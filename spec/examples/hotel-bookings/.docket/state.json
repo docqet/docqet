@@ -6,21 +6,6 @@
   },
   "commit": "4f2c9e1",
   "indexedAt": "2026-11-18T15:04:00Z",
-  "results": {
-    "commit": "4f2c9e1",
-    "suites": [
-      {
-        "suite": "acceptance",
-        "path": "reports/acceptance.json",
-        "ranAt": "2026-11-18T15:02:41Z"
-      },
-      {
-        "suite": "unit",
-        "path": "reports/unit.xml",
-        "ranAt": "2026-11-18T15:01:12Z"
-      }
-    ]
-  },
   "summary": {
     "maturity": 60,
     "band": "beta",
@@ -33,15 +18,9 @@
       "beta": 2,
       "ga": 1
     },
-    "rules": {
-      "decided": 1,
-      "implemented": 1,
-      "tested": 0,
-      "passing": 3,
-      "failing": 0
-    },
+    "rules": 5,
     "gaps": 4,
-    "problems": 1
+    "problems": 0
   },
   "domains": [
     {
@@ -184,7 +163,7 @@
       "code": [
         {
           "glob": "src/booking/**",
-          "files": 3
+          "files": 5
         }
       ],
       "gaps": [
@@ -193,7 +172,23 @@
         "capability:room-booking#calendar-needs-a-mouse"
       ],
       "body": "## Covers\n\n- Clerks see which rooms are free for a stay.\n- Clerks move a booking to new dates.\n\n## Success\n\n- The front desk stops keeping the paper diary alongside the app.",
-      "feature": "reservations"
+      "feature": "reservations",
+      "evidence": {
+        "implements": [
+          {
+            "file": "src/booking/repository.ts",
+            "line": 6,
+            "text": "export async function saveBooking(db: Pool, booking: Booking): Promise<void> {"
+          }
+        ],
+        "verifies": [
+          {
+            "file": "e2e/booking.spec.ts",
+            "line": 19,
+            "text": "test(\"a clerk books a free room for a guest\", async ({ page }) => {"
+          }
+        ]
+      }
     },
     {
       "id": "cancellations",
@@ -215,14 +210,18 @@
       "code": [
         {
           "glob": "src/cancellations/**",
-          "files": 1
+          "files": 2
         }
       ],
       "gaps": [
         "capability:cancellations#late-cancellations-refunded-in-full"
       ],
       "body": "## Covers\n\n- Clerks tell a guest what they'd be refunded if they cancelled now.\n\n## Open decisions\n\n- **No-shows:** is a guest who never arrives treated as a late cancellation, or\n  charged for the whole stay?",
-      "feature": "reservations"
+      "feature": "reservations",
+      "evidence": {
+        "implements": [],
+        "verifies": []
+      }
     },
     {
       "id": "check-in",
@@ -244,7 +243,11 @@
       "code": [],
       "gaps": [],
       "body": "## Covers\n\n- Clerks see today's arrivals.\n- Clerks move a guest to another room for the rest of their stay.\n\n## Success\n\n- A guest with a booking is checked in within two minutes of reaching the desk.",
-      "feature": "front-desk"
+      "feature": "front-desk",
+      "evidence": {
+        "implements": [],
+        "verifies": []
+      }
     },
     {
       "id": "check-out",
@@ -263,7 +266,11 @@
       "code": [],
       "gaps": [],
       "body": "## Covers\n\n- Clerks see today's departures.\n\n## Success\n\n- The front desk closes the day with every departure settled.",
-      "feature": "front-desk"
+      "feature": "front-desk",
+      "evidence": {
+        "implements": [],
+        "verifies": []
+      }
     },
     {
       "id": "cleaning-schedule",
@@ -282,7 +289,11 @@
       "code": [],
       "gaps": [],
       "body": "## Learning\n\n- Is ordering by arrival time enough, or do housekeepers plan by floor?",
-      "feature": "housekeeping"
+      "feature": "housekeeping",
+      "evidence": {
+        "implements": [],
+        "verifies": []
+      }
     },
     {
       "id": "group-bookings",
@@ -304,7 +315,11 @@
       "code": [],
       "gaps": [],
       "body": "## Learning\n\n- Do groups want one booking with many rooms, or many bookings linked\n  together?",
-      "feature": "reservations"
+      "feature": "reservations",
+      "evidence": {
+        "implements": [],
+        "verifies": []
+      }
     },
     {
       "id": "rate-calendar",
@@ -321,7 +336,11 @@
       "code": [],
       "gaps": [],
       "body": "## Learning\n\n- Do rates change often enough to need a calendar, or is a rate per season\n  enough?",
-      "feature": null
+      "feature": null,
+      "evidence": {
+        "implements": [],
+        "verifies": []
+      }
     },
     {
       "id": "room-status",
@@ -341,7 +360,11 @@
       "code": [],
       "gaps": [],
       "body": "## Covers\n\n- Clerks see which rooms are ready for arriving guests.\n\n## Learning\n\n- Will housekeepers update a room's status as they go, or at the end of their\n  round?",
-      "feature": "housekeeping"
+      "feature": "housekeeping",
+      "evidence": {
+        "implements": [],
+        "verifies": []
+      }
     }
   ],
   "rules": [
@@ -351,8 +374,6 @@
       "file": "docs/product/domains/guest-stays/rules/booking/no-double-booking.md",
       "name": "A room can't be double-booked",
       "summary": "Two bookings for the same room can't share a night. A cancelled booking no longer holds its nights.",
-      "kind": "core",
-      "status": "passing",
       "capabilities": [
         "room-booking",
         "check-in",
@@ -362,27 +383,43 @@
         "booking",
         "room"
       ],
-      "implementedIn": [
-        {
-          "file": "src/booking/availability.ts",
-          "line": 9,
-          "symbol": "assertRoomFree"
-        }
-      ],
-      "verifiedBy": [
-        {
-          "file": "features/booking.feature",
-          "line": 3,
-          "test": "A room can't be double-booked",
-          "suite": "acceptance",
-          "result": "passed",
-          "cases": {
-            "passed": 2,
-            "failed": 0
+      "body": "",
+      "evidence": {
+        "implements": [
+          {
+            "file": "db/migrations/001_bookings.sql",
+            "line": 10,
+            "text": "EXCLUDE USING gist (room_id WITH =, nights WITH &&) WHERE (status <> 'cancelled')"
+          },
+          {
+            "file": "src/booking/availability.ts",
+            "line": 9,
+            "text": "export function assertRoomFree(roomId: string, stay: Stay, existing: Booking[]): void {"
           }
-        }
-      ],
-      "body": ""
+        ],
+        "verifies": [
+          {
+            "file": "e2e/booking.spec.ts",
+            "line": 9,
+            "text": "test(\"a clerk can't book a room that's taken\", async ({ page }) => {"
+          },
+          {
+            "file": "features/booking.feature",
+            "line": 3,
+            "text": "Rule: A room can't be double-booked"
+          },
+          {
+            "file": "src/booking/availability.test.ts",
+            "line": 13,
+            "text": "it(\"refuses a room that's booked for one of the nights\", () => {"
+          },
+          {
+            "file": "test/integration/bookings.test.ts",
+            "line": 11,
+            "text": "it(\"is refused by the database when the room is taken that night\", async () => {"
+          }
+        ]
+      }
     },
     {
       "id": "booking/minimum-stay",
@@ -390,8 +427,6 @@
       "file": "docs/product/domains/guest-stays/rules/booking/minimum-stay.md",
       "name": "A stay is at least one night",
       "summary": "A booking's check-out date is after its check-in date.",
-      "kind": "edge-case",
-      "status": "passing",
       "capabilities": [
         "room-booking",
         "group-bookings"
@@ -399,27 +434,23 @@
       "concepts": [
         "booking"
       ],
-      "implementedIn": [
-        {
-          "file": "src/booking/stay.ts",
-          "line": 11,
-          "symbol": "parseStay"
-        }
-      ],
-      "verifiedBy": [
-        {
-          "file": "src/booking/stay.test.ts",
-          "line": 12,
-          "test": "parseStay > rejects a stay that ends the day it starts",
-          "suite": "unit",
-          "result": "passed",
-          "cases": {
-            "passed": 1,
-            "failed": 0
+      "body": "",
+      "evidence": {
+        "implements": [
+          {
+            "file": "src/booking/stay.ts",
+            "line": 11,
+            "text": "export function parseStay(checkIn: string, checkOut: string): Stay {"
           }
-        }
-      ],
-      "body": ""
+        ],
+        "verifies": [
+          {
+            "file": "src/booking/stay.test.ts",
+            "line": 12,
+            "text": "it(\"rejects a stay that ends the day it starts\", () => {"
+          }
+        ]
+      }
     },
     {
       "id": "booking/same-day-turnover",
@@ -427,8 +458,6 @@
       "file": "docs/product/domains/guest-stays/rules/booking/same-day-turnover.md",
       "name": "A stay can start on the day another ends",
       "summary": "A room can be booked from the day an earlier booking checks out, because the two stays don't share a night.",
-      "kind": "edge-case",
-      "status": "implemented",
       "capabilities": [
         "room-booking"
       ],
@@ -436,15 +465,17 @@
         "booking",
         "room"
       ],
-      "implementedIn": [
-        {
-          "file": "src/booking/availability.ts",
-          "line": 4,
-          "symbol": "overlaps"
-        }
-      ],
-      "verifiedBy": [],
-      "body": "## Why\n\nGuests check out by 11:00 and check in from 15:00, which leaves time to clean\nthe room."
+      "body": "## Why\n\nGuests check out by 11:00 and check in from 15:00, which leaves time to clean\nthe room.",
+      "evidence": {
+        "implements": [
+          {
+            "file": "src/booking/availability.ts",
+            "line": 4,
+            "text": "export function overlaps(a: Stay, b: Stay): boolean {"
+          }
+        ],
+        "verifies": []
+      }
     },
     {
       "id": "cancellations/free-cancellation-window",
@@ -452,35 +483,34 @@
       "file": "docs/product/domains/guest-stays/rules/cancellations/free-cancellation-window.md",
       "name": "Cancelling 48 hours ahead is free",
       "summary": "A booking cancelled at least 48 hours before check-in is refunded in full.",
-      "kind": "core",
-      "status": "passing",
       "capabilities": [
         "cancellations"
       ],
       "concepts": [
         "booking"
       ],
-      "implementedIn": [
-        {
-          "file": "src/cancellations/refund.ts",
-          "line": 4,
-          "symbol": "refundAmount"
-        }
-      ],
-      "verifiedBy": [
-        {
-          "file": "features/cancellations.feature",
-          "line": 3,
-          "test": "Cancelling 48 hours ahead is free",
-          "suite": "acceptance",
-          "result": "passed",
-          "cases": {
-            "passed": 2,
-            "failed": 0
+      "body": "",
+      "evidence": {
+        "implements": [
+          {
+            "file": "src/cancellations/refund.ts",
+            "line": 4,
+            "text": "export function refundAmount(paid: number, checkIn: Date, cancelledAt: Date): number {"
           }
-        }
-      ],
-      "body": ""
+        ],
+        "verifies": [
+          {
+            "file": "features/cancellations.feature",
+            "line": 3,
+            "text": "Rule: Cancelling 48 hours ahead is free"
+          },
+          {
+            "file": "src/cancellations/refund.test.ts",
+            "line": 5,
+            "text": "it(\"refunds in full exactly 48 hours ahead\", () => {"
+          }
+        ]
+      }
     },
     {
       "id": "cancellations/late-cancellation-fee",
@@ -488,17 +518,17 @@
       "file": "docs/product/domains/guest-stays/rules/cancellations/late-cancellation-fee.md",
       "name": "A late cancellation costs the first night",
       "summary": "A booking cancelled less than 48 hours before check-in is refunded everything except the first night.",
-      "kind": "edge-case",
-      "status": "decided",
       "capabilities": [
         "cancellations"
       ],
       "concepts": [
         "booking"
       ],
-      "implementedIn": [],
-      "verifiedBy": [],
-      "body": "## Why\n\nThe room usually can't be rebooked at such short notice."
+      "body": "## Why\n\nThe room usually can't be rebooked at such short notice.",
+      "evidence": {
+        "implements": [],
+        "verifies": []
+      }
     }
   ],
   "concepts": [
@@ -573,17 +603,7 @@
       "text": "The late-cancellation fee isn't charged yet, so every cancellation is refunded in full."
     }
   ],
-  "problems": [
-    {
-      "type": "below-level",
-      "subject": "rule:booking/same-day-turnover",
-      "capabilities": [
-        "room-booking"
-      ],
-      "message": "Room booking is Beta, which needs edge-case rules passing, but this rule has no verifying test.",
-      "domain": "guest-stays"
-    }
-  ],
+  "problems": [],
   "checklist": {
     "groups": [
       {

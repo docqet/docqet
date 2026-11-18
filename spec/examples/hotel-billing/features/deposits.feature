@@ -1,6 +1,6 @@
 Feature: Deposits
 
-  @docket:verifies:rule:payments/deposit-is-the-first-night
+  # docket:verifies rule:payments/deposit-is-the-first-night
   Rule: A deposit is the first night
 
     Scenario: The deposit for a three-night stay
@@ -8,7 +8,7 @@ Feature: Deposits
       When a guest books room 12 for three nights
       Then they're asked for a deposit of 153
 
-  @docket:verifies:rule:payments/card-numbers-are-never-kept
+  # docket:verifies rule:payments/card-numbers-are-never-kept
   Rule: Card numbers are never kept
 
     Scenario: A deposit paid by card leaves no card number behind

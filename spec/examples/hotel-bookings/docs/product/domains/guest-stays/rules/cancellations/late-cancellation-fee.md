@@ -1,5 +1,4 @@
 ---
-kind: edge-case
 concepts: [booking]
 ---
 

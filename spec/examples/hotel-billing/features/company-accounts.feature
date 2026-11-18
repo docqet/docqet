@@ -1,6 +1,6 @@
 Feature: Company accounts
 
-  @docket:verifies:rule:company-accounts/credit-limit
+  # docket:verifies rule:company-accounts/credit-limit
   Rule: A company can't go over its credit limit
 
     Scenario: A bill within the limit moves to the company

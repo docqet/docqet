@@ -31,9 +31,10 @@ A **persona** is a type of person the software serves, such as a front desk
 clerk. Each capability says which personas it serves, so Docket can show, for
 each of them, what the software does for them and how ready it is for them.
 
-Code and tests point at rules with **annotations**. The **indexer** reads all
-of it, plus the latest **test results**, and works out each rule's **status**,
-each feature's, domain's and project's **maturity**, each persona's
+Anything in the repository can point at a rule or capability with an
+**annotation**, as **evidence** that it verifies or implements it. The
+**indexer** reads all of it, and works out each one's evidence, each
+feature's, domain's and project's **maturity**, each persona's
 **readiness**, and any **problems**.
 
 ```text
@@ -41,12 +42,12 @@ project ──────────────────── where softw
 
 domain ───────────────────── a part of the business and its language; maturity (derived)
 ├── its part of features ─── a feature can span domains
-│   └── its part of capabilities ── stability level (declared, per domain), known gaps
+│   └── its part of capabilities ── stability level (declared, per domain), known gaps, evidence
 │       ├──► personas ────── who it serves
 │       ├──► rules ───────── its domain's, unless it names another
 │       ├──► concepts ────── its domain's, unless it names another
 │       └── code
-├── rule ─────────────────── status (derived from annotations and test results)
+├── rule ─────────────────── evidence (derived from annotations), if it has any
 └── concept ──────────────── what a word means in this domain
 
 feature ──────────────────── one across every domain: maturity (derived) from every part
@@ -69,8 +70,7 @@ paid.
   comes from, so you can see who said what and show only what some projects
   define. It doesn't decide what words mean, which is a domain's job, and it
   groups nothing for its own sake.
-- **Everything in its repository is its own**: every doc, annotation and test
-  result.
+- **Everything in its repository is its own**: every doc and annotation.
 - **It works in one or more domains**, and contributes what it knows about
   each to the overall view. No project owns a domain, a feature or a
   capability. Docket puts every project's contributions together by ID. Hotel
@@ -304,27 +304,16 @@ A rule belongs to the domain, not to a capability or a feature:
   booking and group bookings in Reservations, and to check-in in Front desk.
 - **Features reach rules only through their capabilities.** A feature's rules
   are the rules its capabilities follow. Nobody lists them on the feature.
-- **Its status is the rule's, wherever it applies.** A passing test for no
-  double-booking counts for every capability that follows it, even if the test
-  only goes through room booking. That holds up when the rule is enforced in
-  one place that every capability goes through, and it's worth checking when
-  it isn't.
+- **Its evidence is the rule's, wherever it applies.** What verifies no
+  double-booking is about every capability that follows it, even if it only
+  goes through room booking.
 - **It's its domain's.** A rule holds within the domain that declares it, in
   that domain's words. A capability in another domain can still follow it, by
   naming its domain, so one rule can govern work that crosses domains. Another
   domain can have a rule with the same ID that says something else.
 
-A rule is one of two kinds, the same for every capability that follows it:
-
-- **Core**: the main workflow of the capabilities that follow it depends on
-  it. Break it and they don't do their job. No double-booking is core to room
-  booking.
-- **Edge case**: it covers a boundary, an unusual state or a failure around a
-  core rule. A stay starting the day another ends is an edge case of no
-  double-booking.
-
-A rule is decided once its doc exists. Whether it's actually enforced is its
-**status**, which comes from evidence, not from the doc.
+A rule is decided once its doc exists. Places in the repository can point at
+it as evidence, but nothing requires them to.
 
 ### Concept
 
@@ -401,8 +390,6 @@ demote it.
   question quickly is good work.
 - **Stability isn't perfection.** A GA capability can still have bugs and known
   gaps.
-- **A level sets expectations Docket can check.** From Alpha, a capability's
-  core rules must be passing. From Beta, its edge-case rules must be too.
 
 ### Stability checklist
 
@@ -451,42 +438,31 @@ from the whole, never from every part.
 
 ## Evidence
 
-### Annotation
-
-A comment in code or a test that points at a rule. There are two:
-
-- **Implements** marks the code that enforces a rule. It's a pointer for
-  finding your way around, nothing more.
-- **Verifies** marks a test that proves a rule.
-
-Annotations are claims. Docket can tell when one names a rule that doesn't
-exist, but not when one is missing or has been left on code that no longer
-enforces the rule.
-
-### Test results
-
-The reports a test run produces, which the indexer reads to see which tests
-passed. Results belong to the commit they were run on. When that isn't the
-commit being indexed, they're **stale**.
-
 ### Evidence
 
-What it takes for Docket to count a rule as enforced: a test that verifies the
-rule, passing in the results for the commit being described. Docs, annotations
-and implementing code are all claims. Only a passing test is evidence.
+Places in the repository that say they verify or implement a rule or a
+capability, so you can go from it to what's about it. There are two kinds:
 
-### Rule status
+- **Verifies**: this place checks that the rule holds, or that the capability
+  works.
+- **Implements**: this place makes it so.
 
-How far a rule has got from decided to proven, worked out from annotations and
-test results:
+It's optional: a rule or capability with none is still one, and nothing at any
+level requires any, though Docket points out what has none. There's no limit
+to how much there is. No double-booking is verified in four places and
+implemented in two, one of them a database constraint. Docket doesn't care
+whether a place is a test or code, what language it's in, or whether anything
+has run.
 
-| Status      | Meaning                                                     |
-| ----------- | ----------------------------------------------------------- |
-| Decided     | The rule is written down, and no code or test points at it. |
-| Implemented | Code says it enforces the rule, and no test verifies it.    |
-| Tested      | A test verifies it, but the results don't include that test. |
-| Passing     | Every test that verifies it passed.                         |
-| Failing     | At least one test that verifies it failed.                  |
+### Annotation
+
+A comment that makes a place evidence: `docket:verifies` or
+`docket:implements`, then the rules and capabilities it's about. It's the
+same in any language or framework.
+
+Annotations are claims. Docket can tell when one names a rule or capability
+that doesn't exist, but not when one is missing or has been left on something
+that's no longer about what it names.
 
 ## Docket itself
 
@@ -517,12 +493,12 @@ Everything in Docket is one or the other:
 
 - **Declared**: written by people and agents. Docs, stability levels, rules,
   gaps, links and annotations.
-- **Derived**: worked out by the indexer. Rule statuses, maturity, bands,
+- **Derived**: worked out by the indexer. Evidence, maturity, bands,
   reverse links and problems. Nobody edits it by hand.
 
 ### Indexer
 
-The program that reads a project's docs, annotations and test results, and
+The program that reads a project's docs and annotations, and
 writes down everything derived about them, as the project's **state**, for a
 particular commit. `docket index` is Docket's indexer, but the format belongs
 to no one tool.
@@ -539,6 +515,6 @@ between them. Showing only some projects combines just what they define.
 ### Problem
 
 Something the indexer, or combining, found wrong, such as a link to a doc
-that doesn't exist, a capability in two features, a rule whose status is
-below what its capability's level needs, or a contradiction between projects. The spec lists
+that doesn't exist, a capability in two features, or a contradiction
+between projects. The spec lists
 [every kind](../../spec/README.md#problems).

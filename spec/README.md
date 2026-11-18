@@ -15,9 +15,7 @@ tool. Anyone can adopt the format or write their own indexer for it.
   service, in a repository of its own: guest bills, payments, company accounts
   and closing the day. It's a second project to show beside the first. It works
   in the Billing and Finance domains, and contributes Billing's part of Front
-  desk, a feature that's mostly Guest stays'. Its test
-  results are a commit behind, so it shows the problems that come with that: a
-  stale run, a rule whose test isn't in the results, and a failing one.
+  desk, a feature that's mostly Guest stays'.
 
 ## Principles
 
@@ -25,12 +23,13 @@ tool. Anyone can adopt the format or write their own indexer for it.
   repository or derived from it.
 - **Declared vs. derived.** People and agents write the declared parts:
   stability, rules, gaps and links. The indexer computes the derived parts:
-  coverage, test results, reverse links and problems. Nobody edits derived
-  state by hand.
-- **Evidence over claims.** A rule counts as enforced only when a test that
-  verifies it passes on the indexed commit.
+  maturity, readiness, evidence, reverse links and problems. Nobody edits
+  derived state by hand.
+- **Evidence is optional.** Code and tests can point at the rules they're
+  about, so readers can see them beside the rule. Docket doesn't run tests or
+  read their results, and nothing requires evidence at any level.
 - **Frontmatter for tools, prose for people.** Each doc is Markdown. Its YAML
-  frontmatter holds what a tool computes with: levels, kinds, links and gaps.
+  frontmatter holds what a tool computes with: levels, links and gaps.
   Its body holds what people read. No fact is in both.
 - **Contradictions are shown, not resolved.** Each repository contributes what
   it knows to one picture of the product. Where two contributions disagree,
@@ -39,7 +38,7 @@ tool. Anyone can adopt the format or write their own indexer for it.
 ## What's in a repository
 
 ```text
-docket.yaml                              config: the project's ID and name, where test results land
+docket.yaml                              config: the project's ID and name
 docs/
 └── product/
     ├── personas/<slug>.md               who the software serves, across every domain
@@ -74,8 +73,10 @@ these changes:
 - Personas have an image and a Needs section, and no Based on. Capabilities
   link to them, so each persona's capabilities, features and readiness can be
   worked out.
-- A rule no longer links to its acceptance test. The test points at the rule
-  instead.
+- A rule no longer links to its acceptance test. Whatever verifies or
+  implements it, a test or not, points at it instead, and can point at a
+  capability too.
+- Rules have no kind: core and edge case are gone.
 - There are no engineering docs: no systems, components, providers or
   runbooks, and so no technical gaps. A repository can keep them anywhere
   outside `docs/product/`, but Docket doesn't read them.
@@ -99,7 +100,7 @@ its folder's name:
 | persona    | `docs/product/personas/`                      | `front-desk-clerk`          |
 
 - **IDs, links and values are kebab case**: lowercase words joined by
-  hyphens, such as `room-booking`, `edge-case`, `to-close-later` or `ga`.
+  hyphens, such as `room-booking`, `accepted-tradeoff`, `to-close-later` or `ga`.
   Tools show values with their own labels, such as GA for `ga`.
 - **No `id:` field.** The path is the ID, so there's nothing to drift. Renaming
   a file renames the doc, and the indexer reports every link and annotation the
@@ -128,7 +129,7 @@ is its name. The paragraph under the title is its summary. The UI shows both.
 | domain | none | Anything worth saying about the part of the business, as prose | [guest-stays](examples/hotel-bookings/docs/product/domains/guest-stays/domain.md) |
 | feature | `capabilities` (required) | Anything worth saying about the job, as prose | [reservations](examples/hotel-bookings/docs/product/domains/guest-stays/features/reservations.md) |
 | capability | `stability` (required), `personas`, `rules`, `concepts`, `code`, `gaps` | Covers, Learning, Success, Open decisions | [room-booking](examples/hotel-bookings/docs/product/domains/guest-stays/capabilities/room-booking.md) |
-| rule | `kind` (required: `core` or `edge-case`), `concepts` | The rule, Why | [same-day-turnover](examples/hotel-bookings/docs/product/domains/guest-stays/rules/booking/same-day-turnover.md) |
+| rule | `concepts` | The rule, Why | [same-day-turnover](examples/hotel-bookings/docs/product/domains/guest-stays/rules/booking/same-day-turnover.md) |
 | concept | none | Details, Lifecycle, Not to be confused with | [booking](examples/hotel-bookings/docs/product/domains/guest-stays/concepts/booking.md) |
 | persona | `image` (required) | Needs, Knows, Context, Expects, Cares about | [front-desk-clerk](examples/hotel-bookings/docs/product/personas/front-desk-clerk.md) |
 
@@ -136,8 +137,8 @@ is its name. The paragraph under the title is its summary. The UI shows both.
   as Prototype, Alpha, Beta and GA. Only capabilities have one. A feature's maturity is worked out from its capabilities' levels,
   and a domain's from its parts of features (see
   [Features and maturity](#features-and-maturity)).
-- **`code`** is a list of path globs for where it lives. Tests aren't listed:
-  they're found through `docket:verifies`.
+- **`code`** is a list of path globs for where it lives. What verifies or
+  implements it is found through [annotations](#evidence) instead.
 - **`personas`** lists the personas a capability serves: who does it, or who
   it's done for when the software does it.
 - **`image`** is the URL of the persona's picture. Any image a browser can
@@ -191,8 +192,7 @@ Every link points one way and is written once:
 feature                    → capabilities
 capability                 → personas, rules, concepts, code
 rule                       → concepts
-code                       → rules    (docket:implements)
-test                       → rules    (docket:verifies)
+annotation                 → rules, capabilities    (docket:verifies, docket:implements)
 ```
 
 The indexer computes the other direction, such as which capabilities a rule
@@ -451,34 +451,59 @@ a level's color:
 | Mostly ready  | 50%  | Enough is settled or stable for them to rely on day to day.             |
 | Ready         | 75%  | What they need is mostly stable and supported.                          |
 
-## Annotations
+## Evidence
 
-Code and tests point at rules with one comment format, the same in every
-language:
+A rule or a capability can have **evidence**: places in the repository that
+say they verify it, or implement it. Evidence is optional at every level, and
+there's no limit to how much there is. Docket doesn't care what a place is,
+whether a test, code, a migration or anything else, or what language or
+framework it's in, and it doesn't run anything. It shows where the evidence
+is, so a reader can go from a rule or capability to what's about it.
+
+A place gives evidence with an annotation, written in a comment, the same in
+every language:
 
 ```text
 docket:<verb> <type>:<id> [<type>:<id> ...]
 ```
 
-- **`implements`** goes on the code that enforces the rule, such as
-  [`assertRoomFree`](examples/hotel-bookings/src/booking/availability.ts). It's optional at
-  every level. Put it where the rule is enforced, not everywhere the rule is
-  touched.
-- **`verifies`** goes on a test that proves the rule, such as
-  [this unit test](examples/hotel-bookings/src/booking/stay.test.ts).
-- **Gherkin** uses a tag, since tags carry through to test reports:
-  `@docket:verifies:rule:booking/no-double-booking` on a `Rule:` or
-  `Scenario:` ([example](examples/hotel-bookings/features/booking.feature)). A tag on a `Rule:`
-  covers every scenario in it.
+- **`<verb>`** is the kind of evidence, `verifies` or `implements`.
+  - **`verifies`** says this place checks that the rule holds, or that the
+    capability works, such as
+    [a unit test](examples/hotel-bookings/src/booking/stay.test.ts) or
+    [a Gherkin `Rule:`](examples/hotel-bookings/features/booking.feature).
+  - **`implements`** says this place makes it so, such as
+    [`assertRoomFree`](examples/hotel-bookings/src/booking/availability.ts), or
+    the [constraint](examples/hotel-bookings/db/migrations/001_bookings.sql)
+    in a database migration.
+- **`<type>`** is `rule` or `capability`. An annotation can name several,
+  of either type:
+  `docket:verifies capability:deposits rule:payments/deposit-counts-towards-the-bill`.
 
-An annotation applies to the declaration directly below it. The indexer
-records the file, the line and that declaration's name every time it runs, so
-nobody writes a line number down.
+```ts
+// docket:verifies rule:booking/minimum-stay
+it("rejects a stay that ends the day it starts", () => {
+```
 
-Annotations are claims. The indexer catches one that names a rule that doesn't
-exist. It can't catch a missing annotation, or one left behind on code that no
-longer enforces the rule. That's why `implementedIn` is only a pointer for
-navigation, and only a passing `verifies` test counts as evidence.
+```gherkin
+  # docket:verifies rule:booking/no-double-booking
+  Rule: A room can't be double-booked
+```
+
+- **The indexer doesn't parse anything.** It looks for `docket:verifies` and
+  `docket:implements` in every file in the repository outside `docs/product/`,
+  in whatever comment syntax the file uses.
+- **An annotation is on the first line below it** that isn't blank or another
+  annotation. The indexer records the file, the annotation's line, and that
+  line's text as written, every time it runs. Nobody writes a line number
+  down, and readers can tell what it's on without knowing the language.
+- **Readers point out what has none.** A rule or capability with nothing
+  verifying it, or nothing implementing it, shows a warning where that
+  evidence would be. It's a prompt, not a problem: nothing requires evidence.
+
+Annotations are claims. The indexer catches one that names a rule or
+capability that doesn't exist. It can't catch a missing annotation, or one
+left behind on something that's no longer about what it names.
 
 ## Config
 
@@ -490,13 +515,6 @@ defined, and usually implemented.
 project:
   id: hotel-bookings
   name: Hotel Bookings
-results:
-  - suite: acceptance
-    format: cucumber-json
-    path: reports/acceptance.json
-  - suite: unit
-    format: junit
-    path: reports/unit.xml
 ```
 
 - **`project`** is metadata, not a boundary: it says where each doc comes
@@ -506,7 +524,6 @@ results:
     unique among them. It's lowercase, with hyphens, like a doc's ID.
   - **`name`** is what people see, named for the software: Hotel Bookings,
     not Guest stays.
-- **`results`** lists the test results `docket index` reads.
 
 A doc's domain is the folder under `docs/product/domains/` it's in, so
 nothing in a doc says it. Moving a doc to another folder moves it. Both hotel examples work
@@ -547,15 +564,13 @@ Putting contributions together:
   in several domains is in each of them. Each domain's part is the
   capabilities that domain builds.
 - **Links are combined**: a feature's capabilities, a capability's personas,
-  rules, concepts, code and gaps. Each contribution's order is kept, in the order the
-  projects are read.
+  rules, concepts, code and gaps, and a rule's or capability's evidence. Each
+  contribution's order is kept, in the order the projects are read.
 - **A body is each contribution's own.** Readers show each, labelled with its
   project and domain.
 - **A capability's `stability` is per domain.** Each contribution declares the
   level of its own part. Where they differ, the capability's level in short is
   the lowest, and readers show each.
-- **A rule's status is per domain**, since it's a different rule in each.
-  Within one domain, it's the worst of its contributions' statuses.
 
 ### Which rule or concept a link means
 
@@ -608,22 +623,15 @@ their states:
 4. Add the problems combining finds: contradictions and ambiguous links. Drop
    an `unknown-id` problem when the link resolves to another project's doc.
 
-What combining doesn't do is check levels again: `below-level` stays each
-project's own, against its own rules. A capability whose level in one domain
-needs a rule from another project isn't checked yet.
-
 ## Index output
 
 `docket index` writes `.docket/state.json` ([example](examples/hotel-bookings/.docket/state.json)).
 It holds everything the UI shows, so the UI never reads the repository itself,
 and showing several projects together means reading each one's state.json.
 
-- **Header**: the `project` (its ID and name), the commit indexed, and the
-  commit the test results came from. If the two commits
-  differ, the UI marks the results as stale. `results` is `null` when no test
-  results were read.
+- **Header**: the `project` (its ID and name), and the commit indexed.
 - **`summary`**: the project's maturity and band, how many domains and
-  features there are, capabilities per level, rules per status, how many gaps
+  features there are, capabilities per level, how many rules, how many gaps
   and how many problems. This is the
   at-a-glance view.
 - **`domains`**: each of the project's `domain.md` files, with the domain's
@@ -638,6 +646,9 @@ and showing several projects together means reading each one's state.json.
   after the title and summary. A doc declared in two of the project's domains
   has an entry for each. Links are written as declared,
   with `@<domain>` where the doc named one.
+- **Evidence**: each rule's and capability's entry also has `evidence`, with
+  `verifies` and `implements` lists of each place's `file`, `line` and
+  `text`, as [Evidence](#evidence) describes. Both are empty when it has none.
 - **`gaps`**: every gap from every capability, each with its `domain`, and
   the checklist `item` it names, or `null`.
 - **`problems`**: everything the indexer found wrong, each about a doc with
@@ -646,39 +657,6 @@ and showing several projects together means reading each one's state.json.
   so the UI can show it beside each capability. It's the YAML's groups, areas
   and items, with each item's full `<area>/<item>` ID, `until` as `null` where
   it has none, and `baseline` as `true` or `false`.
-
-### Rule status
-
-Each rule gets one status:
-
-| Status        | Meaning                                                       |
-| ------------- | ------------------------------------------------------------- |
-| `decided`     | The rule doc exists, and no code or test points at it.        |
-| `implemented` | Code is annotated as enforcing it, and no test verifies it.   |
-| `tested`      | A test verifies it, and the results don't include that test.  |
-| `passing`     | Every verifying test passed in the results.                   |
-| `failing`     | At least one verifying test failed.                           |
-
-A rule has one status, wherever it applies. A test that verifies a rule counts
-for every capability that follows it, even if the test only goes through one
-of them.
-
-### What each level needs
-
-A capability's level sets the status its rules need. A rule that several
-capabilities follow has to meet what each of them needs, so in practice it's
-held to the highest level among them:
-
-| Level     | Core rules | Edge-case rules |
-| --------- | ---------- | --------------- |
-| Prototype | anything   | anything        |
-| Alpha     | `passing`  | anything        |
-| Beta, GA  | `passing`  | `passing`       |
-
-This comes from forge's testing rule, and it's the only expectation the spec
-checks for now. The rest of the [stability checklist](#stability-checklist)
-stays guidance: the indexer only checks that a gap's `item` is a real item
-and not a baseline one.
 
 ### Problems
 
@@ -690,8 +668,6 @@ and not a baseline one.
 | `broken-link`          | A relative link in a doc's body doesn't resolve.               |
 | `unlinked-rule`        | No capability follows a rule.                                  |
 | `in-two-features`      | More than one feature lists the same capability.               |
-| `below-level`          | A rule's status is below what a capability following it needs. |
-| `stale-results`        | The test results came from a different commit.                 |
 | `contradiction`        | Contributions that should agree don't, as Domains describes.   |
 | `ambiguous-link`       | A link could mean the rule or concept of two or more domains.  |
 | `unknown-item`         | A gap's `item` isn't in the stability checklist.               |
@@ -701,32 +677,14 @@ and not a baseline one.
 are in different projects. Combining raises `contradiction` and
 `ambiguous-link`, and those.
 
-The hotel example has a problem on purpose: room booking is Beta, but its
-same-day-turnover rule is only `implemented`.
-
 ## Open decisions
 
-- **Matching tests to results.** A comment annotation gives the indexer a file
-  and line, but a JUnit report identifies tests by name, so the indexer has to
-  read the test's name from the line below the annotation, which varies by
-  language. The alternative is putting the ID in the test name, such as
-  `it("rejects a one-night stay [rule:booking/minimum-stay]")`, which reports
-  carry directly but which reads worse. Gherkin tags have neither problem.
-- **Where the results' commit comes from.** Test reports don't record a commit.
-  The simplest option is to require `docket index` to run in the same job as
-  the tests, and stamp the results with the same commit.
-- **A rule's kind is the same everywhere it applies.** `kind` is on the rule,
-  but whether a rule is core can depend on the capability: no double-booking
-  is core to room booking, and arguably an edge case of check-in. If that
-  matters in practice, `kind` moves to the capability's link, such as
-  `rules: { core: [...], edge-case: [...] }`.
-- **Expectations are fixed.** The level table above is forge's testing rule
-  built into the spec. It becomes configurable once someone adopting Docket
-  needs different rules. The same goes for the stability checklist.
+- **The stability checklist is fixed.** It becomes configurable once someone
+  adopting Docket needs different items.
 - **Met is assumed.** An item counts as met unless a gap names it, so nothing
   says which items someone actually looked at, and an item added to the
   checklist counts as met everywhere at once. A record of when someone last
   went through the list, and against which version of it, would show both.
   Items not applicable, with why, items Docket can work out itself, such as
-  `tests/main-path-automated` from core rules passing, and items a whole
+  `tests/main-path-automated` from its rules' evidence, and items a whole
   project meets, such as CI, would also make met mean more.

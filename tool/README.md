@@ -2,13 +2,13 @@
 
 The `docket` command and the UI.
 
-- **`docket index`** reads the docs, scans the code and test annotations, takes
-  in test results (Cucumber JSON, JUnit XML), and writes `state.json`, stamped
-  with the commit it describes. Not built yet.
+- **`docket index`** reads the docs, scans the code and tests for
+  annotations, and writes `state.json`, stamped with the commit it describes.
+  Not built yet.
 - **[The UI](ui/)** reads only `state.json`. It answers, at a glance: what the
   software can do, who it serves and how far along it is for each of them, how
-  stable each capability is, which rules are enforced, and what the known gaps
-  are. Each answer links to the code and tests behind it.
+  stable each capability is, the rules each follows, and what the known gaps
+  are. A rule shows the code and tests that point at it.
 
 The UI shows several projects together, each from its own `state.json`. Before
 a view shows projects belonging to different clients, it needs access control,

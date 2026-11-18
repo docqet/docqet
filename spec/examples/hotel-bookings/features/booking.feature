@@ -1,6 +1,6 @@
 Feature: Room booking
 
-  @docket:verifies:rule:booking/no-double-booking
+  # docket:verifies rule:booking/no-double-booking
   Rule: A room can't be double-booked
 
     Scenario: A stay that overlaps an existing booking is refused

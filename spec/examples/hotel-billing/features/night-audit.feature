@@ -1,6 +1,6 @@
 Feature: Night audit
 
-  @docket:verifies:rule:night-audit/one-room-charge-per-night
+  # docket:verifies rule:night-audit/one-room-charge-per-night
   Rule: A guest is charged once a night for their room
 
     Scenario: Every guest in the hotel is charged for the night
@@ -13,7 +13,7 @@ Feature: Night audit
       When the night audit is started twice for 1 December
       Then their bill has one room charge for the night of 1 December
 
-  @docket:verifies:rule:night-audit/closed-days-dont-change
+  # docket:verifies rule:night-audit/closed-days-dont-change
   Rule: A closed day can't change
 
     Scenario: A late breakfast goes on the next day

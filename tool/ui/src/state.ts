@@ -8,8 +8,6 @@ import { STABILITY_LEVEL_IDS, type StabilityLevelId } from "./design/stability/s
 
 /* A stability level, as state.json and the design components both name it: "ga". */
 export type Level = StabilityLevelId;
-export type RuleKind = "core" | "edge-case";
-export type RuleStatus = "decided" | "implemented" | "tested" | "passing" | "failing";
 
 /* What one project says about a doc, in one domain: each doc has one from every project and domain that declares it. */
 export type Contribution = {
@@ -82,18 +80,19 @@ export type Capability = Doc & {
   concepts: string[];
   code: CodeGlob[];
   gaps: string[];
+  evidence: Evidence;
 };
 
-export type Location = { file: string; line: number; symbol?: string };
+/*
+ * A place an annotation points at a rule or capability from: the file, the
+ * annotation's line, and the first line below it, as written, so it reads the
+ * same in any language, test or not. `project` is the repository the file is
+ * in, filled in when projects are put together.
+ */
+export type EvidencePlace = { project?: string; file: string; line: number; text: string };
 
-export type Verification = {
-  file: string;
-  line: number;
-  test: string;
-  suite: string;
-  result: "passed" | "failed" | null;
-  cases: { passed: number; failed: number };
-};
+/* What a rule or capability has as evidence, if anyone gave it any: the places annotated as implementing it, and as verifying it. */
+export type Evidence = { implements: EvidencePlace[]; verifies: EvidencePlace[] };
 
 /*
  * A rule belongs to a domain, not to a capability or feature. Capabilities
@@ -101,13 +100,10 @@ export type Verification = {
  * different features and domains. A feature's rules are its capabilities'.
  */
 export type Rule = Doc & {
-  kind: RuleKind;
-  status: RuleStatus;
   /* Every capability that follows it, worked out from their `rules`. */
   capabilities: string[];
   concepts: string[];
-  implementedIn: Location[];
-  verifiedBy: Verification[];
+  evidence: Evidence;
 };
 
 export type Concept = Doc & { capabilities: string[]; rules: string[] };
@@ -171,8 +167,6 @@ export type Project = {
   name: string;
   commit: string;
   indexedAt: string;
-  /* null when no test results were indexed. */
-  results: { commit: string; suites: { suite: string; path: string; ranAt: string }[] } | null;
   maturity: number | null;
   band: Level | null;
 };
@@ -186,7 +180,6 @@ export type StateFile = {
   project: { id: string; name: string };
   commit: string;
   indexedAt: string;
-  results: Project["results"];
   summary: { maturity: number | null; band: Level | null };
   /* Each of its domain.md files. A domain is its own domain, so these have no `domain`. */
   domains: Omit<Raw<Domain>, "domain" | "features" | "capabilities">[];
@@ -207,16 +200,21 @@ export const projectOf = (file: StateFile): Project => ({
   ...file.project,
   commit: file.commit,
   indexedAt: file.indexedAt,
-  results: file.results,
   maturity: file.summary.maturity,
   band: file.summary.band,
 });
 
 const LEVEL_ORDER: readonly Level[] = STABILITY_LEVEL_IDS;
-const STATUS_ORDER: RuleStatus[] = ["failing", "decided", "implemented", "tested", "passing"];
 
 /* A rule's or concept's ID without its domain: `booking@billing` is `booking`. */
 export const bareId = (id: string) => (id.includes("@") ? id.slice(0, id.lastIndexOf("@")) : id);
+
+/* Add one project's evidence, missing from state written before evidence, without repeating a place a doc's other entry already added. */
+const addEvidence = (into: Evidence, from: Evidence | undefined, project: string) => {
+  for (const verb of ["implements", "verifies"] as const)
+    for (const e of from?.[verb] ?? [])
+      if (!into[verb].some((x) => x.project === project && x.file === e.file && x.line === e.line)) into[verb].push({ ...e, project });
+};
 
 /* Add what isn't there yet, keeping the order. */
 const union = (into: string[], ids: string[]) => {
@@ -240,7 +238,6 @@ const band = (m: number | null) => (m === null ? null : maturityBand(m));
  *
  * Then reverse links, parts and maturity are worked out again across
  * everything, and the contradictions between contributions become problems.
- * Levels aren't checked again: each project's `below-level` stays its own.
  */
 export function combine(files: StateFile[]): DocketState {
   const state: DocketState = {
@@ -298,7 +295,9 @@ export function combine(files: StateFile[]): DocketState {
         concepts: [],
         code: [],
         gaps: [],
+        evidence: { implements: [], verifies: [] },
       }));
+      addEvidence(capability.evidence, c.evidence, project);
       capability.levels.push({ project, domain: c.domain, level: c.stability });
       union(capability.personas, c.personas ?? []);
       capability.code.push(...c.code.filter((g) => !capability.code.some((x) => x.glob === g.glob)));
@@ -308,17 +307,11 @@ export function combine(files: StateFile[]): DocketState {
     for (const r of file.rules) {
       const rule = contribute(state.rules, `${r.id}@${r.domain}`, project, r, (base) => ({
         ...base,
-        kind: r.kind,
-        status: r.status,
         capabilities: [],
         concepts: [],
-        implementedIn: [],
-        verifiedBy: [],
+        evidence: { implements: [], verifies: [] },
       }));
-      /* Within one domain, the worst of its contributions' statuses. */
-      if (STATUS_ORDER.indexOf(r.status) < STATUS_ORDER.indexOf(rule.status)) rule.status = r.status;
-      rule.implementedIn.push(...r.implementedIn);
-      rule.verifiedBy.push(...r.verifiedBy);
+      addEvidence(rule.evidence, r.evidence, project);
       pending.push({ from: rule, domain: r.domain, rules: [], concepts: r.concepts });
     }
     for (const c of file.concepts) {

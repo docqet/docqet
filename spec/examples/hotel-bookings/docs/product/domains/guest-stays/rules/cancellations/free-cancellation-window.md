@@ -1,5 +1,4 @@
 ---
-kind: core
 concepts: [booking]
 ---
 

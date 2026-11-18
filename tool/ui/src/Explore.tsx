@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import BoltOutlinedIcon from "@mui/icons-material/BoltOutlined";
 import CheckRoundedIcon from "@mui/icons-material/CheckRounded";
+import CodeRoundedIcon from "@mui/icons-material/CodeRounded";
+import FactCheckOutlinedIcon from "@mui/icons-material/FactCheckOutlined";
 import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import FilterListRoundedIcon from "@mui/icons-material/FilterListRounded";
@@ -46,7 +48,9 @@ import {
   type Gap,
   type Persona,
   type Pick,
+  type Rule,
   type Target,
+  type Evidence,
 } from "./state";
 
 /* What the panel can show: the product's parts, each as a list or one of them. */
@@ -612,6 +616,10 @@ function CapabilityView({ state, capability, onOpen, onConcept, onShow, isFilter
         <Heading count={rules.length}>Rules it follows</Heading>
         {rules.length ? <RuleList state={state} rules={rules} /> : <p className="concepts-empty">None written down yet.</p>}
       </section>
+      <section>
+        <Heading count={capability.evidence.verifies.length + capability.evidence.implements.length}>Evidence</Heading>
+        <EvidenceLists state={state} evidence={capability.evidence} />
+      </section>
       {concepts.length ? (
         <section>
           <Heading count={concepts.length}>Concepts it uses</Heading>
@@ -878,27 +886,128 @@ function PersonaRows({ state, personas, feature, onOpen }: { state: DocketState;
   );
 }
 
-/* A rule as the panel shows it: its name, what it says, its kind and status, and its domain when several are showing. */
-function RuleList({ state, rules }: { state: DocketState; rules: { id: string; name: string; summary?: string; kind: string; status: string; domain: string }[] }) {
+/*
+ * Rules as the panel shows them: each one's name, what it says, what verifies
+ * and implements it, with a warning where nothing does, and its domain when
+ * several are showing. One with evidence opens to list it.
+ */
+function RuleList({ state, rules }: { state: DocketState; rules: Rule[] }) {
+  const [open, setOpen] = useState<Set<string>>(() => new Set());
+  const toggle = (id: string) =>
+    setOpen((was) => {
+      const now = new Set(was);
+      if (!now.delete(id)) now.add(id);
+      return now;
+    });
   return (
     <ul>
-      {rules.map((r) => (
-        <li key={r.id} className="explore-rule">
-          <RuleRoundedIcon sx={{ fontSize: 15, color: "text.secondary", flex: "none", mt: "2px" }} />
-          <span className="concept-row-text">
-            <span className="concept-row-name">{r.name}</span>
-            {r.summary ? <span className="concept-row-summary">{r.summary}</span> : null}
-            <span className="explore-rule-meta">
-              <span className="explore-tag">{r.kind === "core" ? "Core" : "Edge case"}</span>
-              <span className="explore-tag" data-status={r.status}>
-                {r.status[0].toUpperCase() + r.status.slice(1)}
+      {rules.map((r) => {
+        const hasEvidence = r.evidence.verifies.length + r.evidence.implements.length > 0;
+        const isOpen = hasEvidence && open.has(r.id);
+        const line = (
+          <>
+            <RuleRoundedIcon sx={{ fontSize: 15, color: "text.secondary", flex: "none", mt: "2px" }} />
+            <span className="concept-row-text">
+              <span className="concept-row-name">{r.name}</span>
+              {r.summary ? <span className="concept-row-summary">{r.summary}</span> : null}
+              <span className="explore-rule-meta">
+                <EvidenceCounts evidence={r.evidence} />
+                {state.domains.length > 1 ? <span className="faint">{domainName(state, r.domain)}</span> : null}
               </span>
-              {state.domains.length > 1 ? <span className="faint">{domainName(state, r.domain)}</span> : null}
             </span>
-          </span>
-        </li>
-      ))}
+          </>
+        );
+        return (
+          <li key={r.id} className="explore-rule">
+            {hasEvidence ? (
+              <button type="button" className="explore-rule-head" aria-expanded={isOpen} onClick={() => toggle(r.id)}>
+                {line}
+                <ChevronRightRoundedIcon className="explore-checklist-chevron" sx={{ fontSize: 18, flex: "none", mt: "1px" }} />
+              </button>
+            ) : (
+              <div className="explore-rule-head">{line}</div>
+            )}
+            {isOpen ? (
+              <div className="explore-evidence">
+                <EvidenceLists state={state} evidence={r.evidence} />
+              </div>
+            ) : null}
+          </li>
+        );
+      })}
     </ul>
+  );
+}
+
+const VERBS = [
+  { verb: "verifies", name: "Verifies", none: "Nothing verifies it", icon: <FactCheckOutlinedIcon sx={{ fontSize: 13 }} /> },
+  { verb: "implements", name: "Implements", none: "Nothing implements it", icon: <CodeRoundedIcon sx={{ fontSize: 13 }} /> },
+] as const;
+
+/* In a line: how many places verify and implement something, a warning for each kind it has none of, or one warning when it has no evidence at all. */
+function EvidenceCounts({ evidence }: { evidence: Evidence }) {
+  if (!evidence.verifies.length && !evidence.implements.length) return <EvidenceWarning>No evidence</EvidenceWarning>;
+  return (
+    <>
+      {VERBS.map(({ verb, name, none, icon }) =>
+        evidence[verb].length ? (
+          <span key={verb} className="explore-evidence-count">
+            {icon}
+            {name} {evidence[verb].length}
+          </span>
+        ) : (
+          <EvidenceWarning key={verb}>{none}</EvidenceWarning>
+        ),
+      )}
+    </>
+  );
+}
+
+function EvidenceWarning({ children }: { children: ReactNode }) {
+  return (
+    <span className="explore-evidence-warning">
+      <WarningAmberRoundedIcon sx={{ fontSize: 13 }} />
+      {children}
+    </span>
+  );
+}
+
+/*
+ * What verifies something, then what implements it: each place's line, as
+ * written, then its file, and its project when several are showing. Where
+ * there's none, a warning stands in for the list.
+ */
+function EvidenceLists({ state, evidence }: { state: DocketState; evidence: Evidence }) {
+  return (
+    <>
+      {VERBS.map(({ verb, name, none, icon }) => (
+        <div key={verb} className="explore-evidence-group">
+          <span className="explore-gap-kind">{name}</span>
+          {evidence[verb].length ? (
+            <ul>
+              {evidence[verb].map((e) => (
+                <li key={`${e.project}:${e.file}:${e.line}`} className="explore-evidence-item">
+                  <span className="explore-evidence-icon">{icon}</span>
+                  <span className="explore-evidence-body">
+                    <code className="explore-evidence-text">{e.text}</code>
+                    <span className="explore-evidence-where">
+                      <span>
+                        {e.file}:{e.line}
+                      </span>
+                      {state.projects.length > 1 && e.project ? <span>{projectName(state, e.project)}</span> : null}
+                    </span>
+                  </span>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="explore-evidence-none">
+              <EvidenceWarning>{none} yet.</EvidenceWarning>
+            </p>
+          )}
+        </div>
+      ))}
+    </>
   );
 }
 

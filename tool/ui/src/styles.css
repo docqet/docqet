@@ -1717,9 +1717,102 @@ kbd {
 }
 
 .explore-rule {
+  padding: 10px 0;
+}
+
+/* A rule's line, which opens its evidence under it. */
+.explore-rule-head {
   display: flex;
   gap: 10px;
-  padding: 10px 0;
+  width: 100%;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+div.explore-rule-head {
+  cursor: default;
+}
+
+button.explore-rule-head:hover .concept-row-name {
+  color: var(--accent);
+}
+
+.explore-rule-head[aria-expanded="true"] .explore-checklist-chevron {
+  transform: rotate(90deg);
+}
+
+/* In a rule's line, how many places verify and implement it. */
+.explore-evidence-count {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 11.5px;
+  color: var(--muted);
+}
+
+/* Where evidence would be, when there's none of a kind. */
+.explore-evidence-warning {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 11.5px;
+  color: var(--warning);
+}
+
+.explore-evidence-none {
+  margin: 4px 0 0;
+}
+
+/* Under an open rule: what verifies it, then what implements it. */
+.explore-evidence {
+  margin: 10px 0 0 25px;
+  padding: 2px 0 2px 12px;
+  border-left: 2px solid var(--border);
+}
+
+.explore-evidence-group + .explore-evidence-group {
+  margin-top: 10px;
+}
+
+.explore-evidence-item {
+  display: flex;
+  gap: 7px;
+  padding: 4px 0;
+}
+
+.explore-evidence-icon {
+  display: inline-flex;
+  margin-top: 3px;
+  color: var(--faint);
+}
+
+.explore-evidence-body {
+  min-width: 0;
+}
+
+/* The line the annotation is on, as written, cut short when it's long. */
+.explore-evidence-text {
+  display: block;
+  overflow: hidden;
+  font-size: 12px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--text);
+}
+
+.explore-evidence-where {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 10px;
+  margin-top: 1px;
+  font-size: 11.5px;
+  overflow-wrap: anywhere;
+  color: var(--faint);
 }
 
 .explore-rule + .explore-rule {
@@ -1752,16 +1845,6 @@ kbd {
   color: var(--muted);
   border: 1px solid var(--border-strong);
   border-radius: 999px;
-}
-
-.explore-tag[data-status="passing"] {
-  color: var(--ok);
-  border-color: color-mix(in srgb, var(--ok) 40%, transparent);
-}
-
-.explore-tag[data-status="failing"] {
-  color: var(--bad);
-  border-color: color-mix(in srgb, var(--bad) 40%, transparent);
 }
 
 /* Under a known gap, the checklist item it falls short of. */

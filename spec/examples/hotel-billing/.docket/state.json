@@ -6,21 +6,6 @@
   },
   "commit": "9b31d07",
   "indexedAt": "2026-11-18T16:20:00Z",
-  "results": {
-    "commit": "7e0c4a2",
-    "suites": [
-      {
-        "suite": "acceptance",
-        "path": "reports/acceptance.json",
-        "ranAt": "2026-11-17T22:41:09Z"
-      },
-      {
-        "suite": "unit",
-        "path": "reports/unit.xml",
-        "ranAt": "2026-11-17T22:39:52Z"
-      }
-    ]
-  },
   "summary": {
     "maturity": 56,
     "band": "beta",
@@ -33,15 +18,9 @@
       "beta": 3,
       "ga": 2
     },
-    "rules": {
-      "decided": 3,
-      "implemented": 2,
-      "tested": 1,
-      "passing": 8,
-      "failing": 1
-    },
+    "rules": 15,
     "gaps": 4,
-    "problems": 4
+    "problems": 1
   },
   "domains": [
     {
@@ -262,7 +241,11 @@
       ],
       "gaps": [],
       "body": "## Covers\n\n- Clerks correct a charge that was added by mistake.\n\n## Success\n\n- No guest leaves with an extra that never reached their bill.",
-      "feature": "guest-bills"
+      "feature": "guest-bills",
+      "evidence": {
+        "implements": [],
+        "verifies": []
+      }
     },
     {
       "id": "city-tax",
@@ -294,7 +277,11 @@
         "capability:city-tax#children-corrected-by-hand"
       ],
       "body": "## Covers\n\n- Clerks see the city tax on a guest's bill, night by night.",
-      "feature": "guest-bills"
+      "feature": "guest-bills",
+      "evidence": {
+        "implements": [],
+        "verifies": []
+      }
     },
     {
       "id": "split-bills",
@@ -316,7 +303,11 @@
       "code": [],
       "gaps": [],
       "body": "## Learning\n\n- Do guests split evenly, or charge by charge?",
-      "feature": "guest-bills"
+      "feature": "guest-bills",
+      "evidence": {
+        "implements": [],
+        "verifies": []
+      }
     },
     {
       "id": "deposits",
@@ -346,7 +337,23 @@
       ],
       "gaps": [],
       "body": "## Covers\n\n- Clerks see whether a stay's deposit has been paid.\n- Clerks take a deposit again when the guest's card was declined.\n\n## Open decisions\n\n- **Long stays:** is a week's stay still secured by one night's deposit?",
-      "feature": "payments"
+      "feature": "payments",
+      "evidence": {
+        "implements": [
+          {
+            "file": "src/payments/provider.ts",
+            "line": 7,
+            "text": "export async function takePayment(provider: PaymentProvider, cardToken: string, amount: number, billId: string): Promise<string> {"
+          }
+        ],
+        "verifies": [
+          {
+            "file": "e2e/check-out.spec.ts",
+            "line": 9,
+            "text": "test(\"a guest's deposit is taken off their bill at check-out\", async ({ page }) => {"
+          }
+        ]
+      }
     },
     {
       "id": "pay-by-link",
@@ -372,7 +379,17 @@
         "capability:pay-by-link#hotels-currency-only"
       ],
       "body": "## Covers\n\n- Clerks send a guest a link to pay what they owe.\n\n## Learning\n\n- Do guests pay before they leave, or wait until they're home?",
-      "feature": "payments"
+      "feature": "payments",
+      "evidence": {
+        "implements": [
+          {
+            "file": "src/payments/provider.ts",
+            "line": 7,
+            "text": "export async function takePayment(provider: PaymentProvider, cardToken: string, amount: number, billId: string): Promise<string> {"
+          }
+        ],
+        "verifies": []
+      }
     },
     {
       "id": "company-accounts",
@@ -398,7 +415,11 @@
       ],
       "gaps": [],
       "body": "## Covers\n\n- Bookkeepers name the guests whose stays a company pays for.\n- Bookkeepers see what each company owes.",
-      "feature": "company-accounts"
+      "feature": "company-accounts",
+      "evidence": {
+        "implements": [],
+        "verifies": []
+      }
     },
     {
       "id": "direct-billing",
@@ -429,7 +450,11 @@
         "capability:direct-billing#whole-bill-moves"
       ],
       "body": "",
-      "feature": "company-accounts"
+      "feature": "company-accounts",
+      "evidence": {
+        "implements": [],
+        "verifies": []
+      }
     },
     {
       "id": "invoices",
@@ -457,7 +482,11 @@
         "capability:invoices#no-payment-reminders"
       ],
       "body": "## Covers\n\n- Bookkeepers record a company's payment against its invoice.",
-      "feature": "company-accounts"
+      "feature": "company-accounts",
+      "evidence": {
+        "implements": [],
+        "verifies": []
+      }
     },
     {
       "id": "night-audit",
@@ -483,12 +512,16 @@
       "code": [
         {
           "glob": "src/night-audit/**",
-          "files": 1
+          "files": 2
         }
       ],
       "gaps": [],
       "body": "## Covers\n\n- Night auditors see whether tonight's audit has run, and what it charged.\n- Night auditors start the audit by hand when it hasn't run.\n\n## Success\n\n- Every morning starts with yesterday closed, without anyone staying up for it.",
-      "feature": "closing-the-day"
+      "feature": "closing-the-day",
+      "evidence": {
+        "implements": [],
+        "verifies": []
+      }
     },
     {
       "id": "daily-takings",
@@ -510,7 +543,11 @@
       "code": [],
       "gaps": [],
       "body": "## Covers\n\n- Managers compare a day with the same day last year.",
-      "feature": "closing-the-day"
+      "feature": "closing-the-day",
+      "evidence": {
+        "implements": [],
+        "verifies": []
+      }
     },
     {
       "id": "accounting-export",
@@ -531,7 +568,11 @@
       "code": [],
       "gaps": [],
       "body": "## Learning\n\n- Is a day at a time what the accountant wants, or one export a month?",
-      "feature": "closing-the-day"
+      "feature": "closing-the-day",
+      "evidence": {
+        "implements": [],
+        "verifies": []
+      }
     },
     {
       "id": "check-out",
@@ -554,7 +595,11 @@
       "code": [],
       "gaps": [],
       "body": "## Covers\n\n- Clerks see a departing guest's bill, with every night and charge on it.\n- Clerks take payment for the balance, and close the bill.\n\n## Learning\n\n- Do guests want their bill emailed as they leave, or printed at the desk?",
-      "feature": "front-desk"
+      "feature": "front-desk",
+      "evidence": {
+        "implements": [],
+        "verifies": []
+      }
     }
   ],
   "rules": [
@@ -564,8 +609,6 @@
       "file": "docs/product/domains/billing/rules/bills/charges-are-never-changed.md",
       "name": "A charge is never changed or deleted",
       "summary": "A charge is corrected by adding a charge for the opposite amount, never by changing or deleting it.",
-      "kind": "core",
-      "status": "passing",
       "capabilities": [
         "extra-charges",
         "night-audit"
@@ -574,27 +617,23 @@
         "charge",
         "bill"
       ],
-      "implementedIn": [
-        {
-          "file": "src/ledger/ledger.ts",
-          "line": 21,
-          "symbol": "correct"
-        }
-      ],
-      "verifiedBy": [
-        {
-          "file": "features/bills.feature",
-          "line": 3,
-          "test": "A charge is never changed or deleted",
-          "suite": "acceptance",
-          "result": "passed",
-          "cases": {
-            "passed": 1,
-            "failed": 0
+      "body": "## Why\n\nThe hotel's accountant and the tax office need to see every charge that was\nmade, including the mistakes.",
+      "evidence": {
+        "implements": [
+          {
+            "file": "src/ledger/ledger.ts",
+            "line": 21,
+            "text": "export function correct(bill: Bill, line: Line, id: string, businessDay: string): void {"
           }
-        }
-      ],
-      "body": "## Why\n\nThe hotel's accountant and the tax office need to see every charge that was\nmade, including the mistakes."
+        ],
+        "verifies": [
+          {
+            "file": "features/bills.feature",
+            "line": 3,
+            "text": "Rule: A charge is never changed or deleted"
+          }
+        ]
+      }
     },
     {
       "id": "bills/closed-bills-dont-change",
@@ -602,8 +641,6 @@
       "file": "docs/product/domains/billing/rules/bills/closed-bills-dont-change.md",
       "name": "A closed bill can't change",
       "summary": "Nothing can be charged or paid on a closed bill. A charge that arrives after the guest has left goes on a new bill for the same stay.",
-      "kind": "edge-case",
-      "status": "passing",
       "capabilities": [
         "extra-charges",
         "pay-by-link",
@@ -614,27 +651,23 @@
         "charge",
         "payment"
       ],
-      "implementedIn": [
-        {
-          "file": "src/ledger/ledger.ts",
-          "line": 13,
-          "symbol": "post"
-        }
-      ],
-      "verifiedBy": [
-        {
-          "file": "src/ledger/ledger.test.ts",
-          "line": 13,
-          "test": "post > refuses a charge on a closed bill",
-          "suite": "unit",
-          "result": "passed",
-          "cases": {
-            "passed": 1,
-            "failed": 0
+      "body": "",
+      "evidence": {
+        "implements": [
+          {
+            "file": "src/ledger/ledger.ts",
+            "line": 13,
+            "text": "export function post(bill: Bill, line: Line): void {"
           }
-        }
-      ],
-      "body": ""
+        ],
+        "verifies": [
+          {
+            "file": "src/ledger/ledger.test.ts",
+            "line": 13,
+            "text": "it(\"refuses a charge on a closed bill\", () => {"
+          }
+        ]
+      }
     },
     {
       "id": "tax/city-tax-per-guest-night",
@@ -642,8 +675,6 @@
       "file": "docs/product/domains/billing/rules/tax/city-tax-per-guest-night.md",
       "name": "City tax is charged per guest, per night",
       "summary": "Each guest on a stay is charged the city's tax for each night, at the rate on that night.",
-      "kind": "core",
-      "status": "passing",
       "capabilities": [
         "city-tax"
       ],
@@ -651,27 +682,23 @@
         "bill",
         "charge"
       ],
-      "implementedIn": [
-        {
-          "file": "src/tax/city-tax.ts",
-          "line": 10,
-          "symbol": "cityTax"
-        }
-      ],
-      "verifiedBy": [
-        {
-          "file": "features/city-tax.feature",
-          "line": 3,
-          "test": "City tax is charged per guest, per night",
-          "suite": "acceptance",
-          "result": "passed",
-          "cases": {
-            "passed": 1,
-            "failed": 0
+      "body": "## Why\n\nThe hotel owes the city tax for every guest night, whether or not it charged\nthe guest.",
+      "evidence": {
+        "implements": [
+          {
+            "file": "src/tax/city-tax.ts",
+            "line": 10,
+            "text": "export function cityTax(guests: number, nights: string[], ratePerGuestNight: number): { night: string; amount: number }[] {"
           }
-        }
-      ],
-      "body": "## Why\n\nThe hotel owes the city tax for every guest night, whether or not it charged\nthe guest."
+        ],
+        "verifies": [
+          {
+            "file": "features/city-tax.feature",
+            "line": 3,
+            "text": "Rule: City tax is charged per guest, per night"
+          }
+        ]
+      }
     },
     {
       "id": "tax/children-pay-no-city-tax",
@@ -679,17 +706,17 @@
       "file": "docs/product/domains/billing/rules/tax/children-pay-no-city-tax.md",
       "name": "Children pay no city tax",
       "summary": "Guests under 16 aren't charged city tax.",
-      "kind": "edge-case",
-      "status": "decided",
       "capabilities": [
         "city-tax"
       ],
       "concepts": [
         "charge"
       ],
-      "implementedIn": [],
-      "verifiedBy": [],
-      "body": ""
+      "body": "",
+      "evidence": {
+        "implements": [],
+        "verifies": []
+      }
     },
     {
       "id": "tax/city-tax-stops-after-seven-nights",
@@ -697,23 +724,23 @@
       "file": "docs/product/domains/billing/rules/tax/city-tax-stops-after-seven-nights.md",
       "name": "City tax stops after seven nights",
       "summary": "A guest staying longer than seven nights is charged city tax for the first seven only.",
-      "kind": "edge-case",
-      "status": "implemented",
       "capabilities": [
         "city-tax"
       ],
       "concepts": [
         "charge"
       ],
-      "implementedIn": [
-        {
-          "file": "src/tax/city-tax.ts",
-          "line": 3,
-          "symbol": "taxedNights"
-        }
-      ],
-      "verifiedBy": [],
-      "body": ""
+      "body": "",
+      "evidence": {
+        "implements": [
+          {
+            "file": "src/tax/city-tax.ts",
+            "line": 3,
+            "text": "export function taxedNights(nights: string[]): string[] {"
+          }
+        ],
+        "verifies": []
+      }
     },
     {
       "id": "bills/moving-charges-keeps-the-total",
@@ -721,8 +748,6 @@
       "file": "docs/product/domains/billing/rules/bills/moving-charges-keeps-the-total.md",
       "name": "Moving charges keeps the total",
       "summary": "Splitting a bill or moving charges between bills never changes the total owed across them.",
-      "kind": "core",
-      "status": "decided",
       "capabilities": [
         "split-bills"
       ],
@@ -730,9 +755,11 @@
         "bill",
         "charge"
       ],
-      "implementedIn": [],
-      "verifiedBy": [],
-      "body": ""
+      "body": "",
+      "evidence": {
+        "implements": [],
+        "verifies": []
+      }
     },
     {
       "id": "payments/deposit-is-the-first-night",
@@ -740,35 +767,29 @@
       "file": "docs/product/domains/billing/rules/payments/deposit-is-the-first-night.md",
       "name": "A deposit is the first night",
       "summary": "A stay's deposit is the first night's room rate, with its city tax.",
-      "kind": "core",
-      "status": "passing",
       "capabilities": [
         "deposits"
       ],
       "concepts": [
         "payment"
       ],
-      "implementedIn": [
-        {
-          "file": "src/payments/deposit.ts",
-          "line": 3,
-          "symbol": "depositAmount"
-        }
-      ],
-      "verifiedBy": [
-        {
-          "file": "features/deposits.feature",
-          "line": 3,
-          "test": "A deposit is the first night",
-          "suite": "acceptance",
-          "result": "passed",
-          "cases": {
-            "passed": 1,
-            "failed": 0
+      "body": "",
+      "evidence": {
+        "implements": [
+          {
+            "file": "src/payments/deposit.ts",
+            "line": 3,
+            "text": "export function depositAmount(firstNightRate: number, firstNightCityTax: number): number {"
           }
-        }
-      ],
-      "body": ""
+        ],
+        "verifies": [
+          {
+            "file": "features/deposits.feature",
+            "line": 3,
+            "text": "Rule: A deposit is the first night"
+          }
+        ]
+      }
     },
     {
       "id": "payments/deposit-counts-towards-the-bill",
@@ -776,8 +797,6 @@
       "file": "docs/product/domains/billing/rules/payments/deposit-counts-towards-the-bill.md",
       "name": "A deposit counts towards the bill",
       "summary": "A deposit is a payment on the guest's bill, so the guest pays only the rest at check-out.",
-      "kind": "edge-case",
-      "status": "tested",
       "capabilities": [
         "deposits"
       ],
@@ -785,27 +804,28 @@
         "payment",
         "bill"
       ],
-      "implementedIn": [
-        {
-          "file": "src/payments/deposit.ts",
-          "line": 8,
-          "symbol": "applyDeposit"
-        }
-      ],
-      "verifiedBy": [
-        {
-          "file": "src/payments/deposit.test.ts",
-          "line": 6,
-          "test": "applyDeposit > counts the deposit towards the bill",
-          "suite": "unit",
-          "result": null,
-          "cases": {
-            "passed": 0,
-            "failed": 0
+      "body": "",
+      "evidence": {
+        "implements": [
+          {
+            "file": "src/payments/deposit.ts",
+            "line": 8,
+            "text": "export function applyDeposit(bill: Bill, amount: number, paymentId: string, businessDay: string): void {"
           }
-        }
-      ],
-      "body": ""
+        ],
+        "verifies": [
+          {
+            "file": "e2e/check-out.spec.ts",
+            "line": 9,
+            "text": "test(\"a guest's deposit is taken off their bill at check-out\", async ({ page }) => {"
+          },
+          {
+            "file": "src/payments/deposit.test.ts",
+            "line": 6,
+            "text": "it(\"counts the deposit towards the bill\", () => {"
+          }
+        ]
+      }
     },
     {
       "id": "payments/card-numbers-are-never-kept",
@@ -813,8 +833,6 @@
       "file": "docs/product/domains/billing/rules/payments/card-numbers-are-never-kept.md",
       "name": "Card numbers are never kept",
       "summary": "The hotel never stores a guest's card number. Only the payment provider holds it.",
-      "kind": "core",
-      "status": "passing",
       "capabilities": [
         "deposits",
         "pay-by-link"
@@ -822,27 +840,28 @@
       "concepts": [
         "payment"
       ],
-      "implementedIn": [
-        {
-          "file": "src/payments/provider.ts",
-          "line": 7,
-          "symbol": "takePayment"
-        }
-      ],
-      "verifiedBy": [
-        {
-          "file": "features/deposits.feature",
-          "line": 11,
-          "test": "Card numbers are never kept",
-          "suite": "acceptance",
-          "result": "passed",
-          "cases": {
-            "passed": 1,
-            "failed": 0
+      "body": "## Why\n\nHolding card numbers would put the hotel under the card schemes' security\naudits.",
+      "evidence": {
+        "implements": [
+          {
+            "file": "src/payments/provider.ts",
+            "line": 8,
+            "text": "export async function takePayment(provider: PaymentProvider, cardToken: string, amount: number, billId: string): Promise<string> {"
           }
-        }
-      ],
-      "body": "## Why\n\nHolding card numbers would put the hotel under the card schemes' security\naudits."
+        ],
+        "verifies": [
+          {
+            "file": "features/deposits.feature",
+            "line": 11,
+            "text": "Rule: Card numbers are never kept"
+          },
+          {
+            "file": "test/integration/provider.test.ts",
+            "line": 6,
+            "text": "it(\"sends the provider only a token for the card\", async () => {"
+          }
+        ]
+      }
     },
     {
       "id": "company-accounts/credit-limit",
@@ -850,8 +869,6 @@
       "file": "docs/product/domains/finance/rules/company-accounts/credit-limit.md",
       "name": "A company can't go over its credit limit",
       "summary": "A bill can't move to a company's account if it would take what the company owes over its credit limit.",
-      "kind": "core",
-      "status": "passing",
       "capabilities": [
         "company-accounts",
         "direct-billing"
@@ -860,27 +877,23 @@
         "company-account",
         "bill"
       ],
-      "implementedIn": [
-        {
-          "file": "src/companies/credit.ts",
-          "line": 5,
-          "symbol": "assertWithinLimit"
-        }
-      ],
-      "verifiedBy": [
-        {
-          "file": "features/company-accounts.feature",
-          "line": 3,
-          "test": "A company can't go over its credit limit",
-          "suite": "acceptance",
-          "result": "passed",
-          "cases": {
-            "passed": 2,
-            "failed": 0
+      "body": "",
+      "evidence": {
+        "implements": [
+          {
+            "file": "src/companies/credit.ts",
+            "line": 5,
+            "text": "export function assertWithinLimit(account: CompanyAccount, amount: number): void {"
           }
-        }
-      ],
-      "body": ""
+        ],
+        "verifies": [
+          {
+            "file": "features/company-accounts.feature",
+            "line": 3,
+            "text": "Rule: A company can't go over its credit limit"
+          }
+        ]
+      }
     },
     {
       "id": "company-accounts/only-named-guests",
@@ -888,8 +901,6 @@
       "file": "docs/product/domains/finance/rules/company-accounts/only-named-guests.md",
       "name": "Only named guests' bills go to a company",
       "summary": "A bill can move to a company's account only if the company has named the guest as someone whose stays it pays for.",
-      "kind": "edge-case",
-      "status": "implemented",
       "capabilities": [
         "direct-billing"
       ],
@@ -897,15 +908,17 @@
         "company-account",
         "bill"
       ],
-      "implementedIn": [
-        {
-          "file": "src/companies/credit.ts",
-          "line": 12,
-          "symbol": "assertNamedGuest"
-        }
-      ],
-      "verifiedBy": [],
-      "body": ""
+      "body": "",
+      "evidence": {
+        "implements": [
+          {
+            "file": "src/companies/credit.ts",
+            "line": 12,
+            "text": "export function assertNamedGuest(account: CompanyAccount, guestId: string): void {"
+          }
+        ],
+        "verifies": []
+      }
     },
     {
       "id": "invoices/invoice-numbers-run-in-sequence",
@@ -913,35 +926,29 @@
       "file": "docs/product/domains/finance/rules/invoices/invoice-numbers-run-in-sequence.md",
       "name": "Invoice numbers run in sequence",
       "summary": "Each invoice's number is one more than the last, with none skipped or used twice.",
-      "kind": "core",
-      "status": "passing",
       "capabilities": [
         "invoices"
       ],
       "concepts": [
         "company-account"
       ],
-      "implementedIn": [
-        {
-          "file": "src/invoices/numbering.ts",
-          "line": 3,
-          "symbol": "nextInvoiceNumber"
-        }
-      ],
-      "verifiedBy": [
-        {
-          "file": "src/invoices/numbering.test.ts",
-          "line": 5,
-          "test": "nextInvoiceNumber > follows the last invoice's number",
-          "suite": "unit",
-          "result": "passed",
-          "cases": {
-            "passed": 1,
-            "failed": 0
+      "body": "## Why\n\nThe tax office requires it, so it can tell no invoice is missing.",
+      "evidence": {
+        "implements": [
+          {
+            "file": "src/invoices/numbering.ts",
+            "line": 3,
+            "text": "export function nextInvoiceNumber(lastNumber: number | null): number {"
           }
-        }
-      ],
-      "body": "## Why\n\nThe tax office requires it, so it can tell no invoice is missing."
+        ],
+        "verifies": [
+          {
+            "file": "src/invoices/numbering.test.ts",
+            "line": 5,
+            "text": "it(\"follows the last invoice's number\", () => {"
+          }
+        ]
+      }
     },
     {
       "id": "night-audit/one-room-charge-per-night",
@@ -949,8 +956,6 @@
       "file": "docs/product/domains/finance/rules/night-audit/one-room-charge-per-night.md",
       "name": "A guest is charged once a night for their room",
       "summary": "Each guest in the hotel is charged for their room once for each night, even if the audit is started more than once.",
-      "kind": "core",
-      "status": "failing",
       "capabilities": [
         "night-audit"
       ],
@@ -958,27 +963,28 @@
         "business-day",
         "charge"
       ],
-      "implementedIn": [
-        {
-          "file": "src/night-audit/audit.ts",
-          "line": 14,
-          "symbol": "runNightAudit"
-        }
-      ],
-      "verifiedBy": [
-        {
-          "file": "features/night-audit.feature",
-          "line": 3,
-          "test": "A guest is charged once a night for their room",
-          "suite": "acceptance",
-          "result": "failed",
-          "cases": {
-            "passed": 1,
-            "failed": 1
+      "body": "",
+      "evidence": {
+        "implements": [
+          {
+            "file": "src/night-audit/audit.ts",
+            "line": 14,
+            "text": "export function runNightAudit(day: BusinessDay, inHouse: Stay[]): void {"
           }
-        }
-      ],
-      "body": ""
+        ],
+        "verifies": [
+          {
+            "file": "features/night-audit.feature",
+            "line": 3,
+            "text": "Rule: A guest is charged once a night for their room"
+          },
+          {
+            "file": "src/night-audit/audit.test.ts",
+            "line": 6,
+            "text": "it(\"charges each guest in the hotel for the night\", () => {"
+          }
+        ]
+      }
     },
     {
       "id": "night-audit/closed-days-dont-change",
@@ -986,8 +992,6 @@
       "file": "docs/product/domains/finance/rules/night-audit/closed-days-dont-change.md",
       "name": "A closed day can't change",
       "summary": "Once a business day is closed, nothing is added to it. A correction to a closed day goes on the current one.",
-      "kind": "edge-case",
-      "status": "passing",
       "capabilities": [
         "night-audit",
         "daily-takings",
@@ -997,27 +1001,23 @@
         "business-day",
         "charge"
       ],
-      "implementedIn": [
-        {
-          "file": "src/night-audit/audit.ts",
-          "line": 6,
-          "symbol": "assertDayOpen"
-        }
-      ],
-      "verifiedBy": [
-        {
-          "file": "features/night-audit.feature",
-          "line": 16,
-          "test": "A closed day can't change",
-          "suite": "acceptance",
-          "result": "passed",
-          "cases": {
-            "passed": 1,
-            "failed": 0
+      "body": "## Why\n\nA closed day's takings have already gone to the accountant.",
+      "evidence": {
+        "implements": [
+          {
+            "file": "src/night-audit/audit.ts",
+            "line": 6,
+            "text": "export function assertDayOpen(day: BusinessDay): void {"
           }
-        }
-      ],
-      "body": "## Why\n\nA closed day's takings have already gone to the accountant."
+        ],
+        "verifies": [
+          {
+            "file": "features/night-audit.feature",
+            "line": 16,
+            "text": "Rule: A closed day can't change"
+          }
+        ]
+      }
     },
     {
       "id": "payments/overpayments-are-refunded",
@@ -1025,16 +1025,16 @@
       "file": "docs/product/domains/billing/rules/payments/overpayments-are-refunded.md",
       "name": "Overpayments are refunded",
       "summary": "A guest who has paid more than their bill is refunded the difference before the bill closes.",
-      "kind": "edge-case",
-      "status": "decided",
       "capabilities": [],
       "concepts": [
         "payment",
         "bill"
       ],
-      "implementedIn": [],
-      "verifiedBy": [],
-      "body": ""
+      "body": "",
+      "evidence": {
+        "implements": [],
+        "verifies": []
+      }
     }
   ],
   "concepts": [
@@ -1189,30 +1189,6 @@
     }
   ],
   "problems": [
-    {
-      "type": "stale-results",
-      "subject": "results",
-      "capabilities": [],
-      "message": "The test results are from commit 7e0c4a2, not 9b31d07, the commit indexed."
-    },
-    {
-      "type": "below-level",
-      "subject": "rule:payments/deposit-counts-towards-the-bill",
-      "capabilities": [
-        "deposits"
-      ],
-      "message": "Deposits is Beta, which needs edge-case rules passing, but its test isn't in the results.",
-      "domain": "billing"
-    },
-    {
-      "type": "below-level",
-      "subject": "rule:night-audit/one-room-charge-per-night",
-      "capabilities": [
-        "night-audit"
-      ],
-      "message": "Night audit is GA, which needs core rules passing, but its test is failing.",
-      "domain": "finance"
-    },
     {
       "type": "unlinked-rule",
       "subject": "rule:payments/overpayments-are-refunded",
