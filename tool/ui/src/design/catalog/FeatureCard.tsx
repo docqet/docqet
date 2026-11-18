@@ -17,6 +17,8 @@ export type FeatureCapability = {
   name: string;
   /** Its stability, or null for a draft. */
   level: StabilityLevelId | null;
+  /** Show its drag grip, where the app lets it be dragged, such as to another Feature. */
+  grip?: boolean;
   /** At the end of its row: the app's menu for it. */
   actions?: ReactNode;
   /** What its name opens on hover (see CapabilityLabel). */
@@ -34,7 +36,7 @@ export type FeatureCardProps = {
   capabilities: FeatureCapability[];
   /** Its maturity as the indexer worked it out. Left out, it's worked out here from `capabilities`. */
   maturity?: number | null;
-  /** Show drag grips on the Feature and each Capability, where the app lets them be dragged. */
+  /** Show the Feature's drag grip, where the app lets it be dragged. Each Capability says for its own. */
   grip?: boolean;
   /** Beside its maturity: the app's menu for the Feature. */
   actions?: ReactNode;
@@ -53,8 +55,8 @@ const rank = (level: StabilityLevelId | null) => (level ? STABILITY_LEVEL_IDS.in
  * most stable first, in its popover; its description under its name; then a row per Capability, as on
  * a CapabilityCard; and, where the reader can add one, "Add a Capability".
  * A Feature with no Capabilities has no maturity yet, and says so.
- * Editing and dragging are the app's: `grip` shows where each can be
- * picked up, and `actions` hold their menus.
+ * Editing and dragging are the app's: each `grip` is the handle it's
+ * picked up by, and `actions` hold their menus.
  */
 export function FeatureCard({
   name,
@@ -75,11 +77,8 @@ export function FeatureCard({
       sx={{
         width: "100%",
         boxSizing: "border-box",
-        cursor: grip ? "grab" : undefined,
-        /* Not while over one of its Capabilities, which lights up on its own instead. */
-        "&:hover:not(:has(li:hover))": grip
-          ? { borderColor: "text.disabled", "& > header .grip": { color: "text.secondary" } }
-          : {},
+        /* Not while over one of its Capabilities, whose own grip lights up instead. */
+        "&:hover:not(:has(li:hover)) > header .grip": { color: "text.secondary" },
       }}
     >
       <Box component="header" sx={{ display: "flex", gap: 1, px: 2, pt: 1.75, pb: 1.5 }}>
@@ -171,14 +170,14 @@ export function FeatureCard({
                 borderTop: 1,
                 borderColor: "divider",
                 transition: "background-color 120ms",
-                "&:hover": grip ? { bgcolor: "action.hover" } : undefined,
+                "&:hover": capability.grip ? { bgcolor: "action.hover" } : undefined,
                 "&:hover .grip": { color: "text.secondary" },
               }}
             >
               <CapabilityLabel
                 name={capability.name}
                 level={capability.level}
-                grip={grip}
+                grip={capability.grip}
                 actions={capability.actions}
                 details={capability.details}
                 hint={capability.hint}

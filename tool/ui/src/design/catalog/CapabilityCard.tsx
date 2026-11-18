@@ -25,8 +25,8 @@ export type CapabilityCardProps = {
 /*
  * A Capability on its own, in no Feature: its bolt, its name, and its
  * stability as a short mark, or "Draft". One line, cut short, so a few sit
- * in a narrow column. Editing and dragging are the app's: `grip` shows
- * where it can be picked up, and `actions` holds its menu.
+ * in a narrow column. Editing and dragging are the app's: `grip` is the
+ * handle it's picked up by, and `actions` holds its menu.
  */
 export function CapabilityCard({
   name,
@@ -47,8 +47,6 @@ export function CapabilityCard({
       sx={{
         width: "100%",
         boxSizing: "border-box",
-        cursor: grip ? "grab" : undefined,
-        "&:hover": grip ? { borderColor: "text.disabled" } : undefined,
         "&:hover .grip": { color: "text.secondary" },
       }}
     >

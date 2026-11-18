@@ -31,6 +31,44 @@ const plural = (n: number, one: string, many: string) => `${n} ${n === 1 ? one :
 const fromProject = (state: DocketState, c: Concept) =>
   state.domains.length > 1 ? `${domainName(state, c.domain)} · ` : "";
 
+/*
+ * The top of a side panel: a list's kind and name, or, showing one of them, a
+ * way back named for where it goes; and a way to close it.
+ */
+export function PanelHeader({
+  icon,
+  title,
+  back,
+  onBack,
+  onClose,
+}: {
+  icon: ReactNode;
+  title: string;
+  /* Where back goes, or null when there's nowhere to go back to. */
+  back: string | null;
+  onBack: () => void;
+  onClose: () => void;
+}) {
+  return (
+    <header className="concepts-header">
+      {back ? (
+        <button type="button" className="panel-back" onClick={onBack} title={`Back to ${back}`}>
+          <ArrowBackRoundedIcon sx={{ fontSize: 17, flex: "none" }} />
+          <span>{back}</span>
+        </button>
+      ) : (
+        <>
+          {icon}
+          <span className="concepts-title">{title}</span>
+        </>
+      )}
+      <button type="button" className="icon-button" onClick={onClose} aria-label="Close">
+        <CloseRoundedIcon sx={{ fontSize: 18 }} />
+      </button>
+    </header>
+  );
+}
+
 export function ConceptIcon({ size = 16 }: { size?: number }) {
   return <MenuBookOutlinedIcon sx={{ fontSize: size, flex: "none", color: "var(--concept)" }} />;
 }
@@ -44,11 +82,15 @@ export function ConceptChips({
   concepts,
   onOpen,
   popovers = true,
+  scopeOf,
 }: {
   concepts: Concept[];
   onOpen: (id: string) => void;
   popovers?: boolean;
+  /* Where a concept is from, such as its domain, said beside those whose names repeat here. */
+  scopeOf?: (concept: Concept) => string;
 }) {
+  const repeated = new Set(concepts.map((c) => c.name).filter((name, i, all) => all.indexOf(name) !== i));
   return (
     <span className="concept-chips">
       {concepts.map((c) => {
@@ -65,6 +107,7 @@ export function ConceptChips({
             }}
           >
             {c.name}
+            {scopeOf && repeated.has(c.name) ? <span className="concept-chip-scope">{scopeOf(c)}</span> : null}
           </button>
         );
         return popovers ? (
@@ -174,7 +217,8 @@ export function Markdown({
     <div className="markdown">
       {blocks.map((block, i) => {
         const heading = block.match(/^(#{1,6})\s+(.*)$/);
-        if (heading) return <h4 key={i}>{inline(heading[2])}</h4>;
+        /* `#` and `##` head a part of the doc; `###` and deeper, such as a persona's name, a group within one. */
+        if (heading) return heading[1].length <= 2 ? <h4 key={i}>{inline(heading[2])}</h4> : <h5 key={i}>{inline(heading[2])}</h5>;
         const lines = block.split("\n");
         if (lines.every((l) => /^\s*([-*]|\d+\.)\s+/.test(l) || /^\s{2,}\S/.test(l))) {
           const items: string[] = [];
@@ -259,19 +303,13 @@ export function ConceptsPanel({
 
   return (
     <aside className="panel concepts" data-no-pan aria-label="Concepts">
-      <header className="concepts-header">
-        {concept ? (
-          <button type="button" className="icon-button" onClick={() => onSelect(null)} aria-label={backLabel ?? "All concepts"}>
-            <ArrowBackRoundedIcon sx={{ fontSize: 18 }} />
-          </button>
-        ) : (
-          <ConceptIcon size={18} />
-        )}
-        <span className="concepts-title">{concept ? (backLabel ?? "All concepts") : "Concepts"}</span>
-        <button type="button" className="icon-button" onClick={onClose} aria-label="Close">
-          <CloseRoundedIcon sx={{ fontSize: 18 }} />
-        </button>
-      </header>
+      <PanelHeader
+        icon={<ConceptIcon size={18} />}
+        title="Concepts"
+        back={concept ? (backLabel ?? "All concepts") : null}
+        onBack={() => onSelect(null)}
+        onClose={onClose}
+      />
       <div className="concepts-body" ref={body}>
         {concept ? (
           <ConceptView
@@ -365,9 +403,11 @@ function ConceptView({
 
   return (
     <article className="concept">
-      <DetailsEyebrow>
-        {state.domains.length > 1 ? `Concept · ${domainName(state, concept.domain)}` : "Concept"}
-      </DetailsEyebrow>
+      <div className="explore-kind">
+        <ConceptIcon size={18} />
+        Concept
+        {state.domains.length > 1 ? <span className="faint">in {domainName(state, concept.domain)}</span> : null}
+      </div>
       <h2>{concept.name}</h2>
       {concept.summary ? <p className="concept-lede">{concept.summary}</p> : null}
       {/* The same word in other domains: a definition of its own there, not a mistake in either. */}
@@ -385,11 +425,11 @@ function ConceptView({
         <div className="explore-actions">
           <button type="button" className="filter-toggle" onClick={() => onShow(targetOf(state, { kind: "concept", id: concept.id }))}>
             <MyLocationRoundedIcon sx={{ fontSize: 15 }} />
-            Show on the map
+            Show on map
           </button>
           <button type="button" className="filter-toggle" aria-pressed={filtering} onClick={onFilter}>
             <FilterListRoundedIcon sx={{ fontSize: 15 }} />
-            {filtering ? "Filtering the map to this" : "Filter the map to this"}
+            {filtering ? "Filtering to this" : "Filter to this"}
             {filtering ? <CloseRoundedIcon sx={{ fontSize: 14, ml: 0.25 }} /> : null}
           </button>
         </div>

@@ -7,6 +7,7 @@ import Box from "@mui/material/Box";
 import { STABILITY, levelColor } from "./design/stability/stability";
 import { StabilityTrack } from "./design/stability/StabilityTrack";
 import { ConceptIcon } from "./Concepts";
+import { PersonaIcon } from "./Personas";
 import { DomainIcon } from "./FeatureMap";
 import { ProjectIcon } from "./ProjectFilter";
 import {
@@ -34,7 +35,7 @@ import {
  */
 export type Selection = { pick: Pick } | Target | { project: string };
 
-type Kind = "project" | "domain" | "feature" | "capability" | "rule" | "concept";
+type Kind = "project" | "domain" | "feature" | "capability" | "rule" | "concept" | "persona";
 
 type Entry = {
   key: string;
@@ -57,6 +58,7 @@ const GROUPS: { kind: Kind; label: string }[] = [
   { kind: "capability", label: "Capabilities" },
   { kind: "rule", label: "Rules" },
   { kind: "concept", label: "Concepts" },
+  { kind: "persona", label: "Personas" },
 ];
 
 /* How many results each group shows at most. */
@@ -170,6 +172,16 @@ function entries(state: DocketState): (Entry & { projects: string[] })[] {
       target: { pick: { kind: "concept" as const, id: c.id } },
       projects: docProjects(c),
     })),
+    /* Found by what they need, too, so "payment" finds the guest. */
+    ...state.personas.map((p) => ({
+      key: `persona:${p.id}`,
+      kind: "persona" as const,
+      title: p.name,
+      text: `${p.summary ?? ""} ${p.id} ${p.body}`,
+      context: p.summary ?? plural(p.capabilities.length, "capability", "capabilities"),
+      target: { pick: { kind: "persona" as const, id: p.id } },
+      projects: docProjects(p),
+    })),
   ];
 }
 
@@ -214,7 +226,7 @@ function highlight(title: string, terms: string[]): ReactNode {
 }
 
 /*
- * Search across projects, domains, features, capabilities, rules, and concepts. `/` or Ctrl/⌘ + K jumps
+ * Search across projects, domains, features, capabilities, rules, concepts, and personas. `/` or Ctrl/⌘ + K jumps
  * to it from anywhere; the arrow keys move through the results, Enter shows
  * one on the canvas, and Esc clears it.
  */
@@ -279,7 +291,7 @@ export default function Search({
           type="search"
           value={query}
           placeholder={all.length > 1 ? "Search projects, features, capabilities…" : "Search domains, features, capabilities, rules…"}
-          aria-label="Search projects, domains, features, capabilities, rules, and concepts"
+          aria-label="Search projects, domains, features, capabilities, rules, concepts, and personas"
           aria-expanded={showing}
           aria-controls="search-results"
           aria-activedescendant={showing && flat[active] ? `result-${flat[active].key}` : undefined}
@@ -359,6 +371,7 @@ function KindIcon({ kind }: { kind: Kind }) {
   if (kind === "feature") return <WidgetsOutlinedIcon sx={{ ...sx, color: "secondary.main" }} />;
   if (kind === "capability") return <BoltOutlinedIcon sx={{ ...sx, color: "primary.main" }} />;
   if (kind === "concept") return <ConceptIcon />;
+  if (kind === "persona") return <PersonaIcon />;
   return <RuleRoundedIcon sx={{ ...sx, color: "text.secondary" }} />;
 }
 

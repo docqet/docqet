@@ -6,10 +6,12 @@ import {
   useRef,
   useState,
   type PointerEvent as ReactPointerEvent,
+  type CSSProperties,
   type ReactNode,
   type Ref,
   type RefObject,
 } from "react";
+import { Grip } from "./design/Grip";
 
 const MIN_ZOOM = 0.3;
 const MAX_ZOOM = 1.6;
@@ -19,6 +21,8 @@ const DOT = 22;
 const PAD = 40;
 /* How far a press moves before it's a drag rather than a click. */
 const DRAG_FROM = 3;
+/* How small a region can be resized to, though never smaller than around its cards. */
+const MIN_GROUP = 160;
 /* How long the camera takes to glide to a card, and how long the card stays lit. */
 const GLIDE_MS = 320;
 const FLASH_MS = 1800;
@@ -28,17 +32,36 @@ export type Size = { w: number; h: number };
 export type CanvasItem = { id: string; node: ReactNode };
 /*
  * A region drawn behind some of the cards, such as a domain behind its
- * features. It isn't placed itself: it wraps wherever its cards are, so it
- * stretches to follow one dragged away. `label` sits in the room above them.
+ * features. It wraps wherever its cards are, so it stretches to follow one
+ * dragged away, and can be resized larger than that. Dragging its grip moves
+ * it with its cards. `label` sits in the room above them, and clicking the
+ * region calls `onOpen`.
  */
-export type CanvasGroup = { id: string; items: string[]; label: ReactNode };
+export type CanvasGroup = { id: string; items: string[]; label: ReactNode; onOpen?: () => void };
 /* The room a group leaves around its cards, and above them for its label. */
 export const GROUP_PAD = 18;
-export const GROUP_HEAD = 52;
+export const GROUP_HEAD = 44;
 
 type Box = { x: number; y: number; w: number; h: number };
 
 type View = { x: number; y: number; zoom: number };
+
+/* Which edges a resize handle moves: -1 the left or top, 1 the right or bottom. */
+const EDGES: Record<string, [number, number]> = {
+  n: [0, -1], ne: [1, -1], e: [1, 0], se: [1, 1], s: [0, 1], sw: [-1, 1], w: [-1, 0], nw: [-1, -1],
+};
+const RESIZE_CURSORS: Record<string, string> = {
+  n: "ns-resize", s: "ns-resize", e: "ew-resize", w: "ew-resize",
+  ne: "nesw-resize", sw: "nesw-resize", nw: "nwse-resize", se: "nwse-resize",
+};
+
+/* A press on the canvas, until it's let go: it pans, or moves a card or a group by its grip, or resizes a group. */
+type Gesture = { sx: number; sy: number; moved: boolean } & (
+  | { kind: "pan"; from: View }
+  | { kind: "card"; id: string; from: Pos }
+  | { kind: "group"; id: string; from: Record<string, Pos>; box?: Box }
+  | { kind: "resize"; id: string; edge: string; box: Box }
+);
 
 /* What the page can ask of the canvas. */
 export type CanvasHandle = {
@@ -49,13 +72,15 @@ export type CanvasHandle = {
    */
   show: (ids: string[], row?: string) => void;
 };
-type Saved = { positions: Record<string, Pos>; view?: View };
+/* `groups` are the regions resized, each at least this box. */
+type Saved = { positions: Record<string, Pos>; groups?: Record<string, Box>; view?: View };
 
 const clamp = (zoom: number) => Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, zoom));
 
 /*
- * A canvas of cards: drag a card to move it, or drag the background, or
- * scroll, to move around; Ctrl/⌘ + scroll or a pinch zooms around the
+ * A canvas of cards: drag a card or a group by its grip to move it, drag a
+ * group's edge to resize it, and click either to open it. Drag anywhere
+ * else, or scroll, to move around; Ctrl/⌘ + scroll or a pinch zooms around the
  * pointer, and the buttons and + - 0 zoom around the middle or fit
  * everything in view. Tidy puts every card back where `tidy` lays it out.
  *
@@ -65,7 +90,8 @@ const clamp = (zoom: number) => Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, zoom));
  * puts it. Fitting keeps the content below `clearOf`, the header floating
  * over the top of it. Through `ref`, the page can bring a card into view.
  * `groups` are regions behind cards, each wrapping its own, and `show` can
- * bring one of them into view too.
+ * bring one of them into view too. `links` draws a line from one card to each
+ * of some others, under the cards, such as from a persona to what serves them.
  */
 export default function Canvas({
   items,
@@ -74,6 +100,7 @@ export default function Canvas({
   storageKey,
   clearOf,
   fitKey,
+  links,
   ref,
 }: {
   items: CanvasItem[];
@@ -83,21 +110,26 @@ export default function Canvas({
   clearOf: RefObject<HTMLElement | null>;
   /* When this changes, such as when a filter does, everything left is fitted into view. */
   fitKey?: string;
+  /* Lines from one card to others, or null for none. Those not on the map are left out. */
+  links?: { from: string; to: string[] } | null;
   ref?: Ref<CanvasHandle>;
 }) {
   const frame = useRef<HTMLDivElement>(null);
   const nodes = useRef(new Map<string, HTMLDivElement>());
-  const pan = useRef<{ x: number; y: number; vx: number; vy: number } | null>(null);
-  const drag = useRef<{ id: string; sx: number; sy: number; from: Pos; moved: boolean } | null>(null);
+  const gesture = useRef<Gesture | null>(null);
+  /* Set as a drag ends, so the click its release makes doesn't open what's under it. */
+  const dragged = useRef(false);
 
   const [saved] = useState<Saved>(() => readSaved(storageKey));
   const [view, setView] = useState<View>(saved.view ?? { x: PAD, y: PAD, zoom: 1 });
   const [moved, setMoved] = useState<Record<string, Pos>>(saved.positions);
+  const [resized, setResized] = useState<Record<string, Box>>(saved.groups ?? {});
   const [sizes, setSizes] = useState<Record<string, Size> | null>(null);
-  const [panning, setPanning] = useState(false);
-  const [dragging, setDragging] = useState<string | null>(null);
-  /* The card moved last sits on top. */
+  /* What's being dragged now, for its look and the cursor. */
+  const [active, setActive] = useState<{ kind: Gesture["kind"]; id?: string; edge?: string } | null>(null);
+  /* The card moved last sits on top, and the group moved last over the other groups and their cards. */
   const [top, setTop] = useState<string | null>(null);
+  const [topGroup, setTopGroup] = useState<string | null>(null);
   /* The cards just brought into view, lit up for a moment. */
   const [flash, setFlash] = useState<string[]>([]);
   const viewNow = useRef(view);
@@ -107,9 +139,9 @@ export default function Canvas({
   const tidied = sizes ? tidy(sizes) : null;
   const place = (id: string): Pos => moved[id] ?? tidied?.[id] ?? { x: 0, y: 0 };
 
-  /* A group's box: around those of its cards that are drawn, or null with none. */
+  /* A group's box: around those of its cards that are drawn, and at least as large as it was resized to, or null with none drawn. */
   const groupBox = useCallback(
-    (group: CanvasGroup, positions: (id: string) => Pos): Box | null => {
+    (group: CanvasGroup, positions: (id: string) => Pos, own: Record<string, Box> = resized): Box | null => {
       let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
       for (const id of group.items) {
         const s = sizes?.[id];
@@ -121,19 +153,25 @@ export default function Canvas({
         maxY = Math.max(maxY, p.y + s.h);
       }
       if (minX === Infinity) return null;
-      return {
-        x: minX - GROUP_PAD,
-        y: minY - GROUP_HEAD,
-        w: maxX - minX + GROUP_PAD * 2,
-        h: maxY - minY + GROUP_HEAD + GROUP_PAD,
-      };
+      minX -= GROUP_PAD;
+      minY -= GROUP_HEAD;
+      maxX += GROUP_PAD;
+      maxY += GROUP_PAD;
+      const r = own[group.id];
+      if (r) {
+        minX = Math.min(minX, r.x);
+        minY = Math.min(minY, r.y);
+        maxX = Math.max(maxX, r.x + r.w);
+        maxY = Math.max(maxY, r.y + r.h);
+      }
+      return { x: minX, y: minY, w: maxX - minX, h: maxY - minY };
     },
-    [sizes],
+    [sizes, resized],
   );
 
   /* The box around every card and group, in canvas coordinates. */
   const bounds = useCallback(
-    (positions: (id: string) => Pos) => {
+    (positions: (id: string) => Pos, own?: Record<string, Box>) => {
       if (!sizes || !items.length) return null;
       let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
       const add = (b: Box) => {
@@ -147,7 +185,7 @@ export default function Canvas({
         add({ ...positions(id), ...s });
       }
       for (const group of groups) {
-        const b = groupBox(group, positions);
+        const b = groupBox(group, positions, own);
         if (b) add(b);
       }
       return { minX, minY, width: maxX - minX, height: maxY - minY };
@@ -165,9 +203,9 @@ export default function Canvas({
 
   /* Everything in view, no larger than 100%. `readable` keeps it at least 75% on a narrow screen. */
   const fit = useCallback(
-    (positions: (id: string) => Pos, readable = false) => {
+    (positions: (id: string) => Pos, readable = false, own?: Record<string, Box>) => {
       const f = frame.current;
-      const b = bounds(positions);
+      const b = bounds(positions, own);
       if (!f || !b) return;
       const top = (clearOf.current?.getBoundingClientRect().bottom ?? 0) + PAD / 2;
       const across = (f.clientWidth - PAD * 2) / b.width;
@@ -219,9 +257,9 @@ export default function Canvas({
   /* Keep where the cards are and where the canvas is looking, a moment after they change. */
   useEffect(() => {
     if (!placed.current) return;
-    const timer = setTimeout(() => writeSaved(storageKey, { positions: moved, view }), 250);
+    const timer = setTimeout(() => writeSaved(storageKey, { positions: moved, groups: resized, view }), 250);
     return () => clearTimeout(timer);
-  }, [storageKey, moved, view]);
+  }, [storageKey, moved, resized, view]);
 
   const zoomAt = useCallback((px: number, py: number, to: (zoom: number) => number) => {
     setView((v) => {
@@ -306,7 +344,8 @@ export default function Canvas({
 
   const tidyUp = () => {
     setMoved({});
-    if (tidied) fit((id) => tidied[id] ?? { x: 0, y: 0 });
+    setResized({});
+    if (tidied) fit((id) => tidied[id] ?? { x: 0, y: 0 }, false, {});
   };
 
   /* Wheel events have to be non-passive to keep the page itself from scrolling or zooming. */
@@ -340,99 +379,197 @@ export default function Canvas({
     return () => window.removeEventListener("keydown", onKey);
   });
 
-  /* Dragging a card. The press is held, so the card follows the pointer even past the canvas's edge. */
-  const startDrag = (id: string) => (e: ReactPointerEvent<HTMLDivElement>) => {
-    /* A button on a card, such as a concept, takes its own click; capturing the pointer would steal it. */
-    if (e.button !== 0 || (e.target as HTMLElement).closest("[data-no-pan]")) return;
-    e.stopPropagation();
-    drag.current = { id, sx: e.clientX, sy: e.clientY, from: place(id), moved: false };
-    e.currentTarget.setPointerCapture(e.pointerId);
+  /*
+   * Every press on the canvas: on a resize handle it resizes that group, on a
+   * grip it moves that card or group, and anywhere else it pans once it moves,
+   * so a click on a card or group still reaches it. Buttons, such as a
+   * maturity ring, take their own presses, as does anything in a popover,
+   * which React bubbles here though it's drawn elsewhere.
+   */
+  const press = (e: ReactPointerEvent<HTMLDivElement>) => {
+    const target = e.target as HTMLElement;
+    if (e.button !== 0 || !e.currentTarget.contains(target) || target.closest("[data-no-pan]")) return;
+    cancelAnimationFrame(glide.current);
+    const at = { sx: e.clientX, sy: e.clientY, moved: false };
+    const group = target.closest<HTMLElement>(".group")?.dataset.id;
+    const card = target.closest<HTMLElement>(".item")?.dataset.id;
+    const edge = target.closest<HTMLElement>("[data-resize]")?.dataset.resize;
+    if (edge && !EDGES[edge]) return;
+    const grip = target.closest(".grip");
+    const box = group ? boxOf(group) : null;
+    if (group && edge && box) gesture.current = { ...at, kind: "resize", id: group, edge, box };
+    else if (card && grip) gesture.current = { ...at, kind: "card", id: card, from: place(card) };
+    else if (group && grip) {
+      const members = groups.find((g) => g.id === group)?.items.filter((id) => sizes?.[id]) ?? [];
+      gesture.current = { ...at, kind: "group", id: group, from: Object.fromEntries(members.map((id) => [id, place(id)])), box: resized[group] };
+    } else gesture.current = { ...at, kind: "pan", from: view };
+    /* Dragging something holds the press at once, so it follows the pointer even past the canvas's edge. A pan waits until it moves. */
+    if (gesture.current.kind !== "pan") e.currentTarget.setPointerCapture(e.pointerId);
   };
-  const moveDrag = (e: ReactPointerEvent<HTMLDivElement>) => {
-    const d = drag.current;
-    if (!d) return;
-    const dx = (e.clientX - d.sx) / view.zoom;
-    const dy = (e.clientY - d.sy) / view.zoom;
-    if (!d.moved) {
-      if (Math.hypot(e.clientX - d.sx, e.clientY - d.sy) < DRAG_FROM) return;
-      d.moved = true;
-      setDragging(d.id);
-      setTop(d.id);
+
+  const move = (e: ReactPointerEvent<HTMLDivElement>) => {
+    const g = gesture.current;
+    if (!g) return;
+    if (!g.moved) {
+      if (Math.hypot(e.clientX - g.sx, e.clientY - g.sy) < DRAG_FROM) return;
+      g.moved = true;
+      e.currentTarget.setPointerCapture(e.pointerId);
+      setActive({ kind: g.kind, id: "id" in g ? g.id : undefined, edge: g.kind === "resize" ? g.edge : undefined });
+      if (g.kind === "card") setTop(g.id);
+      if (g.kind === "group" || g.kind === "resize") setTopGroup(g.id);
     }
-    setMoved((m) => ({ ...m, [d.id]: { x: Math.round(d.from.x + dx), y: Math.round(d.from.y + dy) } }));
+    if (g.kind === "pan") {
+      setView((v) => ({ ...v, x: g.from.x + e.clientX - g.sx, y: g.from.y + e.clientY - g.sy }));
+      return;
+    }
+    const dx = (e.clientX - g.sx) / view.zoom;
+    const dy = (e.clientY - g.sy) / view.zoom;
+    const by = (p: Pos) => ({ x: Math.round(p.x + dx), y: Math.round(p.y + dy) });
+    if (g.kind === "card") setMoved((m) => ({ ...m, [g.id]: by(g.from) }));
+    else if (g.kind === "group") {
+      setMoved((m) => ({ ...m, ...Object.fromEntries(Object.entries(g.from).map(([id, p]) => [id, by(p)])) }));
+      const box = g.box;
+      if (box) setResized((r) => ({ ...r, [g.id]: { ...box, ...by(box) } }));
+    } else {
+      /* Each edge being dragged moves by as far as the pointer has, and the opposite one stays put. */
+      const [ex, ey] = EDGES[g.edge];
+      let { x, y, w, h } = g.box;
+      if (ex) {
+        const to = Math.max(MIN_GROUP, Math.round(w + ex * dx));
+        if (ex < 0) x += w - to;
+        w = to;
+      }
+      if (ey) {
+        const to = Math.max(MIN_GROUP, Math.round(h + ey * dy));
+        if (ey < 0) y += h - to;
+        h = to;
+      }
+      setResized((r) => ({ ...r, [g.id]: { x, y, w, h } }));
+    }
   };
-  const endDrag = () => {
-    drag.current = null;
-    setDragging(null);
+
+  const release = () => {
+    if (gesture.current?.moved) {
+      dragged.current = true;
+      setTimeout(() => (dragged.current = false));
+    }
+    gesture.current = null;
+    setActive(null);
   };
+
+  const cursor = !active ? undefined : active.kind === "resize" ? RESIZE_CURSORS[active.edge!] : "grabbing";
+
+  /* Each line, from the bottom of `links.from` to the top of a card it links to, curving between them. */
+  const linkFrom = tidied && links ? boxOf(links.from) : null;
+  const linkPaths = linkFrom
+    ? links!.to.flatMap((id) => {
+        const b = boxOf(id);
+        if (!b) return [];
+        const x1 = linkFrom.x + linkFrom.w / 2;
+        const y1 = linkFrom.y + linkFrom.h;
+        const x2 = b.x + b.w / 2;
+        const y2 = b.y;
+        const bend = Math.max(48, Math.abs(y2 - y1) / 2);
+        return [{ id, d: `M${x1},${y1} C${x1},${y1 + bend} ${x2},${y2 - bend} ${x2},${y2}`, x2, y2 }];
+      })
+    : [];
+
+  /* The cards of the group moved last, which sit over the other groups with it. */
+  const inTopGroup = new Set(groups.find((g) => g.id === topGroup)?.items ?? []);
 
   return (
     <div
       ref={frame}
-      className={`canvas${panning || dragging ? " dragging" : ""}`}
+      className={`canvas${active ? " dragging" : ""}`}
       style={{
         backgroundSize: `${DOT * view.zoom}px ${DOT * view.zoom}px`,
         backgroundPosition: `${view.x}px ${view.y}px`,
+        cursor,
       }}
-      onPointerDown={(e) => {
-        if (e.button !== 0 || (e.target as HTMLElement).closest("[data-no-pan]")) return;
-        cancelAnimationFrame(glide.current);
-        pan.current = { x: e.clientX, y: e.clientY, vx: view.x, vy: view.y };
-        e.currentTarget.setPointerCapture(e.pointerId);
-        setPanning(true);
-      }}
-      onPointerMove={(e) => {
-        const p = pan.current;
-        if (p) setView((v) => ({ ...v, x: p.vx + e.clientX - p.x, y: p.vy + e.clientY - p.y }));
-      }}
-      onPointerUp={() => {
-        pan.current = null;
-        setPanning(false);
-      }}
-      onPointerCancel={() => {
-        pan.current = null;
-        setPanning(false);
+      onPointerDown={press}
+      onPointerMove={move}
+      onPointerUp={release}
+      onPointerCancel={release}
+      onClickCapture={(e) => {
+        if (dragged.current) e.stopPropagation();
       }}
     >
-      <div className="world" style={{ transform: `translate(${view.x}px, ${view.y}px) scale(${view.zoom})` }}>
-        {tidied
-          ? groups.map((group) => {
-              const b = groupBox(group, place);
-              return b ? (
-                <div
-                  key={group.id}
-                  className={`group${flash.includes(group.id) ? " flash" : ""}`}
-                  style={{ transform: `translate(${b.x}px, ${b.y}px)`, width: b.w, height: b.h }}
-                >
-                  <div className="group-label">{group.label}</div>
-                </div>
-              ) : null;
-            })
-          : null}
-        {items.map(({ id, node }) => {
-          const p = place(id);
-          return (
-            <div
-              key={id}
-              ref={(el) => {
-                if (el) nodes.current.set(id, el);
-                else nodes.current.delete(id);
-              }}
-              className={`item${dragging === id ? " lifted" : ""}${flash.includes(id) ? " flash" : ""}`}
-              style={{
-                transform: `translate(${p.x}px, ${p.y}px)`,
-                visibility: tidied ? undefined : "hidden",
-                zIndex: dragging === id ? 3 : top === id ? 2 : 1,
-              }}
-              onPointerDown={startDrag(id)}
-              onPointerMove={moveDrag}
-              onPointerUp={endDrag}
-              onPointerCancel={endDrag}
-            >
-              {node}
-            </div>
-          );
-        })}
+      {/*
+        Moved by whole pixels, and zoomed with CSS zoom rather than a scale
+        transform: the cards are laid out at the size they're shown, so their
+        text is drawn as crisply as the rest of the page's, not shrunk from
+        another size. Inside, everything is in canvas units, placed by left
+        and top, which the zoom scales.
+      */}
+      <div className="world" style={{ transform: `translate(${Math.round(view.x)}px, ${Math.round(view.y)}px)` }}>
+        {/* --zoom lets what keeps its size on screen, such as a resize handle, undo the zoom. */}
+        <div className="world-zoom" style={{ zoom: view.zoom, "--zoom": view.zoom } as CSSProperties}>
+          {tidied
+            ? groups.map((group) => {
+                const b = groupBox(group, place);
+                return b ? (
+                  <div
+                    key={group.id}
+                    data-id={group.id}
+                    className={`group${group.onOpen ? " openable" : ""}${active?.id === group.id ? " lifted" : ""}${flash.includes(group.id) ? " flash" : ""}`}
+                    style={{
+                      left: b.x,
+                      top: b.y,
+                      width: b.w,
+                      height: b.h,
+                      zIndex: topGroup === group.id ? 2 : 0,
+                    }}
+                    onClick={(e) => {
+                      const target = e.target as HTMLElement;
+                      if (!e.currentTarget.contains(target) || target.closest(".grip, [data-resize], [data-no-pan]")) return;
+                      group.onOpen?.();
+                    }}
+                  >
+                    <div className="group-label">
+                      <Grip />
+                      {group.label}
+                    </div>
+                    {Object.keys(EDGES).map((edge) => (
+                      <div key={edge} className="resize" data-resize={edge} />
+                    ))}
+                  </div>
+                ) : null;
+              })
+            : null}
+          {linkPaths.length ? (
+            <svg className="links" aria-hidden>
+              {linkPaths.map((l) => (
+                <g key={l.id}>
+                  <path d={l.d} />
+                  <circle cx={l.x2} cy={l.y2} r={4} />
+                </g>
+              ))}
+            </svg>
+          ) : null}
+          {items.map(({ id, node }) => {
+            const p = place(id);
+            const lifted = active?.kind === "card" && active.id === id;
+            return (
+              <div
+                key={id}
+                ref={(el) => {
+                  if (el) nodes.current.set(id, el);
+                  else nodes.current.delete(id);
+                }}
+                data-id={id}
+                className={`item${lifted ? " lifted" : ""}${flash.includes(id) ? " flash" : ""}`}
+                style={{
+                  left: p.x,
+                  top: p.y,
+                  visibility: tidied ? undefined : "hidden",
+                  zIndex: lifted ? 5 : top === id ? 4 : topGroup && inTopGroup.has(id) ? 3 : 1,
+                }}
+              >
+                {node}
+              </div>
+            );
+          })}
+        </div>
       </div>
 
       <div className="zoom panel" data-no-pan>
@@ -470,7 +607,8 @@ function readSaved(key: string): Saved {
     if (parsed && typeof parsed.positions === "object" && parsed.positions) {
       const v = parsed.view;
       const valid = v && [v.x, v.y, v.zoom].every((n) => typeof n === "number" && Number.isFinite(n));
-      return { positions: parsed.positions, view: valid ? { ...v, zoom: clamp(v.zoom) } : undefined };
+      const groups = parsed.groups && typeof parsed.groups === "object" ? parsed.groups : undefined;
+      return { positions: parsed.positions, groups, view: valid ? { ...v, zoom: clamp(v.zoom) } : undefined };
     }
   } catch {
     /* No storage, or something unreadable in it: start tidy. */

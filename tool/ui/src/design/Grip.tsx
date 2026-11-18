@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box";
 import DragIndicatorRoundedIcon from "@mui/icons-material/DragIndicatorRounded";
 
-/* The mark on what can be dragged, faint until the row or card is hovered. */
+/* The handle what can be dragged is picked up by, faint until the row or card is hovered. */
 export function Grip() {
   return (
     <Box
@@ -11,6 +11,7 @@ export function Grip() {
         display: "flex",
         flex: "none",
         color: "text.disabled",
+        cursor: "grab",
         transition: "color 120ms",
       }}
     >

@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded";
 import BoltOutlinedIcon from "@mui/icons-material/BoltOutlined";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import FilterListRoundedIcon from "@mui/icons-material/FilterListRounded";
@@ -9,18 +8,18 @@ import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 import WarningAmberRoundedIcon from "@mui/icons-material/WarningAmberRounded";
 import WidgetsOutlinedIcon from "@mui/icons-material/WidgetsOutlined";
 import Box from "@mui/material/Box";
-import { DetailsEyebrow } from "./design/DetailsPopover";
 import { MATURITY_BANDS, maturityBand } from "./design/maturity/maturity";
 import { RingGlyph } from "./design/maturity/RingGlyph";
 import { STABILITY, levelColor } from "./design/stability/stability";
 import { StabilityMark } from "./design/stability/StabilityMark";
-import { ConceptChips, Markdown } from "./Concepts";
+import { ConceptChips, Markdown, PanelHeader } from "./Concepts";
 import { DomainIcon } from "./FeatureMap";
+import { PersonaAvatar, PersonaIcon, ReadinessMeter, personaNameAndRole, type ReadinessBasis } from "./Personas";
+import { ProjectIcon } from "./ProjectFilter";
 import {
   capabilityTarget,
   contradictionsOf,
   docDomains,
-  docProjects,
   domainGroup,
   domainName,
   featureConcepts,
@@ -29,18 +28,21 @@ import {
   levelId,
   projectName,
   partOf,
+  personaReadinessIn,
+  targetOf,
   type Capability,
   type Contribution,
   type Domain,
   type Doc,
   type DocketState,
   type Feature,
+  type Persona,
   type Pick,
   type Target,
 } from "./state";
 
 /* What the panel can show: the product's parts, each as a list or one of them. */
-export type ExploreKind = "domain" | "feature" | "capability";
+export type ExploreKind = "domain" | "feature" | "capability" | "persona";
 
 const plural = (n: number, one: string, many: string) => `${n} ${n === 1 ? one : many}`;
 
@@ -48,6 +50,7 @@ const NAMES: Record<ExploreKind, { one: string; many: string; icon: ReactNode }>
   domain: { one: "Domain", many: "Domains", icon: <DomainIcon size={18} /> },
   feature: { one: "Feature", many: "Features", icon: <WidgetsOutlinedIcon sx={{ fontSize: 18, color: "secondary.main" }} /> },
   capability: { one: "Capability", many: "Capabilities", icon: <BoltOutlinedIcon sx={{ fontSize: 18, color: "primary.main" }} /> },
+  persona: { one: "Persona", many: "Personas", icon: <PersonaIcon size={18} /> },
 };
 
 /*
@@ -93,24 +96,19 @@ export function ExplorePanel({
   const domain = kind === "domain" && selected ? find(state.domains, selected) : undefined;
   const feature = kind === "feature" && selected ? find(state.features, selected) : undefined;
   const capability = kind === "capability" && selected ? find(state.capabilities, selected) : undefined;
-  const one = domain ?? feature ?? capability;
+  const persona = kind === "persona" && selected ? find(state.personas, selected) : undefined;
+  const one = domain ?? feature ?? capability ?? persona;
   const links = { state, onOpen, onConcept, onShow, isFiltering, onFilter };
 
   return (
     <aside className="panel concepts" data-no-pan aria-label={names.many}>
-      <header className="concepts-header">
-        {one ? (
-          <button type="button" className="icon-button" onClick={onBack} aria-label={backLabel ?? `All ${names.many.toLowerCase()}`}>
-            <ArrowBackRoundedIcon sx={{ fontSize: 18 }} />
-          </button>
-        ) : (
-          names.icon
-        )}
-        <span className="concepts-title">{one ? (backLabel ?? `All ${names.many.toLowerCase()}`) : names.many}</span>
-        <button type="button" className="icon-button" onClick={onClose} aria-label="Close">
-          <CloseRoundedIcon sx={{ fontSize: 18 }} />
-        </button>
-      </header>
+      <PanelHeader
+        icon={names.icon}
+        title={names.many}
+        back={one ? (backLabel ?? `All ${names.many.toLowerCase()}`) : null}
+        onBack={onBack}
+        onClose={onClose}
+      />
       <div className="concepts-body" ref={body}>
         {domain ? (
           <DomainView domain={domain} {...links} />
@@ -118,6 +116,8 @@ export function ExplorePanel({
           <FeatureView feature={feature} {...links} />
         ) : capability ? (
           <CapabilityView capability={capability} {...links} />
+        ) : persona ? (
+          <PersonaView persona={persona} {...links} />
         ) : (
           <List state={state} kind={kind} onOpen={(id) => onOpen(kind, id)} />
         )}
@@ -141,8 +141,16 @@ function List({ state, kind, onOpen }: { state: DocketState; kind: ExploreKind; 
   const terms = query.toLowerCase().split(/\s+/).filter(Boolean);
   const rows = useMemo(() => {
     const domains = (ids: string[]) => ids.map((id) => domainName(state, id)).join(" + ");
-    const docs: { doc: Doc; meta: string; mark: ReactNode }[] =
-      kind === "domain"
+    const docs: { doc: Doc; meta: string; mark: ReactNode; picture?: ReactNode; name?: string; role?: string | null }[] =
+      kind === "persona"
+        ? state.personas.map((p) => ({
+            doc: p,
+            ...personaNameAndRole(p),
+            meta: `${plural(p.capabilities.length, "capability", "capabilities")} · ${plural(p.features.length, "feature", "features")}`,
+            mark: p.readiness !== null ? <ReadinessMeter value={p.readiness} basis={readinessBasis(state, p)} inButton /> : null,
+            picture: <PersonaAvatar persona={p} size={36} />,
+          }))
+        : kind === "domain"
         ? state.domains.map((d) => ({
             doc: d,
             meta: plural(d.features.length, "feature", "features"),
@@ -187,13 +195,15 @@ function List({ state, kind, onOpen }: { state: DocketState; kind: ExploreKind; 
       </label>
       {shown.length ? (
         <ul className="concept-list">
-          {shown.map(({ doc, meta, mark }) => (
+          {shown.map(({ doc, meta, mark, picture, name, role }) => (
             <li key={doc.id}>
-              <button type="button" onClick={() => onOpen(doc.id)}>
+              <button type="button" className={picture ? "has-picture" : undefined} onClick={() => onOpen(doc.id)}>
+                {picture}
                 <span className="explore-name">
-                  <span className="concept-name">{doc.name}</span>
+                  <span className="concept-name">{name ?? doc.name}</span>
                   {mark}
                 </span>
+                {role ? <span className="persona-role">{role}</span> : null}
                 {doc.summary ? <span className="concept-summary">{doc.summary}</span> : null}
                 <span className="concept-meta">{meta}</span>
               </button>
@@ -208,9 +218,11 @@ function List({ state, kind, onOpen }: { state: DocketState; kind: ExploreKind; 
 }
 
 /*
- * The top of any one doc: its kind and the projects that define it, its name,
- * what it's part of, its summary (each project's, where they differ), any
- * contradictions, a way to find it on the map, and each project's body.
+ * The top of any one doc: its kind, its name, what it's part of, its maturity
+ * or level, and ways to find it on the map; then any contradictions; then what
+ * it is. Each source, one or several, such as two projects or two domains
+ * defining it, gets a card of its own, headed by the domain and project it's
+ * from, so it's always clear who says what, and several can be compared.
  */
 function Head({
   state,
@@ -218,6 +230,10 @@ function Head({
   doc,
   trail,
   extra,
+  mark,
+  picture,
+  name = doc.name,
+  role,
   target,
   onShow,
   onConcept,
@@ -227,10 +243,16 @@ function Head({
   state: DocketState;
   kind: ExploreKind;
   doc: Doc;
+  /* Beside its name: a persona's picture, and under it, their role. */
+  picture?: ReactNode;
+  name?: string;
+  role?: string | null;
   /* What it's part of, outermost first. */
   trail?: ReactNode;
-  /* Under its name: its maturity or levels. */
+  /* Under its name: its maturity. */
   extra?: ReactNode;
+  /* Under its name: its level. */
+  mark?: ReactNode;
   target: Target;
   onShow: (target: Target) => void;
   onConcept: (id: string) => void;
@@ -239,60 +261,89 @@ function Head({
 }) {
   const pick: Pick = { kind, id: doc.id };
   const filtering = isFiltering(pick);
-  const projects = docProjects(doc);
-  const several = state.projects.length > 1;
-  const who = (f: Contribution) =>
-    kind === "domain" ? projectName(state, f.project) : `${domainName(state, f.domain)}${several ? ` · ${projectName(state, f.project)}` : ""}`;
-  const summaries = new Set(doc.from.map((f) => f.summary ?? ""));
   const problems = contradictionsOf(state, kind, doc.id);
-  const bodies = doc.from.filter((f) => f.body.trim());
+  /* Domains and personas aren't written in a domain, so their sources are told apart by project alone. */
+  const byProject = kind === "domain" || kind === "persona";
+  const markdown = (f: Contribution) =>
+    f.body.trim() ? <Markdown state={state} concept={f} text={f.body} onConcept={onConcept} onShow={onShow} /> : null;
   return (
     <>
-      <DetailsEyebrow>
-        {NAMES[kind].one}
-        {several ? ` · ${projects.map((id) => projectName(state, id)).join(" + ")}` : ""}
-      </DetailsEyebrow>
-      {trail ? <div className="explore-trail">{trail}</div> : null}
-      <h2>{doc.name}</h2>
-      {extra}
-      {summaries.size > 1 ? (
-        <div className="explore-said">
-          {doc.from.map((f, i) => (
-            <p key={i}>
-              <span className="concept-elsewhere-scope">{who(f)}</span>
-              {f.summary}
-            </p>
-          ))}
+      <header className="explore-hero">
+        <div className="explore-kind">
+          {NAMES[kind].icon}
+          {NAMES[kind].one}
         </div>
-      ) : doc.summary ? (
-        <p className="concept-lede">{doc.summary}</p>
-      ) : null}
+        {picture ? (
+          <div className="explore-title">
+            {picture}
+            <div>
+              <h2>{name}</h2>
+              {role ? <div className="explore-role">{role}</div> : null}
+            </div>
+          </div>
+        ) : (
+          <h2>{doc.name}</h2>
+        )}
+        {trail ? <div className="explore-trail">{trail}</div> : null}
+        {extra}
+        {mark ? <div className="explore-mark">{mark}</div> : null}
+        <div className="explore-actions">
+          <button type="button" className="filter-toggle" onClick={() => onShow(target)}>
+            <MyLocationRoundedIcon sx={{ fontSize: 15 }} />
+            Show on map
+          </button>
+          <button type="button" className="filter-toggle" aria-pressed={filtering} onClick={() => onFilter(pick)}>
+            <FilterListRoundedIcon sx={{ fontSize: 15 }} />
+            {filtering ? "Filtering to this" : "Filter to this"}
+            {filtering ? <CloseRoundedIcon sx={{ fontSize: 14, ml: 0.25 }} /> : null}
+          </button>
+        </div>
+      </header>
       {problems.map((p) => (
         <p key={p.message} className="explore-problem">
-          <WarningAmberRoundedIcon sx={{ fontSize: 16, flex: "none", mt: "2px" }} />
+          <WarningAmberRoundedIcon sx={{ fontSize: 17, flex: "none" }} />
           {p.message}
         </p>
       ))}
-      <div className="explore-actions">
-        <button type="button" className="filter-toggle" onClick={() => onShow(target)}>
-          <MyLocationRoundedIcon sx={{ fontSize: 15 }} />
-          Show on the map
-        </button>
-        <button type="button" className="filter-toggle" aria-pressed={filtering} onClick={() => onFilter(pick)}>
-          <FilterListRoundedIcon sx={{ fontSize: 15 }} />
-          {filtering ? "Filtering the map to this" : "Filter the map to this"}
-          {filtering ? <CloseRoundedIcon sx={{ fontSize: 14, ml: 0.25 }} /> : null}
-        </button>
+      <div className="explore-sources">
+        {doc.from.map((f, i) => (
+          <div key={i} className="explore-source">
+            <div className="explore-source-head">
+              {byProject ? null : (
+                <span className="explore-source-from">
+                  <span className="explore-source-label">Domain</span>
+                  <span className="explore-source-name">
+                    <DomainIcon size={14} />
+                    {domainName(state, f.domain)}
+                  </span>
+                </span>
+              )}
+              <span className="explore-source-from">
+                <span className="explore-source-label">Project</span>
+                <span className="explore-source-name">
+                  <ProjectIcon size={14} />
+                  {projectName(state, f.project)}
+                </span>
+              </span>
+            </div>
+            <div className="explore-source-body">
+              {f.summary ? <p className="explore-source-summary">{f.summary}</p> : null}
+              {markdown(f)}
+            </div>
+          </div>
+        ))}
       </div>
-      {bodies.map((f, i) => (
-        <div key={i}>
-          {bodies.length > 1 || doc.from.length > 1 ? (
-            <div className="explore-body-scope">From {who(f)}</div>
-          ) : null}
-          <Markdown state={state} concept={f} text={f.body} onConcept={onConcept} onShow={onShow} />
-        </div>
-      ))}
     </>
+  );
+}
+
+/* A section's heading, with how many it holds. */
+function Heading({ children, count }: { children: ReactNode; count?: number }) {
+  return (
+    <h3 className="explore-heading">
+      {children}
+      {count !== undefined ? <span className="explore-count">{count}</span> : null}
+    </h3>
   );
 }
 
@@ -304,6 +355,51 @@ function Maturity({ value, of }: { value: number | null; of: string }) {
       <RingGlyph progress={value} size={22} />
       <strong>{MATURITY_BANDS[band]}</strong>
       <span className="faint">{value}% maturity</span>
+    </Box>
+  );
+}
+
+/*
+ * A capability's level in short, and, where its domains are at different
+ * levels, each of theirs: "Alpha in Billing · GA in Guest stays".
+ */
+function CapabilityLevel({ state, capability }: { state: DocketState; capability: Capability }) {
+  const differ = new Set(capability.levels.map((l) => l.level)).size > 1;
+  return (
+    <span className="explore-level-line">
+      <Level name={capability.name} level={capability.stability} />
+      {differ ? (
+        <span className="faint">
+          {capability.levels.map((l) => `${STABILITY[levelId(l.level)].name} in ${domainName(state, l.domain)}`).join(" · ")}
+        </span>
+      ) : null}
+    </span>
+  );
+}
+
+/* How ready the software is for a persona, on readiness's own scale. */
+function Readiness({ value, basis }: { value: number | null; basis: ReadinessBasis }) {
+  if (value === null) return <p className="explore-level faint">Nothing serves them yet, so there's no readiness.</p>;
+  return (
+    <div className="explore-level">
+      <ReadinessMeter value={value} basis={basis} large />
+    </div>
+  );
+}
+
+/* What a persona's readiness is worked out from: the capabilities that serve them, in `feature` or everywhere. */
+function readinessBasis(state: DocketState, persona: Persona, feature?: Feature): ReadinessBasis {
+  const ids = feature ? feature.capabilities.filter((id) => persona.capabilities.includes(id)) : persona.capabilities;
+  return { persona: personaNameAndRole(persona).name, feature: feature?.name, capabilities: ids.flatMap((id) => find(state.capabilities, id) ?? []) };
+}
+
+/* A capability's level, as a mark and its name in the level's color. */
+function Level({ name, level }: { name: string; level: Capability["stability"] }) {
+  const id = levelId(level);
+  return (
+    <Box component="span" className="explore-level-mark" sx={levelColor(id)}>
+      <StabilityMark level={id} feature={name} size="short" />
+      {STABILITY[id].name}
     </Box>
   );
 }
@@ -327,7 +423,7 @@ function DomainView({ state, domain, onOpen, onConcept, onShow, isFiltering, onF
         onFilter={onFilter}
       />
       <section>
-        <h3>Its part of {plural(features.length, "feature", "features")}</h3>
+        <Heading count={features.length}>Features</Heading>
         {features.length ? (
           <ul>
             {features.map((f) => {
@@ -353,19 +449,19 @@ function DomainView({ state, domain, onOpen, onConcept, onShow, isFiltering, onF
       </section>
       {loose.length ? (
         <section>
-          <h3>Capabilities in no feature</h3>
+          <Heading count={loose.length}>Capabilities in no feature</Heading>
           <CapabilityRows capabilities={loose} domain={domain.id} onOpen={onOpen} />
         </section>
       ) : null}
       {concepts.length ? (
         <section>
-          <h3>What its words mean</h3>
+          <Heading count={concepts.length}>Concepts</Heading>
           <ConceptChips concepts={concepts} onOpen={onConcept} />
         </section>
       ) : null}
       {rules.length ? (
         <section>
-          <h3>Its {plural(rules.length, "rule", "rules")}</h3>
+          <Heading count={rules.length}>Rules</Heading>
           <RuleList state={state} rules={rules} />
         </section>
       ) : null}
@@ -408,6 +504,7 @@ function FeatureView({ state, feature, onOpen, onConcept, onShow, isFiltering, o
   const capabilities = feature.capabilities.flatMap((id) => find(state.capabilities, id) ?? []);
   const concepts = featureConcepts(state, feature);
   const rules = [...new Set(capabilities.flatMap((c) => c.rules))].flatMap((id) => find(state.rules, id) ?? []);
+  const personas = state.personas.filter((p) => p.features.includes(feature.id));
   return (
     <article className="concept">
       <Head
@@ -425,16 +522,15 @@ function FeatureView({ state, feature, onOpen, onConcept, onShow, isFiltering, o
       {feature.parts.length ? (
         feature.parts.map((part) => (
           <section key={part.domain}>
-            <h3 className="explore-part">
-              {feature.parts.length > 1 ? (
-                <>
-                  <span>In {domainName(state, part.domain)}</span>
-                  {part.maturity !== null ? <RingGlyph progress={part.maturity} size={18} /> : null}
-                </>
-              ) : (
-                plural(part.capabilities.length, "capability", "capabilities")
-              )}
-            </h3>
+            {feature.parts.length > 1 ? (
+              <h3 className="explore-heading explore-part">
+                <span>Capabilities in {domainName(state, part.domain)}</span>
+                <span className="explore-count">{part.capabilities.length}</span>
+                {part.maturity !== null ? <RingGlyph progress={part.maturity} size={18} /> : null}
+              </h3>
+            ) : (
+              <Heading count={part.capabilities.length}>Capabilities</Heading>
+            )}
             <CapabilityRows
               capabilities={part.capabilities.flatMap((id) => find(state.capabilities, id) ?? [])}
               domain={part.domain}
@@ -447,15 +543,21 @@ function FeatureView({ state, feature, onOpen, onConcept, onShow, isFiltering, o
           <p className="concepts-empty">A job the software doesn't do yet.</p>
         </section>
       )}
+      {personas.length ? (
+        <section>
+          <Heading count={personas.length}>Who it serves</Heading>
+          <PersonaRows state={state} personas={personas} feature={feature} onOpen={onOpen} />
+        </section>
+      ) : null}
       {concepts.length ? (
         <section>
-          <h3>Concepts its capabilities use</h3>
-          <ConceptChips concepts={concepts} onOpen={onConcept} />
+          <Heading count={concepts.length}>Concepts its capabilities use</Heading>
+          <ConceptChips concepts={concepts} onOpen={onConcept} scopeOf={(c) => domainName(state, c.domain)} />
         </section>
       ) : null}
       {rules.length ? (
         <section>
-          <h3>Rules its capabilities follow</h3>
+          <Heading count={rules.length}>Rules its capabilities follow</Heading>
           <RuleList state={state} rules={rules} />
         </section>
       ) : null}
@@ -468,7 +570,7 @@ function CapabilityView({ state, capability, onOpen, onConcept, onShow, isFilter
   const concepts = capability.concepts.flatMap((id) => find(state.concepts, id) ?? []);
   const rules = capability.rules.flatMap((id) => find(state.rules, id) ?? []);
   const gaps = capability.gaps.flatMap((id) => state.gaps.find((g) => g.id === id) ?? []);
-  const several = capability.levels.length > 1;
+  const personas = capability.personas.flatMap((id) => find(state.personas, id) ?? []);
   return (
     <article className="concept">
       <Head
@@ -486,41 +588,32 @@ function CapabilityView({ state, capability, onOpen, onConcept, onShow, isFilter
             )}
           </>
         }
-        extra={
-          <ul className="explore-levels">
-            {capability.levels.map((l) => (
-              <Box component="li" key={`${l.domain}:${l.project}`} sx={levelColor(levelId(l.level))}>
-                <StabilityMark level={levelId(l.level)} feature={capability.name} size="short" />
-                <strong>{STABILITY[levelId(l.level)].name}</strong>
-                {several ? (
-                  <span className="faint">
-                    in {domainName(state, l.domain)}
-                    {state.projects.length > 1 ? `, says ${projectName(state, l.project)}` : ""}
-                  </span>
-                ) : null}
-              </Box>
-            ))}
-          </ul>
-        }
+        mark={<CapabilityLevel state={state} capability={capability} />}
         target={capabilityTarget(state, capability.id)}
         onShow={onShow}
         onConcept={onConcept}
         isFiltering={isFiltering}
         onFilter={onFilter}
       />
+      {personas.length ? (
+        <section>
+          <Heading count={personas.length}>Who it serves</Heading>
+          <PersonaRows state={state} personas={personas} onOpen={onOpen} />
+        </section>
+      ) : null}
       <section>
-        <h3>Follows {plural(rules.length, "rule", "rules")}</h3>
+        <Heading count={rules.length}>Rules it follows</Heading>
         {rules.length ? <RuleList state={state} rules={rules} /> : <p className="concepts-empty">None written down yet.</p>}
       </section>
       {concepts.length ? (
         <section>
-          <h3>Uses {plural(concepts.length, "concept", "concepts")}</h3>
-          <ConceptChips concepts={concepts} onOpen={onConcept} />
+          <Heading count={concepts.length}>Concepts it uses</Heading>
+          <ConceptChips concepts={concepts} onOpen={onConcept} scopeOf={(c) => domainName(state, c.domain)} />
         </section>
       ) : null}
       {gaps.length ? (
         <section>
-          <h3>Known {gaps.length === 1 ? "gap" : "gaps"}</h3>
+          <Heading count={gaps.length}>Known gaps</Heading>
           <ul>
             {gaps.map((g) => (
               <li key={g.id} className="explore-text">
@@ -535,7 +628,7 @@ function CapabilityView({ state, capability, onOpen, onConcept, onShow, isFilter
       ) : null}
       {capability.code.length ? (
         <section>
-          <h3>Code</h3>
+          <Heading count={capability.code.length}>Code</Heading>
           <ul>
             {capability.code.map((c) => (
               <li key={c.glob} className="explore-text">
@@ -546,6 +639,95 @@ function CapabilityView({ state, capability, onOpen, onConcept, onShow, isFilter
         </section>
       ) : null}
     </article>
+  );
+}
+
+/*
+ * A persona: who they are and what they need, how ready the software is for
+ * them, then each feature that serves them, with how ready it is for them and
+ * the capabilities in it that do, and any in no feature.
+ */
+function PersonaView({ state, persona, onOpen, onConcept, onShow, isFiltering, onFilter }: Links & { persona: Persona }) {
+  const features = persona.features.flatMap((id) => find(state.features, id) ?? []);
+  const capabilities = persona.capabilities.flatMap((id) => find(state.capabilities, id) ?? []);
+  const loose = capabilities.filter((c) => !c.feature);
+  const domains = [...new Set(capabilities.flatMap((c) => docDomains(c)))];
+  return (
+    <article className="concept">
+      <Head
+        state={state}
+        kind="persona"
+        doc={persona}
+        picture={<PersonaAvatar persona={persona} size={56} />}
+        {...personaNameAndRole(persona)}
+        trail={domains.length ? <DomainCrumbs state={state} domains={domains} onOpen={onOpen} /> : undefined}
+        extra={<Readiness value={persona.readiness} basis={readinessBasis(state, persona)} />}
+        target={targetOf(state, { kind: "persona", id: persona.id })}
+        onShow={onShow}
+        onConcept={onConcept}
+        isFiltering={isFiltering}
+        onFilter={onFilter}
+      />
+      <section>
+        <Heading count={features.length}>Features that serve them</Heading>
+        {features.length ? (
+          features.map((f) => {
+            const readiness = personaReadinessIn(state, persona, f);
+            return (
+              <div key={f.id} className="concept-group">
+                <div className="concept-group-name">
+                  <WidgetsOutlinedIcon sx={{ fontSize: 14, color: "secondary.main" }} />
+                  <button type="button" className="link" onClick={() => onOpen("feature", f.id)}>
+                    {f.name}
+                  </button>
+                  {readiness !== null ? (
+                    <span className="persona-feature-readiness">
+                      <ReadinessMeter value={readiness} basis={readinessBasis(state, persona, f)} />
+                    </span>
+                  ) : null}
+                </div>
+                <CapabilityRows
+                  capabilities={capabilities.filter((c) => c.feature === f.id)}
+                  onOpen={onOpen}
+                />
+              </div>
+            );
+          })
+        ) : (
+          <p className="concepts-empty">No feature serves them yet.</p>
+        )}
+      </section>
+      {loose.length ? (
+        <section>
+          <Heading count={loose.length}>Capabilities in no feature</Heading>
+          <CapabilityRows capabilities={loose} onOpen={onOpen} />
+        </section>
+      ) : null}
+    </article>
+  );
+}
+
+/* A persona's row: their name, with their role under it. */
+const rowName = (p: Persona) => {
+  const { name, role } = personaNameAndRole(p);
+  return { name, summary: role ?? p.summary };
+};
+
+/* Personas as rows, each opening in the panel, with how ready `feature` is for them when it's given. */
+function PersonaRows({ state, personas, feature, onOpen }: { state: DocketState; personas: Persona[]; feature?: Feature; onOpen: Links["onOpen"] }) {
+  return (
+    <ul>
+      {personas.map((p) => {
+        const readiness = feature ? personaReadinessIn(state, p, feature) : null;
+        return (
+          <li key={p.id}>
+            <Row icon={<PersonaAvatar persona={p} size={28} />} {...rowName(p)} onClick={() => onOpen("persona", p.id)}>
+              {readiness !== null && feature ? <ReadinessMeter value={readiness} basis={readinessBasis(state, p, feature)} inButton /> : null}
+            </Row>
+          </li>
+        );
+      })}
+    </ul>
   );
 }
 
@@ -560,8 +742,11 @@ function RuleList({ state, rules }: { state: DocketState; rules: { id: string; n
             <span className="concept-row-name">{r.name}</span>
             {r.summary ? <span className="concept-row-summary">{r.summary}</span> : null}
             <span className="explore-rule-meta">
-              {r.kind === "core" ? "Core" : "Edge case"} · {r.status}
-              {state.domains.length > 1 ? ` · ${domainName(state, r.domain)}` : ""}
+              <span className="explore-tag">{r.kind === "core" ? "Core" : "Edge case"}</span>
+              <span className="explore-tag" data-status={r.status}>
+                {r.status[0].toUpperCase() + r.status.slice(1)}
+              </span>
+              {state.domains.length > 1 ? <span className="faint">{domainName(state, r.domain)}</span> : null}
             </span>
           </span>
         </li>

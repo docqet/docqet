@@ -1,11 +1,13 @@
+import type { MouseEvent } from "react";
 import SpaceDashboardOutlinedIcon from "@mui/icons-material/SpaceDashboardOutlined";
 import { GROUP_HEAD, GROUP_PAD, type CanvasGroup, type CanvasItem, type Pos, type Size } from "./Canvas";
 import { CapabilityCard } from "./design/catalog/CapabilityCard";
 import { FeatureCard } from "./design/catalog/FeatureCard";
 import { MaturityRing } from "./design/maturity/MaturityRing";
 import { RingGlyph } from "./design/maturity/RingGlyph";
-import { CapabilityDetails, ContradictionHint, RulesHint } from "./CapabilityDetails";
+import { ContradictionHint, RulesHint } from "./CapabilityHints";
 import { ConceptChips, ConceptIcon } from "./Concepts";
+import { PersonaCard } from "./Personas";
 import { ProjectIcon } from "./ProjectFilter";
 import {
   capabilityCard,
@@ -16,13 +18,14 @@ import {
   featureCard,
   find,
   levelId,
+  personaCard,
   projectName,
   partOf,
-  ruleAppliesTo,
   type Capability,
   type Doc,
   type DocketState,
   type Domain,
+  type Pick,
 } from "./state";
 
 /* A domain's mark, wherever one is named. */
@@ -30,60 +33,42 @@ export function DomainIcon({ size = 14 }: { size?: number }) {
   return <SpaceDashboardOutlinedIcon sx={{ fontSize: size, flex: "none", color: "text.secondary" }} />;
 }
 
-/* A card's width, and the room between cards, as tidy lays them out. */
+/* A card's width, and the room between cards, as tidy lays them out. A persona's card is narrower. */
 const SLOT = 320;
+const PERSONA_SLOT = 240;
 const GAP = 28;
 
 /*
- * A capability's line on a card in a domain: its name opens its rules on
- * hover, and says how many it has. Rules belong to a domain, so each also
- * says which other capabilities follow it, with their feature when it isn't
- * this one's. The card's level is the capability's in that domain, and the
- * hover shows every domain's. The concepts it uses come last, each opening in
- * the concepts panel.
+ * A capability's line on a card in a domain: its name, with how many rules
+ * it has and any contradiction after it, and its level in that domain.
+ * Clicking it opens the rest in the side panel.
  */
-function line(state: DocketState, c: Capability, domain: string, openConcept: (id: string) => void) {
-  const concepts = c.concepts.flatMap((id) => find(state.concepts, id) ?? []);
-  const rules = c.rules.flatMap((id) => {
-    const rule = find(state.rules, id);
-    if (!rule) return [];
-    const also = ruleAppliesTo(state, rule)
-      .filter((a) => a.capability.id !== c.id)
-      .map((a) =>
-        a.capability.feature === c.feature
-          ? a.capability.name
-          : `${a.capability.name} (${a.feature?.name ?? "not in a feature"})`,
-      );
-    return [{ ...rule, also }];
-  });
-  const several = state.projects.length > 1;
-  const parts = c.from.map((f, i) => ({
-    name: `${domainName(state, f.domain)}${several ? ` · ${projectName(state, f.project)}` : ""}`,
-    level: c.levels[i].level,
-    summary: f.summary,
-  }));
+function line(state: DocketState, c: Capability, domain: string) {
   const here = c.levels.find((l) => l.domain === domain)?.level ?? c.stability;
   const contradictions = contradictionsOf(state, "capability", c.id).map((p) => p.message);
   return {
     name: c.name,
     level: levelId(here),
-    details: (
-      <CapabilityDetails
-        capability={c}
-        rules={rules}
-        concepts={concepts.length ? <ConceptChips concepts={concepts} onOpen={openConcept} popovers={false} /> : null}
-        projects={parts}
-        contradictions={contradictions}
-      />
-    ),
     hint: (
       <>
         <ContradictionHint messages={contradictions} />
-        <RulesHint count={rules.length} />
+        <RulesHint count={c.rules.filter((id) => find(state.rules, id)).length} />
       </>
     ),
   };
 }
+
+/*
+ * A click on a card opens what it is in the side panel: the capability whose
+ * row it's on, or else the card's own. Not a click on its grip or a button
+ * in it, such as a concept, nor one in a popover it opened.
+ */
+const opener = (onOpen: (pick: Pick) => void, pick: Pick) => (e: MouseEvent<HTMLElement>) => {
+  const target = e.target as HTMLElement;
+  if (!e.currentTarget.contains(target) || target.closest(".grip, button, a, [data-no-pan]")) return;
+  const row = target.closest<HTMLElement>("li[data-capability]")?.dataset.capability;
+  onOpen(row ? { kind: "capability", id: row } : pick);
+};
 
 /*
  * The map's cards, in their domains: each domain's part of each feature it
@@ -93,21 +78,31 @@ function line(state: DocketState, c: Capability, domain: string, openConcept: (i
  * are the design system's, rethemed. Each feature ends with the concepts its
  * capabilities use there, which open in the concepts panel. With several
  * projects showing, each card says which define it, and one that projects
- * contradict each other on says so. With `cards`, only those are on the map,
- * as a concept filter leaves them.
+ * contradict each other on says so. Above the domains, each persona has a small
+ * card of their own, in no region. With `cards`, only those are on the
+ * map, as a filter leaves them. Clicking a card, or a capability's row on
+ * one, calls `onOpen` with it.
  */
-export function mapItems(state: DocketState, openConcept: (id: string) => void, cards?: Set<string>): CanvasItem[] {
+export function mapItems(
+  state: DocketState,
+  openConcept: (id: string) => void,
+  onOpen: (pick: Pick) => void,
+  cards?: Set<string>,
+): CanvasItem[] {
   const header = (doc: Doc, type: string, domain: string) => {
     const problems = contradictionsOf(state, type, doc.id).map((p) => p.message);
     const elsewhere = type === "feature" ? (find(state.features, doc.id)?.parts ?? []).filter((p) => p.domain !== domain) : [];
-    const projects = doc.from.filter((f) => f.domain === domain).map((f) => f.project);
-    if (state.projects.length < 2 && !problems.length && !elsewhere.length) return null;
+    /* Its projects, said only where they aren't just those of its domain, which its region names. */
+    const projects = [...new Set(doc.from.filter((f) => f.domain === domain).map((f) => f.project))];
+    const domainProjects = new Set(find(state.domains, domain)?.from.map((f) => f.project));
+    const ownProjects = state.projects.length > 1 && !(projects.length === domainProjects.size && projects.every((id) => domainProjects.has(id)));
+    if (!ownProjects && !problems.length && !elsewhere.length) return null;
     return (
       <span className="card-project">
-        {state.projects.length > 1 ? (
+        {ownProjects ? (
           <>
             <ProjectIcon size={13} />
-            {[...new Set(projects)].map((id) => projectName(state, id)).join(" + ")}
+            {projects.map((id) => projectName(state, id)).join(" + ")}
           </>
         ) : null}
         {elsewhere.length ? (
@@ -133,9 +128,9 @@ export function mapItems(state: DocketState, openConcept: (id: string) => void, 
             {
               id: capabilityCard(c.id, domain.id),
               node: (
-                <div className="slot" data-capability={c.id}>
+                <div className="slot" data-capability={c.id} onClick={opener(onOpen, { kind: "capability", id: c.id })}>
                   {header(c, "capability", domain.id)}
-                  <CapabilityCard {...line(state, c, domain.id, openConcept)} />
+                  <CapabilityCard grip {...line(state, c, domain.id)} />
                 </div>
               ),
             },
@@ -151,15 +146,16 @@ export function mapItems(state: DocketState, openConcept: (id: string) => void, 
         {
           id: featureCard(feature.id, domain.id),
           node: (
-            <div className="slot">
+            <div className="slot" data-feature={feature.id} onClick={opener(onOpen, { kind: "feature", id: feature.id })}>
               {header(feature, "feature", domain.id)}
               <FeatureCard
+                grip
                 name={feature.name}
                 description={feature.summary}
                 maturity={part.maturity}
                 capabilities={part.capabilities.flatMap((cid) => {
                   const c = find(state.capabilities, cid);
-                  return c ? [{ id: c.id, ...line(state, c, domain.id, openConcept) }] : [];
+                  return c ? [{ id: c.id, ...line(state, c, domain.id) }] : [];
                 })}
                 footer={
                   concepts.length ? (
@@ -176,6 +172,16 @@ export function mapItems(state: DocketState, openConcept: (id: string) => void, 
       ];
     }),
   ]);
+  for (const p of state.personas) {
+    items.push({
+      id: personaCard(p.id),
+      node: (
+        <div className="slot persona-slot" data-persona={p.id} onClick={opener(onOpen, { kind: "persona", id: p.id })}>
+          <PersonaCard persona={p} />
+        </div>
+      ),
+    });
+  }
   return cards ? items.filter((item) => cards.has(item.id)) : items;
 }
 
@@ -186,11 +192,13 @@ const cardsIn = (domain: Domain) => [
 ];
 
 /*
- * Each domain as a region behind its cards, labelled with its name and its
- * maturity, worked out from its parts of features. A domain's region wraps
+ * Each domain as a region behind its cards, labelled on one line with its
+ * name, the projects that define it when several are showing, and right
+ * after them its maturity, worked out from its parts of features. A domain's region wraps
  * whichever of its cards are on the map, so one with none drawn has none.
+ * Clicking it calls `onOpen` with it.
  */
-export function mapGroups(state: DocketState): CanvasGroup[] {
+export function mapGroups(state: DocketState, onOpen: (pick: Pick) => void): CanvasGroup[] {
   return state.domains.map((domain) => {
     const parts = domain.features.flatMap((id) => {
       const f = find(state.features, id);
@@ -200,14 +208,17 @@ export function mapGroups(state: DocketState): CanvasGroup[] {
     return {
       id: domainGroup(domain.id),
       items: cardsIn(domain),
+      onOpen: () => onOpen({ kind: "domain", id: domain.id }),
       label: (
         <>
-          <span className="area-text">
-            <span className="area-eyebrow">
-              <DomainIcon />
-              Domain
-            </span>
+          <span className="area-text" title="Domain">
+            <DomainIcon size={15} />
             <span className="area-name">{domain.name}</span>
+            {state.projects.length > 1 ? (
+              <span className="area-projects">
+                {[...new Set(domain.from.map((f) => f.project))].map((id) => projectName(state, id)).join(" + ")}
+              </span>
+            ) : null}
           </span>
           {domain.maturity !== null ? (
             <span className="area-maturity" data-no-pan>
@@ -259,10 +270,11 @@ function pack(ids: string[], columns: number, x: number, y: number, height: (id:
 }
 
 /*
- * Where each card goes when tidy: each domain's cards inside its region, the
- * domains side by side and wrapping once a row is ACROSS columns wide. Within
- * a domain, each card goes into whichever column is shortest so far. With
- * `cards`, only those are laid out, so a filtered map packs together.
+ * Where each card goes when tidy: the personas first, in a row across the top,
+ * then each domain's cards inside its region, the domains side by side and
+ * wrapping once a row is ACROSS columns wide. Within a domain, each card goes
+ * into whichever column is shortest so far. With `cards`, only those are laid
+ * out, so a filtered map packs together.
  */
 export function tidyMap(state: DocketState, sizes: Record<string, Size>, cards?: Set<string>): Record<string, Pos> {
   const height = (id: string) => sizes[id]?.h ?? 0;
@@ -270,6 +282,9 @@ export function tidyMap(state: DocketState, sizes: Record<string, Size>, cards?:
   const domains = state.domains.map((d) => cardsIn(d).filter((id) => !cards || cards.has(id))).filter((ids) => ids.length);
   let x = 0;
   let y = 0;
+  const people = state.personas.map((p) => personaCard(p.id)).filter((id) => !cards || cards.has(id));
+  people.forEach((id, i) => (positions[id] = { x: i * (PERSONA_SLOT + GAP), y: 0 }));
+  if (people.length) y = Math.max(...people.map(height)) + DOMAIN_GAP;
   let used = 0;
   let row = 0;
   for (const ids of domains) {

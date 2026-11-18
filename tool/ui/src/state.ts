@@ -69,6 +69,8 @@ export type Feature = Doc & {
 };
 
 export type Capability = Doc & {
+  /* The personas it serves: who does it, or who it's done for. */
+  personas: string[];
   /* Its level in short: the lowest of `levels`. */
   stability: Level;
   /* Its level in each domain that builds part of it, and the project that says so. */
@@ -109,6 +111,20 @@ export type Rule = Doc & {
 
 export type Concept = Doc & { capabilities: string[]; rules: string[] };
 
+/*
+ * A type of person the software serves, one across every domain. What it
+ * relates to is worked out from the capabilities that list it.
+ */
+export type Persona = Doc & {
+  /* Its picture's URL. */
+  image: string;
+  /* Every capability that lists it, and the features those are in. */
+  capabilities: string[];
+  features: string[];
+  /* How ready the software is for them, 0 to 100: the maturity of every capability that serves them, or null with none. */
+  readiness: number | null;
+};
+
 /* A known gap in a capability: what someone using the product would notice. */
 export type Gap = {
   id: string;
@@ -130,6 +146,7 @@ export type DocketState = {
   capabilities: Capability[];
   rules: Rule[];
   concepts: Concept[];
+  personas: Persona[];
   gaps: Gap[];
   problems: Problem[];
 };
@@ -163,6 +180,8 @@ export type StateFile = {
   capabilities: Raw<Capability>[];
   rules: Raw<Rule>[];
   concepts: Raw<Concept>[];
+  /* Personas aren't in a domain, so these have no `domain`. Missing from state written before personas. */
+  personas?: Omit<Raw<Persona>, "domain">[];
   gaps: Gap[];
   problems: Problem[];
 };
@@ -217,6 +236,7 @@ export function combine(files: StateFile[]): DocketState {
     capabilities: [],
     rules: [],
     concepts: [],
+    personas: [],
     gaps: [],
     problems: [],
   };
@@ -255,6 +275,7 @@ export function combine(files: StateFile[]): DocketState {
     for (const c of file.capabilities) {
       const capability = contribute(state.capabilities, c.id, project, c, (base) => ({
         ...base,
+        personas: [],
         stability: c.stability,
         levels: [],
         feature: null,
@@ -264,6 +285,7 @@ export function combine(files: StateFile[]): DocketState {
         gaps: [],
       }));
       capability.levels.push({ project, domain: c.domain, level: c.stability });
+      union(capability.personas, c.personas ?? []);
       capability.code.push(...c.code.filter((g) => !capability.code.some((x) => x.glob === g.glob)));
       union(capability.gaps, c.gaps.map((g) => `${g}@${project}`));
       pending.push({ from: capability, domain: c.domain, rules: c.rules, concepts: c.concepts });
@@ -286,6 +308,16 @@ export function combine(files: StateFile[]): DocketState {
     }
     for (const c of file.concepts) {
       contribute(state.concepts, `${c.id}@${c.domain}`, project, c, (base) => ({ ...base, capabilities: [], rules: [] }));
+    }
+    /* A persona is in no domain; its contributions are told apart by project, as a domain's are. */
+    for (const p of file.personas ?? []) {
+      contribute(state.personas, p.id, project, { ...p, domain: "" }, (base) => ({
+        ...base,
+        image: p.image,
+        capabilities: [],
+        features: [],
+        readiness: null,
+      }));
     }
     /* A gap's ID is its project's, as capabilities' `gaps` above name them. */
     state.gaps.push(...file.gaps.map((g) => ({ ...g, project, id: `${g.id}@${project}` })));
@@ -377,6 +409,12 @@ export function combine(files: StateFile[]): DocketState {
   for (const c of state.capabilities) {
     if (!c.feature) for (const l of c.levels) union(find(state.domains, l.domain)?.capabilities ?? [], [c.id]);
   }
+  /* Each persona's capabilities, their features, and their readiness: those capabilities' maturity, from their levels in every domain, as a feature's is. */
+  for (const c of state.capabilities) for (const id of c.personas) union(find(state.personas, id)?.capabilities ?? [], [c.id]);
+  for (const p of state.personas) {
+    union(p.features, state.features.filter((f) => p.capabilities.some((id) => f.capabilities.includes(id))).map((f) => f.id));
+    p.readiness = featureMaturity(p.capabilities.flatMap((id) => levelsIn(id)));
+  }
   for (const d of state.domains) {
     d.maturity = projectMaturity(d.features.map((id) => partOf(find(state.features, id), d.id)?.maturity ?? null));
     d.band = band(d.maturity);
@@ -401,6 +439,7 @@ export function combine(files: StateFile[]): DocketState {
   differing("capability", state.capabilities);
   differing("rule", state.rules);
   differing("concept", state.concepts);
+  differing("persona", state.personas);
   return state;
 }
 
@@ -420,6 +459,12 @@ export const maturityOf = (state: DocketState): number | null =>
   state.projects.length === 1
     ? state.projects[0].maturity
     : projectMaturity(state.features.flatMap((f) => f.parts.map((p) => p.maturity)));
+
+/* How ready a feature is for a persona: the maturity of just the capabilities in it that serve them. */
+export function personaReadinessIn(state: DocketState, persona: Persona, feature: Feature): number | null {
+  const ids = feature.capabilities.filter((id) => persona.capabilities.includes(id));
+  return featureMaturity(ids.flatMap((id) => (find(state.capabilities, id)?.levels ?? []).map((l) => levelId(l.level))));
+}
 
 /* A feature's part in a domain, if it has one. */
 export const partOf = (feature: Feature | undefined, domain: string) => feature?.parts.find((p) => p.domain === domain);
@@ -470,12 +515,14 @@ export function ruleAppliesTo(state: DocketState, rule: Rule): { capability: Cap
 export type Target = { items: string[]; row?: string };
 
 /* Something the side panel can show and the map can be filtered to. */
-export type Pick = { kind: "domain" | "feature" | "capability" | "concept"; id: string };
+export type Pick = { kind: "domain" | "feature" | "capability" | "concept" | "persona"; id: string };
 
 /* A card on the map: a feature's part in a domain, or a capability in no feature, in a domain. */
 export const featureCard = (feature: string, domain: string) => `feature:${feature}@${domain}`;
 export const capabilityCard = (capability: string, domain: string) => `capability:${capability}@${domain}`;
 export const domainGroup = (domain: string) => `domain:${domain}`;
+/* A persona's card, above the domains. */
+export const personaCard = (persona: string) => `persona:${persona}`;
 
 /* Every card a capability is on: each part of its feature that has it, or its own card in each domain. */
 export function cardsOf(state: DocketState, capabilityId: string): string[] {
@@ -499,19 +546,27 @@ export function featureTarget(state: DocketState, featureId: string): Target {
   return { items: (f?.parts ?? []).map((p) => featureCard(featureId, p.domain)) };
 }
 
-/* Where something the panel shows is on the canvas: a domain's region, a feature's or capability's cards, or a concept's users' rows. */
+/* The capabilities a concept or persona relates to: those that use the concept, or serve the persona. */
+const capabilitiesOf = (state: DocketState, pick: Pick) =>
+  (pick.kind === "persona" ? find(state.personas, pick.id) : find(state.concepts, pick.id))?.capabilities ?? [];
+
+/* Where something the panel shows is on the canvas: a domain's region, a feature's or capability's cards, a concept's capabilities' rows, or a persona's card and those of the capabilities that serve them. */
 export function targetOf(state: DocketState, pick: Pick): Target {
   if (pick.kind === "domain") return { items: [domainGroup(pick.id)] };
   if (pick.kind === "feature") return featureTarget(state, pick.id);
   if (pick.kind === "capability") return capabilityTarget(state, pick.id);
-  const users = find(state.concepts, pick.id)?.capabilities ?? [];
-  return { items: [...new Set(users.flatMap((id) => cardsOf(state, id)))], row: rowsOf(users) };
+  const users = capabilitiesOf(state, pick);
+  const own = pick.kind === "persona" ? [personaCard(pick.id)] : [];
+  return { items: [...own, ...new Set(users.flatMap((id) => cardsOf(state, id)))], row: rowsOf(users) };
 }
+
+/* Every doc of a pick's kind. */
+export const pickList = (state: DocketState, kind: Pick["kind"]): Doc[] =>
+  ({ domain: state.domains, feature: state.features, capability: state.capabilities, concept: state.concepts, persona: state.personas })[kind];
 
 /* A pick's name, as the filter bar and back button say it. */
 export function pickName(state: DocketState, pick: Pick): string {
-  const lists = { domain: state.domains, feature: state.features, capability: state.capabilities, concept: state.concepts };
-  return find<Doc>(lists[pick.kind], pick.id)?.name ?? pick.id;
+  return find<Doc>(pickList(state, pick.kind), pick.id)?.name ?? pick.id;
 }
 
 /*
@@ -539,9 +594,9 @@ export const featureConcepts = (state: DocketState, feature: Feature) => concept
 /*
  * What filtering leaves on the map: everything any of the picks covers. A
  * domain covers its cards and every capability on them, a feature its cards
- * in every domain, a capability the cards it's on, and a concept every
- * capability that uses it. Capabilities on those cards that none covers are
- * faded. Null when there's no filter.
+ * in every domain, a capability the cards it's on, a concept every capability
+ * that uses it, and a persona every capability that serves them. Capabilities
+ * on those cards that none covers are faded. Null when there's no filter.
  */
 export type MapFilter = { capabilities: Set<string>; cards: Set<string> };
 
@@ -571,9 +626,12 @@ export function filterBy(state: DocketState, picks: Pick[]): MapFilter | null {
     } else if (pick.kind === "capability") {
       addCapability(pick.id);
     } else {
-      for (const id of find(state.concepts, pick.id)?.capabilities ?? []) addCapability(id);
+      for (const id of capabilitiesOf(state, pick)) addCapability(id);
+      if (pick.kind === "persona") cards.add(personaCard(pick.id));
     }
   }
+  /* The people anything left on the map serves stay on it too. */
+  for (const p of state.personas) if (p.capabilities.some((id) => capabilities.has(id))) cards.add(personaCard(p.id));
   return { capabilities, cards };
 }
 

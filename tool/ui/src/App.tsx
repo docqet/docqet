@@ -13,10 +13,13 @@ import { MATURITY_BANDS, maturityBand } from "./design/maturity/maturity";
 import { STABILITY_LEVEL_IDS, levelColor } from "./design/stability/stability";
 import { DomainIcon, mapGroups, mapItems, tidyMap } from "./FeatureMap";
 import Logo from "./Logo";
+import { PersonaIcon } from "./Personas";
 import ProjectFilter from "./ProjectFilter";
 import Search, { type Selection } from "./Search";
 import {
+  cardsOf,
   combine,
+  domainGroup,
   filterBy,
   pickName,
   targetOf,
@@ -24,6 +27,8 @@ import {
   loadProjects,
   loadState,
   maturityOf,
+  personaCard,
+  pickList,
   projectOf,
   type DocketState,
   type Pick,
@@ -120,6 +125,17 @@ function View({
     [],
   );
   const openConcept = useCallback((id: string | null) => open({ kind: "concept", id }), [open]);
+  /* Something clicked on the map opens without the map moving to it, since it's already in view. */
+  const quiet = useRef(false);
+  const atNow = useRef(panel?.at);
+  atNow.current = panel?.at;
+  const openHere = useCallback(
+    (pick: Pick) => {
+      if (atNow.current?.kind !== pick.kind || atNow.current.id !== pick.id) quiet.current = true;
+      open(pick);
+    },
+    [open],
+  );
   /* A stat in the header opens its kind's list, or closes it when it's showing. */
   const toggle = (kind: PanelKind) =>
     setPanel((p) => (p?.at.kind === kind && p.at.id === null ? null : { at: { kind, id: null }, back: [] }));
@@ -137,8 +153,8 @@ function View({
   const isFiltering = (pick: Pick) => filters.some((f) => same(f, pick));
   const toggleFilter = (pick: Pick) => setFilters((fs) => (fs.some((f) => same(f, pick)) ? fs.filter((f) => !same(f, pick)) : [...fs, pick]));
   const filtered = useMemo(() => filterBy(state, filters), [state, filters]);
-  const items = useMemo(() => mapItems(state, openConcept, filtered?.cards), [state, openConcept, filtered]);
-  const groups = useMemo(() => mapGroups(state), [state]);
+  const items = useMemo(() => mapItems(state, openConcept, openHere, filtered?.cards), [state, openConcept, openHere, filtered]);
+  const groups = useMemo(() => mapGroups(state, openHere), [state, openHere]);
   /* Bring something into view. When the filter hides all of it, the filter is cleared first. A domain shows while any of its cards do. */
   const show = (t: Target) => {
     canvas.current?.show(t.items, t.row);
@@ -151,7 +167,8 @@ function View({
   /* Whatever the panel opens, the map focuses on. */
   const at = panel?.at;
   useEffect(() => {
-    if (at?.id) show(targetOf(state, { kind: at.kind, id: at.id }));
+    if (quiet.current) quiet.current = false;
+    else if (at?.id) show(targetOf(state, { kind: at.kind, id: at.id }));
   }, [at?.kind, at?.id]);
   const select = (s: Selection) => {
     if ("pick" in s) {
@@ -162,8 +179,22 @@ function View({
     else if ("project" in s) onProjects([s.project]);
     else show(s);
   };
-  const lit = litBy(state, panel?.at);
+  /* While a concept or persona is open, the capabilities that use it, or serve them. */
+  const lit =
+    at?.kind === "concept" && at.id
+      ? (find(state.concepts, at.id)?.capabilities ?? [])
+      : at?.kind === "persona" && at.id
+        ? (find(state.personas, at.id)?.capabilities ?? [])
+        : [];
   const showing = state.projects.map((o) => o.id).join(",");
+  /* While a persona is open, lines from their card to every card with something that serves them. */
+  const links = useMemo(
+    () =>
+      at?.kind === "persona" && at.id
+        ? { from: personaCard(at.id), to: [...new Set(lit.flatMap((id) => cardsOf(state, id)))] }
+        : null,
+    [state, at?.kind, at?.id, lit.join(",")],
+  );
 
   /* Esc closes the panel, unless it's clearing the search. */
   useEffect(() => {
@@ -184,11 +215,13 @@ function View({
         items={items}
         groups={groups}
         tidy={(sizes) => tidyMap(state, sizes, filtered?.cards)}
-        storageKey={`docket.layout.v2:${layoutKey}`}
+        storageKey={`docket.layout.v4:${layoutKey}`}
         clearOf={header}
         fitKey={`${showing}|${filters.map((f) => `${f.kind}:${f.id}`).join(",")}`}
+        links={links}
       />
-      {lit.length ? <LitCapabilities ids={lit} /> : null}
+      {lit.length ? <LitCapabilities ids={lit} color={at?.kind === "persona" ? "persona" : "concept"} /> : null}
+      <FocusStyle at={at} />
       {filtered ? (
         <FilterStyle concepts={filters.filter((f) => f.kind === "concept").map((f) => f.id)} capabilities={filtered.capabilities} />
       ) : null}
@@ -246,17 +279,39 @@ function View({
 }
 
 /*
- * While a concept is open, the capabilities that use it are lit on the
- * canvas, rows and cards alike, so where it matters can be seen at a glance.
- * A style rule rather than props, so the cards don't rebuild.
+ * While a concept or persona is open, the capabilities that use it or serve
+ * them are lit on the canvas, rows and cards alike, in its color, so where it
+ * matters can be seen at a glance. A style rule rather than props, so the
+ * cards don't rebuild.
  */
-function LitCapabilities({ ids }: { ids: string[] }) {
+function LitCapabilities({ ids, color }: { ids: string[]; color: "concept" | "persona" }) {
   if (!ids.length) return null;
   const rows = ids.map((id) => `li[data-capability="${CSS.escape(id)}"]`).join(",");
   const cards = ids.map((id) => `.slot[data-capability="${CSS.escape(id)}"]`).join(",");
   return (
-    <style>{`${rows}{background:var(--concept-soft);box-shadow:inset 3px 0 var(--concept)}${cards}{border-radius:10px;outline:2px solid var(--concept);outline-offset:2px}`}</style>
+    <style>{`${rows}{background:var(--${color}-soft);box-shadow:inset 3px 0 var(--${color})}${cards}{border-radius:10px;outline:2px solid var(--${color});outline-offset:2px}`}</style>
   );
+}
+
+/*
+ * What the side panel has open is lit on the map just as it is while
+ * hovered: a domain's region, a feature's cards, or a capability's rows and
+ * cards. A style rule rather than props, so the cards don't rebuild. Its
+ * declarations are the hover rules' in styles.css.
+ */
+const LIT = "border-color:var(--accent);box-shadow:var(--lit-ring)";
+const LIT_ROW = "background-color:var(--lit-row);box-shadow:inset 3px 0 var(--accent)";
+function FocusStyle({ at }: { at: PanelAt | undefined }) {
+  if (!at?.id || at.kind === "concept") return null;
+  if (at.kind === "persona") return <style>{`.slot[data-persona="${CSS.escape(at.id)}"]>.MuiCard-root{${LIT}}`}</style>;
+  const id = CSS.escape(at.id);
+  const rule =
+    at.kind === "domain"
+      ? `.group[data-id="${CSS.escape(domainGroup(at.id))}"]{${LIT}}`
+      : at.kind === "feature"
+        ? `.slot[data-feature="${id}"]>.MuiCard-root{${LIT}}`
+        : `.slot[data-capability="${id}"]>.MuiCard-root{${LIT}}li[data-capability="${id}"]{${LIT_ROW}}`;
+  return <style>{rule}</style>;
 }
 
 /*
@@ -374,6 +429,13 @@ function Header({
           pressed={panel === "concept"}
           onClick={() => onPanel("concept")}
         />
+        <StatButton
+          n={state.personas.length}
+          label={state.personas.length === 1 ? "persona" : "personas"}
+          title="Browse who the software serves, and how far along it is for each"
+          pressed={panel === "persona"}
+          onClick={() => onPanel("persona")}
+        />
       </div>
       {filters}
     </div>
@@ -382,8 +444,7 @@ function Header({
 
 /* Whether a pick names something showing. */
 function isPick(state: DocketState, pick: Pick): boolean {
-  const lists = { domain: state.domains, feature: state.features, capability: state.capabilities, concept: state.concepts };
-  return lists[pick.kind].some((d) => d.id === pick.id);
+  return pickList(state, pick.kind).some((d) => d.id === pick.id);
 }
 
 const PICK_ICONS: Record<Pick["kind"], ReactNode> = {
@@ -391,8 +452,9 @@ const PICK_ICONS: Record<Pick["kind"], ReactNode> = {
   feature: <WidgetsOutlinedIcon sx={{ fontSize: 15, color: "secondary.main" }} />,
   capability: <BoltOutlinedIcon sx={{ fontSize: 15, color: "primary.main" }} />,
   concept: <ConceptIcon size={15} />,
+  persona: <PersonaIcon size={15} />,
 };
-const PICK_KINDS: Record<Pick["kind"], string> = { domain: "Domain", feature: "Feature", capability: "Capability", concept: "Concept" };
+const PICK_KINDS: Record<Pick["kind"], string> = { domain: "Domain", feature: "Feature", capability: "Capability", concept: "Concept", persona: "Persona" };
 
 /*
  * The filters the map has, across the top of the canvas: each one's name,
@@ -469,23 +531,8 @@ type PanelAt = { kind: PanelKind; id: string | null };
 
 /* What back returns to, named: "Room booking", or "All features". */
 function backTo(state: DocketState, at: PanelAt): string {
-  const lists = { domain: state.domains, feature: state.features, capability: state.capabilities, concept: state.concepts };
-  const plurals = { domain: "domains", feature: "features", capability: "capabilities", concept: "concepts" };
-  return at.id ? (find<{ id: string; name: string }>(lists[at.kind], at.id)?.name ?? "Back") : `All ${plurals[at.kind]}`;
-}
-
-/* The capabilities to light on the map for what the panel is showing: one, a feature's, a domain's, or a concept's users. */
-function litBy(state: DocketState, at: PanelAt | undefined): string[] {
-  if (!at?.id) return [];
-  const featureCaps = (id: string) => find(state.features, id)?.capabilities ?? [];
-  if (at.kind === "concept") return find(state.concepts, at.id)?.capabilities ?? [];
-  if (at.kind === "capability") return [at.id];
-  if (at.kind === "feature") return featureCaps(at.id);
-  const domain = find(state.domains, at.id);
-  return [
-    ...(domain?.capabilities ?? []),
-    ...(domain?.features ?? []).flatMap((id) => find(state.features, id)?.parts.find((p) => p.domain === at.id)?.capabilities ?? []),
-  ];
+  const plurals = { domain: "domains", feature: "features", capability: "capabilities", concept: "concepts", persona: "personas" };
+  return at.id ? (find(pickList(state, at.kind), at.id)?.name ?? "Back") : `All ${plurals[at.kind]}`;
 }
 
 /* What the rings' colors mean: maturity's four bands, in their levels' colors. */
