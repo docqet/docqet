@@ -256,11 +256,72 @@ ul {
   color: var(--faint);
 }
 
+/*
+ * The header's list of projects to show: the same popover as search's
+ * results, hanging 6px under the brand panel. MUI's Menu draws it, so these
+ * override its paper and items (hence the doubled classes).
+ */
+.project-menu.project-menu {
+  margin-top: 6px;
+  background: var(--popover);
+  background-image: none;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgb(20 10 50 / 0.08), 0 18px 40px -12px rgb(40 20 100 / 0.32);
+  color: var(--text);
+}
+
+.project-menu-list.project-menu-list {
+  padding: 6px;
+}
+
+.project-menu-group {
+  padding: 10px 10px 4px;
+  font-size: 11px;
+  font-weight: 650;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--faint);
+  list-style: none;
+}
+
+.project-menu-item.project-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 0;
+  padding: 7px 10px;
+  border-radius: 5px;
+  font: inherit;
+}
+
+.project-menu-item.project-menu-item:hover,
+.project-menu-item.project-menu-item.Mui-focusVisible,
+.project-menu-item.project-menu-item.Mui-selected,
+.project-menu-item.project-menu-item.Mui-selected:hover,
+.project-menu-item.project-menu-item.Mui-selected.Mui-focusVisible {
+  background: var(--accent-soft);
+}
+
+/* The last project showing can't be unticked, but it still reads as a project. */
+.project-menu-item.project-menu-item.Mui-disabled {
+  opacity: 1;
+}
+
 /* A project in the header's list: its name over the commit it was indexed at. */
 .project-option {
   display: grid;
   flex: 1;
-  margin-right: 16px;
+  min-width: 0;
+  margin-right: 12px;
+}
+
+.project-option-name {
+  font-size: 13.5px;
+  font-weight: 550;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .project-option .faint {

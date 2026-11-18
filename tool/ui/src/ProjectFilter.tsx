@@ -3,8 +3,6 @@ import CheckBoxOutlineBlankRoundedIcon from "@mui/icons-material/CheckBoxOutline
 import CheckBoxRoundedIcon from "@mui/icons-material/CheckBoxRounded";
 import FolderOutlinedIcon from "@mui/icons-material/FolderOutlined";
 import UnfoldMoreRoundedIcon from "@mui/icons-material/UnfoldMoreRounded";
-import Divider from "@mui/material/Divider";
-import ListItemIcon from "@mui/material/ListItemIcon";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { RingGlyph } from "./design/maturity/RingGlyph";
@@ -66,7 +64,7 @@ export default function ProjectFilter({
         className="project-switch"
         aria-haspopup="menu"
         aria-expanded={anchor ? true : undefined}
-        onClick={(e) => setAnchor(e.currentTarget)}
+        onClick={(e) => setAnchor(e.currentTarget.closest<HTMLElement>(".brand"))}
       >
         <strong>{everything ? "All projects" : showing.map((p) => p.name).join(", ")}</strong>
         <UnfoldMoreRoundedIcon aria-hidden sx={{ fontSize: 16 }} />
@@ -82,33 +80,39 @@ export default function ProjectFilter({
         anchorEl={anchor}
         open={Boolean(anchor)}
         onClose={() => setAnchor(null)}
-        slotProps={{ paper: { sx: { mt: 0.75, minWidth: 280 } } }}
+        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+        slotProps={{
+          paper: { className: "project-menu", sx: { minWidth: anchor?.offsetWidth } },
+          list: { className: "project-menu-list" },
+        }}
       >
-        <MenuItem selected={everything} onClick={() => onChange(all.map((p) => p.id))}>
-          <ListItemIcon>
-            <Check on={everything} />
-          </ListItemIcon>
-          All projects
+        <MenuItem className="project-menu-item" selected={everything} onClick={() => onChange(all.map((p) => p.id))}>
+          <Check on={everything} />
+          <span className="project-option">
+            <span className="project-option-name">All projects</span>
+            <span className="faint">{all.length} projects</span>
+          </span>
         </MenuItem>
-        <Divider />
+        <li className="project-menu-group" role="presentation">
+          Projects
+        </li>
         {all.map((p) => {
           const on = ids.includes(p.id);
           return (
             <MenuItem
               key={p.id}
+              className="project-menu-item"
               role="menuitemcheckbox"
               aria-checked={on}
               disabled={on && showing.length === 1}
               onClick={() => toggle(p.id)}
             >
-              <ListItemIcon>
-                <Check on={on} />
-              </ListItemIcon>
+              <Check on={on} />
               <span className="project-option">
-                <span>{p.name}</span>
+                <span className="project-option-name">{p.name}</span>
                 <Indexed project={p} />
               </span>
-              {p.maturity !== null ? <RingGlyph progress={p.maturity} size={20} /> : null}
+              {p.maturity !== null ? <RingGlyph progress={p.maturity} size={18} /> : null}
             </MenuItem>
           );
         })}
@@ -119,8 +123,8 @@ export default function ProjectFilter({
 
 function Check({ on }: { on: boolean }) {
   return on ? (
-    <CheckBoxRoundedIcon sx={{ fontSize: 18, color: "primary.main" }} />
+    <CheckBoxRoundedIcon aria-hidden sx={{ fontSize: 18, flex: "none", color: "var(--accent)" }} />
   ) : (
-    <CheckBoxOutlineBlankRoundedIcon sx={{ fontSize: 18, color: "text.disabled" }} />
+    <CheckBoxOutlineBlankRoundedIcon aria-hidden sx={{ fontSize: 18, flex: "none", color: "var(--faint)" }} />
   );
 }
