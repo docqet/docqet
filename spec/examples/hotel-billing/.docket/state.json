@@ -1,0 +1,1079 @@
+{
+  "docket": "0.1",
+  "project": {
+    "id": "hotel-billing",
+    "name": "Hotel Billing"
+  },
+  "commit": "9b31d07",
+  "indexedAt": "2026-11-18T16:20:00Z",
+  "results": {
+    "commit": "7e0c4a2",
+    "suites": [
+      {
+        "suite": "acceptance",
+        "path": "reports/acceptance.json",
+        "ranAt": "2026-11-17T22:41:09Z"
+      },
+      {
+        "suite": "unit",
+        "path": "reports/unit.xml",
+        "ranAt": "2026-11-17T22:39:52Z"
+      }
+    ]
+  },
+  "summary": {
+    "maturity": 56,
+    "band": "Beta",
+    "domains": 2,
+    "features": 5,
+    "capabilities": {
+      "Prototype": 1,
+      "Alpha": 6,
+      "Beta": 3,
+      "GA": 2
+    },
+    "rules": {
+      "decided": 3,
+      "implemented": 2,
+      "tested": 1,
+      "passing": 8,
+      "failing": 1
+    },
+    "gaps": 4,
+    "problems": 4
+  },
+  "domains": [
+    {
+      "id": "billing",
+      "file": "docs/product/billing/domain.md",
+      "name": "Billing",
+      "summary": "Charging guests for their stays, and getting paid.",
+      "maturity": 52,
+      "band": "Beta",
+      "body": "A booking here is what a guest is charged for a stay, not the hold on a room\nthat Guest stays means by it."
+    },
+    {
+      "id": "finance",
+      "file": "docs/product/finance/domain.md",
+      "name": "Finance",
+      "summary": "Keeping the hotel's accounts, and getting paid by the companies it bills.",
+      "maturity": 61,
+      "band": "Beta",
+      "body": ""
+    }
+  ],
+  "features": [
+    {
+      "id": "guest-bills",
+      "domain": "billing",
+      "file": "docs/product/billing/features/guest-bills.md",
+      "name": "Guest bills",
+      "summary": "Keeping an accurate record of what each guest owes during their stay.",
+      "capabilities": [
+        "extra-charges",
+        "city-tax",
+        "split-bills"
+      ],
+      "maturity": 67,
+      "band": "Beta",
+      "body": ""
+    },
+    {
+      "id": "payments",
+      "domain": "billing",
+      "file": "docs/product/billing/features/payments.md",
+      "name": "Payments",
+      "summary": "Getting paid for stays, before the guest arrives and while they're here.",
+      "capabilities": [
+        "deposits",
+        "pay-by-link"
+      ],
+      "maturity": 49,
+      "band": "Alpha",
+      "body": ""
+    },
+    {
+      "id": "company-accounts",
+      "domain": "finance",
+      "file": "docs/product/finance/features/company-accounts.md",
+      "name": "Company accounts",
+      "summary": "Billing companies for their staff's stays, so the guests don't pay themselves.",
+      "capabilities": [
+        "company-accounts",
+        "direct-billing",
+        "invoices"
+      ],
+      "maturity": 45,
+      "band": "Alpha",
+      "body": ""
+    },
+    {
+      "id": "closing-the-day",
+      "domain": "finance",
+      "file": "docs/product/finance/features/closing-the-day.md",
+      "name": "Closing the day",
+      "summary": "Making each day's takings final, and handing them to the hotel's accounts.",
+      "capabilities": [
+        "night-audit",
+        "daily-takings",
+        "accounting-export"
+      ],
+      "maturity": 73,
+      "band": "Beta",
+      "body": ""
+    },
+    {
+      "id": "front-desk",
+      "domain": "billing",
+      "file": "docs/product/billing/features/front-desk.md",
+      "name": "Front desk",
+      "summary": "Welcoming guests when they arrive and settling up when they leave.",
+      "capabilities": [
+        "check-out"
+      ],
+      "maturity": 35,
+      "band": "Alpha",
+      "body": "Billing's part of the front desk is settling the bill at check-out. Checking\nguests in and out is Guest stays'."
+    }
+  ],
+  "capabilities": [
+    {
+      "id": "extra-charges",
+      "domain": "billing",
+      "file": "docs/product/billing/capabilities/extra-charges.md",
+      "name": "Extra charges",
+      "summary": "Staff add extras such as breakfast, parking or the minibar to a guest's bill, so everything the guest owes is on it.",
+      "stability": "GA",
+      "rules": [
+        "bills/charges-are-never-changed",
+        "bills/closed-bills-dont-change"
+      ],
+      "concepts": [
+        "bill",
+        "charge"
+      ],
+      "code": [
+        {
+          "glob": "src/ledger/**",
+          "files": 2
+        }
+      ],
+      "gaps": [],
+      "body": "## What people can do\n\n### Front desk clerk\n\n- Add an extra to a guest's bill.\n- Correct a charge that was added by mistake.\n\n## Success\n\n- No guest leaves with an extra that never reached their bill.",
+      "feature": "guest-bills"
+    },
+    {
+      "id": "city-tax",
+      "domain": "billing",
+      "file": "docs/product/billing/capabilities/city-tax.md",
+      "name": "City tax",
+      "summary": "The software adds the city's tourist tax to each guest's bill, night by night, so the hotel collects what it owes the city.",
+      "stability": "Alpha",
+      "rules": [
+        "tax/city-tax-per-guest-night",
+        "tax/children-pay-no-city-tax",
+        "tax/city-tax-stops-after-seven-nights"
+      ],
+      "concepts": [
+        "bill",
+        "charge"
+      ],
+      "code": [
+        {
+          "glob": "src/tax/**",
+          "files": 1
+        }
+      ],
+      "gaps": [
+        "capability:city-tax#children-corrected-by-hand"
+      ],
+      "body": "## What people can do\n\n### Front desk clerk\n\n- See the city tax on a guest's bill, night by night.",
+      "feature": "guest-bills"
+    },
+    {
+      "id": "split-bills",
+      "domain": "billing",
+      "file": "docs/product/billing/capabilities/split-bills.md",
+      "name": "Split bills",
+      "summary": "Clerks split a bill between guests sharing a room, or move charges onto another guest's bill.",
+      "stability": "Prototype",
+      "rules": [
+        "bills/moving-charges-keeps-the-total"
+      ],
+      "concepts": [
+        "bill",
+        "charge"
+      ],
+      "code": [],
+      "gaps": [],
+      "body": "## What people can do\n\n### Front desk clerk\n\n- Split a bill evenly between the guests in a room.\n- Move a charge onto another guest's bill.\n\n## Learning\n\n- Do guests split evenly, or charge by charge?",
+      "feature": "guest-bills"
+    },
+    {
+      "id": "deposits",
+      "domain": "billing",
+      "file": "docs/product/billing/capabilities/deposits.md",
+      "name": "Deposits",
+      "summary": "The software takes a deposit on the guest's card when a stay is booked, so the hotel isn't left out of pocket by guests who never arrive.",
+      "stability": "Beta",
+      "rules": [
+        "payments/deposit-is-the-first-night",
+        "payments/deposit-counts-towards-the-bill",
+        "payments/card-numbers-are-never-kept"
+      ],
+      "concepts": [
+        "payment",
+        "bill"
+      ],
+      "code": [
+        {
+          "glob": "src/payments/deposit*.ts",
+          "files": 2
+        }
+      ],
+      "gaps": [],
+      "body": "## What people can do\n\n### Front desk clerk\n\n- See whether a stay's deposit has been paid.\n- Take a deposit again when the guest's card was declined.\n\n## Open decisions\n\n- **Long stays:** is a week's stay still secured by one night's deposit?",
+      "feature": "payments"
+    },
+    {
+      "id": "pay-by-link",
+      "domain": "billing",
+      "file": "docs/product/billing/capabilities/pay-by-link.md",
+      "name": "Pay by link",
+      "summary": "Guests pay their bill from a link the hotel sends them, without coming to the desk.",
+      "stability": "Alpha",
+      "rules": [
+        "payments/card-numbers-are-never-kept",
+        "bills/closed-bills-dont-change"
+      ],
+      "concepts": [
+        "payment",
+        "bill"
+      ],
+      "code": [],
+      "gaps": [
+        "capability:pay-by-link#hotels-currency-only"
+      ],
+      "body": "## What people can do\n\n### Front desk clerk\n\n- Send a guest a link to pay what they owe.\n\n### Guest\n\n- Pay their bill by card from the link.\n\n## Learning\n\n- Do guests pay before they leave, or wait until they're home?",
+      "feature": "payments"
+    },
+    {
+      "id": "company-accounts",
+      "domain": "finance",
+      "file": "docs/product/finance/capabilities/company-accounts.md",
+      "name": "Company accounts",
+      "summary": "Bookkeepers set up companies that pay for their staff's stays, each with a credit limit.",
+      "stability": "Beta",
+      "rules": [
+        "company-accounts/credit-limit"
+      ],
+      "concepts": [
+        "company-account"
+      ],
+      "code": [
+        {
+          "glob": "src/companies/**",
+          "files": 1
+        }
+      ],
+      "gaps": [],
+      "body": "## What people can do\n\n### Bookkeeper\n\n- Set up a company, with its billing address and credit limit.\n- Name the guests whose stays the company pays for.\n- See what each company owes.",
+      "feature": "company-accounts"
+    },
+    {
+      "id": "direct-billing",
+      "domain": "finance",
+      "file": "docs/product/finance/capabilities/direct-billing.md",
+      "name": "Direct billing",
+      "summary": "Clerks move a guest's bill to their company's account at check-out, so the guest leaves without paying.",
+      "stability": "Alpha",
+      "rules": [
+        "company-accounts/credit-limit",
+        "company-accounts/only-named-guests"
+      ],
+      "concepts": [
+        "bill",
+        "company-account"
+      ],
+      "code": [
+        {
+          "glob": "src/companies/**",
+          "files": 1
+        }
+      ],
+      "gaps": [
+        "capability:direct-billing#whole-bill-moves"
+      ],
+      "body": "## What people can do\n\n### Front desk clerk\n\n- Move a guest's bill to their company's account.",
+      "feature": "company-accounts"
+    },
+    {
+      "id": "invoices",
+      "domain": "finance",
+      "file": "docs/product/finance/capabilities/invoices.md",
+      "name": "Invoices",
+      "summary": "Bookkeepers invoice each company once a month for its staff's stays.",
+      "stability": "Alpha",
+      "rules": [
+        "invoices/invoice-numbers-run-in-sequence"
+      ],
+      "concepts": [
+        "company-account"
+      ],
+      "code": [
+        {
+          "glob": "src/invoices/**",
+          "files": 2
+        }
+      ],
+      "gaps": [
+        "capability:invoices#no-payment-reminders"
+      ],
+      "body": "## What people can do\n\n### Bookkeeper\n\n- Invoice every company for last month's stays.\n- Record a company's payment against its invoice.",
+      "feature": "company-accounts"
+    },
+    {
+      "id": "night-audit",
+      "domain": "finance",
+      "file": "docs/product/finance/capabilities/night-audit.md",
+      "name": "Night audit",
+      "summary": "The software closes each business day overnight, charging every guest in the hotel for that night's room, so the day's takings are final.",
+      "stability": "GA",
+      "rules": [
+        "night-audit/one-room-charge-per-night",
+        "night-audit/closed-days-dont-change",
+        "bills/charges-are-never-changed"
+      ],
+      "concepts": [
+        "business-day",
+        "bill",
+        "charge"
+      ],
+      "code": [
+        {
+          "glob": "src/night-audit/**",
+          "files": 1
+        }
+      ],
+      "gaps": [],
+      "body": "## What people can do\n\n### Night auditor\n\n- See whether tonight's audit has run, and what it charged.\n- Start the audit by hand when it hasn't run.\n\n## Success\n\n- Every morning starts with yesterday closed, without anyone staying up for it.",
+      "feature": "closing-the-day"
+    },
+    {
+      "id": "daily-takings",
+      "domain": "finance",
+      "file": "docs/product/finance/capabilities/daily-takings.md",
+      "name": "Daily takings",
+      "summary": "Managers see each closed day's takings, for rooms, food and drink, and tax.",
+      "stability": "Beta",
+      "rules": [
+        "night-audit/closed-days-dont-change"
+      ],
+      "concepts": [
+        "business-day",
+        "charge"
+      ],
+      "code": [],
+      "gaps": [],
+      "body": "## What people can do\n\n### Manager\n\n- See a closed day's takings.\n- Compare a day with the same day last year.",
+      "feature": "closing-the-day"
+    },
+    {
+      "id": "accounting-export",
+      "domain": "finance",
+      "file": "docs/product/finance/capabilities/accounting-export.md",
+      "name": "Accounting export",
+      "summary": "Bookkeepers hand each closed day's takings to the hotel's accounting software, without typing them in.",
+      "stability": "Alpha",
+      "rules": [
+        "night-audit/closed-days-dont-change"
+      ],
+      "concepts": [
+        "business-day"
+      ],
+      "code": [],
+      "gaps": [],
+      "body": "## What people can do\n\n### Bookkeeper\n\n- Export the closed days since the last export.\n\n## Learning\n\n- Is a day at a time what the accountant wants, or one export a month?",
+      "feature": "closing-the-day"
+    },
+    {
+      "id": "check-out",
+      "domain": "billing",
+      "file": "docs/product/billing/capabilities/check-out.md",
+      "name": "Check-out",
+      "summary": "Guests settle their bill as they leave, so nothing is left owing once they've gone.",
+      "stability": "Alpha",
+      "rules": [
+        "bills/closed-bills-dont-change"
+      ],
+      "concepts": [
+        "bill",
+        "booking"
+      ],
+      "code": [],
+      "gaps": [],
+      "body": "## What people can do\n\n### Front desk clerk\n\n- See a departing guest's bill, with every night and charge on it.\n- Take payment for the balance, and close the bill.\n\n## Learning\n\n- Do guests want their bill emailed as they leave, or printed at the desk?",
+      "feature": "front-desk"
+    }
+  ],
+  "rules": [
+    {
+      "id": "bills/charges-are-never-changed",
+      "domain": "billing",
+      "file": "docs/product/billing/rules/bills/charges-are-never-changed.md",
+      "name": "A charge is never changed or deleted",
+      "summary": "A charge is corrected by adding a charge for the opposite amount, never by changing or deleting it.",
+      "kind": "core",
+      "status": "passing",
+      "capabilities": [
+        "extra-charges",
+        "night-audit"
+      ],
+      "concepts": [
+        "charge",
+        "bill"
+      ],
+      "implementedIn": [
+        {
+          "file": "src/ledger/ledger.ts",
+          "line": 21,
+          "symbol": "correct"
+        }
+      ],
+      "verifiedBy": [
+        {
+          "file": "features/bills.feature",
+          "line": 3,
+          "test": "A charge is never changed or deleted",
+          "suite": "acceptance",
+          "result": "passed",
+          "cases": {
+            "passed": 1,
+            "failed": 0
+          }
+        }
+      ],
+      "body": "## Why\n\nThe hotel's accountant and the tax office need to see every charge that was\nmade, including the mistakes."
+    },
+    {
+      "id": "bills/closed-bills-dont-change",
+      "domain": "billing",
+      "file": "docs/product/billing/rules/bills/closed-bills-dont-change.md",
+      "name": "A closed bill can't change",
+      "summary": "Nothing can be charged or paid on a closed bill. A charge that arrives after the guest has left goes on a new bill for the same stay.",
+      "kind": "edge-case",
+      "status": "passing",
+      "capabilities": [
+        "extra-charges",
+        "pay-by-link",
+        "check-out"
+      ],
+      "concepts": [
+        "bill",
+        "charge",
+        "payment"
+      ],
+      "implementedIn": [
+        {
+          "file": "src/ledger/ledger.ts",
+          "line": 13,
+          "symbol": "post"
+        }
+      ],
+      "verifiedBy": [
+        {
+          "file": "src/ledger/ledger.test.ts",
+          "line": 13,
+          "test": "post > refuses a charge on a closed bill",
+          "suite": "unit",
+          "result": "passed",
+          "cases": {
+            "passed": 1,
+            "failed": 0
+          }
+        }
+      ],
+      "body": ""
+    },
+    {
+      "id": "tax/city-tax-per-guest-night",
+      "domain": "billing",
+      "file": "docs/product/billing/rules/tax/city-tax-per-guest-night.md",
+      "name": "City tax is charged per guest, per night",
+      "summary": "Each guest on a stay is charged the city's tax for each night, at the rate on that night.",
+      "kind": "core",
+      "status": "passing",
+      "capabilities": [
+        "city-tax"
+      ],
+      "concepts": [
+        "bill",
+        "charge"
+      ],
+      "implementedIn": [
+        {
+          "file": "src/tax/city-tax.ts",
+          "line": 10,
+          "symbol": "cityTax"
+        }
+      ],
+      "verifiedBy": [
+        {
+          "file": "features/city-tax.feature",
+          "line": 3,
+          "test": "City tax is charged per guest, per night",
+          "suite": "acceptance",
+          "result": "passed",
+          "cases": {
+            "passed": 1,
+            "failed": 0
+          }
+        }
+      ],
+      "body": "## Why\n\nThe hotel owes the city tax for every guest night, whether or not it charged\nthe guest."
+    },
+    {
+      "id": "tax/children-pay-no-city-tax",
+      "domain": "billing",
+      "file": "docs/product/billing/rules/tax/children-pay-no-city-tax.md",
+      "name": "Children pay no city tax",
+      "summary": "Guests under 16 aren't charged city tax.",
+      "kind": "edge-case",
+      "status": "decided",
+      "capabilities": [
+        "city-tax"
+      ],
+      "concepts": [
+        "charge"
+      ],
+      "implementedIn": [],
+      "verifiedBy": [],
+      "body": ""
+    },
+    {
+      "id": "tax/city-tax-stops-after-seven-nights",
+      "domain": "billing",
+      "file": "docs/product/billing/rules/tax/city-tax-stops-after-seven-nights.md",
+      "name": "City tax stops after seven nights",
+      "summary": "A guest staying longer than seven nights is charged city tax for the first seven only.",
+      "kind": "edge-case",
+      "status": "implemented",
+      "capabilities": [
+        "city-tax"
+      ],
+      "concepts": [
+        "charge"
+      ],
+      "implementedIn": [
+        {
+          "file": "src/tax/city-tax.ts",
+          "line": 3,
+          "symbol": "taxedNights"
+        }
+      ],
+      "verifiedBy": [],
+      "body": ""
+    },
+    {
+      "id": "bills/moving-charges-keeps-the-total",
+      "domain": "billing",
+      "file": "docs/product/billing/rules/bills/moving-charges-keeps-the-total.md",
+      "name": "Moving charges keeps the total",
+      "summary": "Splitting a bill or moving charges between bills never changes the total owed across them.",
+      "kind": "core",
+      "status": "decided",
+      "capabilities": [
+        "split-bills"
+      ],
+      "concepts": [
+        "bill",
+        "charge"
+      ],
+      "implementedIn": [],
+      "verifiedBy": [],
+      "body": ""
+    },
+    {
+      "id": "payments/deposit-is-the-first-night",
+      "domain": "billing",
+      "file": "docs/product/billing/rules/payments/deposit-is-the-first-night.md",
+      "name": "A deposit is the first night",
+      "summary": "A stay's deposit is the first night's room rate, with its city tax.",
+      "kind": "core",
+      "status": "passing",
+      "capabilities": [
+        "deposits"
+      ],
+      "concepts": [
+        "payment"
+      ],
+      "implementedIn": [
+        {
+          "file": "src/payments/deposit.ts",
+          "line": 3,
+          "symbol": "depositAmount"
+        }
+      ],
+      "verifiedBy": [
+        {
+          "file": "features/deposits.feature",
+          "line": 3,
+          "test": "A deposit is the first night",
+          "suite": "acceptance",
+          "result": "passed",
+          "cases": {
+            "passed": 1,
+            "failed": 0
+          }
+        }
+      ],
+      "body": ""
+    },
+    {
+      "id": "payments/deposit-counts-towards-the-bill",
+      "domain": "billing",
+      "file": "docs/product/billing/rules/payments/deposit-counts-towards-the-bill.md",
+      "name": "A deposit counts towards the bill",
+      "summary": "A deposit is a payment on the guest's bill, so the guest pays only the rest at check-out.",
+      "kind": "edge-case",
+      "status": "tested",
+      "capabilities": [
+        "deposits"
+      ],
+      "concepts": [
+        "payment",
+        "bill"
+      ],
+      "implementedIn": [
+        {
+          "file": "src/payments/deposit.ts",
+          "line": 8,
+          "symbol": "applyDeposit"
+        }
+      ],
+      "verifiedBy": [
+        {
+          "file": "src/payments/deposit.test.ts",
+          "line": 6,
+          "test": "applyDeposit > counts the deposit towards the bill",
+          "suite": "unit",
+          "result": null,
+          "cases": {
+            "passed": 0,
+            "failed": 0
+          }
+        }
+      ],
+      "body": ""
+    },
+    {
+      "id": "payments/card-numbers-are-never-kept",
+      "domain": "billing",
+      "file": "docs/product/billing/rules/payments/card-numbers-are-never-kept.md",
+      "name": "Card numbers are never kept",
+      "summary": "The hotel never stores a guest's card number. Only the payment provider holds it.",
+      "kind": "core",
+      "status": "passing",
+      "capabilities": [
+        "deposits",
+        "pay-by-link"
+      ],
+      "concepts": [
+        "payment"
+      ],
+      "implementedIn": [
+        {
+          "file": "src/payments/provider.ts",
+          "line": 7,
+          "symbol": "takePayment"
+        }
+      ],
+      "verifiedBy": [
+        {
+          "file": "features/deposits.feature",
+          "line": 11,
+          "test": "Card numbers are never kept",
+          "suite": "acceptance",
+          "result": "passed",
+          "cases": {
+            "passed": 1,
+            "failed": 0
+          }
+        }
+      ],
+      "body": "## Why\n\nHolding card numbers would put the hotel under the card schemes' security\naudits."
+    },
+    {
+      "id": "company-accounts/credit-limit",
+      "domain": "finance",
+      "file": "docs/product/finance/rules/company-accounts/credit-limit.md",
+      "name": "A company can't go over its credit limit",
+      "summary": "A bill can't move to a company's account if it would take what the company owes over its credit limit.",
+      "kind": "core",
+      "status": "passing",
+      "capabilities": [
+        "company-accounts",
+        "direct-billing"
+      ],
+      "concepts": [
+        "company-account",
+        "bill"
+      ],
+      "implementedIn": [
+        {
+          "file": "src/companies/credit.ts",
+          "line": 5,
+          "symbol": "assertWithinLimit"
+        }
+      ],
+      "verifiedBy": [
+        {
+          "file": "features/company-accounts.feature",
+          "line": 3,
+          "test": "A company can't go over its credit limit",
+          "suite": "acceptance",
+          "result": "passed",
+          "cases": {
+            "passed": 2,
+            "failed": 0
+          }
+        }
+      ],
+      "body": ""
+    },
+    {
+      "id": "company-accounts/only-named-guests",
+      "domain": "finance",
+      "file": "docs/product/finance/rules/company-accounts/only-named-guests.md",
+      "name": "Only named guests' bills go to a company",
+      "summary": "A bill can move to a company's account only if the company has named the guest as someone whose stays it pays for.",
+      "kind": "edge-case",
+      "status": "implemented",
+      "capabilities": [
+        "direct-billing"
+      ],
+      "concepts": [
+        "company-account",
+        "bill"
+      ],
+      "implementedIn": [
+        {
+          "file": "src/companies/credit.ts",
+          "line": 12,
+          "symbol": "assertNamedGuest"
+        }
+      ],
+      "verifiedBy": [],
+      "body": ""
+    },
+    {
+      "id": "invoices/invoice-numbers-run-in-sequence",
+      "domain": "finance",
+      "file": "docs/product/finance/rules/invoices/invoice-numbers-run-in-sequence.md",
+      "name": "Invoice numbers run in sequence",
+      "summary": "Each invoice's number is one more than the last, with none skipped or used twice.",
+      "kind": "core",
+      "status": "passing",
+      "capabilities": [
+        "invoices"
+      ],
+      "concepts": [
+        "company-account"
+      ],
+      "implementedIn": [
+        {
+          "file": "src/invoices/numbering.ts",
+          "line": 3,
+          "symbol": "nextInvoiceNumber"
+        }
+      ],
+      "verifiedBy": [
+        {
+          "file": "src/invoices/numbering.test.ts",
+          "line": 5,
+          "test": "nextInvoiceNumber > follows the last invoice's number",
+          "suite": "unit",
+          "result": "passed",
+          "cases": {
+            "passed": 1,
+            "failed": 0
+          }
+        }
+      ],
+      "body": "## Why\n\nThe tax office requires it, so it can tell no invoice is missing."
+    },
+    {
+      "id": "night-audit/one-room-charge-per-night",
+      "domain": "finance",
+      "file": "docs/product/finance/rules/night-audit/one-room-charge-per-night.md",
+      "name": "A guest is charged once a night for their room",
+      "summary": "Each guest in the hotel is charged for their room once for each night, even if the audit is started more than once.",
+      "kind": "core",
+      "status": "failing",
+      "capabilities": [
+        "night-audit"
+      ],
+      "concepts": [
+        "business-day",
+        "charge"
+      ],
+      "implementedIn": [
+        {
+          "file": "src/night-audit/audit.ts",
+          "line": 14,
+          "symbol": "runNightAudit"
+        }
+      ],
+      "verifiedBy": [
+        {
+          "file": "features/night-audit.feature",
+          "line": 3,
+          "test": "A guest is charged once a night for their room",
+          "suite": "acceptance",
+          "result": "failed",
+          "cases": {
+            "passed": 1,
+            "failed": 1
+          }
+        }
+      ],
+      "body": ""
+    },
+    {
+      "id": "night-audit/closed-days-dont-change",
+      "domain": "finance",
+      "file": "docs/product/finance/rules/night-audit/closed-days-dont-change.md",
+      "name": "A closed day can't change",
+      "summary": "Once a business day is closed, nothing is added to it. A correction to a closed day goes on the current one.",
+      "kind": "edge-case",
+      "status": "passing",
+      "capabilities": [
+        "night-audit",
+        "daily-takings",
+        "accounting-export"
+      ],
+      "concepts": [
+        "business-day",
+        "charge"
+      ],
+      "implementedIn": [
+        {
+          "file": "src/night-audit/audit.ts",
+          "line": 6,
+          "symbol": "assertDayOpen"
+        }
+      ],
+      "verifiedBy": [
+        {
+          "file": "features/night-audit.feature",
+          "line": 16,
+          "test": "A closed day can't change",
+          "suite": "acceptance",
+          "result": "passed",
+          "cases": {
+            "passed": 1,
+            "failed": 0
+          }
+        }
+      ],
+      "body": "## Why\n\nA closed day's takings have already gone to the accountant."
+    },
+    {
+      "id": "payments/overpayments-are-refunded",
+      "domain": "billing",
+      "file": "docs/product/billing/rules/payments/overpayments-are-refunded.md",
+      "name": "Overpayments are refunded",
+      "summary": "A guest who has paid more than their bill is refunded the difference before the bill closes.",
+      "kind": "edge-case",
+      "status": "decided",
+      "capabilities": [],
+      "concepts": [
+        "payment",
+        "bill"
+      ],
+      "implementedIn": [],
+      "verifiedBy": [],
+      "body": ""
+    }
+  ],
+  "concepts": [
+    {
+      "id": "bill",
+      "domain": "billing",
+      "file": "docs/product/billing/concepts/bill.md",
+      "name": "Bill",
+      "summary": "Everything a guest owes for one stay, and everything they've paid towards it.",
+      "capabilities": [
+        "extra-charges",
+        "city-tax",
+        "split-bills",
+        "deposits",
+        "pay-by-link",
+        "direct-billing",
+        "night-audit",
+        "check-out"
+      ],
+      "rules": [
+        "bills/charges-are-never-changed",
+        "bills/closed-bills-dont-change",
+        "tax/city-tax-per-guest-night",
+        "bills/moving-charges-keeps-the-total",
+        "payments/deposit-counts-towards-the-bill",
+        "company-accounts/credit-limit",
+        "company-accounts/only-named-guests",
+        "payments/overpayments-are-refunded"
+      ],
+      "body": "## Details\n\nA bill is made of [charges](charge.md) and [payments](payment.md). Its balance\nis what's been charged less what's been paid. A guest's bill can move to their\n[company's account](company-account.md), which then owes it instead.\n\n## Lifecycle\n\nOpen → Closed\n\nA bill closes when its balance is zero, or when it moves to a company's\naccount.\n\n## Not to be confused with\n\n- **Invoice:** what a company is sent for a month of its staff's bills."
+    },
+    {
+      "id": "business-day",
+      "domain": "finance",
+      "file": "docs/product/finance/concepts/business-day.md",
+      "name": "Business day",
+      "summary": "The hotel's day for its accounts, from one night audit to the next.",
+      "capabilities": [
+        "night-audit",
+        "daily-takings",
+        "accounting-export"
+      ],
+      "rules": [
+        "night-audit/one-room-charge-per-night",
+        "night-audit/closed-days-dont-change"
+      ],
+      "body": "## Details\n\nA business day isn't a calendar day. It runs from when one night audit closes\nthe day before, usually around 03:00, until the next audit closes it. A\nbreakfast at 02:00 is on the previous business day.\n\n## Lifecycle\n\nOpen → Closed"
+    },
+    {
+      "id": "charge",
+      "domain": "billing",
+      "file": "docs/product/billing/concepts/charge.md",
+      "name": "Charge",
+      "summary": "One amount a guest owes, such as a night's room, a breakfast or a night's city tax.",
+      "capabilities": [
+        "extra-charges",
+        "city-tax",
+        "split-bills",
+        "night-audit",
+        "daily-takings"
+      ],
+      "rules": [
+        "bills/charges-are-never-changed",
+        "bills/closed-bills-dont-change",
+        "tax/city-tax-per-guest-night",
+        "tax/children-pay-no-city-tax",
+        "tax/city-tax-stops-after-seven-nights",
+        "bills/moving-charges-keeps-the-total",
+        "night-audit/one-room-charge-per-night",
+        "night-audit/closed-days-dont-change"
+      ],
+      "body": "## Details\n\nEach charge is on one [bill](bill.md), and on the\n[business day](business-day.md) it was added. A correction is a charge for the\nopposite amount, pointing at the charge it corrects."
+    },
+    {
+      "id": "company-account",
+      "domain": "finance",
+      "file": "docs/product/finance/concepts/company-account.md",
+      "name": "Company account",
+      "summary": "A company that pays for its staff's stays, and what it owes the hotel.",
+      "capabilities": [
+        "company-accounts",
+        "direct-billing",
+        "invoices"
+      ],
+      "rules": [
+        "company-accounts/credit-limit",
+        "company-accounts/only-named-guests",
+        "invoices/invoice-numbers-run-in-sequence"
+      ],
+      "body": "## Details\n\nA company account has a credit limit, and names the guests whose\n[bills](bill.md) it pays. It's invoiced once a month for the bills moved to it."
+    },
+    {
+      "id": "payment",
+      "domain": "billing",
+      "file": "docs/product/billing/concepts/payment.md",
+      "name": "Payment",
+      "summary": "Money a guest has paid towards their bill, by card or in cash.",
+      "capabilities": [
+        "deposits",
+        "pay-by-link"
+      ],
+      "rules": [
+        "bills/closed-bills-dont-change",
+        "payments/deposit-is-the-first-night",
+        "payments/deposit-counts-towards-the-bill",
+        "payments/card-numbers-are-never-kept",
+        "payments/overpayments-are-refunded"
+      ],
+      "body": "## Details\n\nA deposit is a payment taken before the guest arrives. A card payment is\nknown by the provider's reference, never by the card's number.\n\n## Lifecycle\n\nPending → Paid\n\nA pending card payment can instead be Declined."
+    },
+    {
+      "id": "booking",
+      "domain": "billing",
+      "file": "docs/product/billing/concepts/booking.md",
+      "name": "Booking",
+      "summary": "What a guest is charged for a stay: its nights, at the rate agreed when it was booked.",
+      "capabilities": [
+        "check-out"
+      ],
+      "rules": [],
+      "body": "## Details\n\nA booking puts one room charge per night on the guest's [bill](bill.md), at its\nagreed rate, whatever the rate is on the night.\n\n## Not to be confused with\n\n- **The booking app's booking:** a guest's hold on a room. Billing doesn't\n  keep rooms free or taken, only what each stay costs."
+    }
+  ],
+  "gaps": [
+    {
+      "id": "capability:city-tax#children-corrected-by-hand",
+      "domain": "billing",
+      "kind": "to-close-later",
+      "text": "Guests' ages aren't recorded, so city tax is added for every guest on a stay, and clerks correct it by hand for children."
+    },
+    {
+      "id": "capability:pay-by-link#hotels-currency-only",
+      "domain": "billing",
+      "kind": "accepted-tradeoff",
+      "text": "Guests pay in the hotel's currency. Their card provider converts it, at its own rate."
+    },
+    {
+      "id": "capability:direct-billing#whole-bill-moves",
+      "domain": "finance",
+      "kind": "accepted-tradeoff",
+      "text": "A bill moves to a company's account whole. A guest who pays for their own extras pays for them before their bill moves."
+    },
+    {
+      "id": "capability:invoices#no-payment-reminders",
+      "domain": "finance",
+      "kind": "to-close-later",
+      "text": "Nothing reminds a company when an invoice is overdue. The bookkeeper checks the unpaid invoices each week and chases them by email."
+    }
+  ],
+  "problems": [
+    {
+      "type": "stale-results",
+      "subject": "results",
+      "capabilities": [],
+      "message": "The test results are from commit 7e0c4a2, not 9b31d07, the commit indexed."
+    },
+    {
+      "type": "below-level",
+      "subject": "rule:payments/deposit-counts-towards-the-bill",
+      "capabilities": [
+        "deposits"
+      ],
+      "message": "Deposits is Beta, which needs edge-case rules passing, but its test isn't in the results.",
+      "domain": "billing"
+    },
+    {
+      "type": "below-level",
+      "subject": "rule:night-audit/one-room-charge-per-night",
+      "capabilities": [
+        "night-audit"
+      ],
+      "message": "Night audit is GA, which needs core rules passing, but its test is failing.",
+      "domain": "finance"
+    },
+    {
+      "type": "unlinked-rule",
+      "subject": "rule:payments/overpayments-are-refunded",
+      "capabilities": [],
+      "message": "No capability follows this rule.",
+      "domain": "billing"
+    }
+  ]
+}
