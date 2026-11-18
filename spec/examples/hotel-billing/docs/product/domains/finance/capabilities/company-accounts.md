@@ -1,5 +1,5 @@
 ---
-stability: Beta
+stability: beta
 personas: [bookkeeper]
 rules: [company-accounts/credit-limit]
 concepts: [company-account]

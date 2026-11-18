@@ -1,5 +1,5 @@
 ---
-stability: Alpha
+stability: alpha
 personas: [front-desk-clerk]
 rules:
   - cancellations/free-cancellation-window

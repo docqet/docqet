@@ -15,7 +15,6 @@ import {
   byFeature,
   capabilityTarget,
   find,
-  levelId,
   bareId,
   domainName,
   featureTarget,
@@ -462,7 +461,7 @@ function ConceptView({
                     <button type="button" className="concept-row" onClick={() => onOpen("capability", c.id)}>
                       <BoltOutlinedIcon sx={{ fontSize: 15, color: "primary.main" }} />
                       <span className="concept-row-name">{c.name}</span>
-                      <StabilityMark level={levelId(c.stability)} feature={c.name} focusable={false} size="short" />
+                      <StabilityMark level={c.stability} feature={c.name} focusable={false} size="short" />
                     </button>
                   </li>
                 ))}

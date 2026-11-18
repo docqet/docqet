@@ -1,5 +1,5 @@
 ---
-stability: Prototype
+stability: prototype
 personas: [front-desk-clerk]
 rules: [bills/moving-charges-keeps-the-total]
 concepts: [bill, charge]

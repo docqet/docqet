@@ -1,5 +1,5 @@
 ---
-stability: Prototype
+stability: prototype
 personas: [front-desk-clerk]
 rules:
   - booking/no-double-booking

@@ -1,5 +1,5 @@
 ---
-stability: Alpha
+stability: alpha
 personas: [manager, front-desk-clerk]
 rules:
   - tax/city-tax-per-guest-night

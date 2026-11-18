@@ -1,12 +1,13 @@
 import { featureMaturity, maturityBand, projectMaturity } from "./design/maturity/maturity";
-import type { StabilityLevelId } from "./design/stability/stability";
+import { STABILITY_LEVEL_IDS, type StabilityLevelId } from "./design/stability/stability";
 
 /*
  * The shape of `state.json`, as the spec's "Index output" section describes
  * it, and of the view the page builds from one or more of them (DocketState).
  */
 
-export type Level = "Prototype" | "Alpha" | "Beta" | "GA";
+/* A stability level, as state.json and the design components both name it: "ga". */
+export type Level = StabilityLevelId;
 export type RuleKind = "core" | "edge-case";
 export type RuleStatus = "decided" | "implemented" | "tested" | "passing" | "failing";
 
@@ -196,9 +197,7 @@ export const projectOf = (file: StateFile): Project => ({
   band: file.summary.band,
 });
 
-const LEVELS: Record<StabilityLevelId, Level> = { prototype: "Prototype", alpha: "Alpha", beta: "Beta", ga: "GA" };
-
-const LEVEL_ORDER: Level[] = ["Prototype", "Alpha", "Beta", "GA"];
+const LEVEL_ORDER: readonly Level[] = STABILITY_LEVEL_IDS;
 const STATUS_ORDER: RuleStatus[] = ["failing", "decided", "implemented", "tested", "passing"];
 
 /* A rule's or concept's ID without its domain: `booking@billing` is `booking`. */
@@ -209,7 +208,7 @@ const union = (into: string[], ids: string[]) => {
   for (const id of ids) if (!into.includes(id)) into.push(id);
 };
 
-const band = (m: number | null) => (m === null ? null : LEVELS[maturityBand(m)]);
+const band = (m: number | null) => (m === null ? null : maturityBand(m));
 
 /*
  * What the chosen projects define, from each one's state, as one, the
@@ -391,7 +390,7 @@ export function combine(files: StateFile[]): DocketState {
    * levels in that domain alone. The feature's maturity counts every part.
    */
   const levelsIn = (id: string, domain?: string) =>
-    (find(state.capabilities, id)?.levels ?? []).filter((l) => !domain || l.domain === domain).map((l) => levelId(l.level));
+    (find(state.capabilities, id)?.levels ?? []).filter((l) => !domain || l.domain === domain).map((l) => l.level);
   for (const f of state.features) {
     const domains: string[] = [];
     for (const l of featureLists.get(f.id) ?? []) union(domains, [l.domain]);
@@ -463,7 +462,7 @@ export const maturityOf = (state: DocketState): number | null =>
 /* How ready a feature is for a persona: the maturity of just the capabilities in it that serve them. */
 export function personaReadinessIn(state: DocketState, persona: Persona, feature: Feature): number | null {
   const ids = feature.capabilities.filter((id) => persona.capabilities.includes(id));
-  return featureMaturity(ids.flatMap((id) => (find(state.capabilities, id)?.levels ?? []).map((l) => levelId(l.level))));
+  return featureMaturity(ids.flatMap((id) => (find(state.capabilities, id)?.levels ?? []).map((l) => l.level)));
 }
 
 /* A feature's part in a domain, if it has one. */
@@ -635,5 +634,3 @@ export function filterBy(state: DocketState, picks: Pick[]): MapFilter | null {
   return { capabilities, cards };
 }
 
-/* state.json's level ("GA") as the design components name it ("ga"). */
-export const levelId = (level: Level) => level.toLowerCase() as StabilityLevelId;

@@ -1,5 +1,5 @@
 ---
-stability: Alpha
+stability: alpha
 personas: [guest, front-desk-clerk]
 rules:
   - payments/card-numbers-are-never-kept

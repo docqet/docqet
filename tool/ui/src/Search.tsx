@@ -16,7 +16,6 @@ import {
   domainName,
   capabilityTarget,
   find,
-  levelId,
   bareId,
   docProjects,
   projectName,
@@ -422,17 +421,16 @@ function KindIcon({ kind }: { kind: Kind }) {
 
 /* A capability's level in a result, as its mark looks, without a popover of its own. */
 function LevelMark({ level }: { level: Level }) {
-  const id = levelId(level);
   return (
     <Box
       component="span"
       sx={[
         { display: "inline-flex", alignItems: "center", gap: 0.75, fontSize: 12, fontWeight: 500, flex: "none" },
-        levelColor(id),
+        levelColor(level),
       ]}
     >
-      <StabilityTrack level={id} />
-      {STABILITY[id].name}
+      <StabilityTrack level={level} />
+      {STABILITY[level].name}
     </Box>
   );
 }

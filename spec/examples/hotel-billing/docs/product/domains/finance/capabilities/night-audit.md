@@ -1,5 +1,5 @@
 ---
-stability: GA
+stability: ga
 personas: [night-auditor, manager]
 rules:
   - night-audit/one-room-charge-per-night

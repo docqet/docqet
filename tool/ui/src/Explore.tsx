@@ -25,7 +25,6 @@ import {
   featureConcepts,
   featureTarget,
   find,
-  levelId,
   projectName,
   partOf,
   personaReadinessIn,
@@ -165,7 +164,7 @@ function List({ state, kind, onOpen }: { state: DocketState; kind: ExploreKind; 
           : state.capabilities.map((c) => ({
               doc: c,
               meta: `${c.feature ? (find(state.features, c.feature)?.name ?? c.feature) : "Not in a feature"} · ${domains(docDomains(c))}`,
-              mark: <StabilityMark level={levelId(c.stability)} feature={c.name} focusable={false} size="short" />,
+              mark: <StabilityMark level={c.stability} feature={c.name} focusable={false} size="short" />,
             }));
     return docs.sort((a, b) => a.doc.name.localeCompare(b.doc.name));
   }, [state, kind]);
@@ -370,7 +369,7 @@ function CapabilityLevel({ state, capability }: { state: DocketState; capability
       <Level name={capability.name} level={capability.stability} />
       {differ ? (
         <span className="faint">
-          {capability.levels.map((l) => `${STABILITY[levelId(l.level)].name} in ${domainName(state, l.domain)}`).join(" · ")}
+          {capability.levels.map((l) => `${STABILITY[l.level].name} in ${domainName(state, l.domain)}`).join(" · ")}
         </span>
       ) : null}
     </span>
@@ -395,11 +394,10 @@ function readinessBasis(state: DocketState, persona: Persona, feature?: Feature)
 
 /* A capability's level, as a mark and its name in the level's color. */
 function Level({ name, level }: { name: string; level: Capability["stability"] }) {
-  const id = levelId(level);
   return (
-    <Box component="span" className="explore-level-mark" sx={levelColor(id)}>
-      <StabilityMark level={id} feature={name} size="short" />
-      {STABILITY[id].name}
+    <Box component="span" className="explore-level-mark" sx={levelColor(level)}>
+      <StabilityMark level={level} feature={name} size="short" />
+      {STABILITY[level].name}
     </Box>
   );
 }
@@ -486,7 +484,7 @@ function CapabilityRows({
         return (
           <li key={c.id}>
             <Row icon={NAMES.capability.icon} name={c.name} summary={c.summary} onClick={() => onOpen("capability", c.id)}>
-              <StabilityMark level={levelId(level)} feature={c.name} focusable={false} size="short" />
+              <StabilityMark level={level} feature={c.name} focusable={false} size="short" />
             </Row>
           </li>
         );

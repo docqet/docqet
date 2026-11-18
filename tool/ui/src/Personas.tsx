@@ -6,8 +6,9 @@ import PersonRoundedIcon from "@mui/icons-material/PersonRounded";
 import type { CSSProperties } from "react";
 import { DetailsCard, DetailsEyebrow, DetailsPopover } from "./design/DetailsPopover";
 import { Grip } from "./design/Grip";
+import { STABILITY_LEVEL_IDS } from "./design/stability/stability";
 import { StabilityMark } from "./design/stability/StabilityMark";
-import { levelId, type Capability, type Persona } from "./state";
+import type { Capability, Persona } from "./state";
 
 export function PersonaIcon({ size = 16 }: { size?: number }) {
   return <PersonOutlineRoundedIcon sx={{ fontSize: size, flex: "none", color: "var(--persona)" }} />;
@@ -107,8 +108,6 @@ const READINESS_SUMMARIES: Record<string, string> = {
   Ready: "What they need is mostly stable and supported, while any newer parts settle in.",
 };
 
-const LEVEL_RANK = ["Prototype", "Alpha", "Beta", "GA"];
-
 /* What a readiness is worked out from, for its popover: whose it is, and the capabilities that serve them, in a feature or everywhere. */
 export type ReadinessBasis = { persona: string; feature?: string; capabilities: Capability[] };
 
@@ -145,11 +144,11 @@ function ReadinessDetails({ value, basis }: { value: number; basis: ReadinessBas
       {n ? (
         <Box component="ul" sx={{ ...section, listStyle: "none", m: 0, p: 0, pt: 1.5 }}>
           {[...basis.capabilities]
-            .sort((a, b) => LEVEL_RANK.indexOf(b.stability) - LEVEL_RANK.indexOf(a.stability))
+            .sort((a, b) => STABILITY_LEVEL_IDS.indexOf(b.stability) - STABILITY_LEVEL_IDS.indexOf(a.stability))
             .map((c) => (
               <Box key={c.id} component="li" sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 2, py: 0.5 }}>
                 <span>{c.name}</span>
-                <StabilityMark level={levelId(c.stability)} feature={c.name} focusable={false} size="short" />
+                <StabilityMark level={c.stability} feature={c.name} focusable={false} size="short" />
               </Box>
             ))}
         </Box>

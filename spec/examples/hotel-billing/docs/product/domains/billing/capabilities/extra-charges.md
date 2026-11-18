@@ -1,5 +1,5 @@
 ---
-stability: GA
+stability: ga
 personas: [front-desk-clerk]
 rules:
   - bills/charges-are-never-changed

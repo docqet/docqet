@@ -1,5 +1,5 @@
 ---
-stability: Beta
+stability: beta
 personas: [manager]
 rules: [night-audit/closed-days-dont-change]
 concepts: [business-day, charge]

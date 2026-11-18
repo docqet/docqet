@@ -1,5 +1,5 @@
 ---
-stability: Alpha
+stability: alpha
 personas: [bookkeeper]
 rules: [night-audit/closed-days-dont-change]
 concepts: [business-day]

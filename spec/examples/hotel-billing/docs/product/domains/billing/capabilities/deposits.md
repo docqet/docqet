@@ -1,5 +1,5 @@
 ---
-stability: Beta
+stability: beta
 personas: [manager, front-desk-clerk]
 rules:
   - payments/deposit-is-the-first-night

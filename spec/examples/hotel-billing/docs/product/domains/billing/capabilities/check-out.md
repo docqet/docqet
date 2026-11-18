@@ -1,5 +1,5 @@
 ---
-stability: Alpha
+stability: alpha
 personas: [front-desk-clerk, guest]
 rules: [bills/closed-bills-dont-change]
 concepts: [bill, booking]

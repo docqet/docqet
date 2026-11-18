@@ -1,5 +1,5 @@
 ---
-stability: Prototype
+stability: prototype
 personas: [housekeeper, front-desk-clerk]
 concepts: [room@guest-stays]
 ---

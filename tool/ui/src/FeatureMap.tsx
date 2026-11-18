@@ -17,7 +17,6 @@ import {
   domainName,
   featureCard,
   find,
-  levelId,
   personaCard,
   projectName,
   partOf,
@@ -48,7 +47,7 @@ function line(state: DocketState, c: Capability, domain: string) {
   const contradictions = contradictionsOf(state, "capability", c.id).map((p) => p.message);
   return {
     name: c.name,
-    level: levelId(here),
+    level: here,
     hint: (
       <>
         <ContradictionHint messages={contradictions} />

@@ -1,5 +1,5 @@
 ---
-stability: Beta
+stability: beta
 personas: [front-desk-clerk]
 rules:
   - booking/no-double-booking

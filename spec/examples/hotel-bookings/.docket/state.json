@@ -23,15 +23,15 @@
   },
   "summary": {
     "maturity": 60,
-    "band": "Beta",
+    "band": "beta",
     "domains": 2,
     "features": 3,
     "personas": 3,
     "capabilities": {
-      "Prototype": 4,
-      "Alpha": 1,
-      "Beta": 2,
-      "GA": 1
+      "prototype": 4,
+      "alpha": 1,
+      "beta": 2,
+      "ga": 1
     },
     "rules": {
       "decided": 1,
@@ -50,7 +50,7 @@
       "name": "Guest stays",
       "summary": "Looking after guests from their booking to their check-out.",
       "maturity": 70,
-      "band": "Beta",
+      "band": "beta",
       "body": ""
     },
     {
@@ -59,7 +59,7 @@
       "name": "Property",
       "summary": "Keeping the hotel ready for guests.",
       "maturity": 15,
-      "band": "Prototype",
+      "band": "prototype",
       "body": "Maintenance belongs here too, once the software takes on that job."
     }
   ],
@@ -76,7 +76,7 @@
         "group-bookings"
       ],
       "maturity": 42,
-      "band": "Alpha",
+      "band": "alpha",
       "body": ""
     },
     {
@@ -90,7 +90,7 @@
         "check-out"
       ],
       "maturity": 84,
-      "band": "GA",
+      "band": "ga",
       "body": ""
     },
     {
@@ -104,7 +104,7 @@
         "cleaning-schedule"
       ],
       "maturity": 15,
-      "band": "Prototype",
+      "band": "prototype",
       "body": ""
     }
   ],
@@ -168,7 +168,7 @@
       "file": "docs/product/domains/guest-stays/capabilities/room-booking.md",
       "name": "Room booking",
       "summary": "Clerks book a free room for a guest's stay.",
-      "stability": "Beta",
+      "stability": "beta",
       "personas": [
         "front-desk-clerk"
       ],
@@ -200,7 +200,7 @@
       "file": "docs/product/domains/guest-stays/capabilities/cancellations.md",
       "name": "Cancellations",
       "summary": "Clerks cancel a booking when a guest's plans change, and the guest is refunded what the cancellation policy allows.",
-      "stability": "Alpha",
+      "stability": "alpha",
       "personas": [
         "front-desk-clerk"
       ],
@@ -229,7 +229,7 @@
       "file": "docs/product/domains/guest-stays/capabilities/check-in.md",
       "name": "Check-in",
       "summary": "Clerks check guests in when they arrive and give them their room.",
-      "stability": "Beta",
+      "stability": "beta",
       "personas": [
         "front-desk-clerk"
       ],
@@ -251,7 +251,7 @@
       "file": "docs/product/domains/guest-stays/capabilities/check-out.md",
       "name": "Check-out",
       "summary": "Clerks check guests out on their departure day and take payment for anything still owed.",
-      "stability": "GA",
+      "stability": "ga",
       "personas": [
         "front-desk-clerk"
       ],
@@ -270,7 +270,7 @@
       "file": "docs/product/domains/property/capabilities/cleaning-schedule.md",
       "name": "Cleaning schedule",
       "summary": "Housekeepers see which rooms to clean today, with early arrivals first.",
-      "stability": "Prototype",
+      "stability": "prototype",
       "personas": [
         "housekeeper"
       ],
@@ -289,7 +289,7 @@
       "file": "docs/product/domains/guest-stays/capabilities/group-bookings.md",
       "name": "Group bookings",
       "summary": "Clerks hold several rooms at once for a group travelling together, under one name.",
-      "stability": "Prototype",
+      "stability": "prototype",
       "personas": [
         "front-desk-clerk"
       ],
@@ -311,7 +311,7 @@
       "file": "docs/product/domains/guest-stays/capabilities/rate-calendar.md",
       "name": "Rate calendar",
       "summary": "Managers set each room type's nightly rate, date by date.",
-      "stability": "Prototype",
+      "stability": "prototype",
       "personas": [
         "manager"
       ],
@@ -328,7 +328,7 @@
       "file": "docs/product/domains/property/capabilities/room-status.md",
       "name": "Room status",
       "summary": "Housekeepers mark rooms clean or dirty, so the front desk knows which are ready.",
-      "stability": "Prototype",
+      "stability": "prototype",
       "personas": [
         "housekeeper",
         "front-desk-clerk"

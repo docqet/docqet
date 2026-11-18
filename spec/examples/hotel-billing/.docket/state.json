@@ -23,15 +23,15 @@
   },
   "summary": {
     "maturity": 56,
-    "band": "Beta",
+    "band": "beta",
     "domains": 2,
     "features": 5,
     "personas": 5,
     "capabilities": {
-      "Prototype": 1,
-      "Alpha": 6,
-      "Beta": 3,
-      "GA": 2
+      "prototype": 1,
+      "alpha": 6,
+      "beta": 3,
+      "ga": 2
     },
     "rules": {
       "decided": 3,
@@ -50,7 +50,7 @@
       "name": "Billing",
       "summary": "Charging guests for their stays, and getting paid.",
       "maturity": 52,
-      "band": "Beta",
+      "band": "beta",
       "body": "A booking here is what a guest is charged for a stay, not the hold on a room\nthat Guest stays means by it."
     },
     {
@@ -59,7 +59,7 @@
       "name": "Finance",
       "summary": "Keeping the hotel's accounts, and getting paid by the companies it bills.",
       "maturity": 61,
-      "band": "Beta",
+      "band": "beta",
       "body": ""
     }
   ],
@@ -76,7 +76,7 @@
         "split-bills"
       ],
       "maturity": 67,
-      "band": "Beta",
+      "band": "beta",
       "body": ""
     },
     {
@@ -90,7 +90,7 @@
         "pay-by-link"
       ],
       "maturity": 49,
-      "band": "Alpha",
+      "band": "alpha",
       "body": ""
     },
     {
@@ -105,7 +105,7 @@
         "invoices"
       ],
       "maturity": 45,
-      "band": "Alpha",
+      "band": "alpha",
       "body": ""
     },
     {
@@ -120,7 +120,7 @@
         "accounting-export"
       ],
       "maturity": 73,
-      "band": "Beta",
+      "band": "beta",
       "body": ""
     },
     {
@@ -133,7 +133,7 @@
         "check-out"
       ],
       "maturity": 35,
-      "band": "Alpha",
+      "band": "alpha",
       "body": "Billing's part of the front desk is settling the bill at check-out. Checking\nguests in and out is Guest stays'."
     }
   ],
@@ -242,7 +242,7 @@
       "file": "docs/product/domains/billing/capabilities/extra-charges.md",
       "name": "Extra charges",
       "summary": "Staff add extras such as breakfast, parking or the minibar to a guest's bill.",
-      "stability": "GA",
+      "stability": "ga",
       "personas": [
         "front-desk-clerk"
       ],
@@ -270,7 +270,7 @@
       "file": "docs/product/domains/billing/capabilities/city-tax.md",
       "name": "City tax",
       "summary": "The software adds the city's tourist tax to each guest's bill, night by night.",
-      "stability": "Alpha",
+      "stability": "alpha",
       "personas": [
         "manager",
         "front-desk-clerk"
@@ -302,7 +302,7 @@
       "file": "docs/product/domains/billing/capabilities/split-bills.md",
       "name": "Split bills",
       "summary": "Clerks split a bill between guests sharing a room, or move charges onto another guest's bill.",
-      "stability": "Prototype",
+      "stability": "prototype",
       "personas": [
         "front-desk-clerk"
       ],
@@ -324,7 +324,7 @@
       "file": "docs/product/domains/billing/capabilities/deposits.md",
       "name": "Deposits",
       "summary": "The software takes a deposit on the guest's card when a stay is booked.",
-      "stability": "Beta",
+      "stability": "beta",
       "personas": [
         "manager",
         "front-desk-clerk"
@@ -354,7 +354,7 @@
       "file": "docs/product/domains/billing/capabilities/pay-by-link.md",
       "name": "Pay by link",
       "summary": "Guests pay their bill by card from a link the hotel sends them, without coming to the desk.",
-      "stability": "Alpha",
+      "stability": "alpha",
       "personas": [
         "guest",
         "front-desk-clerk"
@@ -380,7 +380,7 @@
       "file": "docs/product/domains/finance/capabilities/company-accounts.md",
       "name": "Company accounts",
       "summary": "Bookkeepers set up companies that pay for their staff's stays, each with a credit limit.",
-      "stability": "Beta",
+      "stability": "beta",
       "personas": [
         "bookkeeper"
       ],
@@ -406,7 +406,7 @@
       "file": "docs/product/domains/finance/capabilities/direct-billing.md",
       "name": "Direct billing",
       "summary": "Clerks move a guest's bill to their company's account at check-out, so the guest leaves without paying.",
-      "stability": "Alpha",
+      "stability": "alpha",
       "personas": [
         "front-desk-clerk",
         "guest"
@@ -437,7 +437,7 @@
       "file": "docs/product/domains/finance/capabilities/invoices.md",
       "name": "Invoices",
       "summary": "Bookkeepers invoice each company once a month for its staff's stays.",
-      "stability": "Alpha",
+      "stability": "alpha",
       "personas": [
         "bookkeeper"
       ],
@@ -465,7 +465,7 @@
       "file": "docs/product/domains/finance/capabilities/night-audit.md",
       "name": "Night audit",
       "summary": "The software closes each business day overnight, charging every guest in the hotel for that night's room.",
-      "stability": "GA",
+      "stability": "ga",
       "personas": [
         "night-auditor",
         "manager"
@@ -496,7 +496,7 @@
       "file": "docs/product/domains/finance/capabilities/daily-takings.md",
       "name": "Daily takings",
       "summary": "Managers see each closed day's takings, for rooms, food and drink, and tax.",
-      "stability": "Beta",
+      "stability": "beta",
       "personas": [
         "manager"
       ],
@@ -518,7 +518,7 @@
       "file": "docs/product/domains/finance/capabilities/accounting-export.md",
       "name": "Accounting export",
       "summary": "Bookkeepers export each closed day's takings to the hotel's accounting software.",
-      "stability": "Alpha",
+      "stability": "alpha",
       "personas": [
         "bookkeeper"
       ],
@@ -539,7 +539,7 @@
       "file": "docs/product/domains/billing/capabilities/check-out.md",
       "name": "Check-out",
       "summary": "Guests settle their bill as they leave, so nothing is left owing once they've gone.",
-      "stability": "Alpha",
+      "stability": "alpha",
       "personas": [
         "front-desk-clerk",
         "guest"

@@ -1,5 +1,5 @@
 ---
-stability: Alpha
+stability: alpha
 personas: [bookkeeper]
 rules: [invoices/invoice-numbers-run-in-sequence]
 concepts: [company-account]

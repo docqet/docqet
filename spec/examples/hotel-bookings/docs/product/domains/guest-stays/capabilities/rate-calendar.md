@@ -1,5 +1,5 @@
 ---
-stability: Prototype
+stability: prototype
 personas: [manager]
 ---
 

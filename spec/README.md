@@ -98,6 +98,9 @@ its folder's name:
 | concept    | `docs/product/domains/<domain>/concepts/`     | `booking`                   |
 | persona    | `docs/product/personas/`                      | `front-desk-clerk`          |
 
+- **IDs, links and values are kebab case**: lowercase words joined by
+  hyphens, such as `room-booking`, `edge-case`, `to-close-later` or `ga`.
+  Tools show values with their own labels, such as GA for `ga`.
 - **No `id:` field.** The path is the ID, so there's nothing to drift. Renaming
   a file renames the doc, and the indexer reports every link and annotation the
   rename left dangling.
@@ -129,8 +132,8 @@ is its name. The paragraph under the title is its summary. The UI shows both.
 | concept | none | Details, Lifecycle, Not to be confused with | [booking](examples/hotel-bookings/docs/product/domains/guest-stays/concepts/booking.md) |
 | persona | `image` (required) | Needs, Knows, Context, Expects, Cares about | [front-desk-clerk](examples/hotel-bookings/docs/product/personas/front-desk-clerk.md) |
 
-- **`stability`** is `Prototype`, `Alpha`, `Beta` or `GA`. Only capabilities
-  have one. A feature's maturity is worked out from its capabilities' levels,
+- **`stability`** is `prototype`, `alpha`, `beta` or `ga`, which tools show
+  as Prototype, Alpha, Beta and GA. Only capabilities have one. A feature's maturity is worked out from its capabilities' levels,
   and a domain's from its parts of features (see
   [Features and maturity](#features-and-maturity)).
 - **`code`** is a list of path globs for where it lives. Tests aren't listed:

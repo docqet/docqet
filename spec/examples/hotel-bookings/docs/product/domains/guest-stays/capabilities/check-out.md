@@ -1,5 +1,5 @@
 ---
-stability: GA
+stability: ga
 personas: [front-desk-clerk]
 concepts: [booking]
 ---
