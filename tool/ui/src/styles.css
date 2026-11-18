@@ -957,28 +957,76 @@ kbd {
 }
 
 .stat-button {
+  grid-template-columns: auto auto 1fr;
+  grid-template-areas:
+    "icon n chevron"
+    "label label chevron";
+  align-items: center;
+  column-gap: 6px;
+  padding: 6px 8px 6px 12px;
+  margin-left: 6px;
   font: inherit;
   color: inherit;
   text-align: left;
-  background: none;
-  border: 0;
-  border-radius: 6px;
+  background: color-mix(in srgb, var(--text) 3%, transparent);
+  border: 1px solid var(--border);
+  border-radius: 8px;
   cursor: pointer;
+  transition: background 120ms, border-color 120ms, box-shadow 120ms;
 }
 
-.stat-button:hover,
+.stat-maturity + .stat-button {
+  margin-left: 10px;
+}
+
+.stat-icon {
+  grid-area: icon;
+  display: flex;
+}
+
+.stat-button .stat-n {
+  grid-area: n;
+}
+
+.stat-button .stat-label {
+  grid-area: label;
+}
+
+.stat-chevron {
+  grid-area: chevron;
+  justify-self: end;
+  color: var(--faint);
+  transition: transform 120ms, color 120ms;
+}
+
+.stat-button:hover {
+  background: var(--lit-row);
+  border-color: var(--border-strong);
+  box-shadow: 0 1px 2px rgb(30 16 70 / 0.08);
+}
+
+.stat-button:hover .stat-chevron {
+  color: var(--accent);
+  transform: translateX(2px);
+}
+
 .stat-button[aria-pressed="true"] {
-  background: var(--concept-soft);
+  background: var(--accent-soft);
+  border-color: color-mix(in srgb, var(--accent) 45%, transparent);
 }
 
-.stat-button:hover .stat-n,
-.stat-button[aria-pressed="true"] .stat-n {
-  color: var(--concept);
+.stat-button[aria-pressed="true"] .stat-n,
+.stat-button[aria-pressed="true"] .stat-chevron {
+  color: var(--accent);
+}
+
+.stat-button:active {
+  transform: translateY(1px);
 }
 
 .stat-button:focus-visible {
-  outline: 2px solid var(--concept);
-  outline-offset: -2px;
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
 }
 
 .feature-concepts {
@@ -1437,6 +1485,13 @@ kbd {
   }
   .stat-n {
     font-size: 17px;
+  }
+  .stat-button {
+    margin-left: 4px;
+    padding: 4px 6px;
+  }
+  .stat-chevron {
+    display: none;
   }
   .concepts {
     top: 10px;

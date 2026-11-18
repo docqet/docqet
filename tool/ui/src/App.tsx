@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode, type Ref } from "react";
 import Box from "@mui/material/Box";
 import BoltOutlinedIcon from "@mui/icons-material/BoltOutlined";
+import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import FilterListRoundedIcon from "@mui/icons-material/FilterListRounded";
 import WidgetsOutlinedIcon from "@mui/icons-material/WidgetsOutlined";
@@ -401,6 +402,7 @@ function Header({
           </div>
         ) : null}
         <StatButton
+          kind="domain"
           n={state.domains.length}
           label={state.domains.length === 1 ? "domain" : "domains"}
           title="Browse the parts of the business, each with its own language"
@@ -408,6 +410,7 @@ function Header({
           onClick={() => onPanel("domain")}
         />
         <StatButton
+          kind="feature"
           n={state.features.length}
           label={state.features.length === 1 ? "feature" : "features"}
           title="Browse the jobs the product does"
@@ -415,6 +418,7 @@ function Header({
           onClick={() => onPanel("feature")}
         />
         <StatButton
+          kind="capability"
           n={state.capabilities.length}
           label={state.capabilities.length === 1 ? "capability" : "capabilities"}
           title="Browse what the software can do, and how stable each is"
@@ -422,6 +426,7 @@ function Header({
           onClick={() => onPanel("capability")}
         />
         <StatButton
+          kind="concept"
           n={state.concepts.length}
           label={state.concepts.length === 1 ? "concept" : "concepts"}
           title="Browse the domain's concepts"
@@ -429,6 +434,7 @@ function Header({
           onClick={() => onPanel("concept")}
         />
         <StatButton
+          kind="persona"
           n={state.personas.length}
           label={state.personas.length === 1 ? "persona" : "personas"}
           title="Browse who the software serves, and how far along it is for each"
@@ -446,13 +452,21 @@ function isPick(state: DocketState, pick: Pick): boolean {
   return pickList(state, pick.kind).some((d) => d.id === pick.id);
 }
 
-const PICK_ICONS: Record<Pick["kind"], ReactNode> = {
-  domain: <DomainIcon size={15} />,
-  feature: <WidgetsOutlinedIcon sx={{ fontSize: 15, color: "secondary.main" }} />,
-  capability: <BoltOutlinedIcon sx={{ fontSize: 15, color: "primary.main" }} />,
-  concept: <ConceptIcon size={15} />,
-  persona: <PersonaIcon size={15} />,
-};
+/* Each kind's icon, the same everywhere it's named. */
+function kindIcon(kind: Pick["kind"], size = 15): ReactNode {
+  switch (kind) {
+    case "domain":
+      return <DomainIcon size={size} />;
+    case "feature":
+      return <WidgetsOutlinedIcon sx={{ fontSize: size, color: "secondary.main" }} />;
+    case "capability":
+      return <BoltOutlinedIcon sx={{ fontSize: size, color: "primary.main" }} />;
+    case "concept":
+      return <ConceptIcon size={size} />;
+    case "persona":
+      return <PersonaIcon size={size} />;
+  }
+}
 const PICK_KINDS: Record<Pick["kind"], string> = { domain: "Domain", feature: "Feature", capability: "Capability", concept: "Concept", persona: "Persona" };
 
 /*
@@ -480,7 +494,7 @@ function FilterBar({
       {filters.map((f) => (
         <span key={`${f.kind}:${f.id}`} className="filter-chip">
           <button type="button" className="filter-chip-name" title={`${PICK_KINDS[f.kind]}: open it`} onClick={() => onOpen(f)}>
-            {PICK_ICONS[f.kind]}
+            {kindIcon(f.kind)}
             {pickName(state, f)}
           </button>
           <button
@@ -504,12 +518,14 @@ function FilterBar({
 
 /* A count in the header that opens its kind in the side panel. */
 function StatButton({
+  kind,
   n,
   label,
   title,
   pressed,
   onClick,
 }: {
+  kind: Pick["kind"];
   n: number;
   label: string;
   title: string;
@@ -518,8 +534,12 @@ function StatButton({
 }) {
   return (
     <button type="button" className="stat stat-button" aria-pressed={pressed} title={title} onClick={onClick}>
+      <span className="stat-icon" aria-hidden>
+        {kindIcon(kind, 18)}
+      </span>
       <span className="stat-n">{n}</span>
       <span className="stat-label">{label}</span>
+      <ChevronRightRoundedIcon className="stat-chevron" aria-hidden sx={{ fontSize: 16 }} />
     </button>
   );
 }
