@@ -10,7 +10,7 @@ import { ExplorePanel, type ExploreKind } from "./Explore";
 import { MaturityRing } from "./design/maturity/MaturityRing";
 import { RingGlyph } from "./design/maturity/RingGlyph";
 import { MATURITY_BANDS, maturityBand } from "./design/maturity/maturity";
-import { STABILITY_LEVEL_IDS, levelColor } from "./design/stability/stability";
+import { levelColor } from "./design/stability/stability";
 import { DomainIcon, mapGroups, mapItems, tidyMap } from "./FeatureMap";
 import Logo from "./Logo";
 import { PersonaIcon } from "./Personas";
@@ -273,7 +273,6 @@ function View({
           onFilter={(id) => toggleFilter({ kind: "concept", id })}
         />
       ) : null}
-      <Legend />
     </>
   );
 }
@@ -533,20 +532,4 @@ type PanelAt = { kind: PanelKind; id: string | null };
 function backTo(state: DocketState, at: PanelAt): string {
   const plurals = { domain: "domains", feature: "features", capability: "capabilities", concept: "concepts", persona: "personas" };
   return at.id ? (find(pickList(state, at.kind), at.id)?.name ?? "Back") : `All ${plurals[at.kind]}`;
-}
-
-/* What the rings' colors mean: maturity's four bands, in their levels' colors. */
-function Legend() {
-  return (
-    <div className="legend panel" data-no-pan>
-      <span className="legend-title">Maturity</span>
-      {STABILITY_LEVEL_IDS.map((id, i) => (
-        <span key={id} className="legend-item">
-          <Box component="span" className="swatch" aria-hidden sx={levelColor(id)} />
-          {MATURITY_BANDS[id]}
-          <span className="faint">{i * 25}%</span>
-        </span>
-      ))}
-    </div>
-  );
 }

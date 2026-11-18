@@ -397,38 +397,6 @@ ul {
   white-space: nowrap;
 }
 
-.legend {
-  position: fixed;
-  left: 16px;
-  bottom: 16px;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 4px 14px;
-  padding: 9px 14px;
-  font-size: 12px;
-  color: var(--muted);
-  max-width: calc(100vw - 32px - 210px);
-}
-
-.legend-title {
-  font-weight: 650;
-  color: var(--text);
-}
-
-.legend-item {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.swatch {
-  width: 14px;
-  height: 4px;
-  border-radius: 2px;
-  background: currentColor;
-}
-
 .zoom {
   position: fixed;
   right: 16px;
@@ -1469,9 +1437,6 @@ kbd {
   }
   .stat-n {
     font-size: 17px;
-  }
-  .legend {
-    display: none;
   }
   .concepts {
     top: 10px;

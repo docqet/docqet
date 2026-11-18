@@ -32,7 +32,7 @@ export type StabilityLevel = {
    * place in src/design/ with colors of its own rather than palette roles.
    * They're part of what a level is, so they look the same under every
    * theme. `light` is for light surfaces and clears 4.5:1 on white; `dark` is
-   * for dark ones. styles.css repeats them for the legend.
+   * for dark ones.
    */
   colors: { light: string; dark: string };
   /** GitHub label for issues and pull requests that target this level. */
