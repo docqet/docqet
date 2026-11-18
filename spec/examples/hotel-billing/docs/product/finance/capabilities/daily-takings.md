@@ -1,5 +1,6 @@
 ---
 stability: Beta
+personas: [manager]
 rules: [night-audit/closed-days-dont-change]
 concepts: [business-day, charge]
 ---
@@ -8,9 +9,6 @@ concepts: [business-day, charge]
 
 Managers see each closed day's takings, for rooms, food and drink, and tax.
 
-## What people can do
+## Covers
 
-### Manager
-
-- See a closed day's takings.
-- Compare a day with the same day last year.
+- Managers compare a day with the same day last year.

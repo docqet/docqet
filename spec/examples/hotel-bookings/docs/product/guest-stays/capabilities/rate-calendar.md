@@ -1,16 +1,11 @@
 ---
 stability: Prototype
+personas: [manager]
 ---
 
 # Rate calendar
 
 Managers set each room type's nightly rate, date by date.
-
-## What people can do
-
-### Manager
-
-- Set a room type's rate for a range of dates.
 
 ## Learning
 

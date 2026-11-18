@@ -1,5 +1,6 @@
 ---
 stability: Alpha
+personas: [front-desk-clerk, guest]
 rules:
   - company-accounts/credit-limit
   - company-accounts/only-named-guests
@@ -17,9 +18,3 @@ gaps:
 
 Clerks move a guest's bill to their company's account at check-out, so the
 guest leaves without paying.
-
-## What people can do
-
-### Front desk clerk
-
-- Move a guest's bill to their company's account.

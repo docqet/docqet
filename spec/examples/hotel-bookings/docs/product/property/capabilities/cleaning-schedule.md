@@ -1,17 +1,12 @@
 ---
 stability: Prototype
+personas: [housekeeper]
 concepts: [room]
 ---
 
 # Cleaning schedule
 
-Housekeeping sees which rooms to clean today, with early arrivals first.
-
-## What people can do
-
-### Housekeeper
-
-- See today's rooms to clean, in order.
+Housekeepers see which rooms to clean today, with early arrivals first.
 
 ## Learning
 

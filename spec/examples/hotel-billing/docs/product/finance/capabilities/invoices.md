@@ -1,5 +1,6 @@
 ---
 stability: Alpha
+personas: [bookkeeper]
 rules: [invoices/invoice-numbers-run-in-sequence]
 concepts: [company-account]
 code: [src/invoices/**]
@@ -15,9 +16,6 @@ gaps:
 
 Bookkeepers invoice each company once a month for its staff's stays.
 
-## What people can do
+## Covers
 
-### Bookkeeper
-
-- Invoice every company for last month's stays.
-- Record a company's payment against its invoice.
+- Bookkeepers record a company's payment against its invoice.

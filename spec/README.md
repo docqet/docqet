@@ -42,6 +42,7 @@ tool. Anyone can adopt the format or write their own indexer for it.
 docket.yaml                              config: the project's ID and name, where test results land
 docs/
 └── product/
+    ├── personas/<slug>.md               who the software serves, across every domain
     └── <domain>/                        one folder per domain the project works in
         ├── domain.md                    the domain's name and summary
         ├── features/<slug>.md           the product's jobs, each grouping capabilities
@@ -61,6 +62,13 @@ these changes:
   own, and a project's docs are in a folder per domain it works in.
 - Frontmatter replaces bold-label lines such as `**Stability:** Alpha`.
 - Rules are one per file instead of one file per topic.
+- A capability is its one-sentence summary, saying who or what does what.
+  "What people can do", with a heading per role, is gone: the people it
+  serves are links to personas, and an optional Covers list says what else it
+  includes.
+- Personas have an image and a Needs section, and no Based on. Capabilities
+  link to them, so each persona's capabilities, features and readiness can be
+  worked out.
 - A rule no longer links to its acceptance test. The test points at the rule
   instead.
 - There are no engineering docs: no systems, components, providers or
@@ -73,7 +81,8 @@ real repository it's gitignored.
 ## IDs
 
 A doc's ID is its path under its type's folder in its domain, without `.md`. A
-domain's ID is its folder's name:
+domain's ID is its folder's name. Personas aren't in a domain, so `personas`
+is never a domain's ID:
 
 | Type       | Folder                                      | Example ID                  |
 | ---------- | ------------------------------------------- | --------------------------- |
@@ -82,6 +91,7 @@ domain's ID is its folder's name:
 | capability | `docs/product/<domain>/capabilities/`       | `room-booking`              |
 | rule       | `docs/product/<domain>/rules/`              | `booking/no-double-booking` |
 | concept    | `docs/product/<domain>/concepts/`           | `booking`                   |
+| persona    | `docs/product/personas/`                    | `front-desk-clerk`          |
 
 - **No `id:` field.** The path is the ID, so there's nothing to drift. Renaming
   a file renames the doc, and the indexer reports every link and annotation the
@@ -93,7 +103,8 @@ domain's ID is its folder's name:
 - **A gap's ID** is its doc's ID plus the gap's key:
   `capability:room-booking#no-waitlist`.
 - **What an ID names depends on the type** (see [Domains](#domains)). A
-  domain, feature or capability ID names one thing across every project. A rule
+  domain, feature, capability or persona ID names one thing across every
+  project. A rule
   or concept ID names one definition within a domain.
 - **A link to another domain's rule or concept** adds `@<domain>`:
   `concepts: [booking@guest-stays]`, or
@@ -108,9 +119,10 @@ is its name. The paragraph under the title is its summary. The UI shows both.
 | --- | --- | --- | --- |
 | domain | none | Anything worth saying about the part of the business, as prose | [guest-stays](examples/hotel-bookings/docs/product/guest-stays/domain.md) |
 | feature | `capabilities` (required) | Anything worth saying about the job, as prose | [reservations](examples/hotel-bookings/docs/product/guest-stays/features/reservations.md) |
-| capability | `stability` (required), `rules`, `concepts`, `code`, `gaps` | What people can do, Learning, Success, Open decisions | [room-booking](examples/hotel-bookings/docs/product/guest-stays/capabilities/room-booking.md) |
+| capability | `stability` (required), `personas`, `rules`, `concepts`, `code`, `gaps` | Covers, Learning, Success, Open decisions | [room-booking](examples/hotel-bookings/docs/product/guest-stays/capabilities/room-booking.md) |
 | rule | `kind` (required: `core` or `edge-case`), `concepts` | The rule, Why | [same-day-turnover](examples/hotel-bookings/docs/product/guest-stays/rules/booking/same-day-turnover.md) |
 | concept | none | Details, Lifecycle, Not to be confused with | [booking](examples/hotel-bookings/docs/product/guest-stays/concepts/booking.md) |
+| persona | `image` (required) | Needs, Knows, Context, Expects, Cares about | [front-desk-clerk](examples/hotel-bookings/docs/product/personas/front-desk-clerk.md) |
 
 - **`stability`** is `Prototype`, `Alpha`, `Beta` or `GA`. Only capabilities
   have one. A feature's maturity is worked out from its capabilities' levels,
@@ -118,8 +130,50 @@ is its name. The paragraph under the title is its summary. The UI shows both.
   [Features and maturity](#features-and-maturity)).
 - **`code`** is a list of path globs for where it lives. Tests aren't listed:
   they're found through `docket:verifies`.
-- The body sections keep their meaning from forge's formats. The spec will
-  carry their full descriptions once the frontmatter settles.
+- **`personas`** lists the personas a capability serves: who does it, or who
+  it's done for when the software does it.
+- **`image`** is the URL of the persona's picture. Any image a browser can
+  show works. The examples use randomuser.me's free placeholder portraits,
+  such as `https://randomuser.me/api/portraits/women/68.jpg`.
+- The body sections keep their meaning from forge's formats, except for the
+  capability's and persona's below. The spec will carry their full
+  descriptions once the frontmatter settles.
+
+### Capabilities
+
+A capability is its name and its summary: one sentence saying who or what does
+what, such as "Clerks book a free room for a guest's stay" or "The software
+closes each business day overnight". The sentence names the people it's about
+the way the business does, and `personas` links them, so it reads on its own
+and the links carry the exact list.
+
+What a capability doesn't do is said elsewhere:
+
+- **What must always or never happen**, every time, is a rule it follows:
+  "a room can't be double-booked".
+- **What's missing or limited**, for now or by choice, is a gap: "there's no
+  waitlist when every room is taken".
+
+**Covers** is optional: a list of what else the capability includes, when the
+sentence alone doesn't show it. Each item is a sentence of its own, with who
+or what does it: "Clerks move a booking to new dates."
+
+### Personas
+
+A persona is a type of person the software serves, written as one invented
+person: `# Maria, front desk clerk`, with a sentence on who they are as the
+summary. Personas are written once for the whole project, not per domain,
+since the same people work across domains. Its sections:
+
+- **Needs**: what they need the software to do for them, and why it matters
+  to them. This is the value the software provides them.
+- **Knows**: their domain knowledge, how well they know the product, and
+  their technical skill.
+- **Context**: their device, how often they do this, time pressure,
+  interruptions.
+- **Expects**: the words they use, the tools they already know, and how they
+  think the work goes.
+- **Cares about**: what makes them trust it, and what would make them give up.
 
 ## Links
 
@@ -127,7 +181,7 @@ Every link points one way and is written once:
 
 ```text
 feature                    → capabilities
-capability                 → rules, concepts, code
+capability                 → personas, rules, concepts, code
 rule                       → concepts
 code                       → rules    (docket:implements)
 test                       → rules    (docket:verifies)
@@ -319,6 +373,36 @@ Maturity isn't a finish line, and 100% isn't the goal. It means everything
 under way is GA. Software that keeps growing usually has newer parts settling
 in, and stays Established as it does.
 
+### Readiness
+
+A persona has a **readiness** instead of a maturity: how ready the software is
+for them, from the maturity of what they need. What they need is every
+capability that lists them, so their readiness is worked out as a feature's
+maturity is, from those capabilities' levels in each domain that builds part of
+them. In Hotel Bookings, the front desk clerk has room booking and check-in at
+Beta, cancellations at Alpha, check-out at GA, and group bookings and room
+status at Prototype, so they're (60 × 4 × 2 + 35 × 3 + 100 × 6 + 15 × 2 × 2) ÷
+(4 × 2 + 3 + 6 + 2 × 2) = 1245 ÷ 21 ≈ 59% ready.
+
+- **A feature's readiness for a persona** is worked out the same way, from just
+  the capabilities in it that serve them. Front desk is 84% mature, and 84%
+  ready for the front desk clerk, since both its capabilities serve them.
+- **A persona no capability lists has no readiness.**
+- **Readiness counts toward nothing else.** A domain's or project's maturity
+  comes from its features, never from personas.
+
+Readiness has its own scale, so it's never mistaken for maturity, though it's
+worked out from it. It's a quarter of the scale each, as maturity's bands are,
+with names of its own, and readers show it as a straight bar, not as a ring in
+a level's color:
+
+| Readiness     | From | What it tells you                                                       |
+| ------------- | ---- | ----------------------------------------------------------------------- |
+| Not ready yet | 0%   | Most of what they need is still being explored.                         |
+| Partly ready  | 25%  | Some of it works, but much of what they need is still taking shape.     |
+| Mostly ready  | 50%  | Enough is settled or stable for them to rely on day to day.             |
+| Ready         | 75%  | What they need is mostly stable and supported.                          |
+
 ## Annotations
 
 Code and tests point at rules with one comment format, the same in every
@@ -405,7 +489,7 @@ is put together with others of the same ID depends on its type:
 
 | Type | Is one across | The same ID elsewhere |
 | --- | --- | --- |
-| domain, feature, capability | everything | A contribution to the same one. Its links are put together, and its name and summary should match. |
+| domain, feature, capability, persona | everything | A contribution to the same one. Its links are put together, and its name and summary should match. |
 | rule, concept | its domain | Another definition, shown beside this one. Within the same domain, it's a contribution, as above. |
 
 Putting contributions together:
@@ -413,8 +497,8 @@ Putting contributions together:
 - **Features and capabilities span domains.** A feature or capability written
   in several domains is in each of them. Each domain's part is the
   capabilities that domain builds.
-- **Links are combined**: a feature's capabilities, a capability's rules,
-  concepts, code and gaps. Each contribution's order is kept, in the order the
+- **Links are combined**: a feature's capabilities, a capability's personas,
+  rules, concepts, code and gaps. Each contribution's order is kept, in the order the
   projects are read.
 - **A body is each contribution's own.** Readers show each, labelled with its
   project and domain.
@@ -445,7 +529,8 @@ same way, from the domains of the repository it's in.
 Two contributions that should agree and don't are a **contradiction**, shown
 as a problem naming the projects involved:
 
-- **A product doc's name or summary differs** between projects.
+- **A domain's, feature's, capability's or persona's name or summary
+  differs** between projects.
 - **A capability is in two features**, whichever projects list them.
 - **A rule or concept differs within one domain**, when more than one project
   declares it there.
@@ -496,6 +581,9 @@ and showing several projects together means reading each one's state.json.
   maturity worked out from what this project declares in it.
 - **`features`**: each with its capabilities and its maturity worked out. Each
   capability names the feature it's in, or `null`.
+- **`personas`**: each with the capabilities that list them, the features
+  those are in, and their `readiness` worked out. Personas aren't in a domain, so
+  these have no `domain`.
 - **One list per doc type**: each entry has its ID, its `domain`, file, name,
   summary and links, in both directions, and its body as Markdown: everything
   after the title and summary. A doc declared in two of the project's domains

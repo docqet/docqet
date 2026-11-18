@@ -26,6 +26,7 @@
     "band": "Beta",
     "domains": 2,
     "features": 3,
+    "personas": 3,
     "capabilities": {
       "Prototype": 4,
       "Alpha": 1,
@@ -107,14 +108,70 @@
       "body": ""
     }
   ],
+  "personas": [
+    {
+      "id": "front-desk-clerk",
+      "file": "docs/product/personas/front-desk-clerk.md",
+      "name": "Maria, front desk clerk",
+      "summary": "Runs the front desk: takes bookings, and checks guests in and out.",
+      "image": "https://randomuser.me/api/portraits/women/68.jpg",
+      "capabilities": [
+        "room-booking",
+        "cancellations",
+        "check-in",
+        "check-out",
+        "group-bookings",
+        "room-status"
+      ],
+      "features": [
+        "reservations",
+        "front-desk",
+        "housekeeping"
+      ],
+      "readiness": 59,
+      "body": "## Needs\n\n- To tell a guest at once whether a room is free for their dates, and hold it\n  for them, without ever giving the same room to two guests.\n- To check guests in and out quickly, so nobody waits at the desk.\n- To know which rooms are ready before a guest arrives, without phoning\n  housekeeping.\n\n## Knows\n\nEvery room in the hotel, the regulars, and the cancellation policy by heart.\nComfortable with a computer, but has learned the system on the job, not from a\nmanual.\n\n## Context\n\nAt the desk all shift, on a shared desktop, with a guest or the phone waiting\nmost of the time. Interrupted constantly, so anything they start may be\nfinished minutes later.\n\n## Expects\n\nThe paper diary's view of the hotel: rooms down the side, nights across the\ntop. Talks about stays, rooms and arrivals, not reservations or inventory.\n\n## Cares about\n\nNever having to tell a guest standing in front of them that their room was\ngiven away. They'll go back to the paper diary the first time the app gets\nthat wrong."
+    },
+    {
+      "id": "housekeeper",
+      "file": "docs/product/personas/housekeeper.md",
+      "name": "Ana, housekeeper",
+      "summary": "Cleans and readies the rooms between guests.",
+      "image": "https://randomuser.me/api/portraits/women/26.jpg",
+      "capabilities": [
+        "cleaning-schedule",
+        "room-status"
+      ],
+      "features": [
+        "housekeeping"
+      ],
+      "readiness": 15,
+      "body": "## Needs\n\n- To know which rooms to clean first, so arriving guests don't wait for a\n  room.\n- To tell the front desk a room is ready without walking back down to say so.\n\n## Knows\n\nThe building, floor by floor, and how long each kind of room takes. Uses a\nphone every day, but rarely for work.\n\n## Context\n\nOn their feet, moving from room to room with a trolley, a phone in their pocket.\nGloves on much of the time, so anything they do has to take a tap or two.\n\n## Expects\n\nA list of rooms, in the order they'll do them. Talks about rooms being clean,\ndirty or ready.\n\n## Cares about\n\nNot being rushed by the front desk for a room they didn't know was urgent."
+    },
+    {
+      "id": "manager",
+      "file": "docs/product/personas/manager.md",
+      "name": "David, hotel manager",
+      "summary": "Runs the hotel, and answers for its takings to the owners.",
+      "image": "https://randomuser.me/api/portraits/men/52.jpg",
+      "capabilities": [
+        "rate-calendar"
+      ],
+      "features": [],
+      "readiness": 15,
+      "body": "## Needs\n\n- To set what each room costs, night by night, so busy dates earn more.\n\n## Knows\n\nThe local market and the hotel's busy seasons. Reads a spreadsheet well, and\nexpects software to do the arithmetic for them.\n\n## Context\n\nAt a desk in the back office, a few times a week, in between everything else\nrunning a hotel brings.\n\n## Expects\n\nA calendar of rates, like the one they keep in a spreadsheet today.\n\n## Cares about\n\nRates they can change in a minute when a big event is announced, and being sure\nthe front desk is quoting them."
+    }
+  ],
   "capabilities": [
     {
       "id": "room-booking",
       "domain": "guest-stays",
       "file": "docs/product/guest-stays/capabilities/room-booking.md",
       "name": "Room booking",
-      "summary": "Clerks book a room for a guest's stay, so that each room has at most one guest on any night.",
+      "summary": "Clerks book a free room for a guest's stay.",
       "stability": "Beta",
+      "personas": [
+        "front-desk-clerk"
+      ],
       "rules": [
         "booking/no-double-booking",
         "booking/minimum-stay",
@@ -134,7 +191,7 @@
         "capability:room-booking#no-waitlist",
         "capability:room-booking#one-room-per-booking"
       ],
-      "body": "## What people can do\n\n### Front desk clerk\n\n- See which rooms are free for a stay.\n- Book a free room for a guest.\n- Move a booking to new dates, if its room is free for them.\n\n## Success\n\n- The front desk stops keeping the paper diary alongside the app.",
+      "body": "## Covers\n\n- Clerks see which rooms are free for a stay.\n- Clerks move a booking to new dates.\n\n## Success\n\n- The front desk stops keeping the paper diary alongside the app.",
       "feature": "reservations"
     },
     {
@@ -144,6 +201,9 @@
       "name": "Cancellations",
       "summary": "Clerks cancel a booking when a guest's plans change, and the guest is refunded what the cancellation policy allows.",
       "stability": "Alpha",
+      "personas": [
+        "front-desk-clerk"
+      ],
       "rules": [
         "cancellations/free-cancellation-window",
         "cancellations/late-cancellation-fee"
@@ -160,7 +220,7 @@
       "gaps": [
         "capability:cancellations#late-cancellations-refunded-in-full"
       ],
-      "body": "## What people can do\n\n### Front desk clerk\n\n- Tell a guest what they'd be refunded if they cancelled now.\n- Cancel a booking for a guest.\n\n## Open decisions\n\n- **No-shows:** is a guest who never arrives treated as a late cancellation, or\n  charged for the whole stay?",
+      "body": "## Covers\n\n- Clerks tell a guest what they'd be refunded if they cancelled now.\n\n## Open decisions\n\n- **No-shows:** is a guest who never arrives treated as a late cancellation, or\n  charged for the whole stay?",
       "feature": "reservations"
     },
     {
@@ -168,8 +228,11 @@
       "domain": "guest-stays",
       "file": "docs/product/guest-stays/capabilities/check-in.md",
       "name": "Check-in",
-      "summary": "Clerks check guests in when they arrive and hand over their room.",
+      "summary": "Clerks check guests in when they arrive and give them their room.",
       "stability": "Beta",
+      "personas": [
+        "front-desk-clerk"
+      ],
       "rules": [
         "booking/no-double-booking"
       ],
@@ -179,7 +242,7 @@
       ],
       "code": [],
       "gaps": [],
-      "body": "## What people can do\n\n### Front desk clerk\n\n- See today's arrivals.\n- Check a guest in, and give them their room.\n- Move a guest to another room that's free for the rest of their stay.\n\n## Success\n\n- A guest with a booking is checked in within two minutes of reaching the desk.",
+      "body": "## Covers\n\n- Clerks see today's arrivals.\n- Clerks move a guest to another room for the rest of their stay.\n\n## Success\n\n- A guest with a booking is checked in within two minutes of reaching the desk.",
       "feature": "front-desk"
     },
     {
@@ -187,15 +250,18 @@
       "domain": "guest-stays",
       "file": "docs/product/guest-stays/capabilities/check-out.md",
       "name": "Check-out",
-      "summary": "Clerks check guests out and settle what they owe.",
+      "summary": "Clerks check guests out on their departure day and take payment for anything still owed.",
       "stability": "GA",
+      "personas": [
+        "front-desk-clerk"
+      ],
       "rules": [],
       "concepts": [
         "booking"
       ],
       "code": [],
       "gaps": [],
-      "body": "## What people can do\n\n### Front desk clerk\n\n- See today's departures.\n- Check a guest out, and take payment for anything still owed.\n\n## Success\n\n- The front desk closes the day with every departure settled.",
+      "body": "## Covers\n\n- Clerks see today's departures.\n\n## Success\n\n- The front desk closes the day with every departure settled.",
       "feature": "front-desk"
     },
     {
@@ -203,15 +269,18 @@
       "domain": "property",
       "file": "docs/product/property/capabilities/cleaning-schedule.md",
       "name": "Cleaning schedule",
-      "summary": "Housekeeping sees which rooms to clean today, with early arrivals first.",
+      "summary": "Housekeepers see which rooms to clean today, with early arrivals first.",
       "stability": "Prototype",
+      "personas": [
+        "housekeeper"
+      ],
       "rules": [],
       "concepts": [
         "room"
       ],
       "code": [],
       "gaps": [],
-      "body": "## What people can do\n\n### Housekeeper\n\n- See today's rooms to clean, in order.\n\n## Learning\n\n- Is ordering by arrival time enough, or do housekeepers plan by floor?",
+      "body": "## Learning\n\n- Is ordering by arrival time enough, or do housekeepers plan by floor?",
       "feature": "housekeeping"
     },
     {
@@ -219,8 +288,11 @@
       "domain": "guest-stays",
       "file": "docs/product/guest-stays/capabilities/group-bookings.md",
       "name": "Group bookings",
-      "summary": "Clerks hold several rooms at once for a group travelling together.",
+      "summary": "Clerks hold several rooms at once for a group travelling together, under one name.",
       "stability": "Prototype",
+      "personas": [
+        "front-desk-clerk"
+      ],
       "rules": [
         "booking/no-double-booking",
         "booking/minimum-stay"
@@ -230,7 +302,7 @@
       ],
       "code": [],
       "gaps": [],
-      "body": "## What people can do\n\n### Front desk clerk\n\n- Hold several rooms for one group, under one name.\n\n## Learning\n\n- Do groups want one booking with many rooms, or many bookings linked\n  together?",
+      "body": "## Learning\n\n- Do groups want one booking with many rooms, or many bookings linked\n  together?",
       "feature": "reservations"
     },
     {
@@ -240,11 +312,14 @@
       "name": "Rate calendar",
       "summary": "Managers set each room type's nightly rate, date by date.",
       "stability": "Prototype",
+      "personas": [
+        "manager"
+      ],
       "rules": [],
       "concepts": [],
       "code": [],
       "gaps": [],
-      "body": "## What people can do\n\n### Manager\n\n- Set a room type's rate for a range of dates.\n\n## Learning\n\n- Do rates change often enough to need a calendar, or is a rate per season\n  enough?",
+      "body": "## Learning\n\n- Do rates change often enough to need a calendar, or is a rate per season\n  enough?",
       "feature": null
     },
     {
@@ -252,15 +327,19 @@
       "domain": "property",
       "file": "docs/product/property/capabilities/room-status.md",
       "name": "Room status",
-      "summary": "Housekeeping marks rooms clean or dirty, so the front desk knows which are ready.",
+      "summary": "Housekeepers mark rooms clean or dirty, so the front desk knows which are ready.",
       "stability": "Prototype",
+      "personas": [
+        "housekeeper",
+        "front-desk-clerk"
+      ],
       "rules": [],
       "concepts": [
         "room@guest-stays"
       ],
       "code": [],
       "gaps": [],
-      "body": "## What people can do\n\n### Housekeeper\n\n- Mark a room clean once it's ready.\n\n### Front desk clerk\n\n- See which rooms are ready for arriving guests.\n\n## Learning\n\n- Will housekeepers update a room's status as they go, or at the end of their\n  round?",
+      "body": "## Covers\n\n- Clerks see which rooms are ready for arriving guests.\n\n## Learning\n\n- Will housekeepers update a room's status as they go, or at the end of their\n  round?",
       "feature": "housekeeping"
     }
   ],

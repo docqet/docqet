@@ -1,22 +1,17 @@
 ---
 stability: Prototype
+personas: [housekeeper, front-desk-clerk]
 concepts: [room@guest-stays]
 ---
 
 # Room status
 
-Housekeeping marks rooms clean or dirty, so the front desk knows which are
+Housekeepers mark rooms clean or dirty, so the front desk knows which are
 ready.
 
-## What people can do
+## Covers
 
-### Housekeeper
-
-- Mark a room clean once it's ready.
-
-### Front desk clerk
-
-- See which rooms are ready for arriving guests.
+- Clerks see which rooms are ready for arriving guests.
 
 ## Learning
 

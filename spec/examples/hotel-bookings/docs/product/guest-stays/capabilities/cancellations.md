@@ -1,5 +1,6 @@
 ---
 stability: Alpha
+personas: [front-desk-clerk]
 rules:
   - cancellations/free-cancellation-window
   - cancellations/late-cancellation-fee
@@ -18,12 +19,9 @@ gaps:
 Clerks cancel a booking when a guest's plans change, and the guest is refunded
 what the cancellation policy allows.
 
-## What people can do
+## Covers
 
-### Front desk clerk
-
-- Tell a guest what they'd be refunded if they cancelled now.
-- Cancel a booking for a guest.
+- Clerks tell a guest what they'd be refunded if they cancelled now.
 
 ## Open decisions
 

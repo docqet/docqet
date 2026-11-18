@@ -1,5 +1,6 @@
 ---
 stability: Beta
+personas: [front-desk-clerk]
 rules:
   - booking/no-double-booking
   - booking/minimum-stay
@@ -21,16 +22,12 @@ gaps:
 
 # Room booking
 
-Clerks book a room for a guest's stay, so that each room has at most one guest
-on any night.
+Clerks book a free room for a guest's stay.
 
-## What people can do
+## Covers
 
-### Front desk clerk
-
-- See which rooms are free for a stay.
-- Book a free room for a guest.
-- Move a booking to new dates, if its room is free for them.
+- Clerks see which rooms are free for a stay.
+- Clerks move a booking to new dates.
 
 ## Success
 

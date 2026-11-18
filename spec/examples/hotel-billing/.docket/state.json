@@ -26,6 +26,7 @@
     "band": "Beta",
     "domains": 2,
     "features": 5,
+    "personas": 5,
     "capabilities": {
       "Prototype": 1,
       "Alpha": 6,
@@ -136,14 +137,115 @@
       "body": "Billing's part of the front desk is settling the bill at check-out. Checking\nguests in and out is Guest stays'."
     }
   ],
+  "personas": [
+    {
+      "id": "bookkeeper",
+      "file": "docs/product/personas/bookkeeper.md",
+      "name": "Priya, bookkeeper",
+      "summary": "Keeps the hotel's books, and invoices the companies that pay for their staff's stays.",
+      "image": "https://randomuser.me/api/portraits/women/90.jpg",
+      "capabilities": [
+        "company-accounts",
+        "invoices",
+        "accounting-export"
+      ],
+      "features": [
+        "company-accounts",
+        "closing-the-day"
+      ],
+      "readiness": 45,
+      "body": "## Needs\n\n- To get each day's takings into the accounting software without typing them\n  in.\n- To invoice every company once a month, and see what each one owes.\n- To keep companies within the credit the hotel allows them.\n\n## Knows\n\nBookkeeping, and the hotel's accounting software, well. Less about how the\nfront desk works.\n\n## Context\n\nPart time, two or three days a week, at a desk in the back office. Month end\nis their busiest time.\n\n## Expects\n\nDays that are closed and stay closed, invoice numbers that run in order, and\nan export their accounting software takes as it is.\n\n## Cares about\n\nBooks that balance. A day that changes after they've exported it means finding\nthe difference by hand."
+    },
+    {
+      "id": "front-desk-clerk",
+      "file": "docs/product/personas/front-desk-clerk.md",
+      "name": "Maria, front desk clerk",
+      "summary": "Runs the front desk: takes bookings, and checks guests in and out.",
+      "image": "https://randomuser.me/api/portraits/women/68.jpg",
+      "capabilities": [
+        "extra-charges",
+        "city-tax",
+        "split-bills",
+        "deposits",
+        "pay-by-link",
+        "direct-billing",
+        "check-out"
+      ],
+      "features": [
+        "guest-bills",
+        "payments",
+        "company-accounts",
+        "front-desk"
+      ],
+      "readiness": 54,
+      "body": "## Needs\n\n- To see everything a guest owes on one bill, so check-out is a single\n  payment.\n- To put extras on a bill the moment they happen, so nothing is forgotten.\n- To let company guests leave without paying, knowing their company will be\n  invoiced.\n\n## Knows\n\nWhat every extra costs, and which guests' companies pay for their stays. Not\nan accountant: they think in bills, not ledgers.\n\n## Context\n\nAt the desk, with the guest in front of them and often a queue behind. Check-out\nmornings are the busiest part of their day.\n\n## Expects\n\nA bill that reads like a receipt: each night, each extra, then the total.\nPayments by card at the desk.\n\n## Cares about\n\nA bill the guest doesn't argue with. A charge they can't explain, or one they\ncan't take off when it was a mistake, makes for a hard conversation."
+    },
+    {
+      "id": "guest",
+      "file": "docs/product/personas/guest.md",
+      "name": "Sam, guest",
+      "summary": "Stays at the hotel, for work or on holiday, and pays for the stay.",
+      "image": "https://randomuser.me/api/portraits/men/32.jpg",
+      "capabilities": [
+        "pay-by-link",
+        "direct-billing",
+        "check-out"
+      ],
+      "features": [
+        "payments",
+        "company-accounts",
+        "front-desk"
+      ],
+      "readiness": 35,
+      "body": "## Needs\n\n- To pay without queueing at the desk on the way out.\n- To leave without paying when their company is paying for the stay.\n- A bill they can understand, with nothing on it they didn't have.\n\n## Knows\n\nNothing about the hotel's systems. Pays for things online and by card all the\ntime.\n\n## Context\n\nOn their phone, often in a hurry: packing, catching a train, or already home.\n\n## Expects\n\nPaying by link to work like any other online payment, in a minute or two.\n\n## Cares about\n\nNot being charged twice, and not being chased for something they've paid."
+    },
+    {
+      "id": "manager",
+      "file": "docs/product/personas/manager.md",
+      "name": "David, hotel manager",
+      "summary": "Runs the hotel, and answers for its takings to the owners.",
+      "image": "https://randomuser.me/api/portraits/men/52.jpg",
+      "capabilities": [
+        "city-tax",
+        "deposits",
+        "night-audit",
+        "daily-takings"
+      ],
+      "features": [
+        "guest-bills",
+        "payments",
+        "closing-the-day"
+      ],
+      "readiness": 70,
+      "body": "## Needs\n\n- To see each day's takings, final and broken down, without waiting for the\n  bookkeeper.\n- To be sure every night, every extra and the city's tax are charged, so the\n  hotel isn't out of pocket.\n- To be covered when a guest who booked never arrives.\n\n## Knows\n\nThe hotel's numbers: occupancy, the average rate, last year's takings.\nNot the details of how the books are kept.\n\n## Context\n\nLooks at the numbers first thing each morning, on a laptop or their phone.\n\n## Expects\n\nTotals for rooms, food and drink, and tax, the way the owners ask for them.\n\n## Cares about\n\nNumbers that don't change once a day is closed. If yesterday's takings move,\nthey stop trusting all of them."
+    },
+    {
+      "id": "night-auditor",
+      "file": "docs/product/personas/night-auditor.md",
+      "name": "Tom, night auditor",
+      "summary": "Looks after the hotel overnight, and makes sure each day is closed before morning.",
+      "image": "https://randomuser.me/api/portraits/men/71.jpg",
+      "capabilities": [
+        "night-audit"
+      ],
+      "features": [
+        "closing-the-day"
+      ],
+      "readiness": 100,
+      "body": "## Needs\n\n- To know the day was closed and every guest charged for the night, without\n  staying up to do it by hand.\n- To close the day themselves when the audit didn't run on its own.\n\n## Knows\n\nThe night audit's steps, from years of doing them on paper. Less at ease with\nsoftware that does them for them.\n\n## Context\n\nAt the front desk overnight, alone, with few guests around and no one to ask.\n\n## Expects\n\nTo see, at a glance, that tonight's audit has run, and what it charged.\n\n## Cares about\n\nNot handing over to the morning shift with yesterday still open."
+    }
+  ],
   "capabilities": [
     {
       "id": "extra-charges",
       "domain": "billing",
       "file": "docs/product/billing/capabilities/extra-charges.md",
       "name": "Extra charges",
-      "summary": "Staff add extras such as breakfast, parking or the minibar to a guest's bill, so everything the guest owes is on it.",
+      "summary": "Staff add extras such as breakfast, parking or the minibar to a guest's bill.",
       "stability": "GA",
+      "personas": [
+        "front-desk-clerk"
+      ],
       "rules": [
         "bills/charges-are-never-changed",
         "bills/closed-bills-dont-change"
@@ -159,7 +261,7 @@
         }
       ],
       "gaps": [],
-      "body": "## What people can do\n\n### Front desk clerk\n\n- Add an extra to a guest's bill.\n- Correct a charge that was added by mistake.\n\n## Success\n\n- No guest leaves with an extra that never reached their bill.",
+      "body": "## Covers\n\n- Clerks correct a charge that was added by mistake.\n\n## Success\n\n- No guest leaves with an extra that never reached their bill.",
       "feature": "guest-bills"
     },
     {
@@ -167,8 +269,12 @@
       "domain": "billing",
       "file": "docs/product/billing/capabilities/city-tax.md",
       "name": "City tax",
-      "summary": "The software adds the city's tourist tax to each guest's bill, night by night, so the hotel collects what it owes the city.",
+      "summary": "The software adds the city's tourist tax to each guest's bill, night by night.",
       "stability": "Alpha",
+      "personas": [
+        "manager",
+        "front-desk-clerk"
+      ],
       "rules": [
         "tax/city-tax-per-guest-night",
         "tax/children-pay-no-city-tax",
@@ -187,7 +293,7 @@
       "gaps": [
         "capability:city-tax#children-corrected-by-hand"
       ],
-      "body": "## What people can do\n\n### Front desk clerk\n\n- See the city tax on a guest's bill, night by night.",
+      "body": "## Covers\n\n- Clerks see the city tax on a guest's bill, night by night.",
       "feature": "guest-bills"
     },
     {
@@ -197,6 +303,9 @@
       "name": "Split bills",
       "summary": "Clerks split a bill between guests sharing a room, or move charges onto another guest's bill.",
       "stability": "Prototype",
+      "personas": [
+        "front-desk-clerk"
+      ],
       "rules": [
         "bills/moving-charges-keeps-the-total"
       ],
@@ -206,7 +315,7 @@
       ],
       "code": [],
       "gaps": [],
-      "body": "## What people can do\n\n### Front desk clerk\n\n- Split a bill evenly between the guests in a room.\n- Move a charge onto another guest's bill.\n\n## Learning\n\n- Do guests split evenly, or charge by charge?",
+      "body": "## Learning\n\n- Do guests split evenly, or charge by charge?",
       "feature": "guest-bills"
     },
     {
@@ -214,8 +323,12 @@
       "domain": "billing",
       "file": "docs/product/billing/capabilities/deposits.md",
       "name": "Deposits",
-      "summary": "The software takes a deposit on the guest's card when a stay is booked, so the hotel isn't left out of pocket by guests who never arrive.",
+      "summary": "The software takes a deposit on the guest's card when a stay is booked.",
       "stability": "Beta",
+      "personas": [
+        "manager",
+        "front-desk-clerk"
+      ],
       "rules": [
         "payments/deposit-is-the-first-night",
         "payments/deposit-counts-towards-the-bill",
@@ -232,7 +345,7 @@
         }
       ],
       "gaps": [],
-      "body": "## What people can do\n\n### Front desk clerk\n\n- See whether a stay's deposit has been paid.\n- Take a deposit again when the guest's card was declined.\n\n## Open decisions\n\n- **Long stays:** is a week's stay still secured by one night's deposit?",
+      "body": "## Covers\n\n- Clerks see whether a stay's deposit has been paid.\n- Clerks take a deposit again when the guest's card was declined.\n\n## Open decisions\n\n- **Long stays:** is a week's stay still secured by one night's deposit?",
       "feature": "payments"
     },
     {
@@ -240,8 +353,12 @@
       "domain": "billing",
       "file": "docs/product/billing/capabilities/pay-by-link.md",
       "name": "Pay by link",
-      "summary": "Guests pay their bill from a link the hotel sends them, without coming to the desk.",
+      "summary": "Guests pay their bill by card from a link the hotel sends them, without coming to the desk.",
       "stability": "Alpha",
+      "personas": [
+        "guest",
+        "front-desk-clerk"
+      ],
       "rules": [
         "payments/card-numbers-are-never-kept",
         "bills/closed-bills-dont-change"
@@ -254,7 +371,7 @@
       "gaps": [
         "capability:pay-by-link#hotels-currency-only"
       ],
-      "body": "## What people can do\n\n### Front desk clerk\n\n- Send a guest a link to pay what they owe.\n\n### Guest\n\n- Pay their bill by card from the link.\n\n## Learning\n\n- Do guests pay before they leave, or wait until they're home?",
+      "body": "## Covers\n\n- Clerks send a guest a link to pay what they owe.\n\n## Learning\n\n- Do guests pay before they leave, or wait until they're home?",
       "feature": "payments"
     },
     {
@@ -264,6 +381,9 @@
       "name": "Company accounts",
       "summary": "Bookkeepers set up companies that pay for their staff's stays, each with a credit limit.",
       "stability": "Beta",
+      "personas": [
+        "bookkeeper"
+      ],
       "rules": [
         "company-accounts/credit-limit"
       ],
@@ -277,7 +397,7 @@
         }
       ],
       "gaps": [],
-      "body": "## What people can do\n\n### Bookkeeper\n\n- Set up a company, with its billing address and credit limit.\n- Name the guests whose stays the company pays for.\n- See what each company owes.",
+      "body": "## Covers\n\n- Bookkeepers name the guests whose stays a company pays for.\n- Bookkeepers see what each company owes.",
       "feature": "company-accounts"
     },
     {
@@ -287,6 +407,10 @@
       "name": "Direct billing",
       "summary": "Clerks move a guest's bill to their company's account at check-out, so the guest leaves without paying.",
       "stability": "Alpha",
+      "personas": [
+        "front-desk-clerk",
+        "guest"
+      ],
       "rules": [
         "company-accounts/credit-limit",
         "company-accounts/only-named-guests"
@@ -304,7 +428,7 @@
       "gaps": [
         "capability:direct-billing#whole-bill-moves"
       ],
-      "body": "## What people can do\n\n### Front desk clerk\n\n- Move a guest's bill to their company's account.",
+      "body": "",
       "feature": "company-accounts"
     },
     {
@@ -314,6 +438,9 @@
       "name": "Invoices",
       "summary": "Bookkeepers invoice each company once a month for its staff's stays.",
       "stability": "Alpha",
+      "personas": [
+        "bookkeeper"
+      ],
       "rules": [
         "invoices/invoice-numbers-run-in-sequence"
       ],
@@ -329,7 +456,7 @@
       "gaps": [
         "capability:invoices#no-payment-reminders"
       ],
-      "body": "## What people can do\n\n### Bookkeeper\n\n- Invoice every company for last month's stays.\n- Record a company's payment against its invoice.",
+      "body": "## Covers\n\n- Bookkeepers record a company's payment against its invoice.",
       "feature": "company-accounts"
     },
     {
@@ -337,8 +464,12 @@
       "domain": "finance",
       "file": "docs/product/finance/capabilities/night-audit.md",
       "name": "Night audit",
-      "summary": "The software closes each business day overnight, charging every guest in the hotel for that night's room, so the day's takings are final.",
+      "summary": "The software closes each business day overnight, charging every guest in the hotel for that night's room.",
       "stability": "GA",
+      "personas": [
+        "night-auditor",
+        "manager"
+      ],
       "rules": [
         "night-audit/one-room-charge-per-night",
         "night-audit/closed-days-dont-change",
@@ -356,7 +487,7 @@
         }
       ],
       "gaps": [],
-      "body": "## What people can do\n\n### Night auditor\n\n- See whether tonight's audit has run, and what it charged.\n- Start the audit by hand when it hasn't run.\n\n## Success\n\n- Every morning starts with yesterday closed, without anyone staying up for it.",
+      "body": "## Covers\n\n- Night auditors see whether tonight's audit has run, and what it charged.\n- Night auditors start the audit by hand when it hasn't run.\n\n## Success\n\n- Every morning starts with yesterday closed, without anyone staying up for it.",
       "feature": "closing-the-day"
     },
     {
@@ -366,6 +497,9 @@
       "name": "Daily takings",
       "summary": "Managers see each closed day's takings, for rooms, food and drink, and tax.",
       "stability": "Beta",
+      "personas": [
+        "manager"
+      ],
       "rules": [
         "night-audit/closed-days-dont-change"
       ],
@@ -375,7 +509,7 @@
       ],
       "code": [],
       "gaps": [],
-      "body": "## What people can do\n\n### Manager\n\n- See a closed day's takings.\n- Compare a day with the same day last year.",
+      "body": "## Covers\n\n- Managers compare a day with the same day last year.",
       "feature": "closing-the-day"
     },
     {
@@ -383,8 +517,11 @@
       "domain": "finance",
       "file": "docs/product/finance/capabilities/accounting-export.md",
       "name": "Accounting export",
-      "summary": "Bookkeepers hand each closed day's takings to the hotel's accounting software, without typing them in.",
+      "summary": "Bookkeepers export each closed day's takings to the hotel's accounting software.",
       "stability": "Alpha",
+      "personas": [
+        "bookkeeper"
+      ],
       "rules": [
         "night-audit/closed-days-dont-change"
       ],
@@ -393,7 +530,7 @@
       ],
       "code": [],
       "gaps": [],
-      "body": "## What people can do\n\n### Bookkeeper\n\n- Export the closed days since the last export.\n\n## Learning\n\n- Is a day at a time what the accountant wants, or one export a month?",
+      "body": "## Learning\n\n- Is a day at a time what the accountant wants, or one export a month?",
       "feature": "closing-the-day"
     },
     {
@@ -403,6 +540,10 @@
       "name": "Check-out",
       "summary": "Guests settle their bill as they leave, so nothing is left owing once they've gone.",
       "stability": "Alpha",
+      "personas": [
+        "front-desk-clerk",
+        "guest"
+      ],
       "rules": [
         "bills/closed-bills-dont-change"
       ],
@@ -412,7 +553,7 @@
       ],
       "code": [],
       "gaps": [],
-      "body": "## What people can do\n\n### Front desk clerk\n\n- See a departing guest's bill, with every night and charge on it.\n- Take payment for the balance, and close the bill.\n\n## Learning\n\n- Do guests want their bill emailed as they leave, or printed at the desk?",
+      "body": "## Covers\n\n- Clerks see a departing guest's bill, with every night and charge on it.\n- Clerks take payment for the balance, and close the bill.\n\n## Learning\n\n- Do guests want their bill emailed as they leave, or printed at the desk?",
       "feature": "front-desk"
     }
   ],

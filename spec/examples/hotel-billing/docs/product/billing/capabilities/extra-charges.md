@@ -1,5 +1,6 @@
 ---
 stability: GA
+personas: [front-desk-clerk]
 rules:
   - bills/charges-are-never-changed
   - bills/closed-bills-dont-change
@@ -9,15 +10,11 @@ code: [src/ledger/**]
 
 # Extra charges
 
-Staff add extras such as breakfast, parking or the minibar to a guest's bill,
-so everything the guest owes is on it.
+Staff add extras such as breakfast, parking or the minibar to a guest's bill.
 
-## What people can do
+## Covers
 
-### Front desk clerk
-
-- Add an extra to a guest's bill.
-- Correct a charge that was added by mistake.
+- Clerks correct a charge that was added by mistake.
 
 ## Success
 

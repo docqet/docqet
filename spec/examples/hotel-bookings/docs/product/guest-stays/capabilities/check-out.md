@@ -1,18 +1,17 @@
 ---
 stability: GA
+personas: [front-desk-clerk]
 concepts: [booking]
 ---
 
 # Check-out
 
-Clerks check guests out and settle what they owe.
+Clerks check guests out on their departure day and take payment for anything
+still owed.
 
-## What people can do
+## Covers
 
-### Front desk clerk
-
-- See today's departures.
-- Check a guest out, and take payment for anything still owed.
+- Clerks see today's departures.
 
 ## Success
 

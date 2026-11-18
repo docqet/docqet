@@ -1,5 +1,6 @@
 ---
 stability: Alpha
+personas: [guest, front-desk-clerk]
 rules:
   - payments/card-numbers-are-never-kept
   - bills/closed-bills-dont-change
@@ -14,18 +15,12 @@ gaps:
 
 # Pay by link
 
-Guests pay their bill from a link the hotel sends them, without coming to the
-desk.
+Guests pay their bill by card from a link the hotel sends them, without
+coming to the desk.
 
-## What people can do
+## Covers
 
-### Front desk clerk
-
-- Send a guest a link to pay what they owe.
-
-### Guest
-
-- Pay their bill by card from the link.
+- Clerks send a guest a link to pay what they owe.
 
 ## Learning
 

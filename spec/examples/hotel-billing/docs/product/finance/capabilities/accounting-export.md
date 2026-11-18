@@ -1,19 +1,14 @@
 ---
 stability: Alpha
+personas: [bookkeeper]
 rules: [night-audit/closed-days-dont-change]
 concepts: [business-day]
 ---
 
 # Accounting export
 
-Bookkeepers hand each closed day's takings to the hotel's accounting software,
-without typing them in.
-
-## What people can do
-
-### Bookkeeper
-
-- Export the closed days since the last export.
+Bookkeepers export each closed day's takings to the hotel's accounting
+software.
 
 ## Learning
 

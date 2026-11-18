@@ -1,5 +1,6 @@
 ---
 stability: Beta
+personas: [manager, front-desk-clerk]
 rules:
   - payments/deposit-is-the-first-night
   - payments/deposit-counts-towards-the-bill
@@ -10,15 +11,12 @@ code: [src/payments/deposit*.ts]
 
 # Deposits
 
-The software takes a deposit on the guest's card when a stay is booked, so the
-hotel isn't left out of pocket by guests who never arrive.
+The software takes a deposit on the guest's card when a stay is booked.
 
-## What people can do
+## Covers
 
-### Front desk clerk
-
-- See whether a stay's deposit has been paid.
-- Take a deposit again when the guest's card was declined.
+- Clerks see whether a stay's deposit has been paid.
+- Clerks take a deposit again when the guest's card was declined.
 
 ## Open decisions
 

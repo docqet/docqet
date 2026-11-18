@@ -1,5 +1,6 @@
 ---
 stability: GA
+personas: [night-auditor, manager]
 rules:
   - night-audit/one-room-charge-per-night
   - night-audit/closed-days-dont-change
@@ -11,14 +12,12 @@ code: [src/night-audit/**]
 # Night audit
 
 The software closes each business day overnight, charging every guest in the
-hotel for that night's room, so the day's takings are final.
+hotel for that night's room.
 
-## What people can do
+## Covers
 
-### Night auditor
-
-- See whether tonight's audit has run, and what it charged.
-- Start the audit by hand when it hasn't run.
+- Night auditors see whether tonight's audit has run, and what it charged.
+- Night auditors start the audit by hand when it hasn't run.
 
 ## Success
 

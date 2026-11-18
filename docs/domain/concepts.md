@@ -28,9 +28,14 @@ and lists its **known gaps**. Rules and concepts belong to a domain, and mean
 what they say there. A capability refers to the ones it follows and uses, so
 one rule can apply to many capabilities, in different features and domains.
 
+A **persona** is a type of person the software serves, such as a front desk
+clerk. Each capability says which personas it serves, so Docket can show, for
+each of them, what the software does for them and how ready it is for them.
+
 Code and tests point at rules with **annotations**. The **indexer** reads all
 of it, plus the latest **test results**, and works out each rule's **status**,
-each feature's, domain's and project's **maturity**, and any **problems**.
+each feature's, domain's and project's **maturity**, each persona's
+**readiness**, and any **problems**.
 
 ```text
 project ──────────────────── where software is defined; metadata, not a boundary; maturity (derived)
@@ -38,6 +43,7 @@ project ──────────────────── where softw
 domain ───────────────────── a part of the business and its language; maturity (derived)
 ├── its part of features ─── a feature can span domains
 │   └── its part of capabilities ── stability level (declared, per domain), known gaps
+│       ├──► personas ────── who it serves
 │       ├──► rules ───────── its domain's, unless it names another
 │       ├──► concepts ────── its domain's, unless it names another
 │       └── code
@@ -45,6 +51,7 @@ domain ───────────────────── a part of
 └── concept ──────────────── what a word means in this domain
 
 feature ──────────────────── one across every domain: maturity (derived) from every part
+persona ──────────────────── one across every domain: readiness (derived) from its capabilities
 ```
 
 ## Project
@@ -90,7 +97,7 @@ one product. Visible, they can be fixed.
 
 What should agree:
 
-- **A domain's, feature's or capability's name and summary**, in every project
+- **A domain's, feature's, capability's or persona's name and summary**, in every project
   that declares it. Its body is each project's own notes, so bodies are shown
   side by side.
 - **Which feature a capability is in.**
@@ -116,7 +123,7 @@ through a web page, a mobile app, an API or a command line, whether it runs as
 one service or ten, and whatever language, framework or vendor is behind it.
 
 - **They're described in the domain's words.** Their names, summaries and what
-  people can do name no screens, buttons, endpoints, services, tables,
+  they cover name no screens, buttons, endpoints, services, tables,
   functions, technologies or vendors. "Clerks book a room for a guest's stay",
   not "clerks submit the booking form" or "the bookings API creates a
   reservation".
@@ -199,12 +206,20 @@ Room booking is a capability of Reservations. Its result is a guest with a
 room held for their stay. Cancellations is another, and its result is a
 booking ended and the guest refunded what the policy allows.
 
-A capability can always be stated in one sentence in one of two forms:
+A capability is stated in one sentence, its summary, in one of two forms:
 
-- **Who can do what, and to what end**: "Clerks book a room for a guest's
-  stay, so that each room has at most one guest on any night."
-- **What the software does, and to what end**: "The software reminds each
-  guest of their stay the day before they arrive, so fewer guests forget."
+- **Who does what**: "Clerks book a free room for a guest's stay."
+- **What the software does**: "The software reminds each guest of their stay
+  the day before they arrive."
+
+The sentence can add a condition that limits it, or to what end, when that
+helps: "Clerks move a guest's bill to their company's account at check-out, so
+the guest leaves without paying." It names the people the business's way, and
+the capability links the personas it serves: who does it, or who it's done
+for. What it doesn't do is said elsewhere. What must always or never happen is
+a rule it follows, and what's missing or limited, for now or by choice, is a
+known gap. Anything else it includes, when the sentence doesn't show it, is
+listed under what it covers, each a sentence of its own.
 
 Something is a capability when:
 
@@ -214,8 +229,8 @@ Something is a capability when:
 - **Its result is distinct.** The actions that lead to the same result are
   part of one capability. Seeing which rooms are free, booking one, and moving
   a booking to new dates all lead to a guest with a room held for their stay,
-  under the same rules. So they're all room booking, listed under what people
-  can do. Cancelling leads to a different result under different rules, so
+  under the same rules. So they're all room booking, listed under what it
+  covers. Cancelling leads to a different result under different rules, so
   it's a capability of its own.
 - **It can be depended on by itself.** People can rely on room booking while
   group bookings is still a prototype. That's why the stability level belongs
@@ -321,6 +336,30 @@ A concept means what it says within its domain. Billing's booking is "what a
 guest is charged for a stay", and that's a second definition of the word, not
 a mistake in Guest stays' or Billing's.
 
+### Persona
+
+A type of person the software serves, written as one invented person so it's
+easy to picture: Maria, front desk clerk, "runs the front desk: takes bookings,
+and checks guests in and out". A persona says who they are, what they need the
+software to do for them, what they know, the context they work in, what they
+expect, and what they care about.
+
+- **Capabilities link to the personas they serve**: whoever does it, or whoever
+  it's done for when the software does it on its own. Room status serves the
+  housekeeper who marks rooms clean and the clerk who sees which are ready.
+  Night audit runs by itself, and serves the night auditor and the manager.
+- **What it relates to is worked out from those links**: its capabilities, the
+  features they're in, and the domains those are in. Nobody lists them on the
+  persona.
+- **It's one across every domain.** People work across the parts of the
+  business, so a persona is written for the whole project, not in a domain,
+  and projects that serve the same people share its ID.
+- **It isn't a role or a permission.** It says who someone is and what they
+  need, not what they're allowed to do.
+- **It has no stability level or maturity.** It has a **readiness**: how
+  ready the software is for them, worked out from the maturity of what they
+  need.
+
 ### Open decision
 
 A question about a capability that hasn't been settled. It's recorded in the
@@ -376,6 +415,20 @@ more than early ones.
   settling in.
 
 The spec has [how it's worked out](../../spec/README.md#how-maturity-is-worked-out).
+
+### Readiness
+
+How ready the software is for a persona: a percentage worked out from the
+maturity of what they need, which is every capability that serves them, as a
+feature's maturity is worked out from its capabilities. A feature has a
+readiness for each persona it serves too, from just its capabilities that serve
+them. Readiness is about the people, so it never counts toward a domain's or
+project's maturity.
+
+It has a scale of its own, so it's never mistaken for maturity: Not ready yet,
+Partly ready, Mostly ready and Ready, a quarter each.
+
+The spec has [how it's worked out](../../spec/README.md#readiness).
 
 ### Band
 

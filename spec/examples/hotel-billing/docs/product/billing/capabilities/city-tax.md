@@ -1,5 +1,6 @@
 ---
 stability: Alpha
+personas: [manager, front-desk-clerk]
 rules:
   - tax/city-tax-per-guest-night
   - tax/children-pay-no-city-tax
@@ -16,11 +17,8 @@ gaps:
 
 # City tax
 
-The software adds the city's tourist tax to each guest's bill, night by night,
-so the hotel collects what it owes the city.
+The software adds the city's tourist tax to each guest's bill, night by night.
 
-## What people can do
+## Covers
 
-### Front desk clerk
-
-- See the city tax on a guest's bill, night by night.
+- Clerks see the city tax on a guest's bill, night by night.
