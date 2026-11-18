@@ -43,12 +43,13 @@ docket.yaml                              config: the project's ID and name, wher
 docs/
 └── product/
     ├── personas/<slug>.md               who the software serves, across every domain
-    └── <domain>/                        one folder per domain the project works in
-        ├── domain.md                    the domain's name and summary
-        ├── features/<slug>.md           the product's jobs, each grouping capabilities
-        ├── capabilities/<slug>.md       the only docs with a stability level
-        ├── rules/<topic>/<slug>.md      one rule per file, grouped by topic
-        └── concepts/<slug>.md
+    └── domains/
+        └── <domain>/                    one folder per domain the project works in
+            ├── domain.md                the domain's name and summary
+            ├── features/<slug>.md       the product's jobs, each grouping capabilities
+            ├── capabilities/<slug>.md   the only docs with a stability level
+            ├── rules/<topic>/<slug>.md  one rule per file, grouped by topic
+            └── concepts/<slug>.md
 <code and tests, anywhere>               docket:implements and docket:verifies comments
 .docket/state.json                       written by `docket index`, gitignored
 ```
@@ -59,7 +60,11 @@ these changes:
 - Features are new. A feature is a job the product does, and it groups the
   capabilities that do it.
 - Domains are new. A domain is a part of the business with a language of its
-  own, and a project's docs are in a folder per domain it works in.
+  own, and a project's docs are in a folder per domain it works in, under
+  `domains/`. Forge's single `domain/` folder of rules and concepts becomes
+  one of these per domain.
+- Each folder directly under `docs/product/` holds one kind of thing:
+  `personas/`, which span domains, and `domains/`.
 - Frontmatter replaces bold-label lines such as `**Stability:** Alpha`.
 - Rules are one per file instead of one file per topic.
 - A capability is its one-sentence summary, saying who or what does what.
@@ -80,18 +85,18 @@ real repository it's gitignored.
 
 ## IDs
 
-A doc's ID is its path under its type's folder in its domain, without `.md`. A
-domain's ID is its folder's name. Personas aren't in a domain, so `personas`
-is never a domain's ID:
+A doc's ID is its path under its type's folder, without `.md`: in its domain
+for those written in one, or under `personas/` for a persona. A domain's ID is
+its folder's name:
 
-| Type       | Folder                                      | Example ID                  |
-| ---------- | ------------------------------------------- | --------------------------- |
-| domain     | `docs/product/`                             | `guest-stays`               |
-| feature    | `docs/product/<domain>/features/`           | `reservations`              |
-| capability | `docs/product/<domain>/capabilities/`       | `room-booking`              |
-| rule       | `docs/product/<domain>/rules/`              | `booking/no-double-booking` |
-| concept    | `docs/product/<domain>/concepts/`           | `booking`                   |
-| persona    | `docs/product/personas/`                    | `front-desk-clerk`          |
+| Type       | Folder                                        | Example ID                  |
+| ---------- | --------------------------------------------- | --------------------------- |
+| domain     | `docs/product/domains/`                       | `guest-stays`               |
+| feature    | `docs/product/domains/<domain>/features/`     | `reservations`              |
+| capability | `docs/product/domains/<domain>/capabilities/` | `room-booking`              |
+| rule       | `docs/product/domains/<domain>/rules/`        | `booking/no-double-booking` |
+| concept    | `docs/product/domains/<domain>/concepts/`     | `booking`                   |
+| persona    | `docs/product/personas/`                      | `front-desk-clerk`          |
 
 - **No `id:` field.** The path is the ID, so there's nothing to drift. Renaming
   a file renames the doc, and the indexer reports every link and annotation the
@@ -117,11 +122,11 @@ is its name. The paragraph under the title is its summary. The UI shows both.
 
 | Type | Frontmatter | Body | Example |
 | --- | --- | --- | --- |
-| domain | none | Anything worth saying about the part of the business, as prose | [guest-stays](examples/hotel-bookings/docs/product/guest-stays/domain.md) |
-| feature | `capabilities` (required) | Anything worth saying about the job, as prose | [reservations](examples/hotel-bookings/docs/product/guest-stays/features/reservations.md) |
-| capability | `stability` (required), `personas`, `rules`, `concepts`, `code`, `gaps` | Covers, Learning, Success, Open decisions | [room-booking](examples/hotel-bookings/docs/product/guest-stays/capabilities/room-booking.md) |
-| rule | `kind` (required: `core` or `edge-case`), `concepts` | The rule, Why | [same-day-turnover](examples/hotel-bookings/docs/product/guest-stays/rules/booking/same-day-turnover.md) |
-| concept | none | Details, Lifecycle, Not to be confused with | [booking](examples/hotel-bookings/docs/product/guest-stays/concepts/booking.md) |
+| domain | none | Anything worth saying about the part of the business, as prose | [guest-stays](examples/hotel-bookings/docs/product/domains/guest-stays/domain.md) |
+| feature | `capabilities` (required) | Anything worth saying about the job, as prose | [reservations](examples/hotel-bookings/docs/product/domains/guest-stays/features/reservations.md) |
+| capability | `stability` (required), `personas`, `rules`, `concepts`, `code`, `gaps` | Covers, Learning, Success, Open decisions | [room-booking](examples/hotel-bookings/docs/product/domains/guest-stays/capabilities/room-booking.md) |
+| rule | `kind` (required: `core` or `edge-case`), `concepts` | The rule, Why | [same-day-turnover](examples/hotel-bookings/docs/product/domains/guest-stays/rules/booking/same-day-turnover.md) |
+| concept | none | Details, Lifecycle, Not to be confused with | [booking](examples/hotel-bookings/docs/product/domains/guest-stays/concepts/booking.md) |
 | persona | `image` (required) | Needs, Knows, Context, Expects, Cares about | [front-desk-clerk](examples/hotel-bookings/docs/product/personas/front-desk-clerk.md) |
 
 - **`stability`** is `Prototype`, `Alpha`, `Beta` or `GA`. Only capabilities
@@ -460,16 +465,17 @@ results:
     not Guest stays.
 - **`results`** lists the test results `docket index` reads.
 
-A doc's domain is the folder under `docs/product/` it's in, so nothing in a
-doc says it. Moving a doc to another folder moves it. Both hotel examples work
+A doc's domain is the folder under `docs/product/domains/` it's in, so
+nothing in a doc says it. Moving a doc to another folder moves it. Both hotel examples work
 in two domains each.
 
 ## Domains
 
 A **domain** is a part of the business with a language of its own: a business
 area and a bounded context, in domain-driven design's terms, as one. Every doc
-is written in exactly one domain, the one whose folder it's in. A project
-works in as many domains as it has folders under `docs/product/`, and projects
+but a persona is written in exactly one domain, the one whose folder it's in.
+A project works in as many domains as it has folders under
+`docs/product/domains/`, and projects
 that work in the same part of the business use the same domain ID.
 
 A domain's `domain.md` gives its name and summary, and anything worth saying

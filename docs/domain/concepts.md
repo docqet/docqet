@@ -13,12 +13,11 @@ booking app and its billing service.
 
 A **project** is a place where software is defined in **docs**, and usually
 implemented, such as the hotel's booking app: one repository. Each project
-works in one
-or more **domains**: parts of the business, each with its own language, such as
-Guest stays or Billing. Every doc is written in exactly one domain. Every
-project contributes what it knows to one picture of the whole product, and
-where two of them say different things, Docket shows the **contradiction**
-rather than picking one.
+works in one or more **domains**: parts of the business, each with its own
+language, such as Guest stays or Billing. Every doc but a persona is written in
+exactly one domain. Every project contributes what it knows to one picture of
+the whole product, and where two of them say different things, Docket shows the
+**contradiction** rather than picking one.
 
 A **feature** is a job the product does, and it groups the **capabilities**
 that do that job. Features and capabilities can span domains: each domain that
@@ -160,8 +159,9 @@ in Billing. Both are right, each in its domain.
   in one domain, and one project can work in several. Repackaging the software,
   or reorganizing the teams that build it, never creates, removes or splits a
   domain.
-- **Every doc is written in exactly one domain**: the one whose words it uses.
-  A project's docs for each domain are in a folder of their own.
+- **Every doc but a persona is written in exactly one domain**: the one whose
+  words it uses. A project's docs for each domain are in a folder of their
+  own.
 - **Domains are shared by ID.** Projects that work in the same part of the
   business use the same domain ID, and their contributions to it are one
   domain.
