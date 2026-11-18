@@ -1,4 +1,4 @@
-# Marks this repository as using Docket. Docs are read from docs/.
+# Marks this repository as a Docket project. Its docs are in docs/product/<domain>/.
 project:
   id: hotel-bookings
   name: Hotel Bookings

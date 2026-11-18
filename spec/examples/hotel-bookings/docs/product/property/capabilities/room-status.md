@@ -1,6 +1,6 @@
 ---
 stability: Prototype
-concepts: [room]
+concepts: [room@guest-stays]
 ---
 
 # Room status
