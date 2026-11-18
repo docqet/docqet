@@ -6,59 +6,111 @@ wrong.
 
 The [spec](../../spec/README.md) says how each of these is written down: file
 layout, frontmatter, IDs and the `state.json` schema. This doc says what they
-are. Examples come from the spec's hotel-booking
-[example](../../spec/examples/hotel-bookings/).
+are. Examples come from the spec's [examples](../../spec/examples/): a hotel's
+booking app and its billing service.
 
 ## The big picture
 
-A **project** describes its software in **docs**. On the product side, an
-**area** is a part of the business the software serves, and it groups the
-**features** that serve it. A feature is a job the product does, and it groups
-the **capabilities** that do that job. Each capability has a **stability level**, follows **rules**, uses
-**concepts**, and lists its **known gaps**. Rules and concepts belong to the
-**domain**, not to any capability or feature. A capability refers to the ones
-it follows and uses, so one rule can apply to many capabilities, in different
-features. **Flows** show **personas** getting work done across capabilities. On
-the engineering side, **systems** and **components** explain how the code
-behind capabilities works.
+A **project** is a place where software is defined in **docs**, and usually
+implemented, such as the hotel's booking app: one repository. Each project
+works in one
+or more **domains**: parts of the business, each with its own language, such as
+Guest stays or Billing. Every doc is written in exactly one domain. Every
+project contributes what it knows to one picture of the whole product, and
+where two of them say different things, Docket shows the **contradiction**
+rather than picking one.
+
+A **feature** is a job the product does, and it groups the **capabilities**
+that do that job. Features and capabilities can span domains: each domain that
+does part of the work contributes its part. Each capability has a **stability
+level** in each domain that builds it, follows **rules**, uses **concepts**,
+and lists its **known gaps**. Rules and concepts belong to a domain, and mean
+what they say there. A capability refers to the ones it follows and uses, so
+one rule can apply to many capabilities, in different features and domains.
 
 Code and tests point at rules with **annotations**. The **indexer** reads all
 of it, plus the latest **test results**, and works out each rule's **status**,
-each area's and feature's **maturity**, and any **problems**.
+each feature's, domain's and project's **maturity**, and any **problems**.
 
 ```text
-project
-└── area ─────────────────── maturity (derived)
-    └── feature ──────────── maturity (derived)
-        └── capability ───── stability level (declared), product gaps
-            ├──► rules ───── refers to the domain's
-            ├──► concepts ── refers to the domain's
-            └── code ◄────── system, component ── technical gaps
+project ──────────────────── where software is defined; metadata, not a boundary; maturity (derived)
 
-domain
-├── rule ─────────────── status (derived from annotations and test results),
-│                        applies to every capability that refers to it
-└── concept
+domain ───────────────────── a part of the business and its language; maturity (derived)
+├── its part of features ─── a feature can span domains
+│   └── its part of capabilities ── stability level (declared, per domain), known gaps
+│       ├──► rules ───────── its domain's, unless it names another
+│       ├──► concepts ────── its domain's, unless it names another
+│       └── code
+├── rule ─────────────────── status (derived from annotations and test results)
+└── concept ──────────────── what a word means in this domain
 
-flow ──► personas, capabilities
+feature ──────────────────── one across every domain: maturity (derived) from every part
 ```
+
+## Project
+
+A place where software is defined, and usually implemented: one repository,
+such as a GitHub repository, marked by a `docket.yaml` at its root that gives
+the project's ID and name. Its docs say what the software can do and the rules
+it follows, and its code and tests, when it has them, do it and prove it.
+
+Hotel Bookings is a project: the hotel's booking app, where guests' stays are
+booked, changed and checked in. Hotel Billing is another: the same hotel's
+billing service, in a repository of its own, where guests' bills are kept and
+paid.
+
+- **It's metadata, not a boundary.** It says where each part of the picture
+  comes from, so you can see who said what and show only what some projects
+  define. It doesn't decide what words mean, which is a domain's job, and it
+  groups nothing for its own sake.
+- **Everything in its repository is its own**: every doc, annotation and test
+  result.
+- **It works in one or more domains**, and contributes what it knows about
+  each to the overall view. No project owns a domain, a feature or a
+  capability. Docket puts every project's contributions together by ID. Hotel
+  Bookings works in Guest stays and Property, and Hotel Billing in Billing and
+  Finance. Both say something about check-out: bookings that clerks check
+  guests out, billing that the guest's bill is settled as they go.
+- **Moving docs between projects changes no product doc.** Splitting a service
+  out into a repository of its own makes a new project, but it creates,
+  removes or renames no domain, feature or capability.
+- **It has no stability level.** It has a **maturity**, worked out from its
+  parts of features. Several projects shown together have one too, worked out
+  from all their parts the same way, as if they were one project. Showing
+  only some projects works out each feature's and domain's maturity from what
+  those projects say.
+
+### Contradiction
+
+Two contributions that should agree and don't, such as two projects describing
+check-out differently, or listing the same capability under different
+features. Docket shows contradictions as problems, naming the projects involved,
+instead of choosing one. Duplicates will happen as several projects describe
+one product. Visible, they can be fixed.
+
+What should agree:
+
+- **A domain's, feature's or capability's name and summary**, in every project
+  that declares it. Its body is each project's own notes, so bodies are shown
+  side by side.
+- **Which feature a capability is in.**
+- **A rule or concept within one domain**, when more than one project
+  declares it there.
+
+What isn't a contradiction:
+
+- **A feature or capability in several domains.** Work crosses domains, and
+  each domain contributes its part.
+- **A capability's levels.** Each domain that builds it says how far along its
+  part is.
+- **The same word meaning different things in different domains.** That's
+  what domains are for.
 
 ## Product
 
-Areas, features and capabilities describe one thing: the value the software
-provides.
-Software provides value in one of two ways:
-
-- **It does something of value itself**, such as reminding each guest of their
-  stay the day before they arrive.
-- **It lets someone do something of value**, such as a clerk booking a room for
-  a guest.
-
-Features and capabilities are always described as one of those.
-
 ### Agnostic of implementation
 
-Areas, features and capabilities say what value the software provides, never
+Domains, features and capabilities say what value the software provides, never
 how it's built or delivered. A capability is the same capability whether people use it
 through a web page, a mobile app, an API or a command line, whether it runs as
 one service or ten, and whatever language, framework or vendor is behind it.
@@ -70,7 +122,7 @@ one service or ten, and whatever language, framework or vendor is behind it.
   reservation".
 - **Changing the implementation doesn't change them.** A rewrite, a new
   framework, splitting or merging services, or moving to another vendor never
-  creates, removes, renames or splits an area, feature or capability. If the
+  creates, removes, renames or splits a domain, feature or capability. If the
   software produces the same results of value afterwards, they're the same
   ones.
 - **Delivery isn't a capability.** Offering room booking through an app as
@@ -78,35 +130,47 @@ one service or ten, and whatever language, framework or vendor is behind it.
   room booking. It becomes a capability of its own only if it produces a result
   of value that wasn't possible before.
 - **Implementation and value don't line up one to one.** One capability can be
-  built from several components, and one component or system can serve several
+  built from code in several places, and one piece of code can serve several
   capabilities.
 
-How the software is built has its own place. A capability's `code` says where
-its code lives. Systems and components explain how that code works, and their
-technical gaps say what only someone working on the code would notice.
+A capability's `code` says where its code lives. That's all Docket records
+about how the software is built.
 
-### Area
+### Domain
 
-A part of the business that the software serves, made up of the features that
-serve it. Guest stays is an area: "looking after guests from their booking to
-their check-out". It groups Reservations and Front desk. Property is another:
-"keeping the hotel ready for guests". It groups Housekeeping, and would group
-Maintenance once the software takes on that job.
+A part of the business the software serves, with a language of its own: within
+a domain, each word means one thing. It's a business area and a bounded
+context, in domain-driven design's terms, as one. Guest stays is a domain:
+"looking after guests from their booking to their check-out". Billing is
+another: "charging guests for their stays and getting paid". Booking means a
+guest's hold on one room in Guest stays, and what a guest is charged for a stay
+in Billing. Both are right, each in its domain.
 
 - **It's named for the part of the business it serves**, not for an app, a
-  product, a service or a team: Guest stays, not "the guest app" or "the
-  front-office suite".
-- **It doesn't follow how the software is packaged.** Its features can be
-  delivered by different apps, services or products, and one app can deliver
-  features from several areas. Repackaging the software, or reorganizing the
-  teams that build it, never creates, removes or splits an area.
-- **It provides value only through its features.** An area with no features is
-  a part of the business the software doesn't serve yet.
-- **It's one level.** An area holds features, never other areas.
-- **A feature is in at most one area.** A feature in no area is allowed, and
-  shows on its own. Capabilities belong to an area only through their feature.
+  service or a team: Guest stays, not "the guest app" or "the front-office
+  suite".
+- **It doesn't follow how the software is packaged.** Several projects can work
+  in one domain, and one project can work in several. Repackaging the software,
+  or reorganizing the teams that build it, never creates, removes or splits a
+  domain.
+- **Every doc is written in exactly one domain**: the one whose words it uses.
+  A project's docs for each domain are in a folder of their own.
+- **Domains are shared by ID.** Projects that work in the same part of the
+  business use the same domain ID, and their contributions to it are one
+  domain.
+- **Features and capabilities can span domains.** Front desk is in Guest stays,
+  where clerks check guests in and out, and in Billing, where the bill is
+  settled at check-out. Each domain's part is its own, and the feature is one.
+- **Rules and concepts are the domain's own.** The same ID in two domains is two
+  definitions, shown side by side, and that's not a problem. A capability uses
+  its own domain's rules and concepts, unless it names another domain's, or
+  only one domain defines that ID.
+- **It provides value only through its features.** A domain with no features
+  is a part of the business the software doesn't serve yet.
+- **It's one level.** A domain holds its parts of features, never other
+  domains.
 - **It has no stability level.** It has a **maturity**, worked out from its
-  features' maturities the same way a project's is.
+  parts of features.
 
 ### Feature
 
@@ -161,6 +225,11 @@ The capability is Docket's unit of dependability:
 
 - **It's the only thing with a stability level.** When you need to know
   whether you can rely on something, you check the capability.
+- **It has a level in each domain that builds part of it.** A capability that
+  spans domains can be further along in one than another: check-out is GA in
+  Guest stays, where clerks check guests out, and Alpha in Billing, where
+  settling the bill is still taking shape. Where they differ, its level in
+  short is the lowest, since that's what you can count on everywhere.
 - **It's in at most one feature.** A capability in no feature is allowed, and
   shows on its own.
 - **It's what connects rules, concepts and code to the product.** A capability
@@ -182,26 +251,36 @@ Ask what value the work adds:
 | Only changes how something is built                                   | Neither                                                    |
 
 A rough check: the reason someone uses part of the software is a feature.
-What they get done while they're there is a capability. The part of the
-business that reason belongs to is an area.
+What they get done while they're there is a capability. The parts of the
+business whose language they're in are its domains.
 
 Some things are never features or capabilities:
 
 - **A step or action**, such as picking dates or seeing which rooms are free,
   is part of a capability, unless it produces a result of value by itself.
-- **A screen, page, endpoint or service** is how a capability is delivered.
-  Systems and components describe those.
-- **A rule** is what must or can't happen while capabilities do their jobs.
+- **A screen, page, endpoint or service** is how a capability is delivered,
+  not what it is.
+- **A rule** is a constraint capabilities do their jobs under: something that
+  must always be true, or must never happen.
 - **A quality**, such as being fast, accessible or secure, is how well
   capabilities do their job. Where one falls short, that's a gap in the
   capability.
 
 ### Rule
 
-A business rule of the domain: something that must or can't happen, in the
-domain's words, such as "a room can't be double-booked" or "cancelling 48
-hours ahead is free". Each rule says what it is and why, and nothing about how
-the code enforces it.
+A business rule of the domain: a constraint the business and its software
+operate under. It's something that must always be true, or must never happen,
+in the domain's words, such as "a room can't be double-booked" or "cancelling
+48 hours ahead is free". Each rule says what it is and why, and nothing about
+how the code enforces it.
+
+A rule isn't a preference, a default or a guideline. It holds every time, for
+everyone it covers, and software that lets it be broken is wrong. Something
+that's only usually true, that someone can choose to override, or that's
+still being decided isn't a rule. Write it as what the capability does, or as
+an open decision, until the business commits to it. When the business does
+allow an exception, such as a manager waiving a cancellation fee, the
+exception is part of the rule, and the rule still holds every time.
 
 A rule belongs to the domain, not to a capability or a feature:
 
@@ -215,6 +294,10 @@ A rule belongs to the domain, not to a capability or a feature:
   only goes through room booking. That holds up when the rule is enforced in
   one place that every capability goes through, and it's worth checking when
   it isn't.
+- **It's its domain's.** A rule holds within the domain that declares it, in
+  that domain's words. A capability in another domain can still follow it, by
+  naming its domain, so one rule can govern work that crosses domains. Another
+  domain can have a rule with the same ID that says something else.
 
 A rule is one of two kinds, the same for every capability that follows it:
 
@@ -234,17 +317,9 @@ What a term in the domain means, such as a booking: "a guest's hold on one
 room for a stay". A concept says what something is, what it's made of, how it
 relates to other concepts and what states it moves through.
 
-### Flow
-
-How a piece of work gets done from start to finish, by one or more personas,
-across one or more capabilities, such as a guest's change of plans. A flow has
-a clear start and a clear finish, and the steps and variations between them.
-
-### Persona
-
-One kind of person who uses the product, written as a single representative
-person: who they are, what they know, where they work, what they expect and
-what they care about. Flows say which personas take part.
+A concept means what it says within its domain. Billing's booking is "what a
+guest is charged for a stay", and that's a second definition of the word, not
+a mistake in Guest stays' or Billing's.
 
 ### Open decision
 
@@ -252,47 +327,17 @@ A question about a capability that hasn't been settled. It's recorded in the
 capability so it isn't lost or quietly decided in code. Once it's settled, it
 becomes a rule, or a change to what the capability does.
 
-## Engineering
-
-### System
-
-How something overarching in the software works, used across many
-capabilities, such as authentication. A system doc explains what the code
-can't: how it works, its tradeoffs and gotchas, and what to know before
-changing it.
-
-### Component
-
-How one part of the software works, serving one or more capabilities, such as
-refunds. A component may use systems. It gets a doc only when there's
-something to say that the code can't.
-
 ## Known gaps
 
 ### Gap
 
-Something the software doesn't do, or doesn't do well, that we've chosen to
-write down rather than hide. Each gap is recorded in exactly one place, and
-which place depends on who would notice it.
+Something the software doesn't do, or doesn't do well, that someone using the
+product would notice and that we've chosen to write down rather than hide,
+such as there being no waitlist when every room is taken. It's recorded on the
+capability, and is one of two kinds:
 
-- **Product gap**: someone using the product would notice it, such as there
-  being no waitlist when every room is taken. It's recorded on the capability,
-  and is one of two kinds:
-  - **To close later**: we intend to fix it.
-  - **Accepted tradeoff**: we've decided to live with it.
-- **Technical gap**: only someone working on the code would notice it, such as
-  availability checks loading every booking for a room. It's recorded on the
-  system or component, and says what closes it.
-
-### Until and due
-
-What closes a technical gap. It's one of:
-
-- **A capability reaching a level**, such as "until room booking reaches GA".
-  The gap becomes **due** once that capability is at that level or above, and
-  a due gap is a problem.
-- **A concrete event**, such as "the second instance is deployed".
-- **Not decided.**
+- **To close later**: we intend to fix it.
+- **Accepted tradeoff**: we've decided to live with it.
 
 ## Stability and maturity
 
@@ -314,12 +359,11 @@ demote it.
 - **Stability isn't perfection.** A GA capability can still have bugs and known
   gaps.
 - **A level sets expectations Docket can check.** From Alpha, a capability's
-  core rules must be passing. From Beta, its edge-case rules must be too. And
-  none of its technical gaps may be due.
+  core rules must be passing. From Beta, its edge-case rules must be too.
 
 ### Maturity
 
-How far along a feature, an area or a whole project is: how much of the work under way
+How far along a feature, a domain or a project is: how much of the work under way
 is stable and supported. It's a percentage, derived from capabilities'
 stability levels, and nobody writes it down. Stable capabilities count for
 more than early ones.
@@ -335,7 +379,7 @@ The spec has [how it's worked out](../../spec/README.md#how-maturity-is-worked-o
 
 ### Band
 
-The quarter of the maturity scale a feature, area or project falls in, named for the
+The quarter of the maturity scale a feature, domain or project falls in, named for the
 level it's closest to: **Experimental** (Prototype), **Emerging** (Alpha),
 **Promising** (Beta) and **Established** (GA). A band tells you what to expect
 from the whole, never from every part.
@@ -381,25 +425,25 @@ test results:
 
 ## Docket itself
 
-### Project
-
-One codebase described with Docket, marked by a `docket.yaml` at the root of
-its repository. A project has a maturity, worked out from its features'.
-
 ### Doc
 
-One Markdown file describing one thing: an area, feature, capability, rule,
-concept, flow, persona, system or component. Its frontmatter holds what tools
+One Markdown file describing one thing: a domain, feature, capability, rule or
+concept. Its frontmatter holds what tools
 compute with, such as levels, links and gaps. Its body holds what people read. No fact
 is in both.
 
 A doc's **ID** is its path within its type's folder, so it can't drift from the
-file.
+file. What it identifies depends on the doc's type:
+
+- **Domains, features and capabilities**: one thing across every project. The
+  same ID anywhere is a contribution to the same one.
+- **Rules and concepts**: one definition within a domain. The same ID in two
+  domains is two definitions.
 
 ### Link
 
-A relationship between two things, written once, in one direction: an area
-lists its features, a feature its capabilities, a capability its rules, a test the rule it verifies.
+A relationship between two things, written once, in one direction: a feature
+lists its capabilities, a capability its rules, a test the rule it verifies.
 Docket works out the other direction, so nobody has to keep both sides in step.
 
 ### Declared and derived
@@ -409,7 +453,7 @@ Everything in Docket is one or the other:
 - **Declared**: written by people and agents. Docs, stability levels, rules,
   gaps, links and annotations.
 - **Derived**: worked out by the indexer. Rule statuses, maturity, bands,
-  reverse links, whether gaps are due, and problems. Nobody edits it by hand.
+  reverse links and problems. Nobody edits it by hand.
 
 ### Indexer
 
@@ -420,13 +464,16 @@ to no one tool.
 
 ### State
 
-What the indexer writes: a snapshot of the project at one commit, with
+What the indexer writes: a snapshot of a project at one commit, with
 everything declared and derived. The UI shows only the state and never reads
-the repository itself.
+the repository itself. To show several projects together, it reads each one's
+state and **combines** them: it puts each product doc's contributions
+together, works out maturity again across them, and finds the contradictions
+between them. Showing only some projects combines just what they define.
 
 ### Problem
 
-Something the indexer found wrong, such as a link to a doc that doesn't exist,
-a capability in two features, a rule whose status is below what its
-capability's level needs, or a technical gap that's due. The spec lists
+Something the indexer, or combining, found wrong, such as a link to a doc
+that doesn't exist, a capability in two features, a rule whose status is
+below what its capability's level needs, or a contradiction between projects. The spec lists
 [every kind](../../spec/README.md#problems).

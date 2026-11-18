@@ -4,21 +4,20 @@ The Docket format: how a repository records the state of its software so that
 people, agents and tools can all read it. The spec belongs to no particular
 tool. Anyone can adopt the format or write their own indexer for it.
 
-**Status: draft for review.** Nothing implements it yet. Each project in
+**Status: draft for review.** Nothing implements it yet. Each example in
 [`examples/`](examples/) is laid out as its own repository root, with the
 `state.json` an indexer would produce from it:
 
 - **[`hotel-bookings`](examples/hotel-bookings/)** is a small hotel-booking app
   that uses every part of the spec, code and tests included. The examples
   below come from it.
-- **[`exalynt`](examples/exalynt/)** is Exalynt's API, its docs converted from
-  forge's format, to show the spec at a real project's size. Its code and
-  tests stay in the API's repository, which its `code` globs and links point
-  into. Its rules' acceptance tests are the scenarios their docs linked to,
-  standing in for `docket:verifies` tags. With no test results, none of its
-  rules is `passing`, so every rule a capability's level needs shows as a
-  problem. Forge's provider docs and runbooks weren't brought over, since
-  Docket doesn't read them.
+- **[`hotel-billing`](examples/hotel-billing/)** is the same hotel's billing
+  service, in a repository of its own: guest bills, payments, company accounts
+  and closing the day. It's a second project to show beside the first. It works
+  in the Billing and Finance domains, and contributes Billing's part of Front
+  desk, a feature that's mostly Guest stays'. Its test
+  results are a commit behind, so it shows the problems that come with that: a
+  stale run, a rule whose test isn't in the results, and a failing one.
 
 ## Principles
 
@@ -33,71 +32,72 @@ tool. Anyone can adopt the format or write their own indexer for it.
 - **Frontmatter for tools, prose for people.** Each doc is Markdown. Its YAML
   frontmatter holds what a tool computes with: levels, kinds, links and gaps.
   Its body holds what people read. No fact is in both.
+- **Contradictions are shown, not resolved.** Each repository contributes what
+  it knows to one picture of the product. Where two contributions disagree,
+  readers see both and a problem, not a winner.
 
 ## What's in a repository
 
 ```text
-docket.yaml                              config: project name, where test results land
+docket.yaml                              config: the project's ID and name, where test results land
 docs/
-├── product/
-│   ├── personas/<slug>.md
-│   ├── features/<slug>.md               the product's jobs, each grouping capabilities
-│   ├── capabilities/<slug>.md           the only docs with a stability level
-│   ├── flows/<slug>.md
-│   └── domain/
-│       ├── rules/<area>/<slug>.md       one rule per file, grouped by domain area
-│       └── concepts/<slug>.md
-└── engineering/
-    └── architecture/
-        ├── systems/<slug>.md
-        └── components/<slug>.md
+└── product/
+    └── <domain>/                        one folder per domain the project works in
+        ├── domain.md                    the domain's name and summary
+        ├── features/<slug>.md           the product's jobs, each grouping capabilities
+        ├── capabilities/<slug>.md       the only docs with a stability level
+        ├── rules/<topic>/<slug>.md      one rule per file, grouped by topic
+        └── concepts/<slug>.md
 <code and tests, anywhere>               docket:implements and docket:verifies comments
 .docket/state.json                       written by `docket index`, gitignored
 ```
 
-This is the layout forge's `docs` and `engineering-docs` skills use today, with
+This is the product docs layout forge's `docs` skill uses today, with
 these changes:
 
 - Features are new. A feature is a job the product does, and it groups the
   capabilities that do it.
-- Engineering feature docs are called components, so "feature" means only the
-  product's kind.
-
+- Domains are new. A domain is a part of the business with a language of its
+  own, and a project's docs are in a folder per domain it works in.
 - Frontmatter replaces bold-label lines such as `**Stability:** Alpha`.
-- Rules are one per file instead of one file per area.
+- Rules are one per file instead of one file per topic.
 - A rule no longer links to its acceptance test. The test points at the rule
   instead.
-- There are no provider or runbook types. A third-party service is described
-  in the system or component doc that uses it. A project can keep runbooks and
-  other docs anywhere under `docs/`, but Docket doesn't read them.
+- There are no engineering docs: no systems, components, providers or
+  runbooks, and so no technical gaps. A repository can keep them anywhere
+  outside `docs/product/`, but Docket doesn't read them.
 
 In the examples, `.docket/state.json` is checked in so you can read it. In a
 real repository it's gitignored.
 
 ## IDs
 
-A doc's ID is its path under its type's folder, without `.md`:
+A doc's ID is its path under its type's folder in its domain, without `.md`. A
+domain's ID is its folder's name:
 
 | Type       | Folder                                      | Example ID                  |
 | ---------- | ------------------------------------------- | --------------------------- |
-| persona    | `docs/product/personas/`                    | `front-desk-clerk`          |
-| feature    | `docs/product/features/`                    | `reservations`              |
-| capability | `docs/product/capabilities/`                | `room-booking`              |
-| flow       | `docs/product/flows/`                       | `change-of-plans`           |
-| rule       | `docs/product/domain/rules/`                | `booking/no-double-booking` |
-| concept    | `docs/product/domain/concepts/`             | `booking`                   |
-| system     | `docs/engineering/architecture/systems/`    | `authentication`            |
-| component  | `docs/engineering/architecture/components/` | `bookings`                  |
+| domain     | `docs/product/`                             | `guest-stays`               |
+| feature    | `docs/product/<domain>/features/`           | `reservations`              |
+| capability | `docs/product/<domain>/capabilities/`       | `room-booking`              |
+| rule       | `docs/product/<domain>/rules/`              | `booking/no-double-booking` |
+| concept    | `docs/product/<domain>/concepts/`           | `booking`                   |
 
 - **No `id:` field.** The path is the ID, so there's nothing to drift. Renaming
   a file renames the doc, and the indexer reports every link and annotation the
   rename left dangling.
 - **Where the type isn't obvious, the ID carries it**, as `<type>:<id>`, such
-  as `rule:booking/no-double-booking` in an annotation or
-  `component:bookings` in `state.json`. In frontmatter the field name gives the
+  as `rule:booking/no-double-booking` in an annotation or a problem's
+  `subject` in `state.json`. In frontmatter the field name gives the
   type, so links there are bare: `rules: [booking/no-double-booking]`.
 - **A gap's ID** is its doc's ID plus the gap's key:
   `capability:room-booking#no-waitlist`.
+- **What an ID names depends on the type** (see [Domains](#domains)). A
+  domain, feature or capability ID names one thing across every project. A rule
+  or concept ID names one definition within a domain.
+- **A link to another domain's rule or concept** adds `@<domain>`:
+  `concepts: [booking@guest-stays]`, or
+  `docket:verifies rule:bills/closed-bills-dont-change@billing`.
 
 ## Doc types
 
@@ -106,19 +106,16 @@ is its name. The paragraph under the title is its summary. The UI shows both.
 
 | Type | Frontmatter | Body | Example |
 | --- | --- | --- | --- |
-| feature | `capabilities` (required) | Anything worth saying about the job, as prose | [reservations](examples/hotel-bookings/docs/product/features/reservations.md) |
-| capability | `stability` (required), `rules`, `concepts`, `code`, `gaps` | What people can do, Learning, Success, Open decisions | [room-booking](examples/hotel-bookings/docs/product/capabilities/room-booking.md) |
-| rule | `kind` (required: `core` or `edge-case`), `concepts` | The rule, Why | [same-day-turnover](examples/hotel-bookings/docs/product/domain/rules/booking/same-day-turnover.md) |
-| concept | none | Details, Lifecycle, Not to be confused with | [booking](examples/hotel-bookings/docs/product/domain/concepts/booking.md) |
-| flow | `personas`, `capabilities` (required) | People, Starts when, Done when, Steps, Variations | [change-of-plans](examples/hotel-bookings/docs/product/flows/change-of-plans.md) |
-| persona | none | Who, Knows, Context, Expects, Cares about, Based on | [front-desk-clerk](examples/hotel-bookings/docs/product/personas/front-desk-clerk.md) |
-| system | `capabilities`, `code`, `gaps` | How it works, Tradeoffs, Gotchas, Changing it | [authorization](examples/exalynt/docs/engineering/architecture/systems/authorization.md) |
-| component | `capabilities`, `code`, `systems`, `gaps` | How it works, Tradeoffs, Gotchas | [refunds](examples/hotel-bookings/docs/engineering/architecture/components/refunds.md) |
+| domain | none | Anything worth saying about the part of the business, as prose | [guest-stays](examples/hotel-bookings/docs/product/guest-stays/domain.md) |
+| feature | `capabilities` (required) | Anything worth saying about the job, as prose | [reservations](examples/hotel-bookings/docs/product/guest-stays/features/reservations.md) |
+| capability | `stability` (required), `rules`, `concepts`, `code`, `gaps` | What people can do, Learning, Success, Open decisions | [room-booking](examples/hotel-bookings/docs/product/guest-stays/capabilities/room-booking.md) |
+| rule | `kind` (required: `core` or `edge-case`), `concepts` | The rule, Why | [same-day-turnover](examples/hotel-bookings/docs/product/guest-stays/rules/booking/same-day-turnover.md) |
+| concept | none | Details, Lifecycle, Not to be confused with | [booking](examples/hotel-bookings/docs/product/guest-stays/concepts/booking.md) |
 
 - **`stability`** is `Prototype`, `Alpha`, `Beta` or `GA`. Only capabilities
-  have one. A feature's maturity is worked out from its capabilities' levels
-  (see [Features and maturity](#features-and-maturity)), and an engineering doc
-  serves capabilities, which may be at different levels.
+  have one. A feature's maturity is worked out from its capabilities' levels,
+  and a domain's from its parts of features (see
+  [Features and maturity](#features-and-maturity)).
 - **`code`** is a list of path globs for where it lives. Tests aren't listed:
   they're found through `docket:verifies`.
 - The body sections keep their meaning from forge's formats. The spec will
@@ -130,23 +127,19 @@ Every link points one way and is written once:
 
 ```text
 feature                    → capabilities
-flow                       → personas, capabilities
 capability                 → rules, concepts, code
 rule                       → concepts
-system                     → capabilities, code
-component                  → capabilities, systems, code
-technical gap              → the capability whose level closes it
 code                       → rules    (docket:implements)
 test                       → rules    (docket:verifies)
 ```
 
 The indexer computes the other direction, such as which capabilities a rule
-applies to, which feature a capability is in, or which components use a
-system, so the UI can show both sides.
+applies to, which feature a capability is in, or which domains a feature spans,
+so the UI can show both sides.
 
-### Rules belong to the domain
+### Rules belong to a domain
 
-Rules and concepts belong to the domain, not to any capability or feature. A
+Rules and concepts belong to a domain, not to any capability or feature. A
 capability refers to the rules it follows, and that's the only link between a
 rule and the product:
 
@@ -156,8 +149,8 @@ rule and the product:
 - **A feature has no rules of its own.** Its rules are the ones its
   capabilities follow. Features don't list rules, and `state.json` doesn't
   either: a reader works them out from the feature's capabilities.
-- **A rule's `<area>` is a part of the domain**, such as `booking`, never a
-  capability. A rule keeps its ID as capabilities start or stop following it.
+- **A rule's `<topic>` is a part of its domain**, such as `booking`, never a
+  capability or a feature. A rule keeps its ID as capabilities start or stop following it.
 
 Links in the body are ordinary relative Markdown links, for readers. The
 indexer reports any that are broken, but only frontmatter and annotations count
@@ -165,10 +158,9 @@ as relationships.
 
 ## Gaps
 
-Gaps live in frontmatter so the UI can count, group and check them. Each one
-has a key that's unique within its doc, and a sentence or two of text.
-
-**Product gaps**, in a capability: what someone using the product would notice.
+Gaps live in a capability's frontmatter so the UI can count and group them.
+Each one is what someone using the product would notice, has a key that's
+unique within its doc, a kind, and a sentence or two of text:
 
 ```yaml
 gaps:
@@ -179,30 +171,7 @@ gaps:
       details outside the app and call them if a room frees up.
 ```
 
-**Technical gaps**, in a system or component doc: what only someone
-working on the code would see.
-
-```yaml
-gaps:
-  - id: availability-loads-every-booking
-    text: >-
-      Checking whether a room is free loads every booking for that room and
-      compares them in memory.
-    until:                      # what closes it
-      capability: room-booking
-      reaches: GA
-```
-
-`until` is one of:
-
-- `{ capability: <id>, reaches: <level> }`. The gap is **due** once that
-  capability is at that level or above.
-- A sentence describing a concrete event, such as
-  `the second instance is deployed`.
-- `not-decided`.
-
-As in forge today, a gap is recorded in exactly one place. Engineering
-tradeoffs stay as prose in the body.
+As in forge today, a gap is recorded in exactly one place.
 
 ## Stability levels
 
@@ -256,16 +225,21 @@ Taking bookings and handling changes to them, before the guest arrives.
 - **A feature has no stability level.** It has a maturity instead, which the
   indexer works out from its capabilities' levels. Nobody writes it down.
 
+A feature can span domains: each domain a project writes a feature doc in
+contributes that domain's part of the job. Front desk is in Guest stays, with
+check-in and check-out, and in Billing, with settling the bill at check-out.
+
 ### What maturity is
 
-A feature's or a project's **maturity** says how far along it is: how close
-the work under way is to being stable and supported. It's a percentage.
+A feature's, a domain's or a project's **maturity** says how far along it is:
+how close the work under way is to being stable and supported. It's a
+percentage.
 
 - **Higher means more of it is stable and supported.** 75% or more,
   Established, is healthy for most businesses.
 - **New work shows on its feature.** Starting a new capability lowers that
-  feature's maturity. An established project moves only a little, because
-  what's already stable counts most.
+  feature's maturity. An established domain moves only a little, because what's
+  already stable counts most.
 - **It's about the whole, not each part.** It's an indication, not a verdict.
   Before depending on something, check the stability level of the capability
   you need.
@@ -299,8 +273,8 @@ Starting group bookings lowered it, but nothing got worse: something new
 started.
 
 A maturity sits in one of four **bands**, a quarter of the scale each, named
-for a level and shown in its color. Each band says how far along the feature or
-project is as a whole, and what to expect from it:
+for a level and shown in its color. Each band says how far along the feature,
+domain or project is as a whole, and what to expect from it:
 
 | Band         | From | Level     | What it tells you                                                                                      |
 | ------------ | ---- | --------- | ------------------------------------------------------------------------------------------------------ |
@@ -312,20 +286,34 @@ project is as a whole, and what to expect from it:
 A band is about the whole, so it never says what every part is: a few
 established capabilities can carry a feature into a higher band.
 
-A **project's maturity** is the weighted average of its features' maturities,
-worked out the same way:
+A **domain's maturity** is the weighted average of its parts of features'
+maturities, worked out the same way:
 
-- **Each feature counts as a capability in its band would,** so an Established
-  feature counts for a lot and an Experimental one for little, however many
+- **Its part of a feature** is the capabilities in that feature that the domain
+  builds, at their levels in that domain. Its maturity is worked out as a
+  feature's is, from those levels alone, so a capability that spans domains
+  counts once in each, at that domain's level.
+- **Each part counts as a capability in its band would,** so an Established
+  part counts for a lot and an Experimental one for little, however many
   capabilities it has.
-- **Features with no maturity don't count,** and neither do capabilities in
-  no feature.
-- **A project with no feature that has a maturity shows none.**
+- **Parts with no maturity don't count.**
+- **A domain with no part that has a maturity has none.**
 
-In the hotel example, Reservations (42%, Emerging) weighs 3, Front desk (84%,
-Established) weighs 6, and Housekeeping (15%, Experimental) weighs 2, so the
-project is (42 × 3 + 84 × 6 + 15 × 2) ÷ (3 + 6 + 2) = 660 ÷ 11 = 60%,
-Promising.
+In the hotel example, Guest stays has Reservations (42%, Emerging), which
+weighs 3, and Front desk (84%, Established), which weighs 6, so it's (42 × 3 +
+84 × 6) ÷ (3 + 6) = 630 ÷ 9 = 70%, Promising. Property has only Housekeeping,
+so it's 15%, Experimental. A feature's maturity counts every domain's part:
+shown with Hotel Billing, Front desk has check-out at GA in Guest stays and at
+Alpha in Billing.
+
+A **project's maturity** is worked out the same way from its parts of
+features: each feature's part in each domain the project works in, as the
+project declares it. Hotel Bookings has Reservations (42%), Front desk (84%)
+and Housekeeping (15%), so it's (42 × 3 + 84 × 6 + 15 × 2) ÷ (3 + 6 + 2) =
+660 ÷ 11 = 60%, Promising. Several projects shown together have a maturity
+too, worked out from all their parts the same way, as if they were one
+project. Showing only some projects works out each feature's and domain's
+maturity from the capabilities those projects declare.
 
 Maturity isn't a finish line, and 100% isn't the goal. It means everything
 under way is GA. Software that keeps growing usually has newer parts settling
@@ -362,8 +350,9 @@ navigation, and only a passing `verifies` test counts as evidence.
 
 ## Config
 
-[`docket.yaml`](examples/hotel-bookings/docket.yaml) at the repository root marks the repo as
-using Docket:
+[`docket.yaml`](examples/hotel-bookings/docket.yaml) at the repository root
+marks the repository as a Docket **project**: a place where software is
+defined, and usually implemented.
 
 ```yaml
 project:
@@ -378,27 +367,143 @@ results:
     path: reports/unit.xml
 ```
 
-Docs are always read from `docs/`. That path becomes a setting only once a
-real project needs it somewhere else.
+- **`project`** is metadata, not a boundary: it says where each doc comes
+  from, so readers can see who said what and show only what some projects
+  define.
+  - **`id`** names the project wherever several are shown together, so it's
+    unique among them. It's lowercase, with hyphens, like a doc's ID.
+  - **`name`** is what people see, named for the software: Hotel Bookings,
+    not Guest stays.
+- **`results`** lists the test results `docket index` reads.
+
+A doc's domain is the folder under `docs/product/` it's in, so nothing in a
+doc says it. Moving a doc to another folder moves it. Both hotel examples work
+in two domains each.
+
+## Domains
+
+A **domain** is a part of the business with a language of its own: a business
+area and a bounded context, in domain-driven design's terms, as one. Every doc
+is written in exactly one domain, the one whose folder it's in. A project
+works in as many domains as it has folders under `docs/product/`, and projects
+that work in the same part of the business use the same domain ID.
+
+A domain's `domain.md` gives its name and summary, and anything worth saying
+about it:
+
+```markdown
+# Guest stays
+
+Looking after guests from their booking to their check-out.
+```
+
+Booking is "a guest's hold on one room for a stay" in Guest stays, and "what a
+guest is charged for a stay" in Billing, and both are right.
+
+Every project contributes what it knows to one picture of the product. How a doc
+is put together with others of the same ID depends on its type:
+
+| Type | Is one across | The same ID elsewhere |
+| --- | --- | --- |
+| domain, feature, capability | everything | A contribution to the same one. Its links are put together, and its name and summary should match. |
+| rule, concept | its domain | Another definition, shown beside this one. Within the same domain, it's a contribution, as above. |
+
+Putting contributions together:
+
+- **Features and capabilities span domains.** A feature or capability written
+  in several domains is in each of them. Each domain's part is the
+  capabilities that domain builds.
+- **Links are combined**: a feature's capabilities, a capability's rules,
+  concepts, code and gaps. Each contribution's order is kept, in the order the
+  projects are read.
+- **A body is each contribution's own.** Readers show each, labelled with its
+  project and domain.
+- **A capability's `stability` is per domain.** Each contribution declares the
+  level of its own part. Where they differ, the capability's level in short is
+  the lowest, and readers show each.
+- **A rule's status is per domain**, since it's a different rule in each.
+  Within one domain, it's the worst of its contributions' statuses.
+
+### Which rule or concept a link means
+
+A capability's or rule's link to a rule or concept means, in order:
+
+1. The one named, when the link says `@<domain>`.
+2. Its own domain's.
+3. The only one with that ID, when just one domain has it.
+
+Otherwise the link is ambiguous: two or more domains have that ID, and neither
+is the link's own. That's a problem, and the link names its domain to fix it.
+
+In the examples, Billing's check-out uses `booking`, and gets Billing's
+definition, since that's its own domain's. Were Billing to have no `booking`,
+it would get Guest stays', the only one. An annotation in code resolves the
+same way, from the domains of the repository it's in.
+
+### Contradictions
+
+Two contributions that should agree and don't are a **contradiction**, shown
+as a problem naming the projects involved:
+
+- **A product doc's name or summary differs** between projects.
+- **A capability is in two features**, whichever projects list them.
+- **A rule or concept differs within one domain**, when more than one project
+  declares it there.
+
+A feature or capability in several domains isn't a contradiction, and neither
+are different levels for a capability, or different definitions of a concept
+in different domains.
+
+In the examples, Hotel Billing writes check-out in Billing, the settling of the
+bill, and its summary isn't Hotel Bookings': that's a contradiction. It puts
+check-out in Front desk, as Hotel Bookings does, so Front desk is one feature
+in two domains, Guest stays and Billing, with check-out in both. Check-out is
+GA in Guest stays and Alpha in Billing, so it's Alpha in short.
+
+### Combining
+
+Each project's `state.json` is indexed from its own repository, so it only
+knows its own contributions. Showing several projects together **combines**
+their states:
+
+1. Put each doc's contributions together by type and ID, as above.
+2. Resolve links to rules and concepts across every domain showing.
+3. Work out the reverse links, maturity and bands again across everything.
+   A capability counts once per domain that builds part of it, at that
+   domain's level, since each part is work under way.
+4. Add the problems combining finds: contradictions and ambiguous links. Drop
+   an `unknown-id` problem when the link resolves to another project's doc.
+
+What combining doesn't do is check levels again: `below-level` stays each
+project's own, against its own rules. A capability whose level in one domain
+needs a rule from another project isn't checked yet.
 
 ## Index output
 
 `docket index` writes `.docket/state.json` ([example](examples/hotel-bookings/.docket/state.json)).
 It holds everything the UI shows, so the UI never reads the repository itself,
-and combining several repositories later means collecting their files.
+and showing several projects together means reading each one's state.json.
 
-- **Header**: the project, the commit indexed, and the commit the test results
-  came from. If the two commits differ, the UI marks the results as stale.
-  `results` is `null` when no test results were read.
-- **`summary`**: the project's maturity, capabilities per level, rules per
-  status, gap counts and the number of problems. This is the at-a-glance view.
+- **Header**: the `project` (its ID and name), the commit indexed, and the
+  commit the test results came from. If the two commits
+  differ, the UI marks the results as stale. `results` is `null` when no test
+  results were read.
+- **`summary`**: the project's maturity and band, how many domains and
+  features there are, capabilities per level, rules per status, how many gaps
+  and how many problems. This is the
+  at-a-glance view.
+- **`domains`**: each of the project's `domain.md` files, with the domain's
+  maturity worked out from what this project declares in it.
 - **`features`**: each with its capabilities and its maturity worked out. Each
   capability names the feature it's in, or `null`.
-- **One list per doc type**: each entry has its ID, file, name, summary and
-  links, in both directions, and its body as Markdown: everything after the
-  title and summary.
-- **`gaps`**: every gap from every doc, with `due` worked out.
-- **`problems`**: everything the indexer found wrong.
+- **One list per doc type**: each entry has its ID, its `domain`, file, name,
+  summary and links, in both directions, and its body as Markdown: everything
+  after the title and summary. A doc declared in two of the project's domains
+  has an entry for each. Links are written as declared,
+  with `@<domain>` where the doc named one.
+- **`gaps`**: every gap from every capability, each with its `domain`.
+- **`problems`**: everything the indexer found wrong, each about a doc with
+  that doc's `domain`.
 
 ### Rule status
 
@@ -428,8 +533,8 @@ held to the highest level among them:
 | Alpha     | `passing`  | anything        |
 | Beta, GA  | `passing`  | `passing`       |
 
-On top of that, no technical gap for a capability may be due. This comes from
-forge's testing rule, and it's the only expectation the spec checks for now.
+This comes from forge's testing rule, and it's the only expectation the spec
+checks for now.
 The rest of the stability checklist stays guidance.
 
 ### Problems
@@ -443,12 +548,15 @@ The rest of the stability checklist stays guidance.
 | `unlinked-rule`        | No capability follows a rule.                                  |
 | `in-two-features`      | More than one feature lists the same capability.               |
 | `below-level`          | A rule's status is below what a capability following it needs. |
-| `gap-due`              | A technical gap's `until` has been reached.                    |
 | `stale-results`        | The test results came from a different commit.                 |
+| `contradiction`        | Contributions that should agree don't, as Domains describes.   |
+| `ambiguous-link`       | A link could mean the rule or concept of two or more domains.  |
 
-The hotel example has two problems on purpose. Room booking is Beta, but its
-same-day-turnover rule is only `implemented`. And a refunds gap was due once
-Cancellations reached Alpha, which it has.
+`in-two-features` is a contradiction too, when the listings
+are in different projects. Combining raises the last two, and those.
+
+The hotel example has a problem on purpose: room booking is Beta, but its
+same-day-turnover rule is only `implemented`.
 
 ## Open decisions
 
