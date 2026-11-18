@@ -1,0 +1,657 @@
+# The stability checklist: what each stability level generally includes.
+# Guidelines for what to expect at each level, not a gate. It's part of the
+# spec, so it's the same for every project, and a gap can name the item it
+# falls short of as `<area>/<item>`, such as `tests/edge-cases-checked`.
+#
+# - An item belongs to the lowest level that includes it, and every higher
+#   level includes it too, unless `until` names the last level it applies to,
+#   where a higher level replaces it.
+# - `baseline` items are the security and privacy baseline. They hold at every
+#   level, and are never a known gap.
+# - Items say what to expect, not how to get there. Examples in parentheses
+#   show what it might look like.
+# - IDs are never renamed, since gaps refer to them. Rewording an item is fine.
+
+groups:
+  - id: direction
+    name: Building the right thing
+    areas:
+      - id: direction
+        name: Direction and feedback
+        why: >-
+          We're building the right thing, and we know it.
+        items:
+          - id: purpose-written-down
+            level: Prototype
+            text: >-
+              What it's for is written down: the question it answers, or the
+              problem it solves.
+          - id: client-can-try
+            level: Prototype
+            text: >-
+              The client can reach it, try it, and react to it.
+          - id: feedback-recorded
+            level: Prototype
+            text: >-
+              The client's feedback is recorded, and shapes what comes next.
+          - id: end-to-end
+            level: Alpha
+            text: >-
+              Hooked up end to end. Sample data is fine if the system itself
+              stores and serves it.
+          - id: opt-in-findable
+            level: Alpha
+            until: Alpha
+            text: >-
+              People who'd want to try it can find out it exists and how to opt
+              in.
+          - id: real-use-feedback
+            level: Alpha
+            text: >-
+              Feedback comes from real use, not just demos.
+          - id: shape-settled
+            level: Beta
+            text: >-
+              The client agrees its shape has settled.
+          - id: success-agreed
+            level: Beta
+            text: >-
+              What success looks like is agreed with the client.
+          - id: success-shown
+            level: GA
+            text: >-
+              Shown to meet that success in real use.
+  - id: correct
+    name: Works correctly
+    areas:
+      - id: tests
+        name: Tests
+        why: >-
+          What's been checked, and what keeps it from breaking again.
+        items:
+          - id: main-path-by-hand
+            level: Prototype
+            text: >-
+              The main path works when someone tries it by hand.
+          - id: main-path-automated
+            level: Alpha
+            text: >-
+              The main path is checked automatically (such as unit, integration,
+              or end-to-end tests).
+          - id: run-on-every-change
+            level: Alpha
+            text: >-
+              Checks run on every change, and a failure stops it from shipping
+              (such as CI that blocks merging).
+          - id: edge-cases-checked
+            level: Beta
+            text: >-
+              Edge cases and error paths are checked.
+          - id: critical-workflows-end-to-end
+            level: GA
+            text: >-
+              Critical workflows checked end to end.
+          - id: fixed-bugs-checked
+            level: GA
+            text: >-
+              Every fixed bug has a check that would catch it coming back.
+          - id: trustworthy
+            level: GA
+            text: >-
+              Checks can be trusted: none flaky or skipped without being
+              tracked.
+      - id: edge-cases
+        name: Edge cases and errors
+        why: >-
+          What happens with unusual input, and when something goes wrong.
+        items:
+          - id: fail-visibly
+            level: Alpha
+            text: >-
+              Errors fail visibly, never silently.
+          - id: input-validated
+            level: Alpha
+            text: >-
+              Input validated where it enters.
+          - id: unusual-inputs
+            level: Beta
+            text: >-
+              Empty, missing, duplicate, and large inputs handled.
+          - id: helpful-errors
+            level: Beta
+            text: >-
+              Error messages say what went wrong and what to do next, without
+              exposing internals.
+          - id: concurrency-and-partial-failure
+            level: GA
+            text: >-
+              Concurrent use and partial failures handled (two at once, a crash
+              halfway through), and repeating an operation is safe.
+          - id: all-known-handled
+            level: GA
+            text: >-
+              Every known edge case handled or documented as out of scope.
+      - id: data
+        name: Data and migrations
+        why: >-
+          Your data stays correct, and can be recovered if something goes wrong.
+        items:
+          - id: sample-data-marked
+            level: Prototype
+            text: >-
+              Sample data is clearly marked wherever it appears.
+          - id: can-be-cleaned-up
+            level: Alpha
+            text: >-
+              Data it creates can be cleaned up.
+          - id: kept-across-changes
+            level: Beta
+            text: >-
+              Data people put in is kept across changes.
+          - id: migrations
+            level: Beta
+            text: >-
+              Changes to the shape of stored data apply the same way everywhere,
+              without hand edits (such as migration scripts).
+          - id: validated-before-write
+            level: Beta
+            text: >-
+              Data validated before it's written.
+          - id: changes-can-be-undone
+            level: Beta
+            text: >-
+              A data change that goes wrong can be undone (such as a reversible
+              migration, or a backup taken first).
+          - id: changes-tried-at-scale
+            level: GA
+            text: >-
+              Data changes tried on production-sized data before they ship.
+          - id: recoverable
+            level: GA
+            text: >-
+              Stored data can be recovered after a loss, and recovery has been
+              tried (such as backups with a tested restore).
+      - id: performance
+        name: Performance and cost
+        why: >-
+          It's fast enough for the work, today and at peak, at a cost that makes
+          sense.
+        items:
+          - id: responsive-for-testers
+            level: Prototype
+            text: >-
+              Responsive enough for the people trying it.
+          - id: real-volumes
+            level: Alpha
+            text: >-
+              Usable with today's real amounts of data and use.
+          - id: realistic-volumes-bounded
+            level: Beta
+            text: >-
+              Tried at realistic volumes, with bounded work (queries, memory,
+              input size).
+          - id: obvious-problems-fixed
+            level: Beta
+            text: >-
+              Obvious problems fixed (such as a query or call per item, missing
+              indexes, loading everything into memory, slow startup).
+          - id: targets-met
+            level: GA
+            text: >-
+              Meets performance targets agreed with the client, measured (such
+              as response time, throughput, or startup time).
+          - id: peak-load
+            level: GA
+            text: >-
+              Handles peak load, or the largest expected input, with headroom.
+          - id: cost-known
+            level: GA
+            text: >-
+              What it costs to run is known, and fits expected use.
+  - id: safe
+    name: Safe
+    areas:
+      - id: security
+        name: Security, privacy, and compliance
+        why: >-
+          Your systems and data are protected the same way at every level, and
+          the work follows the rules that apply to it.
+        items:
+          - id: secrets-out-of-code
+            level: Prototype
+            baseline: true
+            text: >-
+              Secrets kept out of code, version control, sample data, and demos
+              (such as in the secret store).
+          - id: secrets-out-of-logs
+            level: Prototype
+            baseline: true
+            text: >-
+              Secrets and personal data kept out of logs, error messages, and
+              output.
+          - id: no-copied-client-data
+            level: Prototype
+            baseline: true
+            text: >-
+              Real client data comes only through production systems, never
+              copied into code, sample data, or fixtures.
+          - id: access-control
+            level: Prototype
+            baseline: true
+            text: >-
+              Access control enforced on anything touching client systems or
+              data.
+          - id: tenant-isolation
+            level: Prototype
+            baseline: true
+            text: >-
+              People can only see and change data they're allowed to. One client
+              or customer can never see or change another's.
+          - id: personal-data-minimal
+            level: Prototype
+            baseline: true
+            text: >-
+              Personal data collected only where needed.
+          - id: no-code-injection
+            level: Prototype
+            baseline: true
+            text: >-
+              Untrusted input can't run as code or commands (such as SQL
+              injection or cross-site scripting).
+          - id: personal-data-export-delete
+            level: Beta
+            text: >-
+              Personal data can be exported and deleted on request.
+          - id: misuse-protection
+            level: Beta
+            text: >-
+              Protected against misuse at the level it's exposed to (such as
+              rate limits, abuse of sign-ups, or scraping).
+          - id: legal-duties-known
+            level: Beta
+            text: >-
+              The legal and regulatory duties that apply are known (such as
+              privacy law, industry rules, where data may be stored, and
+              contracts).
+          - id: security-review
+            level: GA
+            text: >-
+              Reviewed for security wherever it handles credentials, payments,
+              personal data, or permissions.
+          - id: least-privilege-and-audit
+            level: GA
+            text: >-
+              Each part has only the access it needs, and sensitive actions can
+              be traced to who did them.
+          - id: data-retention
+            level: GA
+            text: >-
+              Stored data kept only as long as it's needed.
+          - id: legal-duties-met
+            level: GA
+            text: >-
+              The legal and regulatory duties that apply are met.
+      - id: dependencies
+        name: Dependencies and integrations
+        why: >-
+          What it relies on, and what happens when those things change or fail.
+        items:
+          - id: none-less-stable
+            level: Alpha
+            text: >-
+              Depends on nothing less stable than itself (for a third party, a
+              release at a matching stage).
+          - id: maintained-and-licensed
+            level: Alpha
+            text: >-
+              Dependencies maintained, with compatible licenses.
+          - id: config-out-of-code
+            level: Alpha
+            text: >-
+              Settings that differ between environments kept out of code (such
+              as service URLs and keys).
+          - id: pinned-and-scanned
+            level: Beta
+            text: >-
+              Builds use the same dependency versions every time, and known
+              vulnerabilities in them are found.
+          - id: fail-clearly
+            level: Beta
+            text: >-
+              When an external service is slow or down, it fails clearly instead
+              of hanging (such as timeouts, and retries where safe).
+          - id: limits-fit
+            level: GA
+            text: >-
+              The rate limits and quotas of what it depends on fit expected use.
+          - id: kept-current
+            level: GA
+            text: >-
+              Dependencies kept current (such as automated or scheduled
+              updates).
+  - id: production
+    name: Runs in production
+    areas:
+      - id: telemetry
+        name: Logs, traces, and metrics
+        why: >-
+          When something goes wrong, we can see what happened and why.
+        items:
+          - id: errors-logged
+            level: Alpha
+            text: >-
+              Errors logged with context.
+          - id: logs-readable
+            level: Alpha
+            text: >-
+              Whoever operates it can read the logs.
+          - id: correlated
+            level: Beta
+            text: >-
+              Everything from one request, job, or run can be found together
+              (such as structured logs with a shared ID).
+          - id: errors-surfaced
+            level: Beta
+            text: >-
+              Whoever operates it hears about errors without searching the logs
+              (such as an error tracker).
+          - id: key-operations-measured
+            level: Beta
+            text: >-
+              How often key operations run and fail, and how long they take, is
+              measured.
+          - id: workflow-success-measured
+            level: GA
+            text: >-
+              Whether the main workflows succeed is measured, not just whether
+              the system is up.
+          - id: failures-traceable
+            level: GA
+            text: >-
+              A failed critical workflow can be followed from start to finish
+              (such as traces linked from logs).
+          - id: log-retention
+            level: GA
+            text: >-
+              Logs are kept no longer than privacy needs allow.
+      - id: monitoring
+        name: Monitoring and alerting
+        why: >-
+          Whoever operates it finds out something is wrong before your users do.
+        items:
+          - id: health-checks
+            level: Beta
+            text: >-
+              Health checked automatically (such as uptime checks for services,
+              or success checks for scheduled jobs).
+          - id: dashboard
+            level: Beta
+            text: >-
+              Key metrics visible at a glance (such as a dashboard).
+          - id: targets-tracked
+            level: GA
+            text: >-
+              Targets set and tracked for latency, error rate, and availability.
+          - id: alerts
+            level: GA
+            text: >-
+              Whoever operates production is alerted to failures users would
+              notice.
+          - id: alerts-actionable
+            level: GA
+            text: >-
+              Every alert says what to do about it (such as a linked runbook).
+          - id: alerts-tested
+            level: GA
+            text: >-
+              Alerts are known to fire, and quiet enough that people act on
+              them.
+      - id: release
+        name: Release and rollback
+        why: >-
+          How it reaches your users, and how quickly it can be undone.
+        items:
+          - id: level-shown
+            level: Prototype
+            text: >-
+              Its stability level is clear wherever people see it (a stability
+              mark, or no mark once it's GA).
+          - id: off-by-default
+            level: Prototype
+            until: Prototype
+            text: >-
+              Not available to users by default (such as outside production, or
+              behind a flag that's off).
+          - id: removable
+            level: Prototype
+            until: Alpha
+            text: >-
+              Can be removed cleanly, and can't affect anything people rely on,
+              including production data.
+          - id: opt-in
+            level: Alpha
+            until: Alpha
+            text: >-
+              Opt-in only (such as only for invited users, or behind a feature
+              flag).
+          - id: normal-pipeline
+            level: Beta
+            text: >-
+              Released the same way as the rest of the product (such as the
+              normal deploy pipeline).
+          - id: rollback
+            level: Beta
+            text: >-
+              Can be rolled back to the previous version.
+          - id: rollback-tried
+            level: GA
+            text: >-
+              Rollback has been tried.
+          - id: rebuildable
+            level: GA
+            text: >-
+              It can be set up again from scratch without hand steps, such as
+              after losing its environment.
+          - id: releases-verifiable
+            level: GA
+            text: >-
+              For software others install, users can verify a release came from
+              us (such as signed builds).
+      - id: support
+        name: Ownership and support
+        why: >-
+          Someone is responsible for it, and you know what happens when it
+          breaks.
+        items:
+          - id: owner
+            level: Alpha
+            text: >-
+              It has an owner who decides what happens to it.
+          - id: bugs-tracked
+            level: Alpha
+            text: >-
+              Bugs recorded where the team tracks its work.
+          - id: how-to-report
+            level: Alpha
+            text: >-
+              The client and users know how to report a problem.
+          - id: bugs-triaged
+            level: Beta
+            text: >-
+              Bugs triaged and fixed as found.
+          - id: known-bugs-shared
+            level: Beta
+            text: >-
+              Known bugs shared with the client.
+          - id: bugs-before-new-work
+            level: GA
+            text: >-
+              GA bugs fixed before new work.
+          - id: help-and-response
+            level: GA
+            text: >-
+              The client and users know where to get help, and what response to
+              expect.
+          - id: long-term-owner
+            level: GA
+            text: >-
+              The owner is responsible for keeping it running long term,
+              including who responds outside working hours, if it's critical
+              enough to need that.
+          - id: outage-status
+            level: GA
+            text: >-
+              During a serious outage, users can find out what's happening (such
+              as a status page or an announcement).
+          - id: incident-reviews
+            level: GA
+            text: >-
+              Serious incidents are reviewed so they're less likely to happen
+              again.
+  - id: lasting
+    name: Usable and lasting
+    areas:
+      - id: experience
+        name: User experience
+        why: >-
+          The people using it can get their work done, without surprises.
+        items:
+          - id: main-idea-clear
+            level: Prototype
+            text: >-
+              Its main idea is clear to the people using it.
+          - id: main-workflow-completable
+            level: Alpha
+            text: >-
+              A real user can complete the main workflow.
+          - id: states-handled
+            level: Beta
+            text: >-
+              Waiting, empty, and error states handled on purpose (such as
+              loading, no results, and clear error messages).
+          - id: usable-by-everyone
+            level: Beta
+            text: >-
+              Usable by everyone it's meant for, the way they use it (such as
+              keyboard access, labels, and contrast in a UI, or help text in a
+              command-line tool).
+          - id: platforms-listed
+            level: GA
+            text: >-
+              Supported platforms, languages, and regions listed (such as
+              browsers, devices, and time zones), and it works the same on each.
+          - id: accessibility-standard
+            level: GA
+            text: >-
+              Meets the project's accessibility standard.
+      - id: docs
+        name: Documentation
+        why: >-
+          You, your users, and the next engineer can use, run, and change it
+          without asking the author.
+        items:
+          - id: scope-written-down
+            level: Prototype
+            text: >-
+              What it does, and what it doesn't handle yet, is written down
+              where the client can see it.
+          - id: how-to-run
+            level: Prototype
+            text: >-
+              Developers: how to run it.
+          - id: how-to-try
+            level: Alpha
+            until: Alpha
+            text: >-
+              Users: how to try it.
+          - id: configuration
+            level: Alpha
+            text: >-
+              Developers: its configuration.
+          - id: how-to-use
+            level: Beta
+            until: Beta
+            text: >-
+              Users: how to use and configure it.
+          - id: architecture
+            level: Beta
+            text: >-
+              Developers: how it's put together, and the key decisions behind
+              it.
+          - id: release-notes
+            level: Beta
+            text: >-
+              Users told what changed in each release (such as release notes or
+              a changelog).
+          - id: complete-user-docs
+            level: GA
+            text: >-
+              Users: complete, current documentation.
+          - id: reference
+            level: GA
+            text: >-
+              Developers: reference docs for its public interface.
+          - id: operations
+            level: GA
+            text: >-
+              Operations: how to deploy, roll back, and diagnose it, or for
+              software others install, how to install, upgrade, and troubleshoot
+              it.
+      - id: code
+        name: Code and maintainability
+        why: >-
+          It can keep changing, by any engineer, without getting harder to
+          change.
+        items:
+          - id: conventions
+            level: Alpha
+            text: >-
+              Follows the project's conventions, and passes its automated checks
+              (such as lint and type checks).
+          - id: reviewed
+            level: Alpha
+            text: >-
+              Reviewed by another engineer, where the team has one.
+          - id: shortcuts-tracked
+            level: Beta
+            text: >-
+              Earlier shortcuts removed or tracked.
+          - id: changeable-by-others
+            level: GA
+            text: >-
+              Another engineer can change it without the author.
+          - id: no-untracked-todos
+            level: GA
+            text: >-
+              No untracked TODOs or dead code.
+      - id: compatibility
+        name: Breaking changes
+        why: >-
+          What you build on it keeps working, or you hear first.
+        items:
+          - id: public-interface-clear
+            level: Beta
+            text: >-
+              What's part of its public interface, and what's internal, is
+              clear.
+          - id: change-channel
+            level: Beta
+            text: >-
+              People building on it have somewhere to hear about changes (such
+              as release notes or a changelog).
+          - id: breaking-changes-minimal
+            level: Beta
+            until: Beta
+            text: >-
+              Breaking changes kept to a minimum, and announced ahead of time
+              where we can, with how to move to the new behavior.
+          - id: stable-interfaces-documented
+            level: GA
+            text: >-
+              Public interfaces documented as stable.
+          - id: deprecation-window
+            level: GA
+            text: >-
+              Breaking changes announced ahead of time, with a deprecation
+              window long enough to move (such as a new version, with the
+              previous one kept working for a set time).
