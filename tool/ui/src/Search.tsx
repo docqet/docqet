@@ -1,9 +1,10 @@
-import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
 import BoltOutlinedIcon from "@mui/icons-material/BoltOutlined";
 import RuleRoundedIcon from "@mui/icons-material/RuleRounded";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 import WidgetsOutlinedIcon from "@mui/icons-material/WidgetsOutlined";
 import Box from "@mui/material/Box";
+import Modal from "@mui/material/Modal";
 import { STABILITY, levelColor } from "./design/stability/stability";
 import { StabilityTrack } from "./design/stability/StabilityTrack";
 import { ConceptIcon } from "./Concepts";
@@ -225,10 +226,15 @@ function highlight(title: string, terms: string[]): ReactNode {
   return parts;
 }
 
+/* Ctrl + K, or ⌘ + K on a Mac, as the keys are labelled there. */
+const MOD = typeof navigator !== "undefined" && /Mac|iPhone|iPad/.test(navigator.userAgent) ? "⌘" : "Ctrl";
+
 /*
- * Search across projects, domains, features, capabilities, rules, concepts, and personas. `/` or Ctrl/⌘ + K jumps
- * to it from anywhere; the arrow keys move through the results, Enter shows
- * one on the canvas, and Esc clears it.
+ * Search across projects, domains, features, capabilities, rules, concepts,
+ * and personas. The header only says how to open it; `/` or Ctrl/⌘ + K, or
+ * clicking that, opens it in the middle of the page over a blurred canvas.
+ * The arrow keys move through the results, Enter shows one on the canvas, and
+ * Esc or a click outside closes it. It keeps what was typed for next time.
  */
 export default function Search({
   state,
@@ -239,7 +245,6 @@ export default function Search({
   all: Project[];
   onSelect: (selection: Selection) => void;
 }) {
-  const input = useRef<HTMLInputElement>(null);
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState(0);
@@ -263,104 +268,144 @@ export default function Search({
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      const typing = e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement;
+      const typing =
+        e.target instanceof HTMLInputElement ||
+        e.target instanceof HTMLTextAreaElement ||
+        (e.target instanceof HTMLElement && e.target.isContentEditable);
       if ((e.key === "k" && (e.metaKey || e.ctrlKey)) || (e.key === "/" && !typing)) {
         e.preventDefault();
-        input.current?.focus();
-        input.current?.select();
+        setOpen(true);
       }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, []);
 
+  /*
+   * Opening it puts the cursor in the field, with last time's search selected
+   * to type over. The modal mounts its contents a render after it opens, so
+   * this happens when the field mounts, not when `open` changes.
+   */
+  const field = useCallback((el: HTMLInputElement | null) => {
+    el?.focus();
+    el?.select();
+  }, []);
+
   const choose = (entry: Entry) => {
     onSelect(entry.target);
     setOpen(false);
-    input.current?.blur();
   };
 
-  const showing = open && terms.length > 0;
+  const placeholder =
+    all.length > 1 ? "Search projects, features, capabilities…" : "Search domains, features, capabilities, rules…";
 
   return (
-    <div className="panel search" data-no-pan>
-      <label className="search-field">
-        <SearchRoundedIcon sx={{ fontSize: 18, color: "text.secondary" }} />
-        <input
-          ref={input}
-          type="search"
-          value={query}
-          placeholder={all.length > 1 ? "Search projects, features, capabilities…" : "Search domains, features, capabilities, rules…"}
-          aria-label="Search projects, domains, features, capabilities, rules, concepts, and personas"
-          aria-expanded={showing}
-          aria-controls="search-results"
-          aria-activedescendant={showing && flat[active] ? `result-${flat[active].key}` : undefined}
-          role="combobox"
-          autoComplete="off"
-          spellCheck={false}
-          onChange={(e) => {
-            setQuery(e.target.value);
-            setOpen(true);
-          }}
-          onFocus={() => setOpen(true)}
-          onBlur={() => setOpen(false)}
-          onKeyDown={(e) => {
-            if (e.key === "ArrowDown") {
-              e.preventDefault();
-              setActive((i) => Math.min(i + 1, flat.length - 1));
-            } else if (e.key === "ArrowUp") {
-              e.preventDefault();
-              setActive((i) => Math.max(i - 1, 0));
-            } else if (e.key === "Enter" && flat[active]) {
-              e.preventDefault();
-              choose(flat[active]);
-            } else if (e.key === "Escape") {
-              if (query) setQuery("");
-              else input.current?.blur();
-            }
-          }}
-        />
-        {query ? null : <kbd>/</kbd>}
-      </label>
+    <>
+      <button type="button" className="panel search-trigger" data-no-pan onClick={() => setOpen(true)}>
+        <SearchRoundedIcon aria-hidden sx={{ fontSize: 18 }} />
+        <span className="search-trigger-label">Search</span>
+        <span className="search-keys" aria-hidden>
+          <kbd>{MOD}</kbd>
+          <kbd>K</kbd>
+        </span>
+      </button>
 
-      {showing ? (
-        <div className="search-results" id="search-results" role="listbox">
-          {groups.length ? (
-            groups.map((g) => (
-              <div key={g.kind} role="group" aria-label={g.label}>
-                <div className="search-group">{g.label}</div>
-                {g.results.map((entry) => {
-                  const i = flat.indexOf(entry);
-                  return (
-                    <div
-                      key={entry.key}
-                      id={`result-${entry.key}`}
-                      role="option"
-                      aria-selected={i === active}
-                      className={`search-result${i === active ? " active" : ""}`}
-                      onMouseDown={(e) => e.preventDefault()}
-                      onMouseEnter={() => setActive(i)}
-                      onClick={() => choose(entry)}
-                    >
-                      <KindIcon kind={entry.kind} />
-                      <span className="search-text">
-                        <span className="search-title">{highlight(entry.title, terms)}</span>
-                        <span className="search-context">
-                          {entry.from ? `${entry.from} · ${entry.context}` : entry.context}
-                        </span>
-                      </span>
-                      {entry.level ? <LevelMark level={entry.level} /> : null}
-                    </div>
-                  );
-                })}
+      <Modal
+        open={open}
+        onClose={() => setOpen(false)}
+        disableAutoFocus
+        disableScrollLock
+        slotProps={{ backdrop: { className: "search-backdrop" } }}
+      >
+        <div className="search" role="dialog" aria-modal aria-label="Search" data-no-pan>
+          <label className="search-field">
+            <SearchRoundedIcon aria-hidden sx={{ fontSize: 20, color: "text.secondary" }} />
+            <input
+              ref={field}
+              type="search"
+              value={query}
+              placeholder={placeholder}
+              aria-label="Search projects, domains, features, capabilities, rules, concepts, and personas"
+              aria-expanded={terms.length > 0}
+              aria-controls="search-results"
+              aria-activedescendant={flat[active] ? `result-${flat[active].key}` : undefined}
+              role="combobox"
+              autoComplete="off"
+              spellCheck={false}
+              onChange={(e) => setQuery(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "ArrowDown") {
+                  e.preventDefault();
+                  setActive((i) => Math.min(i + 1, flat.length - 1));
+                } else if (e.key === "ArrowUp") {
+                  e.preventDefault();
+                  setActive((i) => Math.max(i - 1, 0));
+                } else if (e.key === "Enter" && flat[active]) {
+                  e.preventDefault();
+                  choose(flat[active]);
+                }
+              }}
+            />
+            <kbd className="search-esc" onClick={() => setOpen(false)}>
+              Esc
+            </kbd>
+          </label>
+
+          <div className="search-results" id="search-results" role="listbox">
+            {!terms.length ? (
+              <div className="search-empty">
+                Find a project, domain, feature, capability, rule, concept, or persona, and show it on the map.
               </div>
-            ))
-          ) : (
-            <div className="search-empty">Nothing matches “{query.trim()}”.</div>
-          )}
+            ) : groups.length ? (
+              groups.map((g) => (
+                <div key={g.kind} role="group" aria-label={g.label}>
+                  <div className="search-group">{g.label}</div>
+                  {g.results.map((entry) => {
+                    const i = flat.indexOf(entry);
+                    return (
+                      <div
+                        key={entry.key}
+                        id={`result-${entry.key}`}
+                        role="option"
+                        aria-selected={i === active}
+                        className={`search-result${i === active ? " active" : ""}`}
+                        onMouseDown={(e) => e.preventDefault()}
+                        onMouseMove={() => setActive(i)}
+                        onClick={() => choose(entry)}
+                      >
+                        <KindIcon kind={entry.kind} />
+                        <span className="search-text">
+                          <span className="search-title">{highlight(entry.title, terms)}</span>
+                          <span className="search-context">
+                            {entry.from ? `${entry.from} · ${entry.context}` : entry.context}
+                          </span>
+                        </span>
+                        {entry.level ? <LevelMark level={entry.level} /> : null}
+                      </div>
+                    );
+                  })}
+                </div>
+              ))
+            ) : (
+              <div className="search-empty">Nothing matches “{query.trim()}”.</div>
+            )}
+          </div>
+
+          <div className="search-footer" aria-hidden>
+            <span>
+              <kbd>↑</kbd>
+              <kbd>↓</kbd> to move
+            </span>
+            <span>
+              <kbd>↵</kbd> to show on the map
+            </span>
+            <span>
+              <kbd>Esc</kbd> to close
+            </span>
+          </div>
         </div>
-      ) : null}
-    </div>
+      </Modal>
+    </>
   );
 }
 
