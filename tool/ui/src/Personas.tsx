@@ -71,6 +71,13 @@ export function readinessName(value: number): string {
 }
 
 /*
+ * Readiness's color: from Prototype's, not ready at all, to GA's green, ready,
+ * blended by how ready, so it warms up as it rises.
+ */
+export const readinessColor = (value: number) =>
+  `color-mix(in oklch, var(--ready-high) ${Math.min(Math.max(value, 0), 100)}%, var(--ready-low))`;
+
+/*
  * Readiness drawn as the road to ready: a track notched at each step, filled
  * as far as they've come, with a round marker for the person at their
  * percentage, and, but for the smallest, a flag at the end. Its own shape,
@@ -80,7 +87,7 @@ function ReadinessTrack({ value, size }: { value: number; size: "small" | "large
   return (
     <span
       className={`readiness-track ${size}${value >= 75 ? " reached" : ""}`}
-      style={{ "--v": Math.min(Math.max(value, 0), 100) / 100 } as CSSProperties}
+      style={{ "--v": Math.min(Math.max(value, 0), 100) / 100, "--ready": readinessColor(value) } as CSSProperties}
       aria-hidden
     >
       <span className="readiness-fill" />
@@ -121,7 +128,9 @@ function ReadinessDetails({ value, basis }: { value: number; basis: ReadinessBas
       </DetailsEyebrow>
       <Box sx={{ mt: 1, lineHeight: 1.3 }}>
         <Box sx={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: 1 }}>
-          <Box sx={{ fontSize: "1.12em", fontWeight: 700, color: "var(--persona)" }}>{name}</Box>
+          <Box sx={{ fontSize: "1.12em", fontWeight: 700 }} style={{ color: readinessColor(value) }}>
+            {name}
+          </Box>
           <Box sx={{ fontWeight: 650, fontVariantNumeric: "tabular-nums" }}>{value}%</Box>
         </Box>
         <Box sx={{ mt: 1 }}>
@@ -176,7 +185,13 @@ export function ReadinessMeter({
   const said = `${name}: ${value}% ready for ${basis.persona}${basis.feature ? ` in ${basis.feature}` : ""}`;
   return (
     <DetailsPopover hoverOnly={inButton} title={<ReadinessDetails value={value} basis={basis} />}>
-      <span className={`readiness${large ? " large" : ""}`} role="img" aria-label={said} tabIndex={inButton ? undefined : 0}>
+      <span
+        className={`readiness${large ? " large" : ""}`}
+        style={{ color: readinessColor(value) }}
+        role="img"
+        aria-label={said}
+        tabIndex={inButton ? undefined : 0}
+      >
         {large ? <strong>{name}</strong> : null}
         <ReadinessTrack value={value} size={large ? "large" : "small"} />
         {large ? <span className="readiness-value">{value}%</span> : null}

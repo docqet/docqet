@@ -26,6 +26,9 @@
   /* Personas: a blue of their own, apart from concepts, features and capabilities. */
   --persona: #1d4ed8;
   --persona-soft: rgb(29 78 216 / 0.08);
+  /* Readiness: from Prototype's color, not ready, to GA's green, ready. */
+  --ready-low: #6f6982;
+  --ready-high: #047857;
   /* Areas: a faint violet wash behind their features, darker than the canvas, lighter than a card. */
   --area: rgb(124 58 237 / 0.045);
   --area-border: rgb(124 58 237 / 0.16);
@@ -60,6 +63,8 @@
     --concept-soft: rgb(45 212 191 / 0.1);
     --persona: #60a5fa;
     --persona-soft: rgb(96 165 250 / 0.12);
+    --ready-low: #aaa4ba;
+    --ready-high: #34d399;
     --area: rgb(167 139 250 / 0.055);
     --area-border: rgb(167 139 250 / 0.2);
     --warning: #fbbf24;
@@ -1740,13 +1745,22 @@ kbd {
   fill: var(--persona);
 }
 
-/* Readiness: a straight bar in the persona color, unlike maturity's rings in the levels' colors. */
+/* Readiness: the road to ready, in a color from Prototype's to GA's green as it rises (set on it), unlike maturity's rings. */
 .readiness {
   flex: none;
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  color: var(--persona);
+}
+
+.readiness[tabindex] {
+  border-radius: 4px;
+  cursor: help;
+}
+
+.readiness[tabindex]:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
 }
 
 .readiness.large {
@@ -1756,8 +1770,8 @@ kbd {
 /*
  * The road to ready: a track notched at each step, filled as far as the
  * person has come, a round marker for them where they are, and a flag at the
- * end, lit once they're ready. --v is how far, 0 to 1; --person is the
- * marker's size, and --flag the room the flag takes at the end.
+ * end, lit once they're ready. --v is how far, 0 to 1, and --ready its color;
+ * --person is the marker's size, and --flag the room the flag takes at the end.
  */
 .readiness-track {
   --person: 14px;
@@ -1797,10 +1811,10 @@ kbd {
     linear-gradient(90deg, transparent calc(25% - 1px), var(--popover) 0 calc(25% + 1px), transparent 0),
     linear-gradient(90deg, transparent calc(50% - 1px), var(--popover) 0 calc(50% + 1px), transparent 0),
     linear-gradient(90deg, transparent calc(75% - 1px), var(--popover) 0 calc(75% + 1px), transparent 0),
-    var(--persona-soft);
+    color-mix(in srgb, var(--ready-low) 22%, transparent);
 }
 
-/* How far they've come, from faint at the start to the full persona color where they are. */
+/* How far they've come, from Prototype's color at the start to their own where they are. */
 .readiness-fill {
   position: absolute;
   top: 50%;
@@ -1809,7 +1823,7 @@ kbd {
   height: 4px;
   transform: translateY(-50%);
   border-radius: 999px;
-  background: linear-gradient(90deg, color-mix(in srgb, var(--persona) 30%, transparent), var(--persona));
+  background: linear-gradient(90deg, color-mix(in srgb, var(--ready-low) 45%, transparent), var(--ready));
 }
 
 .readiness-track:not(.small)::before,
@@ -1828,10 +1842,10 @@ kbd {
   width: var(--person);
   height: var(--person);
   color: #fff;
-  background: var(--persona);
+  background: var(--ready);
   border: 2px solid var(--popover);
   border-radius: 50%;
-  box-shadow: 0 1px 4px -1px color-mix(in srgb, var(--persona) 70%, transparent);
+  box-shadow: 0 1px 4px -1px color-mix(in srgb, var(--ready) 70%, transparent);
 }
 
 .readiness-person svg {
@@ -1847,11 +1861,11 @@ kbd {
   width: var(--flag) !important;
   height: var(--flag) !important;
   transform: translateY(-50%);
-  color: color-mix(in srgb, var(--persona) 35%, transparent);
+  color: color-mix(in srgb, var(--ready-high) 35%, transparent);
 }
 
 .readiness-track.reached .readiness-flag {
-  color: var(--persona);
+  color: var(--ready-high);
 }
 
 .readiness-value {
