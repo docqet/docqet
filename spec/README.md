@@ -232,6 +232,23 @@ gaps:
 
 As in forge today, a gap is recorded in exactly one place.
 
+A gap can also name the [stability checklist](#stability-checklist) item it
+falls short of, as `item`. Most gaps are limits on what the capability does,
+such as the waitlist, and match no item, so they leave it out:
+
+```yaml
+gaps:
+  - id: calendar-needs-a-mouse
+    kind: to-close-later
+    item: experience/usable-by-everyone
+    text: >-
+      The room calendar can't be used from the keyboard, so clerks need a
+      mouse to pick dates.
+```
+
+A gap can't name a baseline item: the security and privacy baseline is never a
+known gap.
+
 ## Stability levels
 
 Every capability is at one of four stability levels. The level says how stable
@@ -249,6 +266,26 @@ on it.
   is.** A prototype that answers its question quickly is good work.
 - **Stability isn't perfection.** GA software still has bugs, and it can still
   have known gaps.
+
+### Stability checklist
+
+[`stability-checklist.yaml`](stability-checklist.yaml) says what each level
+generally includes, in 117 items across areas such as tests, security, and
+release and rollback. It's part of the spec, so it's the same for every project
+and every tool that reads Docket: a project doesn't copy it, change it or
+configure it. It's guidance, not a gate. Work fits a level when it generally
+meets that level's items, and each item that applies is usually met, not
+applicable, or a known gap.
+
+- **An item's ID** is its area's ID and its own, as `<area>/<item>`:
+  `tests/edge-cases-checked`. IDs are never renamed, since gaps refer to them.
+  Rewording an item is fine.
+- **An item belongs to the lowest level that includes it,** and every higher
+  level includes it too, unless `until` names the last level it applies to.
+  The Alpha-only `release/opt-in` is replaced at Beta by
+  `release/normal-pipeline`.
+- **`baseline` items** are the security and privacy baseline. They start at
+  Prototype, hold at every level, and are never a known gap.
 
 ## Features and maturity
 
