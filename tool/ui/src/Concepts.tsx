@@ -1,0 +1,471 @@
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded";
+import BoltOutlinedIcon from "@mui/icons-material/BoltOutlined";
+import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
+import FilterListRoundedIcon from "@mui/icons-material/FilterListRounded";
+import MyLocationRoundedIcon from "@mui/icons-material/MyLocationRounded";
+import MenuBookOutlinedIcon from "@mui/icons-material/MenuBookOutlined";
+import RuleRoundedIcon from "@mui/icons-material/RuleRounded";
+import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
+import WidgetsOutlinedIcon from "@mui/icons-material/WidgetsOutlined";
+import Box from "@mui/material/Box";
+import { DetailsCard, DetailsEyebrow, DetailsPopover } from "./design/DetailsPopover";
+import { StabilityMark } from "./design/stability/StabilityMark";
+import {
+  byFeature,
+  capabilityTarget,
+  find,
+  levelId,
+  bareId,
+  domainName,
+  featureTarget,
+  targetOf,
+  type Concept,
+  type DocketState,
+  type Target,
+} from "./state";
+
+const plural = (n: number, one: string, many: string) => `${n} ${n === 1 ? one : many}`;
+
+/* "Billing · " before a concept's details: its domain, when several are showing. */
+const fromProject = (state: DocketState, c: Concept) =>
+  state.domains.length > 1 ? `${domainName(state, c.domain)} · ` : "";
+
+export function ConceptIcon({ size = 16 }: { size?: number }) {
+  return <MenuBookOutlinedIcon sx={{ fontSize: size, flex: "none", color: "var(--concept)" }} />;
+}
+
+/*
+ * Concepts as a row of small chips, each opening the concept in the panel.
+ * With `popovers`, hovering one shows what it means first; inside a popover
+ * of its own, it doesn't.
+ */
+export function ConceptChips({
+  concepts,
+  onOpen,
+  popovers = true,
+}: {
+  concepts: Concept[];
+  onOpen: (id: string) => void;
+  popovers?: boolean;
+}) {
+  return (
+    <span className="concept-chips">
+      {concepts.map((c) => {
+        const chip = (
+          <button
+            key={c.id}
+            type="button"
+            className="concept-chip"
+            data-concept={c.id}
+            data-no-pan
+            onClick={(e) => {
+              e.stopPropagation();
+              onOpen(c.id);
+            }}
+          >
+            {c.name}
+          </button>
+        );
+        return popovers ? (
+          <DetailsPopover key={c.id} hoverOnly title={<ConceptSummary concept={c} />}>
+            {chip}
+          </DetailsPopover>
+        ) : (
+          chip
+        );
+      })}
+    </span>
+  );
+}
+
+function ConceptSummary({ concept }: { concept: Concept }) {
+  return (
+    <DetailsCard card>
+      <DetailsEyebrow>Concept</DetailsEyebrow>
+      <Box sx={{ mt: 0.5, fontSize: "1.12em", fontWeight: 700, lineHeight: 1.3 }}>{concept.name}</Box>
+      {concept.summary ? <Box sx={{ mt: 0.75 }}>{concept.summary}</Box> : null}
+      <Box sx={{ mt: 1, fontSize: 12, color: "text.secondary" }}>Click to see everything it's related to.</Box>
+    </DetailsCard>
+  );
+}
+
+/* A path relative to a doc's file, as the repository has it: "room.md" from "a/b/booking.md" is "a/b/room.md". */
+function resolve(from: string, href: string): string {
+  const parts = from.split("/").slice(0, -1);
+  for (const part of href.split("#")[0].split("/")) {
+    if (part === "..") parts.pop();
+    else if (part && part !== ".") parts.push(part);
+  }
+  return parts.join("/");
+}
+
+type Link = { concept: string } | { target: Target } | { href: string } | null;
+
+/*
+ * Where a link in a doc's body goes: another concept, a capability or rule
+ * on the canvas, a web page, or nowhere this page can show. Links stay in the
+ * doc's own project, whose repository its paths are relative to.
+ */
+function follow(state: DocketState, from: { file: string; project: string }, href: string): Link {
+  if (/^[a-z]+:/i.test(href)) return { href };
+  const file = resolve(from.file, href);
+  const at = (d: { file: string; project: string }) => d.file === file && d.project === from.project;
+  const concept = state.concepts.find(at);
+  if (concept) return { concept: concept.id };
+  const capability = state.capabilities.find(at);
+  if (capability) return { target: capabilityTarget(state, capability.id) };
+  const feature = state.features.find(at);
+  if (feature) return { target: featureTarget(state, feature.id) };
+  const rule = state.rules.find(at);
+  if (rule?.capabilities.length) return { target: capabilityTarget(state, rule.capabilities[0]) };
+  return null;
+}
+
+/*
+ * A doc's body, as Markdown: headings, paragraphs, lists, links, bold,
+ * italics, and code. Just what Docket's docs use; anything else shows as
+ * text. Links resolve from `concept`, the doc the body is from.
+ */
+export function Markdown({
+  state,
+  concept,
+  text,
+  onConcept,
+  onShow,
+}: {
+  state: DocketState;
+  concept: { file: string; project: string };
+  text: string;
+  onConcept: (id: string) => void;
+  onShow: (target: Target) => void;
+}) {
+  const inline = (s: string): ReactNode[] =>
+    s.split(/(\[[^\]]+\]\([^)\s]+\)|\*\*[^*]+\*\*|`[^`]+`|\*[^*\s][^*]*\*|_[^_\s][^_]*_)/g).map((part, i) => {
+      const link = part.match(/^\[([^\]]+)\]\(([^)\s]+)\)$/);
+      if (link) {
+        const to = follow(state, concept, link[2]);
+        if (!to) return link[1];
+        if ("href" in to)
+          return (
+            <a key={i} href={to.href} target="_blank" rel="noreferrer">
+              {link[1]}
+            </a>
+          );
+        return (
+          <button
+            key={i}
+            type="button"
+            className="link"
+            onClick={() => ("concept" in to ? onConcept(to.concept) : onShow(to.target))}
+          >
+            {link[1]}
+          </button>
+        );
+      }
+      if (/^\*\*.+\*\*$/.test(part)) return <strong key={i}>{part.slice(2, -2)}</strong>;
+      if (/^`.+`$/.test(part)) return <code key={i}>{part.slice(1, -1)}</code>;
+      if (/^([*_]).+\1$/.test(part)) return <em key={i}>{part.slice(1, -1)}</em>;
+      return part;
+    });
+
+  const blocks = text.trim().split(/\n\s*\n/);
+  return (
+    <div className="markdown">
+      {blocks.map((block, i) => {
+        const heading = block.match(/^(#{1,6})\s+(.*)$/);
+        if (heading) return <h4 key={i}>{inline(heading[2])}</h4>;
+        const lines = block.split("\n");
+        if (lines.every((l) => /^\s*([-*]|\d+\.)\s+/.test(l) || /^\s{2,}\S/.test(l))) {
+          const items: string[] = [];
+          for (const l of lines) {
+            if (/^\s*([-*]|\d+\.)\s+/.test(l)) items.push(l.replace(/^\s*([-*]|\d+\.)\s+/, ""));
+            else items[items.length - 1] += ` ${l.trim()}`;
+          }
+          const Tag = /^\s*\d+\./.test(lines[0]) ? "ol" : "ul";
+          return (
+            <Tag key={i}>
+              {items.map((item, j) => (
+                <li key={j}>{inline(item)}</li>
+              ))}
+            </Tag>
+          );
+        }
+        if (block.startsWith("```"))
+          return (
+            <pre key={i}>
+              <code>{block.replace(/^```\w*\n?|```$/g, "")}</code>
+            </pre>
+          );
+        return <p key={i}>{inline(lines.join(" "))}</p>;
+      })}
+    </div>
+  );
+}
+
+/*
+ * Concepts its body links to, then those that share a rule with it, since a
+ * rule that refers to two concepts says how they bear on each other.
+ */
+function related(state: DocketState, concept: Concept): Concept[] {
+  const ids = new Set<string>();
+  for (const [, href] of concept.body.matchAll(/\]\(([^)\s]+)\)/g)) {
+    const to = follow(state, concept, href);
+    if (to && "concept" in to) ids.add(to.concept);
+  }
+  for (const ruleId of concept.rules) for (const id of find(state.rules, ruleId)?.concepts ?? []) ids.add(id);
+  ids.delete(concept.id);
+  return [...ids].flatMap((id) => find(state.concepts, id) ?? []);
+}
+
+/*
+ * The domain's concepts, in a panel beside the canvas: every concept, found
+ * by typing, and one concept at a time with what it means and everything
+ * related to it: the capabilities that use it, by feature, the rules that
+ * refer to it, and other concepts. Choosing a capability or rule shows it on
+ * the canvas.
+ */
+export function ConceptsPanel({
+  state,
+  selected,
+  onSelect,
+  onClose,
+  onShow,
+  filter,
+  onFilter,
+  onOpen,
+  backLabel = null,
+}: {
+  state: DocketState;
+  /* The concept showing, or null for the list. */
+  selected: string | null;
+  onSelect: (id: string | null) => void;
+  onClose: () => void;
+  onShow: (target: Target) => void;
+  /* The concepts the map is filtered by, and adding or taking one away. */
+  filter: string[];
+  onFilter: (id: string) => void;
+  /* Open a feature or capability in the side panel. */
+  onOpen: (kind: "feature" | "capability", id: string) => void;
+  /* Where back goes, named, or null for the list of concepts. */
+  backLabel?: string | null;
+}) {
+  const concept = selected ? find(state.concepts, selected) : undefined;
+  const body = useRef<HTMLDivElement>(null);
+  /* Braces, so it returns nothing: newer browsers' scrollTo returns a promise, which React would take for a cleanup. */
+  useEffect(() => {
+    body.current?.scrollTo({ top: 0 });
+  }, [selected]);
+
+  return (
+    <aside className="panel concepts" data-no-pan aria-label="Concepts">
+      <header className="concepts-header">
+        {concept ? (
+          <button type="button" className="icon-button" onClick={() => onSelect(null)} aria-label={backLabel ?? "All concepts"}>
+            <ArrowBackRoundedIcon sx={{ fontSize: 18 }} />
+          </button>
+        ) : (
+          <ConceptIcon size={18} />
+        )}
+        <span className="concepts-title">{concept ? (backLabel ?? "All concepts") : "Concepts"}</span>
+        <button type="button" className="icon-button" onClick={onClose} aria-label="Close">
+          <CloseRoundedIcon sx={{ fontSize: 18 }} />
+        </button>
+      </header>
+      <div className="concepts-body" ref={body}>
+        {concept ? (
+          <ConceptView
+            state={state}
+            concept={concept}
+            onSelect={onSelect}
+            onShow={onShow}
+            onOpen={onOpen}
+            filtering={filter.includes(concept.id)}
+            onFilter={() => onFilter(concept.id)}
+          />
+        ) : (
+          <ConceptList state={state} onSelect={onSelect} />
+        )}
+      </div>
+    </aside>
+  );
+}
+
+function ConceptList({ state, onSelect }: { state: DocketState; onSelect: (id: string) => void }) {
+  const [query, setQuery] = useState("");
+  const terms = query.toLowerCase().split(/\s+/).filter(Boolean);
+  const sorted = useMemo(() => [...state.concepts].sort((a, b) => a.name.localeCompare(b.name)), [state]);
+  const shown = sorted.filter((c) => {
+    const text = `${c.name} ${c.summary ?? ""} ${c.id} ${c.body}`.toLowerCase();
+    return terms.every((t) => text.includes(t));
+  });
+
+  if (!state.concepts.length) return <p className="concepts-empty">No concepts are written down yet.</p>;
+  return (
+    <>
+      <label className="concepts-filter">
+        <SearchRoundedIcon sx={{ fontSize: 16, color: "text.secondary" }} />
+        <input
+          type="search"
+          value={query}
+          placeholder={`Filter ${plural(state.concepts.length, "concept", "concepts")}…`}
+          aria-label="Filter concepts"
+          autoFocus
+          spellCheck={false}
+          onChange={(e) => setQuery(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && shown[0]) onSelect(shown[0].id);
+          }}
+        />
+      </label>
+      {shown.length ? (
+        <ul className="concept-list">
+          {shown.map((c) => (
+            <li key={c.id}>
+              <button type="button" onClick={() => onSelect(c.id)}>
+                <span className="concept-name">{c.name}</span>
+                {c.summary ? <span className="concept-summary">{c.summary}</span> : null}
+                <span className="concept-meta">
+                  {fromProject(state, c)}
+                  {plural(c.capabilities.length, "capability", "capabilities")} ·{" "}
+                  {plural(c.rules.length, "rule", "rules")}
+                </span>
+              </button>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className="concepts-empty">Nothing matches “{query.trim()}”.</p>
+      )}
+    </>
+  );
+}
+
+function ConceptView({
+  state,
+  concept,
+  onSelect,
+  onShow,
+  onOpen,
+  filtering,
+  onFilter,
+}: {
+  state: DocketState;
+  concept: Concept;
+  onSelect: (id: string) => void;
+  onShow: (target: Target) => void;
+  onOpen: (kind: "feature" | "capability", id: string) => void;
+  filtering: boolean;
+  onFilter: () => void;
+}) {
+  const groups = byFeature(state, concept.capabilities);
+  const rules = concept.rules.flatMap((id) => find(state.rules, id) ?? []);
+  const others = related(state, concept);
+  const elsewhere = state.concepts.filter((c) => c.id !== concept.id && bareId(c.id) === bareId(concept.id));
+
+  return (
+    <article className="concept">
+      <DetailsEyebrow>
+        {state.domains.length > 1 ? `Concept · ${domainName(state, concept.domain)}` : "Concept"}
+      </DetailsEyebrow>
+      <h2>{concept.name}</h2>
+      {concept.summary ? <p className="concept-lede">{concept.summary}</p> : null}
+      {/* The same word in other domains: a definition of its own there, not a mistake in either. */}
+      {elsewhere.length ? (
+        <div className="concept-elsewhere">
+          {elsewhere.map((c) => (
+            <button key={c.id} type="button" className="concept-elsewhere-row" onClick={() => onSelect(c.id)}>
+              <span className="concept-elsewhere-scope">In {domainName(state, c.domain)}</span>
+              {c.summary ?? c.name}
+            </button>
+          ))}
+        </div>
+      ) : null}
+      {concept.capabilities.length || filtering ? (
+        <div className="explore-actions">
+          <button type="button" className="filter-toggle" onClick={() => onShow(targetOf(state, { kind: "concept", id: concept.id }))}>
+            <MyLocationRoundedIcon sx={{ fontSize: 15 }} />
+            Show on the map
+          </button>
+          <button type="button" className="filter-toggle" aria-pressed={filtering} onClick={onFilter}>
+            <FilterListRoundedIcon sx={{ fontSize: 15 }} />
+            {filtering ? "Filtering the map to this" : "Filter the map to this"}
+            {filtering ? <CloseRoundedIcon sx={{ fontSize: 14, ml: 0.25 }} /> : null}
+          </button>
+        </div>
+      ) : null}
+      {concept.body.trim() ? (
+        <Markdown state={state} concept={concept} text={concept.body} onConcept={onSelect} onShow={onShow} />
+      ) : null}
+      <p className="concept-file">
+        <code>{concept.file}</code>
+      </p>
+
+      <section>
+        <h3>Used by {plural(concept.capabilities.length, "capability", "capabilities")}</h3>
+        {groups.length ? (
+          groups.map(({ feature, capabilities }) => (
+            <div key={feature?.id ?? ""} className="concept-group">
+              <div className="concept-group-name">
+                <WidgetsOutlinedIcon sx={{ fontSize: 14, color: "secondary.main" }} />
+                {feature ? (
+                  <button type="button" className="link" onClick={() => onOpen("feature", feature.id)}>
+                    {feature.name}
+                  </button>
+                ) : (
+                  "Not in a feature"
+                )}
+              </div>
+              <ul>
+                {capabilities.map((c) => (
+                  <li key={c.id}>
+                    <button type="button" className="concept-row" onClick={() => onOpen("capability", c.id)}>
+                      <BoltOutlinedIcon sx={{ fontSize: 15, color: "primary.main" }} />
+                      <span className="concept-row-name">{c.name}</span>
+                      <StabilityMark level={levelId(c.stability)} feature={c.name} focusable={false} size="short" />
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))
+        ) : (
+          <p className="concepts-empty">No capability says it uses this yet.</p>
+        )}
+      </section>
+
+      <section>
+        <h3>Referred to by {plural(rules.length, "rule", "rules")}</h3>
+        {rules.length ? (
+          <ul>
+            {rules.map((r) => (
+              <li key={r.id}>
+                <button
+                  type="button"
+                  className="concept-row"
+                  disabled={!r.capabilities.length}
+                  onClick={() => onShow(capabilityTarget(state, r.capabilities[0]))}
+                >
+                  <RuleRoundedIcon sx={{ fontSize: 15, color: "text.secondary", alignSelf: "flex-start", mt: "2px" }} />
+                  <span className="concept-row-text">
+                    <span className="concept-row-name">{r.name}</span>
+                    {r.summary ? <span className="concept-row-summary">{r.summary}</span> : null}
+                  </span>
+                </button>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="concepts-empty">No rule refers to it yet.</p>
+        )}
+      </section>
+
+      {others.length ? (
+        <section>
+          <h3>Related concepts</h3>
+          <ConceptChips concepts={others} onOpen={onSelect} />
+        </section>
+      ) : null}
+    </article>
+  );
+}

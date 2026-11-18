@@ -2,7 +2,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import type { ReactNode } from "react";
 import { DetailsPopover } from "../DetailsPopover";
-import { MaturityDetails, type MaturitySubject } from "./MaturityDetails";
+import { MaturityDetails, SUBJECT_NAMES, type MaturitySubject } from "./MaturityDetails";
 import { MATURITY_BANDS, clampMaturity, maturityBand } from "./maturity";
 import { RingGlyph } from "./RingGlyph";
 
@@ -57,7 +57,7 @@ export function MaturityRing({
 }: MaturityRingProps) {
   const value = clampMaturity(progress);
   const band = maturityBand(value);
-  const name = label ?? (subject === "project" ? "Project maturity" : "Feature maturity");
+  const name = label ?? `${SUBJECT_NAMES[subject]} maturity`;
   const across = count === undefined ? "" : `, across ${countLabel(subject, count)}`;
 
   return (

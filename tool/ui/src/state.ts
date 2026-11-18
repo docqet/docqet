@@ -1,13 +1,21 @@
+import { featureMaturity, maturityBand, projectMaturity } from "./design/maturity/maturity";
 import type { StabilityLevelId } from "./design/stability/stability";
 
-/* The shape of `state.json`, as the spec's "Index output" section describes it. */
+/*
+ * The shape of `state.json`, as the spec's "Index output" section describes
+ * it, and of the view the page builds from one or more of them (DocketState).
+ */
 
 export type Level = "Prototype" | "Alpha" | "Beta" | "GA";
 export type RuleKind = "core" | "edge-case";
 export type RuleStatus = "decided" | "implemented" | "tested" | "passing" | "failing";
 
-export type Doc = {
-  id: string;
+/* What one project says about a doc, in one domain: each doc has one from every project and domain that declares it. */
+export type Contribution = {
+  /* Where it's defined, and its file in that project's repository. */
+  project: string;
+  /* The domain it's written in, which says what its rule and concept links mean. */
+  domain: string;
   file: string;
   name: string;
   summary?: string;
@@ -15,25 +23,61 @@ export type Doc = {
   body: string;
 };
 
+/*
+ * A doc, put together from every contribution to it (see combine). Its ID
+ * depends on its type, as the spec's Domains section says: a domain, feature
+ * or capability keeps its own ID, one across everything; a rule or concept is
+ * `<id>@<domain>`. Its name, summary, body and file are its first
+ * contribution's.
+ */
+export type Doc = {
+  id: string;
+  /* The project and domain its first contribution is from. */
+  project: string;
+  domain: string;
+  file: string;
+  name: string;
+  summary?: string;
+  body: string;
+  from: Contribution[];
+};
+
 export type CodeGlob = { glob: string; files: number };
 
-/* A job the product does, grouping the capabilities that do it. */
+/* A part of the business, with a language of its own. Features and capabilities span domains; each has a part in it. */
+export type Domain = Doc & {
+  /* The features it has a part in, in the order they come up. */
+  features: string[];
+  /* The capabilities in no feature that it builds part of. */
+  capabilities: string[];
+  /* 0 to 100, worked out from its parts of features, or null with none. */
+  maturity: number | null;
+  band: Level | null;
+};
+
+/* One domain's part of a feature: the capabilities that domain builds or lists, and its maturity from their levels there. */
+export type Part = { domain: string; capabilities: string[]; maturity: number | null; band: Level | null };
+
+/* A job the product does, grouping the capabilities that do it, in every domain that does part of it. */
 export type Feature = Doc & {
   capabilities: string[];
-  /* 0 to 100, or null with no capabilities. See maturity below. */
+  /* Its part in each domain, in the order they come up. */
+  parts: Part[];
+  /* 0 to 100, from every part of its capabilities, or null with none. */
   maturity: number | null;
   band: Level | null;
 };
 
 export type Capability = Doc & {
+  /* Its level in short: the lowest of `levels`. */
   stability: Level;
+  /* Its level in each domain that builds part of it, and the project that says so. */
+  levels: { project: string; domain: string; level: Level }[];
   /* The feature it's in, or null. */
   feature: string | null;
   rules: string[];
   concepts: string[];
   code: CodeGlob[];
-  flows: string[];
-  engineering: string[];
   gaps: string[];
 };
 
@@ -49,9 +93,9 @@ export type Verification = {
 };
 
 /*
- * A rule belongs to the domain, not to a capability or feature. Capabilities
+ * A rule belongs to a domain, not to a capability or feature. Capabilities
  * refer to the rules they follow, so `capabilities` can name several, in
- * different features. A feature's rules are its capabilities' rules.
+ * different features and domains. A feature's rules are its capabilities'.
  */
 export type Rule = Doc & {
   kind: RuleKind;
@@ -64,72 +108,349 @@ export type Rule = Doc & {
 };
 
 export type Concept = Doc & { capabilities: string[]; rules: string[] };
-export type Flow = Doc & { personas: string[]; capabilities: string[] };
-export type Persona = Doc & { flows: string[] };
-export type EngineeringDoc = Doc & { capabilities: string[]; code?: CodeGlob[]; systems?: string[] };
 
-export type Until = { capability: string; reaches: Level } | string;
-
+/* A known gap in a capability: what someone using the product would notice. */
 export type Gap = {
   id: string;
-  type: "product" | "technical";
-  kind?: "to-close-later" | "accepted-tradeoff";
+  /* Combining adds it: state.json doesn't say, since the file is the project's. */
+  project?: string;
+  domain: string;
+  kind: "to-close-later" | "accepted-tradeoff";
   text: string;
-  until?: Until;
-  due?: boolean;
 };
 
-export type Problem = { type: string; subject: string; capabilities: string[]; message: string };
+/* What the indexer found wrong. `domain` is that of the doc it's about, if it's about one. */
+export type Problem = { type: string; subject: string; capabilities: string[]; message: string; domain?: string };
 
+/* What the page shows at once: the projects it's showing, and everything they define, together. */
 export type DocketState = {
-  docket: string;
-  project: { id: string; name: string };
-  commit: string;
-  indexedAt: string;
-  /* null when no test results were indexed. */
-  results: { commit: string; suites: { suite: string; path: string; ranAt: string }[] } | null;
-  summary: {
-    maturity: number | null;
-    band: Level | null;
-    features: number;
-    capabilities: Record<Level, number>;
-    rules: Record<RuleStatus, number>;
-    gaps: { product: number; technical: number; due: number };
-    problems: number;
-  };
+  projects: Project[];
+  domains: Domain[];
   features: Feature[];
   capabilities: Capability[];
   rules: Rule[];
   concepts: Concept[];
-  flows: Flow[];
-  personas: Persona[];
-  engineering: EngineeringDoc[];
   gaps: Gap[];
   problems: Problem[];
 };
 
-/* A project the UI can show, and where its state.json is, relative to the page. */
-export type ProjectEntry = { id: string; name: string; state: string };
+/* A place where software is defined, as its state.json's header and summary have it. */
+export type Project = {
+  id: string;
+  name: string;
+  commit: string;
+  indexedAt: string;
+  /* null when no test results were indexed. */
+  results: { commit: string; suites: { suite: string; path: string; ranAt: string }[] } | null;
+  maturity: number | null;
+  band: Level | null;
+};
+
+/* A doc as one project's state.json has it: its contribution in one domain, with links as declared. */
+type Raw<T extends Doc> = Omit<T, "from" | "levels" | "parts" | "project">;
+
+/* One project's state.json, as the indexer writes it. */
+export type StateFile = {
+  docket: string;
+  project: { id: string; name: string };
+  commit: string;
+  indexedAt: string;
+  results: Project["results"];
+  summary: { maturity: number | null; band: Level | null };
+  /* Each of its domain.md files. A domain is its own domain, so these have no `domain`. */
+  domains: Omit<Raw<Domain>, "domain" | "features" | "capabilities">[];
+  features: Raw<Feature>[];
+  capabilities: Raw<Capability>[];
+  rules: Raw<Rule>[];
+  concepts: Raw<Concept>[];
+  gaps: Gap[];
+  problems: Problem[];
+};
+
+/* A project's header and summary, from its state.json. */
+export const projectOf = (file: StateFile): Project => ({
+  ...file.project,
+  commit: file.commit,
+  indexedAt: file.indexedAt,
+  results: file.results,
+  maturity: file.summary.maturity,
+  band: file.summary.band,
+});
+
+const LEVELS: Record<StabilityLevelId, Level> = { prototype: "Prototype", alpha: "Alpha", beta: "Beta", ga: "GA" };
+
+const LEVEL_ORDER: Level[] = ["Prototype", "Alpha", "Beta", "GA"];
+const STATUS_ORDER: RuleStatus[] = ["failing", "decided", "implemented", "tested", "passing"];
+
+/* A rule's or concept's ID without its domain: `booking@billing` is `booking`. */
+export const bareId = (id: string) => (id.includes("@") ? id.slice(0, id.lastIndexOf("@")) : id);
+
+/* Add what isn't there yet, keeping the order. */
+const union = (into: string[], ids: string[]) => {
+  for (const id of ids) if (!into.includes(id)) into.push(id);
+};
+
+const band = (m: number | null) => (m === null ? null : LEVELS[maturityBand(m)]);
+
+/*
+ * What the chosen projects define, from each one's state, as one, the
+ * way the spec's "Combining" says, so the map, search and panels show one
+ * picture of the product:
+ *
+ * - Domains, features and capabilities are one across everything, so
+ *   contributions with the same ID are put together, their links combined.
+ *   Features and capabilities span domains: each domain that writes one has
+ *   a part in it, and a capability keeps its level in each.
+ * - Rules and concepts are their domain's, keyed `<id>@<domain>`, so the same
+ *   ID in two domains is two definitions. A link to one means its own
+ *   domain's, else the only one, else it's ambiguous.
+ *
+ * Then reverse links, parts and maturity are worked out again across
+ * everything, and the contradictions between contributions become problems.
+ * Levels aren't checked again: each project's `below-level` stays its own.
+ */
+export function combine(files: StateFile[]): DocketState {
+  const state: DocketState = {
+    projects: [],
+    domains: [],
+    features: [],
+    capabilities: [],
+    rules: [],
+    concepts: [],
+    gaps: [],
+    problems: [],
+  };
+  /* Rule and concept links as declared, to resolve once every domain is in. */
+  const pending: { from: Doc & { rules?: string[]; concepts: string[] }; domain: string; rules: string[]; concepts: string[] }[] = [];
+  /* Who lists what, to find a capability in two features. */
+  const listings = new Map<string, { parent: string; project: string }[]>();
+  const listed = (child: string, parent: string, project: string) =>
+    listings.set(child, [...(listings.get(child) ?? []), { parent, project }]);
+  /* Which capabilities each domain lists in each feature. */
+  const featureLists = new Map<string, { domain: string; capabilities: string[] }[]>();
+
+  /* Add one project's contribution to the doc with this ID, making it if it's the first. */
+  function contribute<T extends Doc>(list: T[], id: string, project: string, raw: Omit<Raw<Doc>, "domain"> & { domain: string }, make: (base: Doc) => T): T {
+    const from: Contribution = { project, domain: raw.domain, file: raw.file, name: raw.name, summary: raw.summary, body: raw.body };
+    let doc = find(list, id);
+    if (!doc) {
+      doc = make({ ...from, id, from: [] });
+      list.push(doc);
+    }
+    doc.from.push(from);
+    return doc;
+  }
+  const newDomain = (base: Doc): Domain => ({ ...base, features: [], capabilities: [], maturity: null, band: null });
+
+  for (const file of files) {
+    const project = file.project.id;
+    state.projects.push(projectOf(file));
+    for (const d of file.domains) contribute(state.domains, d.id, project, { ...d, domain: d.id }, newDomain);
+    for (const f of file.features) {
+      const feature = contribute(state.features, f.id, project, f, (base) => ({ ...base, capabilities: [], parts: [], maturity: null, band: null }));
+      union(feature.capabilities, f.capabilities);
+      for (const c of f.capabilities) listed(`capability:${c}`, f.id, project);
+      featureLists.set(f.id, [...(featureLists.get(f.id) ?? []), { domain: f.domain, capabilities: f.capabilities }]);
+    }
+    for (const c of file.capabilities) {
+      const capability = contribute(state.capabilities, c.id, project, c, (base) => ({
+        ...base,
+        stability: c.stability,
+        levels: [],
+        feature: null,
+        rules: [],
+        concepts: [],
+        code: [],
+        gaps: [],
+      }));
+      capability.levels.push({ project, domain: c.domain, level: c.stability });
+      capability.code.push(...c.code.filter((g) => !capability.code.some((x) => x.glob === g.glob)));
+      union(capability.gaps, c.gaps.map((g) => `${g}@${project}`));
+      pending.push({ from: capability, domain: c.domain, rules: c.rules, concepts: c.concepts });
+    }
+    for (const r of file.rules) {
+      const rule = contribute(state.rules, `${r.id}@${r.domain}`, project, r, (base) => ({
+        ...base,
+        kind: r.kind,
+        status: r.status,
+        capabilities: [],
+        concepts: [],
+        implementedIn: [],
+        verifiedBy: [],
+      }));
+      /* Within one domain, the worst of its contributions' statuses. */
+      if (STATUS_ORDER.indexOf(r.status) < STATUS_ORDER.indexOf(rule.status)) rule.status = r.status;
+      rule.implementedIn.push(...r.implementedIn);
+      rule.verifiedBy.push(...r.verifiedBy);
+      pending.push({ from: rule, domain: r.domain, rules: [], concepts: r.concepts });
+    }
+    for (const c of file.concepts) {
+      contribute(state.concepts, `${c.id}@${c.domain}`, project, c, (base) => ({ ...base, capabilities: [], rules: [] }));
+    }
+    /* A gap's ID is its project's, as capabilities' `gaps` above name them. */
+    state.gaps.push(...file.gaps.map((g) => ({ ...g, project, id: `${g.id}@${project}` })));
+    /* A rule or concept a problem names is its domain's. */
+    const subject = (p: Problem) => {
+      const type = p.subject.slice(0, p.subject.indexOf(":"));
+      return (type === "rule" || type === "concept") && p.domain ? `${p.subject}@${p.domain}` : p.subject;
+    };
+    state.problems.push(...file.problems.map((p) => ({ ...p, subject: subject(p) })));
+  }
+
+  /* A domain docs are written in, with no domain.md showing, still gets a place, named by its ID. */
+  for (const doc of [...state.features, ...state.capabilities, ...state.rules, ...state.concepts]) {
+    for (const f of doc.from) {
+      if (!find(state.domains, f.domain)) {
+        state.domains.push(newDomain({ id: f.domain, project: f.project, domain: f.domain, file: "", name: f.domain, body: "", from: [] }));
+      }
+    }
+  }
+
+  const domainName = (id: string) => find(state.domains, id)?.name ?? id;
+  const projectName = (id: string) => find(state.projects, id)?.name ?? id;
+
+  /* Links to rules and concepts: the one named, its own domain's, else the only one. */
+  for (const p of pending) {
+    const resolve = (list: Doc[], link: string): string[] => {
+      if (link.includes("@")) return find(list, link) ? [link] : [];
+      if (find(list, `${link}@${p.domain}`)) return [`${link}@${p.domain}`];
+      const matches = list.filter((d) => bareId(d.id) === link);
+      if (matches.length > 1) {
+        const capability = state.capabilities.includes(p.from as Capability);
+        state.problems.push({
+          type: "ambiguous-link",
+          subject: capability ? `capability:${p.from.id}` : `rule:${p.from.id}`,
+          capabilities: capability ? [p.from.id] : [],
+          message: `${p.from.name}, in ${domainName(p.domain)}, names ${link}, which ${list_(matches.map((m) => domainName(m.domain)))} each have. Name the domain, as ${link}@<domain>.`,
+        });
+      }
+      return matches.length === 1 ? [matches[0].id] : [];
+    };
+    if ("rules" in p.from && p.from.rules) union(p.from.rules, p.rules.flatMap((l) => resolve(state.rules, l)));
+    union(p.from.concepts, p.concepts.flatMap((l) => resolve(state.concepts, l)));
+  }
+
+  /* Reverse links, worked out again across everything. */
+  for (const c of state.capabilities) {
+    for (const id of c.rules) union(find(state.rules, id)?.capabilities ?? [], [c.id]);
+    for (const id of c.concepts) union(find(state.concepts, id)?.capabilities ?? [], [c.id]);
+  }
+  for (const r of state.rules) for (const id of r.concepts) union(find(state.concepts, id)?.rules ?? [], [r.id]);
+
+  /* Which feature each capability is in: the first listing, with a contradiction when projects list it in different ones. */
+  for (const c of state.capabilities) {
+    const all = listings.get(`capability:${c.id}`) ?? [];
+    const parents = [...new Set(all.map((l) => l.parent))];
+    if (parents.length > 1 && new Set(all.map((l) => l.project)).size > 1) {
+      state.problems.push({
+        type: "in-two-features",
+        subject: `capability:${c.id}`,
+        capabilities: [c.id],
+        message: `Listed in ${parents.length} features: ${all.map((l) => `${l.parent} in ${projectName(l.project)}`).join(", ")}.`,
+      });
+    }
+    c.feature = parents[0] ?? null;
+    c.stability = c.levels.reduce((low, l) => (LEVEL_ORDER.indexOf(l.level) < LEVEL_ORDER.indexOf(low) ? l.level : low), c.levels[0].level);
+  }
+
+  /*
+   * Each feature's part in each domain: the capabilities that domain builds,
+   * or lists in its own doc of the feature, with its maturity from their
+   * levels in that domain alone. The feature's maturity counts every part.
+   */
+  const levelsIn = (id: string, domain?: string) =>
+    (find(state.capabilities, id)?.levels ?? []).filter((l) => !domain || l.domain === domain).map((l) => levelId(l.level));
+  for (const f of state.features) {
+    const domains: string[] = [];
+    for (const l of featureLists.get(f.id) ?? []) union(domains, [l.domain]);
+    for (const id of f.capabilities) union(domains, (find(state.capabilities, id)?.levels ?? []).map((l) => l.domain));
+    for (const domain of domains) {
+      const listedThere = (featureLists.get(f.id) ?? []).filter((l) => l.domain === domain).flatMap((l) => l.capabilities);
+      const capabilities = f.capabilities.filter((id) => listedThere.includes(id) || levelsIn(id, domain).length);
+      const maturity = featureMaturity(capabilities.flatMap((id) => levelsIn(id, domain)));
+      f.parts.push({ domain, capabilities, maturity, band: band(maturity) });
+      union(find(state.domains, domain)?.features ?? [], [f.id]);
+    }
+    f.maturity = featureMaturity(f.capabilities.flatMap((id) => levelsIn(id)));
+    f.band = band(f.maturity);
+  }
+  for (const c of state.capabilities) {
+    if (!c.feature) for (const l of c.levels) union(find(state.domains, l.domain)?.capabilities ?? [], [c.id]);
+  }
+  for (const d of state.domains) {
+    d.maturity = projectMaturity(d.features.map((id) => partOf(find(state.features, id), d.id)?.maturity ?? null));
+    d.band = band(d.maturity);
+  }
+
+  /* Contradictions: a product doc whose name or summary differs between contributions, or a rule or concept within one domain. */
+  const differing = (type: string, docs: Doc[]) => {
+    for (const doc of docs) {
+      const said = new Set(doc.from.map((f) => `${f.name}\n${f.summary ?? ""}`));
+      if (said.size < 2) continue;
+      const who = list_(docProjects(doc).map(projectName));
+      state.problems.push({
+        type: "contradiction",
+        subject: `${type}:${doc.id}`,
+        capabilities: type === "capability" ? [doc.id] : [],
+        message: `${who} describe ${doc.name} differently.`,
+      });
+    }
+  };
+  differing("domain", state.domains);
+  differing("feature", state.features);
+  differing("capability", state.capabilities);
+  differing("rule", state.rules);
+  differing("concept", state.concepts);
+  return state;
+}
+
+/* "A", "A and B", "A, B and C". */
+const list_ = (names: string[]) =>
+  names.length > 1 ? `${names.slice(0, -1).join(", ")} and ${names[names.length - 1]}` : (names[0] ?? "");
+
+/* The projects that contribute to a doc, each once, in order. */
+export const docProjects = (doc: Doc) => [...new Set(doc.from.map((f) => f.project))];
+/* The domains a doc is written in, each once, in order. */
+export const docDomains = (doc: Doc) => [...new Set(doc.from.map((f) => f.domain))];
+export const domainName = (state: DocketState, id: string) => find(state.domains, id)?.name ?? id;
+export const projectName = (state: DocketState, id: string) => find(state.projects, id)?.name ?? id;
+
+/* The maturity of everything showing: one project's, or several's worked out from all their parts of features the same way. */
+export const maturityOf = (state: DocketState): number | null =>
+  state.projects.length === 1
+    ? state.projects[0].maturity
+    : projectMaturity(state.features.flatMap((f) => f.parts.map((p) => p.maturity)));
+
+/* A feature's part in a domain, if it has one. */
+export const partOf = (feature: Feature | undefined, domain: string) => feature?.parts.find((p) => p.domain === domain);
+
+/* The contradictions and ambiguous links a doc has, as combining found them. */
+export const contradictionsOf = (state: DocketState, type: string, id: string) =>
+  state.problems.filter(
+    (p) =>
+      (p.type === "contradiction" || p.type === "ambiguous-link" || p.type === "in-two-features") &&
+      p.subject === `${type}:${id}`,
+  );
 
 const isJson = (response: Response) => response.headers.get("content-type")?.includes("json") ?? false;
 
 /*
- * The projects listed in `projects.json` beside the page. With none listed
- * there, the page shows the one project in `state.json` beside it, so the
- * list is empty.
+ * Where each project's state.json is, relative to the page, as
+ * `projects.json` beside it lists them. With no such file, the page shows the
+ * one `state.json` beside it, so the list is empty.
  */
-export async function loadProjects(): Promise<ProjectEntry[]> {
+export async function loadProjects(): Promise<string[]> {
   const response = await fetch("./projects.json", { cache: "no-store" });
   /* Some servers answer a missing file with the page itself. */
   if (response.status === 404 || (response.ok && !isJson(response))) return [];
   if (!response.ok) throw new Error(`projects.json: ${response.status} ${response.statusText}`);
-  return ((await response.json()) as { projects: ProjectEntry[] }).projects;
+  return ((await response.json()) as { projects: { state: string }[] }).projects.map((p) => p.state);
 }
 
-export async function loadState(path = "./state.json"): Promise<DocketState> {
+export async function loadState(path = "./state.json"): Promise<StateFile> {
   const response = await fetch(path, { cache: "no-store" });
   if (!response.ok) throw new Error(`${path}: ${response.status} ${response.statusText}`);
-  return (await response.json()) as DocketState;
+  return (await response.json()) as StateFile;
 }
 
 export function find<T extends { id: string }>(list: T[], id: string): T | undefined {
@@ -143,6 +464,117 @@ export function ruleAppliesTo(state: DocketState, rule: Rule): { capability: Cap
     if (!capability) return [];
     return [{ capability, feature: capability.feature ? (find(state.features, capability.feature) ?? null) : null }];
   });
+}
+
+/* Where something is on the canvas: its cards or regions, and the rows in them, if any. */
+export type Target = { items: string[]; row?: string };
+
+/* Something the side panel can show and the map can be filtered to. */
+export type Pick = { kind: "domain" | "feature" | "capability" | "concept"; id: string };
+
+/* A card on the map: a feature's part in a domain, or a capability in no feature, in a domain. */
+export const featureCard = (feature: string, domain: string) => `feature:${feature}@${domain}`;
+export const capabilityCard = (capability: string, domain: string) => `capability:${capability}@${domain}`;
+export const domainGroup = (domain: string) => `domain:${domain}`;
+
+/* Every card a capability is on: each part of its feature that has it, or its own card in each domain. */
+export function cardsOf(state: DocketState, capabilityId: string): string[] {
+  const c = find(state.capabilities, capabilityId);
+  if (!c) return [];
+  const feature = c.feature ? find(state.features, c.feature) : undefined;
+  if (feature) return feature.parts.filter((p) => p.capabilities.includes(c.id)).map((p) => featureCard(feature.id, p.domain));
+  return [...new Set(c.levels.map((l) => l.domain))].map((d) => capabilityCard(c.id, d));
+}
+
+const rowsOf = (capabilityIds: string[]) => capabilityIds.map((id) => `li[data-capability="${CSS.escape(id)}"]`).join(",");
+
+/* Where a capability is on the canvas: its row in every card it's on. */
+export function capabilityTarget(state: DocketState, capabilityId: string): Target {
+  return { items: cardsOf(state, capabilityId), row: rowsOf([capabilityId]) };
+}
+
+/* Where a feature is on the canvas: its card in every domain it spans. */
+export function featureTarget(state: DocketState, featureId: string): Target {
+  const f = find(state.features, featureId);
+  return { items: (f?.parts ?? []).map((p) => featureCard(featureId, p.domain)) };
+}
+
+/* Where something the panel shows is on the canvas: a domain's region, a feature's or capability's cards, or a concept's users' rows. */
+export function targetOf(state: DocketState, pick: Pick): Target {
+  if (pick.kind === "domain") return { items: [domainGroup(pick.id)] };
+  if (pick.kind === "feature") return featureTarget(state, pick.id);
+  if (pick.kind === "capability") return capabilityTarget(state, pick.id);
+  const users = find(state.concepts, pick.id)?.capabilities ?? [];
+  return { items: [...new Set(users.flatMap((id) => cardsOf(state, id)))], row: rowsOf(users) };
+}
+
+/* A pick's name, as the filter bar and back button say it. */
+export function pickName(state: DocketState, pick: Pick): string {
+  const lists = { domain: state.domains, feature: state.features, capability: state.capabilities, concept: state.concepts };
+  return find<Doc>(lists[pick.kind], pick.id)?.name ?? pick.id;
+}
+
+/*
+ * Capabilities grouped by the feature they're in, features in the order
+ * state.json lists them, then those in no feature under null.
+ */
+export function byFeature(state: DocketState, capabilityIds: string[]): { feature: Feature | null; capabilities: Capability[] }[] {
+  const capabilities = capabilityIds.flatMap((id) => find(state.capabilities, id) ?? []);
+  const groups = state.features
+    .map((feature) => ({ feature: feature as Feature | null, capabilities: capabilities.filter((c) => c.feature === feature.id) }))
+    .filter((g) => g.capabilities.length);
+  const loose = capabilities.filter((c) => !c.feature);
+  return loose.length ? [...groups, { feature: null, capabilities: loose }] : groups;
+}
+
+/* The concepts some capabilities use, each once, in the order they first come up. */
+export function conceptsOf(state: DocketState, capabilityIds: string[]): Concept[] {
+  const ids = new Set(capabilityIds.flatMap((id) => find(state.capabilities, id)?.concepts ?? []));
+  return [...ids].flatMap((id) => find(state.concepts, id) ?? []);
+}
+
+/* The concepts a feature's capabilities use. */
+export const featureConcepts = (state: DocketState, feature: Feature) => conceptsOf(state, feature.capabilities);
+
+/*
+ * What filtering leaves on the map: everything any of the picks covers. A
+ * domain covers its cards and every capability on them, a feature its cards
+ * in every domain, a capability the cards it's on, and a concept every
+ * capability that uses it. Capabilities on those cards that none covers are
+ * faded. Null when there's no filter.
+ */
+export type MapFilter = { capabilities: Set<string>; cards: Set<string> };
+
+export function filterBy(state: DocketState, picks: Pick[]): MapFilter | null {
+  if (!picks.length) return null;
+  const capabilities = new Set<string>();
+  const cards = new Set<string>();
+  const addCapability = (id: string) => {
+    capabilities.add(id);
+    for (const card of cardsOf(state, id)) cards.add(card);
+  };
+  for (const pick of picks) {
+    if (pick.kind === "domain") {
+      const domain = find(state.domains, pick.id);
+      for (const id of domain?.capabilities ?? []) {
+        capabilities.add(id);
+        cards.add(capabilityCard(id, pick.id));
+      }
+      for (const id of domain?.features ?? []) {
+        cards.add(featureCard(id, pick.id));
+        for (const c of partOf(find(state.features, id), pick.id)?.capabilities ?? []) capabilities.add(c);
+      }
+    } else if (pick.kind === "feature") {
+      const feature = find(state.features, pick.id);
+      for (const p of feature?.parts ?? []) cards.add(featureCard(pick.id, p.domain));
+      for (const id of feature?.capabilities ?? []) capabilities.add(id);
+    } else if (pick.kind === "capability") {
+      addCapability(pick.id);
+    } else {
+      for (const id of find(state.concepts, pick.id)?.capabilities ?? []) addCapability(id);
+    }
+  }
+  return { capabilities, cards };
 }
 
 /* state.json's level ("GA") as the design components name it ("ga"). */

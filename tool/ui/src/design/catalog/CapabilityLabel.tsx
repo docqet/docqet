@@ -21,7 +21,7 @@ export function CapabilityStability({
   focusable?: boolean;
 }) {
   return level ? (
-    <StabilityMark level={level} feature={name} focusable={focusable} />
+    <StabilityMark level={level} feature={name} focusable={focusable} size="short" />
   ) : (
     <Box component="span" sx={{ fontSize: 12.5, color: "text.secondary" }}>
       Draft

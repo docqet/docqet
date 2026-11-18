@@ -26,16 +26,28 @@ const FLASH_MS = 1800;
 export type Pos = { x: number; y: number };
 export type Size = { w: number; h: number };
 export type CanvasItem = { id: string; node: ReactNode };
+/*
+ * A region drawn behind some of the cards, such as a domain behind its
+ * features. It isn't placed itself: it wraps wherever its cards are, so it
+ * stretches to follow one dragged away. `label` sits in the room above them.
+ */
+export type CanvasGroup = { id: string; items: string[]; label: ReactNode };
+/* The room a group leaves around its cards, and above them for its label. */
+export const GROUP_PAD = 18;
+export const GROUP_HEAD = 52;
+
+type Box = { x: number; y: number; w: number; h: number };
 
 type View = { x: number; y: number; zoom: number };
 
 /* What the page can ask of the canvas. */
 export type CanvasHandle = {
   /*
-   * Bring a card into view and light it up for a moment, and with `row`, the
-   * element inside it that matches, such as one capability in a feature.
+   * Bring cards or groups into view, all of them together, and light them up
+   * for a moment, and with `row`, the elements inside them that match, such
+   * as one capability in a feature. Those not on the map are left out.
    */
-  show: (id: string, row?: string) => void;
+  show: (ids: string[], row?: string) => void;
 };
 type Saved = { positions: Record<string, Pos>; view?: View };
 
@@ -52,18 +64,25 @@ const clamp = (zoom: number) => Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, zoom));
  * this browser sees them, and a card with no saved place goes where `tidy`
  * puts it. Fitting keeps the content below `clearOf`, the header floating
  * over the top of it. Through `ref`, the page can bring a card into view.
+ * `groups` are regions behind cards, each wrapping its own, and `show` can
+ * bring one of them into view too.
  */
 export default function Canvas({
   items,
+  groups = [],
   tidy,
   storageKey,
   clearOf,
+  fitKey,
   ref,
 }: {
   items: CanvasItem[];
+  groups?: CanvasGroup[];
   tidy: (sizes: Record<string, Size>) => Record<string, Pos>;
   storageKey: string;
   clearOf: RefObject<HTMLElement | null>;
+  /* When this changes, such as when a filter does, everything left is fitted into view. */
+  fitKey?: string;
   ref?: Ref<CanvasHandle>;
 }) {
   const frame = useRef<HTMLDivElement>(null);
@@ -79,8 +98,8 @@ export default function Canvas({
   const [dragging, setDragging] = useState<string | null>(null);
   /* The card moved last sits on top. */
   const [top, setTop] = useState<string | null>(null);
-  /* The card just brought into view, lit up for a moment. */
-  const [flash, setFlash] = useState<string | null>(null);
+  /* The cards just brought into view, lit up for a moment. */
+  const [flash, setFlash] = useState<string[]>([]);
   const viewNow = useRef(view);
   viewNow.current = view;
   const glide = useRef(0);
@@ -88,23 +107,61 @@ export default function Canvas({
   const tidied = sizes ? tidy(sizes) : null;
   const place = (id: string): Pos => moved[id] ?? tidied?.[id] ?? { x: 0, y: 0 };
 
-  /* The box around every card, in canvas coordinates. */
-  const bounds = useCallback(
-    (positions: (id: string) => Pos) => {
-      if (!sizes || !items.length) return null;
+  /* A group's box: around those of its cards that are drawn, or null with none. */
+  const groupBox = useCallback(
+    (group: CanvasGroup, positions: (id: string) => Pos): Box | null => {
       let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
-      for (const { id } of items) {
+      for (const id of group.items) {
+        const s = sizes?.[id];
+        if (!s) continue;
         const p = positions(id);
-        const s = sizes[id] ?? { w: 0, h: 0 };
         minX = Math.min(minX, p.x);
         minY = Math.min(minY, p.y);
         maxX = Math.max(maxX, p.x + s.w);
         maxY = Math.max(maxY, p.y + s.h);
       }
+      if (minX === Infinity) return null;
+      return {
+        x: minX - GROUP_PAD,
+        y: minY - GROUP_HEAD,
+        w: maxX - minX + GROUP_PAD * 2,
+        h: maxY - minY + GROUP_HEAD + GROUP_PAD,
+      };
+    },
+    [sizes],
+  );
+
+  /* The box around every card and group, in canvas coordinates. */
+  const bounds = useCallback(
+    (positions: (id: string) => Pos) => {
+      if (!sizes || !items.length) return null;
+      let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+      const add = (b: Box) => {
+        minX = Math.min(minX, b.x);
+        minY = Math.min(minY, b.y);
+        maxX = Math.max(maxX, b.x + b.w);
+        maxY = Math.max(maxY, b.y + b.h);
+      };
+      for (const { id } of items) {
+        const s = sizes[id] ?? { w: 0, h: 0 };
+        add({ ...positions(id), ...s });
+      }
+      for (const group of groups) {
+        const b = groupBox(group, positions);
+        if (b) add(b);
+      }
       return { minX, minY, width: maxX - minX, height: maxY - minY };
     },
-    [items, sizes],
+    [items, groups, sizes, groupBox],
   );
+
+  /* Where a card or a group is now, or null if it isn't drawn. */
+  const boxOf = (id: string): Box | null => {
+    const s = sizes?.[id];
+    if (s) return { ...place(id), ...s };
+    const group = groups.find((g) => g.id === id);
+    return group ? groupBox(group, place) : null;
+  };
 
   /* Everything in view, no larger than 100%. `readable` keeps it at least 75% on a narrow screen. */
   const fit = useCallback(
@@ -138,6 +195,25 @@ export default function Canvas({
     if (!sizes || placed.current) return;
     placed.current = true;
     if (!saved.view) fit(place, true);
+  }, [sizes]);
+
+  /*
+   * Once the cards a new `fitKey` leaves are measured, fit them into view,
+   * then show the card asked for while it was still off the map, if any.
+   */
+  const fittedFor = useRef(fitKey);
+  const pending = useRef<{ ids: string[]; row?: string } | null>(null);
+  useLayoutEffect(() => {
+    if (!sizes || !placed.current) return;
+    if (fittedFor.current !== fitKey) {
+      fittedFor.current = fitKey;
+      fit(place);
+    }
+    const p = pending.current;
+    if (p && p.ids.some((id) => boxOf(id))) {
+      pending.current = null;
+      showNow(p.ids, p.row);
+    }
   }, [sizes]);
 
   /* Keep where the cards are and where the canvas is looking, a moment after they change. */
@@ -185,25 +261,46 @@ export default function Canvas({
     glide.current = requestAnimationFrame(step);
   }, []);
 
+  /* Bring cards or groups into view, as `show` does, once they're measured. */
+  function showNow(ids: string[], row?: string) {
+    const f = frame.current;
+    const drawn = ids.filter((id) => boxOf(id));
+    if (!f || !drawn.length) return;
+    let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+    for (const id of drawn) {
+      const b = boxOf(id)!;
+      minX = Math.min(minX, b.x);
+      minY = Math.min(minY, b.y);
+      maxX = Math.max(maxX, b.x + b.w);
+      maxY = Math.max(maxY, b.y + b.h);
+    }
+    const b = { x: minX, y: minY, w: maxX - minX, h: maxY - minY };
+    const top = (clearOf.current?.getBoundingClientRect().bottom ?? 0) + PAD / 2;
+    const room = f.clientHeight - top - PAD;
+    /*
+     * One card: close enough to read. Several, or a group: far enough out to
+     * take them all in, where they fit.
+     */
+    const fits = Math.min((f.clientWidth - PAD * 2) / b.w, room / b.h);
+    const floor = drawn.length > 1 || !sizes?.[drawn[0]] ? Math.min(0.85, fits) : 0.85;
+    const zoom = clamp(Math.min(Math.max(Math.min(viewNow.current.zoom, fits), floor), 1));
+    const y = top + Math.max(0, (room - b.h * zoom) / 2) - b.y * zoom;
+    glideTo({ zoom, x: f.clientWidth / 2 - (b.x + b.w / 2) * zoom, y });
+    if (drawn.length === 1) setTop(drawn[0]);
+    setFlash(drawn);
+    const rows = row ? drawn.flatMap((id) => [...(nodes.current.get(id)?.querySelectorAll(row) ?? [])]) : [];
+    for (const el of rows) el.classList.add("flash-row");
+    setTimeout(() => {
+      setFlash((current) => (current === drawn ? [] : current));
+      for (const el of rows) el.classList.remove("flash-row");
+    }, FLASH_MS);
+  }
+
   useImperativeHandle(ref, () => ({
-    show(id, row) {
-      const f = frame.current;
-      const s = sizes?.[id];
-      if (!f || !s) return;
-      const p = place(id);
-      const zoom = clamp(Math.min(Math.max(viewNow.current.zoom, 0.85), 1));
-      const top = (clearOf.current?.getBoundingClientRect().bottom ?? 0) + PAD / 2;
-      const room = f.clientHeight - top - PAD;
-      const y = top + Math.max(0, (room - s.h * zoom) / 2) - p.y * zoom;
-      glideTo({ zoom, x: f.clientWidth / 2 - (p.x + s.w / 2) * zoom, y });
-      setTop(id);
-      setFlash(id);
-      const el = row ? nodes.current.get(id)?.querySelector(row) : null;
-      el?.classList.add("flash-row");
-      setTimeout(() => {
-        setFlash((current) => (current === id ? null : current));
-        el?.classList.remove("flash-row");
-      }, FLASH_MS);
+    show(ids, row) {
+      /* Not on the map yet, such as when the page has just cleared a filter to show it: show it once it's drawn. */
+      if (!ids.some((id) => boxOf(id))) pending.current = { ids, row };
+      else showNow(ids, row);
     },
   }));
 
@@ -245,7 +342,8 @@ export default function Canvas({
 
   /* Dragging a card. The press is held, so the card follows the pointer even past the canvas's edge. */
   const startDrag = (id: string) => (e: ReactPointerEvent<HTMLDivElement>) => {
-    if (e.button !== 0) return;
+    /* A button on a card, such as a concept, takes its own click; capturing the pointer would steal it. */
+    if (e.button !== 0 || (e.target as HTMLElement).closest("[data-no-pan]")) return;
     e.stopPropagation();
     drag.current = { id, sx: e.clientX, sy: e.clientY, from: place(id), moved: false };
     e.currentTarget.setPointerCapture(e.pointerId);
@@ -297,6 +395,20 @@ export default function Canvas({
       }}
     >
       <div className="world" style={{ transform: `translate(${view.x}px, ${view.y}px) scale(${view.zoom})` }}>
+        {tidied
+          ? groups.map((group) => {
+              const b = groupBox(group, place);
+              return b ? (
+                <div
+                  key={group.id}
+                  className={`group${flash.includes(group.id) ? " flash" : ""}`}
+                  style={{ transform: `translate(${b.x}px, ${b.y}px)`, width: b.w, height: b.h }}
+                >
+                  <div className="group-label">{group.label}</div>
+                </div>
+              ) : null;
+            })
+          : null}
         {items.map(({ id, node }) => {
           const p = place(id);
           return (
@@ -306,7 +418,7 @@ export default function Canvas({
                 if (el) nodes.current.set(id, el);
                 else nodes.current.delete(id);
               }}
-              className={`item${dragging === id ? " lifted" : ""}${flash === id ? " flash" : ""}`}
+              className={`item${dragging === id ? " lifted" : ""}${flash.includes(id) ? " flash" : ""}`}
               style={{
                 transform: `translate(${p.x}px, ${p.y}px)`,
                 visibility: tidied ? undefined : "hidden",

@@ -40,6 +40,8 @@ export type FeatureCardProps = {
   actions?: ReactNode;
   /** Ends it with "Add a Capability", which the app answers with a new one. */
   onAddCapability?: () => void;
+  /** Under its Capabilities: the app's own line, such as the concepts they use. */
+  footer?: ReactNode;
 };
 
 const rank = (level: StabilityLevelId | null) => (level ? STABILITY_LEVEL_IDS.indexOf(level) : -1);
@@ -62,6 +64,7 @@ export function FeatureCard({
   grip = false,
   actions,
   onAddCapability,
+  footer,
 }: FeatureCardProps) {
   const progress =
     maturity !== undefined ? maturity : featureMaturity(capabilities.map((capability) => capability.level));
@@ -197,6 +200,10 @@ export function FeatureCard({
           No Capabilities yet{onAddCapability ? "; add one to start its maturity." : "."}
         </Box>
       )}
+
+      {footer ? (
+        <Box sx={{ px: 2, py: 1, borderTop: 1, borderColor: "divider", typography: "body2" }}>{footer}</Box>
+      ) : null}
 
       {onAddCapability ? (
         <Box sx={{ px: 0.75, py: 0.5, borderTop: 1, borderColor: "divider" }}>

@@ -5,7 +5,10 @@ import { MATURITY_BANDS, clampMaturity, maturityBand } from "./maturity";
 import { RingGlyph } from "./RingGlyph";
 import { levelColor, type StabilityLevelId } from "../stability/stability";
 
-export type MaturitySubject = "feature" | "project";
+/* A feature's maturity comes from its capabilities, a domain's from its parts of features, and a project's from its features. */
+export type MaturitySubject = "feature" | "domain" | "project";
+
+export const SUBJECT_NAMES: Record<MaturitySubject, string> = { feature: "Feature", domain: "Domain", project: "Project" };
 
 export type MaturityDetailsProps = {
   /** 0 to 100; anything outside is clamped, and fractions rounded. */
@@ -64,7 +67,7 @@ export function MaturityDetails({
   return (
     <DetailsCard card={card}>
       <DetailsEyebrow>
-        {subject === "feature" ? "Feature maturity" : "Project maturity"}
+        {SUBJECT_NAMES[subject]} maturity
       </DetailsEyebrow>
       <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mt: 1 }}>
         <RingGlyph progress={value} size={56} />

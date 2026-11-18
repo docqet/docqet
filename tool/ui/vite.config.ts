@@ -24,13 +24,6 @@ function statePaths(): string[] {
     .filter((p) => existsSync(p));
 }
 
-function projects() {
-  return statePaths().map((path) => {
-    const { project } = JSON.parse(readFileSync(path, "utf8")) as { project: { id: string; name: string } };
-    return { ...project, path };
-  });
-}
-
 const serveState: Connect.NextHandleFunction = (req, res, next) => {
   const { pathname } = new URL(req.url ?? "/", "http://localhost");
   const json = (body: string | Buffer) => {
@@ -38,12 +31,12 @@ const serveState: Connect.NextHandleFunction = (req, res, next) => {
     res.end(body);
   };
   if (pathname === "/projects.json") {
-    const list = projects().map(({ id, name }) => ({ id, name, state: `projects/${encodeURIComponent(id)}/state.json` }));
+    const list = statePaths().map((_, i) => ({ state: `projects/${i}/state.json` }));
     return json(JSON.stringify({ projects: list }));
   }
-  const match = pathname.match(/^\/projects\/([^/]+)\/state\.json$/);
-  const project = match && projects().find((p) => p.id === decodeURIComponent(match[1]));
-  if (project) return json(readFileSync(project.path));
+  const match = pathname.match(/^\/projects\/(\d+)\/state\.json$/);
+  const path = match && statePaths()[Number(match[1])];
+  if (path) return json(readFileSync(path));
   next();
 };
 
