@@ -1,0 +1,13 @@
+# Marks this repository as using Docket. Docs are read from docs/.
+project:
+  id: hotel-bookings
+  name: Hotel Bookings
+
+# Test results for `docket index` to read, written by the test run before it.
+results:
+  - suite: acceptance
+    format: cucumber-json
+    path: reports/acceptance.json
+  - suite: unit
+    format: junit
+    path: reports/unit.xml

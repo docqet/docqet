@@ -1,0 +1,576 @@
+{
+  "docket": "0.1",
+  "project": {
+    "id": "hotel-bookings",
+    "name": "Hotel Bookings"
+  },
+  "commit": "4f2c9e1",
+  "indexedAt": "2026-11-18T15:04:00Z",
+  "results": {
+    "commit": "4f2c9e1",
+    "suites": [
+      {
+        "suite": "acceptance",
+        "path": "reports/acceptance.json",
+        "ranAt": "2026-11-18T15:02:41Z"
+      },
+      {
+        "suite": "unit",
+        "path": "reports/unit.xml",
+        "ranAt": "2026-11-18T15:01:12Z"
+      }
+    ]
+  },
+  "summary": {
+    "maturity": 60,
+    "band": "Beta",
+    "features": 3,
+    "capabilities": {
+      "Prototype": 4,
+      "Alpha": 1,
+      "Beta": 2,
+      "GA": 1
+    },
+    "rules": {
+      "decided": 1,
+      "implemented": 1,
+      "tested": 0,
+      "passing": 3,
+      "failing": 0
+    },
+    "gaps": {
+      "product": 3,
+      "technical": 2,
+      "due": 1
+    },
+    "problems": 2
+  },
+  "features": [
+    {
+      "id": "reservations",
+      "file": "docs/product/features/reservations.md",
+      "name": "Reservations",
+      "summary": "Taking bookings and handling changes to them, before the guest arrives.",
+      "capabilities": [
+        "room-booking",
+        "cancellations",
+        "group-bookings"
+      ],
+      "maturity": 42,
+      "band": "Alpha",
+      "body": ""
+    },
+    {
+      "id": "front-desk",
+      "file": "docs/product/features/front-desk.md",
+      "name": "Front desk",
+      "summary": "Welcoming guests when they arrive and settling up when they leave.",
+      "capabilities": [
+        "check-in",
+        "check-out"
+      ],
+      "maturity": 84,
+      "band": "GA",
+      "body": ""
+    },
+    {
+      "id": "housekeeping",
+      "file": "docs/product/features/housekeeping.md",
+      "name": "Housekeeping",
+      "summary": "Keeping rooms ready for the next guest.",
+      "capabilities": [
+        "room-status",
+        "cleaning-schedule"
+      ],
+      "maturity": 15,
+      "band": "Prototype",
+      "body": ""
+    }
+  ],
+  "capabilities": [
+    {
+      "id": "room-booking",
+      "file": "docs/product/capabilities/room-booking.md",
+      "name": "Room booking",
+      "summary": "Clerks book a room for a guest's stay, so that each room has at most one guest on any night.",
+      "stability": "Beta",
+      "rules": [
+        "booking/no-double-booking",
+        "booking/minimum-stay",
+        "booking/same-day-turnover"
+      ],
+      "concepts": [
+        "booking",
+        "room"
+      ],
+      "code": [
+        {
+          "glob": "src/booking/**",
+          "files": 3
+        }
+      ],
+      "flows": [
+        "change-of-plans"
+      ],
+      "engineering": [
+        "component:bookings"
+      ],
+      "gaps": [
+        "capability:room-booking#no-waitlist",
+        "capability:room-booking#one-room-per-booking",
+        "component:bookings#availability-loads-every-booking"
+      ],
+      "body": "## What people can do\n\n### Front desk clerk\n\n- See which rooms are free for a stay.\n- Book a free room for a guest.\n- Move a booking to new dates, if its room is free for them.\n\n## Success\n\n- The front desk stops keeping the paper diary alongside the app.",
+      "feature": "reservations"
+    },
+    {
+      "id": "cancellations",
+      "file": "docs/product/capabilities/cancellations.md",
+      "name": "Cancellations",
+      "summary": "Clerks cancel a booking when a guest's plans change, and the guest is refunded what the cancellation policy allows.",
+      "stability": "Alpha",
+      "rules": [
+        "cancellations/free-cancellation-window",
+        "cancellations/late-cancellation-fee"
+      ],
+      "concepts": [
+        "booking"
+      ],
+      "code": [
+        {
+          "glob": "src/cancellations/**",
+          "files": 1
+        }
+      ],
+      "flows": [
+        "change-of-plans"
+      ],
+      "engineering": [
+        "component:refunds"
+      ],
+      "gaps": [
+        "capability:cancellations#late-cancellations-refunded-in-full",
+        "component:refunds#refund-errors-not-traceable"
+      ],
+      "body": "## What people can do\n\n### Front desk clerk\n\n- Tell a guest what they'd be refunded if they cancelled now.\n- Cancel a booking for a guest.\n\n## Open decisions\n\n- **No-shows:** is a guest who never arrives treated as a late cancellation, or\n  charged for the whole stay?",
+      "feature": "reservations"
+    },
+    {
+      "id": "check-in",
+      "file": "docs/product/capabilities/check-in.md",
+      "name": "Check-in",
+      "summary": "Clerks check guests in when they arrive and hand over their room.",
+      "stability": "Beta",
+      "rules": [
+        "booking/no-double-booking"
+      ],
+      "concepts": [
+        "booking",
+        "room"
+      ],
+      "code": [],
+      "flows": [],
+      "engineering": [],
+      "gaps": [],
+      "body": "## What people can do\n\n### Front desk clerk\n\n- See today's arrivals.\n- Check a guest in, and give them their room.\n- Move a guest to another room that's free for the rest of their stay.\n\n## Success\n\n- A guest with a booking is checked in within two minutes of reaching the desk.",
+      "feature": "front-desk"
+    },
+    {
+      "id": "check-out",
+      "file": "docs/product/capabilities/check-out.md",
+      "name": "Check-out",
+      "summary": "Clerks check guests out and settle what they owe.",
+      "stability": "GA",
+      "rules": [],
+      "concepts": [
+        "booking"
+      ],
+      "code": [],
+      "flows": [],
+      "engineering": [],
+      "gaps": [],
+      "body": "## What people can do\n\n### Front desk clerk\n\n- See today's departures.\n- Check a guest out, and take payment for anything still owed.\n\n## Success\n\n- The front desk closes the day with every departure settled.",
+      "feature": "front-desk"
+    },
+    {
+      "id": "cleaning-schedule",
+      "file": "docs/product/capabilities/cleaning-schedule.md",
+      "name": "Cleaning schedule",
+      "summary": "Housekeeping sees which rooms to clean today, with early arrivals first.",
+      "stability": "Prototype",
+      "rules": [],
+      "concepts": [
+        "room"
+      ],
+      "code": [],
+      "flows": [],
+      "engineering": [],
+      "gaps": [],
+      "body": "## What people can do\n\n### Housekeeper\n\n- See today's rooms to clean, in order.\n\n## Learning\n\n- Is ordering by arrival time enough, or do housekeepers plan by floor?",
+      "feature": "housekeeping"
+    },
+    {
+      "id": "group-bookings",
+      "file": "docs/product/capabilities/group-bookings.md",
+      "name": "Group bookings",
+      "summary": "Clerks hold several rooms at once for a group travelling together.",
+      "stability": "Prototype",
+      "rules": [
+        "booking/no-double-booking",
+        "booking/minimum-stay"
+      ],
+      "concepts": [
+        "booking"
+      ],
+      "code": [],
+      "flows": [],
+      "engineering": [],
+      "gaps": [],
+      "body": "## What people can do\n\n### Front desk clerk\n\n- Hold several rooms for one group, under one name.\n\n## Learning\n\n- Do groups want one booking with many rooms, or many bookings linked\n  together?",
+      "feature": "reservations"
+    },
+    {
+      "id": "rate-calendar",
+      "file": "docs/product/capabilities/rate-calendar.md",
+      "name": "Rate calendar",
+      "summary": "Managers set each room type's nightly rate, date by date.",
+      "stability": "Prototype",
+      "rules": [],
+      "concepts": [],
+      "code": [],
+      "flows": [],
+      "engineering": [],
+      "gaps": [],
+      "body": "## What people can do\n\n### Manager\n\n- Set a room type's rate for a range of dates.\n\n## Learning\n\n- Do rates change often enough to need a calendar, or is a rate per season\n  enough?",
+      "feature": null
+    },
+    {
+      "id": "room-status",
+      "file": "docs/product/capabilities/room-status.md",
+      "name": "Room status",
+      "summary": "Housekeeping marks rooms clean or dirty, so the front desk knows which are ready.",
+      "stability": "Prototype",
+      "rules": [],
+      "concepts": [
+        "room"
+      ],
+      "code": [],
+      "flows": [],
+      "engineering": [],
+      "gaps": [],
+      "body": "## What people can do\n\n### Housekeeper\n\n- Mark a room clean once it's ready.\n\n### Front desk clerk\n\n- See which rooms are ready for arriving guests.\n\n## Learning\n\n- Will housekeepers update a room's status as they go, or at the end of their\n  round?",
+      "feature": "housekeeping"
+    }
+  ],
+  "rules": [
+    {
+      "id": "booking/no-double-booking",
+      "file": "docs/product/domain/rules/booking/no-double-booking.md",
+      "name": "A room can't be double-booked",
+      "summary": "Two bookings for the same room can't share a night. A cancelled booking no longer holds its nights.",
+      "kind": "core",
+      "status": "passing",
+      "capabilities": [
+        "room-booking",
+        "check-in",
+        "group-bookings"
+      ],
+      "concepts": [
+        "booking",
+        "room"
+      ],
+      "implementedIn": [
+        {
+          "file": "src/booking/availability.ts",
+          "line": 9,
+          "symbol": "assertRoomFree"
+        }
+      ],
+      "verifiedBy": [
+        {
+          "file": "features/booking.feature",
+          "line": 3,
+          "test": "A room can't be double-booked",
+          "suite": "acceptance",
+          "result": "passed",
+          "cases": {
+            "passed": 2,
+            "failed": 0
+          }
+        }
+      ],
+      "body": ""
+    },
+    {
+      "id": "booking/minimum-stay",
+      "file": "docs/product/domain/rules/booking/minimum-stay.md",
+      "name": "A stay is at least one night",
+      "summary": "A booking's check-out date is after its check-in date.",
+      "kind": "edge-case",
+      "status": "passing",
+      "capabilities": [
+        "room-booking",
+        "group-bookings"
+      ],
+      "concepts": [
+        "booking"
+      ],
+      "implementedIn": [
+        {
+          "file": "src/booking/stay.ts",
+          "line": 11,
+          "symbol": "parseStay"
+        }
+      ],
+      "verifiedBy": [
+        {
+          "file": "src/booking/stay.test.ts",
+          "line": 12,
+          "test": "parseStay > rejects a stay that ends the day it starts",
+          "suite": "unit",
+          "result": "passed",
+          "cases": {
+            "passed": 1,
+            "failed": 0
+          }
+        }
+      ],
+      "body": ""
+    },
+    {
+      "id": "booking/same-day-turnover",
+      "file": "docs/product/domain/rules/booking/same-day-turnover.md",
+      "name": "A stay can start on the day another ends",
+      "summary": "A room can be booked from the day an earlier booking checks out, because the two stays don't share a night.",
+      "kind": "edge-case",
+      "status": "implemented",
+      "capabilities": [
+        "room-booking"
+      ],
+      "concepts": [
+        "booking",
+        "room"
+      ],
+      "implementedIn": [
+        {
+          "file": "src/booking/availability.ts",
+          "line": 4,
+          "symbol": "overlaps"
+        }
+      ],
+      "verifiedBy": [],
+      "body": "## Why\n\nGuests check out by 11:00 and check in from 15:00, which leaves time to clean\nthe room."
+    },
+    {
+      "id": "cancellations/free-cancellation-window",
+      "file": "docs/product/domain/rules/cancellations/free-cancellation-window.md",
+      "name": "Cancelling 48 hours ahead is free",
+      "summary": "A booking cancelled at least 48 hours before check-in is refunded in full.",
+      "kind": "core",
+      "status": "passing",
+      "capabilities": [
+        "cancellations"
+      ],
+      "concepts": [
+        "booking"
+      ],
+      "implementedIn": [
+        {
+          "file": "src/cancellations/refund.ts",
+          "line": 4,
+          "symbol": "refundAmount"
+        }
+      ],
+      "verifiedBy": [
+        {
+          "file": "features/cancellations.feature",
+          "line": 3,
+          "test": "Cancelling 48 hours ahead is free",
+          "suite": "acceptance",
+          "result": "passed",
+          "cases": {
+            "passed": 2,
+            "failed": 0
+          }
+        }
+      ],
+      "body": ""
+    },
+    {
+      "id": "cancellations/late-cancellation-fee",
+      "file": "docs/product/domain/rules/cancellations/late-cancellation-fee.md",
+      "name": "A late cancellation costs the first night",
+      "summary": "A booking cancelled less than 48 hours before check-in is refunded everything except the first night.",
+      "kind": "edge-case",
+      "status": "decided",
+      "capabilities": [
+        "cancellations"
+      ],
+      "concepts": [
+        "booking"
+      ],
+      "implementedIn": [],
+      "verifiedBy": [],
+      "body": "## Why\n\nThe room usually can't be rebooked at such short notice."
+    }
+  ],
+  "concepts": [
+    {
+      "id": "booking",
+      "file": "docs/product/domain/concepts/booking.md",
+      "name": "Booking",
+      "summary": "A guest's hold on one room for a stay, from a check-in date to a check-out date.",
+      "capabilities": [
+        "room-booking",
+        "cancellations",
+        "check-in",
+        "check-out",
+        "group-bookings"
+      ],
+      "rules": [
+        "booking/no-double-booking",
+        "booking/minimum-stay",
+        "booking/same-day-turnover",
+        "cancellations/free-cancellation-window",
+        "cancellations/late-cancellation-fee"
+      ],
+      "body": "## Details\n\nA booking is for one [room](room.md). Its nights run from the check-in date up\nto, but not including, the check-out date.\n\n## Lifecycle\n\nConfirmed → Checked in → Checked out\n\nA confirmed booking can instead be Cancelled, any time before check-in."
+    },
+    {
+      "id": "room",
+      "file": "docs/product/domain/concepts/room.md",
+      "name": "Room",
+      "summary": "A room guests can stay in, known by its number.",
+      "capabilities": [
+        "room-booking",
+        "check-in",
+        "cleaning-schedule",
+        "room-status"
+      ],
+      "rules": [
+        "booking/no-double-booking",
+        "booking/same-day-turnover"
+      ],
+      "body": "## Details\n\nEach room has a type, such as double or twin, which sets its rate. A room is\n[booked](booking.md) a night at a time."
+    }
+  ],
+  "flows": [
+    {
+      "id": "change-of-plans",
+      "file": "docs/product/flows/change-of-plans.md",
+      "name": "Change of plans",
+      "summary": "A guest whose dates change either moves their booking or cancels it, and ends up with a stay that fits or a refund.",
+      "personas": [
+        "front-desk-clerk"
+      ],
+      "capabilities": [
+        "room-booking",
+        "cancellations"
+      ],
+      "body": "- **People:** front desk clerk, guest\n- **Starts when:** a guest asks to change the dates of their booking.\n- **Done when:** the guest has a booking for their new dates, or their booking\n  is cancelled and they know what they'll be refunded.\n\n## Steps\n\n1. **Guest** asks the front desk to change their dates.\n2. **Front desk clerk** checks whether the guest's room is free for the new\n   dates.\n3. **Front desk clerk** moves the booking to the new dates.\n4. **Guest** gets confirmation of the new dates.\n\n## Variations\n\n- **The room isn't free:** the clerk offers another free room. If none suits,\n  the clerk tells the guest what they'd be refunded and cancels the booking."
+    }
+  ],
+  "personas": [
+    {
+      "id": "front-desk-clerk",
+      "file": "docs/product/personas/front-desk-clerk.md",
+      "name": "Sam, front desk clerk",
+      "flows": [
+        "change-of-plans"
+      ],
+      "body": "## Who\n\nWorks the front desk of a small hotel, taking bookings by phone and in person,\nand handling changes when guests' plans move.\n\n## Knows\n\nThe hotel's rooms and rates by heart. Comfortable with booking software, but\nnot technical.\n\n## Context\n\nAt a desktop at the front desk, often with a guest waiting or on the phone.\nInterrupted constantly.\n\n## Expects\n\nTalks about stays, nights and rooms, not reservations or inventory. Used to a\npaper diary that shows which rooms are taken on which nights.\n\n## Cares about\n\nNever putting two guests in one room. Gives up on anything that keeps a waiting\nguest waiting longer.\n\n## Based on\n\nInvented for this example."
+    }
+  ],
+  "engineering": [
+    {
+      "id": "component:bookings",
+      "file": "docs/engineering/architecture/components/bookings.md",
+      "name": "Bookings",
+      "summary": "Booking a room and checking it's free. Start reading at `assertRoomFree` in `src/booking/availability.ts`.",
+      "capabilities": [
+        "room-booking"
+      ],
+      "code": [
+        {
+          "glob": "src/booking/**",
+          "files": 3
+        }
+      ],
+      "body": "## Gotchas\n\n- Stays are half-open: the check-out date isn't a night of the stay. `overlaps`\n  depends on this, and comparing with `<=` would break\n  [same-day turnover](../../../product/domain/rules/booking/same-day-turnover.md)."
+    },
+    {
+      "id": "component:refunds",
+      "file": "docs/engineering/architecture/components/refunds.md",
+      "name": "Refunds",
+      "summary": "Working out what a cancelled booking is refunded, and paying it back through the payment provider. Start reading at `refundAmount` in `src/cancellations/refund.ts`.",
+      "capabilities": [
+        "cancellations"
+      ],
+      "code": [
+        {
+          "glob": "src/cancellations/**",
+          "files": 1
+        }
+      ],
+      "body": "## Gotchas\n\n- The provider can reject a refund days after accepting it, for example when the\n  guest's card has been closed. The app doesn't retry, so a rejected refund is\n  made again by hand."
+    }
+  ],
+  "gaps": [
+    {
+      "id": "capability:room-booking#no-waitlist",
+      "type": "product",
+      "kind": "to-close-later",
+      "text": "When every room is taken there's no waitlist. Clerks note the guest's details outside the app and call them if a room frees up."
+    },
+    {
+      "id": "capability:room-booking#one-room-per-booking",
+      "type": "product",
+      "kind": "accepted-tradeoff",
+      "text": "A booking holds one room, so a family that needs two rooms makes two bookings."
+    },
+    {
+      "id": "capability:cancellations#late-cancellations-refunded-in-full",
+      "type": "product",
+      "kind": "to-close-later",
+      "text": "The late-cancellation fee isn't charged yet, so every cancellation is refunded in full."
+    },
+    {
+      "id": "component:bookings#availability-loads-every-booking",
+      "type": "technical",
+      "text": "Checking whether a room is free loads every booking for that room and compares them in memory. That's fine at one small hotel's volume.",
+      "until": {
+        "capability": "room-booking",
+        "reaches": "GA"
+      },
+      "due": false
+    },
+    {
+      "id": "component:refunds#refund-errors-not-traceable",
+      "type": "technical",
+      "text": "Payment provider errors are logged without the booking reference, so tracing a failed refund means searching the provider's records by amount and date.",
+      "until": {
+        "capability": "cancellations",
+        "reaches": "Alpha"
+      },
+      "due": true
+    }
+  ],
+  "problems": [
+    {
+      "type": "below-level",
+      "subject": "rule:booking/same-day-turnover",
+      "capabilities": [
+        "room-booking"
+      ],
+      "message": "Room booking is Beta, which needs edge-case rules passing, but this rule has no verifying test."
+    },
+    {
+      "type": "gap-due",
+      "subject": "component:refunds#refund-errors-not-traceable",
+      "capabilities": [
+        "cancellations"
+      ],
+      "message": "This gap was to close when Cancellations reached Alpha, and it's Alpha now."
+    }
+  ]
+}
