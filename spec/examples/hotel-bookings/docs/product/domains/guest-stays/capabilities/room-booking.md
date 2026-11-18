@@ -18,6 +18,12 @@ gaps:
     text: >-
       A booking holds one room, so a family that needs two rooms makes two
       bookings.
+  - id: calendar-needs-a-mouse
+    kind: to-close-later
+    item: experience/usable-by-everyone
+    text: >-
+      The room calendar can't be used from the keyboard, so clerks need a
+      mouse to pick dates.
 ---
 
 # Room booking

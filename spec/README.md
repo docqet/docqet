@@ -280,6 +280,9 @@ configure it. It's guidance, not a gate. Work fits a level when it generally
 meets that level's items, and each item that applies is usually met, not
 applicable, or a known gap.
 
+- **An item that applies is met unless a gap names it.** Declaring a level
+  claims what that level includes, except the gaps written down, so only
+  what isn't met is recorded. An item that doesn't apply counts as met too.
 - **An item's ID** is its area's ID and its own, as `<area>/<item>`:
   `tests/edge-cases-checked`. IDs are never renamed, since gaps refer to them.
   Rewording an item is fine.
@@ -635,9 +638,14 @@ and showing several projects together means reading each one's state.json.
   after the title and summary. A doc declared in two of the project's domains
   has an entry for each. Links are written as declared,
   with `@<domain>` where the doc named one.
-- **`gaps`**: every gap from every capability, each with its `domain`.
+- **`gaps`**: every gap from every capability, each with its `domain`, and
+  the checklist `item` it names, or `null`.
 - **`problems`**: everything the indexer found wrong, each about a doc with
   that doc's `domain`.
+- **`checklist`**: the stability checklist the project was indexed against,
+  so the UI can show it beside each capability. It's the YAML's groups, areas
+  and items, with each item's full `<area>/<item>` ID, `until` as `null` where
+  it has none, and `baseline` as `true` or `false`.
 
 ### Rule status
 
@@ -668,8 +676,9 @@ held to the highest level among them:
 | Beta, GA  | `passing`  | `passing`       |
 
 This comes from forge's testing rule, and it's the only expectation the spec
-checks for now.
-The rest of the stability checklist stays guidance.
+checks for now. The rest of the [stability checklist](#stability-checklist)
+stays guidance: the indexer only checks that a gap's `item` is a real item
+and not a baseline one.
 
 ### Problems
 
@@ -685,9 +694,12 @@ The rest of the stability checklist stays guidance.
 | `stale-results`        | The test results came from a different commit.                 |
 | `contradiction`        | Contributions that should agree don't, as Domains describes.   |
 | `ambiguous-link`       | A link could mean the rule or concept of two or more domains.  |
+| `unknown-item`         | A gap's `item` isn't in the stability checklist.               |
+| `baseline-gap`         | A gap's `item` is a baseline item, which is never a known gap. |
 
 `in-two-features` is a contradiction too, when the listings
-are in different projects. Combining raises the last two, and those.
+are in different projects. Combining raises `contradiction` and
+`ambiguous-link`, and those.
 
 The hotel example has a problem on purpose: room booking is Beta, but its
 same-day-turnover rule is only `implemented`.
@@ -710,4 +722,11 @@ same-day-turnover rule is only `implemented`.
   `rules: { core: [...], edge-case: [...] }`.
 - **Expectations are fixed.** The level table above is forge's testing rule
   built into the spec. It becomes configurable once someone adopting Docket
-  needs different rules.
+  needs different rules. The same goes for the stability checklist.
+- **Met is assumed.** An item counts as met unless a gap names it, so nothing
+  says which items someone actually looked at, and an item added to the
+  checklist counts as met everywhere at once. A record of when someone last
+  went through the list, and against which version of it, would show both.
+  Items not applicable, with why, items Docket can work out itself, such as
+  `tests/main-path-automated` from core rules passing, and items a whole
+  project meets, such as CI, would also make met mean more.

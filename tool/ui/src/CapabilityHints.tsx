@@ -1,4 +1,6 @@
+import type { ReactNode } from "react";
 import Box from "@mui/material/Box";
+import IncompleteCircleRoundedIcon from "@mui/icons-material/IncompleteCircleRounded";
 import RuleRoundedIcon from "@mui/icons-material/RuleRounded";
 import WarningAmberRoundedIcon from "@mui/icons-material/WarningAmberRounded";
 
@@ -15,11 +17,26 @@ export function ContradictionHint({ messages }: { messages: string[] }) {
 
 /* After a capability's name, how many rules it has, which the side panel lists. */
 export function RulesHint({ count }: { count: number }) {
+  return <CountHint count={count} label={count === 1 ? "1 rule" : `${count} rules`} icon={<RuleRoundedIcon sx={{ fontSize: 14 }} />} />;
+}
+
+/* After a capability's name, how many known gaps it has, which the side panel lists. */
+export function GapsHint({ count }: { count: number }) {
+  return (
+    <CountHint
+      count={count}
+      label={count === 1 ? "1 known gap" : `${count} known gaps`}
+      icon={<IncompleteCircleRoundedIcon sx={{ fontSize: 13 }} />}
+    />
+  );
+}
+
+function CountHint({ count, label, icon }: { count: number; label: string; icon: ReactNode }) {
   if (!count) return null;
   return (
     <Box
       component="span"
-      aria-label={count === 1 ? "1 rule" : `${count} rules`}
+      aria-label={label}
       sx={{
         flex: "none",
         display: "inline-flex",
@@ -31,7 +48,7 @@ export function RulesHint({ count }: { count: number }) {
         color: "text.secondary",
       }}
     >
-      <RuleRoundedIcon sx={{ fontSize: 14 }} />
+      {icon}
       {count}
     </Box>
   );

@@ -1,8 +1,12 @@
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import BoltOutlinedIcon from "@mui/icons-material/BoltOutlined";
+import CheckRoundedIcon from "@mui/icons-material/CheckRounded";
+import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import FilterListRoundedIcon from "@mui/icons-material/FilterListRounded";
+import IncompleteCircleRoundedIcon from "@mui/icons-material/IncompleteCircleRounded";
 import MyLocationRoundedIcon from "@mui/icons-material/MyLocationRounded";
+import RadioButtonUncheckedRoundedIcon from "@mui/icons-material/RadioButtonUncheckedRounded";
 import RuleRoundedIcon from "@mui/icons-material/RuleRounded";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 import WarningAmberRoundedIcon from "@mui/icons-material/WarningAmberRounded";
@@ -17,7 +21,9 @@ import { DomainIcon } from "./FeatureMap";
 import { PersonaAvatar, PersonaIcon, ReadinessMeter, personaNameAndRole, type ReadinessBasis } from "./Personas";
 import { ProjectIcon } from "./ProjectFilter";
 import {
+  appliesAt,
   capabilityTarget,
+  checklistItem,
   contradictionsOf,
   docDomains,
   domainGroup,
@@ -25,16 +31,19 @@ import {
   featureConcepts,
   featureTarget,
   find,
+  nextLevel,
   projectName,
   partOf,
   personaReadinessIn,
   targetOf,
   type Capability,
+  type ChecklistItem,
   type Contribution,
   type Domain,
   type Doc,
   type DocketState,
   type Feature,
+  type Gap,
   type Persona,
   type Pick,
   type Target,
@@ -613,17 +622,24 @@ function CapabilityView({ state, capability, onOpen, onConcept, onShow, isFilter
         <section>
           <Heading count={gaps.length}>Known gaps</Heading>
           <ul>
-            {gaps.map((g) => (
-              <li key={g.id} className="explore-text">
-                <span className="explore-gap-kind">
-                  {g.kind === "accepted-tradeoff" ? "Accepted tradeoff" : "To close later"}
-                </span>
-                {g.text}
-              </li>
-            ))}
+            {gaps.map((g) => {
+              const named = g.item ? checklistItem(state.checklist, g.item) : undefined;
+              return (
+                <li key={g.id} className="explore-text">
+                  <span className="explore-gap-kind">{gapKind(g)}</span>
+                  {g.text}
+                  {named ? (
+                    <span className="explore-gap-item">
+                      Falls short of {named.area.name}: {withoutExamples(named.item.text)}
+                    </span>
+                  ) : null}
+                </li>
+              );
+            })}
           </ul>
         </section>
       ) : null}
+      <ChecklistSection key={capability.id} state={state} capability={capability} gaps={gaps} />
       {capability.code.length ? (
         <section>
           <Heading count={capability.code.length}>Code</Heading>
@@ -637,6 +653,139 @@ function CapabilityView({ state, capability, onOpen, onConcept, onShow, isFilter
         </section>
       ) : null}
     </article>
+  );
+}
+
+const gapKind = (g: Gap) => (g.kind === "accepted-tradeoff" ? "Accepted tradeoff" : "To close later");
+
+/* A checklist item's text without its examples in parentheses, to name it in a line. */
+const withoutExamples = (text: string) => text.replace(/\s*\([^)]*\)/g, "");
+
+/*
+ * What a capability's level generally includes, and how much of it is met.
+ * An item that applies counts as met unless a known gap names it, since
+ * declaring a level claims its items, except the gaps written down. By
+ * default only what isn't met shows, by area. The whole checklist can be
+ * shown too, each area opening to its items, and then the next level's new
+ * items as well, to see what promoting it would take.
+ */
+function ChecklistSection({ state, capability, gaps }: { state: DocketState; capability: Capability; gaps: Gap[] }) {
+  const level = capability.stability;
+  const next = nextLevel(level);
+  const gapsOf = (item: ChecklistItem) => gaps.filter((g) => g.item === item.id);
+  const areas = (state.checklist?.groups.flatMap((g) => g.areas) ?? []).map((area) => {
+    const items = area.items.filter((i) => appliesAt(i, level));
+    return {
+      area,
+      items,
+      notMet: items.filter((i) => gapsOf(i).length),
+      added: next ? area.items.filter((i) => appliesAt(i, next) && !appliesAt(i, level)) : [],
+    };
+  });
+  const [showAll, setShowAll] = useState(false);
+  const [showNext, setShowNext] = useState(false);
+  const [open, setOpen] = useState(() => new Set(areas.filter((a) => a.notMet.length).map((a) => a.area.id)));
+  if (!state.checklist) return null;
+  const toggle = (id: string) =>
+    setOpen((was) => {
+      const now = new Set(was);
+      if (!now.delete(id)) now.add(id);
+      return now;
+    });
+  const count = areas.reduce((n, a) => n + a.items.length, 0);
+  const notMet = areas.reduce((n, a) => n + a.notMet.length, 0);
+  const adds = areas.reduce((n, a) => n + a.added.length, 0);
+  const levelName = STABILITY[level].name;
+  const nextName = next ? STABILITY[next].name : "";
+  const row = (item: ChecklistItem) => {
+    const itemGaps = gapsOf(item);
+    const isNew = !appliesAt(item, level);
+    return (
+      <li key={item.id} className="explore-checklist-item" data-met={isNew ? undefined : itemGaps.length ? "no" : "yes"}>
+        {isNew ? (
+          <RadioButtonUncheckedRoundedIcon className="explore-checklist-icon" aria-label="Not yet expected" sx={{ fontSize: 15 }} />
+        ) : itemGaps.length ? (
+          <IncompleteCircleRoundedIcon className="explore-checklist-icon" aria-label="Not met" sx={{ fontSize: 15 }} />
+        ) : (
+          <CheckRoundedIcon className="explore-checklist-icon" aria-label="Met" sx={{ fontSize: 15 }} />
+        )}
+        <span className="explore-checklist-text">
+          {item.text}
+          {item.baseline || isNew ? (
+            <span className="explore-rule-meta">
+              {item.baseline ? <span className="explore-tag">Baseline</span> : null}
+              {isNew ? (
+                <Box component="span" className="explore-tag" sx={levelColor(next!)}>
+                  New at {nextName}
+                </Box>
+              ) : null}
+            </span>
+          ) : null}
+          {itemGaps.map((g) => (
+            <span key={g.id} className="explore-checklist-gap">
+              <span className="explore-gap-kind">{gapKind(g)}</span>
+              {g.text}
+            </span>
+          ))}
+        </span>
+      </li>
+    );
+  };
+  return (
+    <section>
+      <Heading>Stability checklist</Heading>
+      <p className="explore-checklist-note">
+        {count - notMet} of {count} items {levelName} includes are met. Anything not listed as a gap counts as met.
+      </p>
+      {showAll ? (
+        <ul className="explore-checklist">
+          {areas.map(({ area, items, notMet: missing, added }) => {
+            const shown = showNext ? [...items, ...added] : items;
+            if (!shown.length) return null;
+            const isOpen = open.has(area.id);
+            return (
+              <li key={area.id}>
+                <button type="button" className="explore-checklist-area" aria-expanded={isOpen} title={area.why} onClick={() => toggle(area.id)}>
+                  <ChevronRightRoundedIcon className="explore-checklist-chevron" sx={{ fontSize: 16 }} />
+                  <span className="explore-checklist-area-name">{area.name}</span>
+                  {missing.length ? <span className="explore-checklist-gaps">{missing.length} not met</span> : null}
+                  <span className="explore-count">
+                    {items.length}
+                    {showNext && added.length ? ` +${added.length}` : ""}
+                  </span>
+                </button>
+                {isOpen ? <ul className="explore-checklist-items">{shown.map(row)}</ul> : null}
+              </li>
+            );
+          })}
+        </ul>
+      ) : notMet ? (
+        areas
+          .filter((a) => a.notMet.length)
+          .map(({ area, notMet: missing }) => (
+            <div key={area.id} className="explore-checklist-unmet">
+              <span className="explore-checklist-area-label" title={area.why}>
+                {area.name}
+              </span>
+              <ul>{missing.map(row)}</ul>
+            </div>
+          ))
+      ) : (
+        <p className="concepts-empty">Everything {levelName} includes is met.</p>
+      )}
+      <div className="explore-checklist-toggles">
+        <label className="explore-checklist-toggle">
+          <input type="checkbox" checked={showAll} onChange={(e) => setShowAll(e.target.checked)} />
+          Show all {count} items
+        </label>
+        {showAll && next && adds ? (
+          <label className="explore-checklist-toggle">
+            <input type="checkbox" checked={showNext} onChange={(e) => setShowNext(e.target.checked)} />
+            Show what {nextName} adds ({adds})
+          </label>
+        ) : null}
+      </div>
+    </section>
   );
 }
 

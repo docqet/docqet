@@ -1764,6 +1764,148 @@ kbd {
   border-color: color-mix(in srgb, var(--bad) 40%, transparent);
 }
 
+/* Under a known gap, the checklist item it falls short of. */
+.explore-gap-item {
+  display: block;
+  margin-top: 4px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/*
+ * A capability's stability checklist: what isn't met, by area, or the whole
+ * list, each area opening to its items, met or not, with any gap under the
+ * item it names.
+ */
+.explore-checklist-note {
+  margin: 0 0 6px;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--muted);
+}
+
+.explore-checklist > li + li {
+  border-top: 1px dashed var(--border);
+}
+
+.explore-checklist-area {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  padding: 7px 0;
+  font: inherit;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text);
+  text-align: left;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+.explore-checklist-area:hover .explore-checklist-area-name {
+  color: var(--accent);
+}
+
+.explore-checklist-chevron {
+  color: var(--faint);
+  transition: transform 120ms ease;
+}
+
+.explore-checklist-area[aria-expanded="true"] .explore-checklist-chevron {
+  transform: rotate(90deg);
+}
+
+.explore-checklist-area-name {
+  flex: 1;
+}
+
+.explore-checklist-gaps {
+  font-size: 12px;
+  color: var(--warning);
+}
+
+.explore-checklist-items {
+  margin-bottom: 8px;
+  padding-left: 22px;
+}
+
+/* By default, only what isn't met: each area's name, then its items. */
+.explore-checklist-unmet {
+  margin-top: 10px;
+}
+
+.explore-checklist-area-label {
+  display: block;
+  margin-bottom: 2px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.explore-checklist-item {
+  display: flex;
+  gap: 8px;
+  padding: 5px 0;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--muted);
+}
+
+.explore-checklist-icon {
+  flex: none;
+  margin-top: 2px;
+  color: var(--faint);
+}
+
+.explore-checklist-item[data-met="yes"] .explore-checklist-icon {
+  color: var(--ok);
+}
+
+.explore-checklist-item[data-met="no"] {
+  color: var(--text);
+}
+
+.explore-checklist-item[data-met="no"] .explore-checklist-icon {
+  color: var(--warning);
+}
+
+.explore-checklist-text {
+  min-width: 0;
+}
+
+.explore-checklist-item .explore-rule-meta {
+  margin-top: 4px;
+}
+
+.explore-checklist-gap {
+  display: block;
+  margin-top: 6px;
+  padding: 6px 8px;
+  font-size: 12.5px;
+  color: var(--text);
+  background: color-mix(in srgb, var(--warning) 9%, transparent);
+  border-left: 2px solid var(--warning);
+  border-radius: 0 6px 6px 0;
+}
+
+.explore-checklist-toggles {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 10px;
+}
+
+.explore-checklist-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  color: var(--muted);
+  cursor: pointer;
+}
+
 /*
  * The filters the map has, as a row of its own across the top of the
  * canvas, under the header. Each opens what it filters to, and its × takes it

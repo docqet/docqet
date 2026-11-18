@@ -133,8 +133,19 @@ export type Gap = {
   project?: string;
   domain: string;
   kind: "to-close-later" | "accepted-tradeoff";
+  /* The stability checklist item it falls short of, as `<area>/<item>`, or null. */
+  item: string | null;
   text: string;
 };
+
+/*
+ * The stability checklist: what each level generally includes, by area. An
+ * item applies from its level up, through `until` where a higher level
+ * replaces it. Baseline items hold at every level and are never a gap.
+ */
+export type ChecklistItem = { id: string; level: Level; until: Level | null; baseline: boolean; text: string };
+export type ChecklistArea = { id: string; name: string; why: string; items: ChecklistItem[] };
+export type Checklist = { groups: { id: string; name: string; areas: ChecklistArea[] }[] };
 
 /* What the indexer found wrong. `domain` is that of the doc it's about, if it's about one. */
 export type Problem = { type: string; subject: string; capabilities: string[]; message: string; domain?: string };
@@ -150,6 +161,8 @@ export type DocketState = {
   personas: Persona[];
   gaps: Gap[];
   problems: Problem[];
+  /* The stability checklist, the same for every project: the first project's, or null if none has one. */
+  checklist: Checklist | null;
 };
 
 /* A place where software is defined, as its state.json's header and summary have it. */
@@ -185,6 +198,8 @@ export type StateFile = {
   personas?: Omit<Raw<Persona>, "domain">[];
   gaps: Gap[];
   problems: Problem[];
+  /* Missing from state written before the checklist. */
+  checklist?: Checklist;
 };
 
 /* A project's header and summary, from its state.json. */
@@ -238,6 +253,7 @@ export function combine(files: StateFile[]): DocketState {
     personas: [],
     gaps: [],
     problems: [],
+    checklist: files.find((f) => f.checklist)?.checklist ?? null,
   };
   /* Rule and concept links as declared, to resolve once every domain is in. */
   const pending: { from: Doc & { rules?: string[]; concepts: string[] }; domain: string; rules: string[]; concepts: string[] }[] = [];
@@ -634,3 +650,20 @@ export function filterBy(state: DocketState, picks: Pick[]): MapFilter | null {
   return { capabilities, cards };
 }
 
+
+const levelIndex = (level: Level) => LEVEL_ORDER.indexOf(level);
+
+/* Whether a checklist item applies at a level: from its own level up, through `until` where it has one. */
+export const appliesAt = (item: ChecklistItem, level: Level) =>
+  levelIndex(item.level) <= levelIndex(level) && (!item.until || levelIndex(item.until) >= levelIndex(level));
+
+/* The level after this one, or null after GA. */
+export const nextLevel = (level: Level): Level | null => LEVEL_ORDER[levelIndex(level) + 1] ?? null;
+
+/* A checklist item, with its area, by its full ID. */
+export function checklistItem(checklist: Checklist | null, id: string): { item: ChecklistItem; area: ChecklistArea } | undefined {
+  for (const area of checklist?.groups.flatMap((g) => g.areas) ?? []) {
+    const item = area.items.find((i) => i.id === id);
+    if (item) return { item, area };
+  }
+}

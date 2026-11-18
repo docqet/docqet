@@ -5,7 +5,7 @@ import { CapabilityCard } from "./design/catalog/CapabilityCard";
 import { FeatureCard } from "./design/catalog/FeatureCard";
 import { MaturityRing } from "./design/maturity/MaturityRing";
 import { RingGlyph } from "./design/maturity/RingGlyph";
-import { ContradictionHint, RulesHint } from "./CapabilityHints";
+import { ContradictionHint, GapsHint, RulesHint } from "./CapabilityHints";
 import { ConceptChips, ConceptIcon } from "./Concepts";
 import { PersonaCard } from "./Personas";
 import { ProjectIcon } from "./ProjectFilter";
@@ -39,8 +39,8 @@ const GAP = 28;
 
 /*
  * A capability's line on a card in a domain: its name, with how many rules
- * it has and any contradiction after it, and its level in that domain.
- * Clicking it opens the rest in the side panel.
+ * and known gaps it has and any contradiction after it, and its level in
+ * that domain. Clicking it opens the rest in the side panel.
  */
 function line(state: DocketState, c: Capability, domain: string) {
   const here = c.levels.find((l) => l.domain === domain)?.level ?? c.stability;
@@ -52,6 +52,7 @@ function line(state: DocketState, c: Capability, domain: string) {
       <>
         <ContradictionHint messages={contradictions} />
         <RulesHint count={c.rules.filter((id) => find(state.rules, id)).length} />
+        <GapsHint count={c.gaps.filter((id) => state.gaps.some((g) => g.id === id)).length} />
       </>
     ),
   };

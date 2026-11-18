@@ -1163,24 +1163,28 @@
       "id": "capability:city-tax#children-corrected-by-hand",
       "domain": "billing",
       "kind": "to-close-later",
+      "item": null,
       "text": "Guests' ages aren't recorded, so city tax is added for every guest on a stay, and clerks correct it by hand for children."
     },
     {
       "id": "capability:pay-by-link#hotels-currency-only",
       "domain": "billing",
       "kind": "accepted-tradeoff",
+      "item": null,
       "text": "Guests pay in the hotel's currency. Their card provider converts it, at its own rate."
     },
     {
       "id": "capability:direct-billing#whole-bill-moves",
       "domain": "finance",
       "kind": "accepted-tradeoff",
+      "item": null,
       "text": "A bill moves to a company's account whole. A guest who pays for their own extras pays for them before their bill moves."
     },
     {
       "id": "capability:invoices#no-payment-reminders",
       "domain": "finance",
       "kind": "to-close-later",
+      "item": null,
       "text": "Nothing reminds a company when an invoice is overdue. The bookkeeper checks the unpaid invoices each week and chases them by email."
     }
   ],
@@ -1216,5 +1220,963 @@
       "message": "No capability follows this rule.",
       "domain": "billing"
     }
-  ]
+  ],
+  "checklist": {
+    "groups": [
+      {
+        "id": "direction",
+        "name": "Building the right thing",
+        "areas": [
+          {
+            "id": "direction",
+            "name": "Direction and feedback",
+            "why": "We're building the right thing, and we know it.",
+            "items": [
+              {
+                "id": "direction/purpose-written-down",
+                "level": "prototype",
+                "until": null,
+                "baseline": false,
+                "text": "What it's for is written down: the question it answers, or the problem it solves."
+              },
+              {
+                "id": "direction/client-can-try",
+                "level": "prototype",
+                "until": null,
+                "baseline": false,
+                "text": "The client can reach it, try it, and react to it."
+              },
+              {
+                "id": "direction/feedback-recorded",
+                "level": "prototype",
+                "until": null,
+                "baseline": false,
+                "text": "The client's feedback is recorded, and shapes what comes next."
+              },
+              {
+                "id": "direction/end-to-end",
+                "level": "alpha",
+                "until": null,
+                "baseline": false,
+                "text": "Hooked up end to end. Sample data is fine if the system itself stores and serves it."
+              },
+              {
+                "id": "direction/opt-in-findable",
+                "level": "alpha",
+                "until": "alpha",
+                "baseline": false,
+                "text": "People who'd want to try it can find out it exists and how to opt in."
+              },
+              {
+                "id": "direction/real-use-feedback",
+                "level": "alpha",
+                "until": null,
+                "baseline": false,
+                "text": "Feedback comes from real use, not just demos."
+              },
+              {
+                "id": "direction/shape-settled",
+                "level": "beta",
+                "until": null,
+                "baseline": false,
+                "text": "The client agrees its shape has settled."
+              },
+              {
+                "id": "direction/success-agreed",
+                "level": "beta",
+                "until": null,
+                "baseline": false,
+                "text": "What success looks like is agreed with the client."
+              },
+              {
+                "id": "direction/success-shown",
+                "level": "ga",
+                "until": null,
+                "baseline": false,
+                "text": "Shown to meet that success in real use."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "correct",
+        "name": "Works correctly",
+        "areas": [
+          {
+            "id": "tests",
+            "name": "Tests",
+            "why": "What's been checked, and what keeps it from breaking again.",
+            "items": [
+              {
+                "id": "tests/main-path-by-hand",
+                "level": "prototype",
+                "until": null,
+                "baseline": false,
+                "text": "The main path works when someone tries it by hand."
+              },
+              {
+                "id": "tests/main-path-automated",
+                "level": "alpha",
+                "until": null,
+                "baseline": false,
+                "text": "The main path is checked automatically (such as unit, integration, or end-to-end tests)."
+              },
+              {
+                "id": "tests/run-on-every-change",
+                "level": "alpha",
+                "until": null,
+                "baseline": false,
+                "text": "Checks run on every change, and a failure stops it from shipping (such as CI that blocks merging)."
+              },
+              {
+                "id": "tests/edge-cases-checked",
+                "level": "beta",
+                "until": null,
+                "baseline": false,
+                "text": "Edge cases and error paths are checked."
+              },
+              {
+                "id": "tests/critical-workflows-end-to-end",
+                "level": "ga",
+                "until": null,
+                "baseline": false,
+                "text": "Critical workflows checked end to end."
+              },
+              {
+                "id": "tests/fixed-bugs-checked",
+                "level": "ga",
+                "until": null,
+                "baseline": false,
+                "text": "Every fixed bug has a check that would catch it coming back."
+              },
+              {
+                "id": "tests/trustworthy",
+                "level": "ga",
+                "until": null,
+                "baseline": false,
+                "text": "Checks can be trusted: none flaky or skipped without being tracked."
+              }
+            ]
+          },
+          {
+            "id": "edge-cases",
+            "name": "Edge cases and errors",
+            "why": "What happens with unusual input, and when something goes wrong.",
+            "items": [
+              {
+                "id": "edge-cases/fail-visibly",
+                "level": "alpha",
+                "until": null,
+                "baseline": false,
+                "text": "Errors fail visibly, never silently."
+              },
+              {
+                "id": "edge-cases/input-validated",
+                "level": "alpha",
+                "until": null,
+                "baseline": false,
+                "text": "Input validated where it enters."
+              },
+              {
+                "id": "edge-cases/unusual-inputs",
+                "level": "beta",
+                "until": null,
+                "baseline": false,
+                "text": "Empty, missing, duplicate, and large inputs handled."
+              },
+              {
+                "id": "edge-cases/helpful-errors",
+                "level": "beta",
+                "until": null,
+                "baseline": false,
+                "text": "Error messages say what went wrong and what to do next, without exposing internals."
+              },
+              {
+                "id": "edge-cases/concurrency-and-partial-failure",
+                "level": "ga",
+                "until": null,
+                "baseline": false,
+                "text": "Concurrent use and partial failures handled (two at once, a crash halfway through), and repeating an operation is safe."
+              },
+              {
+                "id": "edge-cases/all-known-handled",
+                "level": "ga",
+                "until": null,
+                "baseline": false,
+                "text": "Every known edge case handled or documented as out of scope."
+              }
+            ]
+          },
+          {
+            "id": "data",
+            "name": "Data and migrations",
+            "why": "Your data stays correct, and can be recovered if something goes wrong.",
+            "items": [
+              {
+                "id": "data/sample-data-marked",
+                "level": "prototype",
+                "until": null,
+                "baseline": false,
+                "text": "Sample data is clearly marked wherever it appears."
+              },
+              {
+                "id": "data/can-be-cleaned-up",
+                "level": "alpha",
+                "until": null,
+                "baseline": false,
+                "text": "Data it creates can be cleaned up."
+              },
+              {
+                "id": "data/kept-across-changes",
+                "level": "beta",
+                "until": null,
+                "baseline": false,
+                "text": "Data people put in is kept across changes."
+              },
+              {
+                "id": "data/migrations",
+                "level": "beta",
+                "until": null,
+                "baseline": false,
+                "text": "Changes to the shape of stored data apply the same way everywhere, without hand edits (such as migration scripts)."
+              },
+              {
+                "id": "data/validated-before-write",
+                "level": "beta",
+                "until": null,
+                "baseline": false,
+                "text": "Data validated before it's written."
+              },
+              {
+                "id": "data/changes-can-be-undone",
+                "level": "beta",
+                "until": null,
+                "baseline": false,
+                "text": "A data change that goes wrong can be undone (such as a reversible migration, or a backup taken first)."
+              },
+              {
+                "id": "data/changes-tried-at-scale",
+                "level": "ga",
+                "until": null,
+                "baseline": false,
+                "text": "Data changes tried on production-sized data before they ship."
+              },
+              {
+                "id": "data/recoverable",
+                "level": "ga",
+                "until": null,
+                "baseline": false,
+                "text": "Stored data can be recovered after a loss, and recovery has been tried (such as backups with a tested restore)."
+              }
+            ]
+          },
+          {
+            "id": "performance",
+            "name": "Performance and cost",
+            "why": "It's fast enough for the work, today and at peak, at a cost that makes sense.",
+            "items": [
+              {
+                "id": "performance/responsive-for-testers",
+                "level": "prototype",
+                "until": null,
+                "baseline": false,
+                "text": "Responsive enough for the people trying it."
+              },
+              {
+                "id": "performance/real-volumes",
+                "level": "alpha",
+                "until": null,
+                "baseline": false,
+                "text": "Usable with today's real amounts of data and use."
+              },
+              {
+                "id": "performance/realistic-volumes-bounded",
+                "level": "beta",
+                "until": null,
+                "baseline": false,
+                "text": "Tried at realistic volumes, with bounded work (queries, memory, input size)."
+              },
+              {
+                "id": "performance/obvious-problems-fixed",
+                "level": "beta",
+                "until": null,
+                "baseline": false,
+                "text": "Obvious problems fixed (such as a query or call per item, missing indexes, loading everything into memory, slow startup)."
+              },
+              {
+                "id": "performance/targets-met",
+                "level": "ga",
+                "until": null,
+                "baseline": false,
+                "text": "Meets performance targets agreed with the client, measured (such as response time, throughput, or startup time)."
+              },
+              {
+                "id": "performance/peak-load",
+                "level": "ga",
+                "until": null,
+                "baseline": false,
+                "text": "Handles peak load, or the largest expected input, with headroom."
+              },
+              {
+                "id": "performance/cost-known",
+                "level": "ga",
+                "until": null,
+                "baseline": false,
+                "text": "What it costs to run is known, and fits expected use."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "safe",
+        "name": "Safe",
+        "areas": [
+          {
+            "id": "security",
+            "name": "Security, privacy, and compliance",
+            "why": "Your systems and data are protected the same way at every level, and the work follows the rules that apply to it.",
+            "items": [
+              {
+                "id": "security/secrets-out-of-code",
+                "level": "prototype",
+                "until": null,
+                "baseline": true,
+                "text": "Secrets kept out of code, version control, sample data, and demos (such as in the secret store)."
+              },
+              {
+                "id": "security/secrets-out-of-logs",
+                "level": "prototype",
+                "until": null,
+                "baseline": true,
+                "text": "Secrets and personal data kept out of logs, error messages, and output."
+              },
+              {
+                "id": "security/no-copied-client-data",
+                "level": "prototype",
+                "until": null,
+                "baseline": true,
+                "text": "Real client data comes only through production systems, never copied into code, sample data, or fixtures."
+              },
+              {
+                "id": "security/access-control",
+                "level": "prototype",
+                "until": null,
+                "baseline": true,
+                "text": "Access control enforced on anything touching client systems or data."
+              },
+              {
+                "id": "security/tenant-isolation",
+                "level": "prototype",
+                "until": null,
+                "baseline": true,
+                "text": "People can only see and change data they're allowed to. One client or customer can never see or change another's."
+              },
+              {
+                "id": "security/personal-data-minimal",
+                "level": "prototype",
+                "until": null,
+                "baseline": true,
+                "text": "Personal data collected only where needed."
+              },
+              {
+                "id": "security/no-code-injection",
+                "level": "prototype",
+                "until": null,
+                "baseline": true,
+                "text": "Untrusted input can't run as code or commands (such as SQL injection or cross-site scripting)."
+              },
+              {
+                "id": "security/personal-data-export-delete",
+                "level": "beta",
+                "until": null,
+                "baseline": false,
+                "text": "Personal data can be exported and deleted on request."
+              },
+              {
+                "id": "security/misuse-protection",
+                "level": "beta",
+                "until": null,
+                "baseline": false,
+                "text": "Protected against misuse at the level it's exposed to (such as rate limits, abuse of sign-ups, or scraping)."
+              },
+              {
+                "id": "security/legal-duties-known",
+                "level": "beta",
+                "until": null,
+                "baseline": false,
+                "text": "The legal and regulatory duties that apply are known (such as privacy law, industry rules, where data may be stored, and contracts)."
+              },
+              {
+                "id": "security/security-review",
+                "level": "ga",
+                "until": null,
+                "baseline": false,
+                "text": "Reviewed for security wherever it handles credentials, payments, personal data, or permissions."
+              },
+              {
+                "id": "security/least-privilege-and-audit",
+                "level": "ga",
+                "until": null,
+                "baseline": false,
+                "text": "Each part has only the access it needs, and sensitive actions can be traced to who did them."
+              },
+              {
+                "id": "security/data-retention",
+                "level": "ga",
+                "until": null,
+                "baseline": false,
+                "text": "Stored data kept only as long as it's needed."
+              },
+              {
+                "id": "security/legal-duties-met",
+                "level": "ga",
+                "until": null,
+                "baseline": false,
+                "text": "The legal and regulatory duties that apply are met."
+              }
+            ]
+          },
+          {
+            "id": "dependencies",
+            "name": "Dependencies and integrations",
+            "why": "What it relies on, and what happens when those things change or fail.",
+            "items": [
+              {
+                "id": "dependencies/none-less-stable",
+                "level": "alpha",
+                "until": null,
+                "baseline": false,
+                "text": "Depends on nothing less stable than itself (for a third party, a release at a matching stage)."
+              },
+              {
+                "id": "dependencies/maintained-and-licensed",
+                "level": "alpha",
+                "until": null,
+                "baseline": false,
+                "text": "Dependencies maintained, with compatible licenses."
+              },
+              {
+                "id": "dependencies/config-out-of-code",
+                "level": "alpha",
+                "until": null,
+                "baseline": false,
+                "text": "Settings that differ between environments kept out of code (such as service URLs and keys)."
+              },
+              {
+                "id": "dependencies/pinned-and-scanned",
+                "level": "beta",
+                "until": null,
+                "baseline": false,
+                "text": "Builds use the same dependency versions every time, and known vulnerabilities in them are found."
+              },
+              {
+                "id": "dependencies/fail-clearly",
+                "level": "beta",
+                "until": null,
+                "baseline": false,
+                "text": "When an external service is slow or down, it fails clearly instead of hanging (such as timeouts, and retries where safe)."
+              },
+              {
+                "id": "dependencies/limits-fit",
+                "level": "ga",
+                "until": null,
+                "baseline": false,
+                "text": "The rate limits and quotas of what it depends on fit expected use."
+              },
+              {
+                "id": "dependencies/kept-current",
+                "level": "ga",
+                "until": null,
+                "baseline": false,
+                "text": "Dependencies kept current (such as automated or scheduled updates)."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "production",
+        "name": "Runs in production",
+        "areas": [
+          {
+            "id": "telemetry",
+            "name": "Logs, traces, and metrics",
+            "why": "When something goes wrong, we can see what happened and why.",
+            "items": [
+              {
+                "id": "telemetry/errors-logged",
+                "level": "alpha",
+                "until": null,
+                "baseline": false,
+                "text": "Errors logged with context."
+              },
+              {
+                "id": "telemetry/logs-readable",
+                "level": "alpha",
+                "until": null,
+                "baseline": false,
+                "text": "Whoever operates it can read the logs."
+              },
+              {
+                "id": "telemetry/correlated",
+                "level": "beta",
+                "until": null,
+                "baseline": false,
+                "text": "Everything from one request, job, or run can be found together (such as structured logs with a shared ID)."
+              },
+              {
+                "id": "telemetry/errors-surfaced",
+                "level": "beta",
+                "until": null,
+                "baseline": false,
+                "text": "Whoever operates it hears about errors without searching the logs (such as an error tracker)."
+              },
+              {
+                "id": "telemetry/key-operations-measured",
+                "level": "beta",
+                "until": null,
+                "baseline": false,
+                "text": "How often key operations run and fail, and how long they take, is measured."
+              },
+              {
+                "id": "telemetry/workflow-success-measured",
+                "level": "ga",
+                "until": null,
+                "baseline": false,
+                "text": "Whether the main workflows succeed is measured, not just whether the system is up."
+              },
+              {
+                "id": "telemetry/failures-traceable",
+                "level": "ga",
+                "until": null,
+                "baseline": false,
+                "text": "A failed critical workflow can be followed from start to finish (such as traces linked from logs)."
+              },
+              {
+                "id": "telemetry/log-retention",
+                "level": "ga",
+                "until": null,
+                "baseline": false,
+                "text": "Logs are kept no longer than privacy needs allow."
+              }
+            ]
+          },
+          {
+            "id": "monitoring",
+            "name": "Monitoring and alerting",
+            "why": "Whoever operates it finds out something is wrong before your users do.",
+            "items": [
+              {
+                "id": "monitoring/health-checks",
+                "level": "beta",
+                "until": null,
+                "baseline": false,
+                "text": "Health checked automatically (such as uptime checks for services, or success checks for scheduled jobs)."
+              },
+              {
+                "id": "monitoring/dashboard",
+                "level": "beta",
+                "until": null,
+                "baseline": false,
+                "text": "Key metrics visible at a glance (such as a dashboard)."
+              },
+              {
+                "id": "monitoring/targets-tracked",
+                "level": "ga",
+                "until": null,
+                "baseline": false,
+                "text": "Targets set and tracked for latency, error rate, and availability."
+              },
+              {
+                "id": "monitoring/alerts",
+                "level": "ga",
+                "until": null,
+                "baseline": false,
+                "text": "Whoever operates production is alerted to failures users would notice."
+              },
+              {
+                "id": "monitoring/alerts-actionable",
+                "level": "ga",
+                "until": null,
+                "baseline": false,
+                "text": "Every alert says what to do about it (such as a linked runbook)."
+              },
+              {
+                "id": "monitoring/alerts-tested",
+                "level": "ga",
+                "until": null,
+                "baseline": false,
+                "text": "Alerts are known to fire, and quiet enough that people act on them."
+              }
+            ]
+          },
+          {
+            "id": "release",
+            "name": "Release and rollback",
+            "why": "How it reaches your users, and how quickly it can be undone.",
+            "items": [
+              {
+                "id": "release/level-shown",
+                "level": "prototype",
+                "until": null,
+                "baseline": false,
+                "text": "Its stability level is clear wherever people see it (a stability mark, or no mark once it's GA)."
+              },
+              {
+                "id": "release/off-by-default",
+                "level": "prototype",
+                "until": "prototype",
+                "baseline": false,
+                "text": "Not available to users by default (such as outside production, or behind a flag that's off)."
+              },
+              {
+                "id": "release/removable",
+                "level": "prototype",
+                "until": "alpha",
+                "baseline": false,
+                "text": "Can be removed cleanly, and can't affect anything people rely on, including production data."
+              },
+              {
+                "id": "release/opt-in",
+                "level": "alpha",
+                "until": "alpha",
+                "baseline": false,
+                "text": "Opt-in only (such as only for invited users, or behind a feature flag)."
+              },
+              {
+                "id": "release/normal-pipeline",
+                "level": "beta",
+                "until": null,
+                "baseline": false,
+                "text": "Released the same way as the rest of the product (such as the normal deploy pipeline)."
+              },
+              {
+                "id": "release/rollback",
+                "level": "beta",
+                "until": null,
+                "baseline": false,
+                "text": "Can be rolled back to the previous version."
+              },
+              {
+                "id": "release/rollback-tried",
+                "level": "ga",
+                "until": null,
+                "baseline": false,
+                "text": "Rollback has been tried."
+              },
+              {
+                "id": "release/rebuildable",
+                "level": "ga",
+                "until": null,
+                "baseline": false,
+                "text": "It can be set up again from scratch without hand steps, such as after losing its environment."
+              },
+              {
+                "id": "release/releases-verifiable",
+                "level": "ga",
+                "until": null,
+                "baseline": false,
+                "text": "For software others install, users can verify a release came from us (such as signed builds)."
+              }
+            ]
+          },
+          {
+            "id": "support",
+            "name": "Ownership and support",
+            "why": "Someone is responsible for it, and you know what happens when it breaks.",
+            "items": [
+              {
+                "id": "support/owner",
+                "level": "alpha",
+                "until": null,
+                "baseline": false,
+                "text": "It has an owner who decides what happens to it."
+              },
+              {
+                "id": "support/bugs-tracked",
+                "level": "alpha",
+                "until": null,
+                "baseline": false,
+                "text": "Bugs recorded where the team tracks its work."
+              },
+              {
+                "id": "support/how-to-report",
+                "level": "alpha",
+                "until": null,
+                "baseline": false,
+                "text": "The client and users know how to report a problem."
+              },
+              {
+                "id": "support/bugs-triaged",
+                "level": "beta",
+                "until": null,
+                "baseline": false,
+                "text": "Bugs triaged and fixed as found."
+              },
+              {
+                "id": "support/known-bugs-shared",
+                "level": "beta",
+                "until": null,
+                "baseline": false,
+                "text": "Known bugs shared with the client."
+              },
+              {
+                "id": "support/bugs-before-new-work",
+                "level": "ga",
+                "until": null,
+                "baseline": false,
+                "text": "GA bugs fixed before new work."
+              },
+              {
+                "id": "support/help-and-response",
+                "level": "ga",
+                "until": null,
+                "baseline": false,
+                "text": "The client and users know where to get help, and what response to expect."
+              },
+              {
+                "id": "support/long-term-owner",
+                "level": "ga",
+                "until": null,
+                "baseline": false,
+                "text": "The owner is responsible for keeping it running long term, including who responds outside working hours, if it's critical enough to need that."
+              },
+              {
+                "id": "support/outage-status",
+                "level": "ga",
+                "until": null,
+                "baseline": false,
+                "text": "During a serious outage, users can find out what's happening (such as a status page or an announcement)."
+              },
+              {
+                "id": "support/incident-reviews",
+                "level": "ga",
+                "until": null,
+                "baseline": false,
+                "text": "Serious incidents are reviewed so they're less likely to happen again."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "lasting",
+        "name": "Usable and lasting",
+        "areas": [
+          {
+            "id": "experience",
+            "name": "User experience",
+            "why": "The people using it can get their work done, without surprises.",
+            "items": [
+              {
+                "id": "experience/main-idea-clear",
+                "level": "prototype",
+                "until": null,
+                "baseline": false,
+                "text": "Its main idea is clear to the people using it."
+              },
+              {
+                "id": "experience/main-workflow-completable",
+                "level": "alpha",
+                "until": null,
+                "baseline": false,
+                "text": "A real user can complete the main workflow."
+              },
+              {
+                "id": "experience/states-handled",
+                "level": "beta",
+                "until": null,
+                "baseline": false,
+                "text": "Waiting, empty, and error states handled on purpose (such as loading, no results, and clear error messages)."
+              },
+              {
+                "id": "experience/usable-by-everyone",
+                "level": "beta",
+                "until": null,
+                "baseline": false,
+                "text": "Usable by everyone it's meant for, the way they use it (such as keyboard access, labels, and contrast in a UI, or help text in a command-line tool)."
+              },
+              {
+                "id": "experience/platforms-listed",
+                "level": "ga",
+                "until": null,
+                "baseline": false,
+                "text": "Supported platforms, languages, and regions listed (such as browsers, devices, and time zones), and it works the same on each."
+              },
+              {
+                "id": "experience/accessibility-standard",
+                "level": "ga",
+                "until": null,
+                "baseline": false,
+                "text": "Meets the project's accessibility standard."
+              }
+            ]
+          },
+          {
+            "id": "docs",
+            "name": "Documentation",
+            "why": "You, your users, and the next engineer can use, run, and change it without asking the author.",
+            "items": [
+              {
+                "id": "docs/scope-written-down",
+                "level": "prototype",
+                "until": null,
+                "baseline": false,
+                "text": "What it does, and what it doesn't handle yet, is written down where the client can see it."
+              },
+              {
+                "id": "docs/how-to-run",
+                "level": "prototype",
+                "until": null,
+                "baseline": false,
+                "text": "Developers: how to run it."
+              },
+              {
+                "id": "docs/how-to-try",
+                "level": "alpha",
+                "until": "alpha",
+                "baseline": false,
+                "text": "Users: how to try it."
+              },
+              {
+                "id": "docs/configuration",
+                "level": "alpha",
+                "until": null,
+                "baseline": false,
+                "text": "Developers: its configuration."
+              },
+              {
+                "id": "docs/how-to-use",
+                "level": "beta",
+                "until": "beta",
+                "baseline": false,
+                "text": "Users: how to use and configure it."
+              },
+              {
+                "id": "docs/architecture",
+                "level": "beta",
+                "until": null,
+                "baseline": false,
+                "text": "Developers: how it's put together, and the key decisions behind it."
+              },
+              {
+                "id": "docs/release-notes",
+                "level": "beta",
+                "until": null,
+                "baseline": false,
+                "text": "Users told what changed in each release (such as release notes or a changelog)."
+              },
+              {
+                "id": "docs/complete-user-docs",
+                "level": "ga",
+                "until": null,
+                "baseline": false,
+                "text": "Users: complete, current documentation."
+              },
+              {
+                "id": "docs/reference",
+                "level": "ga",
+                "until": null,
+                "baseline": false,
+                "text": "Developers: reference docs for its public interface."
+              },
+              {
+                "id": "docs/operations",
+                "level": "ga",
+                "until": null,
+                "baseline": false,
+                "text": "Operations: how to deploy, roll back, and diagnose it, or for software others install, how to install, upgrade, and troubleshoot it."
+              }
+            ]
+          },
+          {
+            "id": "code",
+            "name": "Code and maintainability",
+            "why": "It can keep changing, by any engineer, without getting harder to change.",
+            "items": [
+              {
+                "id": "code/conventions",
+                "level": "alpha",
+                "until": null,
+                "baseline": false,
+                "text": "Follows the project's conventions, and passes its automated checks (such as lint and type checks)."
+              },
+              {
+                "id": "code/reviewed",
+                "level": "alpha",
+                "until": null,
+                "baseline": false,
+                "text": "Reviewed by another engineer, where the team has one."
+              },
+              {
+                "id": "code/shortcuts-tracked",
+                "level": "beta",
+                "until": null,
+                "baseline": false,
+                "text": "Earlier shortcuts removed or tracked."
+              },
+              {
+                "id": "code/changeable-by-others",
+                "level": "ga",
+                "until": null,
+                "baseline": false,
+                "text": "Another engineer can change it without the author."
+              },
+              {
+                "id": "code/no-untracked-todos",
+                "level": "ga",
+                "until": null,
+                "baseline": false,
+                "text": "No untracked TODOs or dead code."
+              }
+            ]
+          },
+          {
+            "id": "compatibility",
+            "name": "Breaking changes",
+            "why": "What you build on it keeps working, or you hear first.",
+            "items": [
+              {
+                "id": "compatibility/public-interface-clear",
+                "level": "beta",
+                "until": null,
+                "baseline": false,
+                "text": "What's part of its public interface, and what's internal, is clear."
+              },
+              {
+                "id": "compatibility/change-channel",
+                "level": "beta",
+                "until": null,
+                "baseline": false,
+                "text": "People building on it have somewhere to hear about changes (such as release notes or a changelog)."
+              },
+              {
+                "id": "compatibility/breaking-changes-minimal",
+                "level": "beta",
+                "until": "beta",
+                "baseline": false,
+                "text": "Breaking changes kept to a minimum, and announced ahead of time where we can, with how to move to the new behavior."
+              },
+              {
+                "id": "compatibility/stable-interfaces-documented",
+                "level": "ga",
+                "until": null,
+                "baseline": false,
+                "text": "Public interfaces documented as stable."
+              },
+              {
+                "id": "compatibility/deprecation-window",
+                "level": "ga",
+                "until": null,
+                "baseline": false,
+                "text": "Breaking changes announced ahead of time, with a deprecation window long enough to move (such as a new version, with the previous one kept working for a set time)."
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
 }

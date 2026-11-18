@@ -378,6 +378,10 @@ capability, and is one of two kinds:
 - **To close later**: we intend to fix it.
 - **Accepted tradeoff**: we've decided to live with it.
 
+A gap can name the stability checklist item it falls short of, such as the
+room calendar not being usable from the keyboard. Most gaps are limits on
+what the capability does, like the waitlist, and name none.
+
 ## Stability and maturity
 
 ### Stability level
@@ -399,6 +403,14 @@ demote it.
   gaps.
 - **A level sets expectations Docket can check.** From Alpha, a capability's
   core rules must be passing. From Beta, its edge-case rules must be too.
+
+### Stability checklist
+
+What each stability level generally includes, such as automated tests from
+Alpha, or a tested rollback at GA. It's the same for every project, and it's
+guidance, not a gate: each item that applies is usually met, not applicable,
+or a known gap. Docket counts an item as met unless a known gap names it. Its
+security and privacy baseline holds at every level and is never a known gap.
 
 ### Maturity
 
