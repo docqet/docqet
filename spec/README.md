@@ -243,14 +243,14 @@ such as the waitlist, and match no item, so they leave it out:
 gaps:
   - id: calendar-needs-a-mouse
     kind: to-close-later
-    item: experience/usable-by-everyone
+    item: usability/beta
     text: >-
       The room calendar can't be used from the keyboard, so clerks need a
       mouse to pick dates.
 ```
 
-A gap can't name a baseline item: the security and privacy baseline is never a
-known gap.
+A gap can't name a baseline item, since the security and privacy baseline is
+never a known gap, or an item that expects nothing.
 
 ## Stability levels
 
@@ -272,26 +272,64 @@ on it.
 
 ### Stability checklist
 
-[`stability-checklist.yaml`](stability-checklist.yaml) says what each level
-generally includes, in 117 items across areas such as tests, security, and
-release and rollback. It's part of the spec, so it's the same for every project
-and every tool that reads Docket: a project doesn't copy it, change it or
-configure it. It's guidance, not a gate. Work fits a level when it generally
-meets that level's items, and each item that applies is usually met, not
-applicable, or a known gap.
+[`stability/checklist.yml`](stability/checklist.yml) says which qualities a
+capability is expected to have at each level, for the people and agents
+building it. It's part of the spec, so it's the same for every project and
+every tool that reads Docket: a project doesn't copy it, change it or configure
+it. It's guidance, not a gate. Work fits a level when it generally meets what
+that level expects, and each item that applies is usually met, not applicable,
+or a known gap.
+
+It has ten qualities, each a question someone asks before depending on the
+work:
+
+| Quality         | The question it answers                                                     |
+| --------------- | --------------------------------------------------------------------------- |
+| Utility         | Is it worth building, and is this the right way to build it?                |
+| Usability       | Can its users, people or programs, learn and use it on their own?           |
+| Functionality   | Does it do what it should, and is that shown as it changes?                 |
+| Reliability     | Does it keep working, and recover when something goes wrong?                |
+| Efficiency      | Is it fast enough, at the load it gets, at a cost that makes sense?         |
+| Security        | Is it protected, and does it follow the rules that apply to it?             |
+| Compatibility   | Does it work with what's around it, without breaking those depending on it? |
+| Observability   | When something goes wrong, does someone find out and see why?               |
+| Maintainability | Is it easy to understand and change, and to see what a change affects?      |
+| Supportability  | Is someone responsible, and do those depending on it know where to turn?    |
+
+They draw on ISO/IEC 25010, Kubernetes' feature graduation and production
+readiness review, Google's SRE practice, AWS Well-Architected and FURPS+.
+Practices and artifacts, such as tests, docs, logs and CI, aren't qualities:
+they're how a quality is met, so they appear in examples. Each quality has an
+item for every level:
+
+- **`expect`** is what that level needs of the quality, as an outcome someone
+  can call met or not, worded to fit any kind of software, from a web app to
+  a CLI, an HTTP API, a background job or a library. An item without one
+  needs nothing new at that level. Efficiency, for example, expects nothing
+  before Beta.
+- **`examples`** are ways to get there: practices, tools, artifacts and
+  standards. They're ideas to choose from, not requirements, and may or may
+  not fit a project. A plain example fits any kind of software.
+  One with `kinds` fits only those, from the file's `kinds` list: web app,
+  mobile app, desktop app, HTTP API, CLI, background job and library. A
+  project can be several kinds, so it uses the examples for each of them.
+- **`not-yet`** is work that belongs to a later level, such as load tests
+  before Beta, so it's left until then. Doing more than a level expects isn't
+  better, and `not-yet` names the work most often done too early.
+
+How items combine:
 
 - **An item that applies is met unless a gap names it.** Declaring a level
-  claims what that level includes, except the gaps written down, so only
-  what isn't met is recorded. An item that doesn't apply counts as met too.
-- **An item's ID** is its area's ID and its own, as `<area>/<item>`:
-  `tests/edge-cases-checked`. IDs are never renamed, since gaps refer to them.
-  Rewording an item is fine.
-- **An item belongs to the lowest level that includes it,** and every higher
-  level includes it too, unless `until` names the last level it applies to.
-  The Alpha-only `release/opt-in` is replaced at Beta by
-  `release/normal-pipeline`.
-- **`baseline` items** are the security and privacy baseline. They start at
-  Prototype, hold at every level, and are never a known gap.
+  claims what that level expects, except the gaps written down, so only what
+  isn't met is recorded. An item that doesn't apply counts as met too.
+- **An item's ID** is its quality and level, as `<quality>/<level>`:
+  `functionality/beta`.
+- **A level includes everything the levels below it expect,** unless `until`
+  names the last level an item applies to. `compatibility/prototype`, which
+  keeps it to those who chose to try it, applies through Alpha, and Beta's
+  normal release replaces it.
+- **The `baseline` item,** `security/prototype`, is the security and privacy
+  baseline. It holds at every level, and is never a known gap.
 
 ## Features and maturity
 
@@ -653,10 +691,13 @@ and showing several projects together means reading each one's state.json.
   the checklist `item` it names, or `null`.
 - **`problems`**: everything the indexer found wrong, each about a doc with
   that doc's `domain`.
-- **`checklist`**: the stability checklist the project was indexed against,
-  so the UI can show it beside each capability. It's the YAML's groups, areas
-  and items, with each item's full `<area>/<item>` ID, `until` as `null` where
-  it has none, and `baseline` as `true` or `false`.
+- **`checklist`**: the stability checklist the project was indexed against, so
+  the UI can show it beside each capability. It's the YAML's `kinds`, and its
+  `qualities`, each with its items as a list in level order. Each item has its
+  full `<quality>/<level>` ID, its `level`, `expect` and `until` as `null`
+  where it has none, `baseline` as `true` or `false`, `examples` as a list of
+  each one's `text` and `kinds`, with `kinds` empty where it fits any kind of
+  software, and `notYet` as a list.
 
 ### Problems
 
@@ -670,7 +711,7 @@ and showing several projects together means reading each one's state.json.
 | `in-two-features`      | More than one feature lists the same capability.               |
 | `contradiction`        | Contributions that should agree don't, as Domains describes.   |
 | `ambiguous-link`       | A link could mean the rule or concept of two or more domains.  |
-| `unknown-item`         | A gap's `item` isn't in the stability checklist.               |
+| `unknown-item`         | A gap's `item` isn't a checklist item that expects something.  |
 | `baseline-gap`         | A gap's `item` is a baseline item, which is never a known gap. |
 
 `in-two-features` is a contradiction too, when the listings
@@ -686,5 +727,5 @@ are in different projects. Combining raises `contradiction` and
   checklist counts as met everywhere at once. A record of when someone last
   went through the list, and against which version of it, would show both.
   Items not applicable, with why, items Docket can work out itself, such as
-  `tests/main-path-automated` from its rules' evidence, and items a whole
+  `functionality/alpha` from its rules' evidence, and items a whole
   project meets, such as CI, would also make met mean more.

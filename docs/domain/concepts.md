@@ -393,11 +393,15 @@ demote it.
 
 ### Stability checklist
 
-What each stability level generally includes, such as automated tests from
-Alpha, or a tested rollback at GA. It's the same for every project, and it's
-guidance, not a gate: each item that applies is usually met, not applicable,
-or a known gap. Docket counts an item as met unless a known gap names it. Its
-security and privacy baseline holds at every level and is never a known gap.
+The qualities a capability is expected to have at each stability level, such
+as functionality, reliability and usability: automated tests of the main path
+from Alpha, say, or a tested rollback at GA. Each level of each quality has
+what it expects, examples of what that might look like for different kinds of
+software, and what to leave until later. It's the same for every project,
+whatever kind of software it is, and it's guidance, not a gate: each item that
+applies is usually met, not applicable, or a known gap. Docket counts an item
+as met unless a known gap names it. Its security and privacy baseline holds at
+every level and is never a known gap.
 
 ### Maturity
 
