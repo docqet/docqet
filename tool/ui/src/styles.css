@@ -41,7 +41,6 @@
   --ok: #15803d;
   --bad: #b91c1c;
 
-
   color-scheme: light;
 }
 
@@ -70,7 +69,6 @@
     --warning: #fbbf24;
     --ok: #4ade80;
     --bad: #f87171;
-
 
     color-scheme: dark;
   }
@@ -1554,17 +1552,37 @@ kbd {
   text-decoration: underline;
 }
 
-.explore-mark {
-  margin-top: 10px;
-}
-
-/* A capability's level, and each domain's where they differ. */
-.explore-level-line {
+/* Its name, with its level, maturity or readiness at the right. */
+.explore-name-row {
   display: flex;
   flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 6px 12px;
+  margin-top: 6px;
+}
+
+.explore-name-row[data-picture] {
   align-items: center;
-  gap: 4px 10px;
-  font-size: 13px;
+}
+
+.concept .explore-name-row h2,
+.explore-name-row .explore-title {
+  margin-top: 0;
+}
+
+.explore-status {
+  flex: none;
+  display: flex;
+  align-items: center;
+  min-height: 26px;
+  margin-left: auto;
+}
+
+/* Where a capability's domains are at different levels, each of theirs. */
+.explore-domain-levels {
+  margin-top: 6px;
+  font-size: 12.5px;
 }
 
 /* A capability's level: its mark and name, in the level's color. */
@@ -1578,10 +1596,9 @@ kbd {
 }
 
 .explore-level {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 8px;
-  margin-top: 10px;
   font-size: 13.5px;
 }
 
@@ -1702,11 +1719,6 @@ kbd {
   margin-left: auto;
 }
 
-.explore-text {
-  padding: 4px 0;
-  font-size: 13.5px;
-}
-
 .explore-gap-kind {
   display: block;
   font-size: 11px;
@@ -1716,45 +1728,6 @@ kbd {
   color: var(--faint);
 }
 
-.explore-rule {
-  padding: 10px 0;
-}
-
-/* A rule's line, which opens its evidence under it. */
-.explore-rule-head {
-  display: flex;
-  gap: 10px;
-  width: 100%;
-  padding: 0;
-  font: inherit;
-  color: inherit;
-  text-align: left;
-  background: none;
-  border: 0;
-  cursor: pointer;
-}
-
-div.explore-rule-head {
-  cursor: default;
-}
-
-button.explore-rule-head:hover .concept-row-name {
-  color: var(--accent);
-}
-
-.explore-rule-head[aria-expanded="true"] .explore-checklist-chevron {
-  transform: rotate(90deg);
-}
-
-/* In a rule's line, how many places verify and implement it. */
-.explore-evidence-count {
-  display: inline-flex;
-  align-items: center;
-  gap: 3px;
-  font-size: 11.5px;
-  color: var(--muted);
-}
-
 /* Where evidence would be, when there's none of a kind. */
 .explore-evidence-warning {
   display: inline-flex;
@@ -1762,79 +1735,6 @@ button.explore-rule-head:hover .concept-row-name {
   gap: 3px;
   font-size: 11.5px;
   color: var(--warning);
-}
-
-.explore-evidence-none {
-  margin: 4px 0 0;
-}
-
-/* Under an open rule: what verifies it, then what implements it. */
-.explore-evidence {
-  margin: 10px 0 0 25px;
-  padding: 2px 0 2px 12px;
-  border-left: 2px solid var(--border);
-}
-
-.explore-evidence-group + .explore-evidence-group {
-  margin-top: 10px;
-}
-
-.explore-evidence-item {
-  display: flex;
-  gap: 7px;
-  padding: 4px 0;
-}
-
-.explore-evidence-icon {
-  display: inline-flex;
-  margin-top: 3px;
-  color: var(--faint);
-}
-
-.explore-evidence-body {
-  min-width: 0;
-}
-
-/* The line the annotation is on, as written, cut short when it's long. */
-.explore-evidence-text {
-  display: block;
-  overflow: hidden;
-  font-size: 12px;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  color: var(--text);
-}
-
-.explore-evidence-where {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 2px 10px;
-  margin-top: 1px;
-  font-size: 11.5px;
-  overflow-wrap: anywhere;
-  color: var(--faint);
-}
-
-.explore-rule + .explore-rule {
-  border-top: 1px dashed var(--border);
-}
-
-.explore-rule .concept-row-name {
-  font-weight: 650;
-}
-
-.explore-rule .concept-row-summary {
-  margin-top: 2px;
-  line-height: 1.45;
-}
-
-.explore-rule-meta {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 6px;
-  margin-top: 8px;
-  font-size: 12px;
 }
 
 .explore-tag {
@@ -1847,146 +1747,39 @@ button.explore-rule-head:hover .concept-row-name {
   border-radius: 999px;
 }
 
-/* Under a known gap, the checklist item it falls short of. */
-.explore-gap-item {
-  display: block;
+/* Under an item, folded away: examples of what it might look like, and what to leave until later. */
+.explore-checklist-guidance {
   margin-top: 4px;
-  font-size: 12px;
-  color: var(--muted);
-}
-
-/*
- * A capability's stability checklist: what isn't met, by area, or the whole
- * list, each area opening to its items, met or not, with any gap under the
- * item it names.
- */
-.explore-checklist-note {
-  margin: 0 0 6px;
   font-size: 12.5px;
-  line-height: 1.45;
   color: var(--muted);
 }
 
-.explore-checklist > li + li {
-  border-top: 1px dashed var(--border);
-}
-
-.explore-checklist-area {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  width: 100%;
-  padding: 7px 0;
-  font: inherit;
-  font-size: 13.5px;
-  font-weight: 600;
-  color: var(--text);
-  text-align: left;
-  background: none;
-  border: 0;
+.explore-checklist-guidance > summary {
+  width: fit-content;
+  color: var(--faint);
   cursor: pointer;
 }
 
-.explore-checklist-area:hover .explore-checklist-area-name {
+.explore-checklist-guidance > summary:hover {
   color: var(--accent);
 }
 
-.explore-checklist-chevron {
-  color: var(--faint);
-  transition: transform 120ms ease;
+.explore-checklist-guidance ul {
+  margin: 4px 0 6px;
+  padding-left: 18px;
+  list-style: disc;
 }
 
-.explore-checklist-area[aria-expanded="true"] .explore-checklist-chevron {
-  transform: rotate(90deg);
-}
-
-.explore-checklist-area-name {
-  flex: 1;
-}
-
-.explore-checklist-gaps {
-  font-size: 12px;
-  color: var(--warning);
-}
-
-.explore-checklist-items {
-  margin-bottom: 8px;
-  padding-left: 22px;
-}
-
-/* By default, only what isn't met: each area's name, then its items. */
-.explore-checklist-unmet {
-  margin-top: 10px;
-}
-
-.explore-checklist-area-label {
-  display: block;
-  margin-bottom: 2px;
-  font-size: 13px;
+.explore-checklist-guidance-kinds {
   font-weight: 600;
-  color: var(--text);
-}
-
-.explore-checklist-item {
-  display: flex;
-  gap: 8px;
-  padding: 5px 0;
-  font-size: 13px;
-  line-height: 1.45;
   color: var(--muted);
 }
 
-.explore-checklist-icon {
-  flex: none;
-  margin-top: 2px;
-  color: var(--faint);
-}
-
-.explore-checklist-item[data-met="yes"] .explore-checklist-icon {
-  color: var(--ok);
-}
-
-.explore-checklist-item[data-met="no"] {
-  color: var(--text);
-}
-
-.explore-checklist-item[data-met="no"] .explore-checklist-icon {
-  color: var(--warning);
-}
-
-.explore-checklist-text {
-  min-width: 0;
-}
-
-.explore-checklist-item .explore-rule-meta {
-  margin-top: 4px;
-}
-
-.explore-checklist-gap {
+.explore-checklist-guidance-label {
   display: block;
-  margin-top: 6px;
-  padding: 6px 8px;
-  font-size: 12.5px;
-  color: var(--text);
-  background: color-mix(in srgb, var(--warning) 9%, transparent);
-  border-left: 2px solid var(--warning);
-  border-radius: 0 6px 6px 0;
-}
-
-.explore-checklist-toggles {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  margin-top: 10px;
-}
-
-.explore-checklist-toggle {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 12.5px;
+  margin-top: 4px;
+  font-weight: 600;
   color: var(--muted);
-  cursor: pointer;
 }
 
 /*
@@ -2263,4 +2056,905 @@ button.explore-rule-head:hover .concept-row-name {
 .readiness-value {
   color: var(--muted);
   font-variant-numeric: tabular-nums;
+}
+
+/* ——— What's left, in a side panel or on a detail page ——— */
+
+.explore-left-group + .explore-left-group {
+  margin-top: 12px;
+}
+
+.explore-left-group > .explore-gap-kind {
+  margin-bottom: 4px;
+}
+
+.explore-left-group .markdown {
+  font-size: 13.5px;
+}
+
+.explore-left-list {
+  padding-left: 20px;
+  list-style: disc;
+  font-size: 13.5px;
+}
+
+.explore-left-list li {
+  padding: 2px 0;
+}
+
+.explore-left-list li::marker {
+  color: var(--faint);
+}
+
+/* Under a gap or rule: its kind, and what it falls short of. */
+.explore-left-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 10px;
+  margin: 3px 0 2px;
+  font-size: 12px;
+  color: var(--faint);
+}
+
+.explore-left-checklist {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 8px;
+  margin-top: 12px;
+  font-size: 12.5px;
+  color: var(--muted);
+}
+
+.explore-left-checklist a {
+  color: var(--accent);
+}
+
+/* On a detail page, each capability with something open, then its items. */
+.explore-left-capability + .explore-left-capability {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px dashed var(--border);
+}
+
+.link-row {
+  margin-bottom: 8px;
+  padding: 0;
+  font: inherit;
+  text-align: left;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+.link-row .concept-row-name {
+  font-size: 14px;
+  color: var(--text);
+}
+
+.link-row:hover .concept-row-name {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+/* Rules by name alone, in the side panel. */
+.explore-rule-names li {
+  display: flex;
+  gap: 10px;
+  padding: 4px 0;
+  font-size: 13.5px;
+}
+
+a.filter-toggle {
+  text-decoration: none;
+}
+
+/* ——— Detail pages ——— */
+
+.page {
+  height: 100%;
+  overflow-y: auto;
+}
+
+.page-top {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 32px;
+  background: var(--popover);
+  border-bottom: 1px solid var(--border);
+}
+
+.page-brand {
+  display: inline-flex;
+  color: inherit;
+  text-decoration: none;
+}
+
+.page-projects {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.page-wrap {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 32px;
+}
+
+.page-missing {
+  padding-top: 64px;
+}
+
+.page-missing h1 {
+  margin-bottom: 8px;
+  font-size: 24px;
+}
+
+/* The band across the top: who or what it is, and its status in figures. */
+.page-hero {
+  padding: 32px 0 28px;
+  background: var(--popover);
+  border-bottom: 1px solid var(--border);
+}
+
+.page-hero-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.page-hero-text {
+  min-width: 0;
+}
+
+.page-hero h1 {
+  margin-top: 6px;
+  font-size: 34px;
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+}
+
+.page-role {
+  margin-top: 2px;
+  font-size: 15px;
+  color: var(--muted);
+}
+
+.page-hero .explore-trail {
+  margin-top: 10px;
+  font-size: 13px;
+}
+
+.page-lede {
+  max-width: 760px;
+  margin-top: 14px;
+  font-size: 18px;
+  line-height: 1.5;
+}
+
+.page-hero .explore-problem {
+  margin-top: 16px;
+}
+
+.page-tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.page-tile {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+  padding: 14px 16px;
+  background: color-mix(in srgb, var(--text) 2.5%, transparent);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+.page-tile[data-tone="warn"] {
+  background: color-mix(in srgb, var(--warning) 7%, transparent);
+  border-color: color-mix(in srgb, var(--warning) 35%, transparent);
+}
+
+.page-tile[data-tone="warn"] .page-tile-value {
+  color: var(--warning);
+}
+
+.page-tile[data-tone="ok"] .page-tile-value {
+  color: var(--ok);
+}
+
+.page-tile-label,
+.page-label,
+.page-cell-label {
+  font-size: 11px;
+  font-weight: 650;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
+.page-tile-value {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 30px;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.page-tile-note {
+  font-size: 12.5px;
+  color: var(--muted);
+}
+
+.page-tile-percent {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--muted);
+}
+
+.page-level,
+.page-maturity {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+}
+
+/* How many capabilities are at each level. */
+.level-bar-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+}
+
+.level-bar {
+  display: flex;
+  gap: 2px;
+  height: 6px;
+  overflow: hidden;
+  border-radius: 3px;
+}
+
+.level-bar > span {
+  background: var(--level);
+}
+
+.level-bar-key {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.page-avatars {
+  display: inline-flex;
+}
+
+.page-avatars > span {
+  display: inline-flex;
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px var(--popover);
+}
+
+.page-avatars > span + span {
+  margin-left: -6px;
+}
+
+/* The proof in a wide column, beside one that stays in view. */
+.page-columns {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 360px;
+  grid-template-areas: "main rail";
+  align-items: start;
+  gap: 28px;
+  padding-top: 28px;
+  padding-bottom: 80px;
+}
+
+.page-main {
+  grid-area: main;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  min-width: 0;
+}
+
+.page-rail {
+  grid-area: rail;
+  position: sticky;
+  top: 76px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-height: calc(100vh - 92px);
+  overflow-y: auto;
+}
+
+.page-block,
+.page-card {
+  background: var(--popover);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+.page-block {
+  padding: 22px 24px 24px;
+}
+
+.page-block-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.page-block-head h2 {
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.page-block-aside {
+  margin-left: auto;
+  font-size: 13px;
+}
+
+.page-block-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font: inherit;
+  color: var(--text);
+}
+
+.page-card {
+  padding: 16px 18px;
+}
+
+.page-card h3 {
+  margin-bottom: 10px;
+  font-size: 11px;
+  font-weight: 650;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
+.page-code li {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 3px 0;
+  font-size: 13px;
+}
+
+.page-code code {
+  overflow-wrap: anywhere;
+}
+
+/* What its body says, its sections side by side. */
+.page-facets {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 12px;
+}
+
+.page-facet {
+  padding: 14px 16px;
+  background: color-mix(in srgb, var(--text) 2%, transparent);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+.page-facet .page-label {
+  display: block;
+  margin-bottom: 8px;
+}
+
+.page-facet .markdown {
+  font-size: 14px;
+}
+
+/* Several sources, a column each, to compare. */
+.page-sources {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.page-source {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
+
+.page-source-from {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  padding-bottom: 8px;
+  font-size: 13px;
+  font-weight: 650;
+  border-bottom: 1px solid var(--border);
+}
+
+.page-source-summary {
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+/* Tables of capabilities and rules. */
+.page-table {
+  display: grid;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+.page-table-row {
+  display: grid;
+  align-items: start;
+  gap: 16px;
+  width: 100%;
+  padding: 12px 16px;
+  font: inherit;
+  font-size: 13.5px;
+  color: inherit;
+  text-align: left;
+  background: none;
+  border: 0;
+  border-top: 1px solid var(--border);
+}
+
+.page-table-head {
+  padding-top: 9px;
+  padding-bottom: 9px;
+  font-size: 11px;
+  font-weight: 650;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--faint);
+  background: color-mix(in srgb, var(--text) 3%, transparent);
+  border-top: 0;
+}
+
+button.page-table-row {
+  cursor: pointer;
+}
+
+button.page-table-row:hover {
+  background: var(--accent-soft);
+}
+
+button.page-table-row:hover .page-table-name strong {
+  color: var(--accent);
+}
+
+.cap-table .page-table-row {
+  grid-template-columns: minmax(0, 2.4fr) 112px 100px 110px minmax(56px, auto);
+  align-items: center;
+}
+
+.rule-table .page-table-row {
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr) minmax(0, 1fr);
+}
+
+.page-table-name {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.page-table-name strong {
+  font-weight: 650;
+}
+
+.page-table-name > span {
+  line-height: 1.45;
+  color: var(--muted);
+}
+
+.page-table [role="cell"][data-tone="warn"] {
+  font-weight: 600;
+  color: var(--warning);
+}
+
+.page-rule-name {
+  display: flex;
+  gap: 8px;
+}
+
+.page-rule-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  font-size: 12px;
+  color: var(--faint);
+}
+
+.page-rule-meta .link {
+  font-size: 12px;
+}
+
+.page-evidence-cell .page-cell-label {
+  display: none;
+}
+
+.page-places {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.page-places li {
+  display: flex;
+  gap: 8px;
+  min-width: 0;
+}
+
+.page-place-icon {
+  display: inline-flex;
+  margin-top: 2px;
+  color: var(--faint);
+}
+
+.page-place {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.page-place code {
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+
+.page-place-where {
+  font-size: 11.5px;
+  overflow-wrap: anywhere;
+  color: var(--faint);
+}
+
+/* A domain's features, as cards. */
+.page-feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 12px;
+}
+
+.page-feature {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 14px 16px;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  background: color-mix(in srgb, var(--text) 2%, transparent);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.page-feature:hover {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+}
+
+.page-feature-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14.5px;
+}
+
+.page-feature-head strong {
+  flex: 1;
+}
+
+.page-feature-summary {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.page-feature ul {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 13px;
+}
+
+.page-feature li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.page-feature > .faint {
+  font-size: 12px;
+}
+
+/* The stability checklist: a row per category, a column per level. */
+.matrix-summary {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 14px;
+  font-size: 13.5px;
+  color: var(--muted);
+}
+
+.matrix-summary .filter-toggle {
+  flex: none;
+}
+
+.matrix {
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+.matrix-row {
+  display: grid;
+  grid-template-columns: minmax(180px, 1.6fr) repeat(4, minmax(0, 1fr));
+  width: 100%;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  background: none;
+  border: 0;
+}
+
+.matrix-head {
+  background: color-mix(in srgb, var(--text) 3%, transparent);
+}
+
+.matrix-head > * {
+  padding: 10px 12px;
+  font-size: 12.5px;
+  font-weight: 700;
+}
+
+.matrix-head > :first-child {
+  font-size: 11px;
+  font-weight: 650;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
+.matrix-level {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.matrix-tag {
+  padding: 0 6px;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 16px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  opacity: 0.85;
+}
+
+.matrix-group {
+  border-top: 1px solid var(--border);
+}
+
+button.matrix-row {
+  cursor: pointer;
+}
+
+button.matrix-row:hover {
+  background: var(--accent-soft);
+}
+
+.matrix [data-now] {
+  background: color-mix(in srgb, var(--accent) 7%, transparent);
+}
+
+.matrix [data-next] {
+  background: color-mix(in srgb, var(--text) 3%, transparent);
+}
+
+.matrix-category {
+  display: flex;
+  gap: 6px;
+  min-width: 0;
+  padding: 10px 12px;
+}
+
+.matrix-category strong {
+  display: block;
+  font-size: 13.5px;
+}
+
+.matrix-why {
+  display: block;
+  font-size: 12px;
+  line-height: 1.35;
+  color: var(--faint);
+}
+
+.matrix-chevron {
+  flex: none;
+  margin-top: 1px;
+  color: var(--faint);
+  transition: transform 120ms;
+}
+
+.matrix-row[aria-expanded="true"] .matrix-chevron {
+  transform: rotate(90deg);
+}
+
+.matrix-cell {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 12px;
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+.matrix-cell[data-status="met"] {
+  color: var(--ok);
+}
+
+.matrix-cell[data-status="gap"] {
+  color: var(--warning);
+}
+
+.matrix-cell[data-status="later"] {
+  font-weight: 500;
+  color: var(--faint);
+}
+
+.matrix-cell[data-status="none"],
+.matrix-cell[data-status="replaced"] {
+  font-weight: 400;
+  color: var(--faint);
+}
+
+.matrix-detail {
+  border-top: 1px dashed var(--border);
+}
+
+.matrix-expect {
+  min-width: 0;
+  padding: 10px 12px 14px;
+  font-size: 12.5px;
+  line-height: 1.5;
+}
+
+.matrix-expect > .page-cell-label {
+  display: none;
+}
+
+.matrix-expect p + p {
+  margin-top: 6px;
+}
+
+.matrix-gap {
+  color: var(--warning);
+}
+
+/* Narrower: what's left above the rest, then tables and the grid stacked. */
+@media (max-width: 1040px) {
+  .page-columns {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "rail" "main";
+  }
+
+  .page-rail {
+    position: static;
+    max-height: none;
+    overflow: visible;
+  }
+}
+
+@media (max-width: 760px) {
+  .page-top {
+    padding: 8px 16px;
+  }
+
+  .page-wrap {
+    padding: 0 16px;
+  }
+
+  .page-hero {
+    padding: 20px 0;
+  }
+
+  .page-hero h1 {
+    font-size: 26px;
+  }
+
+  .page-lede {
+    font-size: 16px;
+  }
+
+  .page-tiles {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .page-block {
+    padding: 16px;
+  }
+
+  .page-table-head {
+    display: none;
+  }
+
+  .cap-table .page-table-row {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 6px 12px;
+  }
+
+  .cap-table .page-table-name {
+    grid-column: 1 / -1;
+  }
+
+  .rule-table .page-table-row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
+  }
+
+  .page-evidence-cell .page-cell-label {
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  .matrix-row {
+    grid-template-columns: minmax(96px, 1.4fr) repeat(4, minmax(0, 1fr));
+  }
+
+  .matrix-why,
+  .matrix-cell-label,
+  .matrix-head .matrix-tag {
+    display: none;
+  }
+
+  .matrix-head > *,
+  .matrix-cell,
+  .matrix-category {
+    padding: 8px 6px;
+  }
+
+  .matrix-detail {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .matrix-detail > :first-child {
+    display: none;
+  }
+
+  .matrix-expect > .page-cell-label {
+    display: block;
+    margin-bottom: 2px;
+  }
 }

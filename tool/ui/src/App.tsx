@@ -14,6 +14,7 @@ import { MATURITY_BANDS, maturityBand } from "./design/maturity/maturity";
 import { levelColor } from "./design/stability/stability";
 import { DomainIcon, mapGroups, mapItems, tidyMap } from "./FeatureMap";
 import Logo from "./Logo";
+import DetailPage from "./Page";
 import { PersonaIcon } from "./Personas";
 import ProjectFilter from "./ProjectFilter";
 import Search, { type Selection } from "./Search";
@@ -28,6 +29,8 @@ import {
   loadProjects,
   loadState,
   maturityOf,
+  pageHref,
+  pageInUrl,
   personaCard,
   pickList,
   projectOf,
@@ -47,18 +50,23 @@ const projectsInUrl = () =>
  * read, mapped together on a canvas, under a header with their maturity.
  * `projects.json` lists the projects' state, or else there's the one
  * `state.json`. The page can be filtered to some of them, and the address
- * says which. Where the cards sit is this browser's own.
+ * says which. Where the cards sit is this browser's own. An address naming
+ * one doc, such as `?capability=deposits`, shows its detail page instead.
  */
 export default function App() {
   const [files, setFiles] = useState<StateFile[] | null>(null);
   const [wanted, setWanted] = useState(projectsInUrl);
+  const [page, setPage] = useState(pageInUrl);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     loadProjects()
       .then((paths) => Promise.all(paths.length ? paths.map((p) => loadState(p)) : [loadState()]))
       .then(setFiles, (e: unknown) => setError(String(e)));
-    const onPop = () => setWanted(projectsInUrl());
+    const onPop = () => {
+      setWanted(projectsInUrl());
+      setPage(pageInUrl());
+    };
     window.addEventListener("popstate", onPop);
     return () => window.removeEventListener("popstate", onPop);
   }, []);
@@ -73,8 +81,14 @@ export default function App() {
   const state = useMemo(() => files && combine(files.filter((f) => chosen.includes(f.project.id))), [files, chosen]);
 
   useEffect(() => {
-    if (state) document.title = state.projects.length === 1 ? `${state.projects[0].name} · Docket` : "Docket";
-  }, [state]);
+    if (state && !page) document.title = state.projects.length === 1 ? `${state.projects[0].name} · Docket` : "Docket";
+  }, [state, page]);
+
+  /* From one detail page to another, in the same tab, so back returns. */
+  const go = (pick: Pick) => {
+    window.history.pushState(null, "", pageHref(pick));
+    setPage(pick);
+  };
 
   const choose = (ids: string[]) => {
     const everything = ids.length === all.length;
@@ -96,6 +110,7 @@ export default function App() {
     );
   }
   if (!state || !files) return <div className="message faint">Loading…</div>;
+  if (page) return <DetailPage state={state} page={page} onGo={go} />;
 
   /* Keyed by the projects there are, so a different set starts its canvas afresh. */
   const key = all.map((p) => p.id).join(",");

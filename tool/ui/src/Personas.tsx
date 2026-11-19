@@ -142,7 +142,7 @@ function ReadinessDetails({ value, basis }: { value: number; basis: ReadinessBas
       </Box>
       <Box sx={{ mt: 1.5 }}>{READINESS_SUMMARIES[name]}</Box>
       {n ? (
-        <Box component="ul" sx={{ ...section, listStyle: "none", m: 0, p: 0, pt: 1.5 }}>
+        <Box component="ul" sx={{ listStyle: "none", m: 0, p: 0, ...section }}>
           {[...basis.capabilities]
             .sort((a, b) => STABILITY_LEVEL_IDS.indexOf(b.stability) - STABILITY_LEVEL_IDS.indexOf(a.stability))
             .map((c) => (

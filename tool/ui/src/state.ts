@@ -135,13 +135,25 @@ export type Gap = {
 };
 
 /*
- * The stability checklist: what each level generally includes, by area. An
- * item applies from its level up, through `until` where a higher level
- * replaces it. Baseline items hold at every level and are never a gap.
+ * The stability checklist: what a capability needs at each level, by
+ * category, with an item for every level. An item with `expect` applies from
+ * its level up, through `until` where a higher level replaces it. One without
+ * expects nothing new at its level, and only guides. Baseline items hold at
+ * every level and are never a gap.
  */
-export type ChecklistItem = { id: string; level: Level; until: Level | null; baseline: boolean; text: string };
-export type ChecklistArea = { id: string; name: string; why: string; items: ChecklistItem[] };
-export type Checklist = { groups: { id: string; name: string; areas: ChecklistArea[] }[] };
+export type ChecklistItem = {
+  id: string;
+  level: Level;
+  until: Level | null;
+  baseline: boolean;
+  expect: string | null;
+  /* Each with the kinds of software it fits, or none where it fits any. */
+  examples: { text: string; kinds: string[] }[];
+  notYet: string[];
+};
+export type ChecklistCategory = { id: string; name: string; why: string; items: ChecklistItem[] };
+export type ChecklistKind = { id: string; name: string };
+export type Checklist = { kinds: ChecklistKind[]; categories: ChecklistCategory[] };
 
 /* What the indexer found wrong. `domain` is that of the doc it's about, if it's about one. */
 export type Problem = { type: string; subject: string; capabilities: string[]; message: string; domain?: string };
@@ -648,15 +660,119 @@ const levelIndex = (level: Level) => LEVEL_ORDER.indexOf(level);
 
 /* Whether a checklist item applies at a level: from its own level up, through `until` where it has one. */
 export const appliesAt = (item: ChecklistItem, level: Level) =>
-  levelIndex(item.level) <= levelIndex(level) && (!item.until || levelIndex(item.until) >= levelIndex(level));
+  item.expect !== null && levelIndex(item.level) <= levelIndex(level) && (!item.until || levelIndex(item.until) >= levelIndex(level));
 
 /* The level after this one, or null after GA. */
 export const nextLevel = (level: Level): Level | null => LEVEL_ORDER[levelIndex(level) + 1] ?? null;
 
-/* A checklist item, with its area, by its full ID. */
-export function checklistItem(checklist: Checklist | null, id: string): { item: ChecklistItem; area: ChecklistArea } | undefined {
-  for (const area of checklist?.groups.flatMap((g) => g.areas) ?? []) {
-    const item = area.items.find((i) => i.id === id);
-    if (item) return { item, area };
+/* A checklist item, with its category, by its full ID. */
+export function checklistItem(checklist: Checklist | null, id: string): { item: ChecklistItem; category: ChecklistCategory } | undefined {
+  for (const category of checklist?.categories ?? []) {
+    const item = category.items.find((i) => i.id === id);
+    if (item) return { item, category };
   }
+}
+
+/* ——— What's left ——— */
+
+/* Where a body's `##` section called `name` is: from its heading to the next heading at its level or above. */
+function sectionAt(body: string, name: string): { start: number; end: number; heading: number } | null {
+  const match = new RegExp(`^(#{1,2})\\s+${name}\\s*$`, "im").exec(body);
+  if (!match) return null;
+  const start = match.index;
+  const heading = start + match[0].length;
+  const next = new RegExp(`^#{1,${match[1].length}}\\s`, "m").exec(body.slice(heading));
+  return { start, heading, end: next ? heading + next.index : body.length };
+}
+
+/* A body without a section, such as a capability's open decisions, which show under what's left instead. */
+export function withoutSection(body: string, name: string): string {
+  const at = sectionAt(body, name);
+  return at ? body.slice(0, at.start) + body.slice(at.end) : body;
+}
+
+/* Just one section of a body, its heading included, or nothing. */
+export function onlySection(body: string, name: string): string {
+  const at = sectionAt(body, name);
+  return at ? body.slice(at.start, at.end) : "";
+}
+
+/* The open decisions a capability's doc lists, from every contribution, each as Markdown: a list item or a paragraph. */
+export function openDecisions(doc: Doc): string[] {
+  return doc.from.flatMap((f) => {
+    const at = sectionAt(f.body, "open decisions");
+    if (!at) return [];
+    const text = f.body.slice(at.heading, at.end).trim();
+    const items: string[] = [];
+    for (const block of text.split(/\n\s*\n/)) {
+      const lines = block.split("\n").filter((l) => l.trim());
+      if (!lines.length) continue;
+      if (!/^\s*([-*]|\d+\.)\s+/.test(lines[0])) {
+        items.push(lines.map((l) => l.trim()).join(" "));
+        continue;
+      }
+      for (const l of lines) {
+        if (/^\s*([-*]|\d+\.)\s+/.test(l)) items.push(l.replace(/^\s*([-*]|\d+\.)\s+/, ""));
+        else items[items.length - 1] += ` ${l.trim()}`;
+      }
+    }
+    return items;
+  });
+}
+
+/* A rule a capability follows that nothing verifies or implements yet, and which of those it lacks. */
+export type RuleWanting = { rule: Rule; missing: ("verifies" | "implements")[] };
+
+/*
+ * What's still open about a capability: decisions nobody has made, known gaps,
+ * and the rules it follows with no evidence of a kind, which the spec calls a
+ * prompt, not a problem.
+ */
+export type Left = { decisions: string[]; gaps: Gap[]; rules: RuleWanting[] };
+
+export function leftIn(state: DocketState, capability: Capability): Left {
+  return {
+    decisions: openDecisions(capability),
+    gaps: capability.gaps.flatMap((id) => state.gaps.find((g) => g.id === id) ?? []),
+    rules: capability.rules.flatMap((id) => {
+      const rule = find(state.rules, id);
+      if (!rule) return [];
+      const missing = (["verifies", "implements"] as const).filter((verb) => !rule.evidence[verb].length);
+      return missing.length ? [{ rule, missing }] : [];
+    }),
+  };
+}
+
+export const leftCount = (left: Left) => left.decisions.length + left.gaps.length + left.rules.length;
+
+/* ——— Detail pages ——— */
+
+const PAGE_KINDS: Pick["kind"][] = ["domain", "feature", "capability", "concept", "persona"];
+
+/* The projects showing, as the address has them, carried over to the pages it links to. */
+const projectParam = () => new URLSearchParams(window.location.search).get("project");
+
+/* A doc's detail page, as `?capability=deposits`, showing the same projects as this page. */
+export function pageHref(pick: Pick, section?: string): string {
+  const params = new URLSearchParams();
+  const project = projectParam();
+  if (project) params.set("project", project);
+  params.set(pick.kind, pick.id);
+  return `?${params}${section ? `#${section}` : ""}`;
+}
+
+/* The map, showing the same projects as this page. */
+export function mapHref(): string {
+  const project = projectParam();
+  return project ? `?${new URLSearchParams({ project })}` : window.location.pathname;
+}
+
+/* The doc whose detail page the address names, or null for the map. */
+export function pageInUrl(): Pick | null {
+  const params = new URLSearchParams(window.location.search);
+  for (const kind of PAGE_KINDS) {
+    const id = params.get(kind);
+    if (id) return { kind, id };
+  }
+  return null;
 }

@@ -39,6 +39,11 @@ With more than one project, the UI shows them all on one map:
   several, it's worked out from all their parts of features, the same way as
   one project's, and its popover lists each project's.
 
+The side panel summarizes a doc: what it is, what's left, and what it's
+connected to. Its **Details** link opens everything about it, such as each
+rule's evidence, the stability checklist and the code, in a new tab, at an
+address like `?capability=deposits` that keeps the projects showing.
+
 `npm run build` writes a static site to `dist/`. Put a `state.json` beside its
 `index.html` and serve the folder. Nothing else runs on the server. To show
 several projects, put a `projects.json` there instead, listing where each

@@ -5,6 +5,7 @@ import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import FilterListRoundedIcon from "@mui/icons-material/FilterListRounded";
 import MyLocationRoundedIcon from "@mui/icons-material/MyLocationRounded";
 import MenuBookOutlinedIcon from "@mui/icons-material/MenuBookOutlined";
+import OpenInNewRoundedIcon from "@mui/icons-material/OpenInNewRounded";
 import RuleRoundedIcon from "@mui/icons-material/RuleRounded";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 import WidgetsOutlinedIcon from "@mui/icons-material/WidgetsOutlined";
@@ -19,8 +20,10 @@ import {
   domainName,
   featureTarget,
   targetOf,
+  pageHref,
   type Concept,
   type DocketState,
+  type Pick,
   type Target,
 } from "./state";
 
@@ -40,6 +43,7 @@ export function PanelHeader({
   back,
   onBack,
   onClose,
+  extra,
 }: {
   icon: ReactNode;
   title: string;
@@ -47,6 +51,8 @@ export function PanelHeader({
   back: string | null;
   onBack: () => void;
   onClose: () => void;
+  /* Beside close: a way to the detail page of what's showing. */
+  extra?: ReactNode;
 }) {
   return (
     <header className="concepts-header">
@@ -61,10 +67,24 @@ export function PanelHeader({
           <span className="concepts-title">{title}</span>
         </>
       )}
+      {extra}
       <button type="button" className="icon-button" onClick={onClose} aria-label="Close">
         <CloseRoundedIcon sx={{ fontSize: 18 }} />
       </button>
     </header>
+  );
+}
+
+/*
+ * A way from a side panel to a doc's detail page, in a tab of its own, so the
+ * map stays where it was in this one.
+ */
+export function PageLink({ pick, children = "Details" }: { pick: Pick; children?: ReactNode }) {
+  return (
+    <a className="filter-toggle page-link" href={pageHref(pick)} target="_blank" rel="noopener" title="Open everything about it in a new tab">
+      <OpenInNewRoundedIcon sx={{ fontSize: 14 }} />
+      {children}
+    </a>
   );
 }
 
@@ -142,7 +162,7 @@ function resolve(from: string, href: string): string {
   return parts.join("/");
 }
 
-type Link = { concept: string } | { target: Target } | { href: string } | null;
+type Link = { concept: string } | { target: Target; pick: Pick } | { href: string } | null;
 
 /*
  * Where a link in a doc's body goes: another concept, a capability or rule
@@ -156,18 +176,21 @@ function follow(state: DocketState, from: { file: string; project: string }, hre
   const concept = state.concepts.find(at);
   if (concept) return { concept: concept.id };
   const capability = state.capabilities.find(at);
-  if (capability) return { target: capabilityTarget(state, capability.id) };
+  if (capability) return { target: capabilityTarget(state, capability.id), pick: { kind: "capability", id: capability.id } };
   const feature = state.features.find(at);
-  if (feature) return { target: featureTarget(state, feature.id) };
+  if (feature) return { target: featureTarget(state, feature.id), pick: { kind: "feature", id: feature.id } };
   const rule = state.rules.find(at);
-  if (rule?.capabilities.length) return { target: capabilityTarget(state, rule.capabilities[0]) };
+  if (rule?.capabilities.length)
+    return { target: capabilityTarget(state, rule.capabilities[0]), pick: { kind: "capability", id: rule.capabilities[0] } };
   return null;
 }
 
 /*
  * A doc's body, as Markdown: headings, paragraphs, lists, links, bold,
  * italics, and code. Just what Docket's docs use; anything else shows as
- * text. Links resolve from `concept`, the doc the body is from.
+ * text. Links resolve from `concept`, the doc the body is from. With
+ * `onPick`, as on a detail page, a link to a capability or feature opens it
+ * rather than showing it on the map.
  */
 export function Markdown({
   state,
@@ -175,12 +198,14 @@ export function Markdown({
   text,
   onConcept,
   onShow,
+  onPick,
 }: {
   state: DocketState;
   concept: { file: string; project: string };
   text: string;
   onConcept: (id: string) => void;
   onShow: (target: Target) => void;
+  onPick?: (pick: Pick) => void;
 }) {
   const inline = (s: string): ReactNode[] =>
     s.split(/(\[[^\]]+\]\([^)\s]+\)|\*\*[^*]+\*\*|`[^`]+`|\*[^*\s][^*]*\*|_[^_\s][^_]*_)/g).map((part, i) => {
@@ -199,7 +224,7 @@ export function Markdown({
             key={i}
             type="button"
             className="link"
-            onClick={() => ("concept" in to ? onConcept(to.concept) : onShow(to.target))}
+            onClick={() => ("concept" in to ? onConcept(to.concept) : onPick ? onPick(to.pick) : onShow(to.target))}
           >
             {link[1]}
           </button>
@@ -250,7 +275,7 @@ export function Markdown({
  * Concepts its body links to, then those that share a rule with it, since a
  * rule that refers to two concepts says how they bear on each other.
  */
-function related(state: DocketState, concept: Concept): Concept[] {
+export function related(state: DocketState, concept: Concept): Concept[] {
   const ids = new Set<string>();
   for (const [, href] of concept.body.matchAll(/\]\(([^)\s]+)\)/g)) {
     const to = follow(state, concept, href);
@@ -308,6 +333,7 @@ export function ConceptsPanel({
         back={concept ? (backLabel ?? "All concepts") : null}
         onBack={() => onSelect(null)}
         onClose={onClose}
+        extra={concept ? <PageLink pick={{ kind: "concept", id: concept.id }} /> : null}
       />
       <div className="concepts-body" ref={body}>
         {concept ? (
@@ -378,6 +404,7 @@ function ConceptList({ state, onSelect }: { state: DocketState; onSelect: (id: s
   );
 }
 
+/* One concept, with ways to find it on the map. */
 function ConceptView({
   state,
   concept,
