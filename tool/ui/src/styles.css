@@ -1747,39 +1747,24 @@ kbd {
   border-radius: 999px;
 }
 
-/* Under an item, folded away: examples of what it might look like, and what to leave until later. */
-.explore-checklist-guidance {
-  margin-top: 4px;
-  font-size: 12.5px;
+/* In a checklist item's popover: examples of how it might be met. */
+.checklist-guidance {
+  margin: 6px 0 0;
+  padding-left: 16px;
   color: var(--muted);
-}
-
-.explore-checklist-guidance > summary {
-  width: fit-content;
-  color: var(--faint);
-  cursor: pointer;
-}
-
-.explore-checklist-guidance > summary:hover {
-  color: var(--accent);
-}
-
-.explore-checklist-guidance ul {
-  margin: 4px 0 6px;
-  padding-left: 18px;
   list-style: disc;
 }
 
-.explore-checklist-guidance-kinds {
-  font-weight: 600;
-  color: var(--muted);
+.checklist-guidance li + li {
+  margin-top: 5px;
 }
 
-.explore-checklist-guidance-label {
+/* The kinds of software an example is for, as a small label above it. */
+.checklist-guidance-kinds {
   display: block;
-  margin-top: 4px;
+  font-size: 11px;
   font-weight: 600;
-  color: var(--muted);
+  color: var(--faint);
 }
 
 /*
@@ -2692,61 +2677,101 @@ button.page-table-row:hover .page-table-name strong {
   font-size: 12px;
 }
 
-/* The stability checklist: a row per category, a column per level. */
-.matrix-summary {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 16px;
-  margin-bottom: 14px;
+/*
+ * The stability checklist: everything the capability's level expects, a row
+ * each, by quality, with any gap under its item.
+ */
+.qc-summary {
+  margin-bottom: 10px;
   font-size: 13.5px;
   color: var(--muted);
 }
 
-.matrix-summary .filter-toggle {
-  flex: none;
+.qc-summary strong {
+  color: var(--ok);
 }
 
-.matrix {
-  overflow: hidden;
-  border: 1px solid var(--border);
-  border-radius: 10px;
+.qc-summary strong[data-met="no"] {
+  color: var(--warning);
 }
 
-.matrix-row {
+.qc-row {
   display: grid;
-  grid-template-columns: minmax(180px, 1.6fr) repeat(4, minmax(0, 1fr));
-  width: 100%;
-  padding: 0;
-  font: inherit;
-  color: inherit;
-  text-align: left;
-  background: none;
-  border: 0;
+  grid-template-columns: 18px 128px minmax(0, 1fr);
+  gap: 12px;
+  align-items: baseline;
+  padding: 9px 4px;
+  font-size: 13px;
+  line-height: 1.5;
+  border-top: 1px solid var(--border);
 }
 
-.matrix-head {
-  background: color-mix(in srgb, var(--text) 3%, transparent);
+.qc-row:last-child {
+  border-bottom: 1px solid var(--border);
 }
 
-.matrix-head > * {
-  padding: 10px 12px;
-  font-size: 12.5px;
-  font-weight: 700;
+.qc-icon {
+  display: inline-flex;
+  align-self: start;
+  margin-top: 2px;
+  color: var(--ok);
 }
 
-.matrix-head > :first-child {
-  font-size: 11px;
+.qc-row[data-met="no"] .qc-icon {
+  color: var(--warning);
+}
+
+.qc-quality {
+  width: fit-content;
   font-weight: 650;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  color: var(--text);
+  cursor: help;
+  text-decoration: underline dotted var(--border-strong);
+  text-underline-offset: 3px;
+}
+
+/* A quality's expectations, stacked, with bullets when there's more than one. */
+.qc-items[data-many] {
+  padding-left: 16px;
+  list-style: disc;
+}
+
+.qc-items[data-many] > li::marker {
   color: var(--faint);
 }
 
-.matrix-level {
+.qc-items > li + li {
+  margin-top: 8px;
+}
+
+.qc-item {
   display: flex;
-  align-items: center;
-  gap: 6px;
+  align-items: baseline;
+  gap: 16px;
+}
+
+.qc-text {
+  flex: 1;
+  min-width: 0;
+  color: var(--text);
+}
+
+.qc-tag {
+  margin-left: 6px;
+  vertical-align: 1px;
+  color: var(--muted);
+}
+
+.qc-examples {
+  font-size: 12px;
+  color: var(--faint);
+  white-space: nowrap;
+  cursor: help;
+}
+
+.qc-examples:hover,
+.qc-examples:focus-visible {
+  color: var(--accent);
 }
 
 .matrix-tag {
@@ -2761,106 +2786,14 @@ button.page-table-row:hover .page-table-name strong {
   opacity: 0.85;
 }
 
-.matrix-group {
-  border-top: 1px solid var(--border);
-}
-
-button.matrix-row {
-  cursor: pointer;
-}
-
-button.matrix-row:hover {
-  background: var(--accent-soft);
-}
-
-.matrix [data-now] {
-  background: color-mix(in srgb, var(--accent) 7%, transparent);
-}
-
-.matrix [data-next] {
-  background: color-mix(in srgb, var(--text) 3%, transparent);
-}
-
-.matrix-category {
-  display: flex;
-  gap: 6px;
-  min-width: 0;
-  padding: 10px 12px;
-}
-
-.matrix-category strong {
-  display: block;
-  font-size: 13.5px;
-}
-
-.matrix-why {
-  display: block;
-  font-size: 12px;
-  line-height: 1.35;
-  color: var(--faint);
-}
-
-.matrix-chevron {
-  flex: none;
-  margin-top: 1px;
-  color: var(--faint);
-  transition: transform 120ms;
-}
-
-.matrix-row[aria-expanded="true"] .matrix-chevron {
-  transform: rotate(90deg);
-}
-
-.matrix-cell {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 6px;
-  padding: 10px 12px;
-  font-size: 12.5px;
-  font-weight: 600;
-}
-
-.matrix-cell[data-status="met"] {
-  color: var(--ok);
-}
-
-.matrix-cell[data-status="gap"] {
-  color: var(--warning);
-}
-
-.matrix-cell[data-status="later"] {
-  font-weight: 500;
-  color: var(--faint);
-}
-
-.matrix-cell[data-status="none"],
-.matrix-cell[data-status="replaced"] {
-  font-weight: 400;
-  color: var(--faint);
-}
-
-.matrix-detail {
-  border-top: 1px dashed var(--border);
-}
-
-.matrix-expect {
-  min-width: 0;
-  padding: 10px 12px 14px;
-  font-size: 12.5px;
-  line-height: 1.5;
-}
-
-.matrix-expect > .page-cell-label {
-  display: none;
-}
-
-.matrix-expect p + p {
-  margin-top: 6px;
-}
-
 .matrix-gap {
-  color: var(--warning);
+  margin-top: 6px;
+  padding: 6px 8px;
+  font-size: 12.5px;
+  color: var(--text);
+  background: color-mix(in srgb, var(--warning) 9%, transparent);
+  border-left: 2px solid var(--warning);
+  border-radius: 0 6px 6px 0;
 }
 
 /* Narrower: what's left above the rest, then tables and the grid stacked. */
@@ -2929,32 +2862,12 @@ button.matrix-row:hover {
     margin-bottom: 4px;
   }
 
-  .matrix-row {
-    grid-template-columns: minmax(96px, 1.4fr) repeat(4, minmax(0, 1fr));
+  .qc-row {
+    grid-template-columns: 18px minmax(0, 1fr);
+    gap: 4px 10px;
   }
 
-  .matrix-why,
-  .matrix-cell-label,
-  .matrix-head .matrix-tag {
-    display: none;
-  }
-
-  .matrix-head > *,
-  .matrix-cell,
-  .matrix-category {
-    padding: 8px 6px;
-  }
-
-  .matrix-detail {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .matrix-detail > :first-child {
-    display: none;
-  }
-
-  .matrix-expect > .page-cell-label {
-    display: block;
-    margin-bottom: 2px;
+  .qc-items {
+    grid-column: 2;
   }
 }

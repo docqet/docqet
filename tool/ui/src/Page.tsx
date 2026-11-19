@@ -1,11 +1,9 @@
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useRef, type ReactNode } from "react";
 import CheckRoundedIcon from "@mui/icons-material/CheckRounded";
-import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
 import CodeRoundedIcon from "@mui/icons-material/CodeRounded";
 import FactCheckOutlinedIcon from "@mui/icons-material/FactCheckOutlined";
 import IncompleteCircleRoundedIcon from "@mui/icons-material/IncompleteCircleRounded";
 import MapOutlinedIcon from "@mui/icons-material/MapOutlined";
-import RadioButtonUncheckedRoundedIcon from "@mui/icons-material/RadioButtonUncheckedRounded";
 import RuleRoundedIcon from "@mui/icons-material/RuleRounded";
 import WarningAmberRoundedIcon from "@mui/icons-material/WarningAmberRounded";
 import Box from "@mui/material/Box";
@@ -33,6 +31,7 @@ import {
   readinessBasis,
   type ExploreKind,
 } from "./Explore";
+import { DetailsCard, DetailsEyebrow, DetailsPopover } from "./design/DetailsPopover";
 import { DomainIcon } from "./FeatureMap";
 import Logo from "./Logo";
 import { PersonaAvatar, ReadinessMeter, personaNameAndRole } from "./Personas";
@@ -49,6 +48,7 @@ import {
   leftIn,
   mapHref,
   nextLevel,
+  appliesAt,
   partOf,
   personaReadinessIn,
   pickList,
@@ -556,114 +556,84 @@ function RuleTable({ state, rules, own, followers = false, onOpen }: Go & { rule
 
 /* ——— The stability checklist ——— */
 
-const levelIndex = (level: Level) => STABILITY_LEVEL_IDS.indexOf(level);
-
-type CellStatus = "met" | "gap" | "next" | "later" | "none" | "replaced";
-
-const CELL: Record<CellStatus, { label: string; icon: ReactNode }> = {
-  met: { label: "Met", icon: <CheckRoundedIcon sx={{ fontSize: 16 }} /> },
-  gap: { label: "Gap", icon: <IncompleteCircleRoundedIcon sx={{ fontSize: 15 }} /> },
-  next: { label: "Next", icon: <RadioButtonUncheckedRoundedIcon sx={{ fontSize: 15 }} /> },
-  later: { label: "Later", icon: <RadioButtonUncheckedRoundedIcon sx={{ fontSize: 15 }} /> },
-  none: { label: "Nothing new", icon: null },
-  replaced: { label: "Replaced", icon: null },
-};
-
 /*
- * The stability checklist as a grid: a row for each category, a column for
- * each level, so where a capability stands and what the next level asks of
- * it read across. An item that applies counts as met unless a gap names it.
- * A row opens to what each level expects in that category, its gaps, and
- * what meeting it might look like.
+ * The stability checklist, as it applies to this capability at its level:
+ * everything that level expects, in one list by quality, each met unless a
+ * gap names it, with the gap under it. A quality's name opens what it means,
+ * and an item's Examples how it might be met, both as popovers.
  */
-function ChecklistMatrix({ state, capability, gaps }: { state: DocketState; capability: Capability; gaps: Gap[] }) {
+function QualityChecklist({ state, capability, gaps }: { state: DocketState; capability: Capability; gaps: Gap[] }) {
   const checklist = state.checklist!;
   const level = capability.stability;
-  const at = levelIndex(level);
-  const next = nextLevel(level);
   const gapsOf = (item: ChecklistItem) => gaps.filter((g) => g.item === item.id);
-  const status = (item: ChecklistItem | undefined): CellStatus => {
-    if (!item?.expect) return "none";
-    const i = levelIndex(item.level);
-    if (i > at) return i === at + 1 ? "next" : "later";
-    if (item.until && levelIndex(item.until) < at) return "replaced";
-    return gapsOf(item).length ? "gap" : "met";
-  };
-  const [open, setOpen] = useState(() => new Set(checklist.categories.filter((c) => c.items.some((i) => status(i) === "gap")).map((c) => c.id)));
-  const allOpen = open.size === checklist.categories.length;
-  const toggle = (id: string) =>
-    setOpen((was) => {
-      const now = new Set(was);
-      if (!now.delete(id)) now.add(id);
-      return now;
-    });
+  const qualities = checklist.categories
+    .map((quality) => ({ quality, items: quality.items.filter((i) => appliesAt(i, level)) }))
+    .filter((q) => q.items.length);
   const counts = checklistCounts(state, capability, gaps);
-  const adds = next ? checklist.categories.filter((c) => c.items.some((i) => i.level === next && i.expect)).length : 0;
+  const unmet = qualities.filter((q) => q.items.some((i) => gapsOf(i).length)).map((q) => q.quality.name);
   return (
     <>
-      <div className="matrix-summary">
-        <p>
-          {counts ? `${counts.count - counts.notMet} of ${counts.count} ${STABILITY[level].name} expectations met. ` : null}
-          {next ? `${STABILITY[next].name} adds ${plural(adds, "expectation", "expectations")}.` : "GA is the top level."} Anything a gap doesn't name counts as met.
-        </p>
-        <button type="button" className="filter-toggle" onClick={() => setOpen(allOpen ? new Set() : new Set(checklist.categories.map((c) => c.id)))}>
-          {allOpen ? "Collapse all" : "Expand all"}
-        </button>
-      </div>
-      <div className="matrix" role="table">
-        <div className="matrix-row matrix-head" role="row">
-          <span role="columnheader">Category</span>
-          {STABILITY_LEVEL_IDS.map((l, i) => (
-            <Box key={l} component="span" role="columnheader" className="matrix-level" data-now={i === at || undefined} data-next={i === at + 1 || undefined} sx={levelColor(l)}>
-              {STABILITY[l].name}
-              {i === at ? <span className="matrix-tag">Now</span> : i === at + 1 ? <span className="matrix-tag">Next</span> : null}
-            </Box>
-          ))}
-        </div>
-        {checklist.categories.map((category) => {
-          const items = STABILITY_LEVEL_IDS.map((l) => category.items.find((i) => i.level === l));
-          const isOpen = open.has(category.id);
+      <p className="qc-summary">
+        {counts ? (
+          <strong data-met={counts.notMet ? "no" : "yes"}>
+            {counts.count - counts.notMet} of {counts.count} {STABILITY[level].name} expectations met
+          </strong>
+        ) : null}
+        {unmet.length ? ` · Not met in ${unmet.join(", ")}` : null}. Anything a gap doesn't name counts as met.
+      </p>
+      <div className="qc" role="list">
+        {qualities.map(({ quality, items }) => {
+          const notMet = items.some((i) => gapsOf(i).length);
           return (
-            <div key={category.id} className="matrix-group" data-open={isOpen || undefined}>
-              <button type="button" className="matrix-row" role="row" aria-expanded={isOpen} onClick={() => toggle(category.id)}>
-                <span className="matrix-category" role="rowheader">
-                  <ChevronRightRoundedIcon className="matrix-chevron" sx={{ fontSize: 16 }} />
-                  <span>
-                    <strong>{category.name}</strong>
-                    <span className="matrix-why">{category.why}</span>
-                  </span>
+            <div key={quality.id} className="qc-row" role="listitem" data-met={notMet ? "no" : "yes"}>
+              <span className="qc-icon" aria-label={notMet ? "Not met" : "Met"}>
+                {notMet ? <IncompleteCircleRoundedIcon sx={{ fontSize: 15 }} /> : <CheckRoundedIcon sx={{ fontSize: 16 }} />}
+              </span>
+              <DetailsPopover
+                title={
+                  <DetailsCard card>
+                    <DetailsEyebrow>Quality</DetailsEyebrow>
+                    <strong>{quality.name}</strong>
+                    <Box sx={{ mt: 0.5, color: "text.secondary" }}>{quality.why}</Box>
+                  </DetailsCard>
+                }
+              >
+                <span className="qc-quality" tabIndex={0}>
+                  {quality.name}
                 </span>
-                {items.map((item, i) => {
-                  const s = status(item);
-                  return (
-                    <span key={i} role="cell" className="matrix-cell" data-status={s} data-now={i === at || undefined} data-next={i === at + 1 || undefined}>
-                      {CELL[s].icon}
-                      <span className="matrix-cell-label">{CELL[s].label}</span>
-                      {item?.baseline ? <span className="matrix-tag">Baseline</span> : null}
-                    </span>
-                  );
-                })}
-              </button>
-              {isOpen ? (
-                <div className="matrix-row matrix-detail">
-                  <span />
-                  {items.map((item, i) => (
-                    <div key={i} className="matrix-expect" data-now={i === at || undefined} data-next={i === at + 1 || undefined}>
-                      <span className="page-cell-label">{STABILITY[STABILITY_LEVEL_IDS[i]].name}</span>
-                      {item?.expect ? <p>{item.expect}</p> : <p className="faint">Nothing new at this level.</p>}
-                      {item
-                        ? gapsOf(item).map((g) => (
-                            <p key={g.id} className="matrix-gap">
-                              <span className="explore-gap-kind">{gapKind(g)}</span>
-                              {g.text}
-                            </p>
-                          ))
-                        : null}
-                      {item ? <ChecklistGuidance item={item} kinds={checklist.kinds} /> : null}
+              </DetailsPopover>
+              <ul className="qc-items" data-many={items.length > 1 || undefined}>
+                {items.map((item) => (
+                  <li key={item.id}>
+                    <div className="qc-item">
+                      <span className="qc-text">
+                        {item.expect}
+                        {item.baseline ? <span className="matrix-tag qc-tag">Baseline</span> : null}
+                      </span>
+                      {item.examples.length ? (
+                        <DetailsPopover
+                          title={
+                            <DetailsCard card width={400}>
+                              <DetailsEyebrow>How it might be met</DetailsEyebrow>
+                              <ChecklistGuidance item={item} kinds={checklist.kinds} />
+                            </DetailsCard>
+                          }
+                        >
+                          <span className="qc-examples" tabIndex={0}>
+                            Examples
+                          </span>
+                        </DetailsPopover>
+                      ) : null}
                     </div>
-                  ))}
-                </div>
-              ) : null}
+                    {gapsOf(item).map((g) => (
+                      <p key={g.id} className="matrix-gap">
+                        <span className="explore-gap-kind">{gapKind(g)}</span>
+                        {g.text}
+                      </p>
+                    ))}
+                  </li>
+                ))}
+              </ul>
             </div>
           );
         })}
@@ -726,7 +696,7 @@ function CapabilityPage({ capability, ...go }: Go & { capability: Capability }) 
             </Block>
             {state.checklist ? (
               <Block title="Stability checklist" id="checklist">
-                <ChecklistMatrix state={state} capability={capability} gaps={left.gaps} />
+                <QualityChecklist state={state} capability={capability} gaps={left.gaps} />
               </Block>
             ) : null}
           </>

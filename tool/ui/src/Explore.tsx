@@ -901,34 +901,18 @@ export function checklistCounts(state: DocketState, capability: Capability, gaps
   return { count: items.length, notMet: items.filter((i) => gaps.some((g) => g.item === i.id)).length };
 }
 
-/* What an item might look like for different kinds of software, and what to leave until later, folded away. */
+/* How an item might be met, each example with the kinds of software it fits, if not all. */
 export function ChecklistGuidance({ item, kinds }: { item: ChecklistItem; kinds: ChecklistKind[] }) {
-  if (!item.examples.length && !item.notYet.length) return null;
   const kindName = (id: string) => kinds.find((k) => k.id === id)?.name ?? id;
   return (
-    <details className="explore-checklist-guidance">
-      <summary>What this might look like</summary>
-      {item.examples.length ? (
-        <ul>
-          {item.examples.map((e) => (
-            <li key={e.text}>
-              {e.kinds.length ? <span className="explore-checklist-guidance-kinds">{e.kinds.map(kindName).join(", ")}: </span> : null}
-              {e.text}
-            </li>
-          ))}
-        </ul>
-      ) : null}
-      {item.notYet.length ? (
-        <>
-          <span className="explore-checklist-guidance-label">Not yet</span>
-          <ul>
-            {item.notYet.map((e) => (
-              <li key={e}>{e}</li>
-            ))}
-          </ul>
-        </>
-      ) : null}
-    </details>
+    <ul className="checklist-guidance">
+      {item.examples.map((e) => (
+        <li key={e.text}>
+          {e.kinds.length ? <span className="checklist-guidance-kinds">{e.kinds.map(kindName).join(", ")}</span> : null}
+          {e.text}
+        </li>
+      ))}
+    </ul>
   );
 }
 

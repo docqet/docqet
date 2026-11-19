@@ -50,9 +50,9 @@ export function DetailsPopover({ title, hoverOnly = false, children }: DetailsPo
 }
 
 /* The popover's card, or with `card={false}` just its text, for a card of your own. */
-export type DetailsCardProps = { card: boolean; children: ReactNode };
+export type DetailsCardProps = { card: boolean; /** The card's width, for longer content. */ width?: number; children: ReactNode };
 
-export function DetailsCard({ card, children }: DetailsCardProps) {
+export function DetailsCard({ card, width = 300, children }: DetailsCardProps) {
   return (
     <Box
       sx={[
@@ -65,7 +65,7 @@ export function DetailsCard({ card, children }: DetailsCardProps) {
           color: "text.primary",
         },
         card && {
-          width: 300,
+          width,
           maxWidth: "calc(100vw - 24px)",
           px: 2,
           py: 1.75,
