@@ -129,31 +129,43 @@ export type Gap = {
   project?: string;
   domain: string;
   kind: "to-close-later" | "accepted-tradeoff";
-  /* The stability checklist item it falls short of, as `<area>/<item>`, or null. */
-  item: string | null;
+  /* The stability checklist outcome it falls short of, as `<quality>/<level>/<id>`, or null. */
+  outcome: string | null;
   text: string;
 };
 
 /*
- * The stability checklist: what a capability needs at each level, by
- * category, with an item for every level. An item with `expect` applies from
- * its level up, through `until` where a higher level replaces it. One without
- * expects nothing new at its level, and only guides. Baseline items hold at
- * every level and are never a gap.
+ * The stability checklist: what each level generally means and expects, by
+ * quality, with an entry for every level. An outcome applies from its level
+ * up, through `until` where a higher level replaces it. An entry without
+ * outcomes expects nothing new at its level, and only guides. Baseline
+ * outcomes hold at every level and are never a gap. It's a guideline, not a
+ * gate: implementation and overengineering are examples to judge by.
  */
-export type ChecklistItem = {
+export type ChecklistExample = { text: string; kinds: string[] };
+export type ChecklistOutcome = {
   id: string;
   level: Level;
+  text: string;
   until: Level | null;
   baseline: boolean;
-  expect: string | null;
-  /* Each with the kinds of software it fits, or none where it fits any. */
-  examples: { text: string; kinds: string[] }[];
-  notYet: string[];
+  /* How meeting it might look ("How it might look"), each with the kinds of software it may suit, or none where it isn't tagged. */
+  implementation: ChecklistExample[];
+  /* Work that may be more than its level needs, tagged the same way. */
+  overengineering: ChecklistExample[];
 };
-export type ChecklistCategory = { id: string; name: string; why: string; items: ChecklistItem[] };
+export type ChecklistLevel = {
+  level: Level;
+  /* How much the level asks of the quality, in a sentence, or null where it expects nothing. */
+  summary: string | null;
+  outcomes: ChecklistOutcome[];
+  /* Only where it has no outcomes: how work on the quality might look at this level. */
+  implementation: ChecklistExample[];
+  overengineering: ChecklistExample[];
+};
+export type ChecklistQuality = { id: string; name: string; question: string; why: string; levels: ChecklistLevel[] };
 export type ChecklistKind = { id: string; name: string };
-export type Checklist = { kinds: ChecklistKind[]; categories: ChecklistCategory[] };
+export type Checklist = { kinds: ChecklistKind[]; qualities: ChecklistQuality[] };
 
 /* What the indexer found wrong. `domain` is that of the doc it's about, if it's about one. */
 export type Problem = { type: string; subject: string; capabilities: string[]; message: string; domain?: string };
@@ -658,18 +670,21 @@ export function filterBy(state: DocketState, picks: Pick[]): MapFilter | null {
 
 const levelIndex = (level: Level) => LEVEL_ORDER.indexOf(level);
 
-/* Whether a checklist item applies at a level: from its own level up, through `until` where it has one. */
-export const appliesAt = (item: ChecklistItem, level: Level) =>
-  item.expect !== null && levelIndex(item.level) <= levelIndex(level) && (!item.until || levelIndex(item.until) >= levelIndex(level));
+/* Whether a checklist outcome applies at a level: from its own level up, through `until` where it has one. */
+export const appliesAt = (outcome: ChecklistOutcome, level: Level) =>
+  levelIndex(outcome.level) <= levelIndex(level) && (!outcome.until || levelIndex(outcome.until) >= levelIndex(level));
 
 /* The level after this one, or null after GA. */
 export const nextLevel = (level: Level): Level | null => LEVEL_ORDER[levelIndex(level) + 1] ?? null;
 
-/* A checklist item, with its category, by its full ID. */
-export function checklistItem(checklist: Checklist | null, id: string): { item: ChecklistItem; category: ChecklistCategory } | undefined {
-  for (const category of checklist?.categories ?? []) {
-    const item = category.items.find((i) => i.id === id);
-    if (item) return { item, category };
+/* Every outcome of a quality, in level order. */
+export const outcomesOf = (quality: ChecklistQuality) => quality.levels.flatMap((l) => l.outcomes);
+
+/* A checklist outcome, with its quality, by its full ID. */
+export function checklistOutcome(checklist: Checklist | null, id: string): { outcome: ChecklistOutcome; quality: ChecklistQuality } | undefined {
+  for (const quality of checklist?.qualities ?? []) {
+    const outcome = outcomesOf(quality).find((o) => o.id === id);
+    if (outcome) return { outcome, quality };
   }
 }
 

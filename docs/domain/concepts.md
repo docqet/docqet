@@ -367,7 +367,7 @@ capability, and is one of two kinds:
 - **To close later**: we intend to fix it.
 - **Accepted tradeoff**: we've decided to live with it.
 
-A gap can name the stability checklist item it falls short of, such as the
+A gap can name the stability checklist outcome it falls short of, such as the
 room calendar not being usable from the keyboard. Most gaps are limits on
 what the capability does, like the waitlist, and name none.
 
@@ -393,15 +393,20 @@ demote it.
 
 ### Stability checklist
 
-The qualities a capability is expected to have at each stability level, such
-as functionality, reliability and usability: automated tests of the main path
-from Alpha, say, or a tested rollback at GA. Each level of each quality has
-what it expects, examples of what that might look like for different kinds of
-software, and what to leave until later. It's the same for every project,
-whatever kind of software it is, and it's guidance, not a gate: each item that
-applies is usually met, not applicable, or a known gap. Docket counts an item
-as met unless a known gap names it. Its security and privacy baseline holds at
-every level and is never a known gap.
+What each stability level generally means and expects, so the people
+depending on a capability and the people building it share the same picture of
+its level. It's grouped by quality, such as usability, reliability and
+security, each a question someone asks before depending on the work. Each
+level of each quality has the outcomes it expects, such as "a bad release can
+be undone" at Beta, with examples of how meeting one might look for different
+kinds of software, and examples of what may be overengineering at that level.
+
+It's a guideline, not a gate. It doesn't replace engineering judgment, and it
+applies differently to every project: an outcome that applies is usually met,
+not applicable, or a known gap. Docket counts an outcome as met unless a known
+gap names it. Its security and privacy baseline holds at every level and is
+never a known gap. It's the same for every project, whatever kind of software
+it is.
 
 ### Maturity
 

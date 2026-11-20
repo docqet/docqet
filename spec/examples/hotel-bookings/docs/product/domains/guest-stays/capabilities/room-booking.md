@@ -20,7 +20,7 @@ gaps:
       bookings.
   - id: calendar-needs-a-mouse
     kind: to-close-later
-    item: usability/beta
+    outcome: usability/beta/everyone
     text: >-
       The room calendar can't be used from the keyboard, so clerks need a
       mouse to pick dates.

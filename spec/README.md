@@ -235,22 +235,22 @@ gaps:
 
 As in forge today, a gap is recorded in exactly one place.
 
-A gap can also name the [stability checklist](#stability-checklist) item it
-falls short of, as `item`. Most gaps are limits on what the capability does,
-such as the waitlist, and match no item, so they leave it out:
+A gap can also name the [stability checklist](#stability-checklist) outcome
+it falls short of, as `outcome`. Most gaps are limits on what the capability
+does, such as the waitlist, and match no outcome, so they leave it out:
 
 ```yaml
 gaps:
   - id: calendar-needs-a-mouse
     kind: to-close-later
-    item: usability/beta
+    outcome: usability/beta/everyone
     text: >-
       The room calendar can't be used from the keyboard, so clerks need a
       mouse to pick dates.
 ```
 
-A gap can't name a baseline item, since the security and privacy baseline is
-never a known gap, or an item that expects nothing.
+A gap can't name a baseline outcome, since the security and privacy baseline
+is never a known gap.
 
 ## Stability levels
 
@@ -272,64 +272,93 @@ on it.
 
 ### Stability checklist
 
-[`stability/checklist.yml`](stability/checklist.yml) says which qualities a
-capability is expected to have at each level, for the people and agents
-building it. It's part of the spec, so it's the same for every project and
-every tool that reads Docket: a project doesn't copy it, change it or configure
-it. It's guidance, not a gate. Work fits a level when it generally meets what
-that level expects, and each item that applies is usually met, not applicable,
-or a known gap.
+A stability level says in one word how stable something is.
+[`stability/checklist.yml`](stability/checklist.yml) describes what each level
+generally means and expects, so the people depending on a capability and the
+people and agents building it share the same picture of it. It's part of the
+spec, so it's the same for every project and every tool that reads Docket: a
+project doesn't copy it, change it or configure it.
+
+It's a guideline, not a gate:
+
+- **Not every box needs checking.** Work can be called a level, GA included,
+  with outcomes unmet. What's unmet is written down as a known gap, so
+  everyone can see it.
+- **It doesn't replace engineering judgment.** The engineer decides what fits
+  the work, and judgment about the work wins over the wording of any outcome.
+- **It applies differently to every project.** What an outcome takes, and
+  whether it applies at all, depends on the software, who uses it, and the
+  circumstances.
+
+The one exception is the security and privacy baseline, which holds at every
+level and is never a known gap.
 
 It has ten qualities, each a question someone asks before depending on the
-work:
+work. Lower levels ask for little, enough to learn whether the work is worth
+doing, and each level adds to the ones below it as more people come to rely on
+the work:
 
-| Quality         | The question it answers                                                     |
-| --------------- | --------------------------------------------------------------------------- |
-| Utility         | Is it worth building, and is this the right way to build it?                |
-| Usability       | Can its users, people or programs, learn and use it on their own?           |
-| Functionality   | Does it do what it should, and is that shown as it changes?                 |
-| Reliability     | Does it keep working, and recover when something goes wrong?                |
-| Efficiency      | Is it fast enough, at the load it gets, at a cost that makes sense?         |
-| Security        | Is it protected, and does it follow the rules that apply to it?             |
-| Compatibility   | Does it work with what's around it, without breaking those depending on it? |
-| Observability   | When something goes wrong, does someone find out and see why?               |
-| Maintainability | Is it easy to understand and change, and to see what a change affects?      |
-| Supportability  | Is someone responsible, and do those depending on it know where to turn?    |
+| Quality         | The question it answers                                       |
+| --------------- | ------------------------------------------------------------- |
+| Utility         | Is it worth building, and is this the right way to build it?  |
+| Usability       | Can its users learn and use it on their own?                  |
+| Functionality   | Does it do what it should, and keep doing it?                 |
+| Reliability     | Does it keep working when something goes wrong?               |
+| Efficiency      | Is it fast enough, at a cost that makes sense?                |
+| Security        | Is it protected, and does it follow the rules?                |
+| Compatibility   | Does it fit with what's around it?                            |
+| Observability   | When something goes wrong, does someone find out and see why? |
+| Maintainability | Is it easy to understand and change?                          |
+| Supportability  | Who's responsible, and where do people turn?                  |
 
 They draw on ISO/IEC 25010, Kubernetes' feature graduation and production
 readiness review, Google's SRE practice, AWS Well-Architected and FURPS+.
 Practices and artifacts, such as tests, docs, logs and CI, aren't qualities:
-they're how a quality is met, so they appear in examples. Each quality has an
-item for every level:
+they're ways a quality might be met, so they appear in `implementation`.
 
-- **`expect`** is what that level needs of the quality, as an outcome someone
-  can call met or not, worded to fit any kind of software, from a web app to
-  a CLI, an HTTP API, a background job or a library. An item without one
-  needs nothing new at that level. Efficiency, for example, expects nothing
-  before Beta.
-- **`examples`** are ways to get there: practices, tools, artifacts and
-  standards. They're ideas to choose from, not requirements, and may or may
-  not fit a project. A plain example fits any kind of software.
-  One with `kinds` fits only those, from the file's `kinds` list: web app,
-  mobile app, desktop app, HTTP API, CLI, background job and library. A
-  project can be several kinds, so it uses the examples for each of them.
-- **`not-yet`** is work that belongs to a later level, such as load tests
-  before Beta, so it's left until then. Doing more than a level expects isn't
-  better, and `not-yet` names the work most often done too early.
+Each quality has a `question`, `why` it matters, and an entry for every level:
 
-How items combine:
+- **`summary`** says in a sentence how much that level asks of the quality. An
+  entry without one expects nothing at that level. Efficiency, for example,
+  expects nothing before Beta.
+- **`outcomes`** are what should be true of the work at that level, each
+  something someone can call met or not, worded to fit any kind of software,
+  from a web app to a CLI, an HTTP API, a background job or a library.
 
-- **An item that applies is met unless a gap names it.** Declaring a level
+Each outcome has two lists of examples, to help judge how to meet it at that
+level, or whether to at all. They're illustrations, not instructions,
+requirements or complete lists:
+
+- **`implementation`** is how meeting it might look, which tools show as "How
+  it might look". There are other ways to meet it.
+- **`overengineering`** is work that may be overengineering at that level. It
+  may be in scope at another level, or never needed for the project at all,
+  so it isn't a to-do list for the next level. It's there to help judge where
+  a level's work stops.
+
+An example is its text alone, or its `text` and `kinds`: the kinds of software
+it may suit, from the file's `kinds` list: web app, mobile app, desktop app,
+HTTP API, CLI, background job and library. Kinds are indications, not rules: a
+project can be several kinds, an untagged example may not suit it, and one
+tagged for another kind may suit it well.
+
+An entry without outcomes can still have `implementation` and
+`overengineering`, for what work on the quality might look like at that level.
+
+How outcomes combine:
+
+- **An outcome that applies is met unless a gap names it.** Declaring a level
   claims what that level expects, except the gaps written down, so only what
-  isn't met is recorded. An item that doesn't apply counts as met too.
-- **An item's ID** is its quality and level, as `<quality>/<level>`:
-  `functionality/beta`.
-- **A level includes everything the levels below it expect,** unless `until`
-  names the last level an item applies to. `compatibility/prototype`, which
-  keeps it to those who chose to try it, applies through Alpha, and Beta's
-  normal release replaces it.
-- **The `baseline` item,** `security/prototype`, is the security and privacy
-  baseline. It holds at every level, and is never a known gap.
+  isn't met is recorded. An outcome that doesn't apply, such as accessibility
+  for an API with no screens, counts as met too.
+- **An outcome's ID** is its quality, level and own ID, as
+  `<quality>/<level>/<id>`: `reliability/beta/data-kept`.
+- **A level includes every outcome the levels below it expect,** unless
+  `until` names the last level an outcome applies to.
+  `compatibility/prototype/opt-in`, which keeps it to those who chose to try
+  it, applies through Alpha, and Beta's normal release replaces it.
+- **`baseline` outcomes,** Security's at Prototype, are the security and
+  privacy baseline. They hold at every level, and are never a known gap.
 
 ## Features and maturity
 
@@ -688,16 +717,19 @@ and showing several projects together means reading each one's state.json.
   `verifies` and `implements` lists of each place's `file`, `line` and
   `text`, as [Evidence](#evidence) describes. Both are empty when it has none.
 - **`gaps`**: every gap from every capability, each with its `domain`, and
-  the checklist `item` it names, or `null`.
+  the checklist `outcome` it names, or `null`.
 - **`problems`**: everything the indexer found wrong, each about a doc with
   that doc's `domain`.
 - **`checklist`**: the stability checklist the project was indexed against, so
   the UI can show it beside each capability. It's the YAML's `kinds`, and its
-  `qualities`, each with its items as a list in level order. Each item has its
-  full `<quality>/<level>` ID, its `level`, `expect` and `until` as `null`
-  where it has none, `baseline` as `true` or `false`, `examples` as a list of
-  each one's `text` and `kinds`, with `kinds` empty where it fits any kind of
-  software, and `notYet` as a list.
+  `qualities`, each with its `levels` as a list in level order. Each level has
+  its `level`, `summary` as `null` where it has none, and its `outcomes`,
+  `implementation` and `overengineering`, each a list, empty where it has
+  none. Each outcome has its full `<quality>/<level>/<id>` ID, its `level`,
+  `text`, `until` as `null` where it has none, `baseline` as `true` or
+  `false`, and its own `implementation` and `overengineering`. Every example
+  in either is its `text` and `kinds`, with `kinds` empty where it isn't
+  tagged.
 
 ### Problems
 
@@ -711,8 +743,8 @@ and showing several projects together means reading each one's state.json.
 | `in-two-features`      | More than one feature lists the same capability.               |
 | `contradiction`        | Contributions that should agree don't, as Domains describes.   |
 | `ambiguous-link`       | A link could mean the rule or concept of two or more domains.  |
-| `unknown-item`         | A gap's `item` isn't a checklist item that expects something.  |
-| `baseline-gap`         | A gap's `item` is a baseline item, which is never a known gap. |
+| `unknown-outcome`      | A gap's `outcome` isn't a checklist outcome.                   |
+| `baseline-gap`         | A gap's `outcome` is a baseline outcome, never a known gap.    |
 
 `in-two-features` is a contradiction too, when the listings
 are in different projects. Combining raises `contradiction` and
@@ -721,11 +753,12 @@ are in different projects. Combining raises `contradiction` and
 ## Open decisions
 
 - **The stability checklist is fixed.** It becomes configurable once someone
-  adopting Docket needs different items.
-- **Met is assumed.** An item counts as met unless a gap names it, so nothing
-  says which items someone actually looked at, and an item added to the
-  checklist counts as met everywhere at once. A record of when someone last
-  went through the list, and against which version of it, would show both.
-  Items not applicable, with why, items Docket can work out itself, such as
-  `functionality/alpha` from its rules' evidence, and items a whole
-  project meets, such as CI, would also make met mean more.
+  adopting Docket needs different outcomes.
+- **Met is assumed.** An outcome counts as met unless a gap names it, so
+  nothing says which outcomes someone actually looked at, and an outcome added
+  to the checklist counts as met everywhere at once. A record of when someone
+  last went through the list, and against which version of it, would show
+  both. Outcomes not applicable, with why, outcomes Docket can work out
+  itself, such as `functionality/alpha/main-path` from its rules' evidence,
+  and outcomes a whole project meets, such as CI, would also make met mean
+  more.

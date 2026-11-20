@@ -19,7 +19,8 @@ import { ProjectIcon } from "./ProjectFilter";
 import {
   appliesAt,
   capabilityTarget,
-  checklistItem,
+  checklistOutcome,
+  outcomesOf,
   contradictionsOf,
   docDomains,
   domainGroup,
@@ -37,8 +38,6 @@ import {
   personaReadinessIn,
   targetOf,
   type Capability,
-  type ChecklistItem,
-  type ChecklistKind,
   type Contribution,
   type Domain,
   type Doc,
@@ -708,7 +707,7 @@ export const leftLine = (left: Left) =>
  * decisions nobody has made, its known gaps, and the rules it follows that
  * nothing verifies or implements yet; then how much of its level's checklist
  * is met, and `checklist`, a way to the whole of it. With `detailed`, as on
- * its detail page, each gap says the checklist item it falls short of.
+ * its detail page, each gap says the checklist outcome it falls short of.
  */
 export function WhatsLeft({
   state,
@@ -741,7 +740,7 @@ export function WhatsLeft({
       {counts ? (
         <p className="explore-left-checklist">
           <span>
-            {counts.count - counts.notMet} of {counts.count} {STABILITY[capability.stability].name} checklist items met.
+            {counts.count - counts.notMet} of {counts.count} {STABILITY[capability.stability].name} checklist outcomes met.
           </span>
           {checklist}
         </p>
@@ -788,7 +787,7 @@ function LeftItems({
           <span className="explore-gap-kind">Known gaps</span>
           <ul className="explore-left-list">
             {left.gaps.map((g) => {
-              const named = detailed && g.item ? checklistItem(state.checklist, g.item) : undefined;
+              const named = detailed && g.outcome ? checklistOutcome(state.checklist, g.outcome) : undefined;
               return (
                 <li key={g.id}>
                   {g.text}
@@ -796,7 +795,7 @@ function LeftItems({
                     <span className="explore-tag">{gapKind(g)}</span>
                     {named ? (
                       <span>
-                        Falls short of {named.category.name}{named.item.expect ? `: ${named.item.expect}` : ""}
+                        Falls short of {named.quality.name}: {named.outcome.text}
                       </span>
                     ) : null}
                   </span>
@@ -890,30 +889,15 @@ export function LeftRollup({
 export const gapKind = (g: Gap) => (g.kind === "accepted-tradeoff" ? "Accepted tradeoff" : "To close later");
 
 /*
- * How many items a capability's level expects, and how many of those a gap
- * says aren't met; or null with no checklist. An item that applies counts as
- * met unless a known gap names it, since declaring a level claims what it
+ * How many outcomes a capability's level expects, and how many of those a gap
+ * says aren't met; or null with no checklist. An outcome that applies counts
+ * as met unless a known gap names it, since declaring a level claims what it
  * expects, except the gaps written down.
  */
 export function checklistCounts(state: DocketState, capability: Capability, gaps: Gap[]) {
   if (!state.checklist) return null;
-  const items = state.checklist.categories.flatMap((c) => c.items).filter((i) => appliesAt(i, capability.stability));
-  return { count: items.length, notMet: items.filter((i) => gaps.some((g) => g.item === i.id)).length };
-}
-
-/* How an item might be met, each example with the kinds of software it fits, if not all. */
-export function ChecklistGuidance({ item, kinds }: { item: ChecklistItem; kinds: ChecklistKind[] }) {
-  const kindName = (id: string) => kinds.find((k) => k.id === id)?.name ?? id;
-  return (
-    <ul className="checklist-guidance">
-      {item.examples.map((e) => (
-        <li key={e.text}>
-          {e.kinds.length ? <span className="checklist-guidance-kinds">{e.kinds.map(kindName).join(", ")}</span> : null}
-          {e.text}
-        </li>
-      ))}
-    </ul>
-  );
+  const outcomes = state.checklist.qualities.flatMap(outcomesOf).filter((o) => appliesAt(o, capability.stability));
+  return { count: outcomes.length, notMet: outcomes.filter((o) => gaps.some((g) => g.outcome === o.id)).length };
 }
 
 /*

@@ -1,13 +1,12 @@
 import { useEffect, useRef, type ReactNode } from "react";
-import CheckRoundedIcon from "@mui/icons-material/CheckRounded";
 import CodeRoundedIcon from "@mui/icons-material/CodeRounded";
 import FactCheckOutlinedIcon from "@mui/icons-material/FactCheckOutlined";
-import IncompleteCircleRoundedIcon from "@mui/icons-material/IncompleteCircleRounded";
 import MapOutlinedIcon from "@mui/icons-material/MapOutlined";
 import RuleRoundedIcon from "@mui/icons-material/RuleRounded";
 import WarningAmberRoundedIcon from "@mui/icons-material/WarningAmberRounded";
 import Box from "@mui/material/Box";
 import type { Theme } from "@mui/material/styles";
+import { StabilityChecklist } from "./Checklist";
 import { ConceptChips, ConceptIcon, Markdown, related } from "./Concepts";
 import { RingGlyph } from "./design/maturity/RingGlyph";
 import { MATURITY_BANDS, maturityBand } from "./design/maturity/maturity";
@@ -15,7 +14,6 @@ import { STABILITY, STABILITY_LEVEL_IDS, levelColor } from "./design/stability/s
 import { StabilityMark } from "./design/stability/StabilityMark";
 import {
   CapabilityTrail,
-  ChecklistGuidance,
   DomainCrumbs,
   LeftRollup,
   NAMES,
@@ -25,13 +23,11 @@ import {
   capabilityBody,
   checklistCounts,
   domainCapabilities,
-  gapKind,
   leftLine,
   plural,
   readinessBasis,
   type ExploreKind,
 } from "./Explore";
-import { DetailsCard, DetailsEyebrow, DetailsPopover } from "./design/DetailsPopover";
 import { DomainIcon } from "./FeatureMap";
 import Logo from "./Logo";
 import { PersonaAvatar, ReadinessMeter, personaNameAndRole } from "./Personas";
@@ -48,13 +44,11 @@ import {
   leftIn,
   mapHref,
   nextLevel,
-  appliesAt,
   partOf,
   personaReadinessIn,
   pickList,
   projectName,
   type Capability,
-  type ChecklistItem,
   type Concept,
   type Contribution,
   type Doc,
@@ -62,7 +56,6 @@ import {
   type Domain,
   type Evidence,
   type Feature,
-  type Gap,
   type Level,
   type Persona,
   type Pick,
@@ -554,94 +547,6 @@ function RuleTable({ state, rules, own, followers = false, onOpen }: Go & { rule
   );
 }
 
-/* ——— The stability checklist ——— */
-
-/*
- * The stability checklist, as it applies to this capability at its level:
- * everything that level expects, in one list by quality, each met unless a
- * gap names it, with the gap under it. A quality's name opens what it means,
- * and an item's Examples how it might be met, both as popovers.
- */
-function QualityChecklist({ state, capability, gaps }: { state: DocketState; capability: Capability; gaps: Gap[] }) {
-  const checklist = state.checklist!;
-  const level = capability.stability;
-  const gapsOf = (item: ChecklistItem) => gaps.filter((g) => g.item === item.id);
-  const qualities = checklist.categories
-    .map((quality) => ({ quality, items: quality.items.filter((i) => appliesAt(i, level)) }))
-    .filter((q) => q.items.length);
-  const counts = checklistCounts(state, capability, gaps);
-  const unmet = qualities.filter((q) => q.items.some((i) => gapsOf(i).length)).map((q) => q.quality.name);
-  return (
-    <>
-      <p className="qc-summary">
-        {counts ? (
-          <strong data-met={counts.notMet ? "no" : "yes"}>
-            {counts.count - counts.notMet} of {counts.count} {STABILITY[level].name} expectations met
-          </strong>
-        ) : null}
-        {unmet.length ? ` · Not met in ${unmet.join(", ")}` : null}. Anything a gap doesn't name counts as met.
-      </p>
-      <div className="qc" role="list">
-        {qualities.map(({ quality, items }) => {
-          const notMet = items.some((i) => gapsOf(i).length);
-          return (
-            <div key={quality.id} className="qc-row" role="listitem" data-met={notMet ? "no" : "yes"}>
-              <span className="qc-icon" aria-label={notMet ? "Not met" : "Met"}>
-                {notMet ? <IncompleteCircleRoundedIcon sx={{ fontSize: 15 }} /> : <CheckRoundedIcon sx={{ fontSize: 16 }} />}
-              </span>
-              <DetailsPopover
-                title={
-                  <DetailsCard card>
-                    <DetailsEyebrow>Quality</DetailsEyebrow>
-                    <strong>{quality.name}</strong>
-                    <Box sx={{ mt: 0.5, color: "text.secondary" }}>{quality.why}</Box>
-                  </DetailsCard>
-                }
-              >
-                <span className="qc-quality" tabIndex={0}>
-                  {quality.name}
-                </span>
-              </DetailsPopover>
-              <ul className="qc-items" data-many={items.length > 1 || undefined}>
-                {items.map((item) => (
-                  <li key={item.id}>
-                    <div className="qc-item">
-                      <span className="qc-text">
-                        {item.expect}
-                        {item.baseline ? <span className="matrix-tag qc-tag">Baseline</span> : null}
-                      </span>
-                      {item.examples.length ? (
-                        <DetailsPopover
-                          title={
-                            <DetailsCard card width={400}>
-                              <DetailsEyebrow>How it might be met</DetailsEyebrow>
-                              <ChecklistGuidance item={item} kinds={checklist.kinds} />
-                            </DetailsCard>
-                          }
-                        >
-                          <span className="qc-examples" tabIndex={0}>
-                            Examples
-                          </span>
-                        </DetailsPopover>
-                      ) : null}
-                    </div>
-                    {gapsOf(item).map((g) => (
-                      <p key={g.id} className="matrix-gap">
-                        <span className="explore-gap-kind">{gapKind(g)}</span>
-                        {g.text}
-                      </p>
-                    ))}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          );
-        })}
-      </div>
-    </>
-  );
-}
-
 /* ——— Pages ——— */
 
 function CapabilityPage({ capability, ...go }: Go & { capability: Capability }) {
@@ -653,7 +558,7 @@ function CapabilityPage({ capability, ...go }: Go & { capability: Capability }) 
   const next = nextLevel(level);
   const left = leftIn(state, capability);
   const counts = checklistCounts(state, capability, left.gaps);
-  const adds = next ? (state.checklist?.categories ?? []).filter((c) => c.items.some((i) => i.level === next && i.expect)).length : 0;
+  const adds = next ? (state.checklist?.qualities ?? []).flatMap((q) => q.levels).filter((l) => l.level === next).reduce((n, l) => n + l.outcomes.length, 0) : 0;
   const differ = new Set(capability.levels.map((l) => l.level)).size > 1;
   return (
     <>
@@ -675,11 +580,11 @@ function CapabilityPage({ capability, ...go }: Go & { capability: Capability }) 
               <Tile
                 label="Checklist"
                 value={`${counts.count - counts.notMet} of ${counts.count}`}
-                note={`${STABILITY[level].name} expectations met`}
+                note={`${STABILITY[level].name} outcomes met`}
                 tone={counts.notMet ? "warn" : "ok"}
               />
             ) : null}
-            <Tile label="Next level" value={next ? STABILITY[next].name : "None"} note={next ? `Adds ${plural(adds, "expectation", "expectations")}` : "GA is the top level"} />
+            <Tile label="Next level" value={next ? STABILITY[next].name : "None"} note={next ? `Adds ${plural(adds, "outcome", "outcomes")}` : "GA is the top level"} />
           </>
         }
       />
@@ -696,7 +601,7 @@ function CapabilityPage({ capability, ...go }: Go & { capability: Capability }) 
             </Block>
             {state.checklist ? (
               <Block title="Stability checklist" id="checklist">
-                <QualityChecklist state={state} capability={capability} gaps={left.gaps} />
+                <StabilityChecklist key={capability.id} checklist={state.checklist} capability={capability} gaps={left.gaps} />
               </Block>
             ) : null}
           </>
