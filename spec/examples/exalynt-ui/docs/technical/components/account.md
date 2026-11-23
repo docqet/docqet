@@ -12,36 +12,52 @@ capabilities:
 gaps:
   - id: sync-no-end-to-end-test
     outcome: functionality/beta/stays-correct
+    impact: blocking
     summary: >-
       `POST /users/me/sync` has no end-to-end test, as the API's end-to-end
       server runs without Clerk. Acceptance and unit tests cover it instead.
+    when: A change breaks syncing in a way only a real Clerk would show.
   - id: name-by-webhook-only
+    impact: damaging
     summary: >-
       A name or primary address reaches the API only by Clerk's webhook, or
       by `api sync users`, so others see the old one until it arrives, and a
       retried older webhook can bring an old one back.
+    when: Clerk retries an older webhook after a newer one has arrived.
   - id: clerk-failure-signs-out
+    impact: inconvenient
     summary: >-
       If Clerk fails to load, `ResetFailedClerk` clears Clerk's cookies and
       reloads, in the hope that helps, so even a brief Clerk outage signs
       that browser out.
+    when: Clerk fails to load, even briefly.
   - id: google-connection-never-tried
     outcome: functionality/alpha/main-path
+    impact: blocking
     summary: >-
       Nobody has yet completed a Google connection or disconnected one, as
       that needs a real Google account.
+    when: >-
+      Connecting or disconnecting a real Google account doesn't work as
+      built.
   - id: tokens-filtered-in-browser
     outcome: efficiency/beta/bounded
+    impact: inconvenient
     summary: >-
       Access tokens reads every page of someone's tokens, then searches,
       filters, sorts and pages them in the browser.
+    when: Someone's access tokens grow to many pages.
   - id: tokens-not-tried-by-everyone
     outcome: usability/beta/everyone
+    impact: inconvenient
     summary: >-
       No partner has been through Access tokens in a browser, and no real
       screen reader has been through it or its organization limits, though
       it's the same page for everyone. QA only saw the limits disabled, for
       admins, engineers and team leads, who belong to no organization.
+    when: >-
+      A partner, or someone using a screen reader, works with Access
+      tokens or its organization limits.
 ---
 
 The account is the person's, not an organization's or a partnership's, so it

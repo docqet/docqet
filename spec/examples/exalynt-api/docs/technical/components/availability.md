@@ -6,20 +6,22 @@ capabilities: [availability, scheduling, claiming-blocks, staffing]
 gaps:
   - id: not-load-tested
     outcome: efficiency/beta/realistic-volumes
+    impact: inconvenient
     summary: >-
       Availability hasn't been load-tested.
+    when: Availability is used at realistic volumes.
 tradeoffs:
   - id: recurrence-rules-not-weeks
+    impact: inconvenient
     summary: >-
       Availability is stored as recurrence rules, not a `weeks` column. A
       column would do, as the rules are only ever `FREQ=WEEKLY` with an
       optional `COUNT`, but moving off them is an expand/contract migration on
       a table Capacity reads, with nothing to gain for now.
-    drawbacks:
-      - >-
-        The database can't filter by the weeks a rule covers, so `from` on the
-        overrides list is widened by 51 weeks and checked in Go.
-      - A page of overrides can come back short.
+    drawback: >-
+      The database can't filter by the weeks a rule covers, so `from` on the
+      overrides list is widened by 51 weeks and checked in Go, and a page of
+      overrides can come back short.
 ---
 
 An engineer has rows in `availabilities`, each a weekly RFC 5545 recurrence

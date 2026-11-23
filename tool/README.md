@@ -65,7 +65,13 @@ the side panel, on a detail page and on the checklist: one mark and one color
 per kind (gaps, open decisions, tradeoffs), and each
 item a row with its mark, which a detail page adds more under. A gap's mark is
 an open circle with a dotted edge, the same for product and technical gaps,
-and each gap is labelled *Product* or *Technical*.
+and each gap is labelled *Product* or *Technical*. On the same line, at its
+end, is what's at stake: its impact as four steps rising from low to high,
+lit up to it, with its name, from *Negligible* in the faintest color to
+*Damaging* in the strongest. It opens a popover, as maturity and readiness do, with the
+impact's test, whether the gap breaks a promise its level makes, the
+capabilities it's on and the exposure they add up to, and when it bites. A
+tradeoff's drawback, and the gaps riding on a decision, have one too.
 
 - **Open decisions** show on the map as their mark and how many: on each
   capability's row, after a feature's name and after a domain's, each
@@ -74,15 +80,21 @@ and each gap is labelled *Product* or *Technical*.
   components, count their own.
 - **What's left** on a capability lists its open decisions and its gaps,
   and nothing else: missing evidence is never something left to do. Its gaps
-  are one list: its product gaps, then
-  the technical gaps of the mechanisms and components it's built on. Over the
-  list, how many there are of each kind; with both, each count shows only
-  that kind, and pressing it again shows all. A feature's or domain's
-  adds its own open decisions; a persona's leaves technical gaps out.
+  are one list, its product gaps and the technical gaps of the mechanisms and
+  components it's built on together, riskiest first, as the spec's Risk
+  section orders them. A technical gap says how many capabilities it's on, and
+  any gap says when it bites. Over the list, how many there are of each kind;
+  with both, each count shows only that kind, and pressing it again shows
+  all. A feature's or domain's adds its own open decisions, and lists its
+  capabilities with the worst impact among their gaps, worst first; a
+  persona's leaves technical gaps out.
+- **An open decision** with gaps riding on it shows the worst impact among
+  them, and how many there are.
 - **Tradeoffs** show on their capability, and on a feature as what it's
-  decided not to build: in the side panel, what was chosen; on the detail
-  page, each with its benefits and drawbacks as lists, and the code it
-  explains.
+  decided not to build, riskiest first by their drawback's impact: in the
+  side panel, what was chosen; on the detail page, each with its benefit and
+  drawback side by side, the drawback's impact and when it bites, and the
+  code it explains.
 - **Drafts** show as the word Draft, with no mark, and count toward no
   maturity or readiness.
 - **The checklist** marks each outcome not met, not met by choice (a tradeoff
@@ -94,8 +106,10 @@ and each gap is labelled *Product* or *Technical*.
   where it is in the code, the outcomes it meets, open decisions, and what it
   applies to or what relies on it.
 - **Gaps and tradeoffs**, at `?view=gaps` and from the header, has every gap
-  and tradeoff by what it's on, every open decision by where it is, for
-  everything, product gaps, or technical gaps.
+  and tradeoff, every open decision by where it is, for everything, product
+  gaps, or technical gaps. Gaps are riskiest first, in one list with what
+  each is on above it, or grouped by what they're on, and say how many there
+  are of each impact.
 
 `npm run build` writes a static site to `dist/`. Put a `state.json` beside its
 `index.html` and serve the folder. Nothing else runs on the server. To show

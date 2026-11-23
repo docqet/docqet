@@ -47,48 +47,63 @@ rules:
 concepts: [partnership, agreement, capacity-payout-basis]
 gaps:
   - id: partner-invitations-cant-be-resent
+    impact: inconvenient
     summary: >-
       Admins can't resend a pending partner invitation: they revoke it and
       invite the same address again.
   - id: existing-clients-spotted-by-name-only
+    impact: damaging
     summary: >-
       A company that's already a client can only be spotted by having the
       same name, so one signing up under another name counts as new.
+    when: A company that's already a client signs up under another name.
   - id: no-handover-or-new-terms
+    impact: blocking
     summary: >-
       Nothing hands a partnership to another manager, or sends it new terms.
+    when: A partnership needs a new manager or new terms.
   - id: invitation-email-omits-terms
+    impact: negligible
     summary: >-
       The invitation email doesn't state the partnership's terms.
   - id: no-welcome-email
+    impact: negligible
     summary: >-
       A partner gets no welcome email once they've accepted.
   - id: client-members-not-flagged-when-inviting
+    impact: inconvenient
     summary: >-
       When inviting someone, whether an address is a client's member isn't
       shown; only Exalynt's team is named.
   - id: newest-invitation-only
+    impact: inconvenient
     summary: >-
       With several invitations waiting, a partner sees the newest; the rest
       wait for another visit.
   - id: accepting-happens-in-steps
+    impact: inconvenient
     summary: >-
       Accepting the invitation, naming the partnership, and accepting its
       Partner Agreement happen one after another: if naming fails, the
       partner is told to name it later, and if the agreement fails, the hub
       opens on it to accept.
   - id: partner-permission-granted-by-hand
+    impact: inconvenient
     summary: >-
       Admins other than those with the Administrator role need the partner
       permission granted by hand.
   - id: attribution-needs-an-accepted-invitation
+    impact: blocking
     summary: >-
       A client can only be attributed to a partnership whose invitation has
       been accepted.
+    when: A client comes in before its partnership's invitation is accepted.
   - id: admins-see-the-managers-readiness
+    impact: inconvenient
     summary: >-
       An admin looking at a partnership sees whether its manager's own payout
       account can be paid, not the partnership's.
+    when: A manager's own payout account differs from the partnership's.
 decisions:
   - topic: Referral codes over time
     question: >-
@@ -99,6 +114,7 @@ decisions:
       Terms are set when inviting a partnership. Can an admin change them
       afterwards, and if so, does a change reach clients already
       attributed or only those attributed after it?
+    gaps: [no-handover-or-new-terms]
 ---
 
 ## Includes

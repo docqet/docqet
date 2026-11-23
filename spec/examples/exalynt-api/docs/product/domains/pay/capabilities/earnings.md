@@ -47,33 +47,42 @@ concepts:
   - capacity-block
 gaps:
   - id: no-money-sent-in-production
+    impact: blocking
     summary: >-
       No money is sent in production yet, and people are told so.
   - id: upcoming-shares-can-change
     rule: earnings-and-payouts/when-basis-and-percentages-are-fixed
+    impact: inconvenient
     summary: >-
       Upcoming lead and support earnings follow today's team and
       availability, so they can change before the block is fulfilled. Who
       earns them is fixed when it's fulfilled, and the basis and percentages
       aren't fixed when the block is assigned.
   - id: no-earnings-before-earnings-existed
+    impact: inconvenient
     summary: >-
       Blocks fulfilled before earnings existed have none.
   - id: on-hold-reads-earned
+    impact: negligible
     summary: >-
       On hold isn't a status of its own: an earning held up by the payout
       account reads Earned, and an alert says why.
   - id: expected-pay-not-on-the-block
+    impact: inconvenient
     summary: >-
       What an assigned block will pay shows only among a person's earnings,
       not on the block.
   - id: earnings-go-with-a-deleted-user
+    impact: damaging
     summary: >-
       Someone's earnings go if their user is deleted.
+    when: Someone's user is deleted.
   - id: load-failures-not-reported
     outcome: observability/beta/hears-of-errors
+    impact: inconvenient
     summary: >-
       A failure to load is shown to the person but isn't reported to Exalynt.
+    when: Earnings fail to load.
 ---
 
 ## Includes

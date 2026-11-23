@@ -6,25 +6,31 @@ description: >-
   What the terms mean in the domain is in the role and organization concepts.
 tradeoffs:
   - id: member-manage-gives-any-role
+    impact: damaging
     summary: >-
       `member:manage` gives any organization role, not only roles within the
       giver's own permissions: inviting someone or changing a member's role
       checks only that the role exists, so the default roles stay simple and
       only Admin, which holds every organization permission, manages members.
-    drawbacks:
-      - >-
-        A custom role holding `member:manage` without, say, `invoice:pay` can
-        make its holder Admin, so in effect `member:manage` is every
-        organization permission. The API reference says so.
+    drawback: >-
+      A custom role holding `member:manage` without, say, `invoice:pay` can make
+      its holder Admin, so in effect `member:manage` is every organization
+      permission. The API reference says so.
+    when: >-
+      An organization gives a custom role `member:manage` without every other
+      permission.
   - id: application-access-not-enforced
+    impact: inconvenient
     summary: >-
       Which applications someone is offered is `application_access`, held per
       user and not by role, and only the front ends act on it: they decide
       what to show by it, and the API keeps checking permissions.
-    drawbacks:
-      - >-
-        Someone who isn't offered an application can still call its routes with
-        whatever their permissions allow.
+    drawback: >-
+      Someone who isn't offered an application can still call its routes with
+      whatever their permissions allow.
+    when: >-
+      An organization counts on application access alone to keep someone out of
+      an application.
 ---
 
 | Term | What it is | Where |

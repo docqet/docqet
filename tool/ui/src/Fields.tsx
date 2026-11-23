@@ -1,13 +1,16 @@
 import { type ReactNode } from "react";
 import { Markdown, type Go } from "./design/markdown/Markdown";
 import { LeftItem, LeftList } from "./design/left/LeftMark";
+import { IMPACT_NAMES, RiskMeter, RiskSection } from "./design/risk/RiskMeter";
 import { Term } from "./design/term/Term";
 import {
   conceptLinked,
   decidedBy,
   find,
+  gapsById,
   pageHref,
   subjectOf,
+  worstImpact,
   type Became,
   type BecameKind,
   type Contribution,
@@ -28,16 +31,40 @@ export function Text({ from, text, go }: { from: Contribution; text: string; go:
   return <Markdown text={text} from={from} go={go} className="markdown-field" />;
 }
 
-/* Open decisions, each its question under its topic. */
+/*
+ * Open decisions, each its question under its topic, and, with gaps riding on
+ * it, the worst impact among them: a decision has none of its own.
+ */
 export function DecisionList({ from, decisions, go }: { from: Contribution; decisions: Decision[]; go: Go }) {
   return (
     <LeftList>
-      {decisions.map((d, i) => (
-        <LeftItem key={i} kind="decision">
-          {d.topic ? <span className="decision-topic">{d.topic}</span> : null}
-          <Text from={from} text={d.question} go={go} />
-        </LeftItem>
-      ))}
+      {decisions.map((d, i) => {
+        const riding = gapsById(go.state, d.riding ?? []);
+        return (
+          <LeftItem key={i} kind="decision">
+            {d.topic ? <span className="decision-topic">{d.topic}</span> : null}
+            <Text from={from} text={d.question} go={go} />
+            {riding.length ? (
+              <span className="decision-riding">
+                <RiskMeter impact={worstImpact(riding.map((g) => g.impact))} lead={riding.length > 1 ? "Worst" : undefined} eyebrow="Riding on this decision">
+                  <RiskSection label={riding.length === 1 ? "The gap riding on it" : `The ${riding.length} gaps riding on it`}>
+                    <ul className="risk-on">
+                      {riding.map((g) => (
+                        <li key={g.id}>
+                          <span>{g.summary.length > 110 ? `${g.summary.slice(0, 110).trimEnd()}…` : g.summary}</span>
+                          <strong>{g.impact ? IMPACT_NAMES[g.impact].name : "Not rated"}</strong>
+                        </li>
+                      ))}
+                    </ul>
+                    <div className="risk-note">A decision has no impact of its own: what's at stake is what these cost while it's open.</div>
+                  </RiskSection>
+                </RiskMeter>
+                {riding.length === 1 ? "A gap is" : `${riding.length} gaps are`} riding on it
+              </span>
+            ) : null}
+          </LeftItem>
+        );
+      })}
     </LeftList>
   );
 }

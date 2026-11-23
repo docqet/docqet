@@ -11,29 +11,39 @@ rules:
 concepts: [capacity-block]
 gaps:
   - id: engineer-not-always-named
+    impact: negligible
     summary: >-
       A block's engineer is named only when they're on one of the client's
       teams and the team has loaded. Otherwise it says an engineer at Exalynt.
   - id: no-retry-on-failed-section
     outcome: usability/beta/recover
+    impact: inconvenient
     summary: A failed section says to reload. There's no retry on it.
+    when: A section of the page fails to load.
   - id: changes-show-on-reopening
+    impact: inconvenient
     summary: Changes show only when the page opens again.
   - id: custom-roles-and-session-end-unverified
+    impact: inconvenient
     summary: >-
       Custom roles, and a session ending while the page is open, haven't been
       verified.
+    when: >-
+      Someone with a custom role opens the page, or their session ends while
+      it's open.
   - id: screen-readers-unverified
     outcome: usability/beta/everyone
+    impact: blocking
     summary: Real screen readers haven't been verified.
+    when: Someone uses the page with a screen reader.
 tradeoffs:
   - id: status-not-work
+    impact: inconvenient
     summary: >-
       A block shows who's on it and where it stands, not what was done on it.
-    drawbacks:
-      - >-
-        A client can't tell from home what was done on a block, and opens the
-        block's own page for that.
+    drawback: >-
+      A client can't tell from home what was done on a block, and opens the
+      block's own page for that.
 ---
 
 ## Includes

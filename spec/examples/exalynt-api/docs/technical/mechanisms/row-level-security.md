@@ -6,40 +6,51 @@ description: >-
   them in a request acting in an organization or a partnership.
 gaps:
   - id: no-organization-runs-on-platform
+    impact: damaging
     summary: >-
       `X-Organization-ID` is optional, so anyone signed in can leave it out
       and run on `api_platform`. Holding no platform role, they hold no
       permissions and `authz.Require` refuses them, so nothing crosses today,
       but Bounds are all that stand in the way.
+    when: A query reachable without an organization forgets its Bounds.
   - id: shared-tables-unprotected
+    impact: damaging
     summary: >-
       Shared tables have no row-level security, `users` above all, as staff
       names appear across organizations: a query there that forgets to filter
       can read every user's name and email.
+    when: A query on a shared table forgets to filter.
   - id: no-staff-audit-trail
     outcome: security/ga/traceable
+    impact: inconvenient
     summary: >-
       What staff read across organizations isn't recorded beyond the request's
       log line. Left out by decision for now.
+    when: Someone needs to know what staff read in an organization.
   - id: taken-id-is-a-conflict
+    impact: negligible
     summary: >-
       A client-supplied ID that's already taken is a `409`, in any
       organization, as IDs are globally unique. Someone who already knows an ID
       can learn that it exists, and nothing else.
+    when: Someone supplies an ID they know belongs to another organization.
   - id: indexes-not-led-by-organization
+    impact: inconvenient
     summary: >-
       Existing indexes don't all lead with `organization_id`, as some serve
       staff's views across organizations.
+    when: Organizations' data grows large.
 tradeoffs:
   - id: setting-per-transaction
+    impact: inconvenient
     summary: >-
       The organization or partnership is set with `SET LOCAL` in a
       transaction around each statement, a `UnitOfWork`'s or a short one of
       its own, rather than on a connection kept for the request.
-    drawbacks:
-      - >-
-        A statement outside a `UnitOfWork` costs three more round trips, so work
-        issuing many belongs in one.
+    drawback: >-
+      A statement outside a `UnitOfWork` costs three more round trips, so work
+      issuing many belongs in one.
+    when: Work issues many statements outside a `UnitOfWork`.
 ---
 
 Every table holding an organization's records has an `organization_id`, filled

@@ -14,6 +14,7 @@ import { RingGlyph } from "./design/maturity/RingGlyph";
 import { MATURITY_BANDS, maturityBand } from "./design/maturity/maturity";
 import { STABILITY, STABILITY_LEVEL_IDS, levelColor } from "./design/stability/stability";
 import { GapIcon, LeftLabel, LeftList } from "./design/left/LeftMark";
+import { impactCounts } from "./design/risk/RiskMeter";
 import { Term } from "./design/term/Term";
 import { CapabilityStability } from "./design/catalog/CapabilityLabel";
 import { StandingMark } from "./design/standing/StandingMark";
@@ -53,6 +54,7 @@ import {
   domainName,
   technicalDoc,
   gapsById,
+  inRiskOrder,
   openDecisions,
   closedDecisions,
   decidedBy,
@@ -728,7 +730,7 @@ function CapabilityPage({ capability, ...go }: Go & { capability: Capability }) 
               <RuleTable {...go} rules={rules} own={capability.evidence} capability={capability} />
             </Block>
             {capability.tradeoffs.length ? (
-              <Block title={<LeftLabel kind="tradeoff" size={18} />} count={capability.tradeoffs.length} note="Chosen on purpose, with the benefits and drawbacks that came with each.">
+              <Block title={<LeftLabel kind="tradeoff" size={18} />} count={capability.tradeoffs.length} note="Chosen on purpose, each with the benefit and drawback that came with it.">
                 <Card>
                   <Tradeoffs state={state} ids={capability.tradeoffs} detailed bare />
                 </Card>
@@ -822,7 +824,7 @@ function FeaturePage({ feature, ...go }: Go & { feature: Feature }) {
               </Block>
             )}
             {feature.tradeoffs.length ? (
-              <Block title={<LeftLabel kind="tradeoff" size={18}>Decided not to build</LeftLabel>} count={feature.tradeoffs.length} note="Left out on purpose, with the benefits and drawbacks of leaving each out.">
+              <Block title={<LeftLabel kind="tradeoff" size={18}>Decided not to build</LeftLabel>} count={feature.tradeoffs.length} note="Left out on purpose, each with the benefit and drawback of leaving it out.">
                 <Card>
                   <Tradeoffs state={state} ids={feature.tradeoffs} detailed bare />
                 </Card>
@@ -1180,7 +1182,7 @@ function CapabilityList({ capabilities, onOpen }: { capabilities: Capability[]; 
 
 /*
  * A mechanism or component: how it's built, in the code's words, and where that
- * falls short of what we intend. Its technical gaps; its tradeoffs, with their benefits and drawbacks; where it is in the code,
+ * falls short of what we intend. Its technical gaps; its tradeoffs, with their benefit and drawback; where it is in the code,
  * from the annotations that implement or verify it; the checklist outcomes it meets for the capabilities it serves;
  * and, beside them,
  * its open decisions and the capabilities that rely on it.
@@ -1202,7 +1204,7 @@ function TechnicalPage({ doc, ...go }: Go & { doc: TechnicalDoc }) {
           <>
             <Tile label="Serves" value={plural(capabilities.length, "capability", "capabilities")} note={<LevelBar capabilities={capabilities} />} />
             <Tile label={<LeftLabel kind="technical-gap" size={13} />} value={gaps.length || "None"} note={gaps.length ? "What only someone working on the code would notice" : "None written down"} />
-            <Tile label={<LeftLabel kind="tradeoff" size={13} />} value={doc.tradeoffs.length || "None"} note="Chosen on purpose, benefits and drawbacks alike" />
+            <Tile label={<LeftLabel kind="tradeoff" size={13} />} value={doc.tradeoffs.length || "None"} note="Chosen on purpose, benefit and drawback alike" />
             <Tile label="Outcomes it meets" value={outcomes.length || "None"} note={places ? `Evidence in ${plural(places, "place", "places")}` : "Nothing points at it yet"} />
           </>
         }
@@ -1215,7 +1217,7 @@ function TechnicalPage({ doc, ...go }: Go & { doc: TechnicalDoc }) {
               {gaps.length ? (
                 <Card>
                   <LeftList detailed>
-                    {gaps.map((g) => (
+                    {inRiskOrder(state, gaps, (g) => g).map((g) => (
                       <GapItem key={g.id} state={state} gap={g} detailed />
                     ))}
                   </LeftList>
@@ -1225,7 +1227,7 @@ function TechnicalPage({ doc, ...go }: Go & { doc: TechnicalDoc }) {
               )}
             </Block>
             {doc.tradeoffs.length ? (
-              <Block title={<LeftLabel kind="tradeoff" size={18} />} count={doc.tradeoffs.length} note="Chosen on purpose, with the benefits and drawbacks that came with each.">
+              <Block title={<LeftLabel kind="tradeoff" size={18} />} count={doc.tradeoffs.length} note="Chosen on purpose, each with the benefit and drawback that came with it.">
                 <Card>
                   <Tradeoffs state={state} ids={doc.tradeoffs} detailed bare />
                 </Card>
@@ -1308,16 +1310,19 @@ function SubjectLink({ state, type, id, onPick }: { state: DocketState; type: st
 }
 
 type Show = "all" | "product" | "technical";
+type Order = "risk" | "subject";
 
 /*
  * Everything that differs from what's intended, across the projects showing,
  * on one page: gaps and tradeoffs by what they're on, and open decisions
  * by where they are. It can show just what someone using the product would
- * notice, or just technical gaps.
+ * notice, or just technical gaps. Gaps are riskiest first, as one list with
+ * what each is on above it, or grouped by what they're on.
  */
 function GapsPage(go: Go) {
   const { state, onPick } = go;
   const [show, setShow] = useState<Show>("all");
+  const [order, setOrder] = useState<Order>("risk");
   const technicalType = (type: string) => type === "mechanism" || type === "component";
   const shown = (type: string) => show === "all" || (show === "technical") === technicalType(type);
 
@@ -1371,7 +1376,7 @@ function GapsPage(go: Go) {
             <Tile label={<LeftLabel kind="product-gap" size={13} />} value={productGaps || "None"} note="What someone using it would notice" />
             <Tile label={<LeftLabel kind="technical-gap" size={13} />} value={state.gaps.length - productGaps || "None"} note="What only someone working on the code would" />
             <Tile label={<LeftLabel kind="decision" size={13} />} value={decisions || "None"} note={`In ${plural(decided.length, "place", "places")}`} />
-            <Tile label={<LeftLabel kind="tradeoff" size={13} />} value={state.tradeoffs.length || "None"} note="Chosen on purpose, benefits and drawbacks alike" />
+            <Tile label={<LeftLabel kind="tradeoff" size={13} />} value={state.tradeoffs.length || "None"} note="Chosen on purpose, benefit and drawback alike" />
           </div>
         </div>
       </div>
@@ -1391,8 +1396,36 @@ function GapsPage(go: Go) {
                 </button>
               ))}
             </div>
-            <Block title={<LeftLabel kind="product-gap" term="gap" size={18}>Gaps</LeftLabel>} count={gaps.length} note={gaps.length ? "Shortfalls we know about and mean to close. Written down so nobody is surprised, each with what it affects." : undefined}>
-              {gapGroups.length ? (
+            <div className="page-show" role="radiogroup" aria-label="Order">
+              {(
+                [
+                  ["risk", "Riskiest first"],
+                  ["subject", "By what they're on"],
+                ] as const
+              ).map(([value, label]) => (
+                <button key={value} type="button" role="radio" aria-checked={order === value} className="filter-toggle" aria-pressed={order === value} onClick={() => setOrder(value)}>
+                  {label}
+                </button>
+              ))}
+            </div>
+            <Block
+              title={<LeftLabel kind="product-gap" term="gap" size={18}>Gaps</LeftLabel>}
+              count={gaps.length}
+              note={
+                gaps.length
+                  ? `${impactCounts(gaps)}. Riskiest first: by impact, then whether it breaks a promise its level makes, then how much relies on it.`
+                  : undefined
+              }
+            >
+              {gaps.length && order === "risk" ? (
+                <Card>
+                  <LeftList detailed>
+                    {inRiskOrder(state, gaps, (g) => g).map((gap) => (
+                      <GapItem key={gap.id} state={state} gap={gap} subject={<SubjectLink state={state} type={subjectOf(gap).type} id={subjectOf(gap).id} onPick={onPick} />} detailed />
+                    ))}
+                  </LeftList>
+                </Card>
+              ) : gapGroups.length ? (
                 <Card>
                   {gapGroups.map((g) => (
                     <div key={`${g.type}:${g.id}`} className="page-subject-group">
@@ -1400,7 +1433,7 @@ function GapsPage(go: Go) {
                         <SubjectLink state={state} type={g.type} id={g.id} onPick={onPick} />
                       </div>
                       <LeftList detailed>
-                        {g.items.map((gap) => (
+                        {inRiskOrder(state, g.items, (gap) => gap).map((gap) => (
                           <GapItem key={gap.id} state={state} gap={gap} detailed />
                         ))}
                       </LeftList>
@@ -1411,7 +1444,7 @@ function GapsPage(go: Go) {
                 <p className="concepts-empty">None written down.</p>
               )}
             </Block>
-            <Block title={<LeftLabel kind="tradeoff" size={18} />} count={tradeoffs.length} note={tradeoffs.length ? "Chosen on purpose, with the benefits and drawbacks that came with each." : undefined}>
+            <Block title={<LeftLabel kind="tradeoff" size={18} />} count={tradeoffs.length} note={tradeoffs.length ? `Chosen on purpose, each with the benefit and drawback that came with it: ${impactCounts(tradeoffs)}.` : undefined}>
               {tradeoffGroups.length ? (
                 <Card>
                   {tradeoffGroups.map((g) => (

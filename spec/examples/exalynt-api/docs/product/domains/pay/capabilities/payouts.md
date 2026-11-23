@@ -68,35 +68,47 @@ rules:
 concepts: [payout, payout-share, capacity-payout-basis, partnership]
 gaps:
   - id: pre-production-payouts-say-paid
+    impact: damaging
     summary: >-
       Payouts released before production sent money through the payments
       partner say Paid, though nothing was sent.
   - id: leads-cant-see-team-payout-status
     rule: payout-schedule/who-sees-payout-status
+    impact: blocking
     summary: >-
       A lead can't see the payout status of their team's blocks.
   - id: paid-means-reached-the-balance
+    impact: inconvenient
     summary: >-
       Paid means the money has reached the payee's balance with the payments
       partner, not their bank. The payments partner pays it on to the bank
       itself, usually within a couple of days, and keeps for the payee
       anything the bank sends back.
   - id: failed-payout-reads-earned
+    impact: negligible
     summary: >-
       An earning whose payout failed reads as Earned on the earnings page,
       with a note saying so.
   - id: nothing-held-back-from-a-release
+    impact: blocking
     summary: >-
       Nothing can be held back from a release, or looked into from it.
+    when: >-
+      An admin wants to hold back or look into one payee's payout before a
+      release.
   - id: releases-dont-say-who
     outcome: security/ga/traceable
+    impact: inconvenient
     summary: >-
       A past release doesn't say who released it.
+    when: Someone needs to know who released a payout.
   - id: unanswered-releases-stay-processing
+    impact: inconvenient
     summary: >-
       A release that got no answer from the payments partner stays
       Processing, and an admin is told, until the next release sends it
       again.
+    when: The payments partner doesn't answer a release.
 ---
 
 ## Includes

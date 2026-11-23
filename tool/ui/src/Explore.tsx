@@ -15,11 +15,12 @@ import WidgetsOutlinedIcon from "@mui/icons-material/WidgetsOutlined";
 import Box from "@mui/material/Box";
 import { MATURITY_BANDS, maturityBand } from "./design/maturity/maturity";
 import { RingGlyph } from "./design/maturity/RingGlyph";
-import { STABILITY, levelColor } from "./design/stability/stability";
+import { STABILITY, STABILITY_LEVEL_IDS, levelColor } from "./design/stability/stability";
 import { StabilityMark } from "./design/stability/StabilityMark";
 import { CapabilityStability } from "./design/catalog/CapabilityLabel";
 import { StandingMark } from "./design/standing/StandingMark";
 import { GapFilter, GapKindTag, LeftCounts, LeftItem, LeftLabel, LeftList, gapKind, type GapShow, type LeftKind } from "./design/left/LeftMark";
+import { RiskMeter, RiskSection, impactCounts } from "./design/risk/RiskMeter";
 import { ConceptChips, PageLink, PanelHeader } from "./Concepts";
 import { Term } from "./design/term/Term";
 import { InlineMarkdown, MoreAboutFold } from "./design/markdown/Markdown";
@@ -43,8 +44,12 @@ import {
   featureConcepts,
   featureTarget,
   find,
+  impactRank,
+  inRiskOrder,
   leftCount,
   leftIn,
+  riskOf,
+  worstImpact,
   pageHref,
   projectName,
   partOf,
@@ -61,7 +66,9 @@ import {
   type DocketState,
   type Feature,
   type Gap,
+  type Risk,
   type TechnicalGap,
+  type Tradeoff,
   type Left,
   type Persona,
   type Pick,
@@ -870,12 +877,18 @@ export function GapItem({
 }) {
   const named = detailed && gap.outcome ? checklistOutcome(state.checklist, gap.outcome) : undefined;
   const rule = gap.rule ? find(state.rules, gap.rule) : undefined;
+  /* How many capabilities a technical gap shows on, beyond the one it's shown under. */
+  const reach = on ? riskOf(state, gap).capabilities : 0;
+  const reachText = reach > 1 ? ` · on ${reach} capabilities` : "";
   if (detailed)
     return (
       <LeftItem kind={gapKind(gap)}>
-          {subject ? <span className="explore-gap-subject">{subject}</span> : null}
-          <div className="left-item-text">
+          <div className="gap-head">
+            {subject ? <span className="explore-gap-subject">{subject}</span> : null}
             <GapKindTag kind={gapKind(gap)} />
+            <GapRisk state={state} gap={gap} />
+          </div>
+          <div className="left-item-text">
             <InlineMarkdown text={gap.summary} />
           </div>
           <CameFrom kind="gap" id={gap.id} go={{ state, onConcept: () => {} }} inline />
@@ -900,8 +913,17 @@ export function GapItem({
                 <span className="gap-affect">
                   <span className="explore-tag">In</span>
                   <TechnicalLink doc={on} newTab={newTab} />
+                  {reachText ? <span className="faint">{reachText.slice(3)}</span> : null}
                 </span>
               ) : null}
+            </div>
+          ) : null}
+          {gap.when ? (
+            <div className="gap-affects">
+              <span className="gap-affects-label">When</span>
+              <span className="gap-affect">
+                <InlineMarkdown text={gap.when} />
+              </span>
             </div>
           ) : null}
           <Places state={state} places={gap.places} label="Marked" detailed />
@@ -909,50 +931,132 @@ export function GapItem({
     );
   return (
     <LeftItem kind={gapKind(gap)}>
-      {subject ? <span className="explore-gap-subject">{subject}</span> : null}
-      <div className="left-item-text">
+      <div className="gap-head">
+        {subject ? <span className="explore-gap-subject">{subject}</span> : null}
         <GapKindTag kind={gapKind(gap)} />
+        <GapRisk state={state} gap={gap} />
+      </div>
+      <div className="left-item-text">
         <InlineMarkdown text={gap.summary} />
       </div>
       <span className="explore-left-meta">
         {on ? (
           <span>
             In <TechnicalLink doc={on} newTab={newTab} />
+            {reachText}
           </span>
         ) : null}
         {rule ? <span>Doesn't yet hold to: {rule.name}</span> : null}
+        {gap.when ? (
+          <span>
+            When: <InlineMarkdown text={gap.when} />
+          </span>
+        ) : null}
         <Places state={state} places={gap.places} label="Marked" />
       </span>
     </LeftItem>
   );
 }
 
+/* The capabilities a gap or tradeoff shows on, most stable first, and the exposure they add up to, for a risk popover. */
+function RiskExposure({ risk }: { risk: Risk }) {
+  const n = risk.on.length;
+  const rank = (c: Capability) => (c.stability ? STABILITY_LEVEL_IDS.indexOf(c.stability) : -1);
+  return (
+    <RiskSection label={n === 1 ? "On 1 capability" : `On ${n} capabilities`}>
+      {n ? (
+        <ul className="risk-on">
+          {[...risk.on]
+            .sort((a, b) => rank(b) - rank(a))
+            .map((c) => (
+              <li key={c.id}>
+                <span>{c.name}</span>
+                <CapabilityStability level={c.stability} name={c.name} focusable={false} />
+              </li>
+            ))}
+        </ul>
+      ) : (
+        "None showing."
+      )}
+      <div className="risk-note">Exposure {risk.exposure}: each capability weighs as its level does in maturity, GA most, drafts nothing.</div>
+    </RiskSection>
+  );
+}
+
+/* What's at stake in a gap: its impact as a meter, whose popover says whether it breaks a promise, what relies on it, and when it bites. */
+function GapRisk({ state, gap }: { state: DocketState; gap: Gap }) {
+  const risk = riskOf(state, gap);
+  const rule = gap.rule ? find(state.rules, gap.rule) : undefined;
+  const named = gap.outcome ? checklistOutcome(state.checklist, gap.outcome) : undefined;
+  const outcome = named ? `${named.quality.name} at ${STABILITY[named.outcome.level].name}: “${named.outcome.text}”` : "";
+  return (
+    <RiskMeter impact={gap.impact} eyebrow={`What's at stake in this ${gapKind(gap) === "technical-gap" ? "technical" : "product"} gap`}>
+      <RiskSection label="Breaks a promise">
+        {rule
+          ? `Yes. Its capability follows “${rule.name}”, and doesn't hold to it yet.`
+          : named && risk.promise
+            ? `Yes. A level it's on expects ${outcome}`
+            : named
+              ? `Not yet. It falls short of ${outcome}, which no level it's on expects yet.`
+              : "No. It names no rule or checklist outcome."}
+      </RiskSection>
+      <RiskExposure risk={risk} />
+      {gap.when ? (
+        <RiskSection label="When it bites">
+          <InlineMarkdown text={gap.when} />
+        </RiskSection>
+      ) : null}
+    </RiskMeter>
+  );
+}
+
+/* What a tradeoff accepts: its drawback's impact as a meter, whose popover says what relies on it and when it bites. It breaks no promise: it's chosen. */
+function TradeoffRisk({ state, tradeoff }: { state: DocketState; tradeoff: Tradeoff }) {
+  return (
+    <RiskMeter impact={tradeoff.impact} eyebrow="What this tradeoff accepts">
+      <RiskSection label="Drawback">
+        <InlineMarkdown text={tradeoff.drawback} />
+      </RiskSection>
+      <RiskExposure risk={riskOf(state, tradeoff)} />
+      {tradeoff.when ? (
+        <RiskSection label="When it bites">
+          <InlineMarkdown text={tradeoff.when} />
+        </RiskSection>
+      ) : null}
+    </RiskMeter>
+  );
+}
+
 /*
- * One side of a tradeoff, as a list: its benefits, marked +, or its
- * drawbacks, marked −. Both are what came with the choice. Benefits not
- * written down say so, since there's nothing to weigh the drawbacks against.
+ * One side of a tradeoff: its benefit, marked +, or its drawback, marked −,
+ * with when the drawback bites. Both are what came with the choice. A benefit
+ * not written down says so, since there's nothing to weigh the drawback
+ * against.
  */
-function TradeoffSide({ side, points }: { side: "benefits" | "drawbacks"; points: string[] }) {
+function TradeoffSide({ side, text, when = null }: { side: "benefits" | "drawbacks"; text: string | null; when?: string | null }) {
   const Icon = side === "benefits" ? AddRoundedIcon : RemoveRoundedIcon;
   return (
     <div className={`tradeoff-side tradeoff-${side}`}>
-      <span className="tradeoff-side-label">{side === "benefits" ? "Benefits" : "Drawbacks"}</span>
-      {points.length ? (
+      <span className="tradeoff-side-label">{side === "benefits" ? "Benefit" : "Drawback"}</span>
+      {text?.trim() ? (
         <ul className="tradeoff-points">
-          {points.map((p) => (
-            <li key={p}>
-              <span className="tradeoff-point-mark" aria-hidden>
-                <Icon sx={{ fontSize: 14 }} />
-              </span>
-              <span>
-                <InlineMarkdown text={p} />
-              </span>
-            </li>
-          ))}
+          <li>
+            <span className="tradeoff-point-mark" aria-hidden>
+              <Icon sx={{ fontSize: 14 }} />
+            </span>
+            <span>
+              <InlineMarkdown text={text} />
+            </span>
+          </li>
         </ul>
       ) : (
         <span className="tradeoff-none">Not written down</span>
       )}
+      {when ? (
+        <div className="tradeoff-when">
+          When: <InlineMarkdown text={when} />
+        </div>
+      ) : null}
     </div>
   );
 }
@@ -975,10 +1079,10 @@ function FallsShortOf({ state, outcome }: { state: DocketState; outcome: string 
 }
 
 /*
- * Tradeoffs: what we chose on purpose, and its benefits and drawbacks, since
+ * Tradeoffs: what we chose on purpose, and its benefit and drawback, since
  * they're decided, not open. A feature's are what it's decided not to do. In
  * the side panel, folded, each is what we chose alone; with `detailed`, each
- * is a card, its benefits and drawbacks side by side, with the code it
+ * is a card, its benefit and drawback side by side, with the code it
  * explains.
  */
 export function Tradeoffs({
@@ -995,20 +1099,23 @@ export function Tradeoffs({
   /* Without its own heading, as in a block that has one. */
   bare?: boolean;
 }) {
-  const list = tradeoffsById(state, ids);
+  const list = inRiskOrder(state, tradeoffsById(state, ids), (t) => t);
   if (!list.length) return null;
   const items = detailed ? (
     <LeftList detailed>
       {list.map((t) => (
         <LeftItem key={t.id} kind="tradeoff">
           <div className="tradeoff-choice left-item-text">
-            <span className="tradeoff-label">We chose</span>
+            <span className="tradeoff-label">
+              We chose
+              <TradeoffRisk state={state} tradeoff={t} />
+            </span>
             <InlineMarkdown text={t.summary} />
           </div>
           <CameFrom kind="tradeoff" id={t.id} go={{ state, onConcept: () => {} }} inline />
           <div className="tradeoff-sides">
-            <TradeoffSide side="benefits" points={t.benefits} />
-            <TradeoffSide side="drawbacks" points={t.drawbacks} />
+            <TradeoffSide side="benefits" text={t.benefit} />
+            <TradeoffSide side="drawbacks" text={t.drawback} when={t.when} />
           </div>
           <FallsShortOf state={state} outcome={t.outcome} />
           <Places state={state} places={t.places} label="Marked" detailed />
@@ -1019,6 +1126,9 @@ export function Tradeoffs({
     <LeftList>
       {list.map((t) => (
         <LeftItem key={t.id} kind="tradeoff">
+          <div className="gap-head">
+            <TradeoffRisk state={state} tradeoff={t} />
+          </div>
           <div className="left-item-text">
             <InlineMarkdown text={t.summary} />
           </div>
@@ -1165,8 +1275,9 @@ function LeftItems({
 }
 
 /*
- * A capability's gaps, product and technical, in one list, each labelled with
- * its kind. Over it, how many of each, which narrow it to one kind. A
+ * A capability's gaps, product and technical, in one list, riskiest first,
+ * each labelled with its impact and kind. Over it, how many of each kind,
+ * which narrow it to one. A
  * technical gap says what it's in, which, from the side panel, opens in a new
  * tab.
  */
@@ -1184,10 +1295,11 @@ function Gaps({ state, product, technical, detailed }: { state: DocketState; pro
         <GapFilter product={product.length} technical={technical.length} show={show} onShow={setShow} />
       </div>
       <LeftList detailed={detailed}>
-        {show !== "technical-gap" ? product.map((g) => <GapItem key={g.id} state={state} gap={g} detailed={detailed} />) : null}
-        {show !== "product-gap"
-          ? technical.map(({ gap, on }) => <GapItem key={gap.id} state={state} gap={gap} on={on} detailed={detailed} newTab={!detailed} />)
-          : null}
+        {inRiskOrder(state, [...product.map((gap) => ({ gap, on: undefined as TechnicalDoc | undefined })), ...technical], (i) => i.gap)
+          .filter(({ on }) => show === "all" || (show === "technical-gap") === !!on)
+          .map(({ gap, on }) => (
+            <GapItem key={gap.id} state={state} gap={gap} on={on} detailed={detailed} newTab={!!on && !detailed} />
+          ))}
       </LeftList>
     </div>
   );
@@ -1195,7 +1307,8 @@ function Gaps({ state, product, technical, detailed }: { state: DocketState; pro
 
 /*
  * What's left across several capabilities, such as a feature's: in the side
- * panel, a row for each with anything open, saying how much, which opens it;
+ * panel, a row for each with anything open, the one whose worst gap is worst
+ * first, saying how much and that worst impact, which opens it;
  * with `detailed`, as on a detail page, each one's items in full. `own`, a
  * feature, domain or other doc they're under, adds its own open decisions
  * first. With `technical` false, as for a persona, only what someone using
@@ -1223,7 +1336,13 @@ export function LeftRollup({
   onPick?: (pick: Pick) => void;
 }) {
   const decisions = own ? openDecisions(own) : [];
-  const open = capabilities.map((c) => ({ capability: c, left: leftIn(state, c, technical) })).filter(({ left }) => leftCount(left));
+  /* Capabilities with anything open, the one whose worst gap is worst first. */
+  const worstOf = (left: Left) => worstImpact([...left.gaps, ...left.technical.map((t) => t.gap)].map((g) => g.impact));
+  const open = capabilities
+    .map((c) => ({ capability: c, left: leftIn(state, c, technical) }))
+    .filter(({ left }) => leftCount(left))
+    .map((o) => ({ ...o, worst: worstOf(o.left) }))
+    .sort((a, b) => impactRank(a.worst) - impactRank(b.worst));
   const total = decisions.length + open.reduce((n, { left }) => n + leftCount(left), 0);
   return (
     <section className="explore-left">
@@ -1248,9 +1367,21 @@ export function LeftRollup({
         ))
       ) : (
         <ul>
-          {open.map(({ capability, left }) => (
+          {open.map(({ capability, left, worst }) => (
             <li key={capability.id}>
-              <Row icon={NAMES.capability.icon} name={capability.name} summary={<LeftSummary left={left} />} onClick={() => onOpen("capability", capability.id)}>
+              <Row
+                icon={NAMES.capability.icon}
+                name={capability.name}
+                summary={
+                  <>
+                    <RiskMeter impact={worst} lead="Worst" eyebrow={`The worst of what's left in ${capability.name}`} inButton>
+                      <RiskSection label="Its gaps">{impactCounts([...left.gaps, ...left.technical.map((t) => t.gap)])}</RiskSection>
+                    </RiskMeter>
+                    <LeftSummary left={left} />
+                  </>
+                }
+                onClick={() => onOpen("capability", capability.id)}
+              >
                 <CapabilityStability level={capability.stability} name={capability.name} focusable={false} />
               </Row>
             </li>

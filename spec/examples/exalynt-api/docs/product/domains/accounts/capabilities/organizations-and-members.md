@@ -80,25 +80,31 @@ rules:
 concepts: [organization, role, team]
 gaps:
   - id: invitations-never-expire
+    impact: inconvenient
     summary: >-
       Invitations never expire and can't be resent: an Admin revokes one and
       invites the same address again.
   - id: referral-relies-on-alpha-partnerships
     outcome: security/alpha/stable-dependencies
+    impact: inconvenient
     summary: >-
       Which partner referred the organization comes from Partnerships, which
       is still Alpha.
+    when: Partnerships makes a breaking change or resets its data.
   - id: logo-only-in-the-portal
+    impact: negligible
     summary: >-
       Only the portal shows the organization's logo: the console and the
       admin still show initials.
   - id: team-assignment-by-load-only
+    impact: inconvenient
     summary: >-
       Assigning a new client a team goes only by load, not by what kind of
       work suits a team, and two clients signing up at once can land on the
       same team.
   - id: sign-up-shows-the-team
     outcome: security/beta/misuse
+    impact: damaging
     summary: >-
       Anyone who signs up sees the names and email addresses of the team
       they're given, with no one at Exalynt having looked at them first.
@@ -106,87 +112,112 @@ gaps:
       show more than one team.
   - id: no-alert-on-failures
     outcome: observability/beta/hears-of-errors
+    impact: blocking
     summary: >-
       Exalynt doesn't alert itself when sign-up, inviting or joining start
       failing: someone notices first.
+    when: Sign-up, inviting or joining start failing.
   - id: success-not-agreed
     outcome: utility/beta/success-agreed
+    impact: inconvenient
     summary: >-
       What success looks like hasn't been agreed with the client, so nothing
       yet shows it's met in real use.
   - id: no-availability-target
     outcome: reliability/ga/availability
+    impact: inconvenient
     summary: No availability target has been agreed.
   - id: no-speed-target
     outcome: efficiency/ga/speed-targets
+    impact: inconvenient
     summary: >-
       No response-time target has been agreed, and it hasn't been tried at
       peak load.
+    when: Many people use it at once.
   - id: retention-not-decided
     outcome: security/beta/duties
+    impact: damaging
     summary: >-
-      How long an organization's data is kept after it closes isn't decided:
-      nothing is deleted, even on request.
+      Nothing of an organization's data is deleted after it closes, even on
+      request.
   - id: no-privacy-notice
     outcome: security/beta/duties
+    impact: damaging
     summary: >-
       Sign-up doesn't link to a privacy notice, and the agreements with the
       services that hold people's details (sign-in, email, monitoring) aren't
       confirmed.
   - id: supported-browsers-not-stated
     outcome: compatibility/ga/every-platform
+    impact: inconvenient
     summary: >-
       Which browsers and devices it supports isn't stated, and it hasn't been
       checked against them.
+    when: Someone uses a browser or device it doesn't work on.
   - id: accessibility-standard-not-stated
     outcome: usability/ga/all-accessible
+    impact: inconvenient
     summary: >-
       The accessibility standard it meets isn't stated, and it hasn't been
       checked against one.
+    when: Someone relies on assistive technology it doesn't work with.
   - id: no-support-commitments
     outcome: supportability/ga/help
+    impact: inconvenient
     summary: >-
       There's no stated support response time, no status page or outage
       notice, and no commitment to review serious incidents.
 tradeoffs:
   - id: closing-by-email
+    impact: inconvenient
     summary: >-
       Closing the account is a conversation with Exalynt, by email from the
       Organization page.
-    drawbacks:
-      - Nothing in the portal starts or tracks it.
-      - The organization isn't deleted afterwards.
+    drawback: >-
+      Nothing in the portal starts or tracks closing, and the organization isn't
+      deleted afterwards.
   - id: fifty-invitations-a-day
+    impact: inconvenient
     summary: >-
       An organization, and each person, can send 50 invitations a day.
-    drawbacks:
-      - >-
-        An organization inviting more people than that waits until the next
-        day.
+    drawback: >-
+      An organization inviting more people than that waits until the next day.
+    when: An organization invites more than 50 people in a day.
   - id: members-unsorted-and-unpaged
     outcome: efficiency/beta/bounded
+    impact: inconvenient
     summary: >-
       The list of members can't be sorted or paged: it shows every member, by
       name.
-    drawbacks:
-      - A large organization's list is long to look through.
+    drawback: A large organization's list is long to look through.
+    when: An organization has many members.
   - id: last-save-wins
+    impact: damaging
     summary: >-
       The last save wins on the organization's name and on member roles:
       nothing checks what the person last read.
-    drawbacks:
-      - >-
-        Two people changing the same thing at once can undo each other's change
-        without knowing.
+    drawback: >-
+      Two people changing the same thing at once can undo each other's change
+      without knowing.
+    when: >-
+      Two people change the organization's name, or the same member's role, at
+      once.
   - id: any-role-from-member-management
+    impact: damaging
     summary: >-
       Whoever can manage members can give anyone any role, Admin included.
-    drawbacks:
-      - A role that manages members can do everything.
+    drawback: A role that manages members can do everything.
+    when: >-
+      Someone is given a role that manages members but isn't meant to do
+      everything.
   - id: initials-without-a-photo
+    impact: negligible
     summary: A member without a photo of their own shows initials.
-    drawbacks:
-      - Members without a photo are told apart only by their initials.
+    drawback: Members without a photo are told apart only by their initials.
+decisions:
+  - topic: Keeping a closed organization's data
+    question: How long is an organization's data kept after it closes?
+    gaps: [retention-not-decided]
 ---
 
 ## Includes

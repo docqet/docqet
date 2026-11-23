@@ -5,27 +5,31 @@ capabilities: [estimates]
 gaps:
   - id: later-save-wins
     outcome: reliability/ga/holds-up
+    impact: damaging
     summary: >-
       A PUT doesn't check what the caller last read, so the later of two saves
       replaces the earlier one. An `If-Unmodified-Since` precondition with a
       `412` could be added without breaking anyone.
+    when: Two people edit the same estimate at once.
 tradeoffs:
   - id: prices-copied-onto-estimate
+    impact: inconvenient
     summary: >-
       Prices are copied onto the estimate when it's made, so a client's
       estimate doesn't change when prices do. Every response returns the copy
       as `capacity_prices`, and the console and portal price from it.
-    drawbacks:
-      - >-
-        A capacity type added later only reaches estimates made after it's
-        recorded.
+    drawback: >-
+      A capacity type added later only reaches estimates made after it's
+      recorded.
+    when: A capacity type is added.
   - id: unindexed-search
+    impact: inconvenient
     summary: >-
       Search is `ILIKE '%word%'` over four columns, with no index: at 2,000
       estimates that's a few milliseconds, measured against the local stack on
       2026-10-23.
-    drawbacks:
-      - It scans.
+    drawback: It scans.
+    when: Estimates grow far beyond the 2,000 measured.
 ---
 
 `PUT /v1/estimates/{id}` replaces the estimate in one transaction: it updates

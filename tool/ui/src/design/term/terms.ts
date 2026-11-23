@@ -114,7 +114,7 @@ export const TERMS: Record<TermId, TermEntry> = {
   tradeoff: {
     name: "Tradeoff",
     means:
-      "Something chosen over an alternative on purpose, with its benefits and drawbacks, that we've decided to live with. It's a decision, not something left to do.",
+      "Something chosen over an alternative on purpose, with its benefit and drawback, that we've decided to live with. It's a decision, not something left to do.",
     more: "A booking holds one room, so a family that needs two makes two bookings. On a feature, a tradeoff is something decided never to build.",
   },
   "open-decision": {

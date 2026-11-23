@@ -19,37 +19,54 @@ rules:
 concepts: [capacity-block, capacity-unit, invoice]
 gaps:
   - id: block-list-filters-reset
+    impact: inconvenient
     summary: >-
       The filters and sort on the list of blocks are cleared on coming back
       from a block.
   - id: no-failed-payment-email
+    impact: inconvenient
     summary: >-
       A block whose payment fails shows that it failed until its invoice is
       paid, on the payment provider's page for it. Nobody is emailed about a
       failed payment.
+    when: A block's payment fails.
   - id: retry-protection-expires
     rule: capacity-purchasing/retrying-a-purchase-never-charges-twice
+    impact: damaging
     summary: >-
       A retried purchase is protected from charging twice only for as long as
       the payment provider keeps the attempt, at least 24 hours.
+    when: A purchase is retried after the provider has let the attempt go.
   - id: retry-repeats-provider-error
+    impact: inconvenient
     summary: >-
       The payment provider repeats a failed attempt's result, so a retry after
       a provider error can fail the same way. It still can't charge twice.
+    when: The payment provider errors on a purchase.
   - id: unknown-outcome-retry-while-open
     rule: capacity-purchasing/retrying-a-purchase-never-charges-twice
+    impact: damaging
     summary: >-
       If it can't be told whether a purchase went through, the client is told
       so, and trying again can't charge twice, but only while that attempt is
       still open. Closing it, or reloading, starts a new purchase.
+    when: >-
+      A purchase's outcome is unknown and the client closes or reloads before
+      trying again.
   - id: real-payments-untried
     outcome: functionality/beta/unusual-input
+    impact: damaging
     summary: >-
       A decline replayed by the real payment provider, and a real bank debit
       from start to finish, haven't been tried.
+    when: >-
+      The real provider replays a decline, or a client pays by bank debit, and
+      it's handled differently than tested.
   - id: touch-and-screen-readers-untried
     outcome: usability/beta/everyone
+    impact: blocking
     summary: Real touch screens and screen readers haven't been tried.
+    when: Someone buys blocks on a touch screen or with a screen reader.
 decisions:
   - topic: Buying without a call
     question: >-

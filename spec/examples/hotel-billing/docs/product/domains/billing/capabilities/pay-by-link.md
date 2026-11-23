@@ -11,14 +11,14 @@ rules:
 concepts: [payment, bill]
 tradeoffs:
   - id: hotels-currency-only
+    impact: inconvenient
     summary: Guests pay in the hotel's currency, not their own.
-    benefits:
-      - The bill, the payment and the hotel's books are all in one currency.
-      - There are no exchange rates to keep.
-    drawbacks:
-      - >-
-        Their card provider converts it, at its own rate, so the amount on
-        their statement can differ from the bill.
+    benefit: >-
+      The bill, the payment and the hotel's books are all in one currency,
+      with no exchange rates to keep.
+    drawback: >-
+      Their card provider converts it, at its own rate, so the amount on
+      their statement can differ from the bill.
 decisions:
   - question: Do guests pay before they leave, or wait until they're home?
 ---

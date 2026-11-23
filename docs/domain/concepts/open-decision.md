@@ -19,6 +19,15 @@ rule.
 Open decisions on a capability show on every persona it serves, and on its
 feature and domain, but they're declared once.
 
+A question doesn't happen to anyone, so a decision has no impact of its own.
+What does happen is whatever the software does while it's open, and that's a
+[gap](gap.md). When a gap's cost depends on how the question is answered, the
+decision names it as riding on it, and shows the worst impact among those
+gaps, so it's clear what's at stake in leaving it open. The gap is still what
+counts toward [risk](risk.md), so nothing is counted twice. A gap that's
+really an unsettled question is written as both: the consequence as the gap,
+and the question as the decision that names it.
+
 ## Lifecycle
 
 Open → Closed
@@ -61,6 +70,21 @@ a draft capability:
 decisions:
   - topic: Who goes first
     question: Whoever asked first, or whoever's stay fits the free nights best?
+```
+
+While it's open, `gaps` can name the gaps riding on it, each by its key on
+the same doc or by its full ID, on the same side as `became`. On
+[client agreements](../../../spec/examples/exalynt-api/docs/product/domains/agreements/capabilities/client-agreements.md),
+copies accepted before a shared definition changed still say what it used
+to:
+
+```yaml
+decisions:
+  - topic: Changing shared definitions
+    question: >-
+      When a shared definition changes, how does that reach agreement versions
+      that were already accepted?
+    gaps: [shared-definitions-changed-in-place]
 ```
 
 Closing one gives it a `status`, an `answer`, and `became`: a list of what the

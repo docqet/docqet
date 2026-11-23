@@ -8,14 +8,19 @@ meets: [security/ga/sound]
 gaps:
   - id: shapes-shared-with-less-stable-capabilities
     outcome: compatibility/ga/stable-interface
+    impact: inconvenient
     summary: >-
       `GET /organization-roles`, the only way an API caller gets the role IDs
       to invite with or set a member's role, belongs to roles and returns its
       whole `OrganizationRole`, permissions included. The `Organization` schema
       is also what `GET /clients` returns. Changing either changes what
       organizations and members relies on, so both are additive only.
+    when: >-
+      Roles needs to change `OrganizationRole`, or `GET /clients` needs to
+      change `Organization`, in a way that isn't additive.
   - id: sends-and-keys-never-pruned
     outcome: efficiency/beta/bounded
+    impact: negligible
     summary: >-
       `organization_invitation_sends` and `organization_creation_keys` are
       never pruned: only the last day of sends and a retry's key are ever read,
@@ -23,36 +28,42 @@ gaps:
       a day.
   - id: no-load-test
     outcome: efficiency/ga/speed-targets
+    impact: blocking
     summary: >-
       The routes have never been tried at peak, and their running cost isn't
       known, including whether Clerk's plan limits fit expected sign-ups.
+    when: Traffic reaches its peak, or sign-ups outgrow Clerk's plan limits.
   - id: rollback-and-restore-untried
     outcome: reliability/ga/recovery
+    impact: damaging
     summary: >-
       Deploys roll back by re-running an older commit, and there's a runbook
       for restoring deleted records from a backup, but neither has been
       practised for organizations.
+    when: A deploy needs rolling back, or deleted records need restoring.
 tradeoffs:
   - id: lists-returned-whole
     outcome: efficiency/beta/bounded
+    impact: inconvenient
     summary: >-
       Members, invitations, and `GET /v1/clients` are returned whole, not
       paged: an organization is sized for tens of members and Exalynt for tens
       to hundreds of clients.
-    drawbacks:
-      - >-
-        The last-manager check reads every member and organization role on each
-        removal and role change.
+    drawback: >-
+      The last-manager check reads every member and organization role on each
+      removal and role change.
+    when: An organization grows well beyond tens of members.
   - id: shared-invitation-routes
+    impact: negligible
     summary: >-
       `GET /invitations` and `POST /invitations/{id}/accept` stay shared, with
       stable organization-only copies beside them: they also serve invitations
       to work with Exalynt and to manage a partnership, whose shape is still
       settling, so the stable contract for organizations is
       `/users/me/organization-invitations`.
-    drawbacks:
-      - There are two ways to list and accept an organization's invitation.
-      - Onboarding reads both listings.
+    drawback: >-
+      There are two ways to list and accept an organization's invitation, and
+      onboarding reads both listings.
 ---
 
 Who made each change is the `user_id` on its request's log line, and `user.id`

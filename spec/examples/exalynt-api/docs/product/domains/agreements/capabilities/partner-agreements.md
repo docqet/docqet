@@ -23,34 +23,45 @@ rules:
 concepts: [agreement, partnership]
 gaps:
   - id: only-the-partner-hub-holds-to-the-agreement
+    impact: damaging
     summary: >-
       Only the Partner Hub holds a partnership to its agreement: someone using
       the API directly can still do what managing it allows without one in
       effect.
   - id: no-new-terms
+    impact: blocking
     summary: >-
       Nothing sends a partnership new terms after its invitation, so it has
       one Partner Agreement at most for now.
+    when: A partnership's terms need to change.
   - id: offered-only-through-alpha-invitations
     outcome: security/alpha/stable-dependencies
+    impact: blocking
     summary: >-
       A partnership gets its Partner Agreement only through its invitation,
       sent and accepted in Partnerships, which is still Alpha.
+    when: A breaking change in Partnerships' invitations.
   - id: unnamed-partnership-in-the-document
+    impact: negligible
     summary: >-
       A partnership accepted before it's named shows "your partnership" in the
       document as accepted.
+    when: Naming a partnership fails before its agreement is accepted.
   - id: switching-relies-on-alpha-partnerships
     outcome: security/alpha/stable-dependencies
+    impact: blocking
     summary: >-
       Switching between the partnerships someone manages relies on
       Partnerships, which is still Alpha.
+    when: A breaking change in Partnerships.
   - id: generated-pdf-file-name
+    impact: negligible
     summary: >-
       A PDF downloaded from the browser's viewer gets a generated file name,
       not the agreement's.
   - id: names-outside-western-european-alphabets
     outcome: usability/beta/everyone
+    impact: damaging
     summary: >-
       A name with characters outside Western European alphabets shows them as
       "?" in the PDF, and the PDF keeps them that way once accepted.

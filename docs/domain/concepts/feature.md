@@ -49,8 +49,7 @@ tradeoffs:
   - id: front-desk-bookings-only
     summary: >-
       Bookings are taken at the front desk, not from online travel agencies.
-    drawbacks:
-      - Clerks enter each agency booking by hand, as it arrives by email.
+    drawback: Clerks enter each agency booking by hand, as it arrives by email.
 ---
 ```
 

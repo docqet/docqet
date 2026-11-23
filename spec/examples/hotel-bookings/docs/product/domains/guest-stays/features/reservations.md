@@ -8,14 +8,13 @@ capabilities:
   - waitlist
 tradeoffs:
   - id: front-desk-bookings-only
+    impact: inconvenient
     summary: >-
       Bookings are taken at the front desk, not from online travel agencies.
-    benefits:
-      - >-
-        No agency integrations to build or keep working, while most bookings
-        come straight to the desk.
-    drawbacks:
-      - Clerks enter each agency booking by hand, as it arrives by email.
+    benefit: >-
+      No agency integrations to build or keep working, while most bookings
+      come straight to the desk.
+    drawback: Clerks enter each agency booking by hand, as it arrives by email.
 decisions:
   - topic: Agency bookings
     question: Should bookings come in from online travel agencies?

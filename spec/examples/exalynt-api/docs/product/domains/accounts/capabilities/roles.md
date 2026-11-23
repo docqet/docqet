@@ -46,37 +46,47 @@ rules:
 concepts: [role, organization]
 gaps:
   - id: holders-not-shown
+    impact: inconvenient
     summary: >-
       How many people hold a role isn't shown, so whether one can be deleted
       is only learned by trying.
   - id: roles-given-elsewhere
+    impact: inconvenient
     summary: >-
       Nobody is given a role while managing roles: invitations and the API
       give platform roles, and an organization's own members give
       organization roles.
   - id: one-scope-per-permission
+    impact: blocking
     summary: >-
       A permission can be given only one scope when editing a role, though
       several are allowed. Saving a role's permissions keeps only the widest,
       so own and team becomes team, and someone on no team loses their own
       reach.
+    when: A role with a permission given several scopes is saved in the app.
   - id: deploys-restore-built-in-roles
+    impact: damaging
     summary: >-
       Each deploy puts back permissions taken off Admin, Member, Billing, and
       Administrator, and renaming one makes a new role under the old name. A
       role says so going by name alone, so a role of the other kind with one
       of those names says it too.
+    when: An admin takes a permission off a built-in role, or renames one.
   - id: creator-role-guarded-only-by-the-app
     rule: roles-and-access/creators-get-the-creator-role
+    impact: blocking
     summary: >-
       Only the app stops the role given to creators being unmarked or
       deleted: the API allows it, and the next deploy gives creators a role
       again.
+    when: Someone unmarks or deletes the creators' role through the API.
   - id: tested-only-through-the-api
     outcome: functionality/beta/stays-correct
+    impact: inconvenient
     summary: >-
       The workflow is tested end to end only through the API: the apps have
       no automated tests of their own for it.
+    when: A change breaks managing roles in the apps.
 ---
 
 ## Includes

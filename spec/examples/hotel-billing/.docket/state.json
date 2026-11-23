@@ -332,7 +332,8 @@
           "question": "Do guests split evenly, or charge by charge?",
           "status": "open",
           "answer": null,
-          "became": []
+          "became": [],
+          "gaps": []
         }
       ],
       "body": "",
@@ -370,7 +371,8 @@
           "question": "Is a week's stay still secured by one night's deposit?",
           "status": "open",
           "answer": null,
-          "became": []
+          "became": [],
+          "gaps": []
         }
       ],
       "body": "## Includes\n\n- Clerks see whether a stay's deposit has been paid.\n- Clerks take a deposit again when the guest's card was declined.",
@@ -419,7 +421,8 @@
           "question": "Do guests pay before they leave, or wait until they're home?",
           "status": "open",
           "answer": null,
-          "became": []
+          "became": [],
+          "gaps": []
         }
       ],
       "body": "## Includes\n\n- Clerks send a guest a link to pay what they owe.",
@@ -604,7 +607,8 @@
           "question": "Is a day at a time what the accountant wants, or one export a month?",
           "status": "open",
           "answer": null,
-          "became": []
+          "became": [],
+          "gaps": []
         }
       ],
       "body": "",
@@ -640,7 +644,8 @@
           "question": "Do guests want their bill emailed as they leave, or printed at the desk?",
           "status": "open",
           "answer": null,
-          "became": []
+          "became": [],
+          "gaps": []
         }
       ],
       "body": "## Includes\n\n- Clerks see a departing guest's bill, with every night and charge on it.\n- Clerks take payment for the balance, and close the bill.",
@@ -681,7 +686,8 @@
           "question": "Always back to the card it came from, or to whichever card the guest has with them?",
           "status": "open",
           "answer": null,
-          "became": []
+          "became": [],
+          "gaps": []
         }
       ],
       "body": "",
@@ -1340,6 +1346,8 @@
       "domain": "billing",
       "outcome": null,
       "rule": "tax/children-pay-no-city-tax",
+      "impact": "inconvenient",
+      "when": null,
       "summary": "Guests' ages aren't recorded, so city tax is added for every guest on a stay, and clerks correct it by hand for children.",
       "places": []
     },
@@ -1348,6 +1356,8 @@
       "domain": "finance",
       "outcome": null,
       "rule": null,
+      "impact": "inconvenient",
+      "when": null,
       "summary": "Nothing reminds a company when an invoice is overdue. The bookkeeper checks the unpaid invoices each week and chases them by email.",
       "places": []
     },
@@ -1355,6 +1365,8 @@
       "id": "component:ledger#corrections-of-corrections-untested",
       "outcome": "maintainability/ga/others-can-change",
       "rule": null,
+      "impact": "damaging",
+      "when": "Someone changes how corrections work.",
       "summary": "Nothing tests correcting a line that is itself a correction, so a change to `correct` could stop a twice-corrected charge netting to zero without anything failing.",
       "places": [
         {
@@ -1368,6 +1380,8 @@
       "id": "component:payments#no-timeout-on-provider-calls",
       "outcome": "reliability/beta/fails-clearly",
       "rule": null,
+      "impact": "inconvenient",
+      "when": "The payment provider is slow to answer.",
       "summary": "Calls to the payment provider have no timeout, so a slow provider holds the request open until the platform gives up on it.",
       "places": [
         {
@@ -1384,13 +1398,10 @@
       "domain": "billing",
       "outcome": null,
       "summary": "Guests pay in the hotel's currency, not their own.",
-      "benefits": [
-        "The bill, the payment and the hotel's books are all in one currency.",
-        "There are no exchange rates to keep."
-      ],
-      "drawbacks": [
-        "Their card provider converts it, at its own rate, so the amount on their statement can differ from the bill."
-      ],
+      "benefit": "The bill, the payment and the hotel's books are all in one currency, with no exchange rates to keep.",
+      "drawback": "Their card provider converts it, at its own rate, so the amount on their statement can differ from the bill.",
+      "impact": "inconvenient",
+      "when": null,
       "places": []
     },
     {
@@ -1398,26 +1409,20 @@
       "domain": "finance",
       "outcome": null,
       "summary": "A bill moves to a company's account whole, not charge by charge.",
-      "benefits": [
-        "Clerks move a bill in one step at check-out.",
-        "A company's account only ever holds whole bills."
-      ],
-      "drawbacks": [
-        "A guest who pays for their own extras pays for them before their bill moves."
-      ],
+      "benefit": "Clerks move a bill in one step at check-out, and a company's account only ever holds whole bills.",
+      "drawback": "A guest who pays for their own extras pays for them before their bill moves.",
+      "impact": "inconvenient",
+      "when": null,
       "places": []
     },
     {
       "id": "component:ledger#balance-worked-out-on-read",
       "outcome": "efficiency/beta/bounded",
       "summary": "A bill's balance is added up from its lines every time it's asked for, not stored on the bill.",
-      "benefits": [
-        "The balance can never disagree with the lines.",
-        "There's nothing to keep in step when a line is added."
-      ],
-      "drawbacks": [
-        "Opening a bill gets slower as lines are added to it."
-      ],
+      "benefit": "The balance can never disagree with the lines, and there's nothing to keep in step when a line is added.",
+      "drawback": "Opening a bill gets slower as lines are added to it.",
+      "impact": "inconvenient",
+      "when": "A bill grows to thousands of lines, as on a long company stay.",
       "places": [
         {
           "file": "src/ledger/ledger.ts",
@@ -1430,12 +1435,10 @@
       "id": "component:payments#providers-card-form",
       "outcome": null,
       "summary": "Guests type their card into the provider's hosted form, not one of ours.",
-      "benefits": [
-        "Card numbers never reach our servers, so the hotel stays out of most card-security rules."
-      ],
-      "drawbacks": [
-        "The payment page looks like the provider's, not the hotel's."
-      ],
+      "benefit": "Card numbers never reach our servers, so the hotel stays out of most card-security rules.",
+      "drawback": "The payment page looks like the provider's, not the hotel's.",
+      "impact": "negligible",
+      "when": null,
       "places": []
     }
   ],

@@ -7,14 +7,17 @@ description: >-
 meets: [compatibility/prototype/marked]
 gaps:
   - id: marks-depend-on-scalar-markup
+    impact: inconvenient
     summary: >-
       `stability-marks.js` finds what it upgrades through Scalar's markup, and
       the page loads `@scalar/api-reference` from jsdelivr without a version,
       so any Scalar release can change it. When it does, the marks, rings and
       overview stop appearing without an error, and nothing tests the rendered
       page.
+    when: A Scalar release changes its markup.
   - id: no-release-notes
     outcome: compatibility/beta/changes-heard
+    impact: inconvenient
     summary: >-
       Nothing tells people what changed in a release, for the API or the apps,
       Beta features included. Changes show only in the reference and in git

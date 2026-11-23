@@ -9,12 +9,12 @@ capabilities:
   - partnerships
 tradeoffs:
   - id: clerks-screens-for-session-tasks
+    impact: negligible
     summary: >-
       The session tasks Clerk can hold a session back for, a password reset
       it forces or two-step setup, use Clerk's own screens, dressed by
       `clerkAppearance`, since they're rare.
-    drawbacks:
-      - Those few screens look like Clerk's rather than ours.
+    drawback: Those few screens look like Clerk's rather than ours.
 ---
 
 Sign-in and sign-up are our own forms over Clerk's `useSignIn` and

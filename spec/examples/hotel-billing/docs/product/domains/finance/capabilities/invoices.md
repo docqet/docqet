@@ -7,6 +7,7 @@ rules: [invoices/invoice-numbers-run-in-sequence]
 concepts: [company-account]
 gaps:
   - id: no-payment-reminders
+    impact: inconvenient
     summary: >-
       Nothing reminds a company when an invoice is overdue. The bookkeeper
       checks the unpaid invoices each week and chases them by email.

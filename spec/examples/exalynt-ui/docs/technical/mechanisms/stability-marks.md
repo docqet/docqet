@@ -6,13 +6,15 @@ description: >-
 meets: [compatibility/prototype/marked]
 tradeoffs:
   - id: levels-kept-in-the-ui
+    impact: inconvenient
     summary: >-
       Each page's level is declared once in the UI, in
       `src/featureStability.ts`, for the rail and the pages to read, apart
       from the capability docs' levels in the API's repository.
-    drawbacks:
-      - A level change is made in both repositories.
-      - Nothing checks that they agree.
+    drawback: >-
+      A level change is made in both repositories, and nothing checks that
+      they agree.
+    when: A feature's level is changed in one repository and not the other.
 ---
 
 `FEATURES` in `src/featureStability.ts` names each app feature and its level,

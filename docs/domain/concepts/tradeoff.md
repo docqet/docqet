@@ -1,15 +1,24 @@
 # Tradeoff
 
-Something we chose over an alternative, with its benefits and its drawbacks,
+Something we chose over an alternative, with its benefit and its drawback,
 and decided to live with.
 
 ## Details
 
 A booking holds one room, not several, so a family that needs two rooms makes
 two bookings. It's a decision, not something left to do. It says what we
-chose, its benefits, and its drawbacks. We accept both together: they're
-what came with the choice. Without its benefits, there's nothing to weigh the
-drawbacks against. A [gap](gap.md) we'll never close is a tradeoff instead.
+chose, its benefit, and its drawback. We accept both together: they're
+what came with the choice. Without its benefit, there's nothing to weigh the
+drawback against. A [gap](gap.md) we'll never close is a tradeoff instead.
+
+One tradeoff is one choice. When a choice has two drawbacks, its drawback
+says both, rather than the choice being written twice.
+
+Its drawback has an impact, on the same scale as a gap's, and `when` it
+bites, so the choices we live with can be ordered by what we've accepted, as
+[risk](risk.md) describes. A choice that's fine until something changes,
+such as a quicker design that slows down as bills grow, says so in `when`,
+which is also when it's worth looking at again.
 
 It's on the thing the choice was made about:
 
@@ -33,22 +42,23 @@ A tradeoff we reverse is deleted, or replaced by the new one.
 ## In the spec
 
 Tradeoffs are listed in the frontmatter of the doc they're on, each with an
-`id`, a `summary` saying what we chose and not what, its `benefits`, and its
-`drawbacks`. Each side is a list, one point apiece. Optionally, as a gap
-does, its `outcome` names the checklist outcome it falls short of. On the [ledger](../../../spec/examples/hotel-billing/docs/technical/components/ledger.md):
+`id`, a `summary` saying what we chose and not what, its `benefit`, and its
+`drawback`. Optionally, as a gap does, its `outcome` names the checklist
+outcome it falls short of, and its `impact` and `when` rate its drawback. On the [ledger](../../../spec/examples/hotel-billing/docs/technical/components/ledger.md):
 
 ```yaml
 tradeoffs:
   - id: balance-worked-out-on-read
     outcome: efficiency/beta/bounded
+    impact: inconvenient
     summary: >-
       A bill's balance is added up from its lines every time it's asked for,
       not stored on the bill.
-    benefits:
-      - The balance can never disagree with the lines.
-      - There's nothing to keep in step when a line is added.
-    drawbacks:
-      - Opening a bill gets slower as lines are added to it.
+    benefit: >-
+      The balance can never disagree with the lines, and there's nothing to
+      keep in step when a line is added.
+    drawback: Opening a bill gets slower as lines are added to it.
+    when: A bill grows to thousands of lines, as on a long company stay.
 ```
 
 The code it explains points at it:
@@ -64,14 +74,13 @@ A feature's tradeoff is written the same way, on
 ```yaml
 tradeoffs:
   - id: front-desk-bookings-only
+    impact: inconvenient
     summary: >-
       Bookings are taken at the front desk, not from online travel agencies.
-    benefits:
-      - >-
-        No agency integrations to build or keep working, while most bookings
-        come straight to the desk.
-    drawbacks:
-      - Clerks enter each agency booking by hand, as it arrives by email.
+    benefit: >-
+      No agency integrations to build or keep working, while most bookings
+      come straight to the desk.
+    drawback: Clerks enter each agency booking by hand, as it arrives by email.
 ```
 
 ## Not to be confused with

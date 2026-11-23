@@ -76,7 +76,8 @@ Docket separates what the software is meant to do from what it does:
 - **State is derived.** Tools read both and work out everything else, which
   nobody writes by hand: each rule's evidence, each feature's **maturity** (how
   much of it is stable), each persona's **readiness** (how ready the software
-  is for them), and any problems in the docs themselves.
+  is for them), each gap's **risk** (its declared impact, and how much
+  depends on it), and any problems in the docs themselves.
 - **The difference is the work.** What's declared is taken to hold, unless
   it's declared that it doesn't, or the evidence contradicts it. Docket names
   the ways intention and reality differ, open decisions, gaps, tradeoffs and
@@ -169,7 +170,7 @@ down:
 
 | Judgment means…                            | Docket records                                                                                                                       |
 | ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------ |
-| **Evaluating tradeoffs**                   | Tradeoffs: what we chose instead of what, with its benefits and drawbacks                                                            |
+| **Evaluating tradeoffs**                   | Tradeoffs: what we chose instead of what, with its benefit and drawback                                                              |
 | **Amid uncertainty**                       | Known gaps, open decisions, drafts, and Prototype and Alpha levels, so what isn't known or done yet is said plainly                  |
 | **Deciding at the right moment**           | Open decisions, held where their answer will go until it's time to settle them                                                      |
 | **Deciding how much is enough**            | Each capability's stability level, and the stability checklist: what that level generally expects, and what would be overengineering |
@@ -186,13 +187,14 @@ maintainable, and built with care. Docket can't judge code. It holds the
 team's intention about how the software is built, and shows where the build
 falls short of it:
 
-- **Tradeoffs made on purpose**, with their benefits and drawbacks, and what
+- **Tradeoffs made on purpose**, with their benefit and drawback, and what
   would make us look again, so a shortcut someone chose isn't mistaken for one someone missed.
 - **Deliberate code, marked.** A `docket:tradeoff` comment says code that
   looks wrong is meant to be that way, so neither a person nor an agent
   "fixes" it. A bug no longer looks just like a deliberate choice.
 - **Technical gaps**, marked where they are in the code instead of as bare
-  TODOs, and shown on every capability that relies on that code.
+  TODOs, and shown on every capability that relies on that code, ordered with
+  product gaps by what's at stake.
 - **The standard each stability level expects**, grouped by qualities such as
   reliability and security, with each outcome not met, not met by choice
   where a tradeoff says so, met with evidence from a mechanism that meets it,
@@ -267,7 +269,7 @@ one probably belongs in another tool, which Docket can link to. For example:
 | A CI check that fails when the Docket docs are broken, such as a link to a missing rule | Yes, later | Keeps the docs correct. It checks the docs, never the software                              |
 | Notifying people when a capability they depend on is demoted or its rules change        | Yes, later | Tells people when what they rely on changes                                                 |
 | A known gap linking to the issue where its fix is tracked                               | Yes        | Connects the gap to the work, while planning stays in the tracker                           |
-| A tradeoff, with its benefits and drawbacks, beside the code it explains                | Yes        | Intention about how it's built that the code can't show                                     |
+| A tradeoff, with its benefit and drawback, beside the code it explains                  | Yes        | Intention about how it's built that the code can't show                                     |
 | A read-only view a team shares with its product's customers                             | Yes, later | Customers have a stake too, and see only what they're allowed to                            |
 | Owners, estimates and due dates on known gaps                                           | No         | Planning the work is a task tracker's job (fails 1 and 3)                                   |
 | Diagrams of services and components drawn from the code                                 | No         | The code already shows it (fails 4)                                                         |

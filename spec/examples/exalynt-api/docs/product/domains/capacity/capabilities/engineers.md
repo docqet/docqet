@@ -72,61 +72,81 @@ rules:
 concepts: [team, role]
 gaps:
   - id: readiness-one-at-a-time
+    impact: inconvenient
     summary: >-
       Readiness shows only for one person at a time, as asking whether someone
       can be paid asks the payout provider, so the list of everyone can't say
       who isn't ready.
   - id: lists-every-platform-role
+    impact: negligible
     summary: >-
       It lists everyone holding a platform role, whatever the role, not only
       engineers.
   - id: joined-is-account-creation
+    impact: negligible
     summary: >-
       Joined is when their account was made, so someone who was a client first
       shows that earlier date.
   - id: moved-engineers-stay-on-blocks
+    impact: inconvenient
     summary: >-
       Moving someone off a team leaves them on their blocks until they're
       reassigned, which can't be done in the apps yet.
+    when: Someone on upcoming blocks is moved off their team.
   - id: reads-everything
     outcome: efficiency/beta/bounded
+    impact: inconvenient
     summary: >-
       Everyone, every team, client and block is read on opening, and again
       after a team change.
+    when: The numbers of people, teams, clients and blocks grow.
   - id: role-shown-only-to-role-managers
+    impact: inconvenient
     summary: Someone's role is named only to those who can manage roles.
   - id: team-change-offered-then-refused
+    impact: inconvenient
     summary: >-
       Changing someone's team is offered to those who can't manage teams, and
       is refused when tried.
+    when: Someone who can't manage teams tries to change someone's team.
   - id: role-and-applications-api-only
+    impact: inconvenient
     summary: >-
       Someone's role and applications can't be changed in the apps, only by
       calling the API directly.
   - id: no-agreement-preview
+    impact: damaging
     summary: >-
       There's no preview of an Engineer Agreement before sending it, and its
       terms come from the app's own copy of the terms catalog.
+    when: >-
+      The app's copy of the terms catalog falls out of step with the catalog.
   - id: agreements-not-listed
+    impact: inconvenient
     summary: >-
       The list of everyone doesn't say who has an Engineer Agreement, as that
       would take a request per engineer.
   - id: week-range-example-weak
     outcome: functionality/beta/stays-correct
+    impact: inconvenient
     summary: >-
       The acceptance example for listing the blocks someone is on by week has
       no block before the weeks asked for, so losing the earlier limit
       wouldn't fail it.
+    when: >-
+      Someone changes how blocks are listed by week and loses the earlier
+      limit.
 tradeoffs:
   - id: written-for-administrators
+    impact: inconvenient
     summary: >-
       It's written for administrators: without full reads of people, teams,
       capacity and clients the list doesn't load, and with narrower reach it
       shows only what that reaches.
-    drawbacks:
-      - >-
-        There's no rule for what a team-limited view of people shows, as only
-        the admin view matters for now.
+    drawback: >-
+      There's no rule for what a team-limited view of people shows, as only
+      the admin view matters for now.
+    when: Someone other than an administrator needs the list of people.
 ---
 
 ## Includes

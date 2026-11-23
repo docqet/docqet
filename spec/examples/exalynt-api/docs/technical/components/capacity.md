@@ -14,24 +14,29 @@ capabilities:
 gaps:
   - id: buying-and-scheduling-not-load-tested
     outcome: efficiency/beta/realistic-volumes
+    impact: inconvenient
     summary: >-
       Buying and scheduling haven't been load-tested.
+    when: Buying and scheduling are used at realistic volumes.
   - id: weeks-and-types-not-paged
     outcome: efficiency/beta/bounded
+    impact: inconvenient
     summary: >-
       `GET /v1/capacity-weeks` and `GET /v1/capacity-types` aren't paged: the
       first's window is capped at 53 weeks, which acts as its page size, and
       there are three types.
+    when: Capacity types grow well beyond the three there are.
 tradeoffs:
   - id: combined-room
+    impact: inconvenient
     summary: >-
       A week's room is combined, not per engineer: a block fits if the total
       covers it, even if no one engineer could do it alone, as the preferred
       week is a target and not a guarantee.
-    drawbacks:
-      - >-
-        A block can be scheduled into a week where no single engineer can fit
-        it, and an admin sorts it out.
+    drawback: >-
+      A block can be scheduled into a week where no single engineer can fit
+      it, and an admin sorts it out.
+    when: No one engineer has room for a whole block in its week.
 ---
 
 A block moves `pending` → `available` → `scheduled` → `in_progress` →

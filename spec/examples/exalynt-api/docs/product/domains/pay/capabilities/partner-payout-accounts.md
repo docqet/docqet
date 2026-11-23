@@ -49,67 +49,76 @@ rules:
 concepts: [payout, partnership]
 gaps:
   - id: status-changes-show-on-next-load
+    impact: negligible
     summary: >-
       A change of status shows when the page is next loaded.
   - id: requirements-read-as-field-names
+    impact: inconvenient
     summary: >-
       A requirement can read as the payments partner's field name rather than
       words.
   - id: admins-cant-see-partnership-readiness
+    impact: blocking
     summary: >-
       An admin can't see whether a partnership can be paid.
 tradeoffs:
   - id: one-account-per-partnership-checked-each-time
+    impact: inconvenient
     summary: >-
       Each partnership has its own payout account, even when several are paid
       to the same bank account.
-    drawbacks:
-      - >-
-        Someone managing several partnerships that are paid to the same bank
-        account sets it up on each.
-      - They go through the payments partner's checks each time.
+    drawback: >-
+      Someone managing several partnerships that are paid to the same bank
+      account sets it up, and goes through the payments partner's checks, on
+      each.
+    when: Someone manages several partnerships paid to the same bank account.
   - id: one-account-one-country
+    impact: blocking
     summary: >-
       There's one account per partnership, and its country is fixed once it's
       chosen, as the payments partner's form holds one and verifies it for
       one country.
-    drawbacks:
-      - A partnership can't be paid to a second account.
-      - A partnership can't move its account to another country.
+    drawback: >-
+      A partnership can't be paid to a second account, or move its account to
+      another country.
+    when: >-
+      A partnership wants a second account, or to be paid in another country.
   - id: no-payouts-to-mexico
+    impact: blocking
     summary: >-
       Mexico isn't offered as a country, since the payments partner can't
       send there.
-    drawbacks:
-      - Partnerships can't be paid in Mexico.
+    drawback: Partnerships can't be paid in Mexico.
+    when: A partnership's bank account is in Mexico.
   - id: form-asks-for-business-details
+    impact: inconvenient
     summary: >-
       Accounts are set up on the payments partner's form as it is.
-    drawbacks:
-      - >-
-        The form asks for business details, as if the partnership sold
-        something: a website or a description of what it sells, and more of them
-        outside the US.
-      - In Canada it also asks for an ID document and a selfie.
+    drawback: >-
+      The form asks for business details, as if the partnership sold something:
+      a website or a description of what it sells, and more of them outside the
+      US. In Canada it also asks for an ID document and a selfie.
   - id: changes-made-in-the-partners-dashboard
+    impact: inconvenient
     summary: >-
       Once an account is set up, changing it happens in the payments
       partner's own dashboard rather than its form.
-    drawbacks:
-      - >-
-        Managers change the bank account somewhere other than where they set it
-        up.
+    drawback: >-
+      Managers change the bank account somewhere other than where they set it
+      up.
+    when: A manager changes the bank account.
   - id: removing-closes-the-account
+    impact: inconvenient
     summary: >-
       Removing an account closes it with the payments partner.
-    drawbacks:
-      - Adding one again means going through their checks from the start.
+    drawback: Adding one again means going through their checks from the start.
+    when: A manager removes the account and later adds one again.
   - id: test-accounts-cleared
+    impact: inconvenient
     summary: >-
       Accounts set up before production used the payments partner were test
       ones, and were cleared.
-    drawbacks:
-      - Partnerships set theirs up again.
+    drawback: Partnerships set theirs up again.
 ---
 
 ## Includes

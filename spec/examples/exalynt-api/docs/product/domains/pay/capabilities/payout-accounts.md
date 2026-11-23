@@ -16,36 +16,48 @@ rules:
 concepts: [payout, partnership]
 gaps:
   - id: one-account-one-country
+    impact: blocking
     summary: >-
       There's one account per person or partnership, and its country is fixed
       once it's chosen, as the payments partner's form holds one and verifies
       them for one country.
+    when: Someone wants a second account, or to be paid in another country.
   - id: status-changes-show-on-next-load
+    impact: negligible
     summary: >-
       A change of status shows when the account is next loaded.
   - id: requirements-read-as-field-names
+    impact: inconvenient
     summary: >-
       A requirement can read as the payments partner's field name rather than
       words.
   - id: no-payouts-to-mexico
+    impact: blocking
     summary: >-
       People can't be paid in Mexico, so it isn't offered as a country: the
       payments partner can't send there.
+    when: A payee's bank account is in Mexico.
   - id: form-asks-for-business-details
+    impact: inconvenient
     summary: >-
       The payments partner's form asks for business details, as if the payee
       sold something: a website or a description of what they sell, even in
       the US, and more of them outside it. In Canada it also asks for an ID
       document and a selfie.
   - id: changes-made-in-the-partners-dashboard
+    impact: inconvenient
     summary: >-
       Once an account is set up, changing it happens in the payments
       partner's own dashboard rather than its form.
+    when: Someone changes their bank account.
   - id: removing-closes-the-account
+    impact: inconvenient
     summary: >-
       Removing an account closes it with the payments partner, so adding one
       again means going through their checks from the start.
+    when: Someone removes their account and later adds one again.
   - id: test-accounts-cleared
+    impact: inconvenient
     summary: >-
       Accounts set up before production used the payments partner were test
       ones, and were cleared, so people set theirs up again.

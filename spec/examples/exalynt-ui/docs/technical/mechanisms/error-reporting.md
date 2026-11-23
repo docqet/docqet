@@ -6,13 +6,14 @@ description: >-
 meets: [observability/alpha/see-errors]
 tradeoffs:
   - id: errors-only
+    impact: inconvenient
     summary: >-
       Only errors are collected: uncaught ones, and those pages pass to
       `reportError`. No page views, request timings or session recordings.
-    drawbacks:
-      - >-
-        A slow page, or one people give up on without an error, leaves nothing
-        to look at.
+    drawback: >-
+      A slow page, or one people give up on without an error, leaves nothing
+      to look at.
+    when: A page is slow, or people give up on it without an error.
 ---
 
 `main.tsx` calls `initTelemetry` once, as early as possible. It loads Dash0's

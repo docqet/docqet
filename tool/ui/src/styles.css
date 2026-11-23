@@ -3978,3 +3978,210 @@ button.page-table-row:hover .page-table-name strong {
   outline: 2px solid var(--accent, currentColor);
   outline-offset: 2px;
 }
+
+/* What makes a drawback bite, under it. */
+.tradeoff-when {
+  margin-top: 8px;
+  font-size: 12.5px;
+  color: var(--muted);
+}
+
+/* The gaps riding on an open decision: the worst impact among them, and how many. */
+.decision-riding {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 10px;
+  margin-top: 4px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/*
+ * Over a gap, or a tradeoff in a list: what it's on, if that isn't clear,
+ * and its kind, then, at the end of the line, what's at stake.
+ */
+.gap-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
+  margin-bottom: 4px;
+}
+
+.gap-head .explore-gap-subject {
+  margin-bottom: 0;
+}
+
+.gap-head .gap-kind-tag {
+  margin-right: 0;
+}
+
+.gap-head .risk-meter,
+.tradeoff-label .risk-meter {
+  margin-left: auto;
+}
+
+/*
+ * What's at stake: an impact as steps rising from low to high, lit up to it,
+ * and its name, both in its color, worst in the strongest. --impact is that
+ * color, set by `data-impact` on the meter or the popover's card.
+ */
+[data-impact="damaging"] {
+  --impact: var(--bad);
+}
+
+[data-impact="blocking"] {
+  --impact: var(--warning);
+}
+
+[data-impact="inconvenient"] {
+  --impact: color-mix(in srgb, var(--warning) 55%, var(--muted));
+}
+
+[data-impact="negligible"] {
+  --impact: var(--muted);
+}
+
+[data-impact="none"] {
+  --impact: var(--faint);
+}
+
+.risk-meter {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  font-weight: 650;
+  line-height: 16px;
+  letter-spacing: 0;
+  text-transform: none;
+  white-space: nowrap;
+  color: var(--impact);
+  border-radius: 4px;
+}
+
+.risk-meter[data-impact="none"] {
+  font-weight: 500;
+}
+
+.risk-meter[tabindex] {
+  cursor: help;
+}
+
+.risk-meter[tabindex]:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+/* The steps: four bars rising like a signal, small beside its name, or wide across the popover. */
+.risk-track {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 12px;
+}
+
+.risk-step {
+  width: 4px;
+  border-radius: 1.5px;
+  background: color-mix(in srgb, var(--text) 16%, transparent);
+}
+
+.risk-step:nth-child(1) {
+  height: 5px;
+}
+
+.risk-step:nth-child(2) {
+  height: 7px;
+}
+
+.risk-step:nth-child(3) {
+  height: 10px;
+}
+
+.risk-step:nth-child(4) {
+  height: 12px;
+}
+
+.risk-step[data-on] {
+  background: var(--impact);
+}
+
+.risk-track.wide {
+  display: flex;
+  width: 100%;
+  height: 30px;
+  gap: 4px;
+}
+
+.risk-track.wide .risk-step {
+  flex: 1;
+  border-radius: 3px;
+}
+
+.risk-track.wide .risk-step:nth-child(1) {
+  height: 25%;
+}
+
+.risk-track.wide .risk-step:nth-child(2) {
+  height: 50%;
+}
+
+.risk-track.wide .risk-step:nth-child(3) {
+  height: 75%;
+}
+
+.risk-track.wide .risk-step:nth-child(4) {
+  height: 100%;
+}
+
+/* Under the wide bar, each step's name, its own in its color. */
+.risk-scale {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  margin-top: 4px;
+  font-size: 0.86em;
+  color: var(--faint);
+}
+
+.risk-scale > span {
+  text-align: center;
+}
+
+.risk-scale > span[data-current] {
+  font-weight: 650;
+  color: var(--impact);
+}
+
+.risk-details-name {
+  color: var(--impact);
+}
+
+/* In a risk popover: what it's on, or what rides on it, a row apiece. */
+.risk-on {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.risk-on > li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 3px 0;
+}
+
+.risk-note {
+  margin-top: 6px;
+  font-size: 0.92em;
+  color: var(--muted);
+}
+
+/* A capability's row in what's left across several: the worst impact among its gaps, before how much is open. */
+.concept-row-summary .risk-meter {
+  margin-right: 8px;
+  vertical-align: middle;
+}

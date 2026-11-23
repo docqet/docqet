@@ -58,18 +58,20 @@ rules:
 concepts: [capacity-block, invoice, organization, team]
 gaps:
   - id: last-updated-misses-activity
+    impact: inconvenient
     summary: >-
       When a client was last updated changes only when the organization itself
       does, such as its name or logo, not when the client does something.
   - id: agreements-are-placeholders
+    impact: blocking
     summary: >-
       A client's agreements are still placeholders. Its coupons are a separate
       capability, Client coupons.
 tradeoffs:
   - id: no-primary-contact
+    impact: inconvenient
     summary: A client's members aren't shown, since staff can't see them.
-    drawbacks:
-      - There's no primary contact for a client.
+    drawback: There's no primary contact for a client.
 ---
 
 ## Includes

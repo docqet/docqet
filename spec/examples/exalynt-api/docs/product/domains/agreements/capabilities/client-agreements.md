@@ -26,42 +26,53 @@ rules:
 concepts: [agreement, organization]
 gaps:
   - id: only-the-portal-holds-to-the-agreement
+    impact: damaging
     summary: >-
       Only the portal holds an organization to its Client Agreement: someone
       using the API directly can still do what their role allows without one
       in effect.
   - id: new-versions-not-offered
+    impact: blocking
     summary: >-
       A new version of the Client Agreement isn't offered to an organization
       that accepted an earlier one, and nothing sends a client new terms (it
       has none).
+    when: A new version of the Client Agreement is published.
   - id: generated-pdf-file-name
+    impact: negligible
     summary: >-
       A PDF downloaded from the browser's viewer gets a generated file name,
       not the agreement's.
   - id: names-outside-western-european-alphabets
     outcome: usability/beta/everyone
+    impact: damaging
     summary: >-
       A name with characters outside Western European alphabets shows them as
       "?" in the PDF, and the PDF keeps them that way once accepted.
   - id: shared-definitions-changed-in-place
+    impact: damaging
     summary: >-
-      How a shared definition changes once an accepted version uses it isn't
-      decided yet. The definition of Fulfilled, and version 1 of the Client
-      Agreement, were changed in place to say the engineer marks a block
-      fulfilled and nobody reviews it: a copy accepted before then still says
-      a block is fulfilled once it's reviewed and approved. Version 1 was
-      changed in place again to stop saying each block is assigned to a
-      product: a copy accepted before then still does.
+      The definition of Fulfilled, and version 1 of the Client Agreement, were
+      changed in place to say the engineer marks a block fulfilled and nobody
+      reviews it: a copy accepted before then still says a block is fulfilled
+      once it's reviewed and approved. Version 1 was changed in place again to
+      stop saying each block is assigned to a product: a copy accepted before
+      then still does.
 tradeoffs:
   - id: every-member-sees-agreements
+    impact: negligible
     summary: >-
       Every member of an organization sees its agreements, whatever their
       role.
-    drawbacks:
-      - >-
-        Members and Billing see the organization's terms with Exalynt, not just
-        its Admins.
+    drawback: >-
+      Members and Billing see the organization's terms with Exalynt, not just
+      its Admins.
+decisions:
+  - topic: Changing shared definitions
+    question: >-
+      When a shared definition changes, how does that reach agreement versions
+      that were already accepted?
+    gaps: [shared-definitions-changed-in-place]
 ---
 
 ## Includes

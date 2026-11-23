@@ -36,39 +36,52 @@ concepts:
   - team
 gaps:
   - id: no-letting-go-once-started
+    impact: inconvenient
     summary: >-
       Once a block's week has started, an engineer can't let go of it. They
       ask an admin, who takes them off it.
+    when: An engineer needs to let go of a block whose week has started.
   - id: no-claim-notifications
+    impact: inconvenient
     summary: Nobody is told when a block is claimed or unclaimed.
   - id: taken-off-untold
+    impact: inconvenient
     summary: >-
       An engineer isn't told when a client's move or unschedule takes them off
       a block, so a client can take an engineer off by moving a block away and
       back. My Schedule shows it the next time it's read.
+    when: A client moves or unschedules a claimed block.
   - id: stranded-block-client-untold
+    impact: inconvenient
     summary: >-
       When a claim leaves another block with nobody who can take it, that
       block's client isn't told, and it surfaces as a missed week an admin
       rebooks.
+    when: A claim leaves another block with nobody who can take it.
   - id: blocks-read-once
+    impact: inconvenient
     summary: >-
       An engineer's blocks and their clients' blocks are read once on opening,
       so someone else's claim shows only on reading again, or when claiming
       the block is refused.
   - id: about-a-year-ahead
+    impact: inconvenient
     summary: >-
       An engineer's weeks go about a year ahead, from the start of this month.
       A block scheduled further out isn't shown.
+    when: A client schedules a block more than about a year ahead.
   - id: clicking-unclaims
+    impact: inconvenient
     summary: >-
       Before a block's week starts, clicking it on My Schedule unclaims it, so
       an engineer can't open its page from there until the week starts.
   - id: no-teammates-weeks
+    impact: inconvenient
     summary: >-
       An engineer can't see their teammates' weeks: who's on what, or how much
       room each has. A block's own page says who's on it.
   - id: unscheduled-blocks-unseen
+    impact: inconvenient
     summary: >-
       An engineer doesn't see a block a client hasn't scheduled yet, and can't
       ask the client to schedule it from the product.

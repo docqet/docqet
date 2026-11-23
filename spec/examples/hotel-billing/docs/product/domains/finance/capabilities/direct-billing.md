@@ -11,12 +11,12 @@ rules:
 concepts: [bill, company-account]
 tradeoffs:
   - id: whole-bill-moves
+    impact: inconvenient
     summary: A bill moves to a company's account whole, not charge by charge.
-    benefits:
-      - Clerks move a bill in one step at check-out.
-      - A company's account only ever holds whole bills.
-    drawbacks:
-      - >-
-        A guest who pays for their own extras pays for them before their bill
-        moves.
+    benefit: >-
+      Clerks move a bill in one step at check-out, and a company's account
+      only ever holds whole bills.
+    drawback: >-
+      A guest who pays for their own extras pays for them before their bill
+      moves.
 ---

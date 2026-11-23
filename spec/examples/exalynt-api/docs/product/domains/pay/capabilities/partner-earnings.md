@@ -91,44 +91,47 @@ rules:
 concepts: [partnership, payout-share, capacity-payout-basis, fulfilled]
 gaps:
   - id: earning-doesnt-name-its-payout
+    impact: inconvenient
     summary: >-
       An earning doesn't say which payout carried it; the payout lists its
       blocks.
   - id: attribution-and-terms-from-partnerships
     outcome: security/alpha/stable-dependencies
+    impact: inconvenient
     summary: >-
       Which clients are attributed to the partnership, and its terms, come
       from Partnerships, which is still Alpha.
+    when: Partnerships changes in a way that breaks what earnings rely on.
 tradeoffs:
   - id: nothing-before-partnership-earnings
+    impact: inconvenient
     summary: >-
       Partnerships earn only on blocks fulfilled since partnership earnings
       existed.
-    drawbacks:
-      - >-
-        Blocks fulfilled before partnership earnings existed earn the
-        partnership nothing.
+    drawback: >-
+      Blocks fulfilled before partnership earnings existed earn the partnership
+      nothing.
   - id: earlier-blocks-count-after-attribution
+    impact: inconvenient
     summary: >-
       Blocks a client bought before this was built count as bought for the
       partnership only if they were bought after the client was attributed to
       it.
-    drawbacks:
-      - >-
-        Blocks bought before the client was attributed earn the partnership
-        nothing.
+    drawback: >-
+      Blocks bought before the client was attributed earn the partnership
+      nothing.
   - id: client-price-and-coupons-not-shown
+    impact: negligible
     summary: >-
       What the client paid for a block, and any coupon on it, isn't shown, as
       it never changes what the partnership earns.
-    drawbacks:
-      - Partners can't see what their clients paid.
+    drawback: Partners can't see what their clients paid.
   - id: refunds-settled-outside-the-product
+    impact: inconvenient
     summary: >-
       A refund after a block is fulfilled changes nothing the partnership
       earned.
-    drawbacks:
-      - Exalynt settles it outside the product.
+    drawback: Exalynt settles it outside the product.
 ---
 
 ## Includes

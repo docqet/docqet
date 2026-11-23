@@ -63,33 +63,38 @@ rules:
 concepts: [payout, partnership]
 gaps:
   - id: payouts-page-doesnt-say-why-held
+    impact: inconvenient
     summary: >-
       The Payouts page doesn't say when the payout account is holding
       earnings up, beyond having none; Earnings does.
+    when: The partnership's payout account is holding earnings up.
   - id: releasing-is-still-alpha
     outcome: security/alpha/stable-dependencies
+    impact: inconvenient
     summary: >-
       Releasing payouts is the admin side of Payouts, which is still Alpha.
+    when: Releasing payouts changes in a way that breaks what partners rely on.
 tradeoffs:
   - id: pre-production-payouts-say-paid
+    impact: damaging
     summary: >-
       Payouts released before production sent money through the payments
       partner are left saying Paid.
-    drawbacks:
-      - They say Paid, though nothing was sent.
+    drawback: They say Paid, though nothing was sent.
   - id: paid-means-reached-the-balance
+    impact: inconvenient
     summary: >-
       Paid means the money has reached the partnership's balance with the
       payments partner, not its bank.
-    drawbacks:
-      - >-
-        The payments partner pays it on to the bank itself, usually within a
-        couple of days.
+    drawback: >-
+      The payments partner pays it on to the bank itself, usually within a
+      couple of days.
   - id: sent-payouts-not-taken-back
+    impact: inconvenient
     summary: >-
       A sent payout isn't taken back here.
-    drawbacks:
-      - Corrections are settled outside the product.
+    drawback: Corrections are settled outside the product.
+    when: A sent payout needs correcting.
 ---
 
 ## Includes

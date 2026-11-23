@@ -62,65 +62,87 @@ rules:
 concepts: [capacity-block, fulfilled, focus, payout-share]
 gaps:
   - id: no-start-or-fulfill-notifications
+    impact: inconvenient
     summary: Nobody is told when a block is started or fulfilled.
   - id: no-review
+    impact: damaging
     summary: No one checks the work before a block is fulfilled.
+    when: A block is marked fulfilled before its work is done.
   - id: departed-engineers-blocks-stuck
+    impact: blocking
     summary: >-
       Only a block's own engineer can mark it fulfilled, so a block whose
       engineer has left can't be fulfilled by anyone else.
+    when: A block's engineer leaves before marking it fulfilled.
   - id: my-blocks-only-grows
+    impact: inconvenient
     summary: >-
       My blocks shows every block an engineer has ever had, so its fulfilled
       column only grows.
+    when: An engineer fulfills more and more blocks.
   - id: browser-week-not-utc
+    impact: inconvenient
     summary: >-
       "This week" on My blocks is the browser's own week, while a block's week
       starts on Monday UTC, so around midnight a block can show as ready when
       starting it is refused, or not yet ready when it can be started.
+    when: Someone away from UTC looks at My blocks around the turn of the week.
   - id: block-history-not-recorded
+    impact: inconvenient
     summary: >-
       A block's page shows only when it was started and fulfilled. Its
       scheduling, rescheduling, claims and unclaims aren't recorded, so they
       don't show.
   - id: early-starts-not-shown
+    impact: negligible
     summary: A block started before starts were recorded shows no start.
   - id: starter-not-named
+    impact: negligible
     summary: >-
       A block started by a lead or an admin shows as started by Exalynt, not
       by name.
   - id: no-focus-notifications
+    impact: inconvenient
     summary: >-
       Nobody is told when a block's focus is added or changed, by Exalynt or
       by the client.
   - id: no-update-notifications
+    impact: inconvenient
     summary: >-
       Nobody is told when an update is posted, and a block's page shows
       someone else's new updates only when it's opened again.
   - id: svg-images-blank
+    impact: inconvenient
     summary: >-
       An SVG attached to an update or a focus as an image shows blank, though
       it still downloads.
+    when: Someone attaches an SVG as an image.
   - id: no-focus-only-updates
+    impact: inconvenient
     summary: An update about a focus alone, with no block, can't be posted yet.
   - id: unused-focus-not-editable
+    impact: inconvenient
     summary: >-
       A focus taken off every block can't be edited any more, though it can
       still be found and put back on a block.
+    when: A focus is taken off every block.
   - id: focus-search-titles-only
+    impact: inconvenient
     summary: Searching a client's focuses matches their titles only.
   - id: updates-per-block-only
+    impact: inconvenient
     summary: >-
       A block's page shows only that block's updates, not those posted on
       other blocks with the same focus.
 tradeoffs:
   - id: fulfilled-cant-be-reopened
     outcome: usability/beta/recover
+    impact: damaging
     summary: Marking a block fulfilled is final.
-    drawbacks:
-      - >-
-        A fulfilled block can't be reopened, even when it was marked fulfilled
-        by mistake.
+    drawback: >-
+      A fulfilled block can't be reopened, even when it was marked fulfilled
+      by mistake.
+    when: A block is marked fulfilled by mistake.
 ---
 
 ## Includes

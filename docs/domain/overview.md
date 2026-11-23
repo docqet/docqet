@@ -60,7 +60,9 @@ verifies or implements it, or mark where a gap or tradeoff shows in the code.
 The **[indexer](concepts/indexer.md)** reads all of it, and works out each
 one's evidence, each feature's, domain's and project's
 **[maturity](concepts/maturity.md)**, each persona's
-**[readiness](concepts/readiness.md)**, and any problems.
+**[readiness](concepts/readiness.md)**, and any problems. Readers order gaps
+by **[risk](concepts/risk.md)**, from the impact each declares and how much
+depends on it.
 
 ```mermaid
 flowchart TB
@@ -83,7 +85,7 @@ flowchart TB
   subgraph differ ["Where intention and reality differ"]
     decision["Open decision<br/>not settled yet"]
     gap["Gap<br/>to close"]
-    tradeoff["Tradeoff<br/>chosen, with its benefits and drawbacks"]
+    tradeoff["Tradeoff<br/>chosen, with its benefit and drawback"]
   end
 
   subgraph stability ["Stability"]
@@ -97,6 +99,7 @@ flowchart TB
     evidence["Evidence"]
     maturity["Maturity and band"]
     readiness["Readiness"]
+    risk["Risk"]
     problem["Problem"]
   end
 
@@ -123,6 +126,7 @@ flowchart TB
 
   gap -- "falls short of" --> outcome
   gap -- "doesn't yet hold to" --> rule
+  decision -- "has riding on it" --> gap
 
   annotation -- "verifies, implements" --> rule & capability & technical
   annotation -- "marks where it shows" --> gap & tradeoff
@@ -131,10 +135,11 @@ flowchart TB
   level -. "of capabilities" .-> maturity
   persona -.-> readiness
   maturity -. "of what serves them" .-> readiness
+  gap & tradeoff -. "impact and exposure" .-> risk
   project -. "its docs" .-> problem
 
   classDef derivedNode stroke-dasharray: 4 3
-  class evidence,maturity,readiness,problem derivedNode
+  class evidence,maturity,readiness,risk,problem derivedNode
 ```
 
 Solid arrows are [declared](concepts/declared-and-derived.md): written in a
@@ -207,7 +212,7 @@ can be shown the same way and nothing is hidden:
 | --- | --- | --- |
 | **[Open decision](concepts/open-decision.md)** | What's intended isn't settled yet | Declared |
 | **[Gap](concepts/gap.md)** | The software doesn't do what's intended, or isn't built as intended | Declared |
-| **[Tradeoff](concepts/tradeoff.md)** | We chose this on purpose, with its benefits and drawbacks | Declared |
+| **[Tradeoff](concepts/tradeoff.md)** | We chose this on purpose, with its benefit and drawback | Declared |
 | **[Problem](concepts/problem.md)** | The docs are wrong or contradict each other | Derived |
 
 Each declared one is written on the thing it's about, once, and shown on
@@ -299,7 +304,9 @@ Some things are never features or capabilities:
 
 - [Open decision](concepts/open-decision.md): a question not settled yet.
 - [Gap](concepts/gap.md): something we intend to close.
-- [Tradeoff](concepts/tradeoff.md): something we chose, knowing its benefits and drawbacks.
+- [Tradeoff](concepts/tradeoff.md): something we chose, knowing its benefit and drawback.
+- [Risk](concepts/risk.md): which gaps matter most, from their impact and
+  how much depends on them.
 
 **Stability and maturity**
 

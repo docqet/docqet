@@ -29,6 +29,13 @@ written as two gaps.
   always hold, and no rule says so, write the rule and name it: the rule is
   what we intend, and the gap is the part not done yet. Several gaps can name
   one rule, each a part of it.
+- **It says what's at stake**: its impact, what happens to whoever relies on
+  it when it bites, from `negligible` to `damaging`, so Docket can work out
+  its [risk](risk.md). A gap that only bites in certain conditions says when, as
+  context for people.
+- **It can be riding on an [open decision](open-decision.md)**: what it
+  costs depends on how a question is answered. The decision names it, and
+  shows what's at stake.
 - **It can't excuse the security and privacy baseline.** That holds at every
   level, and is never a known gap.
 
@@ -39,32 +46,35 @@ A capability that's missing altogether isn't a gap: it's a draft capability.
 Open → Closed
 
 A closed gap is deleted, and git has its history. A gap we decide never to
-close becomes a [tradeoff](tradeoff.md), with its drawbacks.
+close becomes a [tradeoff](tradeoff.md), with its drawback.
 
 ## In the spec
 
 Gaps are listed in the frontmatter of the doc they're on, each with an `id`
 unique in that doc, a `summary`, and optionally the `outcome` or `rule` it
-falls short of. On [city tax](../../../spec/examples/hotel-billing/docs/product/domains/billing/capabilities/city-tax.md):
+falls short of, its `impact`, and `when` it bites. On [city tax](../../../spec/examples/hotel-billing/docs/product/domains/billing/capabilities/city-tax.md):
 
 ```yaml
 gaps:
   - id: children-corrected-by-hand
     rule: tax/children-pay-no-city-tax
+    impact: inconvenient
     summary: >-
       Guests' ages aren't recorded, so city tax is added for every guest on a
       stay, and clerks correct it by hand for children.
 ```
 
 A technical gap on the [ledger](../../../spec/examples/hotel-billing/docs/technical/components/ledger.md)
-names an outcome:
+names an outcome, and only bites when someone changes the code:
 
 ```yaml
 gaps:
   - id: corrections-of-corrections-untested
     outcome: maintainability/ga/others-can-change
+    impact: damaging
     summary: >-
       Nothing tests correcting a line that is itself a correction, ...
+    when: Someone changes how corrections work.
 ```
 
 Its ID is `component:ledger#corrections-of-corrections-untested`, and the code it
@@ -83,4 +93,5 @@ export function correct(bill: Bill, line: Line, id: string, businessDay: string)
 - A draft [capability](capability.md): a whole result of value not started
   yet.
 - A task: Docket doesn't say when or how a gap is closed. Planning that is a
-  task tracker's job.
+  task tracker's job. [Risk](risk.md) says what's at stake, not what to do
+  first.

@@ -8,11 +8,13 @@ description: >-
 meets: [observability/alpha/see-errors]
 gaps:
   - id: log-retention-not-set
+    impact: damaging
     summary: >-
       Request log lines carry `remote_addr` and `user_id`, and how long
       Grafana Cloud keeps them is its default.
   - id: no-alerts-or-dashboards
     outcome: observability/beta/hears-of-errors
+    impact: damaging
     summary: >-
       Alerts and dashboards aren't set up in Grafana Cloud, though the
       in-cluster Alloy collector now sends there. Each feature with a
@@ -24,6 +26,9 @@ gaps:
       one on `access_tokens.authentications` with `reason` `error` above a few
       in a few minutes, and client home's production alert. The organization
       routes' alert links the respond-to-organization-errors runbook.
+    when: >-
+      A client is charged for capacity that isn't recorded, or a feature's
+      routes start failing.
 ---
 
 Every request gets a SERVER span named for its route template, with a CLIENT

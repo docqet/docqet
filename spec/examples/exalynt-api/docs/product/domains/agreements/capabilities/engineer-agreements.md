@@ -25,41 +25,55 @@ rules:
 concepts: [agreement]
 gaps:
   - id: only-the-console-holds-to-the-agreement
+    impact: damaging
     summary: >-
       Only the console holds engineers to an agreement: someone using the API
       directly can still do what their role allows without one in effect, and
       the admin app isn't gated.
   - id: new-versions-not-offered
+    impact: blocking
     summary: >-
       A new version of the Engineer Agreement isn't offered to an engineer
       who accepted an earlier one.
+    when: A new version of the Engineer Agreement is published.
   - id: sending-relies-on-alpha-capabilities
     outcome: security/alpha/stable-dependencies
+    impact: blocking
     summary: >-
       An engineer only gets an Engineer Agreement through their console
       invitation or an admin sending one, and both are still Alpha, in
       Agreements and Engineer onboarding.
+    when: A breaking change in Agreements or Engineer onboarding.
   - id: earlier-engineers-kept-out
+    impact: inconvenient
     summary: >-
       Engineers and admins already at Exalynt when agreements began are kept
       out of the console until an admin sends each of them an Engineer
       Agreement.
   - id: generated-pdf-file-name
+    impact: negligible
     summary: >-
       A PDF downloaded from the browser's viewer gets a generated file name,
       not the agreement's.
   - id: names-outside-western-european-alphabets
     outcome: usability/beta/everyone
+    impact: damaging
     summary: >-
       A name with characters outside Western European alphabets shows them as
       "?" in the PDF, and the PDF keeps them that way once accepted.
   - id: shared-definitions-changed-in-place
+    impact: damaging
     summary: >-
-      How a shared definition changes once an accepted version uses it isn't
-      decided yet. The definition of Fulfilled, and version 1 of the Engineer
-      Agreement, were changed in place to say the engineer marks a block
-      fulfilled and nobody reviews it: a copy accepted before then still says
-      a block is fulfilled once it's reviewed and approved.
+      The definition of Fulfilled, and version 1 of the Engineer Agreement,
+      were changed in place to say the engineer marks a block fulfilled and
+      nobody reviews it: a copy accepted before then still says a block is
+      fulfilled once it's reviewed and approved.
+decisions:
+  - topic: Changing shared definitions
+    question: >-
+      When a shared definition changes, how does that reach agreement versions
+      that were already accepted?
+    gaps: [shared-definitions-changed-in-place]
 ---
 
 ## Includes
