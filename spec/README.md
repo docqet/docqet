@@ -620,10 +620,12 @@ gaps:
       mouse to pick dates.
 ```
 
-- **`impact`** is what happens to whoever relies on what the gap is in when
-  it bites: the people who use the software, run it, build on it, or depend on
-  what it produces. It's rated by the consequence, never by how likely it is
-  or by what kind of software it's in. Readers order gaps by [risk](#risk)
+- **`impact`** is what the gap would do to the people the software serves:
+  who its capabilities' personas stand for, and whoever runs it, builds on
+  it, or depends on what it produces. It's judged for that software, in two
+  steps: what it takes from those it would affect, then what share of them it
+  would affect if it bit. It's rated by the consequence, never by how likely
+  it is. Readers order gaps by [risk](#risk)
   from it, and show a gap without one as not rated, after the rest. It's one
   of four, from least to most, each taking more than the one before:
 
@@ -638,8 +640,13 @@ gaps:
   that can't be put right, or that someone acts on unknowing, at a cost
   (`damaging`)? Could it stop someone, with no way around it (`blocking`)?
   Does it cost time, a step by hand or a workaround (`inconvenient`)?
-  Otherwise it's `negligible`. A wrong result someone notices and puts right
-  is `inconvenient`; blocking some people is `blocking`; a gap that changes
+  Otherwise it's `negligible`. Then weigh its reach: only a few of the people
+  the software serves steps it down one, and none of them today makes it
+  `negligible`, with `when` saying who would change that. Legal or
+  contractual exposure the business has, and anyone able to do what they
+  shouldn't, stay `damaging` however few it reaches. A wrong result someone
+  notices and puts right is `inconvenient`; blocking a meaningful share of
+  them is `blocking`; a gap that changes
   nothing for anyone yet is `negligible`, however untidy. When torn between
   two, pick the lower unless the higher one's test is plainly met. A gap that
   only bites in certain conditions, such as untested code, is rated by what

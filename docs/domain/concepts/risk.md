@@ -99,12 +99,22 @@ rely on is more exposed than one on a single capability.
 
 ### Impact
 
-Impact is one of four, from least to most. It's set by what happens to
-whoever relies on what the gap is in: the people who use the software, run
-it, build on it, or depend on what it produces. It's never set by how likely
-the gap is to bite, or by what kind of software it's in, so a gap in a
-background job, a library or a deploy script is rated the same way as one on
-a screen. Each step takes more from them than the one before:
+Impact is one of four, from least to most. It's always about the people the
+software serves: the people its capabilities' [personas](persona.md) stand
+for, and whoever runs it, builds on it, or depends on what it produces. It's
+set in two steps, by judgement, in that software's circumstances:
+
+1. **What it takes from those of them it would affect**, by the test below.
+2. **What share of them it would affect**, if it bit. Only a few of them
+   steps it down one; none of them makes it `negligible`.
+
+So the same gap can rate differently in different software: a calendar that
+needs a mouse blocks a public booking site's guests who can't use one, and is
+`inconvenient` or less in an office tool whose staff all can. Where in the
+code a gap is doesn't change it, so a gap in a background job, a library or a
+deploy script is rated the same way as one on a screen. It's never set by how
+likely the gap is to bite. Each step takes more from them than the one
+before:
 
 | Impact         | What's lost                   | The test                                                                                                                                                                                                              |
 | -------------- | ----------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -113,7 +123,7 @@ a screen. Each step takes more from them than the one before:
 | `blocking`     | The outcome                   | Someone, or some group of people, can't get done what they rely on it for, by any route available, until it's closed. They know it, and it waits.                                                                     |
 | `damaging`     | Something they can't get back | It leaves something wrong that can't be fully put right, or that someone acts on without knowing, at a cost: data lost or kept wrong, money moved wrongly, legal or financial exposure, someone able to do what they shouldn't. |
 
-To rate a gap, ask these in order, and stop at the first yes:
+To rate what it takes, ask these in order, and stop at the first yes:
 
 1. Could it leave something wrong that can't be fully put right, or that
    someone acts on without knowing, at a cost? It's `damaging`.
@@ -123,16 +133,35 @@ To rate a gap, ask these in order, and stop at the first yes:
    they get is still right? It's `inconvenient`.
 4. Otherwise, it's `negligible`.
 
+Then weigh how many of the people the software serves it would reach, if it
+bit:
+
+| It would reach                                 | Impact                                                    |
+| ---------------------------------------------- | --------------------------------------------------------- |
+| Most of them, or a meaningful share            | As rated                                                  |
+| Only a few of them                             | One step lower                                            |
+| None of them today                             | `negligible`, with `when` saying who would change that    |
+
+Two kinds of `damaging` never step down, since one case is enough: legal or
+contractual exposure the business really has, such as an accessibility duty,
+and someone able to do what they shouldn't, such as seeing another tenant's
+data.
+
 Where the lines fall:
 
 - **A wrong result someone notices and puts right is `inconvenient`**: clerks
   correcting children's city tax by hand. It's `damaging` only once nobody
   catches it, or it can't be taken back.
-- **Blocking some people is `blocking`**: a room calendar that can't be used
-  from the keyboard blocks the clerks who can't use a mouse, though others get
-  by.
+- **Blocking a meaningful share of them is `blocking`**: a room calendar that
+  can't be used from the keyboard is `blocking` if some of the hotel's clerks
+  can't use a mouse, though others get by. If none of them would, it's
+  `negligible` until one joins.
 - **Only people count.** A gap that changes nothing for anyone yet, such as
   records that are never cleaned up, is `negligible`, however untidy it is.
+- **It's judgement, not arithmetic.** The share is how many of them it could
+  reach, by who they are and what they do, not a count anyone has to know.
+  When it's unclear, rate it as if it reached them, and say why in its
+  description.
 - **When torn between two, pick the lower** unless the higher one's test is
   plainly met. That keeps `damaging` rare, so it means something.
 

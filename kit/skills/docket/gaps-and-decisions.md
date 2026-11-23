@@ -59,11 +59,14 @@ one doc, so check its other files before choosing a key.
 
 ### Rating impact
 
-Impact is what happens to whoever relies on the thing the gap is in, when it
-bites: the people who use the software, run it, build on it, or depend on what
-it produces. Rate the consequence, never how likely it is.
+Impact is always about the people the software serves: who its capabilities'
+personas stand for, and whoever runs it, builds on it, or depends on what it
+produces. Rate it in two steps, using judgement about this software's
+circumstances: what it takes from those it would affect, then what share of
+them it would affect if it bit. Rate the consequence, never how likely it is
+to bite.
 
-Ask in order, and stop at the first yes:
+First, what it takes. Ask in order, and stop at the first yes:
 
 1. Could it leave something wrong that can't be fully put right, or that
    someone acts on without knowing, at a cost? Data lost or kept wrong, money
@@ -74,6 +77,14 @@ Ask in order, and stop at the first yes:
 3. Does it cost time, a step by hand, or a workaround, while the result still
    comes out right? **`inconvenient`**
 4. Otherwise, **`negligible`**: nothing anyone relies on changes.
+
+Then, how many of them it would reach. Most of them, or a meaningful share:
+keep the rating. Only a few: one step lower. None of them today:
+`negligible`, with `when` saying who would change that, such as "Clients who
+use screen readers join." Legal or contractual exposure the business really
+has, and anyone able to do what they shouldn't, stay `damaging` however few
+it reaches. The same gap can rate differently in different software: read the
+personas before rating anything about who can use it.
 
 A wrong result someone notices and puts right is `inconvenient`. When torn
 between two, pick the lower unless the higher one's test is plainly met. A gap

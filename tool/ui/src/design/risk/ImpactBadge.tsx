@@ -99,6 +99,11 @@ function ImpactDetails({ impact, eyebrow, children }: { impact: ImpactId | null;
             What whoever relies on it loses: <strong>{IMPACT_NAMES[impact].lost}</strong>.
           </Box>
         ) : null}
+        {impact ? (
+          <Box sx={{ mt: 0.5, color: "text.secondary", fontSize: "0.92em" }}>
+            Judged for the people this software serves: a gap that would reach only a few of them rates one step lower.
+          </Box>
+        ) : null}
         {children}
       </div>
     </DetailsCard>
