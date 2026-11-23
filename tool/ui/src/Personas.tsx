@@ -7,7 +7,7 @@ import type { CSSProperties } from "react";
 import { DetailsCard, DetailsEyebrow, DetailsPopover } from "./design/DetailsPopover";
 import { Grip } from "./design/Grip";
 import { STABILITY_LEVEL_IDS } from "./design/stability/stability";
-import { StabilityMark } from "./design/stability/StabilityMark";
+import { CapabilityStability } from "./design/catalog/CapabilityLabel";
 import type { Capability, Persona } from "./state";
 
 export function PersonaIcon({ size = 16 }: { size?: number }) {
@@ -144,11 +144,11 @@ function ReadinessDetails({ value, basis }: { value: number; basis: ReadinessBas
       {n ? (
         <Box component="ul" sx={{ listStyle: "none", m: 0, p: 0, ...section }}>
           {[...basis.capabilities]
-            .sort((a, b) => STABILITY_LEVEL_IDS.indexOf(b.stability) - STABILITY_LEVEL_IDS.indexOf(a.stability))
+            .sort((a, b) => (b.stability ? STABILITY_LEVEL_IDS.indexOf(b.stability) : -1) - (a.stability ? STABILITY_LEVEL_IDS.indexOf(a.stability) : -1))
             .map((c) => (
               <Box key={c.id} component="li" sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 2, py: 0.5 }}>
                 <span>{c.name}</span>
-                <StabilityMark level={c.stability} feature={c.name} focusable={false} size="short" />
+                <CapabilityStability level={c.stability} name={c.name} focusable={false} />
               </Box>
             ))}
         </Box>

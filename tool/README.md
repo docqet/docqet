@@ -48,6 +48,29 @@ connected to. Its **Details** link opens everything about it, such as each
 rule's evidence, the stability checklist and the code, in a new tab, at an
 address like `?capability=deposits` that keeps the projects showing.
 
+Where the software differs from what's intended shows where it's declared,
+and wherever it matters:
+
+- **What's left** on a capability lists its open decisions, its known gaps,
+  the technical gaps of the systems and components it's built on, under
+  *Under the hood*, and its rules without evidence. Each gap says when it's to
+  close, in the warning's tone once it's due. A feature's or domain's adds its
+  own open decisions; a persona's leaves technical gaps out.
+- **Tradeoffs** show on their capability, and on a feature as what it's
+  decided not to build, each with what it costs and the code it explains.
+- **Drafts** show as the word Draft, with no mark, and count toward no
+  maturity or readiness.
+- **The checklist** marks each outcome not met, met with evidence (a system
+  or component the capability is built on meets it), or met on its level's
+  word.
+- **A system's or component's page**, at `?system=ledger` or
+  `?component=bookings`, has how it's built, its technical gaps, tradeoffs,
+  open decisions, the outcomes it meets and their evidence, and what relies on
+  it.
+- **Gaps and tradeoffs**, at `?view=gaps` and from the header, has every gap
+  by when it's due, every open decision by where it is, and every tradeoff, for
+  everything, what people notice, or what's under the hood.
+
 `npm run build` writes a static site to `dist/`. Put a `state.json` beside its
 `index.html` and serve the folder. Nothing else runs on the server. To show
 several projects, put a `projects.json` there instead, listing where each

@@ -6,7 +6,7 @@ concepts: [company-account]
 code: [src/invoices/**]
 gaps:
   - id: no-payment-reminders
-    kind: to-close-later
+    until: not-decided
     text: >-
       Nothing reminds a company when an invoice is overdue. The bookkeeper
       checks the unpaid invoices each week and chases them by email.

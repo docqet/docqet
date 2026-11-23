@@ -4,21 +4,24 @@ import IncompleteCircleRoundedIcon from "@mui/icons-material/IncompleteCircleRou
 import LayersOutlinedIcon from "@mui/icons-material/LayersOutlined";
 import LightbulbOutlinedIcon from "@mui/icons-material/LightbulbOutlined";
 import RadioButtonUncheckedRoundedIcon from "@mui/icons-material/RadioButtonUncheckedRounded";
+import TaskAltRoundedIcon from "@mui/icons-material/TaskAltRounded";
 import WarningAmberRoundedIcon from "@mui/icons-material/WarningAmberRounded";
 import Switch from "@mui/material/Switch";
 import { DetailsCard, DetailsEyebrow, DetailsPopover } from "./design/DetailsPopover";
 import { STABILITY, STABILITY_LEVEL_IDS } from "./design/stability/stability";
 import { StabilityMark } from "./design/stability/StabilityMark";
-import { gapKind, plural } from "./Explore";
+import { DueTag, TechnicalLink, levelName, plural } from "./Explore";
 import {
   appliesAt,
+  outcomeStanding,
   outcomesOf,
+  subjectOf,
   type Capability,
   type Checklist,
   type ChecklistExample,
   type ChecklistOutcome,
   type ChecklistQuality,
-  type Gap,
+  type DocketState,
   type Level,
 } from "./state";
 
@@ -29,9 +32,11 @@ import {
  * at that level. It's a guideline, not a gate, so the guidance is there to
  * judge by, never to follow step by step.
  *
- * On a capability's page it opens at the capability's level, and each outcome
- * that level expects is met unless one of its gaps names it. Other levels show
- * what came before and what's next.
+ * On a capability's page it opens at the capability's level. Each outcome
+ * that level expects is not met where a gap names it, on the capability or on
+ * what it's built on; met with evidence where a system or component it's
+ * built on says it meets it; and otherwise met on the level's word. Other
+ * levels show what came before and what's next. A draft claims none.
  */
 
 const IMPLEMENTATION_INFO =
@@ -67,15 +72,16 @@ function countsAt(checklist: Checklist, level: Level) {
   };
 }
 
-/* An outcome's standing for this capability: met, not met (a gap names it), or not expected at its level. */
-type Standing = "met" | "gap" | "not-expected";
+/* An outcome's standing for this capability, as outcomeStanding works it out. */
+type Standing = "gap" | "evidence" | "trust" | "not-expected";
+const isMet = (s: Standing) => s === "evidence" || s === "trust";
 
-export function StabilityChecklist({ checklist, capability, gaps }: { checklist: Checklist; capability: Capability; gaps: Gap[] }) {
+export function StabilityChecklist({ state, checklist, capability }: { state: DocketState; checklist: Checklist; capability: Capability }) {
   const own = capability.stability;
-  const [level, setLevel] = useState<Level>(own);
+  const [level, setLevel] = useState<Level>(own ?? "prototype");
   const [showAll, setShowAll] = useState(false);
-  const gapsOf = (outcome: ChecklistOutcome) => gaps.filter((g) => g.outcome === outcome.id);
-  const standing = (outcome: ChecklistOutcome): Standing => (!appliesAt(outcome, own) ? "not-expected" : gapsOf(outcome).length ? "gap" : "met");
+  const of = (outcome: ChecklistOutcome) => outcomeStanding(state, capability, outcome);
+  const standing = (outcome: ChecklistOutcome): Standing => of(outcome).standing;
   const kindName = (id: string) => checklist.kinds.find((k) => k.id === id)?.name ?? id;
 
   const sections = checklistAt(checklist, level);
@@ -117,20 +123,25 @@ export function StabilityChecklist({ checklist, capability, gaps }: { checklist:
 
       <div className="sc-bar">
         <p className="sc-status">
-          {level === own ? (
+          {own === null ? (
+            <>
+              What {name} would expect of {capability.name}. It's a draft, declared and not started, so none of it is claimed yet.
+            </>
+          ) : level === own ? (
             <>
               <strong data-met={unmet.length ? "no" : "yes"}>
-                {expected.filter((o) => standing(o) === "met").length} of {expected.length} {name} outcomes met
+                {expected.filter((o) => isMet(standing(o))).length} of {expected.length} {name} outcomes met
               </strong>
-              {unmet.length ? ` · Not met in ${unmet.join(", ")}` : null}. Anything a gap doesn't name counts as met.
+              {unmet.length ? ` · Not met in ${unmet.join(", ")}` : null}. {expected.filter((o) => standing(o) === "evidence").length} with evidence from what
+              it's built on; anything a gap doesn't name counts as met.
             </>
           ) : STABILITY_LEVEL_IDS.indexOf(level) > STABILITY_LEVEL_IDS.indexOf(own) ? (
             <>
-              What {name} would expect of {capability.name}. It's at {STABILITY[own].name}, so none of what's new here is claimed yet.
+              What {name} would expect of {capability.name}. It's at {levelName(own)}, so none of what's new here is claimed yet.
             </>
           ) : (
             <>
-              What {name} expects. {capability.name} is at {STABILITY[own].name}, which builds on it.
+              What {name} expects. {capability.name} is at {levelName(own)}, which builds on it.
             </>
           )}
         </p>
@@ -185,12 +196,30 @@ export function StabilityChecklist({ checklist, capability, gaps }: { checklist:
                         ) : null}
                         <p className="sc-outcome-text">{o.text}</p>
                         <Guidance implementation={o.implementation} overengineering={o.overengineering} kindName={kindName} />
-                        {gapsOf(o).map((g) => (
+                        {of(o).gaps.map((g) => (
                           <p key={g.id} className="sc-gap">
-                            <span className="explore-gap-kind">{gapKind(g)}</span>
+                            <span className="explore-gap-kind">{subjectOf(g).type === "capability" ? "Known gap" : "Technical gap"}</span>
                             {g.text}
+                            <span className="explore-left-meta">
+                              <DueTag state={state} gap={g} of={capability} />
+                            </span>
                           </p>
                         ))}
+                        {appliesAt(o, own) && !of(o).gaps.length && of(o).by.length ? (
+                          <p className="sc-met-by">
+                            Met by{" "}
+                            {of(o).by.map((e, i) => (
+                              <span key={e.id}>
+                                {i ? ", " : ""}
+                                <TechnicalLink doc={e} />
+                              </span>
+                            ))}
+                            {(() => {
+                              const n = of(o).by.reduce((sum, e) => sum + e.evidence.implements.length + e.evidence.verifies.length, 0);
+                              return n ? `, with evidence in ${plural(n, "place", "places")}` : ", which nothing points at yet";
+                            })()}
+                          </p>
+                        ) : null}
                       </div>
                     </li>
                   ))}
@@ -211,11 +240,20 @@ export function StabilityChecklist({ checklist, capability, gaps }: { checklist:
   );
 }
 
-/* Whether an outcome is met for this capability, named by a gap, or not expected at its level. */
+const STANDING_LABELS: Record<Standing, string> = {
+  evidence: "Met, with evidence",
+  trust: "Met, on its level's word",
+  gap: "Not met",
+  "not-expected": "Not expected at its level",
+};
+
+/* Whether an outcome is met for this capability, with evidence or on trust, named by a gap, or not expected at its level. */
 function StandingIcon({ standing }: { standing: Standing }) {
   return (
-    <span className="sc-standing" data-standing={standing} aria-label={standing === "met" ? "Met" : standing === "gap" ? "Not met" : "Not expected at its level"}>
-      {standing === "met" ? (
+    <span className="sc-standing" data-standing={standing} aria-label={STANDING_LABELS[standing]} title={STANDING_LABELS[standing]}>
+      {standing === "evidence" ? (
+        <TaskAltRoundedIcon sx={{ fontSize: 16 }} />
+      ) : standing === "trust" ? (
         <CheckRoundedIcon sx={{ fontSize: 16 }} />
       ) : standing === "gap" ? (
         <IncompleteCircleRoundedIcon sx={{ fontSize: 15 }} />

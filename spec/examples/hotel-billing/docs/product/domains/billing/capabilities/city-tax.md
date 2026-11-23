@@ -9,7 +9,8 @@ concepts: [bill, charge]
 code: [src/tax/**]
 gaps:
   - id: children-corrected-by-hand
-    kind: to-close-later
+    until: beta
+    rule: tax/children-pay-no-city-tax
     text: >-
       Guests' ages aren't recorded, so city tax is added for every guest on a
       stay, and clerks correct it by hand for children.

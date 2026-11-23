@@ -5,12 +5,12 @@ rules:
   - payments/card-numbers-are-never-kept
   - bills/closed-bills-dont-change
 concepts: [payment, bill]
-gaps:
+tradeoffs:
   - id: hotels-currency-only
-    kind: accepted-tradeoff
-    text: >-
-      Guests pay in the hotel's currency. Their card provider converts it, at
-      its own rate.
+    text: Guests pay in the hotel's currency, not their own.
+    cost: >-
+      Their card provider converts it, at its own rate, so the amount on
+      their statement can differ from the bill.
 ---
 
 # Pay by link

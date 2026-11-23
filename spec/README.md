@@ -23,9 +23,14 @@ tool. Anyone can adopt the format or write their own indexer for it.
 - **The repo is the source of truth.** Everything is declared in the
   repository or derived from it.
 - **Declared vs. derived.** People and agents write the declared parts:
-  stability, rules, gaps and links. The indexer computes the derived parts:
-  maturity, readiness, evidence, reverse links and problems. Nobody edits
-  derived state by hand.
+  stability, rules, open decisions, gaps, tradeoffs and links. The indexer
+  computes the derived parts: maturity, readiness, evidence, reverse links and
+  problems. Readers work out what depends on other projects, such as when a
+  gap is due. Nobody edits derived state by hand.
+- **Intention about the product, and about how it's built.** Product docs say
+  what the software does, in the domain's words, and never name its
+  implementation. Technical docs say how it's meant to be built, in the
+  code's words, and link to the product, never the other way.
 - **Evidence is optional.** Code and tests can point at the rules they're
   about, so readers can see them beside the rule. Docket doesn't run tests or
   read their results, and nothing requires evidence at any level.
@@ -50,7 +55,10 @@ docs/
             ├── capabilities/<slug>.md   the only docs with a stability level
             ├── rules/<topic>/<slug>.md  one rule per file, grouped by topic
             └── concepts/<slug>.md
-<code and tests, anywhere>               docket:implements and docket:verifies comments
+└── technical/
+    ├── systems/<slug>.md                how something overarching is built
+    └── components/<slug>.md             how one area of the code is built
+<code and tests, anywhere>               docket:implements, verifies, gap and tradeoff comments
 .docket/state.json                       written by `docket index`, gitignored
 ```
 
@@ -78,9 +86,23 @@ these changes:
   implements it, a test or not, points at it instead, and can point at a
   capability too.
 - Rules have no kind: core and edge case are gone.
-- There are no engineering docs: no systems, components, providers or
-  runbooks, and so no technical gaps. A repository can keep them anywhere
-  outside `docs/product/`, but Docket doesn't read them.
+- A capability can be a draft: declared, with no work started.
+- A gap has `until` instead of a kind, and a tradeoff is a list of its own,
+  with its cost. A feature can have tradeoffs and open decisions, and a
+  domain open decisions.
+
+Technical docs are forge's `engineering-docs` layout, with these changes:
+
+- `docs/engineering/` is `docs/technical/`, to say what the docs hold, how
+  the software is meant to be built, rather than who writes them.
+- `architecture/systems/` is `systems/`, and `architecture/features/` is
+  `components/`, since a feature is a job the product does in Docket.
+- Links, gaps and tradeoffs are frontmatter, not sections. How it works,
+  Gotchas and Open decisions stay prose in the body.
+- A gap's `Until` is `until`, and a tradeoff's `Costs` and `Revisit when` are
+  `cost` and `revisit`.
+- A system or component can say which checklist outcomes it meets.
+- Providers and runbooks aren't read. A repository can keep them anywhere.
 
 In the examples, `.docket/state.json` is checked in so you can read it. In a
 real repository it's gitignored.
@@ -99,9 +121,11 @@ its folder's name:
 | rule       | `docs/product/domains/<domain>/rules/`        | `booking/no-double-booking` |
 | concept    | `docs/product/domains/<domain>/concepts/`     | `booking`                   |
 | persona    | `docs/product/personas/`                      | `front-desk-clerk`          |
+| system     | `docs/technical/systems/`                     | `deployment`                |
+| component  | `docs/technical/components/`                  | `bookings`                  |
 
 - **IDs, links and values are kebab case**: lowercase words joined by
-  hyphens, such as `room-booking`, `accepted-tradeoff`, `to-close-later` or `ga`.
+  hyphens, such as `room-booking`, `not-decided` or `ga`.
   Tools show values with their own labels, such as GA for `ga`.
 - **No `id:` field.** The path is the ID, so there's nothing to drift. Renaming
   a file renames the doc, and the indexer reports every link and annotation the
@@ -110,12 +134,14 @@ its folder's name:
   as `rule:booking/no-double-booking` in an annotation or a problem's
   `subject` in `state.json`. In frontmatter the field name gives the
   type, so links there are bare: `rules: [booking/no-double-booking]`.
-- **A gap's ID** is its doc's ID plus the gap's key:
-  `capability:room-booking#no-waitlist`.
+- **A gap's or tradeoff's ID** is its doc's ID plus its key:
+  `capability:room-booking#calendar-needs-a-mouse`,
+  `feature:reservations#front-desk-bookings-only` or
+  `system:ledger#balance-worked-out-on-read`.
 - **What an ID names depends on the type** (see [Domains](#domains)). A
-  domain, feature, capability or persona ID names one thing across every
-  project. A rule
-  or concept ID names one definition within a domain.
+  domain, feature, capability, persona, system or component ID names one
+  thing across every project. A rule or concept ID names one definition
+  within a domain.
 - **A link to another domain's rule or concept** adds `@<domain>`:
   `concepts: [booking@guest-stays]`, or
   `docket:verifies rule:bills/closed-bills-dont-change@billing`.
@@ -127,21 +153,35 @@ is its name. The paragraph under the title is its summary. The UI shows both.
 
 | Type | Frontmatter | Body | Example |
 | --- | --- | --- | --- |
-| domain | none | Anything worth saying about the part of the business, as prose | [guest-stays](examples/hotel-bookings/docs/product/domains/guest-stays/domain.md) |
-| feature | `capabilities` (required) | Anything worth saying about the job, as prose | [reservations](examples/hotel-bookings/docs/product/domains/guest-stays/features/reservations.md) |
-| capability | `stability` (required), `personas`, `rules`, `concepts`, `code`, `gaps` | Covers, Learning, Success, Open decisions | [room-booking](examples/hotel-bookings/docs/product/domains/guest-stays/capabilities/room-booking.md) |
+| domain | none | Anything worth saying about the part of the business, as prose; Open decisions | [guest-stays](examples/hotel-bookings/docs/product/domains/guest-stays/domain.md) |
+| feature | `capabilities` (required), `tradeoffs` | Anything worth saying about the job, as prose; Open decisions | [reservations](examples/hotel-bookings/docs/product/domains/guest-stays/features/reservations.md) |
+| capability | `stability` (required), `personas`, `rules`, `concepts`, `code`, `gaps`, `tradeoffs` | Covers, Learning, Success, Open decisions | [room-booking](examples/hotel-bookings/docs/product/domains/guest-stays/capabilities/room-booking.md) |
 | rule | `concepts` | The rule, Why | [same-day-turnover](examples/hotel-bookings/docs/product/domains/guest-stays/rules/booking/same-day-turnover.md) |
 | concept | none | Details, Lifecycle, Not to be confused with | [booking](examples/hotel-bookings/docs/product/domains/guest-stays/concepts/booking.md) |
 | persona | `image` (required) | Needs, Knows, Context, Expects, Cares about | [front-desk-clerk](examples/hotel-bookings/docs/product/personas/front-desk-clerk.md) |
+| system | `capabilities`, `code`, `meets`, `gaps`, `tradeoffs` | A `**Code:**` line, How it works, Gotchas, Open decisions | [ledger](examples/hotel-billing/docs/technical/systems/ledger.md) |
+| component | `capabilities`, `code`, `meets`, `gaps`, `tradeoffs` | A `**Code:**` line, How it works, Gotchas, Open decisions | [bookings](examples/hotel-bookings/docs/technical/components/bookings.md) |
 
-- **`stability`** is `prototype`, `alpha`, `beta` or `ga`, which tools show
-  as Prototype, Alpha, Beta and GA. Only capabilities have one. A feature's maturity is worked out from its capabilities' levels,
-  and a domain's from its parts of features (see
+- **`stability`** is `draft`, `prototype`, `alpha`, `beta` or `ga`, which
+  tools show as Draft, Prototype, Alpha, Beta and GA. Only capabilities have
+  one. A feature's maturity is worked out from its capabilities' levels, and a
+  domain's from its parts of features (see
   [Features and maturity](#features-and-maturity)).
 - **`code`** is a list of path globs for where it lives. What verifies or
   implements it is found through [annotations](#evidence) instead.
 - **`personas`** lists the personas a capability serves: who does it, or who
   it's done for when the software does it.
+- **`capabilities`** on a system or component lists the capabilities that rely
+  on it. It's the only link between the technical docs and the product.
+- **`meets`** lists the [stability checklist](#stability-checklist) outcomes a
+  system or component meets for the capabilities it lists, as
+  `<quality>/<level>/<id>`. Its evidence is the proof.
+- **Open decisions** is a body section on a domain, feature, capability,
+  system or component: a list of questions, each led by a bold topic. A
+  question sits where its answer will go: on a domain when it'll be a rule or
+  concept, on a feature when it'll add a capability or rule one out, on a
+  capability when it'll change what it does, and on a system or component when
+  it'll be a tradeoff.
 - **`image`** is the URL of the persona's picture. Any image a browser can
   show works. The examples use randomuser.me's free placeholder portraits,
   such as `https://randomuser.me/api/portraits/women/68.jpg`.
@@ -161,8 +201,12 @@ What a capability doesn't do is said elsewhere:
 
 - **What must always or never happen**, every time, is a rule it follows:
   "a room can't be double-booked".
-- **What's missing or limited**, for now or by choice, is a gap: "there's no
-  waitlist when every room is taken".
+- **What's missing for now** is a gap: "the room calendar can't be used from
+  the keyboard".
+- **What's limited by choice** is a tradeoff: "a booking holds one room, not
+  several".
+- **A whole result it doesn't produce yet** is another capability, as a draft
+  until work starts on it: the waitlist, beside room booking.
 
 **Covers** is optional: a list of what else the capability includes, when the
 sentence alone doesn't show it. Each item is a sentence of its own, with who
@@ -185,6 +229,56 @@ since the same people work across domains. Its sections:
   think the work goes.
 - **Cares about**: what makes them trust it, and what would make them give up.
 
+### Systems and components
+
+A system or component says how part of the software is built, in the code's
+words, for the engineer or agent about to change it. A **system** is
+something overarching that several features rely on, such as Hotel Billing's
+[ledger](examples/hotel-billing/docs/technical/systems/ledger.md) or Hotel
+Bookings' [deployment](examples/hotel-bookings/docs/technical/systems/deployment.md).
+A **component** is one area of the code, named as the code names it, such as
+Hotel Bookings' [bookings](examples/hotel-bookings/docs/technical/components/bookings.md).
+
+```yaml
+---
+capabilities: [extra-charges, split-bills, deposits, check-out, direct-billing]
+code: [src/ledger/**]
+meets: [reliability/beta/data-kept]
+gaps:
+  - id: corrections-of-corrections-untested
+    until: extra-charges@ga
+    outcome: maintainability/ga/others-can-change
+    text: >-
+      Nothing tests correcting a line that is itself a correction, so a change
+      to `correct` could stop a twice-corrected charge netting to zero without
+      anything failing.
+tradeoffs:
+  - id: balance-worked-out-on-read
+    text: >-
+      A bill's balance is added up from its lines every time it's asked for,
+      not stored on the bill.
+    cost: Opening a bill gets slower as lines are added to it.
+    revisit: a bill passes 1,000 lines
+---
+
+# Ledger
+
+Every amount a guest owes or pays, as lines on their bill that are only ever
+added, never changed.
+
+**Code:** `src/ledger/ledger.ts`, starting at `post`
+```
+
+- **Only what the code can't say.** Leave out what a competent reader learns
+  from the code in a few minutes, such as lists of endpoints, tables or
+  functions. Most code has no doc.
+- **No stability level, and no domain.** One doc can serve capabilities at
+  different levels, and it's written in the code's words. The same ID in
+  several projects is contributions to one, as for a feature.
+- **Its body** is a `**Code:**` line saying where to start reading, How it
+  works, Gotchas (what's correct but will surprise whoever changes it) and Open
+  decisions, each only where there's something to say.
+
 ## Links
 
 Every link points one way and is written once:
@@ -193,12 +287,16 @@ Every link points one way and is written once:
 feature                    → capabilities
 capability                 → personas, rules, concepts, code
 rule                       → concepts
-annotation                 → rules, capabilities    (docket:verifies, docket:implements)
+gap                        → an outcome, a rule        (outcome, rule)
+system, component          → capabilities, code, outcomes (meets)
+annotation                 → rules, capabilities, systems, components    (docket:verifies, docket:implements)
+                           → gaps, tradeoffs           (docket:gap, docket:tradeoff)
 ```
 
 The indexer computes the other direction, such as which capabilities a rule
-applies to, which feature a capability is in, or which domains a feature spans,
-so the UI can show both sides.
+applies to, which feature a capability is in, which domains a feature spans,
+or which systems a capability relies on, so the UI can show both sides.
+Product docs never link to technical docs.
 
 ### Rules belong to a domain
 
@@ -219,45 +317,113 @@ Links in the body are ordinary relative Markdown links, for readers. The
 indexer reports any that are broken, but only frontmatter and annotations count
 as relationships.
 
-## Gaps
+## Gaps and tradeoffs
 
-Gaps live in a capability's frontmatter so the UI can count and group them.
-Each one is what someone using the product would notice, has a key that's
-unique within its doc, a kind, and a sentence or two of text:
+Gaps and tradeoffs live in frontmatter, so the UI can count and group them.
+Each has a key that's unique within its doc, and is recorded in exactly one
+place: the doc it's about.
 
-```yaml
-gaps:
-  - id: no-waitlist
-    kind: to-close-later        # or accepted-tradeoff
-    text: >-
-      When every room is taken there's no waitlist. Clerks note the guest's
-      details outside the app and call them if a room frees up.
-```
+| Declared on | Gaps | Tradeoffs |
+| --- | --- | --- |
+| Capability | What someone using the product would notice | Limits it has by choice |
+| Feature | None: a capability it lacks is a draft capability | Non-goals: capabilities we've decided never to build |
+| System or component | What only someone working on the code would notice | Technical choices |
 
-As in forge today, a gap is recorded in exactly one place.
+Domains, rules, concepts and personas have neither. A limit across a whole
+domain is a rule, or a tradeoff on the system that causes it. When a gap has a
+visible effect and a technical cause, the effect is the capability's gap, and
+the cause is a gotcha in the technical doc.
 
-A gap can also name the [stability checklist](#stability-checklist) outcome
-it falls short of, as `outcome`. Most gaps are limits on what the capability
-does, such as the waitlist, and match no outcome, so they leave it out:
+### Gaps
+
+A **gap** is something we intend to close. It has an `id`, `until`, a sentence
+or two of `text`, and optionally the `outcome` or `rule` it falls short of:
 
 ```yaml
 gaps:
   - id: calendar-needs-a-mouse
-    kind: to-close-later
+    until: ga
     outcome: usability/beta/everyone
     text: >-
       The room calendar can't be used from the keyboard, so clerks need a
       mouse to pick dates.
 ```
 
-A gap can't name a baseline outcome, since the security and privacy baseline
-is never a known gap.
+- **`until`** says when it's to close, as one of:
+  - a level, such as `beta`: before the capability it's on reaches it. On a
+    system or component, before any capability it serves reaches it, since
+    the strictest applies.
+  - `<capability>@<level>`, on a system or component, for one capability it
+    serves: `until: extra-charges@ga`.
+  - `not-decided`, so nobody invents a trigger.
+  - anything else, as an event in words: `until: the second server is added`.
+- **`outcome`** names the [stability checklist](#stability-checklist) outcome
+  it falls short of, as `<quality>/<level>/<id>`. Most gaps are limits on what
+  the capability does and match none. A gap can't name a baseline outcome,
+  since the security and privacy baseline is never a known gap.
+- **`rule`** names a rule the capability follows but doesn't hold to yet.
+  Readers show it on the rule too:
+
+```yaml
+gaps:
+  - id: children-corrected-by-hand
+    until: beta
+    rule: tax/children-pay-no-city-tax
+    text: >-
+      Guests' ages aren't recorded, so city tax is added for every guest on a
+      stay, and clerks correct it by hand for children.
+```
+
+Readers work out when each gap is **due**, from its `until` and the levels of
+the capabilities it affects. It isn't in `state.json`, since those levels can
+come from another project:
+
+| Due | When |
+| --- | --- |
+| Due | The capability is already at the `until` level, or past it, so its level expects the gap closed |
+| Before the next level | `until` is the capability's next level |
+| Later | `until` is a level further on |
+| When … | `until` is an event |
+| Not decided | `until` is `not-decided` |
+
+A gap on a system or component takes the most pressing of the capabilities it
+serves, each at the level of the part its own project builds, since that's the
+part it serves. Check-out is GA in Hotel Bookings and Alpha in Hotel Billing,
+so Hotel Bookings' deployment gap, `until: ga`, is due. A draft has no level,
+so nothing on it is due.
+
+### Tradeoffs
+
+A **tradeoff** is something we chose over an alternative and decided to live
+with. It has an `id`, `text` saying what we chose and not what, its `cost`,
+and optionally `revisit`, a concrete trigger to look at it again. One we expect
+to keep forever leaves `revisit` off:
+
+```yaml
+tradeoffs:
+  - id: front-desk-bookings-only
+    text: >-
+      Bookings are taken at the front desk, not from online travel agencies.
+    cost: >-
+      Clerks enter each agency booking by hand, as it arrives by email.
+    revisit: agency bookings pass a fifth of all bookings
+```
+
+A gap we decide never to close becomes a tradeoff, with its cost. Neither a
+gap nor a tradeoff can excuse the security and privacy baseline.
 
 ## Stability levels
 
-Every capability is at one of four stability levels. The level says how stable
-the work is right now, so people know what they can rely on before they rely
-on it.
+Every capability that's been started is at one of four stability levels. The
+level says how stable the work is right now, so people know what they can rely
+on before they rely on it.
+
+A capability declared but not started is a **draft**, `stability: draft`, such
+as the [waitlist](examples/hotel-bookings/docs/product/domains/guest-stays/capabilities/waitlist.md)
+or [refunds](examples/hotel-billing/docs/product/domains/billing/capabilities/refunds.md).
+It isn't a level: it promises nothing, claims nothing on the checklist, and
+counts toward no maturity or readiness. Readers show it as the word Draft,
+with no level's mark.
 
 | Level     | How stable | What it means                                                                                                                                           |
 | --------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -352,6 +518,10 @@ How outcomes combine:
   claims what that level expects, except the gaps written down, so only what
   isn't met is recorded. An outcome that doesn't apply, such as accessibility
   for an API with no screens, counts as met too.
+- **Each outcome a capability's level expects has a standing:** not met, when
+  a gap on the capability, or on a system or component it relies on, names it;
+  met with evidence, when a system or component it relies on `meets` it; or
+  met on trust, when nothing names it. A gap wins over `meets`.
 - **An outcome's ID** is its quality, level and own ID, as
   `<quality>/<level>/<id>`: `reliability/beta/data-kept`.
 - **A level includes every outcome the levels below it expect,** unless
@@ -432,13 +602,12 @@ that's mostly early work.
 A **feature's maturity** is the weighted average of its capabilities' scores,
 rounded to a whole percentage. Each score sits inside its level's band (below),
 so a feature whose capabilities are all at Alpha is 35%, in Alpha's band, and
-never shows as more mature than it is. A feature with no capabilities has no
-maturity. Every Docket capability has a level, so there are no drafts to leave
-out.
+never shows as more mature than it is. Drafts are left out, since no work has
+started on them. A feature with no capabilities but drafts has no maturity.
 
-For example, Reservations has room booking at Beta, cancellations at Alpha, and
-group bookings at Prototype, so its maturity is (60 × 4 + 35 × 3 + 15 × 2) ÷
-(4 + 3 + 2) = 375 ÷ 9 ≈ 42%. Without group bookings it would be 345 ÷ 7 ≈ 49%.
+For example, Reservations has room booking at Beta, cancellations at Alpha,
+group bookings at Prototype, and the waitlist as a draft, so its maturity is
+(60 × 4 + 35 × 3 + 15 × 2) ÷ (4 + 3 + 2) = 375 ÷ 9 ≈ 42%. Without group bookings it would be 345 ÷ 7 ≈ 49%.
 Starting group bookings lowered it, but nothing got worse: something new
 started.
 
@@ -495,9 +664,9 @@ A persona has a **readiness** instead of a maturity: how ready the software is
 for them, from the maturity of what they need. What they need is every
 capability that lists them, so their readiness is worked out as a feature's
 maturity is, from those capabilities' levels in each domain that builds part of
-them. In Hotel Bookings, the front desk clerk has room booking and check-in at
-Beta, cancellations at Alpha, check-out at GA, and group bookings and room
-status at Prototype, so they're (60 × 4 × 2 + 35 × 3 + 100 × 6 + 15 × 2 × 2) ÷
+them, drafts left out. In Hotel Bookings, the front desk clerk has room booking
+and check-in at Beta, cancellations at Alpha, check-out at GA, group bookings
+and room status at Prototype, and the waitlist as a draft, so they're (60 × 4 × 2 + 35 × 3 + 100 × 6 + 15 × 2 × 2) ÷
 (4 × 2 + 3 + 6 + 2 × 2) = 1245 ÷ 21 ≈ 59% ready.
 
 - **A feature's readiness for a persona** is worked out the same way, from just
@@ -521,32 +690,40 @@ a level's color:
 
 ## Evidence
 
-A rule or a capability can have **evidence**: places in the repository that
-say they verify it, or implement it. Evidence is optional at every level, and
-there's no limit to how much there is. Docket doesn't care what a place is,
-whether a test, code, a migration or anything else, or what language or
-framework it's in, and it doesn't run anything. It shows where the evidence
-is, so a reader can go from a rule or capability to what's about it.
+A rule, capability, system or component can have **evidence**: places in the
+repository that say they verify it, or implement it. Evidence is optional at
+every level, and there's no limit to how much there is. Docket doesn't care
+what a place is, whether a test, code, a migration, a workflow or anything
+else, or what language or framework it's in, and it doesn't run anything. It
+shows where the evidence is, so a reader can go from what's intended to
+what's about it.
 
-A place gives evidence with an annotation, written in a comment, the same in
-every language:
+A place gives evidence, or marks a gap or tradeoff, with an annotation,
+written in a comment, the same in every language:
 
 ```text
 docket:<verb> <type>:<id> [<type>:<id> ...]
 ```
 
-- **`<verb>`** is the kind of evidence, `verifies` or `implements`.
-  - **`verifies`** says this place checks that the rule holds, or that the
-    capability works, such as
-    [a unit test](examples/hotel-bookings/src/booking/stay.test.ts) or
-    [a Gherkin `Rule:`](examples/hotel-bookings/features/booking.feature).
+- **`<verb>`** is one of four:
+  - **`verifies`** says this place checks that the rule holds, the capability
+    works, or the system or component does what it says, such as
+    [a unit test](examples/hotel-bookings/src/booking/stay.test.ts),
+    [a Gherkin `Rule:`](examples/hotel-bookings/features/booking.feature) or
+    [the rollback job](examples/hotel-bookings/.github/workflows/deploy.yml)
+    in a deploy workflow.
   - **`implements`** says this place makes it so, such as
     [`assertRoomFree`](examples/hotel-bookings/src/booking/availability.ts), or
     the [constraint](examples/hotel-bookings/db/migrations/001_bookings.sql)
     in a database migration.
-- **`<type>`** is `rule` or `capability`. An annotation can name several,
-  of either type:
-  `docket:verifies capability:deposits rule:payments/deposit-counts-towards-the-bill`.
+  - **`gap`** says this is where a gap shows in the code: tracked technical
+    debt, in place of a bare TODO.
+  - **`tradeoff`** says this code is deliberate, though it may look wrong, so
+    nobody "fixes" it.
+- **`<type>:<id>`** is a `rule`, `capability`, `system` or `component` for
+  `verifies` and `implements`, and a gap's or tradeoff's ID for `gap` and
+  `tradeoff`. An annotation can name several, of any of its types:
+  `docket:implements capability:room-booking component:bookings`.
 
 ```ts
 // docket:verifies rule:booking/minimum-stay
@@ -558,9 +735,14 @@ it("rejects a stay that ends the day it starts", () => {
   Rule: A room can't be double-booked
 ```
 
-- **The indexer doesn't parse anything.** It looks for `docket:verifies` and
-  `docket:implements` in every file in the repository outside `docs/product/`,
-  in whatever comment syntax the file uses.
+```ts
+// docket:tradeoff system:ledger#balance-worked-out-on-read
+export function balance(bill: Bill): number {
+```
+
+- **The indexer doesn't parse anything.** It looks for the four verbs in every
+  file in the repository outside `docs/`, in whatever comment syntax the file
+  uses.
 - **An annotation is on the first line below it** that isn't blank or another
   annotation. The indexer records the file, the annotation's line, and that
   line's text as written, every time it runs. Nobody writes a line number
@@ -568,10 +750,14 @@ it("rejects a stay that ends the day it starts", () => {
 - **Readers point out what has none.** A rule or capability with nothing
   verifying it, or nothing implementing it, shows a warning where that
   evidence would be. It's a prompt, not a problem: nothing requires evidence.
+  A gap or tradeoff with no annotation is fine.
+- **A system's or component's evidence** is also the evidence for the
+  checklist outcomes it `meets`.
 
-Annotations are claims. The indexer catches one that names a rule or
-capability that doesn't exist. It can't catch a missing annotation, or one
-left behind on something that's no longer about what it names.
+Annotations are claims. The indexer catches one that names something that
+doesn't exist, such as a gap left behind after it closed. It can't catch a
+missing annotation, or one left behind on something that's no longer about
+what it names.
 
 ## Config
 
@@ -637,7 +823,7 @@ is put together with others of the same ID depends on its type:
 
 | Type | Is one across | The same ID elsewhere |
 | --- | --- | --- |
-| domain, feature, capability, persona | everything | A contribution to the same one. Its links are put together, and its name and summary should match. |
+| domain, feature, capability, persona, system, component | everything | A contribution to the same one. Its links are put together, and its name and summary should match. |
 | rule, concept | its domain | Another definition, shown beside this one. Within the same domain, it's a contribution, as above. |
 
 Putting contributions together:
@@ -645,8 +831,10 @@ Putting contributions together:
 - **Features and capabilities span domains.** A feature or capability written
   in several domains is in each of them. Each domain's part is the
   capabilities that domain builds.
-- **Links are combined**: a feature's capabilities, a capability's personas,
-  rules, concepts, code and gaps, and a rule's or capability's evidence. Each
+- **Links are combined**: a feature's capabilities and tradeoffs, a
+  capability's personas, rules, concepts, code, gaps and tradeoffs, a system's
+  or component's capabilities, code, outcomes, gaps and tradeoffs, and
+  everything's evidence. Each
   contribution's order is kept, in the order the projects are read.
 - **A body is each contribution's own.** Readers show each, labelled with its
   project and domain.
@@ -675,8 +863,8 @@ same way, from the domains of the repository it's in.
 Two contributions that should agree and don't are a **contradiction**, shown
 as a problem naming the projects involved:
 
-- **A domain's, feature's, capability's or persona's name or summary
-  differs** between projects.
+- **A domain's, feature's, capability's, persona's, system's or component's
+  name or summary differs** between projects.
 - **A capability is in two features**, whichever projects list them.
 - **A rule or concept differs within one domain**, when more than one project
   declares it there.
@@ -716,13 +904,15 @@ and showing several projects together means reading each one's state.json.
 - **Header**: the `project` (its ID and name), its `platform` (ID and name)
   when `docket.yaml` declares one, and the commit indexed.
 - **`summary`**: the project's maturity and band, how many domains and
-  features there are, capabilities per level, how many rules, how many gaps
-  and how many problems. This is the
+  features there are, capabilities per level with `draft` among them, how
+  many rules, gaps, tradeoffs, systems, components and problems. This is the
   at-a-glance view.
 - **`domains`**: each of the project's `domain.md` files, with the domain's
   maturity worked out from what this project declares in it.
-- **`features`**: each with its capabilities and its maturity worked out. Each
-  capability names the feature it's in, or `null`.
+- **`features`**: each with its capabilities, its `tradeoffs` and its
+  maturity worked out. Each capability names the feature it's in, or `null`,
+  and lists its `gaps` and `tradeoffs`, by ID. Its `stability` can be
+  `"draft"`.
 - **`personas`**: each with the capabilities that list them, the features
   those are in, and their `readiness` worked out. Personas aren't in a domain, so
   these have no `domain`.
@@ -731,11 +921,22 @@ and showing several projects together means reading each one's state.json.
   after the title and summary. A doc declared in two of the project's domains
   has an entry for each. Links are written as declared,
   with `@<domain>` where the doc named one.
-- **Evidence**: each rule's and capability's entry also has `evidence`, with
-  `verifies` and `implements` lists of each place's `file`, `line` and
-  `text`, as [Evidence](#evidence) describes. Both are empty when it has none.
-- **`gaps`**: every gap from every capability, each with its `domain`, and
-  the checklist `outcome` it names, or `null`.
+- **`systems`** and **`components`**: each with its ID, file, name, summary,
+  `capabilities`, `code` with how many files each glob matches, `meets`, its
+  `gaps` and `tradeoffs` by ID, its `evidence`, and its body. They're in no
+  domain, so they have no `domain`.
+- **Evidence**: each rule's, capability's, system's and component's entry also
+  has `evidence`, with `verifies` and `implements` lists of each place's
+  `file`, `line` and `text`, as [Evidence](#evidence) describes. Both are
+  empty when it has none.
+- **`gaps`**: every gap from every doc, each with its ID, its `domain` when
+  it's a capability's, `until` as written, the `outcome` and `rule` it names
+  or `null`, its `text`, and `places`: where `docket:gap` annotations mark it,
+  in the same shape as evidence. When it's due isn't stored: readers work it
+  out, since it depends on levels another project may declare.
+- **`tradeoffs`**: every tradeoff from every doc, each with its ID, its
+  `domain` when it's a feature's or capability's, `text`, `cost`, `revisit` or
+  `null`, and `places`, from `docket:tradeoff` annotations.
 - **`problems`**: everything the indexer found wrong, each about a doc with
   that doc's `domain`.
 - **`checklist`**: the stability checklist the project was indexed against, so
@@ -751,18 +952,19 @@ and showing several projects together means reading each one's state.json.
 
 ### Problems
 
-| Type                   | Raised when                                                    |
-| ---------------------- | -------------------------------------------------------------- |
-| `unknown-id`           | A link or annotation names a doc that doesn't exist.           |
-| `invalid-frontmatter`  | A required field is missing, or a value isn't allowed.         |
-| `code-matches-nothing` | A `code` glob matches no files.                                |
-| `broken-link`          | A relative link in a doc's body doesn't resolve.               |
-| `unlinked-rule`        | No capability follows a rule.                                  |
-| `in-two-features`      | More than one feature lists the same capability.               |
-| `contradiction`        | Contributions that should agree don't, as Domains describes.   |
-| `ambiguous-link`       | A link could mean the rule or concept of two or more domains.  |
-| `unknown-outcome`      | A gap's `outcome` isn't a checklist outcome.                   |
-| `baseline-gap`         | A gap's `outcome` is a baseline outcome, never a known gap.    |
+| Type                   | Raised when                                                                            |
+| ---------------------- | -------------------------------------------------------------------------------------- |
+| `unknown-id`           | A link, annotation, `until` or `rule` names a doc, gap or tradeoff that doesn't exist. |
+| `invalid-frontmatter`  | A required field is missing, or a value isn't allowed.                                 |
+| `code-matches-nothing` | A `code` glob matches no files.                                                        |
+| `broken-link`          | A relative link in a doc's body doesn't resolve.                                       |
+| `unlinked-rule`        | No capability follows a rule.                                                          |
+| `in-two-features`      | More than one feature lists the same capability.                                       |
+| `contradiction`        | Contributions that should agree don't, as Domains describes.                           |
+| `ambiguous-link`       | A link could mean the rule or concept of two or more domains.                          |
+| `unknown-outcome`      | A gap's `outcome`, or an entry in `meets`, isn't a checklist outcome.                  |
+| `baseline-gap`         | A gap's `outcome` is a baseline outcome, never a known gap.                            |
+| `until-not-served`     | A system's or component's gap has an `until` naming a capability it doesn't list.      |
 
 `in-two-features` is a contradiction too, when the listings
 are in different projects. Combining raises `contradiction` and
@@ -772,11 +974,15 @@ are in different projects. Combining raises `contradiction` and
 
 - **The stability checklist is fixed.** It becomes configurable once someone
   adopting Docket needs different outcomes.
-- **Met is assumed.** An outcome counts as met unless a gap names it, so
-  nothing says which outcomes someone actually looked at, and an outcome added
-  to the checklist counts as met everywhere at once. A record of when someone
-  last went through the list, and against which version of it, would show
-  both. Outcomes not applicable, with why, outcomes Docket can work out
-  itself, such as `functionality/alpha/main-path` from its rules' evidence,
-  and outcomes a whole project meets, such as CI, would also make met mean
-  more.
+- **Met is mostly assumed.** An outcome counts as met unless a gap names it.
+  A system or component that `meets` it adds evidence, but everything else is
+  met on trust, so nothing says which outcomes someone actually looked at, and
+  an outcome added to the checklist counts as met everywhere at once. A record
+  of when someone last went through the list, and against which version of
+  it, would show both. Outcomes not applicable, with why, and outcomes Docket
+  can work out itself, such as `functionality/alpha/main-path` from its rules'
+  evidence, would also make met mean more.
+- **A system every capability relies on lists them all.** Deployment serves
+  every capability a repository has, but `capabilities` has to name each one,
+  and a new capability is easy to leave off. A way to say "every capability in
+  this project" may be worth it once a project has more than a few.

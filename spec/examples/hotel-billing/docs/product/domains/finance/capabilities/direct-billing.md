@@ -6,12 +6,13 @@ rules:
   - company-accounts/only-named-guests
 concepts: [bill, company-account]
 code: [src/companies/**]
-gaps:
+tradeoffs:
   - id: whole-bill-moves
-    kind: accepted-tradeoff
-    text: >-
-      A bill moves to a company's account whole. A guest who pays for their
-      own extras pays for them before their bill moves.
+    text: A bill moves to a company's account whole, not charge by charge.
+    cost: >-
+      A guest who pays for their own extras pays for them before their bill
+      moves.
+    revisit: a company asks to pay for rooms only
 ---
 
 # Direct billing

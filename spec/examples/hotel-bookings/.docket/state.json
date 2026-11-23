@@ -17,6 +17,7 @@
     "features": 3,
     "personas": 3,
     "capabilities": {
+      "draft": 1,
       "prototype": 4,
       "alpha": 1,
       "beta": 2,
@@ -24,7 +25,10 @@
     },
     "rules": 5,
     "gaps": 4,
-    "problems": 0
+    "problems": 0,
+    "tradeoffs": 3,
+    "systems": 1,
+    "components": 1
   },
   "domains": [
     {
@@ -34,7 +38,7 @@
       "summary": "Looking after guests from their booking to their check-out.",
       "maturity": 70,
       "band": "beta",
-      "body": ""
+      "body": "## Open decisions\n\n- **Early arrivals:** when a guest arrives before the room's usual check-in\n  time, does their stay start that day, or is the night before part of it?"
     },
     {
       "id": "property",
@@ -56,11 +60,15 @@
       "capabilities": [
         "room-booking",
         "cancellations",
-        "group-bookings"
+        "group-bookings",
+        "waitlist"
       ],
       "maturity": 42,
       "band": "alpha",
-      "body": ""
+      "body": "",
+      "tradeoffs": [
+        "feature:reservations#front-desk-bookings-only"
+      ]
     },
     {
       "id": "front-desk",
@@ -74,7 +82,8 @@
       ],
       "maturity": 84,
       "band": "ga",
-      "body": ""
+      "body": "",
+      "tradeoffs": []
     },
     {
       "id": "housekeeping",
@@ -88,7 +97,8 @@
       ],
       "maturity": 15,
       "band": "prototype",
-      "body": ""
+      "body": "",
+      "tradeoffs": []
     }
   ],
   "personas": [
@@ -104,7 +114,8 @@
         "check-in",
         "check-out",
         "group-bookings",
-        "room-status"
+        "room-status",
+        "waitlist"
       ],
       "features": [
         "reservations",
@@ -171,8 +182,6 @@
         }
       ],
       "gaps": [
-        "capability:room-booking#no-waitlist",
-        "capability:room-booking#one-room-per-booking",
         "capability:room-booking#calendar-needs-a-mouse"
       ],
       "body": "## Covers\n\n- Clerks see which rooms are free for a stay.\n- Clerks move a booking to new dates.\n\n## Success\n\n- The front desk stops keeping the paper diary alongside the app.",
@@ -192,7 +201,10 @@
             "text": "test(\"a clerk books a free room for a guest\", async ({ page }) => {"
           }
         ]
-      }
+      },
+      "tradeoffs": [
+        "capability:room-booking#one-room-per-booking"
+      ]
     },
     {
       "id": "cancellations",
@@ -225,7 +237,8 @@
       "evidence": {
         "implements": [],
         "verifies": []
-      }
+      },
+      "tradeoffs": []
     },
     {
       "id": "check-in",
@@ -251,7 +264,8 @@
       "evidence": {
         "implements": [],
         "verifies": []
-      }
+      },
+      "tradeoffs": []
     },
     {
       "id": "check-out",
@@ -274,7 +288,8 @@
       "evidence": {
         "implements": [],
         "verifies": []
-      }
+      },
+      "tradeoffs": []
     },
     {
       "id": "cleaning-schedule",
@@ -297,7 +312,8 @@
       "evidence": {
         "implements": [],
         "verifies": []
-      }
+      },
+      "tradeoffs": []
     },
     {
       "id": "group-bookings",
@@ -323,7 +339,8 @@
       "evidence": {
         "implements": [],
         "verifies": []
-      }
+      },
+      "tradeoffs": []
     },
     {
       "id": "rate-calendar",
@@ -344,7 +361,8 @@
       "evidence": {
         "implements": [],
         "verifies": []
-      }
+      },
+      "tradeoffs": []
     },
     {
       "id": "room-status",
@@ -368,7 +386,35 @@
       "evidence": {
         "implements": [],
         "verifies": []
-      }
+      },
+      "tradeoffs": []
+    },
+    {
+      "id": "waitlist",
+      "domain": "guest-stays",
+      "file": "docs/product/domains/guest-stays/capabilities/waitlist.md",
+      "name": "Waitlist",
+      "summary": "Clerks put a guest on a waitlist when every room is taken, and offer them the first room that frees up for their stay.",
+      "stability": "draft",
+      "personas": [
+        "front-desk-clerk"
+      ],
+      "rules": [
+        "booking/no-double-booking"
+      ],
+      "concepts": [
+        "booking",
+        "room"
+      ],
+      "code": [],
+      "gaps": [],
+      "feature": "reservations",
+      "evidence": {
+        "implements": [],
+        "verifies": []
+      },
+      "body": "## Covers\n\n- Clerks see who is waiting for each night.\n\n## Open decisions\n\n- **Who goes first:** whoever asked first, or whoever's stay fits the free\n  nights best?",
+      "tradeoffs": []
     }
   ],
   "rules": [
@@ -577,34 +623,167 @@
       "body": "## Details\n\nEach room has a type, such as double or twin, which sets its rate. A room is\n[booked](booking.md) a night at a time."
     }
   ],
+  "systems": [
+    {
+      "id": "deployment",
+      "file": "docs/technical/systems/deployment.md",
+      "name": "Deployment",
+      "summary": "How a change gets from the main branch to the hotel's server, and back off it again.",
+      "capabilities": [
+        "room-booking",
+        "cancellations",
+        "check-in",
+        "check-out"
+      ],
+      "code": [
+        {
+          "glob": ".github/workflows/**",
+          "files": 1
+        },
+        {
+          "glob": "db/migrations/**",
+          "files": 1
+        }
+      ],
+      "meets": [
+        "reliability/beta/undo-release",
+        "observability/alpha/see-errors"
+      ],
+      "gaps": [
+        "system:deployment#migrations-only-go-forward"
+      ],
+      "tradeoffs": [],
+      "evidence": {
+        "implements": [
+          {
+            "file": ".github/workflows/deploy.yml",
+            "line": 13,
+            "text": "deploy:"
+          }
+        ],
+        "verifies": [
+          {
+            "file": ".github/workflows/deploy.yml",
+            "line": 22,
+            "text": "rollback:"
+          }
+        ]
+      },
+      "body": "**Code:** `.github/workflows/deploy.yml`\n\n## How it works\n\nEvery merge to `main` builds one container image, tagged with the commit, and\ndeploys it. Rolling back deploys the previous tag. Migrations run before the\nnew image starts, from `db/migrations/`, in filename order.\n\n## Gotchas\n\n- A migration runs before the code that needs it, so the code that's still\n  running has to work with the new schema for a minute. Add columns before\n  using them, and remove them a release after the code stops reading them.\n\n## Open decisions\n\n- **Second instance:** once there's a second server, do releases switch over\n  all at once, or one server at a time?"
+    }
+  ],
+  "components": [
+    {
+      "id": "bookings",
+      "file": "docs/technical/components/bookings.md",
+      "name": "Bookings",
+      "summary": "Where a room is held for a stay, and where no double-booking is enforced.",
+      "capabilities": [
+        "room-booking",
+        "group-bookings",
+        "check-in"
+      ],
+      "code": [
+        {
+          "glob": "src/booking/**",
+          "files": 5
+        },
+        {
+          "glob": "db/migrations/001_bookings.sql",
+          "files": 1
+        }
+      ],
+      "meets": [],
+      "gaps": [
+        "component:bookings#clashes-logged-as-unknown"
+      ],
+      "tradeoffs": [
+        "component:bookings#constraint-not-lock"
+      ],
+      "evidence": {
+        "implements": [
+          {
+            "file": "src/booking/repository.ts",
+            "line": 6,
+            "text": "export async function saveBooking(db: Pool, booking: Booking): Promise<void> {"
+          }
+        ],
+        "verifies": []
+      },
+      "body": "**Code:** `src/booking/`, starting at `assertRoomFree` and `saveBooking`\n\n## How it works\n\nThe app checks the room is free (`assertRoomFree`) so it can tell the clerk\nwhy it can't be booked. The bookings table's exclusion constraint is what\nactually guarantees it, since two clerks can pass the app's check at the same\nmoment.\n\n## Gotchas\n\n- Stays are half-open date ranges: the check-out date isn't a night of the\n  stay. `daterange` in Postgres is half-open by default, and `overlaps` in the\n  app has to agree with it."
+    }
+  ],
   "gaps": [
     {
-      "id": "capability:room-booking#no-waitlist",
+      "id": "capability:cancellations#late-cancellations-refunded-in-full",
       "domain": "guest-stays",
-      "kind": "to-close-later",
+      "until": "beta",
       "outcome": null,
-      "text": "When every room is taken there's no waitlist. Clerks note the guest's details outside the app and call them if a room frees up."
-    },
-    {
-      "id": "capability:room-booking#one-room-per-booking",
-      "domain": "guest-stays",
-      "kind": "accepted-tradeoff",
-      "outcome": null,
-      "text": "A booking holds one room, so a family that needs two rooms makes two bookings."
+      "rule": "cancellations/late-cancellation-fee",
+      "text": "The late-cancellation fee isn't charged yet, so every cancellation is refunded in full.",
+      "places": []
     },
     {
       "id": "capability:room-booking#calendar-needs-a-mouse",
       "domain": "guest-stays",
-      "kind": "to-close-later",
+      "until": "ga",
       "outcome": "usability/beta/everyone",
-      "text": "The room calendar can't be used from the keyboard, so clerks need a mouse to pick dates."
+      "rule": null,
+      "text": "The room calendar can't be used from the keyboard, so clerks need a mouse to pick dates.",
+      "places": []
     },
     {
-      "id": "capability:cancellations#late-cancellations-refunded-in-full",
+      "id": "system:deployment#migrations-only-go-forward",
+      "until": "ga",
+      "outcome": "reliability/ga/recovery",
+      "rule": null,
+      "text": "Migrations have no down step, so undoing a release that changed the schema means restoring the database from the night before.",
+      "places": []
+    },
+    {
+      "id": "component:bookings#clashes-logged-as-unknown",
+      "until": "room-booking@ga",
+      "outcome": "observability/beta/hears-of-errors",
+      "rule": null,
+      "text": "`saveBooking` passes every database error up as it is, so a clash that only the exclusion constraint caught is logged as an unknown failure, not as a double booking that was refused.",
+      "places": [
+        {
+          "file": "src/booking/repository.ts",
+          "line": 7,
+          "text": "export async function saveBooking(db: Pool, booking: Booking): Promise<void> {"
+        }
+      ]
+    }
+  ],
+  "tradeoffs": [
+    {
+      "id": "capability:room-booking#one-room-per-booking",
       "domain": "guest-stays",
-      "kind": "to-close-later",
-      "outcome": null,
-      "text": "The late-cancellation fee isn't charged yet, so every cancellation is refunded in full."
+      "text": "A booking holds one room, not several.",
+      "cost": "A family that needs two rooms makes two bookings. Group bookings is where several rooms under one name is being explored.",
+      "revisit": null,
+      "places": []
+    },
+    {
+      "id": "feature:reservations#front-desk-bookings-only",
+      "domain": "guest-stays",
+      "text": "Bookings are taken at the front desk, not from online travel agencies.",
+      "cost": "Clerks enter each agency booking by hand, as it arrives by email.",
+      "revisit": "agency bookings pass a fifth of all bookings",
+      "places": []
+    },
+    {
+      "id": "component:bookings#constraint-not-lock",
+      "text": "The database refuses overlapping bookings with an exclusion constraint, rather than the app locking the room while it checks.",
+      "cost": "Bookings need Postgres with `btree_gist`, and the check in the app is only there to give clerks a clear message first.",
+      "revisit": null,
+      "places": [
+        {
+          "file": "db/migrations/001_bookings.sql",
+          "line": 11,
+          "text": "EXCLUDE USING gist (room_id WITH =, nights WITH &&) WHERE (status <> 'cancelled')"
+        }
+      ]
     }
   ],
   "problems": [],

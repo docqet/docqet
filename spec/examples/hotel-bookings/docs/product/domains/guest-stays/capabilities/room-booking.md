@@ -8,22 +8,18 @@ rules:
 concepts: [booking, room]
 code: [src/booking/**]
 gaps:
-  - id: no-waitlist
-    kind: to-close-later
-    text: >-
-      When every room is taken there's no waitlist. Clerks note the guest's
-      details outside the app and call them if a room frees up.
-  - id: one-room-per-booking
-    kind: accepted-tradeoff
-    text: >-
-      A booking holds one room, so a family that needs two rooms makes two
-      bookings.
   - id: calendar-needs-a-mouse
-    kind: to-close-later
+    until: ga
     outcome: usability/beta/everyone
     text: >-
       The room calendar can't be used from the keyboard, so clerks need a
       mouse to pick dates.
+tradeoffs:
+  - id: one-room-per-booking
+    text: A booking holds one room, not several.
+    cost: >-
+      A family that needs two rooms makes two bookings. Group bookings is
+      where several rooms under one name is being explored.
 ---
 
 # Room booking

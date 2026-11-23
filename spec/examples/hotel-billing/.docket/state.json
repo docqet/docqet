@@ -17,6 +17,7 @@
     "features": 5,
     "personas": 5,
     "capabilities": {
+      "draft": 1,
       "prototype": 1,
       "alpha": 6,
       "beta": 3,
@@ -24,7 +25,10 @@
     },
     "rules": 15,
     "gaps": 4,
-    "problems": 1
+    "problems": 0,
+    "tradeoffs": 4,
+    "systems": 1,
+    "components": 1
   },
   "domains": [
     {
@@ -60,7 +64,8 @@
       ],
       "maturity": 67,
       "band": "beta",
-      "body": ""
+      "body": "",
+      "tradeoffs": []
     },
     {
       "id": "payments",
@@ -70,11 +75,13 @@
       "summary": "Getting paid for stays, before the guest arrives and while they're here.",
       "capabilities": [
         "deposits",
-        "pay-by-link"
+        "pay-by-link",
+        "refunds"
       ],
       "maturity": 49,
       "band": "alpha",
-      "body": ""
+      "body": "",
+      "tradeoffs": []
     },
     {
       "id": "company-accounts",
@@ -89,7 +96,8 @@
       ],
       "maturity": 45,
       "band": "alpha",
-      "body": ""
+      "body": "",
+      "tradeoffs": []
     },
     {
       "id": "closing-the-day",
@@ -104,7 +112,8 @@
       ],
       "maturity": 73,
       "band": "beta",
-      "body": ""
+      "body": "",
+      "tradeoffs": []
     },
     {
       "id": "front-desk",
@@ -117,7 +126,8 @@
       ],
       "maturity": 35,
       "band": "alpha",
-      "body": "Billing's part of the front desk is settling the bill at check-out. Checking\nguests in and out is Guest stays'."
+      "body": "Billing's part of the front desk is settling the bill at check-out. Checking\nguests in and out is Guest stays'.",
+      "tradeoffs": []
     }
   ],
   "personas": [
@@ -152,7 +162,8 @@
         "deposits",
         "pay-by-link",
         "direct-billing",
-        "check-out"
+        "check-out",
+        "refunds"
       ],
       "features": [
         "guest-bills",
@@ -172,7 +183,8 @@
       "capabilities": [
         "pay-by-link",
         "direct-billing",
-        "check-out"
+        "check-out",
+        "refunds"
       ],
       "features": [
         "payments",
@@ -249,7 +261,8 @@
       "evidence": {
         "implements": [],
         "verifies": []
-      }
+      },
+      "tradeoffs": []
     },
     {
       "id": "city-tax",
@@ -285,7 +298,8 @@
       "evidence": {
         "implements": [],
         "verifies": []
-      }
+      },
+      "tradeoffs": []
     },
     {
       "id": "split-bills",
@@ -311,7 +325,8 @@
       "evidence": {
         "implements": [],
         "verifies": []
-      }
+      },
+      "tradeoffs": []
     },
     {
       "id": "deposits",
@@ -357,7 +372,8 @@
             "text": "test(\"a guest's deposit is taken off their bill at check-out\", async ({ page }) => {"
           }
         ]
-      }
+      },
+      "tradeoffs": []
     },
     {
       "id": "pay-by-link",
@@ -379,9 +395,7 @@
         "bill"
       ],
       "code": [],
-      "gaps": [
-        "capability:pay-by-link#hotels-currency-only"
-      ],
+      "gaps": [],
       "body": "## Covers\n\n- Clerks send a guest a link to pay what they owe.\n\n## Learning\n\n- Do guests pay before they leave, or wait until they're home?",
       "feature": "payments",
       "evidence": {
@@ -393,7 +407,10 @@
           }
         ],
         "verifies": []
-      }
+      },
+      "tradeoffs": [
+        "capability:pay-by-link#hotels-currency-only"
+      ]
     },
     {
       "id": "company-accounts",
@@ -423,7 +440,8 @@
       "evidence": {
         "implements": [],
         "verifies": []
-      }
+      },
+      "tradeoffs": []
     },
     {
       "id": "direct-billing",
@@ -450,15 +468,16 @@
           "files": 1
         }
       ],
-      "gaps": [
-        "capability:direct-billing#whole-bill-moves"
-      ],
+      "gaps": [],
       "body": "",
       "feature": "company-accounts",
       "evidence": {
         "implements": [],
         "verifies": []
-      }
+      },
+      "tradeoffs": [
+        "capability:direct-billing#whole-bill-moves"
+      ]
     },
     {
       "id": "invoices",
@@ -490,7 +509,8 @@
       "evidence": {
         "implements": [],
         "verifies": []
-      }
+      },
+      "tradeoffs": []
     },
     {
       "id": "night-audit",
@@ -525,7 +545,8 @@
       "evidence": {
         "implements": [],
         "verifies": []
-      }
+      },
+      "tradeoffs": []
     },
     {
       "id": "daily-takings",
@@ -551,7 +572,8 @@
       "evidence": {
         "implements": [],
         "verifies": []
-      }
+      },
+      "tradeoffs": []
     },
     {
       "id": "accounting-export",
@@ -576,7 +598,8 @@
       "evidence": {
         "implements": [],
         "verifies": []
-      }
+      },
+      "tradeoffs": []
     },
     {
       "id": "check-out",
@@ -603,7 +626,36 @@
       "evidence": {
         "implements": [],
         "verifies": []
-      }
+      },
+      "tradeoffs": []
+    },
+    {
+      "id": "refunds",
+      "domain": "billing",
+      "file": "docs/product/domains/billing/capabilities/refunds.md",
+      "name": "Refunds",
+      "summary": "Clerks refund a guest what they've paid over their bill, before the bill closes.",
+      "stability": "draft",
+      "personas": [
+        "front-desk-clerk",
+        "guest"
+      ],
+      "rules": [
+        "payments/overpayments-are-refunded"
+      ],
+      "concepts": [
+        "payment",
+        "bill"
+      ],
+      "code": [],
+      "gaps": [],
+      "feature": "payments",
+      "evidence": {
+        "implements": [],
+        "verifies": []
+      },
+      "body": "## Open decisions\n\n- **Where the money goes:** always back to the card it came from, or to\n  whichever card the guest has with them?",
+      "tradeoffs": []
     }
   ],
   "rules": [
@@ -667,7 +719,7 @@
         "verifies": [
           {
             "file": "src/ledger/ledger.test.ts",
-            "line": 13,
+            "line": 14,
             "text": "it(\"refuses a charge on a closed bill\", () => {"
           }
         ]
@@ -849,7 +901,7 @@
         "implements": [
           {
             "file": "src/payments/provider.ts",
-            "line": 8,
+            "line": 9,
             "text": "export async function takePayment(provider: PaymentProvider, cardToken: string, amount: number, billId: string): Promise<string> {"
           }
         ],
@@ -1162,45 +1214,176 @@
       "body": "## Details\n\nA booking puts one room charge per night on the guest's [bill](bill.md), at its\nagreed rate, whatever the rate is on the night.\n\n## Not to be confused with\n\n- **The booking app's booking:** a guest's hold on a room. Billing doesn't\n  keep rooms free or taken, only what each stay costs."
     }
   ],
+  "systems": [
+    {
+      "id": "ledger",
+      "file": "docs/technical/systems/ledger.md",
+      "name": "Ledger",
+      "summary": "Every amount a guest owes or pays, as lines on their bill that are only ever added, never changed.",
+      "capabilities": [
+        "extra-charges",
+        "split-bills",
+        "deposits",
+        "check-out",
+        "direct-billing"
+      ],
+      "code": [
+        {
+          "glob": "src/ledger/**",
+          "files": 2
+        }
+      ],
+      "meets": [
+        "reliability/beta/data-kept"
+      ],
+      "gaps": [
+        "system:ledger#corrections-of-corrections-untested"
+      ],
+      "tradeoffs": [
+        "system:ledger#balance-worked-out-on-read"
+      ],
+      "evidence": {
+        "implements": [
+          {
+            "file": "src/ledger/ledger.ts",
+            "line": 13,
+            "text": "export function post(bill: Bill, line: Line): void {"
+          }
+        ],
+        "verifies": [
+          {
+            "file": "src/ledger/ledger.test.ts",
+            "line": 7,
+            "text": "it(\"adds a charge to an open bill\", () => {"
+          }
+        ]
+      },
+      "body": "**Code:** `src/ledger/ledger.ts`, starting at `post`\n\n## How it works\n\nEverything that changes what a guest owes goes through `post`: room nights,\nextras, deposits, payments and corrections. A correction is a new line for\nthe opposite amount, pointing at the line it corrects with `corrects`.\n\n## Gotchas\n\n- Amounts are whole cents, never fractions of a unit, so totals add up\n  exactly. Convert at the edges, when reading input and showing amounts.\n- `post` refuses a closed bill, so anything that closes a bill has to post\n  everything first, deposits included."
+    }
+  ],
+  "components": [
+    {
+      "id": "payments",
+      "file": "docs/technical/components/payments.md",
+      "name": "Payments",
+      "summary": "Taking card payments through the payment provider, for deposits and payment links.",
+      "capabilities": [
+        "deposits",
+        "pay-by-link"
+      ],
+      "code": [
+        {
+          "glob": "src/payments/**",
+          "files": 3
+        }
+      ],
+      "meets": [],
+      "gaps": [
+        "component:payments#no-timeout-on-provider-calls"
+      ],
+      "tradeoffs": [
+        "component:payments#providers-card-form"
+      ],
+      "evidence": {
+        "implements": [
+          {
+            "file": "src/payments/provider.ts",
+            "line": 7,
+            "text": "export async function takePayment(provider: PaymentProvider, cardToken: string, amount: number, billId: string): Promise<string> {"
+          }
+        ],
+        "verifies": []
+      },
+      "body": "**Code:** `src/payments/provider.ts`\n\n## How it works\n\nThe guest types their card into the provider's form, which hands the app a\ntoken. `takePayment` sends the provider that token and the amount, and keeps\nthe reference it sends back. Card numbers never reach the app.\n\n## Gotchas\n\n- The integration tests run against the provider's sandbox\n  (`test/integration/sandbox.ts`), which accepts any test token instantly. Real\n  payments can take seconds."
+    }
+  ],
   "gaps": [
     {
       "id": "capability:city-tax#children-corrected-by-hand",
       "domain": "billing",
-      "kind": "to-close-later",
+      "until": "beta",
       "outcome": null,
-      "text": "Guests' ages aren't recorded, so city tax is added for every guest on a stay, and clerks correct it by hand for children."
-    },
-    {
-      "id": "capability:pay-by-link#hotels-currency-only",
-      "domain": "billing",
-      "kind": "accepted-tradeoff",
-      "outcome": null,
-      "text": "Guests pay in the hotel's currency. Their card provider converts it, at its own rate."
-    },
-    {
-      "id": "capability:direct-billing#whole-bill-moves",
-      "domain": "finance",
-      "kind": "accepted-tradeoff",
-      "outcome": null,
-      "text": "A bill moves to a company's account whole. A guest who pays for their own extras pays for them before their bill moves."
+      "rule": "tax/children-pay-no-city-tax",
+      "text": "Guests' ages aren't recorded, so city tax is added for every guest on a stay, and clerks correct it by hand for children.",
+      "places": []
     },
     {
       "id": "capability:invoices#no-payment-reminders",
       "domain": "finance",
-      "kind": "to-close-later",
+      "until": "not-decided",
       "outcome": null,
-      "text": "Nothing reminds a company when an invoice is overdue. The bookkeeper checks the unpaid invoices each week and chases them by email."
-    }
-  ],
-  "problems": [
+      "rule": null,
+      "text": "Nothing reminds a company when an invoice is overdue. The bookkeeper checks the unpaid invoices each week and chases them by email.",
+      "places": []
+    },
     {
-      "type": "unlinked-rule",
-      "subject": "rule:payments/overpayments-are-refunded",
-      "capabilities": [],
-      "message": "No capability follows this rule.",
-      "domain": "billing"
+      "id": "system:ledger#corrections-of-corrections-untested",
+      "until": "extra-charges@ga",
+      "outcome": "maintainability/ga/others-can-change",
+      "rule": null,
+      "text": "Nothing tests correcting a line that is itself a correction, so a change to `correct` could stop a twice-corrected charge netting to zero without anything failing.",
+      "places": [
+        {
+          "file": "src/ledger/ledger.ts",
+          "line": 22,
+          "text": "export function correct(bill: Bill, line: Line, id: string, businessDay: string): void {"
+        }
+      ]
+    },
+    {
+      "id": "component:payments#no-timeout-on-provider-calls",
+      "until": "pay-by-link@beta",
+      "outcome": "reliability/beta/fails-clearly",
+      "rule": null,
+      "text": "Calls to the payment provider have no timeout, so a slow provider holds the request open until the platform gives up on it.",
+      "places": [
+        {
+          "file": "src/payments/provider.ts",
+          "line": 8,
+          "text": "export async function takePayment(provider: PaymentProvider, cardToken: string, amount: number, billId: string): Promise<string> {"
+        }
+      ]
     }
   ],
+  "tradeoffs": [
+    {
+      "id": "capability:pay-by-link#hotels-currency-only",
+      "domain": "billing",
+      "text": "Guests pay in the hotel's currency, not their own.",
+      "cost": "Their card provider converts it, at its own rate, so the amount on their statement can differ from the bill.",
+      "revisit": null,
+      "places": []
+    },
+    {
+      "id": "capability:direct-billing#whole-bill-moves",
+      "domain": "finance",
+      "text": "A bill moves to a company's account whole, not charge by charge.",
+      "cost": "A guest who pays for their own extras pays for them before their bill moves.",
+      "revisit": "a company asks to pay for rooms only",
+      "places": []
+    },
+    {
+      "id": "system:ledger#balance-worked-out-on-read",
+      "text": "A bill's balance is added up from its lines every time it's asked for, not stored on the bill.",
+      "cost": "Opening a bill gets slower as lines are added to it.",
+      "revisit": "a bill passes 1,000 lines",
+      "places": [
+        {
+          "file": "src/ledger/ledger.ts",
+          "line": 34,
+          "text": "export function balance(bill: Bill): number {"
+        }
+      ]
+    },
+    {
+      "id": "component:payments#providers-card-form",
+      "text": "Guests type their card into the provider's hosted form, not one of ours.",
+      "cost": "The payment page looks like the provider's, not the hotel's.",
+      "revisit": null,
+      "places": []
+    }
+  ],
+  "problems": [],
   "checklist": {
     "kinds": [
       {

@@ -1,0 +1,28 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: The image tag to roll back to
+        required: true
+
+jobs:
+  # docket:implements system:deployment
+  deploy:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: ./scripts/deploy.sh "$GITHUB_SHA"
+
+  # Rolls back to an image already built, without building anything.
+  # docket:verifies system:deployment
+  rollback:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: ./scripts/deploy.sh "${{ inputs.tag }}"

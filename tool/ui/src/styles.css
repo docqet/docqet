@@ -949,7 +949,8 @@ kbd {
   background: var(--concept-soft);
 }
 
-.filter-toggle[aria-pressed="true"] {
+.filter-toggle[aria-pressed="true"],
+.filter-toggle[aria-current="page"] {
   color: var(--popover);
   background: var(--concept);
 }
@@ -2062,6 +2063,31 @@ kbd {
   color: var(--faint);
 }
 
+/* A gap's tag once it's due: its level already expects it closed. */
+.explore-tag[data-tone="warn"] {
+  color: var(--warning);
+  border-color: color-mix(in srgb, var(--warning) 45%, transparent);
+  background: color-mix(in srgb, var(--warning) 8%, transparent);
+}
+
+/* A tradeoff's cost and when to revisit it, each labelled. */
+.explore-tradeoff {
+  align-items: flex-start;
+  flex-direction: column;
+  gap: 2px;
+  color: var(--muted);
+}
+
+.explore-tradeoff strong {
+  font-weight: 600;
+}
+
+/* The code a gap or tradeoff names, in full, under its other details. */
+.explore-left-meta .explore-places {
+  flex-basis: 100%;
+  margin-top: 2px;
+}
+
 .explore-left-checklist {
   display: flex;
   flex-wrap: wrap;
@@ -2137,6 +2163,38 @@ a.filter-toggle {
   display: inline-flex;
   color: inherit;
   text-decoration: none;
+}
+
+/* The way back to the canvas, first in the bar, where the eye starts. */
+.page-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px 5px 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--popover);
+  background: var(--concept);
+  border-radius: 999px;
+  text-decoration: none;
+  transition: background-color 120ms;
+}
+
+.page-back svg {
+  transition: transform 120ms;
+}
+
+.page-back:hover {
+  background: color-mix(in srgb, var(--concept) 85%, var(--text));
+}
+
+.page-back:hover svg {
+  transform: translateX(-2px);
+}
+
+.page-back:focus-visible {
+  outline: 2px solid var(--concept);
+  outline-offset: 2px;
 }
 
 .page-projects {
@@ -2834,6 +2892,11 @@ button.page-table-row:hover .page-table-name strong {
   color: var(--warning);
 }
 
+/* Met on its level's word, with nothing pointing at it: a lighter check than met with evidence. */
+.sc-standing[data-standing="trust"] {
+  color: color-mix(in srgb, var(--ok) 50%, var(--faint));
+}
+
 .sc-standing[data-standing="not-expected"] {
   color: var(--faint);
 }
@@ -2998,6 +3061,17 @@ button.page-table-row:hover .page-table-name strong {
   color: var(--faint);
 }
 
+/* What meets an outcome, under it: the systems and components that say so. */
+.sc-met-by {
+  margin-top: 6px;
+  font-size: 12.5px;
+  color: var(--muted);
+}
+
+.sc-gap .explore-left-meta {
+  margin-top: 4px;
+}
+
 .sc-gap {
   margin-top: 6px;
   padding: 6px 8px;
@@ -3079,4 +3153,63 @@ button.page-table-row:hover .page-table-name strong {
     display: block;
     margin-bottom: 4px;
   }
+}
+
+/* ——— Gaps and tradeoffs, and systems' and components' pages ——— */
+
+/* Which gaps, tradeoffs and decisions the gaps page shows: everything, what people notice, or what's under the hood. */
+.page-show {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 18px;
+}
+
+/* A sentence under a card's title saying what's in it. */
+.page-note {
+  margin: 0 0 8px;
+  font-size: 12.5px;
+}
+
+/* What a gap is on, above it, where that isn't clear from where it's shown. */
+.explore-gap-subject {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
+  margin-bottom: 2px;
+  font-size: 12.5px;
+  font-weight: 550;
+}
+
+/* Tradeoffs or open decisions under what they're on, each a group of its own. */
+.page-subject-group + .page-subject-group {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+
+.page-subject {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
+  margin-bottom: 4px;
+  font-size: 13px;
+  font-weight: 550;
+}
+
+/* What implements and what verifies a system or component, side by side. */
+.page-evidence-pair {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+
+.page-evidence-pair .page-label {
+  display: block;
+  margin-bottom: 4px;
 }

@@ -2,6 +2,7 @@
 capabilities:
   - deposits
   - pay-by-link
+  - refunds
 ---
 
 # Payments

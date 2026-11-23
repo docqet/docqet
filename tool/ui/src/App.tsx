@@ -4,6 +4,7 @@ import BoltOutlinedIcon from "@mui/icons-material/BoltOutlined";
 import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import FilterListRoundedIcon from "@mui/icons-material/FilterListRounded";
+import IncompleteCircleRoundedIcon from "@mui/icons-material/IncompleteCircleRounded";
 import WidgetsOutlinedIcon from "@mui/icons-material/WidgetsOutlined";
 import Canvas, { type CanvasHandle } from "./Canvas";
 import { ConceptIcon, ConceptsPanel } from "./Concepts";
@@ -22,12 +23,14 @@ import {
   cardsOf,
   combine,
   domainGroup,
+  dueOf,
   filterBy,
   pickName,
   targetOf,
   find,
   loadProjects,
   loadState,
+  mapHref,
   maturityOf,
   pageHref,
   pageInUrl,
@@ -35,7 +38,9 @@ import {
   pickList,
   platformsOf,
   projectOf,
+  shownInUrl,
   type DocketState,
+  type PageAt,
   type Pick,
   type Platform,
   type StateFile,
@@ -107,7 +112,7 @@ export default function App() {
   }, [state, platform, page]);
 
   /* From one detail page to another, in the same tab, so back returns. */
-  const go = (pick: Pick) => {
+  const go = (pick: PageAt) => {
     window.history.pushState(null, "", pageHref(pick));
     setPage(pick);
   };
@@ -178,7 +183,14 @@ function View({
    * The side panel: closed, or a kind's list (id null) or one of them, with
    * where the reader came from, so back retraces their steps.
    */
-  const [panel, setPanel] = useState<{ at: PanelAt; back: PanelAt[] } | null>(null);
+  const [panel, setPanel] = useState<{ at: PanelAt; back: PanelAt[] } | null>(() => {
+    /* Back from a detail page, the map opens on the doc it was about, then forgets having been asked. */
+    const shown = shownInUrl();
+    return shown && isPick(state, shown) ? { at: shown, back: [] } : null;
+  });
+  useEffect(() => {
+    if (shownInUrl()) window.history.replaceState(null, "", mapHref());
+  }, []);
   const open = useCallback(
     (at: PanelAt) => setPanel((p) => (p && (p.at.kind !== at.kind || p.at.id !== at.id) ? { at, back: [...p.back, p.at] } : { at, back: p?.back ?? [] })),
     [],
@@ -511,6 +523,7 @@ function Header({
           pressed={panel === "persona"}
           onClick={() => onPanel("persona")}
         />
+        <GapsLink state={state} />
       </div>
       {filters}
     </div>
@@ -583,6 +596,28 @@ function FilterBar({
         </button>
       ) : null}
     </div>
+  );
+}
+
+/* How many known gaps there are, and how many are due, in the header: it opens the page with every gap, open decision and tradeoff. */
+function GapsLink({ state }: { state: DocketState }) {
+  const due = state.gaps.filter((g) => dueOf(state, g).when === "due").length;
+  return (
+    <a
+      className="stat stat-button"
+      href={pageHref({ kind: "gaps", id: "" })}
+      title="Where the software differs from what's intended: known and technical gaps, open decisions and tradeoffs"
+    >
+      <span className="stat-icon" aria-hidden>
+        <IncompleteCircleRoundedIcon sx={{ fontSize: 17, color: due ? "var(--warning)" : "text.secondary" }} />
+      </span>
+      <span className="stat-n">{state.gaps.length}</span>
+      <span className="stat-label">
+        {state.gaps.length === 1 ? "gap" : "gaps"}
+        {due ? `, ${due} due` : ""}
+      </span>
+      <ChevronRightRoundedIcon className="stat-chevron" aria-hidden sx={{ fontSize: 16 }} />
+    </a>
   );
 }
 

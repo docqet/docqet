@@ -11,7 +11,7 @@ import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 import WidgetsOutlinedIcon from "@mui/icons-material/WidgetsOutlined";
 import Box from "@mui/material/Box";
 import { DetailsCard, DetailsEyebrow, DetailsPopover } from "./design/DetailsPopover";
-import { StabilityMark } from "./design/stability/StabilityMark";
+import { CapabilityStability } from "./design/catalog/CapabilityLabel";
 import {
   byFeature,
   capabilityTarget,
@@ -488,7 +488,7 @@ function ConceptView({
                     <button type="button" className="concept-row" onClick={() => onOpen("capability", c.id)}>
                       <BoltOutlinedIcon sx={{ fontSize: 15, color: "primary.main" }} />
                       <span className="concept-row-name">{c.name}</span>
-                      <StabilityMark level={c.stability} feature={c.name} focusable={false} size="short" />
+                      <CapabilityStability level={c.stability} name={c.name} focusable={false} />
                     </button>
                   </li>
                 ))}

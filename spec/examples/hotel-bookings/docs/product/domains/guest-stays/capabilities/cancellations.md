@@ -8,7 +8,8 @@ concepts: [booking]
 code: [src/cancellations/**]
 gaps:
   - id: late-cancellations-refunded-in-full
-    kind: to-close-later
+    until: beta
+    rule: cancellations/late-cancellation-fee
     text: >-
       The late-cancellation fee isn't charged yet, so every cancellation is
       refunded in full.

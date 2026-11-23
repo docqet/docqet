@@ -45,7 +45,8 @@ type Entry = {
   text: string;
   /* A line under it, for context: what it's in, or applies to. */
   context: string;
-  level?: Level;
+  /* A capability's level, or null for a draft. */
+  level?: Level | null;
   target: Selection;
   /* The projects that define it, named, when several are showing. */
   from?: string;
@@ -379,7 +380,7 @@ export default function Search({
                             {entry.from ? `${entry.from} · ${entry.context}` : entry.context}
                           </span>
                         </span>
-                        {entry.level ? <LevelMark level={entry.level} /> : null}
+                        {entry.level ? <LevelMark level={entry.level} /> : entry.level === null ? <span className="faint">Draft</span> : null}
                       </div>
                     );
                   })}

@@ -1,5 +1,8 @@
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import BoltOutlinedIcon from "@mui/icons-material/BoltOutlined";
+import CodeRoundedIcon from "@mui/icons-material/CodeRounded";
+import ExtensionOutlinedIcon from "@mui/icons-material/ExtensionOutlined";
+import HubOutlinedIcon from "@mui/icons-material/HubOutlined";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import FilterListRoundedIcon from "@mui/icons-material/FilterListRounded";
 import MyLocationRoundedIcon from "@mui/icons-material/MyLocationRounded";
@@ -12,15 +15,20 @@ import { MATURITY_BANDS, maturityBand } from "./design/maturity/maturity";
 import { RingGlyph } from "./design/maturity/RingGlyph";
 import { STABILITY, levelColor } from "./design/stability/stability";
 import { StabilityMark } from "./design/stability/StabilityMark";
+import { CapabilityStability } from "./design/catalog/CapabilityLabel";
 import { ConceptChips, Markdown, PageLink, PanelHeader } from "./Concepts";
 import { DomainIcon } from "./FeatureMap";
 import { PersonaAvatar, PersonaIcon, ReadinessMeter, personaNameAndRole, type ReadinessBasis } from "./Personas";
 import { ProjectIcon } from "./PlatformFilter";
 import {
-  appliesAt,
+  builtOn,
   capabilityTarget,
   checklistOutcome,
+  dueOf,
+  openDecisions,
+  outcomeStanding,
   outcomesOf,
+  tradeoffsById,
   contradictionsOf,
   docDomains,
   domainGroup,
@@ -38,7 +46,12 @@ import {
   personaReadinessIn,
   targetOf,
   type Capability,
+  type CapabilityLevel,
   type Contribution,
+  type Due,
+  type TechnicalDoc,
+  type TechnicalKind,
+  type EvidencePlace,
   type Domain,
   type Doc,
   type DocketState,
@@ -176,7 +189,7 @@ function List({ state, kind, onOpen }: { state: DocketState; kind: ExploreKind; 
           : state.capabilities.map((c) => ({
               doc: c,
               meta: `${c.feature ? (find(state.features, c.feature)?.name ?? c.feature) : "Not in a feature"} · ${domains(docDomains(c))}`,
-              mark: <StabilityMark level={c.stability} feature={c.name} focusable={false} size="short" />,
+              mark: <CapabilityStability level={c.stability} name={c.name} focusable={false} />,
             }));
     return docs.sort((a, b) => a.doc.name.localeCompare(b.doc.name));
   }, [state, kind]);
@@ -408,10 +421,13 @@ function DomainLevels({ state, capability }: { state: DocketState; capability: C
   if (new Set(capability.levels.map((l) => l.level)).size < 2) return null;
   return (
     <p className="explore-domain-levels faint">
-      {capability.levels.map((l) => `${STABILITY[l.level].name} in ${domainName(state, l.domain)}`).join(" · ")}
+      {capability.levels.map((l) => `${levelName(l.level)} in ${domainName(state, l.domain)}`).join(" · ")}
     </p>
   );
 }
+
+/* A capability's level by name: "GA", or "Draft" for one declared and not started. */
+export const levelName = (level: CapabilityLevel) => (level ? STABILITY[level].name : "Draft");
 
 /* How ready the software is for a persona, on readiness's own scale. */
 export function Readiness({ value, basis }: { value: number | null; basis: ReadinessBasis }) {
@@ -427,11 +443,14 @@ export function Readiness({ value, basis }: { value: number | null; basis: Readi
 /* What a persona's readiness is worked out from: the capabilities that serve them, in `feature` or everywhere. */
 export function readinessBasis(state: DocketState, persona: Persona, feature?: Feature): ReadinessBasis {
   const ids = feature ? feature.capabilities.filter((id) => persona.capabilities.includes(id)) : persona.capabilities;
-  return { persona: personaNameAndRole(persona).name, feature: feature?.name, capabilities: ids.flatMap((id) => find(state.capabilities, id) ?? []) };
+  /* Drafts count toward no readiness, so they aren't part of what it's from. */
+  const capabilities = ids.flatMap((id) => find(state.capabilities, id) ?? []).filter((c) => c.stability !== null);
+  return { persona: personaNameAndRole(persona).name, feature: feature?.name, capabilities };
 }
 
-/* A capability's level, as a mark and its name in the level's color. */
-function Level({ name, level }: { name: string; level: Capability["stability"] }) {
+/* A capability's level, as a mark and its name in the level's color; a draft has neither, only the word. */
+function Level({ name, level }: { name: string; level: CapabilityLevel }) {
+  if (!level) return <CapabilityStability name={name} level={null} />;
   return (
     <Box component="span" className="explore-level-mark" sx={levelColor(level)}>
       <StabilityMark level={level} feature={name} size="short" />
@@ -464,10 +483,11 @@ function DomainView({ state, domain, onOpen, onConcept, onShow, isFiltering, onF
         doc={domain}
         status={<Maturity value={domain.maturity} of="it builds no capability in a feature yet" />}
         actions={<MapActions pick={pick} target={{ items: [domainGroup(domain.id)] }} onShow={onShow} isFiltering={isFiltering} onFilter={onFilter} />}
+        body={withoutDecisions}
         onShow={onShow}
         onConcept={onConcept}
       />
-      <LeftRollup state={state} capabilities={domainCapabilities(state, domain)} onOpen={onOpen} />
+      <LeftRollup state={state} own={domain} capabilities={domainCapabilities(state, domain)} onOpen={onOpen} onConcept={onConcept} onShow={onShow} />
       <section>
         <Heading count={features.length}>Features</Heading>
         <DomainFeatures state={state} domain={domain} features={features} onOpen={onOpen} />
@@ -530,7 +550,7 @@ export function CapabilityRows({
         return (
           <li key={c.id}>
             <Row icon={NAMES.capability.icon} name={c.name} summary={c.summary} onClick={() => onOpen("capability", c.id)}>
-              <StabilityMark level={level} feature={c.name} focusable={false} size="short" />
+              <CapabilityStability level={level} name={c.name} focusable={false} />
             </Row>
           </li>
         );
@@ -591,11 +611,13 @@ function FeatureView({ state, feature, onOpen, onConcept, onShow, isFiltering, o
         trail={<DomainCrumbs state={state} domains={feature.parts.map((p) => p.domain)} onOpen={onOpen} />}
         status={<Maturity value={feature.maturity} of="it has no capabilities yet" />}
         actions={<MapActions pick={pick} target={featureTarget(state, feature.id)} onShow={onShow} isFiltering={isFiltering} onFilter={onFilter} />}
+        body={withoutDecisions}
         onShow={onShow}
         onConcept={onConcept}
       />
-      <LeftRollup state={state} capabilities={capabilities} onOpen={onOpen} />
+      <LeftRollup state={state} own={feature} capabilities={capabilities} onOpen={onOpen} onConcept={onConcept} onShow={onShow} />
       <FeatureParts state={state} feature={feature} onOpen={onOpen} />
+      <Tradeoffs state={state} ids={feature.tradeoffs} title="Decided not to build" />
       {personas.length ? (
         <section>
           <Heading count={personas.length}>Who it serves</Heading>
@@ -624,8 +646,8 @@ export function CapabilityTrail({ state, capability, onOpen }: { state: DocketSt
   );
 }
 
-/* A capability's body without its open decisions, which show under what's left. */
-export const capabilityBody = (f: Contribution) => withoutSection(f.body, "open decisions");
+/* A body without its open decisions, which show under what's left instead. */
+export const withoutDecisions = (f: Contribution) => withoutSection(f.body, "open decisions");
 
 /*
  * In the side panel, a capability: what it does, its level, what's left
@@ -647,7 +669,7 @@ function CapabilityView({ state, capability, onOpen, onConcept, onShow, isFilter
         status={<Level name={capability.name} level={capability.stability} />}
         extra={<DomainLevels state={state} capability={capability} />}
         actions={<MapActions pick={pick} target={capabilityTarget(state, capability.id)} onShow={onShow} isFiltering={isFiltering} onFilter={onFilter} />}
-        body={capabilityBody}
+        body={withoutDecisions}
         onShow={onShow}
         onConcept={onConcept}
       />
@@ -658,12 +680,14 @@ function CapabilityView({ state, capability, onOpen, onConcept, onShow, isFilter
         onShow={onShow}
         checklist={<a href={pageHref(pick, "checklist")} target="_blank" rel="noopener">See the checklist</a>}
       />
+      <Tradeoffs state={state} ids={capability.tradeoffs} />
       {personas.length ? (
         <section>
           <Heading count={personas.length}>Who it serves</Heading>
           <PersonaRows state={state} personas={personas} onOpen={onOpen} />
         </section>
       ) : null}
+      <BuiltOn state={state} capability={capability} newTab />
       <section>
         <Heading count={rules.length}>Rules it follows</Heading>
         {rules.length ? <RuleNames rules={rules} /> : <p className="concepts-empty">None written down yet.</p>}
@@ -699,15 +723,226 @@ export const leftLine = (left: Left) =>
   [
     ...countOf(left.decisions.length, "open decision", "open decisions"),
     ...countOf(left.gaps.length, "known gap", "known gaps"),
+    ...countOf(left.technical.length, "technical gap", "technical gaps"),
     ...countOf(left.rules.length, "rule without evidence", "rules without evidence"),
   ].join(" · ");
 
+/* Systems' and components' names and icons, wherever one is named. */
+export const TECHNICAL_NAMES: Record<TechnicalKind, { one: string; many: string; icon: ReactNode }> = {
+  system: { one: "System", many: "Systems", icon: <HubOutlinedIcon sx={{ fontSize: 18, color: "text.secondary" }} /> },
+  component: { one: "Component", many: "Components", icon: <ExtensionOutlinedIcon sx={{ fontSize: 18, color: "text.secondary" }} /> },
+};
+
+/*
+ * When a gap is to close, in words: "Due now: Extra charges is GA", "Before
+ * Beta", "Until a second server is added", or that nobody has decided. `of`
+ * is the capability it's shown under, so it isn't named again.
+ */
+export function dueLabel(due: Due, of?: Capability): string {
+  const other = due.capability && due.capability.id !== of?.id ? due.capability : undefined;
+  switch (due.when) {
+    case "due":
+      return other ? `Due now: ${other.name} is ${levelName(due.at ?? null)}` : `Due now, at ${levelName(due.at ?? null)}`;
+    case "next":
+    case "later":
+      return other ? `Before ${other.name} reaches ${STABILITY[due.level!].name}` : `Before ${STABILITY[due.level!].name}`;
+    case "event":
+      return `Until ${due.event}`;
+    case "undecided":
+      return "When isn't decided";
+  }
+}
+
+/* When a gap is to close, as a tag, in the warning's tone once it's due. */
+export function DueTag({ state, gap, of }: { state: DocketState; gap: Gap; of?: Capability }) {
+  const due = dueOf(state, gap);
+  return (
+    <span className="explore-tag" data-tone={due.when === "due" ? "warn" : undefined}>
+      {dueLabel(due, of)}
+    </span>
+  );
+}
+
+/* A link to a system's or component's page: in this tab on a detail page, or a new one from the side panel. */
+export function TechnicalLink({ doc, newTab = false, children }: { doc: TechnicalDoc; newTab?: boolean; children?: ReactNode }) {
+  return (
+    <a className="link explore-crumb" href={pageHref({ kind: doc.kind, id: doc.id })} {...(newTab ? { target: "_blank", rel: "noopener" } : {})}>
+      {children ?? (
+        <>
+          {TECHNICAL_NAMES[doc.kind].icon}
+          {doc.name}
+        </>
+      )}
+    </a>
+  );
+}
+
+/*
+ * Places in the code a gap or tradeoff names, with `docket:gap` or
+ * `docket:tradeoff`: each line as written, and its file. In short, how many.
+ */
+export function Places({ state, places, label, detailed = false }: { state: DocketState; places: EvidencePlace[]; label: string; detailed?: boolean }) {
+  if (!places.length) return null;
+  if (!detailed) return <span>{plural(places.length, `${label} in 1 place`, `${label} in ${places.length} places`).replace(/^\d+ /, "")}</span>;
+  const several = state.projects.length > 1;
+  return (
+    <ul className="page-places explore-places">
+      {places.map((e) => (
+        <li key={`${e.project}:${e.file}:${e.line}`}>
+          <span className="page-place-icon">
+            <CodeRoundedIcon sx={{ fontSize: 14 }} />
+          </span>
+          <span className="page-place">
+            <code title={e.text}>{e.text}</code>
+            <span className="page-place-where">
+              {e.file}:{e.line}
+              {several && e.project ? ` · ${projectName(state, e.project)}` : ""}
+            </span>
+          </span>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+/*
+ * A gap, as a list item: what it is, when it's to close, and with `detailed`
+ * the checklist outcome it falls short of, the rule it doesn't hold to yet,
+ * and where it shows in the code. `on`, for a technical gap, is the system or
+ * component it's on.
+ */
+export function GapItem({
+  state,
+  gap,
+  of,
+  on,
+  subject,
+  detailed = false,
+  newTab = false,
+}: {
+  state: DocketState;
+  gap: Gap;
+  of?: Capability;
+  on?: TechnicalDoc;
+  /* Above it, what it's on, where that isn't clear from where it's shown. */
+  subject?: ReactNode;
+  detailed?: boolean;
+  newTab?: boolean;
+}) {
+  const named = detailed && gap.outcome ? checklistOutcome(state.checklist, gap.outcome) : undefined;
+  const rule = gap.rule ? find(state.rules, gap.rule) : undefined;
+  return (
+    <li>
+      {subject ? <span className="explore-gap-subject">{subject}</span> : null}
+      {gap.text}
+      <span className="explore-left-meta">
+        <DueTag state={state} gap={gap} of={of} />
+        {on ? (
+          <span>
+            In <TechnicalLink doc={on} newTab={newTab} />
+          </span>
+        ) : null}
+        {rule ? <span>Doesn't yet hold to: {rule.name}</span> : null}
+        {named ? (
+          <span>
+            Falls short of {named.quality.name}: {named.outcome.text}
+          </span>
+        ) : null}
+        <Places state={state} places={gap.places} label="Marked" detailed={detailed} />
+      </span>
+    </li>
+  );
+}
+
+/*
+ * Tradeoffs: what we chose, what it costs, and when to look at it again,
+ * since they're decided, not open. A feature's are what it's decided not to
+ * do. With `detailed`, the code each one explains.
+ */
+export function Tradeoffs({
+  state,
+  ids,
+  title = "Tradeoffs",
+  detailed = false,
+  bare = false,
+}: {
+  state: DocketState;
+  ids: string[];
+  title?: string;
+  detailed?: boolean;
+  /* Without its own heading, as in a block that has one. */
+  bare?: boolean;
+}) {
+  const list = tradeoffsById(state, ids);
+  if (!list.length) return null;
+  const items = (
+    <ul className="explore-left-list">
+      {list.map((t) => (
+        <li key={t.id}>
+          {t.text}
+          <span className="explore-left-meta explore-tradeoff">
+            <span>
+              <strong>Costs:</strong> {t.cost}
+            </span>
+            {t.revisit ? (
+              <span>
+                <strong>Revisit when:</strong> {t.revisit}
+              </span>
+            ) : null}
+            <Places state={state} places={t.places} label="Marked" detailed={detailed} />
+          </span>
+        </li>
+      ))}
+    </ul>
+  );
+  if (bare) return items;
+  return (
+    <section className="explore-left">
+      <Heading count={list.length}>{title}</Heading>
+      {items}
+    </section>
+  );
+}
+
+/* The systems and components a capability is built on, each opening its page. */
+export function BuiltOn({ state, capability, newTab = false }: { state: DocketState; capability: Capability; newTab?: boolean }) {
+  const on = builtOn(state, capability);
+  if (!on.length) return null;
+  return (
+    <section>
+      <Heading count={on.length}>Built on</Heading>
+      <TechnicalRows state={state} docs={on} newTab={newTab} />
+    </section>
+  );
+}
+
+/* Systems and components as rows: each one's name, kind, and how many technical gaps it has. */
+export function TechnicalRows({ docs, newTab = false }: { state: DocketState; docs: TechnicalDoc[]; newTab?: boolean }) {
+  return (
+    <ul>
+      {docs.map((e) => (
+        <li key={`${e.kind}:${e.id}`}>
+          <a className="concept-row" href={pageHref({ kind: e.kind, id: e.id })} {...(newTab ? { target: "_blank", rel: "noopener" } : {})}>
+            <span style={{ alignSelf: "flex-start", marginTop: 2, display: "inline-flex" }}>{TECHNICAL_NAMES[e.kind].icon}</span>
+            <span className="concept-row-text">
+              <span className="concept-row-name">{e.name}</span>
+              <span className="concept-row-summary">
+                {[TECHNICAL_NAMES[e.kind].one, ...countOf(e.gaps.length, "technical gap", "technical gaps"), ...countOf(e.tradeoffs.length, "tradeoff", "tradeoffs")].join(" · ")}
+              </span>
+            </span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
 /*
  * What's still open about a capability, near the top so it's read first:
- * decisions nobody has made, its known gaps, and the rules it follows that
- * nothing verifies or implements yet; then how much of its level's checklist
- * is met, and `checklist`, a way to the whole of it. With `detailed`, as on
- * its detail page, each gap says the checklist outcome it falls short of.
+ * decisions nobody has made, its known gaps, the technical gaps of what it's
+ * built on, and the rules it follows that nothing verifies or implements yet;
+ * then how much of its level's checklist is met, and `checklist`, a way to the
+ * whole of it. With `detailed`, as on its detail page, each gap says more.
  */
 export function WhatsLeft({
   state,
@@ -728,7 +963,7 @@ export function WhatsLeft({
 }) {
   const left = leftIn(state, capability);
   const n = leftCount(left);
-  const counts = checklistCounts(state, capability, left.gaps);
+  const counts = checklistCounts(state, capability);
   return (
     <section className="explore-left">
       <Heading count={n || undefined}>What's left</Heading>
@@ -740,16 +975,32 @@ export function WhatsLeft({
       {counts ? (
         <p className="explore-left-checklist">
           <span>
-            {counts.count - counts.notMet} of {counts.count} {STABILITY[capability.stability].name} checklist outcomes met.
+            {counts.count - counts.notMet} of {counts.count} {levelName(capability.stability)} checklist outcomes met
+            {counts.evidence ? `, ${counts.evidence} with evidence` : ""}.
           </span>
           {checklist}
+        </p>
+      ) : capability.stability === null ? (
+        <p className="explore-left-checklist">
+          <span>A draft: declared, and not started, so it claims nothing on the checklist yet.</span>
         </p>
       ) : null}
     </section>
   );
 }
 
-/* What's left about a capability: its open decisions, known gaps and rules without evidence, each under a label. */
+/* Open decisions as a list under their label. */
+function Decisions({ state, doc, decisions, label = "Open decisions", onConcept, onShow, onPick }: { state: DocketState; doc: Doc; decisions: string[]; label?: string; onConcept: (id: string) => void; onShow: (target: Target) => void; onPick?: (pick: Pick) => void }) {
+  if (!decisions.length) return null;
+  return (
+    <div className="explore-left-group">
+      <span className="explore-gap-kind">{label}</span>
+      <Markdown state={state} concept={doc} text={decisions.map((d) => `- ${d}`).join("\n")} onConcept={onConcept} onShow={onShow} onPick={onPick} />
+    </div>
+  );
+}
+
+/* What's left about a capability: its open decisions, known gaps, technical gaps and rules without evidence, each under a label. */
 function LeftItems({
   state,
   capability,
@@ -769,39 +1020,24 @@ function LeftItems({
 }) {
   return (
     <>
-      {left.decisions.length ? (
-        <div className="explore-left-group">
-          <span className="explore-gap-kind">Open decisions</span>
-          <Markdown
-            state={state}
-            concept={capability}
-            text={left.decisions.map((d) => `- ${d}`).join("\n")}
-            onConcept={onConcept}
-            onShow={onShow}
-            onPick={onPick}
-          />
-        </div>
-      ) : null}
+      <Decisions state={state} doc={capability} decisions={left.decisions} onConcept={onConcept} onShow={onShow} onPick={onPick} />
       {left.gaps.length ? (
         <div className="explore-left-group">
           <span className="explore-gap-kind">Known gaps</span>
           <ul className="explore-left-list">
-            {left.gaps.map((g) => {
-              const named = detailed && g.outcome ? checklistOutcome(state.checklist, g.outcome) : undefined;
-              return (
-                <li key={g.id}>
-                  {g.text}
-                  <span className="explore-left-meta">
-                    <span className="explore-tag">{gapKind(g)}</span>
-                    {named ? (
-                      <span>
-                        Falls short of {named.quality.name}: {named.outcome.text}
-                      </span>
-                    ) : null}
-                  </span>
-                </li>
-              );
-            })}
+            {left.gaps.map((g) => (
+              <GapItem key={g.id} state={state} gap={g} of={capability} detailed={detailed} />
+            ))}
+          </ul>
+        </div>
+      ) : null}
+      {left.technical.length ? (
+        <div className="explore-left-group">
+          <span className="explore-gap-kind">Under the hood</span>
+          <ul className="explore-left-list">
+            {left.technical.map(({ gap, on }) => (
+              <GapItem key={gap.id} state={state} gap={gap} of={capability} on={on} detailed={detailed} newTab={!detailed} />
+            ))}
           </ul>
         </div>
       ) : null}
@@ -829,11 +1065,16 @@ function LeftItems({
 /*
  * What's left across several capabilities, such as a feature's: in the side
  * panel, a row for each with anything open, saying how much, which opens it;
- * with `detailed`, as on a detail page, each one's items in full.
+ * with `detailed`, as on a detail page, each one's items in full. `own`, a
+ * feature, domain or other doc they're under, adds its own open decisions
+ * first. With `technical` false, as for a persona, only what someone using
+ * the product would notice.
  */
 export function LeftRollup({
   state,
   capabilities,
+  own,
+  technical = true,
   onOpen,
   detailed = false,
   onConcept = () => {},
@@ -842,17 +1083,21 @@ export function LeftRollup({
 }: {
   state: DocketState;
   capabilities: Capability[];
+  own?: Doc;
+  technical?: boolean;
   onOpen: Links["onOpen"];
   detailed?: boolean;
   onConcept?: (id: string) => void;
   onShow?: (target: Target) => void;
   onPick?: (pick: Pick) => void;
 }) {
-  const open = capabilities.map((c) => ({ capability: c, left: leftIn(state, c) })).filter(({ left }) => leftCount(left));
-  const total = open.reduce((n, { left }) => n + leftCount(left), 0);
+  const decisions = own ? openDecisions(own) : [];
+  const open = capabilities.map((c) => ({ capability: c, left: leftIn(state, c, technical) })).filter(({ left }) => leftCount(left));
+  const total = decisions.length + open.reduce((n, { left }) => n + leftCount(left), 0);
   return (
     <section className="explore-left">
       <Heading count={total || undefined}>What's left</Heading>
+      <Decisions state={state} doc={own ?? capabilities[0]} decisions={decisions} onConcept={onConcept} onShow={onShow} onPick={onPick} />
       {!capabilities.length ? (
         <p className="concepts-empty">It has no capabilities yet.</p>
       ) : !open.length ? (
@@ -866,7 +1111,7 @@ export function LeftRollup({
             <button type="button" className="concept-group-name link-row" onClick={() => onOpen("capability", capability.id)}>
               {NAMES.capability.icon}
               <span className="concept-row-name">{capability.name}</span>
-              <StabilityMark level={capability.stability} feature={capability.name} focusable={false} size="short" />
+              <CapabilityStability level={capability.stability} name={capability.name} focusable={false} />
             </button>
             <LeftItems state={state} capability={capability} left={left} detailed onConcept={onConcept} onShow={onShow} onPick={onPick} />
           </div>
@@ -876,7 +1121,7 @@ export function LeftRollup({
           {open.map(({ capability, left }) => (
             <li key={capability.id}>
               <Row icon={NAMES.capability.icon} name={capability.name} summary={leftLine(left)} onClick={() => onOpen("capability", capability.id)}>
-                <StabilityMark level={capability.stability} feature={capability.name} focusable={false} size="short" />
+                <CapabilityStability level={capability.stability} name={capability.name} focusable={false} />
               </Row>
             </li>
           ))}
@@ -886,18 +1131,19 @@ export function LeftRollup({
   );
 }
 
-export const gapKind = (g: Gap) => (g.kind === "accepted-tradeoff" ? "Accepted tradeoff" : "To close later");
-
 /*
- * How many outcomes a capability's level expects, and how many of those a gap
- * says aren't met; or null with no checklist. An outcome that applies counts
- * as met unless a known gap names it, since declaring a level claims what it
- * expects, except the gaps written down.
+ * How many outcomes a capability's level expects, how many of those a gap
+ * says aren't met, and how many a system or component it's built on says it
+ * meets; or null with no checklist, or for a draft, which claims none. An
+ * outcome nothing names counts as met on its level's word.
  */
-export function checklistCounts(state: DocketState, capability: Capability, gaps: Gap[]) {
-  if (!state.checklist) return null;
-  const outcomes = state.checklist.qualities.flatMap(outcomesOf).filter((o) => appliesAt(o, capability.stability));
-  return { count: outcomes.length, notMet: outcomes.filter((o) => gaps.some((g) => g.outcome === o.id)).length };
+export function checklistCounts(state: DocketState, capability: Capability) {
+  if (!state.checklist || capability.stability === null) return null;
+  const standings = state.checklist.qualities
+    .flatMap(outcomesOf)
+    .map((o) => outcomeStanding(state, capability, o).standing)
+    .filter((s) => s !== "not-expected");
+  return { count: standings.length, notMet: standings.filter((s) => s === "gap").length, evidence: standings.filter((s) => s === "evidence").length };
 }
 
 /*
@@ -924,7 +1170,7 @@ function PersonaView({ state, persona, onOpen, onConcept, onShow, isFiltering, o
         onShow={onShow}
         onConcept={onConcept}
       />
-      <LeftRollup state={state} capabilities={capabilities} onOpen={onOpen} />
+      <LeftRollup state={state} capabilities={capabilities} technical={false} onOpen={onOpen} />
       <PersonaFeatures state={state} persona={persona} onOpen={onOpen} />
     </article>
   );
