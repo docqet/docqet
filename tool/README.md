@@ -87,8 +87,9 @@ neither from the other:
   recommendation: the same weighted average as maturity, each capability at
   its level in short, except that one with a gap that's unacceptable on it
   scores 0 until that's closed. It's a percentage in one of four quarters, Not
-  ready yet, Partly ready, Mostly ready and Ready, drawn as a ring in the
-  text's color, or `--ok` once Ready. Drafts are listed apart, as not
+  ready yet, Partly ready, Mostly ready and Ready, drawn as a short
+  straight bar in the text's color, or `--ok` once Ready, never a ring, which
+  is maturity's. Drafts are listed apart, as not
   started, and never count. It shows on personas, on a feature for a persona,
   on the overview, and on capability, feature and domain pages, each with
   what it still needs: each capability below Beta, or with an unacceptable

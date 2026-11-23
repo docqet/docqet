@@ -1244,7 +1244,8 @@ export function riskOf(state: DocketState, item: Gap | Tradeoff): Risk {
  * and to close each of those gaps, and counts for nothing in readiness until
  * they're closed. A draft is not started, and never counts.
  */
-export type NotReady = { capability: Capability; belowBeta: boolean; gaps: Gap[] };
+/* With what it needs, its open decisions, which don't count toward readiness, but are left to settle there too. */
+export type NotReady = { capability: Capability; belowBeta: boolean; gaps: Gap[]; decisions: Decision[] };
 
 /* The gaps that show on a capability: its own, and those of the mechanisms and components it's built on. */
 export const gapsOn = (state: DocketState, capability: Capability) => [
@@ -1255,7 +1256,7 @@ export const gapsOn = (state: DocketState, capability: Capability) => [
 /* What a started capability still needs to be ready: nothing, once it's ready. */
 export function needsOf(state: DocketState, capability: Capability): NotReady {
   const gaps = gapsOn(state, capability).filter((g) => verdictOf(riskOn(state, g)(capability).score) === "unacceptable");
-  return { capability, belowBeta: rank(capability.stability) < rank("beta"), gaps };
+  return { capability, belowBeta: rank(capability.stability) < rank("beta"), gaps, decisions: openDecisions(capability) };
 }
 
 /*
@@ -1293,7 +1294,7 @@ export const startedOf = (r: Readiness) => r.ready.length + r.notReady.length;
 
 /* Readiness's quarters, named for what they recommend, from the lowest. */
 export const READINESS_BANDS = [
-  { from: 0, name: "Not ready yet", says: "Most of what they need is still being explored, or held back by what's unacceptable." },
+  { from: 0, name: "Not ready", says: "Most of what they need is still being explored, or held back by what's unacceptable." },
   { from: 25, name: "Partly ready", says: "Some of it can be used, but much of what they need is still taking shape." },
   { from: 50, name: "Mostly ready", says: "Enough is settled for them to rely on day to day." },
   { from: 75, name: "Ready", says: "What they need is mostly stable, with nothing unacceptable left open." },

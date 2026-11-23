@@ -26,6 +26,9 @@
   /* Personas: a blue of their own, apart from concepts, features and capabilities. */
   --persona: #1d4ed8;
   --persona-soft: rgb(29 78 216 / 0.08);
+  /* Readiness: from a quiet grey, not ready, to green, ready. */
+  --ready-low: #6f6982;
+  --ready-high: #047857;
   /* Areas: a faint violet wash behind their features, darker than the canvas, lighter than a card. */
   --area: rgb(124 58 237 / 0.045);
   --area-border: rgb(124 58 237 / 0.16);
@@ -63,6 +66,8 @@
     --concept-soft: rgb(45 212 191 / 0.1);
     --persona: #60a5fa;
     --persona-soft: rgb(96 165 250 / 0.12);
+    --ready-low: #aaa4ba;
+    --ready-high: #34d399;
     --area: rgb(167 139 250 / 0.055);
     --area-border: rgb(167 139 250 / 0.2);
     --warning: #fbbf24;
@@ -2110,16 +2115,48 @@ kbd {
   font-size: 18px !important;
 }
 
-.readiness-ring {
+/* Readiness's bar: straight, never a ring, which is maturity's. Its fill runs from grey to its own color, set in --ready, greener the readier. */
+.readiness-bar {
   flex: none;
+  display: inline-block;
+  position: relative;
+  width: 28px;
+  height: 4px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--ready-low) 22%, transparent);
+  overflow: hidden;
 }
 
-.readiness-ring-track {
-  stroke: var(--border-strong);
+.readiness-bar.large {
+  width: 40px;
+  height: 5px;
 }
 
-.readiness-ring-fill {
-  stroke: currentColor;
+/* In its popover, across the card, notched at each quarter. */
+.readiness-bar.wide {
+  display: block;
+  width: 100%;
+  height: 6px;
+  background:
+    linear-gradient(90deg, transparent calc(25% - 1px), var(--popover) 0 calc(25% + 1px), transparent 0),
+    linear-gradient(90deg, transparent calc(50% - 1px), var(--popover) 0 calc(50% + 1px), transparent 0),
+    linear-gradient(90deg, transparent calc(75% - 1px), var(--popover) 0 calc(75% + 1px), transparent 0),
+    color-mix(in srgb, var(--ready-low) 22%, transparent);
+}
+
+.readiness-bar-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  border-radius: inherit;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--ready-low) 45%, transparent), var(--ready));
+}
+
+.readiness-bar-scale {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 4px;
+  font-size: 0.82em;
+  color: var(--faint);
 }
 
 /* What it still needs, on a page: each capability not ready yet, with what would make it ready, then the drafts. */
@@ -2189,9 +2226,52 @@ kbd {
   color: var(--text);
 }
 
-.needs-gap-mark {
+.needs-what li .left-mark,
+.needs-what li .needs-mark {
   margin-top: 3px;
+}
+
+/* Reaching Beta: an arrow up, in the text's color, apart from gaps' amber and decisions' violet. */
+.needs-mark {
+  display: inline-flex;
+  flex: none;
+  color: var(--text);
+}
+
+.needs-faint {
+  color: var(--faint);
+}
+
+/* Open decisions are left to settle, but don't count toward readiness: shown quieter. */
+.needs-what li.needs-aside {
   color: var(--muted);
+}
+
+/* What one capability still needs, by kind, in a row of marks: in a popover. */
+.needs-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 12px;
+  margin-top: 2px;
+  font-size: 0.92em;
+  color: var(--muted);
+}
+
+.needs-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.needs-chip .left-mark,
+.needs-chip .needs-mark {
+  margin-top: 0;
+}
+
+.needs-chip.aside {
+  color: var(--faint);
 }
 
 .needs-ready {

@@ -62,7 +62,7 @@ export function PersonaCard({ state, persona }: { state: DocketState; persona: P
         {role ? <Box sx={{ typography: "body2", color: "text.secondary", lineHeight: 1.35 }}>{role}</Box> : null}
         {startedOf(readiness) ? (
           <Box sx={{ mt: 0.5 }}>
-            <ReadinessMark readiness={readiness} of={`Readiness for ${name}`} inButton />
+            <ReadinessMark readiness={readiness} of={`Readiness for ${name}`} inButton bare />
           </Box>
         ) : null}
       </Box>

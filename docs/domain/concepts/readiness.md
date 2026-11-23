@@ -34,7 +34,7 @@ readiness. It falls in a quarter of its own:
 
 | Readiness     | From | What it recommends                                                                   |
 | ------------- | ---- | ------------------------------------------------------------------------------------ |
-| Not ready yet | 0%   | Most of what they need is still being explored, or held back by what's unacceptable. |
+| Not ready     | 0%   | Most of what they need is still being explored, or held back by what's unacceptable. |
 | Partly ready  | 25%  | Some of it can be used, but much of what they need is still taking shape.            |
 | Mostly ready  | 50%  | Enough is settled for them to rely on day to day.                                    |
 | Ready         | 75%  | What they need is mostly stable, with nothing unacceptable left open.                |
