@@ -67,6 +67,11 @@ item a row with its mark, which a detail page adds more under. A gap's mark is
 an open circle with a dotted edge, the same for product and technical gaps,
 and each gap is labelled *Product* or *Technical*.
 
+- **Open decisions** show on the map as their mark and how many: on each
+  capability's row, after a feature's name and after a domain's, each
+  counting its own. In the side panel's lists, each row counts what opening
+  it shows under what's left; a domain's features, and mechanisms and
+  components, count their own.
 - **What's left** on a capability lists its open decisions and its gaps,
   and nothing else: missing evidence is never something left to do. Its gaps
   are one list: its product gaps, then

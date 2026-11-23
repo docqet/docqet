@@ -25,6 +25,7 @@ import { Term } from "./design/term/Term";
 import { InlineMarkdown, MoreAboutFold } from "./design/markdown/Markdown";
 import { CameFrom, Decided, DecisionList, Facets, facets } from "./Fields";
 import { DomainIcon } from "./FeatureMap";
+import { DecisionsHint } from "./CapabilityHints";
 import { PersonaAvatar, PersonaIcon, ReadinessMeter, personaNameAndRole, readinessBasis, type ReadinessBasis } from "./Personas";
 import { ProjectIcon } from "./PlatformFilter";
 import {
@@ -172,13 +173,17 @@ function List({ state, kind, onOpen }: { state: DocketState; kind: ExploreKind; 
   const terms = query.toLowerCase().split(/\s+/).filter(Boolean);
   const rows = useMemo(() => {
     const domains = (ids: string[]) => ids.map((id) => domainName(state, id)).join(" + ");
-    const docs: { doc: Doc; meta: string; mark: ReactNode; picture?: ReactNode; name?: string; role?: string | null }[] =
+    /* Open decisions on some capabilities, as what's left counts them under a feature, domain or persona. */
+    const decidedIn = (capabilities: Capability[]) => capabilities.reduce((n, c) => n + openDecisions(c).length, 0);
+    const capabilitiesOf = (ids: string[]) => ids.flatMap((id) => find(state.capabilities, id) ?? []);
+    const docs: { doc: Doc; meta: string; mark: ReactNode; decisions: number; picture?: ReactNode; name?: string; role?: string | null }[] =
       kind === "persona"
         ? state.personas.map((p) => ({
             doc: p,
             ...personaNameAndRole(p),
             meta: `${plural(p.capabilities.length, "capability", "capabilities")} · ${plural(p.features.length, "feature", "features")}`,
             mark: p.readiness !== null ? <ReadinessMeter value={p.readiness} basis={readinessBasis(state, p)} inButton /> : null,
+            decisions: decidedIn(capabilitiesOf(p.capabilities)),
             picture: <PersonaAvatar persona={p} size={36} />,
           }))
         : kind === "domain"
@@ -186,17 +191,20 @@ function List({ state, kind, onOpen }: { state: DocketState; kind: ExploreKind; 
             doc: d,
             meta: plural(d.features.length, "feature", "features"),
             mark: d.maturity !== null ? <RingGlyph progress={d.maturity} size={20} /> : null,
+            decisions: openDecisions(d).length + decidedIn(domainCapabilities(state, d)),
           }))
         : kind === "feature"
           ? state.features.map((f) => ({
               doc: f,
               meta: `${domains(f.parts.map((p) => p.domain))} · ${plural(f.capabilities.length, "capability", "capabilities")}`,
               mark: f.maturity !== null ? <RingGlyph progress={f.maturity} size={20} /> : null,
+              decisions: openDecisions(f).length + decidedIn(capabilitiesOf(f.capabilities)),
             }))
           : state.capabilities.map((c) => ({
               doc: c,
               meta: `${c.feature ? (find(state.features, c.feature)?.name ?? c.feature) : "Not in a feature"} · ${domains(docDomains(c))}`,
               mark: <CapabilityStability level={c.stability} name={c.name} focusable={false} />,
+              decisions: openDecisions(c).length,
             }));
     return docs.sort((a, b) => a.doc.name.localeCompare(b.doc.name));
   }, [state, kind]);
@@ -226,12 +234,13 @@ function List({ state, kind, onOpen }: { state: DocketState; kind: ExploreKind; 
       </label>
       {shown.length ? (
         <ul className="concept-list">
-          {shown.map(({ doc, meta, mark, picture, name, role }) => (
+          {shown.map(({ doc, meta, mark, decisions, picture, name, role }) => (
             <li key={doc.id}>
               <button type="button" className={picture ? "has-picture" : undefined} onClick={() => onOpen(doc.id)}>
                 {picture}
                 <span className="explore-name">
                   <span className="concept-name">{name ?? doc.name}</span>
+                  <DecisionsHint count={decisions} />
                   {mark}
                 </span>
                 {role ? <span className="persona-role">{role}</span> : null}
@@ -559,6 +568,7 @@ function DomainFeatures({ state, domain, features, onOpen }: { state: DocketStat
               summary={elsewhere.length ? `${f.description ?? ""} Also in ${elsewhere.join(", ")}.`.trim() : f.description}
               onClick={() => onOpen("feature", f.id)}
             >
+              <DecisionsHint count={openDecisions(f).length} />
               {part?.maturity != null ? <RingGlyph progress={part.maturity} size={20} /> : null}
             </Row>
           </li>
@@ -1046,6 +1056,7 @@ export function TechnicalRows({ docs, newTab = false }: { state: DocketState; do
                 <LeftCounts
                   lead={TECHNICAL_NAMES[e.kind].one}
                   counts={[
+                    ["decision", openDecisions(e).length],
                     ["technical-gap", e.gaps.length],
                     ["tradeoff", e.tradeoffs.length],
                   ]}

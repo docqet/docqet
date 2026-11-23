@@ -23,6 +23,17 @@ export function RulesHint({ count }: { count: number }) {
   return <CountHint count={count} label={count === 1 ? "1 rule" : `${count} rules`} icon={<RuleRoundedIcon sx={{ fontSize: 14 }} />} />;
 }
 
+/* After a name, how many open decisions it has, which the side panel lists under what's left. */
+export function DecisionsHint({ count }: { count: number }) {
+  return (
+    <CountHint
+      count={count}
+      label={count === 1 ? "1 open decision" : `${count} open decisions`}
+      icon={<LeftMark kind="decision" size={13} decorative />}
+    />
+  );
+}
+
 /* After a capability's name, how many product gaps it has, which the side panel lists. */
 export function GapsHint({ count }: { count: number }) {
   return (
@@ -37,6 +48,7 @@ export function GapsHint({ count }: { count: number }) {
 function CountHint({ count, label, icon }: { count: number; label: string; icon: ReactNode }) {
   if (!count) return null;
   return (
+    <Tip title={label}>
     <Box
       component="span"
       aria-label={label}
@@ -54,5 +66,6 @@ function CountHint({ count, label, icon }: { count: number; label: string; icon:
       {icon}
       {count}
     </Box>
+    </Tip>
   );
 }

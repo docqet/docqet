@@ -44,6 +44,8 @@ export type FeatureCardProps = {
   onAddCapability?: () => void;
   /** Under its Capabilities: the app's own line, such as the concepts they use. */
   footer?: ReactNode;
+  /** Something small after its name, such as how many open decisions it has. */
+  hint?: ReactNode;
 };
 
 const rank = (level: StabilityLevelId | null) => (level ? STABILITY_LEVEL_IDS.indexOf(level) : -1);
@@ -52,7 +54,7 @@ const rank = (level: StabilityLevelId | null) => (level ? STABILITY_LEVEL_IDS.in
  * A Feature with its Capabilities, as one card: its icon, its name, cut
  * short on one line, and its maturity as a 24px ring, which shows its own
  * percentage, worked out from its Capabilities' levels and listing them,
- * most stable first, in its popover; its description under its name; then a row per Capability, as on
+ * most stable first, in its popover, with an optional `hint` before it; its description under its name; then a row per Capability, as on
  * a CapabilityCard; and, where the reader can add one, "Add a Capability".
  * A Feature with no Capabilities has no maturity yet, and says so.
  * Editing and dragging are the app's: each `grip` is the handle it's
@@ -67,6 +69,7 @@ export function FeatureCard({
   actions,
   onAddCapability,
   footer,
+  hint,
 }: FeatureCardProps) {
   const progress =
     maturity !== undefined ? maturity : featureMaturity(capabilities.map((capability) => capability.level));
@@ -108,6 +111,7 @@ export function FeatureCard({
                 {name}
               </Box>
             </Tooltip>
+            {hint}
             {progress === null ? null : (
               <Box sx={{ flex: "none", display: "flex", alignItems: "center", gap: 0.75 }}>
                 <MaturityRing

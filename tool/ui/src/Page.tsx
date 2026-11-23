@@ -438,16 +438,23 @@ function MaturityValue({ value }: { value: number | null }) {
   );
 }
 
-/* What's left across capabilities, as a tile. With `technical` false, as for a persona, only what someone using the product would notice. */
-function LeftTile({ state, capabilities, technical = true }: { state: DocketState; capabilities: Capability[]; technical?: boolean }) {
+/*
+ * What's left across capabilities, as a tile, with the open decisions of
+ * `own`, the feature or domain they're under, as its what's left counts them.
+ * With `technical` false, as for a persona, only what someone using the
+ * product would notice.
+ */
+function LeftTile({ state, capabilities, own, technical = true }: { state: DocketState; capabilities: Capability[]; own?: { doc: Doc; kind: "feature" | "domain" }; technical?: boolean }) {
   const lefts = capabilities.map((c) => leftIn(state, c, technical));
-  const n = lefts.reduce((sum, l) => sum + leftCount(l), 0);
+  const mine = own ? openDecisions(own.doc).length : 0;
+  const n = mine + lefts.reduce((sum, l) => sum + leftCount(l), 0);
   const open = lefts.filter((l) => leftCount(l)).length;
+  const where = [...(mine ? [`${mine} on the ${own!.kind}`] : []), ...(open ? [`in ${plural(open, "capability", "capabilities")}`] : [])];
   return (
     <Tile
       label="What's left"
       value={n ? plural(n, "open item", "open items") : "Nothing open"}
-      note={n ? `in ${plural(open, "capability", "capabilities")}` : "No open decisions or gaps"}
+      note={n ? where.join(", ") : "No open decisions or gaps"}
       tone={n ? "warn" : "ok"}
     />
   );
@@ -788,7 +795,7 @@ function FeaturePage({ feature, ...go }: Go & { feature: Feature }) {
           <>
             <Tile label="Maturity" value={<MaturityValue value={feature.maturity} />} note="From its capabilities' levels" />
             <Tile label={<Term id="capability">Capabilities</Term>} value={capabilities.length} note={<LevelBar capabilities={capabilities} />} />
-            <LeftTile state={state} capabilities={capabilities} />
+            <LeftTile state={state} capabilities={capabilities} own={{ doc: feature, kind: "feature" }} />
             <RulesTile rules={rules} capabilities={capabilities} />
             {personas.length ? <Tile label="Serves" value={<Avatars personas={personas} />} note={plural(personas.length, "persona", "personas")} /> : null}
           </>
@@ -875,7 +882,7 @@ function DomainPage({ domain, ...go }: Go & { domain: Domain }) {
             <Tile label="Maturity" value={<MaturityValue value={domain.maturity} />} note="From its parts of features" />
             <Tile label={<Term id="feature">Features</Term>} value={features.length} note={loose.length ? `and ${plural(loose.length, "capability", "capabilities")} in none` : undefined} />
             <Tile label={<Term id="capability">Capabilities</Term>} value={capabilities.length} note={<LevelBar capabilities={capabilities} />} />
-            <LeftTile state={state} capabilities={capabilities} />
+            <LeftTile state={state} capabilities={capabilities} own={{ doc: domain, kind: "domain" }} />
             <RulesTile rules={rules} capabilities={capabilities} />
           </>
         }

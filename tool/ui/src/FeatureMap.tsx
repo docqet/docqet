@@ -5,7 +5,7 @@ import { CapabilityCard } from "./design/catalog/CapabilityCard";
 import { FeatureCard } from "./design/catalog/FeatureCard";
 import { MaturityRing } from "./design/maturity/MaturityRing";
 import { RingGlyph } from "./design/maturity/RingGlyph";
-import { ContradictionHint, GapsHint, RulesHint } from "./CapabilityHints";
+import { ContradictionHint, DecisionsHint, GapsHint, RulesHint } from "./CapabilityHints";
 import { ConceptChips, ConceptIcon } from "./Concepts";
 import { PersonaCard } from "./Personas";
 import { ProjectIcon } from "./PlatformFilter";
@@ -17,6 +17,7 @@ import {
   domainName,
   featureCard,
   find,
+  openDecisions,
   personaCard,
   projectName,
   partOf,
@@ -39,9 +40,9 @@ const PERSONA_SLOT = 240;
 const GAP = 28;
 
 /*
- * A capability's line on a card in a domain: its name, with how many rules
- * and product gaps it has and any contradiction after it, and its level in
- * that domain. Clicking it opens the rest in the side panel.
+ * A capability's line on a card in a domain: its name, with how many rules,
+ * open decisions and product gaps it has and any contradiction after it, and
+ * its level in that domain. Clicking it opens the rest in the side panel.
  */
 function line(state: DocketState, c: Capability, domain: string) {
   const here = c.levels.find((l) => l.domain === domain)?.level ?? c.stability;
@@ -53,6 +54,7 @@ function line(state: DocketState, c: Capability, domain: string) {
       <>
         <ContradictionHint messages={contradictions} />
         <RulesHint count={c.rules.filter((id) => find(state.rules, id)).length} />
+        <DecisionsHint count={openDecisions(c).length} />
         <GapsHint count={c.gaps.filter((id) => state.gaps.some((g) => g.id === id)).length} />
       </>
     ),
@@ -157,6 +159,7 @@ export function mapItems(
                 grip
                 name={feature.name}
                 description={feature.description}
+                hint={<DecisionsHint count={openDecisions(feature).length} />}
                 maturity={part.maturity}
                 capabilities={part.capabilities.flatMap((cid) => {
                   const c = find(state.capabilities, cid);
@@ -198,8 +201,8 @@ const cardsIn = (domain: Domain) => [
 
 /*
  * Each domain as a region behind its cards, labelled on one line with its
- * name, the projects that define it when several are showing, and right
- * after them its maturity, worked out from its parts of features. A domain's region wraps
+ * name, the projects that define it when several are showing, how many open
+ * decisions it has, and right after them its maturity, worked out from its parts of features. A domain's region wraps
  * whichever of its cards are on the map, so one with none drawn has none.
  * Clicking it calls `onOpen` with it.
  */
@@ -227,6 +230,7 @@ export function mapGroups(state: DocketState, onOpen: (pick: Pick) => void): Can
               ) : null}
             </span>
           </Tip>
+          <DecisionsHint count={openDecisions(domain).length} />
           {domain.maturity !== null ? (
             <span className="area-maturity" data-no-pan>
               <MaturityRing
