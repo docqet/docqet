@@ -1,6 +1,6 @@
 ---
 name: Deposits
-summary: The software takes a deposit on the guest's card when a stay is booked.
+description: The software takes a deposit on the guest's card when a stay is booked.
 stability: beta
 personas: [manager, front-desk-clerk]
 rules:

@@ -45,7 +45,7 @@ to, but not including, the check-out date.
 A confirmed booking can instead be Cancelled, any time before check-in.
 ```
 
-Each item in `confused-with` has `text` saying how they differ, and either
+Each item in `confused-with` has a `summary` saying how they differ, and either
 `concept`, a [link](link.md) to that concept written as any concept link is,
 or `term`, for a word that isn't a concept in the docs. Billing's
 [bill](../../../spec/examples/hotel-billing/docs/product/domains/billing/concepts/bill.md)
@@ -54,7 +54,7 @@ isn't an invoice:
 ```yaml
 confused-with:
   - term: Invoice
-    text: what a company is sent for a month of its staff's bills.
+    summary: what a company is sent for a month of its staff's bills.
 ```
 
 ## Not to be confused with

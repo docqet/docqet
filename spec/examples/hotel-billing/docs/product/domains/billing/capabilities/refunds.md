@@ -1,6 +1,6 @@
 ---
 name: Refunds
-summary: >-
+description: >-
   Clerks refund a guest what they've paid over their bill, before the bill
   closes.
 stability: draft

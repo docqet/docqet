@@ -56,13 +56,13 @@ docs/product/domains/guest-stays/
 ```
 
 Its [`domain.md`](../../../spec/examples/hotel-bookings/docs/product/domains/guest-stays/domain.md)
-gives its name, summary and open decisions in frontmatter, and anything more
+gives its name, description and open decisions in frontmatter, and anything more
 worth saying about it in its body:
 
 ```markdown
 ---
 name: Guest stays
-summary: Looking after guests from their booking to their check-out.
+description: Looking after guests from their booking to their check-out.
 decisions:
   - topic: Early arrivals
     question: >-

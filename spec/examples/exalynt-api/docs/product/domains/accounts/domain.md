@@ -1,6 +1,6 @@
 ---
 name: Accounts and access
-summary: Who people are, the accounts they share, and what each may do.
+description: Who people are, the accounts they share, and what each may do.
 ---
 
 Everyone has one account, whichever hats they wear: a client's member, one of

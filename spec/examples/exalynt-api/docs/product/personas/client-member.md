@@ -1,6 +1,6 @@
 ---
 name: Carla Nuñez
-summary: >-
+description: >-
   Customer service manager at a non-software business whose team uses what
   Exalynt builds. Follows the work and raises what the software should do.
 role: Client Member

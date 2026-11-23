@@ -1,6 +1,6 @@
 ---
 name: Teams
-summary: >-
+description: >-
   Exalynt groups its people into teams to work with the clients they're
   assigned to, and a client's teams decide who at Exalynt it sees.
 stability: beta
@@ -52,12 +52,12 @@ rules:
 concepts: [team, organization]
 gaps:
   - id: no-resending-invitations
-    text: >-
+    summary: >-
       An admin can't resend a pending engineer invitation: they revoke it and
       invite the same address again. Once resending comes, any admin can
       resend any of them, not only the ones they sent.
   - id: team-changes-unannounced
-    text: >-
+    summary: >-
       Moving or removing an engineer, or removing a team from a client, takes
       the engineers it leaves ineligible off that client's blocks whose week
       hasn't started, back to the shared queue, but nobody sees which blocks
@@ -65,74 +65,74 @@ gaps:
       or that work has begun on, keeps its engineer until an admin reassigns
       or unassigns it through Staffing.
   - id: last-team-removable
-    text: >-
+    summary: >-
       A client's last team can be removed even while the client has scheduled
       blocks. Those blocks stay scheduled and owed, but no one can claim them
       until a team is assigned again, and nothing stops the removal.
   - id: team-name-last-save-wins
-    text: >-
+    summary: >-
       The last save wins on a team's name: nothing checks what the person last
       read.
   - id: names-can-name-clients
-    text: >-
+    summary: >-
       Nothing checks that a team's name doesn't name one of its clients,
       though every client it supports sees it. Name teams for what they do.
   - id: no-team-history
-    text: >-
+    summary: >-
       Nothing keeps a history of who was on a team, or which teams a client
       had, and a deleted team can't be undone.
   - id: moves-unchecked-against-blocks
-    text: >-
+    summary: >-
       Moving an engineer off a team, or taking a team off a client, isn't
       checked against the blocks they're assigned. They stay on those blocks
       until they're reassigned through Staffing.
   - id: no-team-notifications
-    text: >-
+    summary: >-
       Nobody is told when they're put on a team, or when a client's teams
       change, including the client given a team at sign-up.
   - id: clients-see-name-and-email-only
-    text: Clients see a member's name and email only.
+    summary: Clients see a member's name and email only.
   - id: leavers-stay-on-teams
-    text: >-
+    summary: >-
       Someone who leaves Exalynt drops off the team without being taken off
       it, and is back on it if they rejoin.
   - id: team-reread-each-time
-    text: The team is read again each time it's shown.
+    summary: The team is read again each time it's shown.
   - id: teamless-clients-not-listed
-    text: >-
+    summary: >-
       Nothing lists the clients no team is assigned to. Teams lists only the
       teams, and Engineers filters for engineers on no team.
   - id: team-choice-blind
-    text: >-
+    summary: >-
       Choosing a team for a client doesn't say how much room the team has,
       and nothing says what kind of work suits it.
   - id: invitation-terms-hidden
-    text: The pending engineer invitations don't show the terms they carry.
+    summary: The pending engineer invitations don't show the terms they carry.
   - id: terms-from-the-apps-copy
-    text: >-
+    summary: >-
       The terms on an invitation come from the app's own copy of the terms
       catalog.
   - id: invitations-dont-expire
-    text: An engineer invitation doesn't expire.
+    summary: An engineer invitation doesn't expire.
   - id: invitation-permissions-split
-    text: >-
+    summary: >-
       Choosing an invitation's role, sending it, giving it applications, and
       giving it a team each need their own permission.
   - id: leads-lose-lead-on-accepting
-    text: >-
+    summary: >-
       Someone who already leads the team they're invited to stops leading it
       when they accept.
   - id: tested-only-through-the-api
     outcome: functionality/beta/stays-correct
-    text: >-
+    summary: >-
       The workflow is tested end to end only through the API. The apps' own
       tests cover reading every page of teams, the order people show in, and
       finding an engineer's team.
 tradeoffs:
   - id: names-unique-across-all-teams
-    text: Team names are unique across all teams, not per client.
-    cost: >-
-      Two teams can't both be called "Platform", even for different clients.
+    summary: Team names are unique across all teams, not per client.
+    drawbacks:
+      - Two teams can't both be called "Platform", even for different clients.
 ---
 
 ## Includes

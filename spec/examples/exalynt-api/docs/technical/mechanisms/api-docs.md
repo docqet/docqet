@@ -1,13 +1,13 @@
 ---
 name: API docs
-summary: >-
+description: >-
   The reference at `GET /docs/api`: the OpenAPI spec bundled into one
   document, rendered by Scalar, with each endpoint's stability and each
   group's maturity drawn on top by our own script.
 meets: [compatibility/prototype/marked]
 gaps:
   - id: marks-depend-on-scalar-markup
-    text: >-
+    summary: >-
       `stability-marks.js` finds what it upgrades through Scalar's markup, and
       the page loads `@scalar/api-reference` from jsdelivr without a version,
       so any Scalar release can change it. When it does, the marks, rings and
@@ -15,7 +15,7 @@ gaps:
       page.
   - id: no-release-notes
     outcome: compatibility/beta/changes-heard
-    text: >-
+    summary: >-
       Nothing tells people what changed in a release, for the API or the apps,
       Beta features included. Changes show only in the reference and in git
       history.

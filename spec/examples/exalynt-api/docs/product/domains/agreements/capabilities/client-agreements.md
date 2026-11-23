@@ -1,6 +1,6 @@
 ---
 name: Client agreements
-summary: >-
+description: >-
   A client organization's Admin reads and accepts its Client Agreement on its
   behalf, before anyone can use the portal for it.
 stability: beta
@@ -26,26 +26,26 @@ rules:
 concepts: [agreement, organization]
 gaps:
   - id: only-the-portal-holds-to-the-agreement
-    text: >-
+    summary: >-
       Only the portal holds an organization to its Client Agreement: someone
       using the API directly can still do what their role allows without one
       in effect.
   - id: new-versions-not-offered
-    text: >-
+    summary: >-
       A new version of the Client Agreement isn't offered to an organization
       that accepted an earlier one, and nothing sends a client new terms (it
       has none).
   - id: generated-pdf-file-name
-    text: >-
+    summary: >-
       A PDF downloaded from the browser's viewer gets a generated file name,
       not the agreement's.
   - id: names-outside-western-european-alphabets
     outcome: usability/beta/everyone
-    text: >-
+    summary: >-
       A name with characters outside Western European alphabets shows them as
       "?" in the PDF, and the PDF keeps them that way once accepted.
   - id: shared-definitions-changed-in-place
-    text: >-
+    summary: >-
       How a shared definition changes once an accepted version uses it isn't
       decided yet. The definition of Fulfilled, and version 1 of the Client
       Agreement, were changed in place to say the engineer marks a block
@@ -55,12 +55,13 @@ gaps:
       product: a copy accepted before then still does.
 tradeoffs:
   - id: every-member-sees-agreements
-    text: >-
+    summary: >-
       Every member of an organization sees its agreements, whatever their
       role.
-    cost: >-
-      Members and Billing see the organization's terms with Exalynt, not just
-      its Admins.
+    drawbacks:
+      - >-
+        Members and Billing see the organization's terms with Exalynt, not just
+        its Admins.
 ---
 
 ## Includes

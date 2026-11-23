@@ -35,7 +35,7 @@
       "id": "guest-stays",
       "file": "docs/product/domains/guest-stays/domain.md",
       "name": "Guest stays",
-      "summary": "Looking after guests from their booking to their check-out.",
+      "description": "Looking after guests from their booking to their check-out.",
       "maturity": 70,
       "band": "beta",
       "decisions": [
@@ -62,7 +62,7 @@
       "id": "property",
       "file": "docs/product/domains/property/domain.md",
       "name": "Property",
-      "summary": "Keeping the hotel ready for guests.",
+      "description": "Keeping the hotel ready for guests.",
       "maturity": 15,
       "band": "prototype",
       "decisions": [],
@@ -75,7 +75,7 @@
       "domain": "guest-stays",
       "file": "docs/product/domains/guest-stays/features/reservations.md",
       "name": "Reservations",
-      "summary": "Taking bookings and handling changes to them, before the guest arrives.",
+      "description": "Taking bookings and handling changes to them, before the guest arrives.",
       "capabilities": [
         "room-booking",
         "cancellations",
@@ -114,7 +114,7 @@
       "domain": "guest-stays",
       "file": "docs/product/domains/guest-stays/features/front-desk.md",
       "name": "Front desk",
-      "summary": "Welcoming guests when they arrive and settling up when they leave.",
+      "description": "Welcoming guests when they arrive and settling up when they leave.",
       "capabilities": [
         "check-in",
         "check-out"
@@ -130,7 +130,7 @@
       "domain": "property",
       "file": "docs/product/domains/property/features/housekeeping.md",
       "name": "Housekeeping",
-      "summary": "Keeping rooms ready for the next guest.",
+      "description": "Keeping rooms ready for the next guest.",
       "capabilities": [
         "room-status",
         "cleaning-schedule"
@@ -149,7 +149,7 @@
       "name": "Maria",
       "role": "Front desk",
       "title": "Front desk clerk",
-      "summary": "Runs the front desk: takes bookings, and checks guests in and out.",
+      "description": "Runs the front desk: takes bookings, and checks guests in and out.",
       "image": "https://randomuser.me/api/portraits/women/68.jpg",
       "capabilities": [
         "room-booking",
@@ -174,7 +174,7 @@
       "name": "Ana",
       "role": "Housekeeping",
       "title": "Housekeeper",
-      "summary": "Cleans and readies the rooms between guests.",
+      "description": "Cleans and readies the rooms between guests.",
       "image": "https://randomuser.me/api/portraits/women/26.jpg",
       "capabilities": [
         "cleaning-schedule",
@@ -192,7 +192,7 @@
       "name": "David",
       "role": "Manager",
       "title": "Hotel manager",
-      "summary": "Runs the hotel, and answers for its takings to the owners.",
+      "description": "Runs the hotel, and answers for its takings to the owners.",
       "image": "https://randomuser.me/api/portraits/men/52.jpg",
       "capabilities": [
         "rate-calendar"
@@ -208,7 +208,7 @@
       "domain": "guest-stays",
       "file": "docs/product/domains/guest-stays/capabilities/room-booking.md",
       "name": "Room booking",
-      "summary": "Clerks book a free room for a guest's stay.",
+      "description": "Clerks book a free room for a guest's stay.",
       "stability": "beta",
       "personas": [
         "front-desk-clerk"
@@ -263,7 +263,7 @@
       "domain": "guest-stays",
       "file": "docs/product/domains/guest-stays/capabilities/cancellations.md",
       "name": "Cancellations",
-      "summary": "Clerks cancel a booking when a guest's plans change, and the guest is refunded what the cancellation policy allows.",
+      "description": "Clerks cancel a booking when a guest's plans change, and the guest is refunded what the cancellation policy allows.",
       "stability": "alpha",
       "personas": [
         "front-desk-clerk"
@@ -300,7 +300,7 @@
       "domain": "guest-stays",
       "file": "docs/product/domains/guest-stays/capabilities/check-in.md",
       "name": "Check-in",
-      "summary": "Clerks check guests in when they arrive and give them their room.",
+      "description": "Clerks check guests in when they arrive and give them their room.",
       "stability": "beta",
       "personas": [
         "front-desk-clerk"
@@ -327,7 +327,7 @@
       "domain": "guest-stays",
       "file": "docs/product/domains/guest-stays/capabilities/check-out.md",
       "name": "Check-out",
-      "summary": "Clerks check guests out on their departure day and take payment for anything still owed.",
+      "description": "Clerks check guests out on their departure day and take payment for anything still owed.",
       "stability": "ga",
       "personas": [
         "front-desk-clerk"
@@ -351,7 +351,7 @@
       "domain": "property",
       "file": "docs/product/domains/property/capabilities/cleaning-schedule.md",
       "name": "Cleaning schedule",
-      "summary": "Housekeepers see which rooms to clean today, with early arrivals first.",
+      "description": "Housekeepers see which rooms to clean today, with early arrivals first.",
       "stability": "prototype",
       "personas": [
         "housekeeper"
@@ -383,7 +383,7 @@
       "domain": "guest-stays",
       "file": "docs/product/domains/guest-stays/capabilities/group-bookings.md",
       "name": "Group bookings",
-      "summary": "Clerks hold several rooms at once for a group travelling together, under one name.",
+      "description": "Clerks hold several rooms at once for a group travelling together, under one name.",
       "stability": "prototype",
       "personas": [
         "front-desk-clerk"
@@ -418,7 +418,7 @@
       "domain": "guest-stays",
       "file": "docs/product/domains/guest-stays/capabilities/rate-calendar.md",
       "name": "Rate calendar",
-      "summary": "Managers set each room type's nightly rate, date by date.",
+      "description": "Managers set each room type's nightly rate, date by date.",
       "stability": "prototype",
       "personas": [
         "manager"
@@ -448,7 +448,7 @@
       "domain": "property",
       "file": "docs/product/domains/property/capabilities/room-status.md",
       "name": "Room status",
-      "summary": "Housekeepers mark rooms clean or dirty, so the front desk knows which are ready.",
+      "description": "Housekeepers mark rooms clean or dirty, so the front desk knows which are ready.",
       "stability": "prototype",
       "personas": [
         "housekeeper",
@@ -481,7 +481,7 @@
       "domain": "guest-stays",
       "file": "docs/product/domains/guest-stays/capabilities/waitlist.md",
       "name": "Waitlist",
-      "summary": "Clerks put a guest on a waitlist when every room is taken, and offer them the first room that frees up for their stay.",
+      "description": "Clerks put a guest on a waitlist when every room is taken, and offer them the first room that frees up for their stay.",
       "stability": "draft",
       "personas": [
         "front-desk-clerk"
@@ -725,7 +725,7 @@
       "id": "deployment",
       "file": "docs/technical/mechanisms/deployment.md",
       "name": "Deployment",
-      "summary": "How a change gets from the main branch to the hotel's server, and back off it again.",
+      "description": "How a change gets from the main branch to the hotel's server, and back off it again.",
       "applies": "project",
       "capabilities": [
         "room-booking",
@@ -823,7 +823,7 @@
       "domain": "guest-stays",
       "outcome": null,
       "rule": "cancellations/late-cancellation-fee",
-      "text": "The late-cancellation fee isn't charged yet, so every cancellation is refunded in full.",
+      "summary": "The late-cancellation fee isn't charged yet, so every cancellation is refunded in full.",
       "places": []
     },
     {
@@ -831,21 +831,21 @@
       "domain": "guest-stays",
       "outcome": "usability/beta/everyone",
       "rule": null,
-      "text": "The room calendar can't be used from the keyboard, so clerks need a mouse to pick dates.",
+      "summary": "The room calendar can't be used from the keyboard, so clerks need a mouse to pick dates.",
       "places": []
     },
     {
       "id": "mechanism:deployment#migrations-only-go-forward",
       "outcome": "reliability/ga/recovery",
       "rule": null,
-      "text": "Migrations have no down step, so undoing a release that changed the schema means restoring the database from the night before.",
+      "summary": "Migrations have no down step, so undoing a release that changed the schema means restoring the database from the night before.",
       "places": []
     },
     {
       "id": "component:bookings#clashes-logged-as-unknown",
       "outcome": "observability/beta/hears-of-errors",
       "rule": null,
-      "text": "`saveBooking` passes every database error up as it is, so a clash that only the exclusion constraint caught is logged as an unknown failure, not as a double booking that was refused.",
+      "summary": "`saveBooking` passes every database error up as it is, so a clash that only the exclusion constraint caught is logged as an unknown failure, not as a double booking that was refused.",
       "places": [
         {
           "file": "src/booking/repository.ts",
@@ -859,31 +859,52 @@
     {
       "id": "capability:room-booking#one-room-per-booking",
       "domain": "guest-stays",
-      "text": "A booking holds one room, not several.",
-      "gain": "Booking, changing and cancelling stay simple: each booking is one room for one stay.",
-      "cost": "A family that needs two rooms makes two bookings. Group bookings is where several rooms under one name is being explored.",
+      "outcome": null,
+      "summary": "A booking holds one room, not several.",
+      "benefits": [
+        "Booking, changing and cancelling stay simple: each booking is one room for one stay."
+      ],
+      "drawbacks": [
+        "A family that needs two rooms makes two bookings. Group bookings is where several rooms under one name is being explored."
+      ],
       "places": []
     },
     {
       "id": "feature:reservations#front-desk-bookings-only",
       "domain": "guest-stays",
-      "text": "Bookings are taken at the front desk, not from online travel agencies.",
-      "gain": "No agency integrations to build or keep working, while most bookings come straight to the desk.",
-      "cost": "Clerks enter each agency booking by hand, as it arrives by email.",
+      "outcome": null,
+      "summary": "Bookings are taken at the front desk, not from online travel agencies.",
+      "benefits": [
+        "No agency integrations to build or keep working, while most bookings come straight to the desk."
+      ],
+      "drawbacks": [
+        "Clerks enter each agency booking by hand, as it arrives by email."
+      ],
       "places": []
     },
     {
       "id": "mechanism:deployment#migrations-before-start",
-      "text": "Migrations run before the new image starts, while the old one is still serving, rather than stopping the app for each release.",
-      "gain": "Releases don't take the front desk offline.",
-      "cost": "The running code has to work with the new schema for a minute, so a column is added a release before it's used, and removed a release after the code stops reading it.",
+      "outcome": null,
+      "summary": "Migrations run before the new image starts, while the old one is still serving, rather than stopping the app for each release.",
+      "benefits": [
+        "Releases don't take the front desk offline."
+      ],
+      "drawbacks": [
+        "The running code has to work with the new schema for a minute, so a column is added a release before it's used, and removed a release after the code stops reading it."
+      ],
       "places": []
     },
     {
       "id": "component:bookings#constraint-not-lock",
-      "text": "The database refuses overlapping bookings with an exclusion constraint, rather than the app locking the room while it checks.",
-      "gain": "No two bookings can overlap, however they arrive at once, without the app having to get locking right.",
-      "cost": "Bookings need Postgres with `btree_gist`, and the check in the app is only there to give clerks a clear message first.",
+      "outcome": null,
+      "summary": "The database refuses overlapping bookings with an exclusion constraint, rather than the app locking the room while it checks.",
+      "benefits": [
+        "No two bookings can overlap, however they arrive at once, without the app having to get locking right."
+      ],
+      "drawbacks": [
+        "Bookings need Postgres with `btree_gist`.",
+        "The check in the app is only there to give clerks a clear message first."
+      ],
       "places": [
         {
           "file": "db/migrations/001_bookings.sql",

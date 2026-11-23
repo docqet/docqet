@@ -1,6 +1,6 @@
 ---
 name: Engineering capacity
-summary: >-
+description: >-
   Selling engineering capacity in blocks, and scheduling, staffing and
   delivering it week by week.
 ---

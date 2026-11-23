@@ -200,7 +200,7 @@ function List({ state, kind, onOpen }: { state: DocketState; kind: ExploreKind; 
     return docs.sort((a, b) => a.doc.name.localeCompare(b.doc.name));
   }, [state, kind]);
   const shown = rows.filter(({ doc, meta }) => {
-    const text = `${doc.name} ${doc.summary ?? ""} ${doc.id} ${meta}`.toLowerCase();
+    const text = `${doc.name} ${doc.description ?? ""} ${doc.id} ${meta}`.toLowerCase();
     return terms.every((t) => text.includes(t));
   });
   const many = NAMES[kind].many.toLowerCase();
@@ -234,7 +234,7 @@ function List({ state, kind, onOpen }: { state: DocketState; kind: ExploreKind; 
                   {mark}
                 </span>
                 {role ? <span className="persona-role">{role}</span> : null}
-                {doc.summary ? <span className="concept-summary">{doc.summary}</span> : null}
+                {doc.description ? <span className="concept-summary">{doc.description}</span> : null}
                 <span className="concept-meta">{meta}</span>
               </button>
             </li>
@@ -254,7 +254,7 @@ function List({ state, kind, onOpen }: { state: DocketState; kind: ExploreKind; 
  * as two projects or two domains defining it, each gets a card of its own,
  * headed by the domain and project it's from, so it's always clear who says
  * what, and several can be compared. With one source, its trail says where
- * it's from instead. Each source shows what it is (its summary and fields)
+ * it's from instead. Each source shows what it is (its description and fields)
  * first, then its body apart, folded under "More about it".
  */
 export function Head({
@@ -369,7 +369,7 @@ export function Head({
               </div>
             ) : null}
             <div className="explore-source-body">
-              {f.summary ? <p className="explore-source-summary">{f.summary}</p> : null}
+              {f.description ? <p className="explore-source-summary">{f.description}</p> : null}
               {says(f)}
             </div>
           </div>
@@ -563,7 +563,7 @@ function DomainFeatures({ state, domain, features, onOpen }: { state: DocketStat
             <Row
               icon={NAMES.feature.icon}
               name={f.name}
-              summary={elsewhere.length ? `${f.summary ?? ""} Also in ${elsewhere.join(", ")}.`.trim() : f.summary}
+              summary={elsewhere.length ? `${f.description ?? ""} Also in ${elsewhere.join(", ")}.`.trim() : f.description}
               onClick={() => onOpen("feature", f.id)}
             >
               {part?.maturity != null ? <RingGlyph progress={part.maturity} size={20} /> : null}
@@ -591,7 +591,7 @@ export function CapabilityRows({
         const level = (domain && c.levels.find((l) => l.domain === domain)?.level) || c.stability;
         return (
           <li key={c.id}>
-            <Row icon={NAMES.capability.icon} name={c.name} summary={c.summary} onClick={() => onOpen("capability", c.id)}>
+            <Row icon={NAMES.capability.icon} name={c.name} summary={c.description} onClick={() => onOpen("capability", c.id)}>
               <CapabilityStability level={level} name={c.name} focusable={false} />
             </Row>
           </li>
@@ -873,7 +873,7 @@ export function GapItem({
           {subject ? <span className="explore-gap-subject">{subject}</span> : null}
           <div className="left-item-text">
             <GapKindTag kind={gapKind(gap)} />
-            <InlineMarkdown text={gap.text} />
+            <InlineMarkdown text={gap.summary} />
           </div>
           <CameFrom kind="gap" id={gap.id} go={{ state, onConcept: () => {} }} inline />
           {named || rule || on ? (
@@ -909,7 +909,7 @@ export function GapItem({
       {subject ? <span className="explore-gap-subject">{subject}</span> : null}
       <div className="left-item-text">
         <GapKindTag kind={gapKind(gap)} />
-        <InlineMarkdown text={gap.text} />
+        <InlineMarkdown text={gap.summary} />
       </div>
       <span className="explore-left-meta">
         {on ? (
@@ -925,11 +925,58 @@ export function GapItem({
 }
 
 /*
- * Tradeoffs: what we chose on purpose, what we hope to gain by it, what we
- * accept in return, and when to look at it again, since they're decided, not
- * open. A feature's are what it's decided not to do. In the side panel,
- * folded, each is what we chose alone; with `detailed`, each is a card, the
- * gain and the cost side by side, with the code it explains.
+ * One side of a tradeoff, as a list: its benefits, marked +, or its
+ * drawbacks, marked −. Both are what came with the choice. Benefits not
+ * written down say so, since there's nothing to weigh the drawbacks against.
+ */
+function TradeoffSide({ side, points }: { side: "benefits" | "drawbacks"; points: string[] }) {
+  const Icon = side === "benefits" ? AddRoundedIcon : RemoveRoundedIcon;
+  return (
+    <div className={`tradeoff-side tradeoff-${side}`}>
+      <span className="tradeoff-side-label">{side === "benefits" ? "Benefits" : "Drawbacks"}</span>
+      {points.length ? (
+        <ul className="tradeoff-points">
+          {points.map((p) => (
+            <li key={p}>
+              <span className="tradeoff-point-mark" aria-hidden>
+                <Icon sx={{ fontSize: 14 }} />
+              </span>
+              <span>
+                <InlineMarkdown text={p} />
+              </span>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <span className="tradeoff-none">Not written down</span>
+      )}
+    </div>
+  );
+}
+
+/* The checklist outcome a tradeoff falls short of on purpose, if it names one, as a gap shows what it affects. */
+function FallsShortOf({ state, outcome }: { state: DocketState; outcome: string | null }) {
+  const named = outcome ? checklistOutcome(state.checklist, outcome) : undefined;
+  if (!named) return null;
+  return (
+    <div className="gap-affects">
+      <span className="gap-affects-label">Falls short of</span>
+      <span className="gap-affect">
+        <span className="explore-tag">
+          {named.quality.name} · {STABILITY[named.outcome.level].name}
+        </span>
+        {named.outcome.text}
+      </span>
+    </div>
+  );
+}
+
+/*
+ * Tradeoffs: what we chose on purpose, and its benefits and drawbacks, since
+ * they're decided, not open. A feature's are what it's decided not to do. In
+ * the side panel, folded, each is what we chose alone; with `detailed`, each
+ * is a card, its benefits and drawbacks side by side, with the code it
+ * explains.
  */
 export function Tradeoffs({
   state,
@@ -953,25 +1000,14 @@ export function Tradeoffs({
         <LeftItem key={t.id} kind="tradeoff">
           <div className="tradeoff-choice left-item-text">
             <span className="tradeoff-label">We chose</span>
-            <InlineMarkdown text={t.text} />
+            <InlineMarkdown text={t.summary} />
           </div>
           <CameFrom kind="tradeoff" id={t.id} go={{ state, onConcept: () => {} }} inline />
           <div className="tradeoff-sides">
-            <div className="tradeoff-side tradeoff-gain">
-              <span className="tradeoff-label">
-                <AddRoundedIcon sx={{ fontSize: 14 }} />
-                To gain
-              </span>
-              {t.gain ? <InlineMarkdown text={t.gain} /> : <span className="faint">Not written down</span>}
-            </div>
-            <div className="tradeoff-side tradeoff-cost">
-              <span className="tradeoff-label">
-                <RemoveRoundedIcon sx={{ fontSize: 14 }} />
-                We accept
-              </span>
-              <InlineMarkdown text={t.cost} />
-            </div>
+            <TradeoffSide side="benefits" points={t.benefits} />
+            <TradeoffSide side="drawbacks" points={t.drawbacks} />
           </div>
+          <FallsShortOf state={state} outcome={t.outcome} />
           <Places state={state} places={t.places} label="Marked" detailed />
         </LeftItem>
       ))}
@@ -981,7 +1017,7 @@ export function Tradeoffs({
       {list.map((t) => (
         <LeftItem key={t.id} kind="tradeoff">
           <div className="left-item-text">
-            <InlineMarkdown text={t.text} />
+            <InlineMarkdown text={t.summary} />
           </div>
         </LeftItem>
       ))}
@@ -1067,8 +1103,9 @@ export function WhatsLeft({
       {counts ? (
         <p className="explore-left-checklist">
           <span>
-            {counts.count - counts.notMet} of {counts.count} {levelName(capability.stability)} checklist outcomes met
-            {counts.evidence ? `, ${counts.evidence} with evidence` : ""}.
+            {counts.count - counts.notMet - counts.byChoice} of {counts.count} {levelName(capability.stability)} checklist outcomes met
+            {counts.evidence ? `, ${counts.evidence} with evidence` : ""}
+            {counts.byChoice ? `, ${counts.byChoice} not met by choice` : ""}.
           </span>
           {checklist}
         </p>
@@ -1222,9 +1259,10 @@ export function LeftRollup({
 
 /*
  * How many outcomes a capability's level expects, how many of those a gap
- * says aren't met, and how many a mechanism or component it's built on says it
- * meets; or null with no checklist, or for a draft, which claims none. An
- * outcome nothing names counts as met on its level's word.
+ * says aren't met, how many a tradeoff says aren't met by choice, and how many
+ * a mechanism or component it's built on says it meets; or null with no
+ * checklist, or for a draft, which claims none. An outcome nothing names counts
+ * as met on its level's word.
  */
 export function checklistCounts(state: DocketState, capability: Capability) {
   if (!state.checklist || capability.stability === null) return null;
@@ -1232,7 +1270,8 @@ export function checklistCounts(state: DocketState, capability: Capability) {
     .flatMap(outcomesOf)
     .map((o) => outcomeStanding(state, capability, o).standing)
     .filter((s) => s !== "not-expected");
-  return { count: standings.length, notMet: standings.filter((s) => s === "gap").length, evidence: standings.filter((s) => s === "evidence").length };
+  const n = (standing: string) => standings.filter((s) => s === standing).length;
+  return { count: standings.length, notMet: n("gap"), byChoice: n("tradeoff"), evidence: n("evidence") };
 }
 
 /*
@@ -1310,7 +1349,7 @@ function PersonaFeatures({ state, persona, onOpen }: { state: DocketState; perso
 /* A persona's row: their name, with their role under it. */
 const rowName = (p: Persona) => {
   const { name, role } = personaNameAndRole(p);
-  return { name, summary: role ?? p.summary };
+  return { name, summary: role ?? p.description };
 };
 
 /* Personas as rows, each opening in the panel, with how ready `feature` is for them when it's given. */

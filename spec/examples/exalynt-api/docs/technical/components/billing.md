@@ -9,22 +9,23 @@ capabilities: [billing, capacity-purchasing]
 meets: [reliability/beta/fails-clearly]
 tradeoffs:
   - id: provider-is-source-of-truth
-    text: >-
+    summary: >-
       The provider is the source of truth for invoices and billing details,
       and our row only links to it: we keep the least needed to find an
       invoice and relate its blocks.
-    cost: >-
-      Reading an invoice is a call to the provider, and a provider without
-      hosted pages doesn't fit.
+    drawbacks:
+      - Reading an invoice is a call to the provider.
+      - A provider without hosted pages doesn't fit.
   - id: tax-inside-payments-provider
-    text: >-
+    summary: >-
       Tax is part of the payments provider, not a provider of its own: the
       provider already holds the billing address tax is worked out from, and
       issues the invoice the tax goes on, so a separate tax provider would
       pull billing details out of it and push tax lines back in.
-    cost: >-
-      A payments provider that can't work out tax has to call a tax service
-      inside its own implementation.
+    drawbacks:
+      - >-
+        A payments provider that can't work out tax has to call a tax service
+        inside its own implementation.
 ---
 
 The API keeps only the organization's customer with the provider, and an

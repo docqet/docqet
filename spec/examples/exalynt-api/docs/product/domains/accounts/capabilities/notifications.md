@@ -1,6 +1,6 @@
 ---
 name: Notifications
-summary: People choose which notifications they get and where they go.
+description: People choose which notifications they get and where they go.
 stability: prototype
 personas:
   - client-admin-founder
@@ -34,49 +34,53 @@ rules:
   - notifications/removed-addresses-stop-email-immediately
 gaps:
   - id: admins-see-engineer-choices-in-the-console
-    text: An admin who opens the console sees what engineers get there.
+    summary: An admin who opens the console sees what engineers get there.
   - id: settings-can-differ-between-apps
-    text: >-
+    summary: >-
       A notification shown in several apps has one setting, but can start on
       in one and off in another until they change it, such as for a team lead
       who is also an admin.
   - id: choices-ignore-client-permissions
-    text: >-
+    summary: >-
       A client without billing access sees failed payments, and one who can't
       manage members sees members joining, as a client's permissions are per
       organization and these choices are made in none.
   - id: no-list-of-received-notifications
-    text: There's no list of notifications received in the app.
+    summary: There's no list of notifications received in the app.
 tradeoffs:
   - id: no-email-on-scheduling
-    text: >-
+    summary: >-
       Clients aren't emailed when a block is scheduled, or when an
       availability change affects their capacity: the client scheduled the
       block themselves, and an availability change that matters reaches them
       as a moved preferred week.
-    cost: >-
-      A client hears nothing of a scheduled block, nor of an availability
-      change that doesn't move a preferred week.
+    drawbacks:
+      - >-
+        A client hears nothing of a scheduled block, nor of an availability
+        change that doesn't move a preferred week.
   - id: placeholder-data
-    text: >-
+    summary: >-
       The list of notifications is placeholder data, Slack, Discord, and
       Microsoft Teams are pretend, and the choices are held in the browser
       until a reload.
-    cost: Nothing is actually sent.
+    drawbacks:
+      - Nothing is actually sent.
   - id: behind-a-feature-flag
-    text: It shows only while its feature flag is on.
-    cost: Only those with the flag on can try it.
+    summary: It shows only while its feature flag is on.
+    drawbacks:
+      - Only those with the flag on can try it.
   - id: one-set-of-choices
-    text: >-
+    summary: >-
       One set of choices covers every organization someone belongs to, and
       each notification is to name the one it's about.
-    cost: >-
-      Someone in several organizations can't choose differently for each.
+    drawbacks:
+      - Someone in several organizations can't choose differently for each.
   - id: last-channel-stays
-    text: >-
+    summary: >-
       The last channel can't be removed, as what's always on needs somewhere
       to go. Being always on means at least one channel, not all of them.
-    cost: Nobody can remove every channel to stop notifications altogether.
+    drawbacks:
+      - Nobody can remove every channel to stop notifications altogether.
 decisions:
   - question: Is this the right way to choose notifications?
   - question: Which notifications do people want at all?

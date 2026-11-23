@@ -1,6 +1,6 @@
 ---
 name: Grace Holloway
-summary: >-
+description: >-
   Independent consultant who already works with Exalynt and makes an
   introduction or two a year through their own partnership. Uses only the
   Partner Hub.

@@ -1,6 +1,6 @@
 ---
 name: Partnerships
-summary: >-
+description: >-
   The Partnership Program: partners who bring Exalynt clients, and earn on
   them.
 ---

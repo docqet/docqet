@@ -84,12 +84,12 @@ these changes:
   one of these per domain.
 - Each folder directly under `docs/product/` holds one kind of thing:
   `personas/`, which span domains, and `domains/`.
-- What tools depend on is a frontmatter field: its name and summary,
+- What tools depend on is a frontmatter field: its name and description,
   bold-label lines such as `**Stability:** Alpha`, Why and Open decisions.
   Everything else, such as a persona's needs, what a capability includes and
   a concept's lifecycle, is free Markdown in the body.
 - Rules are one per file instead of one file per topic.
-- A capability is its one-sentence summary, saying who or what does what.
+- A capability is its one-sentence description, saying who or what does what.
   "What people can do", with a heading per role, is gone: the people it
   serves are links to personas, and anything more it does can go in the body.
 - Personas have a name, role, title and an optional image, and no Based on.
@@ -102,7 +102,7 @@ these changes:
 - A capability can be a draft: declared, with no work started.
 - A gap has no kind and no `until`: when and how it's closed is up to the
   team, not the docs. A tradeoff is a list of its own,
-  with its cost. A feature can have tradeoffs and open decisions, and a
+  with its benefits and drawbacks. A feature can have tradeoffs and open decisions, and a
   domain open decisions.
 
 Technical docs are forge's `engineering-docs` layout, with these changes:
@@ -116,10 +116,10 @@ Technical docs are forge's `engineering-docs` layout, with these changes:
   How it works is the body.
 - The `**Code:**` line is gone. The code points at the doc instead, with
   `docket:implements` (see [Evidence](#evidence)).
-- Forge's Gotchas section is gone. A gotcha that's a choice with a cost is a
+- Forge's Gotchas section is gone. A gotcha that's a choice with a drawback is a
   tradeoff, one we mean to fix is a gap, and the rest is in the body.
-- A gap has no `Until`. A tradeoff's `Costs` is `cost`, and it has no
-  `Revisit when`.
+- A gap has no `Until`. A tradeoff's `Costs` is `drawbacks`, a list beside its
+  `benefits`, and it has no `Revisit when`.
 - A mechanism or component can say which checklist outcomes it meets.
 - Providers and runbooks aren't read. A repository can keep them anywhere.
 
@@ -177,7 +177,7 @@ description: >-
   it.
 confused-with:
   - term: Invoice
-    text: what a company is sent for a month of its staff's bills.
+    summary: what a company is sent for a month of its staff's bills.
 ---
 
 A bill is made of [charges](charge.md) and [payments](payment.md). Its balance
@@ -192,8 +192,8 @@ A bill closes when its balance is zero, or when it moves to a company's
 account.
 ```
 
-- **Frontmatter is the doc's structure.** Its name and summary, or a
-  concept's description, its level, its links, its gaps, tradeoffs and
+- **Frontmatter is the doc's structure.** Its name and description, its
+  level, its links, its gaps, tradeoffs and
   decisions, and the fields its type has, such as a persona's role or a
   rule's why. Tools read it, check it,
   count it, follow its links and lay it out.
@@ -245,27 +245,29 @@ Everything else is the body. That means:
 
 ## Doc types
 
-Every doc has a `name`, and every doc but a rule or a concept has a
-`summary`, both required:
+Every doc has a `name`, and every doc but a rule has a `description`, both
+required:
 
 - **`name`** is what it's called, such as `Room booking`. A persona's is the
   invented person's, such as `Maria`, and a rule's is the rule in a few words.
-- **`summary`** is a sentence saying what it is. Readers show the name and
-  summary wherever the doc appears. A rule has none: its body says anything
-  its name leaves out.
-- **`description`**, a concept's instead of a summary, defines it in the
-  domain's words, in as many sentences as that takes. Readers show it where
-  they'd show a summary.
+- **`description`** says what it is: for most docs a sentence, and for a
+  concept a definition in the domain's words, in as many sentences as that
+  takes. Readers show the name and description wherever the doc appears. A
+  rule has none: its body says anything its name leaves out.
+
+What has no name, such as a gap, a tradeoff or what a concept is confused
+with, is said in its `summary` instead: the sentence or two that is the thing
+itself.
 
 | Type | Frontmatter, in order | Its body, if it has one | Example |
 | --- | --- | --- | --- |
-| domain | `name`, `summary`, `decisions` | Anything more about the part of the business | [guest-stays](examples/hotel-bookings/docs/product/domains/guest-stays/domain.md) |
-| feature | `name`, `summary`, `capabilities` (required), `tradeoffs`, `decisions` | Anything more about the job | [reservations](examples/hotel-bookings/docs/product/domains/guest-stays/features/reservations.md) |
-| capability | `name`, `summary`, `stability` (required), `personas`, `rules`, `concepts`, `gaps`, `tradeoffs`, `decisions` | Anything more about what it does, such as what else it includes, or how we'll know it's working | [room-booking](examples/hotel-bookings/docs/product/domains/guest-stays/capabilities/room-booking.md) |
+| domain | `name`, `description`, `decisions` | Anything more about the part of the business | [guest-stays](examples/hotel-bookings/docs/product/domains/guest-stays/domain.md) |
+| feature | `name`, `description`, `capabilities` (required), `tradeoffs`, `decisions` | Anything more about the job | [reservations](examples/hotel-bookings/docs/product/domains/guest-stays/features/reservations.md) |
+| capability | `name`, `description`, `stability` (required), `personas`, `rules`, `concepts`, `gaps`, `tradeoffs`, `decisions` | Anything more about what it does, such as what else it includes, or how we'll know it's working | [room-booking](examples/hotel-bookings/docs/product/domains/guest-stays/capabilities/room-booking.md) |
 | rule | `name`, `concepts`, `why` | The rule in full, where its name doesn't say it all, and examples or how it plays out | [same-day-turnover](examples/hotel-bookings/docs/product/domains/guest-stays/rules/booking/same-day-turnover.md) |
 | concept | `name`, `description`, `confused-with` | Its details: what it's made of, how it relates to other concepts, and the states it moves through | [booking](examples/hotel-bookings/docs/product/domains/guest-stays/concepts/booking.md) |
-| persona | `name`, `summary`, `role`, `title`, `image` | Anything more about who they are, such as what they need, what they know, their context, what they expect, and what they care about | [front-desk-clerk](examples/hotel-bookings/docs/product/personas/front-desk-clerk.md) |
-| mechanism | `name`, `summary`, `applies`, `meets`, `gaps`, `tradeoffs`, `decisions` | How it works | [deployment](examples/hotel-bookings/docs/technical/mechanisms/deployment.md) |
+| persona | `name`, `description`, `role`, `title`, `image` | Anything more about who they are, such as what they need, what they know, their context, what they expect, and what they care about | [front-desk-clerk](examples/hotel-bookings/docs/product/personas/front-desk-clerk.md) |
+| mechanism | `name`, `description`, `applies`, `meets`, `gaps`, `tradeoffs`, `decisions` | How it works | [deployment](examples/hotel-bookings/docs/technical/mechanisms/deployment.md) |
 | component | `name`, `description`, `capabilities`, `meets`, `gaps`, `tradeoffs`, `decisions` | How it works | [bookings](examples/hotel-bookings/docs/technical/components/bookings.md) |
 
 The body column is a suggestion of what's worth writing, not a structure.
@@ -300,10 +302,15 @@ The body column is a suggestion of what's worth writing, not a structure.
     decisions count as what's left.
   - **`answer`**, once it's closed, says in a sentence or two what was
     decided.
-  - **`became`**, once it's closed, lists what the answer was written as: any
-    doc as `<type>:<id>`, such as `rule:booking/same-day-turnover` or
-    `capability:group-bookings`, or a gap's or tradeoff's own ID, such as
-    `capability:room-booking#calendar-needs-a-mouse`. A link to a rule or
+  - **`became`**, once it's closed, lists what the answer was written as, one
+    item or several: a doc as `<type>:<id>`, such as
+    `rule:booking/same-day-turnover` or `capability:group-bookings`, or a
+    gap's or tradeoff's own ID, such as
+    `capability:room-booking#calendar-needs-a-mouse`. Each stays on the
+    decision's side: a decision on a domain, feature or capability becomes
+    product docs, or their gaps or tradeoffs, and one on a mechanism or
+    component becomes mechanisms or components, or their gaps or tradeoffs.
+    A link to a rule or
     concept resolves as any other does, from the decision's domain. Readers
     show each, and show the decision on what it became, so either side leads
     to the other. A decision closed with nothing to write down, such as one
@@ -324,8 +331,8 @@ decisions:
 
 - **`why`** says why a rule holds, so whoever meets a case it didn't foresee
   can judge it.
-- **`confused-with`** lists what a concept is easily mistaken for, each with
-  `text` saying how they differ, and either `concept`, a link to that concept
+- **`confused-with`** lists what a concept is easily mistaken for, each with a
+  `summary` saying how they differ, and either `concept`, a link to that concept
   written as any concept link is, or `term`, for a word that isn't a concept
   in the docs.
 - **`role`**, **`title`** and **`image`** describe a persona (see
@@ -333,7 +340,7 @@ decisions:
 
 ### Capabilities
 
-A capability is its name and its summary: one sentence saying who or what does
+A capability is its name and its description: one sentence saying who or what does
 what, such as "Clerks book a free room for a guest's stay" or "The software
 closes each business day overnight". The sentence names the people it's about
 the way the business does, and `personas` links them, so it reads on its own
@@ -353,13 +360,13 @@ What a capability doesn't do is said elsewhere:
 The questions building it is meant to answer, most often while it's a
 prototype, are open decisions: "Do groups want one booking with many rooms, or
 many bookings linked together?" Anything more about what it does can go in
-the body, such as what else it includes when the summary alone doesn't show
+the body, such as what else it includes when the description alone doesn't show
 it ("Clerks move a booking to new dates"), or how we'll know it does its job.
 
 ```yaml
 ---
 name: Room booking
-summary: Clerks book a free room for a guest's stay.
+description: Clerks book a free room for a guest's stay.
 stability: beta
 personas: [front-desk-clerk]
 rules: [booking/no-double-booking, booking/minimum-stay]
@@ -384,7 +391,7 @@ since the same people work across domains.
 ```markdown
 ---
 name: Maria
-summary: Runs the front desk: takes bookings, and checks guests in and out.
+description: Runs the front desk: takes bookings, and checks guests in and out.
 role: Front desk
 title: Front desk clerk
 image: https://randomuser.me/api/portraits/women/68.jpg
@@ -406,8 +413,8 @@ At the desk all shift, on a shared desktop, with a guest or the phone waiting
 most of the time.
 ```
 
-- **`name`** is the invented person's name, and **`summary`** a sentence on
-  who they are.
+- **`name`** is the invented person's name, and **`description`** a sentence
+  on who they are.
 - **`role`** is how they use the software: the role it gives them, as it
   relates to what they may do, or the part they play in it, such as
   `Front desk` or `Client Admin`. **`title`** is the job title they hold, such
@@ -439,7 +446,7 @@ however many capabilities rely on it.
 ```markdown
 ---
 name: Deployment
-summary: >-
+description: >-
   How a change gets from the main branch to the hotel's server, and back off
   it again.
 meets:
@@ -448,20 +455,21 @@ meets:
 gaps:
   - id: migrations-only-go-forward
     outcome: reliability/ga/recovery
-    text: >-
+    summary: >-
       Migrations have no down step, so undoing a release that changed the
       schema means restoring the database from the night before.
 tradeoffs:
   - id: migrations-before-start
-    text: >-
+    summary: >-
       Migrations run before the new image starts, while the old one is still
       serving, rather than stopping the app for each release.
-    gain: >-
-      Releases don't take the front desk offline.
-    cost: >-
-      The running code has to work with the new schema for a minute, so a
-      column is added a release before it's used, and removed a release after
-      the code stops reading it.
+    benefits:
+      - Releases don't take the front desk offline.
+    drawbacks:
+      - >-
+        The running code has to work with the new schema for a minute, so a
+        column is added a release before it's used, and removed a release after
+        the code stops reading it.
 ---
 
 Every merge to `main` builds one container image, tagged with the commit, and
@@ -499,7 +507,8 @@ capability                 → personas, rules, concepts
 rule                       → concepts
 concept                    → concepts                  (confused-with)
 gap                        → an outcome, a rule        (outcome, rule)
-decision                   → any doc, gap or tradeoff  (became)
+tradeoff                   → an outcome                (outcome)
+decision                   → a doc, gap or tradeoff on its side  (became)
 component                  → capabilities, outcomes    (meets)
 mechanism                  → outcomes                  (meets)
 annotation                 → rules, capabilities, mechanisms, components    (docket:verifies, docket:implements)
@@ -553,8 +562,8 @@ the technical doc explains the cause in How it works.
 
 ### Gaps
 
-A **gap** is something we intend to close. It has an `id`, a sentence or two
-of `text`, and optionally the `outcome` or `rule` it falls short of. It doesn't
+A **gap** is something we intend to close. It has an `id`, a `summary` of a
+sentence or two, and optionally the `outcome` or `rule` it falls short of. It doesn't
 say when or how it'll be closed: Docket lists it so people know about it, and
 deciding that is up to them.
 
@@ -562,7 +571,7 @@ deciding that is up to them.
 gaps:
   - id: calendar-needs-a-mouse
     outcome: usability/beta/everyone
-    text: >-
+    summary: >-
       The room calendar can't be used from the keyboard, so clerks need a
       mouse to pick dates.
 ```
@@ -580,7 +589,7 @@ gaps:
 gaps:
   - id: children-corrected-by-hand
     rule: tax/children-pay-no-city-tax
-    text: >-
+    summary: >-
       Guests' ages aren't recorded, so city tax is added for every guest on a
       stay, and clerks correct it by hand for children.
 ```
@@ -588,24 +597,31 @@ gaps:
 ### Tradeoffs
 
 A **tradeoff** is something we chose over an alternative and decided to live
-with. It has an `id`, `text` saying what we chose and not what, its `gain`,
-what we hope to get by choosing it, and its `cost`, what we give up or risk
-in return. Readers show a tradeoff with no `gain` as missing one, since a
-choice whose reason isn't written down can't be weighed against its cost:
+with. It has an `id`, a `summary` saying what we chose and not what, its
+`benefits`, what we hope to get by choosing it, and its `drawbacks`, what we
+give up or risk in return. Both are lists, one point apiece, and both are
+what came with the choice. Readers show a tradeoff with no `benefits` as
+missing them, since a choice whose reason isn't written down can't be weighed
+against its drawbacks. Optionally, its `outcome` names the
+[stability checklist](#stability-checklist) outcome it falls short of on
+purpose, as a gap's does, so the checklist shows it as not met by choice
+rather than met. It can't name a baseline outcome, since nothing excuses the
+security and privacy baseline:
 
 ```yaml
 tradeoffs:
   - id: front-desk-bookings-only
-    text: >-
+    summary: >-
       Bookings are taken at the front desk, not from online travel agencies.
-    gain: >-
-      No agency integrations to build or keep working, while most bookings
-      come straight to the desk.
-    cost: >-
-      Clerks enter each agency booking by hand, as it arrives by email.
+    benefits:
+      - >-
+        No agency integrations to build or keep working, while most bookings
+        come straight to the desk.
+    drawbacks:
+      - Clerks enter each agency booking by hand, as it arrives by email.
 ```
 
-A gap we decide never to close becomes a tradeoff, with its cost. Neither a
+A gap we decide never to close becomes a tradeoff, with its drawbacks. Neither a
 gap nor a tradeoff can excuse the security and privacy baseline.
 
 ## Stability levels
@@ -710,14 +726,15 @@ An entry without outcomes can still have `implementation` and
 
 How outcomes combine:
 
-- **An outcome that applies is met unless a gap names it.** Declaring a level
-  claims what that level expects, except the gaps written down, so only what
-  isn't met is recorded. An outcome that doesn't apply, such as accessibility
+- **An outcome that applies is met unless a gap or tradeoff names it.**
+  Declaring a level claims what that level expects, except the gaps and
+  tradeoffs written down, so only what isn't met is recorded. An outcome that doesn't apply, such as accessibility
   for an API with no screens, counts as met too.
 - **Each outcome a capability's level expects has a standing:** not met, when
   a gap on the capability, or on a mechanism or component it relies on, names it;
-  met with evidence, when a mechanism or component it relies on `meets` it; or
-  met on trust, when nothing names it. A gap wins over `meets`.
+  not met by choice, when a tradeoff there names it; met with evidence, when a
+  mechanism or component it relies on `meets` it; or met on trust, when
+  nothing names it. A gap wins over a tradeoff, and both win over `meets`.
 - **An outcome's ID** is its quality, level and own ID, as
   `<quality>/<level>/<id>`: `reliability/beta/data-kept`.
 - **A level includes every outcome the levels below it expect,** unless
@@ -746,7 +763,7 @@ A feature's doc lists its capabilities, in the order to show them:
 ```yaml
 ---
 name: Reservations
-summary: Taking bookings and handling changes to them, before the guest arrives.
+description: Taking bookings and handling changes to them, before the guest arrives.
 capabilities:
   - room-booking
   - cancellations
@@ -1007,13 +1024,13 @@ A project works in as many domains as it has folders under
 `docs/product/domains/`, and projects
 that work in the same part of the business use the same domain ID.
 
-A domain's `domain.md` gives its name and summary, any open decisions, and
+A domain's `domain.md` gives its name and description, any open decisions, and
 anything more worth saying about it in its body:
 
 ```yaml
 ---
 name: Guest stays
-summary: Looking after guests from their booking to their check-out.
+description: Looking after guests from their booking to their check-out.
 ---
 ```
 
@@ -1025,7 +1042,7 @@ is put together with others of the same ID depends on its type:
 
 | Type | Is one across | The same ID elsewhere |
 | --- | --- | --- |
-| domain, feature, capability, persona, mechanism, component | everything | A contribution to the same one. Its links are put together, and its name and summary should match. |
+| domain, feature, capability, persona, mechanism, component | everything | A contribution to the same one. Its links are put together, and its name and description should match. |
 | rule, concept | its domain | Another definition, shown beside this one. Within the same domain, it's a contribution, as above. |
 
 Putting contributions together:
@@ -1040,7 +1057,7 @@ Putting contributions together:
   contribution's order is kept, in the order the projects are read.
 - **What a contribution says is its own**: its body, and its frontmatter
   fields that aren't links, such as `decisions` or a rule's `why`. Readers show each, labelled with its project and domain.
-  Its name and summary, and a persona's role and title, should match the
+  Its name and description, and a persona's role and title, should match the
   others'.
 - **A capability's `stability` is per domain.** Each contribution declares the
   level of its own part. Where they differ, the capability's level in short is
@@ -1068,7 +1085,7 @@ Two contributions that should agree and don't are a **contradiction**, shown
 as a problem naming the projects involved:
 
 - **A domain's, feature's, capability's, persona's, mechanism's or component's
-  name or summary differs** between projects, or a persona's role or title.
+  name or description differs** between projects, or a persona's role or title.
 - **A capability is in two features**, whichever projects list them.
 - **A rule or concept differs within one domain**, when more than one project
   declares it there.
@@ -1078,7 +1095,7 @@ are different levels for a capability, or different definitions of a concept
 in different domains.
 
 In the examples, Hotel Billing writes check-out in Billing, the settling of the
-bill, and its summary isn't Hotel Bookings': that's a contradiction. It puts
+bill, and its description isn't Hotel Bookings': that's a contradiction. It puts
 check-out in Front desk, as Hotel Bookings does, so Front desk is one feature
 in two domains, Guest stays and Billing, with check-out in both. Check-out is
 GA in Guest stays and Alpha in Billing, so it's Alpha in short.
@@ -1125,7 +1142,7 @@ and showing several projects together means reading each one's state.json.
   those are in, and their `readiness` worked out. Personas aren't in a domain, so
   these have no `domain`.
 - **One list per doc type**: each entry has its ID, its `domain`, file, name,
-  summary, or a concept's description, and links, in both directions, its type's other frontmatter fields,
+  description, and links, in both directions, its type's other frontmatter fields,
   and its `body` as Markdown, exactly as written, or `""` with none. A doc
   declared in two of the project's domains has an entry for each. Links are
   written as declared, with `@<domain>` where the doc named one.
@@ -1133,9 +1150,9 @@ and showing several projects together means reading each one's state.json.
   `confused-with` is `confusedWith`. A field the doc leaves out is there
   anyway, as `[]` for a list and `null` otherwise, such as a rule's `why`
   or a persona's `image`. Each decision is its `topic`, or `null`, `question`, `status`, `answer`, or `null`, and `became` as written. Each `confusedWith` is its
-  `concept` or `term`, the other `null`, and `text`.
-- **`mechanisms`** and **`components`**: each with its ID, file, name, summary
-  or, for a component, `description`, `capabilities`, `meets`, its `gaps` and
+  `concept` or `term`, the other `null`, and `summary`.
+- **`mechanisms`** and **`components`**: each with its ID, file, name,
+  `description`, `capabilities`, `meets`, its `gaps` and
   `tradeoffs` by ID, its `decisions`, its `evidence`, and its body. A
   component's `capabilities` are as it lists them. A mechanism also has
   `applies`, and its `capabilities` are worked out: every capability the
@@ -1149,11 +1166,12 @@ and showing several projects together means reading each one's state.json.
   empty when it has none.
 - **`gaps`**: every gap from every doc, each with its ID, its `domain` when
   it's a capability's, the `outcome` and `rule` it names or `null`, its
-  `text`, and `places`: where `docket:gap` annotations mark it, in the same
+  `summary`, and `places`: where `docket:gap` annotations mark it, in the same
   shape as evidence.
 - **`tradeoffs`**: every tradeoff from every doc, each with its ID, its
-  `domain` when it's a feature's or capability's, `text`, `gain` or `null`,
-  `cost`, and `places`, from `docket:tradeoff` annotations.
+  `domain` when it's a feature's or capability's, the `outcome` it names or
+  `null`, `summary`, `benefits` and `drawbacks` as lists, `benefits` empty
+  where it has none, and `places`, from `docket:tradeoff` annotations.
 - **`problems`**: everything the indexer found wrong, each about a doc with
   that doc's `domain`.
 - **`checklist`**: the stability checklist the project was indexed against, so
@@ -1169,17 +1187,18 @@ and showing several projects together means reading each one's state.json.
 
 ### Problems
 
-| Type                   | Raised when                                                                            |
-| ---------------------- | -------------------------------------------------------------------------------------- |
-| `unknown-id`           | A link, annotation, `rule` or `became` names a doc, gap or tradeoff that doesn't exist. |
-| `invalid-frontmatter`  | A required field is missing, or a value isn't allowed.                                 |
-| `broken-link`          | A relative link in a doc's body or a text value doesn't resolve.                       |
-| `unlinked-rule`        | No capability follows a rule.                                                          |
-| `in-two-features`      | More than one feature lists the same capability.                                       |
-| `contradiction`        | Contributions that should agree don't, as Domains describes.                           |
-| `ambiguous-link`       | A link could mean the rule or concept of two or more domains.                          |
-| `unknown-outcome`      | A gap's `outcome`, or an entry in `meets`, isn't a checklist outcome.                  |
-| `baseline-gap`         | A gap's `outcome` is a baseline outcome, never a known gap.                            |
+| Type                  | Raised when                                                                                                      |
+| --------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| `unknown-id`          | A link, annotation, `rule` or `became` names a doc, gap or tradeoff that doesn't exist.                          |
+| `invalid-frontmatter` | A required field is missing, or a value isn't allowed.                                                           |
+| `broken-link`         | A relative link in a doc's body or a text value doesn't resolve.                                                 |
+| `unlinked-rule`       | No capability follows a rule.                                                                                    |
+| `in-two-features`     | More than one feature lists the same capability.                                                                 |
+| `contradiction`       | Contributions that should agree don't, as Domains describes.                                                     |
+| `ambiguous-link`      | A link could mean the rule or concept of two or more domains.                                                    |
+| `unknown-outcome`     | A gap's or tradeoff's `outcome`, or an entry in `meets`, isn't a checklist outcome.                              |
+| `baseline-outcome`    | A gap's or tradeoff's `outcome` is a baseline outcome, which nothing excuses.                                    |
+| `became-other-side`   | A decision's `became` names a technical doc, or its gap or tradeoff, from a product doc, or the other way round. |
 
 `in-two-features` is a contradiction too, when the listings
 are in different projects. Combining raises `contradiction` and
@@ -1189,7 +1208,8 @@ are in different projects. Combining raises `contradiction` and
 
 - **The stability checklist is fixed.** It becomes configurable once someone
   adopting Docket needs different outcomes.
-- **Met is mostly assumed.** An outcome counts as met unless a gap names it.
+- **Met is mostly assumed.** An outcome counts as met unless a gap or tradeoff
+  names it.
   A mechanism or component that `meets` it adds evidence, but everything else is
   met on trust, so nothing says which outcomes someone actually looked at, and
   an outcome added to the checklist counts as met everywhere at once. A record

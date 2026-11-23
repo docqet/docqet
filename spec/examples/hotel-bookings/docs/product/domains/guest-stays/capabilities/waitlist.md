@@ -1,6 +1,6 @@
 ---
 name: Waitlist
-summary: >-
+description: >-
   Clerks put a guest on a waitlist when every room is taken, and offer them
   the first room that frees up for their stay.
 stability: draft

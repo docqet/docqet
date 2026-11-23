@@ -1,6 +1,6 @@
 ---
 name: Payouts
-summary: >-
+description: >-
   Admins release what people and partnerships have earned, and it goes to each
   payee's payout account.
 stability: alpha
@@ -68,32 +68,32 @@ rules:
 concepts: [payout, payout-share, capacity-payout-basis, partnership]
 gaps:
   - id: pre-production-payouts-say-paid
-    text: >-
+    summary: >-
       Payouts released before production sent money through the payments
       partner say Paid, though nothing was sent.
   - id: leads-cant-see-team-payout-status
     rule: payout-schedule/who-sees-payout-status
-    text: >-
+    summary: >-
       A lead can't see the payout status of their team's blocks.
   - id: paid-means-reached-the-balance
-    text: >-
+    summary: >-
       Paid means the money has reached the payee's balance with the payments
       partner, not their bank. The payments partner pays it on to the bank
       itself, usually within a couple of days, and keeps for the payee
       anything the bank sends back.
   - id: failed-payout-reads-earned
-    text: >-
+    summary: >-
       An earning whose payout failed reads as Earned on the earnings page,
       with a note saying so.
   - id: nothing-held-back-from-a-release
-    text: >-
+    summary: >-
       Nothing can be held back from a release, or looked into from it.
   - id: releases-dont-say-who
     outcome: security/ga/traceable
-    text: >-
+    summary: >-
       A past release doesn't say who released it.
   - id: unanswered-releases-stay-processing
-    text: >-
+    summary: >-
       A release that got no answer from the payments partner stays
       Processing, and an admin is told, until the next release sends it
       again.

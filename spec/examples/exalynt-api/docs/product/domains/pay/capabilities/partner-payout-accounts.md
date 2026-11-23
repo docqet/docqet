@@ -1,6 +1,6 @@
 ---
 name: Partner payout accounts
-summary: >-
+description: >-
   Partners set up and look after the one bank account each partnership they
   manage is paid to, its own apart from theirs and any other partnership's.
 stability: beta
@@ -49,64 +49,67 @@ rules:
 concepts: [payout, partnership]
 gaps:
   - id: status-changes-show-on-next-load
-    text: >-
+    summary: >-
       A change of status shows when the page is next loaded.
   - id: requirements-read-as-field-names
-    text: >-
+    summary: >-
       A requirement can read as the payments partner's field name rather than
       words.
   - id: admins-cant-see-partnership-readiness
-    text: >-
+    summary: >-
       An admin can't see whether a partnership can be paid.
 tradeoffs:
   - id: one-account-per-partnership-checked-each-time
-    text: >-
+    summary: >-
       Each partnership has its own payout account, even when several are paid
       to the same bank account.
-    cost: >-
-      Someone managing several partnerships that are paid to the same bank
-      account sets it up on each, and goes through the payments partner's
-      checks each time.
+    drawbacks:
+      - >-
+        Someone managing several partnerships that are paid to the same bank
+        account sets it up on each.
+      - They go through the payments partner's checks each time.
   - id: one-account-one-country
-    text: >-
+    summary: >-
       There's one account per partnership, and its country is fixed once it's
       chosen, as the payments partner's form holds one and verifies it for
       one country.
-    cost: >-
-      A partnership can't be paid to a second account, or move its account
-      to another country.
+    drawbacks:
+      - A partnership can't be paid to a second account.
+      - A partnership can't move its account to another country.
   - id: no-payouts-to-mexico
-    text: >-
+    summary: >-
       Mexico isn't offered as a country, since the payments partner can't
       send there.
-    cost: >-
-      Partnerships can't be paid in Mexico.
+    drawbacks:
+      - Partnerships can't be paid in Mexico.
   - id: form-asks-for-business-details
-    text: >-
+    summary: >-
       Accounts are set up on the payments partner's form as it is.
-    cost: >-
-      The form asks for business details, as if the partnership sold
-      something: a website or a description of what it sells, and more of
-      them outside the US. In Canada it also asks for an ID document and a
-      selfie.
+    drawbacks:
+      - >-
+        The form asks for business details, as if the partnership sold
+        something: a website or a description of what it sells, and more of them
+        outside the US.
+      - In Canada it also asks for an ID document and a selfie.
   - id: changes-made-in-the-partners-dashboard
-    text: >-
+    summary: >-
       Once an account is set up, changing it happens in the payments
       partner's own dashboard rather than its form.
-    cost: >-
-      Managers change the bank account somewhere other than where they set it
-      up.
+    drawbacks:
+      - >-
+        Managers change the bank account somewhere other than where they set it
+        up.
   - id: removing-closes-the-account
-    text: >-
+    summary: >-
       Removing an account closes it with the payments partner.
-    cost: >-
-      Adding one again means going through their checks from the start.
+    drawbacks:
+      - Adding one again means going through their checks from the start.
   - id: test-accounts-cleared
-    text: >-
+    summary: >-
       Accounts set up before production used the payments partner were test
       ones, and were cleared.
-    cost: >-
-      Partnerships set theirs up again.
+    drawbacks:
+      - Partnerships set theirs up again.
 ---
 
 ## Includes

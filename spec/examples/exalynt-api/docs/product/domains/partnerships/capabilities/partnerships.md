@@ -1,6 +1,6 @@
 ---
 name: Partnerships
-summary: >-
+description: >-
   Partners Exalynt has enrolled each manage a partnership, and introduce
   people to Exalynt by giving them its referral code or inviting them by
   email.
@@ -47,46 +47,46 @@ rules:
 concepts: [partnership, agreement, capacity-payout-basis]
 gaps:
   - id: partner-invitations-cant-be-resent
-    text: >-
+    summary: >-
       Admins can't resend a pending partner invitation: they revoke it and
       invite the same address again.
   - id: existing-clients-spotted-by-name-only
-    text: >-
+    summary: >-
       A company that's already a client can only be spotted by having the
       same name, so one signing up under another name counts as new.
   - id: no-handover-or-new-terms
-    text: >-
+    summary: >-
       Nothing hands a partnership to another manager, or sends it new terms.
   - id: invitation-email-omits-terms
-    text: >-
+    summary: >-
       The invitation email doesn't state the partnership's terms.
   - id: no-welcome-email
-    text: >-
+    summary: >-
       A partner gets no welcome email once they've accepted.
   - id: client-members-not-flagged-when-inviting
-    text: >-
+    summary: >-
       When inviting someone, whether an address is a client's member isn't
       shown; only Exalynt's team is named.
   - id: newest-invitation-only
-    text: >-
+    summary: >-
       With several invitations waiting, a partner sees the newest; the rest
       wait for another visit.
   - id: accepting-happens-in-steps
-    text: >-
+    summary: >-
       Accepting the invitation, naming the partnership, and accepting its
       Partner Agreement happen one after another: if naming fails, the
       partner is told to name it later, and if the agreement fails, the hub
       opens on it to accept.
   - id: partner-permission-granted-by-hand
-    text: >-
+    summary: >-
       Admins other than those with the Administrator role need the partner
       permission granted by hand.
   - id: attribution-needs-an-accepted-invitation
-    text: >-
+    summary: >-
       A client can only be attributed to a partnership whose invitation has
       been accepted.
   - id: admins-see-the-managers-readiness
-    text: >-
+    summary: >-
       An admin looking at a partnership sees whether its manager's own payout
       account can be paid, not the partnership's.
 decisions:

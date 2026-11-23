@@ -154,7 +154,7 @@ function ConceptSummary({ concept }: { concept: Concept }) {
     <DetailsCard card>
       <DetailsEyebrow>Concept</DetailsEyebrow>
       <Box sx={{ mt: 0.5, fontSize: "1.12em", fontWeight: 700, lineHeight: 1.3 }}>{concept.name}</Box>
-      {concept.summary ? <Box sx={{ mt: 0.75 }}>{concept.summary}</Box> : null}
+      {concept.description ? <Box sx={{ mt: 0.75 }}>{concept.description}</Box> : null}
       <Box sx={{ mt: 1, fontSize: 12, color: "text.secondary" }}>Click to see everything it's related to.</Box>
     </DetailsCard>
   );
@@ -255,7 +255,7 @@ function ConceptList({ state, onSelect }: { state: DocketState; onSelect: (id: s
   const terms = query.toLowerCase().split(/\s+/).filter(Boolean);
   const sorted = useMemo(() => [...state.concepts].sort((a, b) => a.name.localeCompare(b.name)), [state]);
   const shown = sorted.filter((c) => {
-    const text = `${c.name} ${c.summary ?? ""} ${c.id} ${fieldsText(c)} ${c.body}`.toLowerCase();
+    const text = `${c.name} ${c.description ?? ""} ${c.id} ${fieldsText(c)} ${c.body}`.toLowerCase();
     return terms.every((t) => text.includes(t));
   });
 
@@ -283,7 +283,7 @@ function ConceptList({ state, onSelect }: { state: DocketState; onSelect: (id: s
             <li key={c.id}>
               <button type="button" onClick={() => onSelect(c.id)}>
                 <span className="concept-name">{c.name}</span>
-                {c.summary ? <span className="concept-summary">{c.summary}</span> : null}
+                {c.description ? <span className="concept-summary">{c.description}</span> : null}
                 <span className="concept-meta">
                   {fromProject(state, c)}
                   {plural(c.capabilities.length, "capability", "capabilities")} ·{" "}
@@ -331,14 +331,14 @@ function ConceptView({
         {state.domains.length > 1 ? <span className="faint">in {domainName(state, concept.domain)}</span> : null}
       </div>
       <h2>{concept.name}</h2>
-      {concept.summary ? <p className="concept-lede">{concept.summary}</p> : null}
+      {concept.description ? <p className="concept-lede">{concept.description}</p> : null}
       {/* The same word in other domains: a definition of its own there, not a mistake in either. */}
       {elsewhere.length ? (
         <div className="concept-elsewhere">
           {elsewhere.map((c) => (
             <button key={c.id} type="button" className="concept-elsewhere-row" onClick={() => onSelect(c.id)}>
               <span className="concept-elsewhere-scope">In {domainName(state, c.domain)}</span>
-              {c.summary ?? c.name}
+              {c.description ?? c.name}
             </button>
           ))}
         </div>

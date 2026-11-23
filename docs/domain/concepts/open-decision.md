@@ -24,9 +24,21 @@ feature and domain, but they're declared once.
 Open → Closed
 
 Once it's answered, it's closed, not removed. Its answer is written where it
-belongs, such as a rule, a concept, a capability, a gap or a tradeoff, and the
-decision links to it, so what was decided can be traced back to the question
-that led to it. Only open decisions count as what's left.
+belongs, and the decision links to it, so what was decided can be traced back
+to the question that led to it. Only open decisions count as what's left.
+
+One answer can become several things, such as a capability and a gap for
+what its first version leaves out. What it can become stays on the decision's
+side:
+
+- **On a domain, feature or capability**: rules, concepts, capabilities,
+  features, and gaps or tradeoffs on any of those.
+- **On a mechanism or component**: mechanisms, components, and their gaps or
+  tradeoffs.
+
+Product docs never link to technical docs, and a question whose answer is a
+mechanism or component is about how it's built, so it goes on a mechanism or
+component in the first place.
 
 ## In the spec
 
@@ -51,8 +63,8 @@ decisions:
     question: Whoever asked first, or whoever's stay fits the free nights best?
 ```
 
-Closing one gives it a `status`, an `answer`, and `became`: what the answer
-was written as, by its typed ID or a gap's or tradeoff's own ID. On
+Closing one gives it a `status`, an `answer`, and `became`: a list of what the
+answer was written as, each by its typed ID or a gap's or tradeoff's own ID. On
 [Reservations](../../../spec/examples/hotel-bookings/docs/product/domains/guest-stays/features/reservations.md):
 
 ```yaml

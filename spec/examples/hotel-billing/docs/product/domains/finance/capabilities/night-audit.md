@@ -1,6 +1,6 @@
 ---
 name: Night audit
-summary: >-
+description: >-
   The software closes each business day overnight, charging every guest in the
   hotel for that night's room.
 stability: ga

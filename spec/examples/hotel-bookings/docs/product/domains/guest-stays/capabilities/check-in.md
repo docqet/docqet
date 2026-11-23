@@ -1,6 +1,6 @@
 ---
 name: Check-in
-summary: Clerks check guests in when they arrive and give them their room.
+description: Clerks check guests in when they arrive and give them their room.
 stability: beta
 personas: [front-desk-clerk]
 rules: [booking/no-double-booking]

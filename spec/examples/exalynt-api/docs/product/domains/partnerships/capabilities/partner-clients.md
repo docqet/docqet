@@ -1,6 +1,6 @@
 ---
 name: Partner clients
-summary: >-
+description: >-
   Partners see the clients attributed to their partnership: who they are, how
   each came to it, since when, and how long the partnership earns on each.
 stability: beta
@@ -36,19 +36,19 @@ rules:
 concepts: [partnership]
 gaps:
   - id: moving-restarts-since
-    text: >-
+    summary: >-
       Moving a client starts its "since" afresh, and nothing keeps the
       partnerships a client was attributed to before.
   - id: no-attribution-notices
-    text: >-
+    summary: >-
       A partner isn't told when a client is attributed to them, moved, or
       removed.
   - id: phone-hides-how-and-window
-    text: >-
+    summary: >-
       On a phone, how each client came and its earning window aren't shown.
   - id: manual-attribution-from-partnerships
     outcome: security/alpha/stable-dependencies
-    text: >-
+    summary: >-
       Clients Exalynt attributes, moves, or removes by hand go through
       Partnerships, which is still Alpha.
 ---

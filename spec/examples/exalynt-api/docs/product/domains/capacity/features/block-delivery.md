@@ -1,6 +1,6 @@
 ---
 name: Block delivery
-summary: >-
+description: >-
   Getting each block a client buys scheduled into a week, staffed by an
   engineer, and worked until it's fulfilled.
 capabilities:

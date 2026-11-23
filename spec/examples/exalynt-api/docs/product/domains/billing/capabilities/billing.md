@@ -1,6 +1,6 @@
 ---
 name: Billing
-summary: >-
+description: >-
   Clients pay for the capacity they buy with their default payment method, and
   each purchase issues an invoice.
 stability: beta
@@ -28,90 +28,91 @@ rules:
 concepts: [invoice, capacity-block]
 gaps:
   - id: no-fees-or-infrastructure-charges
-    text: >-
+    summary: >-
       Clients can't see operations fees or infrastructure pass-through
       charges, each shown separately from capacity.
   - id: no-reminders-or-retries-for-unpaid-invoices
-    text: >-
+    summary: >-
       An unpaid invoice stays owed until it's paid or Exalynt voids it.
       Nobody is reminded of it, and nothing retries the payment.
   - id: charged-but-unrecorded-purchases
-    text: >-
+    summary: >-
       A purchase that was charged but not recorded has no invoice or blocks
       with Exalynt until it's retried, and the payment provider's updates
       about it are ignored, since Exalynt has no record of the invoice. If it
       can't be retried, it's sorted out by hand with the payment provider.
   - id: capacity-invoices-in-us-dollars-only
-    text: >-
+    summary: >-
       Every invoice is for capacity, in US dollars. There are no invoices for
       the operations fee or infrastructure yet.
   - id: missed-provider-updates-leave-statuses-stale
-    text: >-
+    summary: >-
       A missed update from the payment provider leaves an invoice's status,
       and so its blocks, stale until the provider sends it again or invoices
       are compared with the provider. That comparison only covers statuses,
       so a payment that failed on an invoice still open is only noticed
       through the provider's update.
   - id: voided-invoices-may-show-with-the-provider
-    text: >-
+    summary: >-
       The payment provider's invoice list may also show the voided invoice
       left behind by each declined purchase, or each one whose total changed
       after it was quoted. That hasn't been checked.
   - id: invoices-keep-billing-details-as-issued
-    text: >-
+    summary: >-
       An invoice keeps the billing details its customer had when it was
       issued. Capacity can't be bought without a billing address, for its
       tax, but a company name or tax ID skipped when adding a card is missing
       from the invoices issued before it's added.
   - id: failed-payment-emails-need-a-provider-address
-    text: >-
+    summary: >-
       Nobody is emailed about a failed payment, unless the payment provider
       has an address for the customer.
   - id: invoice-readers-cant-list-invoices
-    text: >-
+    summary: >-
       Someone who can read invoices but not pay them, which only a custom
       role can be, can't list invoices, since the list is on the payment
       provider's pages.
   - id: payment-methods-set-with-the-provider
-    text: >-
+    summary: >-
       Which payment methods clients can add is the payment provider account's
       setting, so "cards only" is set there. A charge to anything else goes
       through the provider the same way, and the label for it is generic.
   - id: cards-but-no-default
-    text: >-
+    summary: >-
       A client can leave themselves with cards but no default, which the
       payment provider's pages may allow. Buying is refused until they choose
       one.
   - id: needs-a-provider-with-hosted-pages
-    text: >-
+    summary: >-
       A payment provider with no hosted pages for payment methods, such as one
       that only offers an embedded card form, can't be used without payment
       method screens of our own.
   - id: default-payment-method-read-on-return-only
-    text: >-
+    summary: >-
       The default payment method shown is read again on coming back from the
       payment provider, but not somewhere else that was left open.
   - id: failed-load-says-to-reload
     outcome: usability/beta/recover
-    text: >-
+    summary: >-
       A failed load says to reload, with no way to retry in place.
   - id: tested-only-through-the-api
     outcome: functionality/beta/stays-correct
-    text: >-
+    summary: >-
       The workflow is tested end to end only through the API, and without a
       real payment provider.
   - id: old-payment-method-records-remain
-    text: >-
+    summary: >-
       Exalynt's old records of payment methods are no longer used, and are
       still to be removed.
 tradeoffs:
   - id: prices-listed-before-tax
-    text: >-
+    summary: >-
       Prices are listed before tax everywhere, such as on estimates and when
       choosing blocks.
-    cost: >-
-      The tax is only known once an order is reviewed, since the payment
-      provider works it out from the billing address.
+    drawbacks:
+      - >-
+        The tax is only known once an order is reviewed, since the payment
+        provider works it out from the billing address.
 ---
 
 ## Includes

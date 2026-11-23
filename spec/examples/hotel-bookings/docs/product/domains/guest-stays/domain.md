@@ -1,6 +1,6 @@
 ---
 name: Guest stays
-summary: Looking after guests from their booking to their check-out.
+description: Looking after guests from their booking to their check-out.
 decisions:
   - topic: Early arrivals
     question: >-

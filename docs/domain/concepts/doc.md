@@ -5,8 +5,8 @@ concept, persona, mechanism or component.
 
 ## Details
 
-Its frontmatter is its structure: its name and summary, or a concept's
-description, its [links](link.md), and every other part the spec names, such
+Its frontmatter is its structure: its name and description, its
+[links](link.md), and every other part the spec names, such
 as a capability's level and gaps, a persona's role or a rule's why. Its body is free Markdown
 for anything more worth saying, in whatever shape suits it, and it's optional.
 No fact is in both. Readers show its frontmatter as what the doc is, and its
@@ -44,14 +44,14 @@ Each type has a folder, and the path under it is the ID:
 | component | `docs/technical/components/` | `bookings` |
 
 Every doc is shaped the same way: YAML frontmatter with its `name`,
-`summary` and its type's other fields, then an optional body.
+`description` and its type's other fields, then an optional body.
 [`cancellations.md`](../../../spec/examples/hotel-bookings/docs/product/domains/guest-stays/capabilities/cancellations.md),
 shortened, has no body at all:
 
 ```markdown
 ---
 name: Cancellations
-summary: >-
+description: >-
   Clerks cancel a booking when a guest's plans change, and the guest is
   refunded what the cancellation policy allows.
 stability: alpha

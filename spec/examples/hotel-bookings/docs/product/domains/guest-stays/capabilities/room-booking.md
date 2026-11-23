@@ -1,6 +1,6 @@
 ---
 name: Room booking
-summary: Clerks book a free room for a guest's stay.
+description: Clerks book a free room for a guest's stay.
 stability: beta
 personas: [front-desk-clerk]
 rules:
@@ -11,18 +11,20 @@ concepts: [booking, room]
 gaps:
   - id: calendar-needs-a-mouse
     outcome: usability/beta/everyone
-    text: >-
+    summary: >-
       The room calendar can't be used from the keyboard, so clerks need a
       mouse to pick dates.
 tradeoffs:
   - id: one-room-per-booking
-    text: A booking holds one room, not several.
-    gain: >-
-      Booking, changing and cancelling stay simple: each booking is one room
-      for one stay.
-    cost: >-
-      A family that needs two rooms makes two bookings. Group bookings is
-      where several rooms under one name is being explored.
+    summary: A booking holds one room, not several.
+    benefits:
+      - >-
+        Booking, changing and cancelling stay simple: each booking is one room
+        for one stay.
+    drawbacks:
+      - >-
+        A family that needs two rooms makes two bookings. Group bookings is
+        where several rooms under one name is being explored.
 decisions:
   - topic: Booking from the keyboard
     question: Must clerks be able to book from the keyboard alone at Beta?

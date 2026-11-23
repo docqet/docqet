@@ -5,9 +5,9 @@ description: >-
   calculated from.
 confused-with:
   - concept: capacity-block@capacity
-    text: what a client buys, at a price the basis doesn't depend on.
+    summary: what a client buys, at a price the basis doesn't depend on.
   - concept: payout-share
-    text: one person's or partnership's part of the basis, not the basis itself.
+    summary: one person's or partnership's part of the basis, not the basis itself.
 ---
 
 A [capacity block](../../capacity/concepts/capacity-block.md)'s basis comes from its

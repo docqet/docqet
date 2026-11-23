@@ -35,7 +35,7 @@
       "id": "billing",
       "file": "docs/product/domains/billing/domain.md",
       "name": "Billing",
-      "summary": "Charging guests for their stays, and getting paid.",
+      "description": "Charging guests for their stays, and getting paid.",
       "maturity": 52,
       "band": "beta",
       "decisions": [],
@@ -45,7 +45,7 @@
       "id": "finance",
       "file": "docs/product/domains/finance/domain.md",
       "name": "Finance",
-      "summary": "Keeping the hotel's accounts, and getting paid by the companies it bills.",
+      "description": "Keeping the hotel's accounts, and getting paid by the companies it bills.",
       "maturity": 61,
       "band": "beta",
       "decisions": [],
@@ -58,7 +58,7 @@
       "domain": "billing",
       "file": "docs/product/domains/billing/features/guest-bills.md",
       "name": "Guest bills",
-      "summary": "Keeping an accurate record of what each guest owes during their stay.",
+      "description": "Keeping an accurate record of what each guest owes during their stay.",
       "capabilities": [
         "extra-charges",
         "city-tax",
@@ -75,7 +75,7 @@
       "domain": "billing",
       "file": "docs/product/domains/billing/features/payments.md",
       "name": "Payments",
-      "summary": "Getting paid for stays, before the guest arrives and while they're here.",
+      "description": "Getting paid for stays, before the guest arrives and while they're here.",
       "capabilities": [
         "deposits",
         "pay-by-link",
@@ -92,7 +92,7 @@
       "domain": "finance",
       "file": "docs/product/domains/finance/features/company-accounts.md",
       "name": "Company accounts",
-      "summary": "Billing companies for their staff's stays, so the guests don't pay themselves.",
+      "description": "Billing companies for their staff's stays, so the guests don't pay themselves.",
       "capabilities": [
         "company-accounts",
         "direct-billing",
@@ -109,7 +109,7 @@
       "domain": "finance",
       "file": "docs/product/domains/finance/features/closing-the-day.md",
       "name": "Closing the day",
-      "summary": "Making each day's takings final, and handing them to the hotel's accounts.",
+      "description": "Making each day's takings final, and handing them to the hotel's accounts.",
       "capabilities": [
         "night-audit",
         "daily-takings",
@@ -126,7 +126,7 @@
       "domain": "billing",
       "file": "docs/product/domains/billing/features/front-desk.md",
       "name": "Front desk",
-      "summary": "Welcoming guests when they arrive and settling up when they leave.",
+      "description": "Welcoming guests when they arrive and settling up when they leave.",
       "capabilities": [
         "check-out"
       ],
@@ -144,7 +144,7 @@
       "name": "Priya",
       "role": "Back office",
       "title": "Bookkeeper",
-      "summary": "Keeps the hotel's books, and invoices the companies that pay for their staff's stays.",
+      "description": "Keeps the hotel's books, and invoices the companies that pay for their staff's stays.",
       "image": "https://randomuser.me/api/portraits/women/90.jpg",
       "capabilities": [
         "company-accounts",
@@ -164,7 +164,7 @@
       "name": "Maria",
       "role": "Front desk",
       "title": "Front desk clerk",
-      "summary": "Runs the front desk: takes bookings, and checks guests in and out.",
+      "description": "Runs the front desk: takes bookings, and checks guests in and out.",
       "image": "https://randomuser.me/api/portraits/women/68.jpg",
       "capabilities": [
         "extra-charges",
@@ -191,7 +191,7 @@
       "name": "Sam",
       "role": "Guest",
       "title": null,
-      "summary": "Stays at the hotel, for work or on holiday, and pays for the stay.",
+      "description": "Stays at the hotel, for work or on holiday, and pays for the stay.",
       "image": "https://randomuser.me/api/portraits/men/32.jpg",
       "capabilities": [
         "pay-by-link",
@@ -213,7 +213,7 @@
       "name": "David",
       "role": "Manager",
       "title": "Hotel manager",
-      "summary": "Runs the hotel, and answers for its takings to the owners.",
+      "description": "Runs the hotel, and answers for its takings to the owners.",
       "image": "https://randomuser.me/api/portraits/men/52.jpg",
       "capabilities": [
         "city-tax",
@@ -235,7 +235,7 @@
       "name": "Tom",
       "role": "Front desk",
       "title": "Night auditor",
-      "summary": "Looks after the hotel overnight, and makes sure each day is closed before morning.",
+      "description": "Looks after the hotel overnight, and makes sure each day is closed before morning.",
       "image": "https://randomuser.me/api/portraits/men/71.jpg",
       "capabilities": [
         "night-audit"
@@ -253,7 +253,7 @@
       "domain": "billing",
       "file": "docs/product/domains/billing/capabilities/extra-charges.md",
       "name": "Extra charges",
-      "summary": "Staff add extras such as breakfast, parking or the minibar to a guest's bill.",
+      "description": "Staff add extras such as breakfast, parking or the minibar to a guest's bill.",
       "stability": "ga",
       "personas": [
         "front-desk-clerk"
@@ -281,7 +281,7 @@
       "domain": "billing",
       "file": "docs/product/domains/billing/capabilities/city-tax.md",
       "name": "City tax",
-      "summary": "The software adds the city's tourist tax to each guest's bill, night by night.",
+      "description": "The software adds the city's tourist tax to each guest's bill, night by night.",
       "stability": "alpha",
       "personas": [
         "manager",
@@ -313,7 +313,7 @@
       "domain": "billing",
       "file": "docs/product/domains/billing/capabilities/split-bills.md",
       "name": "Split bills",
-      "summary": "Clerks split a bill between guests sharing a room, or move charges onto another guest's bill.",
+      "description": "Clerks split a bill between guests sharing a room, or move charges onto another guest's bill.",
       "stability": "prototype",
       "personas": [
         "front-desk-clerk"
@@ -348,7 +348,7 @@
       "domain": "billing",
       "file": "docs/product/domains/billing/capabilities/deposits.md",
       "name": "Deposits",
-      "summary": "The software takes a deposit on the guest's card when a stay is booked.",
+      "description": "The software takes a deposit on the guest's card when a stay is booked.",
       "stability": "beta",
       "personas": [
         "manager",
@@ -398,7 +398,7 @@
       "domain": "billing",
       "file": "docs/product/domains/billing/capabilities/pay-by-link.md",
       "name": "Pay by link",
-      "summary": "Guests pay their bill by card from a link the hotel sends them, without coming to the desk.",
+      "description": "Guests pay their bill by card from a link the hotel sends them, without coming to the desk.",
       "stability": "alpha",
       "personas": [
         "guest",
@@ -443,7 +443,7 @@
       "domain": "finance",
       "file": "docs/product/domains/finance/capabilities/company-accounts.md",
       "name": "Company accounts",
-      "summary": "Bookkeepers set up companies that pay for their staff's stays, each with a credit limit.",
+      "description": "Bookkeepers set up companies that pay for their staff's stays, each with a credit limit.",
       "stability": "beta",
       "personas": [
         "bookkeeper"
@@ -469,7 +469,7 @@
       "domain": "finance",
       "file": "docs/product/domains/finance/capabilities/direct-billing.md",
       "name": "Direct billing",
-      "summary": "Clerks move a guest's bill to their company's account at check-out, so the guest leaves without paying.",
+      "description": "Clerks move a guest's bill to their company's account at check-out, so the guest leaves without paying.",
       "stability": "alpha",
       "personas": [
         "front-desk-clerk",
@@ -500,7 +500,7 @@
       "domain": "finance",
       "file": "docs/product/domains/finance/capabilities/invoices.md",
       "name": "Invoices",
-      "summary": "Bookkeepers invoice each company once a month for its staff's stays.",
+      "description": "Bookkeepers invoice each company once a month for its staff's stays.",
       "stability": "alpha",
       "personas": [
         "bookkeeper"
@@ -528,7 +528,7 @@
       "domain": "finance",
       "file": "docs/product/domains/finance/capabilities/night-audit.md",
       "name": "Night audit",
-      "summary": "The software closes each business day overnight, charging every guest in the hotel for that night's room.",
+      "description": "The software closes each business day overnight, charging every guest in the hotel for that night's room.",
       "stability": "ga",
       "personas": [
         "night-auditor",
@@ -559,7 +559,7 @@
       "domain": "finance",
       "file": "docs/product/domains/finance/capabilities/daily-takings.md",
       "name": "Daily takings",
-      "summary": "Managers see each closed day's takings, for rooms, food and drink, and tax.",
+      "description": "Managers see each closed day's takings, for rooms, food and drink, and tax.",
       "stability": "beta",
       "personas": [
         "manager"
@@ -586,7 +586,7 @@
       "domain": "finance",
       "file": "docs/product/domains/finance/capabilities/accounting-export.md",
       "name": "Accounting export",
-      "summary": "Bookkeepers export each closed day's takings to the hotel's accounting software.",
+      "description": "Bookkeepers export each closed day's takings to the hotel's accounting software.",
       "stability": "alpha",
       "personas": [
         "bookkeeper"
@@ -620,7 +620,7 @@
       "domain": "billing",
       "file": "docs/product/domains/billing/capabilities/check-out.md",
       "name": "Check-out",
-      "summary": "Guests settle their bill as they leave, so nothing is left owing once they've gone.",
+      "description": "Guests settle their bill as they leave, so nothing is left owing once they've gone.",
       "stability": "alpha",
       "personas": [
         "front-desk-clerk",
@@ -656,7 +656,7 @@
       "domain": "billing",
       "file": "docs/product/domains/billing/capabilities/refunds.md",
       "name": "Refunds",
-      "summary": "Clerks refund a guest what they've paid over their bill, before the bill closes.",
+      "description": "Clerks refund a guest what they've paid over their bill, before the bill closes.",
       "stability": "draft",
       "personas": [
         "front-desk-clerk",
@@ -1154,7 +1154,7 @@
         {
           "concept": null,
           "term": "Invoice",
-          "text": "what a company is sent for a month of its staff's bills."
+          "summary": "what a company is sent for a month of its staff's bills."
         }
       ],
       "body": "A bill is made of [charges](charge.md) and [payments](payment.md). Its balance\nis what's been charged less what's been paid. A guest's bill can move to their\n[company's account](../../finance/concepts/company-account.md), which then owes it instead.\n\n## Lifecycle\n\n1. Open\n2. Closed\n\nA bill closes when its balance is zero, or when it moves to a company's account."
@@ -1256,7 +1256,7 @@
         {
           "concept": null,
           "term": "The booking app's booking",
-          "text": "a guest's hold on a room. Billing doesn't keep rooms free or taken, only what each stay costs."
+          "summary": "a guest's hold on a room. Billing doesn't keep rooms free or taken, only what each stay costs."
         }
       ],
       "body": "A booking puts one room charge per night on the guest's [bill](bill.md), at its\nagreed rate, whatever the rate is on the night."
@@ -1340,7 +1340,7 @@
       "domain": "billing",
       "outcome": null,
       "rule": "tax/children-pay-no-city-tax",
-      "text": "Guests' ages aren't recorded, so city tax is added for every guest on a stay, and clerks correct it by hand for children.",
+      "summary": "Guests' ages aren't recorded, so city tax is added for every guest on a stay, and clerks correct it by hand for children.",
       "places": []
     },
     {
@@ -1348,14 +1348,14 @@
       "domain": "finance",
       "outcome": null,
       "rule": null,
-      "text": "Nothing reminds a company when an invoice is overdue. The bookkeeper checks the unpaid invoices each week and chases them by email.",
+      "summary": "Nothing reminds a company when an invoice is overdue. The bookkeeper checks the unpaid invoices each week and chases them by email.",
       "places": []
     },
     {
       "id": "component:ledger#corrections-of-corrections-untested",
       "outcome": "maintainability/ga/others-can-change",
       "rule": null,
-      "text": "Nothing tests correcting a line that is itself a correction, so a change to `correct` could stop a twice-corrected charge netting to zero without anything failing.",
+      "summary": "Nothing tests correcting a line that is itself a correction, so a change to `correct` could stop a twice-corrected charge netting to zero without anything failing.",
       "places": [
         {
           "file": "src/ledger/ledger.ts",
@@ -1368,7 +1368,7 @@
       "id": "component:payments#no-timeout-on-provider-calls",
       "outcome": "reliability/beta/fails-clearly",
       "rule": null,
-      "text": "Calls to the payment provider have no timeout, so a slow provider holds the request open until the platform gives up on it.",
+      "summary": "Calls to the payment provider have no timeout, so a slow provider holds the request open until the platform gives up on it.",
       "places": [
         {
           "file": "src/payments/provider.ts",
@@ -1382,24 +1382,42 @@
     {
       "id": "capability:pay-by-link#hotels-currency-only",
       "domain": "billing",
-      "text": "Guests pay in the hotel's currency, not their own.",
-      "gain": "The bill, the payment and the hotel's books are all in one currency, with no exchange rates to keep.",
-      "cost": "Their card provider converts it, at its own rate, so the amount on their statement can differ from the bill.",
+      "outcome": null,
+      "summary": "Guests pay in the hotel's currency, not their own.",
+      "benefits": [
+        "The bill, the payment and the hotel's books are all in one currency.",
+        "There are no exchange rates to keep."
+      ],
+      "drawbacks": [
+        "Their card provider converts it, at its own rate, so the amount on their statement can differ from the bill."
+      ],
       "places": []
     },
     {
       "id": "capability:direct-billing#whole-bill-moves",
       "domain": "finance",
-      "text": "A bill moves to a company's account whole, not charge by charge.",
-      "gain": "Clerks move a bill in one step at check-out, and a company's account only ever holds whole bills.",
-      "cost": "A guest who pays for their own extras pays for them before their bill moves.",
+      "outcome": null,
+      "summary": "A bill moves to a company's account whole, not charge by charge.",
+      "benefits": [
+        "Clerks move a bill in one step at check-out.",
+        "A company's account only ever holds whole bills."
+      ],
+      "drawbacks": [
+        "A guest who pays for their own extras pays for them before their bill moves."
+      ],
       "places": []
     },
     {
       "id": "component:ledger#balance-worked-out-on-read",
-      "text": "A bill's balance is added up from its lines every time it's asked for, not stored on the bill.",
-      "gain": "The balance can never disagree with the lines, and there's nothing to keep in step when a line is added.",
-      "cost": "Opening a bill gets slower as lines are added to it.",
+      "outcome": "efficiency/beta/bounded",
+      "summary": "A bill's balance is added up from its lines every time it's asked for, not stored on the bill.",
+      "benefits": [
+        "The balance can never disagree with the lines.",
+        "There's nothing to keep in step when a line is added."
+      ],
+      "drawbacks": [
+        "Opening a bill gets slower as lines are added to it."
+      ],
       "places": [
         {
           "file": "src/ledger/ledger.ts",
@@ -1410,9 +1428,14 @@
     },
     {
       "id": "component:payments#providers-card-form",
-      "text": "Guests type their card into the provider's hosted form, not one of ours.",
-      "gain": "Card numbers never reach our servers, so the hotel stays out of most card-security rules.",
-      "cost": "The payment page looks like the provider's, not the hotel's.",
+      "outcome": null,
+      "summary": "Guests type their card into the provider's hosted form, not one of ours.",
+      "benefits": [
+        "Card numbers never reach our servers, so the hotel stays out of most card-security rules."
+      ],
+      "drawbacks": [
+        "The payment page looks like the provider's, not the hotel's."
+      ],
       "places": []
     }
   ],

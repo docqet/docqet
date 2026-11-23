@@ -7,7 +7,7 @@ capabilities: [earnings, partner-earnings, partner-clients, partner-home]
 gaps:
   - id: person-earnings-not-paged
     outcome: efficiency/beta/bounded
-    text: >-
+    summary: >-
       A person's earnings aren't paged: they load whole, and what's upcoming
       is worked out afresh on every read.
 ---

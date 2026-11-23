@@ -1,6 +1,6 @@
 ---
 name: Deployment
-summary: >-
+description: >-
   How a change gets from the main branch to the hotel's server, and back off
   it again.
 meets:
@@ -9,20 +9,21 @@ meets:
 gaps:
   - id: migrations-only-go-forward
     outcome: reliability/ga/recovery
-    text: >-
+    summary: >-
       Migrations have no down step, so undoing a release that changed the
       schema means restoring the database from the night before.
 tradeoffs:
   - id: migrations-before-start
-    text: >-
+    summary: >-
       Migrations run before the new image starts, while the old one is still
       serving, rather than stopping the app for each release.
-    gain: >-
-      Releases don't take the front desk offline.
-    cost: >-
-      The running code has to work with the new schema for a minute, so a
-      column is added a release before it's used, and removed a release after
-      the code stops reading it.
+    benefits:
+      - Releases don't take the front desk offline.
+    drawbacks:
+      - >-
+        The running code has to work with the new schema for a minute, so a
+        column is added a release before it's used, and removed a release after
+        the code stops reading it.
 decisions:
   - topic: Second instance
     question: >-

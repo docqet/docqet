@@ -33,7 +33,7 @@ about.
 ## In the spec
 
 A persona is a doc in `docs/product/personas/`, outside any domain. Its name
-and summary, its role and title, and an optional picture are frontmatter.
+and description, its role and title, and an optional picture are frontmatter.
 Without a picture, readers show their initials. Its body is for anything more
 about who they are, such as what they need, what they know, their context, the
 words and tools they expect, and what they care about, and can be left out.
@@ -43,7 +43,7 @@ shortened:
 ```markdown
 ---
 name: Maria
-summary: >-
+description: >-
   Runs the front desk: takes bookings, and checks guests in and out.
 role: Front desk
 title: Front desk clerk

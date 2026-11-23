@@ -1,6 +1,6 @@
 ---
 name: Theo Lindqvist
-summary: >-
+description: >-
   Mid-level full-stack engineer just hired by Exalynt, coming from a product
   company or agency. Will work blocks for the clients their team supports, and
   is paid per block rather than a salary.

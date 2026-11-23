@@ -6,11 +6,11 @@ description: >-
   it. Also called an earning.
 confused-with:
   - concept: payout
-    text: >-
+    summary: >-
       money sent, made up of earnings. A share is what's owed, and it
       exists before any payout does.
   - concept: capacity-payout-basis
-    text: the whole amount a share is a percentage of.
+    summary: the whole amount a share is a percentage of.
 ---
 
 A block can have these shares:

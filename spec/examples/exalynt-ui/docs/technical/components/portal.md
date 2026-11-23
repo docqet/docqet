@@ -19,76 +19,77 @@ capabilities:
 gaps:
   - id: home-screens-untested
     outcome: functionality/beta/stays-correct
-    text: >-
+    summary: >-
       Home's workflow is tested end to end only by the API's tests. The
       portal's own unit tests cover what the page works out (`homeState`) and
       what it reads (`listCurrentCapacities`), not its screens or how a
       section fails.
   - id: home-not-switchable
-    text: >-
+    summary: >-
       Home can't be switched off on its own, so a bad release of it is rolled
       back with everything else.
   - id: blocks-read-twice-on-home
-    text: >-
+    summary: >-
       The setup bubble reads the blocks on now, the teams and billing when the
       organization changes and each time it opens, so on Home the blocks are
       read twice.
   - id: team-read-per-page
-    text: >-
+    summary: >-
       Each page that shows the organization's teams reads them again.
   - id: team-screens-untested
     outcome: functionality/beta/stays-correct
-    text: >-
+    summary: >-
       Your teams is tested end to end only by the API's feature tests. The
       portal's own unit tests cover reading every page of teams and the order
       people show in.
   - id: every-block-loaded
     outcome: efficiency/beta/bounded
-    text: >-
+    summary: >-
       Capacity and the Schedule load every block the organization has bought,
       reading each page of them in turn, and Capacity filters, sorts and pages
       them in the browser.
   - id: block-page-reads-every-block
-    text: >-
+    summary: >-
       A block's page reads every one of the organization's blocks to find
       this one by its number.
   - id: billing-screens-untested
     outcome: functionality/beta/stays-correct
-    text: >-
+    summary: >-
       Billing and payment methods are tested end to end only by the API's
       feature tests, which run without a real payment provider.
   - id: members-unpaged
     outcome: efficiency/beta/bounded
-    text: >-
+    summary: >-
       The Members table reads every member of the organization at once,
       unpaged.
   - id: members-screens-untested
-    text: >-
+    summary: >-
       The portal's own unit tests on Members cover only how pasted addresses
       are read, what is left to retry after some invitations fail, and the
       role an invitation starts on. The rules are tested by the API's
       acceptance tests, and nothing tests the page itself.
   - id: logo-not-cached
-    text: >-
+    summary: >-
       An organization's logo is read with the session token, once per change
       and per page load, so the browser doesn't cache it.
 tradeoffs:
   - id: provider-pages-for-billing
-    text: >-
+    summary: >-
       Payment methods, invoices and company details stay on the payment
       provider's own pages, which Billing opens at an address the API asks the
       provider for. The portal knows nothing of the provider, and shows only a
       label for the default payment method.
-    cost: >-
-      Clients leave the portal to see an invoice or change how they pay, and
-      a page left open in another tab doesn't see what they changed there.
+    drawbacks:
+      - Clients leave the portal to see an invoice or change how they pay.
+      - A page left open in another tab doesn't see what they changed there.
   - id: no-gravatar-for-members
-    text: >-
+    summary: >-
       Members show their own photo or their initials, never a Gravatar, which
       would send their address, hashed, to a third party.
-    cost: >-
-      A member who hasn't uploaded a photo shows initials here, though their
-      profile shows their Gravatar.
+    drawbacks:
+      - >-
+        A member who hasn't uploaded a photo shows initials here, though their
+        profile shows their Gravatar.
 ---
 
 Every page acts in the organization being looked at. `AccessProvider` holds

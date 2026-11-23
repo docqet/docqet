@@ -1,6 +1,6 @@
 ---
 name: Priya
-summary: >-
+description: >-
   Keeps the hotel's books, and invoices the companies that pay for their
   staff's stays.
 role: Back office

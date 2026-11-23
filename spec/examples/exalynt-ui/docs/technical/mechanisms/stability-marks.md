@@ -1,18 +1,18 @@
 ---
 name: Stability marks
-summary: >-
+description: >-
   How every app page shows its stability level, from one record of every
   feature in every app.
 meets: [compatibility/prototype/marked]
 tradeoffs:
   - id: levels-kept-in-the-ui
-    text: >-
+    summary: >-
       Each page's level is declared once in the UI, in
       `src/featureStability.ts`, for the rail and the pages to read, apart
       from the capability docs' levels in the API's repository.
-    cost: >-
-      A level change is made in both repositories, and nothing checks that
-      they agree.
+    drawbacks:
+      - A level change is made in both repositories.
+      - Nothing checks that they agree.
 ---
 
 `FEATURES` in `src/featureStability.ts` names each app feature and its level,

@@ -12,32 +12,32 @@ capabilities:
 gaps:
   - id: sync-no-end-to-end-test
     outcome: functionality/beta/stays-correct
-    text: >-
+    summary: >-
       `POST /users/me/sync` has no end-to-end test, as the API's end-to-end
       server runs without Clerk. Acceptance and unit tests cover it instead.
   - id: name-by-webhook-only
-    text: >-
+    summary: >-
       A name or primary address reaches the API only by Clerk's webhook, or
       by `api sync users`, so others see the old one until it arrives, and a
       retried older webhook can bring an old one back.
   - id: clerk-failure-signs-out
-    text: >-
+    summary: >-
       If Clerk fails to load, `ResetFailedClerk` clears Clerk's cookies and
       reloads, in the hope that helps, so even a brief Clerk outage signs
       that browser out.
   - id: google-connection-never-tried
     outcome: functionality/alpha/main-path
-    text: >-
+    summary: >-
       Nobody has yet completed a Google connection or disconnected one, as
       that needs a real Google account.
   - id: tokens-filtered-in-browser
     outcome: efficiency/beta/bounded
-    text: >-
+    summary: >-
       Access tokens reads every page of someone's tokens, then searches,
       filters, sorts and pages them in the browser.
   - id: tokens-not-tried-by-everyone
     outcome: usability/beta/everyone
-    text: >-
+    summary: >-
       No partner has been through Access tokens in a browser, and no real
       screen reader has been through it or its organization limits, though
       it's the same page for everyone. QA only saw the limits disabled, for

@@ -46,7 +46,7 @@ export type Facet = { label: string; node: ReactNode; wide?: boolean };
 
 /*
  * The fields a contribution has, by its type, labelled, in the spec's order:
- * part of what it is, so they show with its name and summary, never with its
+ * part of what it is, so they show with its name and description, never with its
  * body. Open decisions aren't among them: they're shown with what's left.
  */
 export function facets(kind: string, f: Contribution, go: Go): Facet[] {
@@ -74,7 +74,7 @@ export function facets(kind: string, f: Contribution, go: Go): Facet[] {
                   ) : (
                     <strong className="confused-name">{c.term ?? c.concept}</strong>
                   )}
-                  <Text from={f} text={c.text} go={go} />
+                  <Text from={f} text={c.summary} go={go} />
                 </li>
               );
             })}
@@ -126,7 +126,7 @@ function placeOf(state: DocketState, b: Became): { href: string | null; name: st
     const item = (b.kind === "gap" ? state.gaps : state.tradeoffs).find((i) => i.id === b.id);
     const on = subjectOf({ id: b.id });
     const kind = on.type as "capability" | "feature" | "mechanism" | "component";
-    return { href: pageHref({ kind, id: on.id }), name: item?.text ?? b.ref };
+    return { href: pageHref({ kind, id: on.id }), name: item?.summary ?? b.ref };
   }
   if (b.kind === "rule") {
     const rule = find(state.rules, b.id);

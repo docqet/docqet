@@ -17,60 +17,60 @@ capabilities:
   - engineer-agreements
 gaps:
   - id: setup-reads-on-every-page
-    text: >-
+    summary: >-
       The setup bubble reads again on each page and each time it opens, four
       requests and a call to the payout provider each time, until everything
       on it is done.
   - id: readiness-worked-out-twice
     outcome: functionality/beta/stays-correct
-    text: >-
+    summary: >-
       Who's ready for client work is worked out in the browser, in the
       console's `components/setup/` and again on the admin's engineer page,
       so no acceptance test covers it, and the two can drift apart.
   - id: board-reads-every-block
     outcome: efficiency/beta/bounded
-    text: >-
+    summary: >-
       My blocks reads every block the engineer has ever had, a page at a
       time.
   - id: conversation-counts-read-on-open
-    text: >-
+    summary: >-
       A block's conversation counts are read when its page opens, and again
       when a conversation window closes, and at no other time.
   - id: team-screens-untested
     outcome: functionality/beta/stays-correct
-    text: >-
+    summary: >-
       Teams is tested end to end only by the API's feature tests. The
       console's own unit tests cover finding the engineer's team.
   - id: availability-changes-not-atomic
     outcome: reliability/ga/holds-up
-    text: >-
+    summary: >-
       Changing a run of weeks takes several calls, so a failure partway
       leaves some weeks changed and others not. The page says it
       failed and shows what's there.
   - id: earnings-unpaged
     outcome: efficiency/beta/bounded
-    text: >-
+    summary: >-
       Earnings loads the whole list at once, with no pagination, and the API
       works out what's upcoming afresh on every read.
   - id: earnings-failures-unreported
     outcome: observability/alpha/see-errors
-    text: >-
+    summary: >-
       A failure to load Earnings is shown on the page but not reported to
       telemetry.
   - id: this-week-from-browser
-    text: >-
+    summary: >-
       "This week" on My blocks and Availability is the browser's, while the
       API counts weeks from Monday in UTC, so around midnight on a Sunday a
       block can show Ready that can't be started yet, and a change to the
       week ending can be refused.
   - id: estimate-save-unchecked
-    text: >-
+    summary: >-
       Saving an estimate sends the whole of it, with no check of what changed
       since it was opened, so of two people editing at once the last save
       wins.
   - id: estimate-editor-screens-untested
     outcome: functionality/beta/stays-correct
-    text: >-
+    summary: >-
       The estimate editor is tested end to end only by the API's feature
       tests. The console's own tests cover the math and what a save sends.
 ---

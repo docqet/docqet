@@ -1,6 +1,6 @@
 ---
 name: Earnings and pay
-summary: >-
+description: >-
   What people and partnerships earn from each block, and getting it to them.
 ---
 

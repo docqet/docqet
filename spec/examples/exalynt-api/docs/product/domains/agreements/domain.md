@@ -1,6 +1,6 @@
 ---
 name: Agreements
-summary: >-
+description: >-
   The terms each client, engineer and partnership works with Exalynt under.
 ---
 

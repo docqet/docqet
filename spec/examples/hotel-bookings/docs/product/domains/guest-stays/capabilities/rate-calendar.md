@@ -1,6 +1,6 @@
 ---
 name: Rate calendar
-summary: Managers set each room type's nightly rate, date by date.
+description: Managers set each room type's nightly rate, date by date.
 stability: prototype
 personas: [manager]
 decisions:

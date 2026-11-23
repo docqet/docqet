@@ -5,7 +5,7 @@ description: >-
   historical, never in the future: what's still to come is earnings.
 confused-with:
   - concept: payout-share
-    text: >-
+    summary: >-
       what someone is owed from a block, which exists from when the block
       is assigned. A payout is the money that pays it.
 ---

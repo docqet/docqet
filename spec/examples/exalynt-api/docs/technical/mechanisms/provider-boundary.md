@@ -1,6 +1,6 @@
 ---
 name: Provider boundary
-summary: >-
+description: >-
   How the API reaches third-party services so that one can be swapped or
   stubbed without its callers noticing. Each service's own setup and behavior
   has a provider doc.

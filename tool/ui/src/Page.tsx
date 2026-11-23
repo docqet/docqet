@@ -249,7 +249,7 @@ function Hero({
                 ) : null}
               </div>
             ) : null}
-            {single && doc.summary ? <p className="page-lede">{doc.summary}</p> : null}
+            {single && doc.description ? <p className="page-lede">{doc.description}</p> : null}
           </div>
         </div>
         <div className="page-tiles">{tiles}</div>
@@ -334,7 +334,7 @@ function SourceFrom({ state, doc, from }: { state: DocketState; doc: Doc; from: 
 }
 
 /*
- * What a doc is, beyond its name and summary, then more about it, as two
+ * What a doc is, beyond its name and description, then more about it, as two
  * sections, the same on every detail page. Under `title`, its fields, by its
  * type, as cards side by side: what it is. Then, under "More about it", its
  * body, as written: anything more its authors wrote, apart from what it is.
@@ -345,7 +345,7 @@ function SourceFrom({ state, doc, from }: { state: DocketState; doc: Doc; from: 
 function About({ kind, doc, title, aside, ...go }: Go & { kind: string; doc: Doc; title: ReactNode; aside?: ReactNode }) {
   const { state } = go;
   const several = doc.from.length > 1;
-  const fielded = doc.from.filter((f) => facets(kind, f, go).length || (several && f.summary));
+  const fielded = doc.from.filter((f) => facets(kind, f, go).length || (several && f.description));
   const written = doc.from.filter((f) => f.body.trim());
   return (
     <>
@@ -356,7 +356,7 @@ function About({ kind, doc, title, aside, ...go }: Go & { kind: string; doc: Doc
               {fielded.map((f, i) => (
                 <div key={i} className="page-source">
                   <SourceFrom state={state} doc={doc} from={f} />
-                  {f.summary ? <p className="page-source-summary">{f.summary}</p> : null}
+                  {f.description ? <p className="page-source-summary">{f.description}</p> : null}
                   <Facets items={facets(kind, f, go)} />
                 </div>
               ))}
@@ -511,7 +511,7 @@ function CapabilityTable({ state, capabilities, domain, onOpen }: Go & { capabil
           <button key={c.id} type="button" className="page-table-row" role="row" onClick={() => onOpen("capability", c.id)}>
             <span className="page-table-name" role="cell">
               <strong>{c.name}</strong>
-              {c.summary ? <span>{c.summary}</span> : null}
+              {c.description ? <span>{c.description}</span> : null}
             </span>
             <span role="cell">
               <LevelName level={level} name={c.name} />
@@ -700,8 +700,8 @@ function CapabilityPage({ capability, ...go }: Go & { capability: Capability }) 
             {counts ? (
               <Tile
                 label="Checklist"
-                value={`${counts.count - counts.notMet} of ${counts.count}`}
-                note={`${levelName(level)} outcomes met${counts.evidence ? `, ${counts.evidence} with evidence` : ""}`}
+                value={`${counts.count - counts.notMet - counts.byChoice} of ${counts.count}`}
+                note={`${levelName(level)} outcomes met${counts.evidence ? `, ${counts.evidence} with evidence` : ""}${counts.byChoice ? `, ${counts.byChoice} not met by choice` : ""}`}
                 tone={counts.notMet ? "warn" : "ok"}
               />
             ) : null}
@@ -721,7 +721,7 @@ function CapabilityPage({ capability, ...go }: Go & { capability: Capability }) 
               <RuleTable {...go} rules={rules} own={capability.evidence} capability={capability} />
             </Block>
             {capability.tradeoffs.length ? (
-              <Block title={<LeftLabel kind="tradeoff" size={18} />} count={capability.tradeoffs.length} note="Chosen on purpose: what each gains us, and what we accept in return.">
+              <Block title={<LeftLabel kind="tradeoff" size={18} />} count={capability.tradeoffs.length} note="Chosen on purpose, with the benefits and drawbacks that came with each.">
                 <Card>
                   <Tradeoffs state={state} ids={capability.tradeoffs} detailed bare />
                 </Card>
@@ -815,7 +815,7 @@ function FeaturePage({ feature, ...go }: Go & { feature: Feature }) {
               </Block>
             )}
             {feature.tradeoffs.length ? (
-              <Block title={<LeftLabel kind="tradeoff" size={18}>Decided not to build</LeftLabel>} count={feature.tradeoffs.length} note="Left out on purpose: what leaving each out gains us, and what we accept in return.">
+              <Block title={<LeftLabel kind="tradeoff" size={18}>Decided not to build</LeftLabel>} count={feature.tradeoffs.length} note="Left out on purpose, with the benefits and drawbacks of leaving each out.">
                 <Card>
                   <Tradeoffs state={state} ids={feature.tradeoffs} detailed bare />
                 </Card>
@@ -898,7 +898,7 @@ function DomainPage({ domain, ...go }: Go & { domain: Domain }) {
                           <strong>{f.name}</strong>
                           {part?.maturity != null ? <RingGlyph progress={part.maturity} size={22} /> : null}
                         </span>
-                        {f.summary ? <span className="page-feature-summary">{f.summary}</span> : null}
+                        {f.description ? <span className="page-feature-summary">{f.description}</span> : null}
                         <ul>
                           {caps.map((c) => {
                             const level = c.levels.find((l) => l.domain === domain.id)?.level ?? c.stability;
@@ -942,7 +942,7 @@ function DomainPage({ domain, ...go }: Go & { domain: Domain }) {
                 <ul>
                   {concepts.map((c) => (
                     <li key={c.id}>
-                      <Row icon={<ConceptIcon size={15} />} name={c.name} summary={c.summary} onClick={() => onConcept(c.id)} />
+                      <Row icon={<ConceptIcon size={15} />} name={c.name} summary={c.description} onClick={() => onConcept(c.id)} />
                     </li>
                   ))}
                 </ul>
@@ -1103,7 +1103,7 @@ function ConceptPage({ concept, ...go }: Go & { concept: Concept }) {
                 <ul>
                   {elsewhere.map((c) => (
                     <li key={c.id}>
-                      <Row icon={<ConceptIcon size={15} />} name={`In ${domainName(state, c.domain)}`} summary={c.summary} onClick={() => onConcept(c.id)} />
+                      <Row icon={<ConceptIcon size={15} />} name={`In ${domainName(state, c.domain)}`} summary={c.description} onClick={() => onConcept(c.id)} />
                     </li>
                   ))}
                 </ul>
@@ -1162,7 +1162,7 @@ function CapabilityList({ capabilities, onOpen }: { capabilities: Capability[]; 
     <ul>
       {capabilities.map((c) => (
         <li key={c.id}>
-          <Row icon={NAMES.capability.icon} name={c.name} summary={c.summary} onClick={() => onOpen("capability", c.id)}>
+          <Row icon={NAMES.capability.icon} name={c.name} summary={c.description} onClick={() => onOpen("capability", c.id)}>
             <CapabilityStability level={c.stability} name={c.name} focusable={false} />
           </Row>
         </li>
@@ -1173,7 +1173,7 @@ function CapabilityList({ capabilities, onOpen }: { capabilities: Capability[]; 
 
 /*
  * A mechanism or component: how it's built, in the code's words, and where that
- * falls short of what we intend. Its technical gaps; its tradeoffs, with what they cost; where it is in the code,
+ * falls short of what we intend. Its technical gaps; its tradeoffs, with their benefits and drawbacks; where it is in the code,
  * from the annotations that implement or verify it; the checklist outcomes it meets for the capabilities it serves;
  * and, beside them,
  * its open decisions and the capabilities that rely on it.
@@ -1195,7 +1195,7 @@ function TechnicalPage({ doc, ...go }: Go & { doc: TechnicalDoc }) {
           <>
             <Tile label="Serves" value={plural(capabilities.length, "capability", "capabilities")} note={<LevelBar capabilities={capabilities} />} />
             <Tile label={<LeftLabel kind="technical-gap" size={13} />} value={gaps.length || "None"} note={gaps.length ? "What only someone working on the code would notice" : "None written down"} />
-            <Tile label={<LeftLabel kind="tradeoff" size={13} />} value={doc.tradeoffs.length || "None"} note="Chosen on purpose, for what they gain" />
+            <Tile label={<LeftLabel kind="tradeoff" size={13} />} value={doc.tradeoffs.length || "None"} note="Chosen on purpose, benefits and drawbacks alike" />
             <Tile label="Outcomes it meets" value={outcomes.length || "None"} note={places ? `Evidence in ${plural(places, "place", "places")}` : "Nothing points at it yet"} />
           </>
         }
@@ -1218,7 +1218,7 @@ function TechnicalPage({ doc, ...go }: Go & { doc: TechnicalDoc }) {
               )}
             </Block>
             {doc.tradeoffs.length ? (
-              <Block title={<LeftLabel kind="tradeoff" size={18} />} count={doc.tradeoffs.length} note="Chosen on purpose: what each gains us, and what we accept in return.">
+              <Block title={<LeftLabel kind="tradeoff" size={18} />} count={doc.tradeoffs.length} note="Chosen on purpose, with the benefits and drawbacks that came with each.">
                 <Card>
                   <Tradeoffs state={state} ids={doc.tradeoffs} detailed bare />
                 </Card>
@@ -1364,7 +1364,7 @@ function GapsPage(go: Go) {
             <Tile label={<LeftLabel kind="product-gap" size={13} />} value={productGaps || "None"} note="What someone using it would notice" />
             <Tile label={<LeftLabel kind="technical-gap" size={13} />} value={state.gaps.length - productGaps || "None"} note="What only someone working on the code would" />
             <Tile label={<LeftLabel kind="decision" size={13} />} value={decisions || "None"} note={`In ${plural(decided.length, "place", "places")}`} />
-            <Tile label={<LeftLabel kind="tradeoff" size={13} />} value={state.tradeoffs.length || "None"} note="Chosen on purpose, for what they gain" />
+            <Tile label={<LeftLabel kind="tradeoff" size={13} />} value={state.tradeoffs.length || "None"} note="Chosen on purpose, benefits and drawbacks alike" />
           </div>
         </div>
       </div>
@@ -1404,7 +1404,7 @@ function GapsPage(go: Go) {
                 <p className="concepts-empty">None written down.</p>
               )}
             </Block>
-            <Block title={<LeftLabel kind="tradeoff" size={18} />} count={tradeoffs.length} note={tradeoffs.length ? "Chosen on purpose: what each gains us, and what we accept in return." : undefined}>
+            <Block title={<LeftLabel kind="tradeoff" size={18} />} count={tradeoffs.length} note={tradeoffs.length ? "Chosen on purpose, with the benefits and drawbacks that came with each." : undefined}>
               {tradeoffGroups.length ? (
                 <Card>
                   {tradeoffGroups.map((g) => (

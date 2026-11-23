@@ -1,6 +1,6 @@
 ---
 name: Daily takings
-summary: >-
+description: >-
   Managers see each closed day's takings, for rooms, food and drink, and tax.
 stability: beta
 personas: [manager]

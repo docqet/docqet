@@ -24,8 +24,7 @@ none.
 ## In the spec
 
 A component is a doc in `docs/technical/components/`, shaped as a mechanism's
-is, with a `description` where a mechanism has a `summary`, `capabilities`
-listing those that rely on it, and how it works as its body. Like a
+is, with `capabilities` listing those that rely on it, and how it works as its body. Like a
 mechanism, it names no code: its entry points say
 `docket:implements component:bookings`.
 [`bookings.md`](../../../spec/examples/hotel-bookings/docs/technical/components/bookings.md):
@@ -39,18 +38,18 @@ capabilities: [room-booking, group-bookings, check-in]
 gaps:
   - id: clashes-logged-as-unknown
     outcome: observability/beta/hears-of-errors
-    text: >-
+    summary: >-
       `saveBooking` passes every database error up as it is, so a clash that
       only the exclusion constraint caught is logged as an unknown failure,
       not as a double booking that was refused.
 tradeoffs:
   - id: constraint-not-lock
-    text: >-
+    summary: >-
       The database refuses overlapping bookings with an exclusion
       constraint, rather than the app locking the room while it checks.
-    cost: >-
-      Bookings need Postgres with `btree_gist`, and the check in the app is
-      only there to give clerks a clear message first.
+    drawbacks:
+      - Bookings need Postgres with `btree_gist`.
+      - The check in the app is only there to give clerks a clear message first.
 ---
 
 The app checks the room is free (`assertRoomFree`) so it can tell the clerk

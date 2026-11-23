@@ -9,7 +9,7 @@ Room booking is a capability of Reservations. Its result is a guest with a
 room held for their stay. Cancellations is another, and its result is a
 booking ended and the guest refunded what the policy allows.
 
-A capability is stated in one sentence, its summary, in one of two forms:
+A capability is stated in one sentence, its description, in one of two forms:
 
 - **Who does what**: "Clerks book a free room for a guest's stay."
 - **What the software does**: "The software reminds each guest of their stay
@@ -27,8 +27,8 @@ sentence doesn't show them, can be said in its body, each a sentence of its
 own: "Clerks move a booking to new dates." Each is something this capability
 does that nothing else on it says:
 
-- **It adds to the summary**, and never says it again in other words. If the
-  summary shows everything, the capability includes nothing more.
+- **It adds to the description**, and never says it again in other words. If
+  the description shows everything, the capability includes nothing more.
 - **It's something done, not a limit on doing it.** What must or can't
   happen is a rule, even when it's about one action. An item that says
   "only", "never", "can't", "without" or "before they can" is a rule in
@@ -86,7 +86,7 @@ when someone decides to promote or demote it.
 ## In the spec
 
 A capability is a doc in its domain's `capabilities/` folder. Its name and
-summary, its level and its links are frontmatter. It names no code: the
+description, its level and its links are frontmatter. It names no code: the
 mechanisms that apply to it and the components that list it say where it's
 built. Questions building
 it should answer are open decisions. Its body is for anything more about what
@@ -97,7 +97,7 @@ left out.
 ```markdown
 ---
 name: Room booking
-summary: Clerks book a free room for a guest's stay.
+description: Clerks book a free room for a guest's stay.
 stability: beta
 personas: [front-desk-clerk]
 rules:
@@ -108,18 +108,20 @@ concepts: [booking, room]
 gaps:
   - id: calendar-needs-a-mouse
     outcome: usability/beta/everyone
-    text: >-
+    summary: >-
       The room calendar can't be used from the keyboard, so clerks need a
       mouse to pick dates.
 tradeoffs:
   - id: one-room-per-booking
-    text: A booking holds one room, not several.
-    gain: >-
-      Booking, changing and cancelling stay simple: each booking is one room
-      for one stay.
-    cost: >-
-      A family that needs two rooms makes two bookings. Group bookings is
-      where several rooms under one name is being explored.
+    summary: A booking holds one room, not several.
+    benefits:
+      - >-
+        Booking, changing and cancelling stay simple: each booking is one room
+        for one stay.
+    drawbacks:
+      - >-
+        A family that needs two rooms makes two bookings. Group bookings is
+        where several rooms under one name is being explored.
 ---
 
 ## Includes
@@ -139,7 +141,7 @@ has its people, rules and an open decision before any code exists:
 ```markdown
 ---
 name: Waitlist
-summary: >-
+description: >-
   Clerks put a guest on a waitlist when every room is taken, and offer them
   the first room that frees up for their stay.
 stability: draft

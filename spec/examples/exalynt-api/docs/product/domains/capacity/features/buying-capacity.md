@@ -1,6 +1,6 @@
 ---
 name: Buying capacity
-summary: >-
+description: >-
   Helping clients see what a project might take, buy the capacity for it, and
   follow where it stands.
 capabilities:

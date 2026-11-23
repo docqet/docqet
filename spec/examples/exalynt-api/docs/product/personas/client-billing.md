@@ -1,6 +1,6 @@
 ---
 name: Owen Achebe
-summary: >-
+description: >-
   Controller at a client business who pays invoices and manages payment
   methods and billing details.
 role: Client Billing

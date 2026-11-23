@@ -53,7 +53,7 @@ rule's evidence, the stability checklist and the code, in a new tab, at an
 address like `?capability=deposits` that keeps the projects showing.
 
 Every doc shows what it is apart from its body, the same way everywhere.
-First what it is, from its frontmatter: its name, summary, level, and fields
+First what it is, from its frontmatter: its name, description, level, and fields
 such as a rule's why or what a concept is confused with. Then its body, the Markdown
 its authors wrote, under *More about it*: folded in the side panel, the
 concepts panel and a rule's row, and a section of its own on a detail page.
@@ -76,12 +76,14 @@ and each gap is labelled *Product* or *Technical*.
   adds its own open decisions; a persona's leaves technical gaps out.
 - **Tradeoffs** show on their capability, and on a feature as what it's
   decided not to build: in the side panel, what was chosen; on the detail
-  page, each with what it gains, what it costs, and the code it explains.
+  page, each with its benefits and drawbacks as lists, and the code it
+  explains.
 - **Drafts** show as the word Draft, with no mark, and count toward no
   maturity or readiness.
-- **The checklist** marks each outcome not met, met with evidence (a mechanism
-  or component the capability is built on meets it), or met on its level's
-  word.
+- **The checklist** marks each outcome not met, not met by choice (a tradeoff
+  names it), met with evidence (a mechanism or component the capability is
+  built on meets it), or met on its level's word. A tradeoff's detail card
+  says which outcome it falls short of.
 - **A mechanism's or component's page**, at `?mechanism=deployment` or
   `?component=bookings`, has how it's built, its technical gaps, tradeoffs,
   where it is in the code, the outcomes it meets, open decisions, and what it

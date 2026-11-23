@@ -1,6 +1,6 @@
 ---
 name: Agreements
-summary: >-
+description: >-
   Putting every client, engineer and partnership under terms they've read and
   accepted before they work with Exalynt.
 capabilities:

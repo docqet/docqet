@@ -6,9 +6,9 @@ description: >-
   **Dedicated** 4.
 confused-with:
   - concept: capacity-unit
-    text: a quarter of one engineer's week, the size a block is measured in.
+    summary: a quarter of one engineer's week, the size a block is measured in.
   - concept: payout@pay
-    text: >-
+    summary: >-
       a separate lifecycle that starts once a block is fulfilled. A
       fulfilled block isn't necessarily paid out.
 ---

@@ -1,6 +1,6 @@
 ---
 name: City tax
-summary: >-
+description: >-
   The software adds the city's tourist tax to each guest's bill, night by
   night.
 stability: alpha
@@ -13,7 +13,7 @@ concepts: [bill, charge]
 gaps:
   - id: children-corrected-by-hand
     rule: tax/children-pay-no-city-tax
-    text: >-
+    summary: >-
       Guests' ages aren't recorded, so city tax is added for every guest on a
       stay, and clerks correct it by hand for children.
 ---

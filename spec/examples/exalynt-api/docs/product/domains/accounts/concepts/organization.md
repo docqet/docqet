@@ -5,11 +5,11 @@ description: >-
   buys capacity and is billed.
 confused-with:
   - concept: team@capacity
-    text: >-
+    summary: >-
       an organization's members are its own people. A team is Exalynt's
       people, assigned to work with it.
   - concept: partnership@partnerships
-    text: >-
+    summary: >-
       a partnership is its own record, separate from any client
       organization.
 ---

@@ -1,6 +1,6 @@
 ---
 name: Client home
-summary: >-
+description: >-
   Clients land on a page showing what's happening with their capacity, and
   what's waiting on them.
 stability: beta
@@ -11,28 +11,29 @@ rules:
 concepts: [capacity-block]
 gaps:
   - id: engineer-not-always-named
-    text: >-
+    summary: >-
       A block's engineer is named only when they're on one of the client's
       teams and the team has loaded. Otherwise it says an engineer at Exalynt.
   - id: no-retry-on-failed-section
     outcome: usability/beta/recover
-    text: A failed section says to reload. There's no retry on it.
+    summary: A failed section says to reload. There's no retry on it.
   - id: changes-show-on-reopening
-    text: Changes show only when the page opens again.
+    summary: Changes show only when the page opens again.
   - id: custom-roles-and-session-end-unverified
-    text: >-
+    summary: >-
       Custom roles, and a session ending while the page is open, haven't been
       verified.
   - id: screen-readers-unverified
     outcome: usability/beta/everyone
-    text: Real screen readers haven't been verified.
+    summary: Real screen readers haven't been verified.
 tradeoffs:
   - id: status-not-work
-    text: >-
+    summary: >-
       A block shows who's on it and where it stands, not what was done on it.
-    cost: >-
-      A client can't tell from home what was done on a block, and opens the
-      block's own page for that.
+    drawbacks:
+      - >-
+        A client can't tell from home what was done on a block, and opens the
+        block's own page for that.
 ---
 
 ## Includes

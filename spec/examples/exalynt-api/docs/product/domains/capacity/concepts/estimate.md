@@ -4,7 +4,7 @@ description: >-
   Exalynt's planning aid for what a project might take. It is not a quote.
 confused-with:
   - concept: focus
-    text: >-
+    summary: >-
       what one block's work is about. An estimate's focuses only group and
       size planned work.
 ---

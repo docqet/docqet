@@ -1,6 +1,6 @@
 ---
 name: Fulfillment
-summary: >-
+description: >-
   A block's engineer starts it once its week begins, and marks it fulfilled
   when the work is done, with nobody reviewing it.
 stability: alpha
@@ -62,63 +62,65 @@ rules:
 concepts: [capacity-block, fulfilled, focus, payout-share]
 gaps:
   - id: no-start-or-fulfill-notifications
-    text: Nobody is told when a block is started or fulfilled.
+    summary: Nobody is told when a block is started or fulfilled.
   - id: no-review
-    text: No one checks the work before a block is fulfilled.
+    summary: No one checks the work before a block is fulfilled.
   - id: departed-engineers-blocks-stuck
-    text: >-
+    summary: >-
       Only a block's own engineer can mark it fulfilled, so a block whose
       engineer has left can't be fulfilled by anyone else.
   - id: my-blocks-only-grows
-    text: >-
+    summary: >-
       My blocks shows every block an engineer has ever had, so its fulfilled
       column only grows.
   - id: browser-week-not-utc
-    text: >-
+    summary: >-
       "This week" on My blocks is the browser's own week, while a block's week
       starts on Monday UTC, so around midnight a block can show as ready when
       starting it is refused, or not yet ready when it can be started.
   - id: block-history-not-recorded
-    text: >-
+    summary: >-
       A block's page shows only when it was started and fulfilled. Its
       scheduling, rescheduling, claims and unclaims aren't recorded, so they
       don't show.
   - id: early-starts-not-shown
-    text: A block started before starts were recorded shows no start.
+    summary: A block started before starts were recorded shows no start.
   - id: starter-not-named
-    text: >-
+    summary: >-
       A block started by a lead or an admin shows as started by Exalynt, not
       by name.
   - id: no-focus-notifications
-    text: >-
+    summary: >-
       Nobody is told when a block's focus is added or changed, by Exalynt or
       by the client.
   - id: no-update-notifications
-    text: >-
+    summary: >-
       Nobody is told when an update is posted, and a block's page shows
       someone else's new updates only when it's opened again.
   - id: svg-images-blank
-    text: >-
+    summary: >-
       An SVG attached to an update or a focus as an image shows blank, though
       it still downloads.
   - id: no-focus-only-updates
-    text: An update about a focus alone, with no block, can't be posted yet.
+    summary: An update about a focus alone, with no block, can't be posted yet.
   - id: unused-focus-not-editable
-    text: >-
+    summary: >-
       A focus taken off every block can't be edited any more, though it can
       still be found and put back on a block.
   - id: focus-search-titles-only
-    text: Searching a client's focuses matches their titles only.
+    summary: Searching a client's focuses matches their titles only.
   - id: updates-per-block-only
-    text: >-
+    summary: >-
       A block's page shows only that block's updates, not those posted on
       other blocks with the same focus.
 tradeoffs:
   - id: fulfilled-cant-be-reopened
-    text: Marking a block fulfilled is final.
-    cost: >-
-      A fulfilled block can't be reopened, even when it was marked fulfilled
-      by mistake.
+    outcome: usability/beta/recover
+    summary: Marking a block fulfilled is final.
+    drawbacks:
+      - >-
+        A fulfilled block can't be reopened, even when it was marked fulfilled
+        by mistake.
 ---
 
 ## Includes

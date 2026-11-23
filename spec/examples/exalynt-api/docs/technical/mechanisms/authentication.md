@@ -1,6 +1,6 @@
 ---
 name: Authentication
-summary: >-
+description: >-
   Decides who is calling each request, and puts the `authz.Principal` the rest
   of the API works from on the context. Clerk only signs people in: users are
   copied to our database, and organizations, memberships, and roles are the
@@ -8,7 +8,7 @@ summary: >-
 applies: platform
 gaps:
   - id: rate-limit-per-instance
-    text: >-
+    summary: >-
       Each running instance counts its own rate limit, so an organization's
       real limit is `RATE_LIMIT_PER_MINUTE` times the instances running
       (`internal/middleware/ratelimit.go`).

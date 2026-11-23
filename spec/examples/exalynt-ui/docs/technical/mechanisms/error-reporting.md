@@ -1,17 +1,18 @@
 ---
 name: Error reporting
-summary: >-
+description: >-
   How the apps report unexpected failures from the browser, so someone looking
   can see what went wrong.
 meets: [observability/alpha/see-errors]
 tradeoffs:
   - id: errors-only
-    text: >-
+    summary: >-
       Only errors are collected: uncaught ones, and those pages pass to
       `reportError`. No page views, request timings or session recordings.
-    cost: >-
-      A slow page, or one people give up on without an error, leaves nothing
-      to look at.
+    drawbacks:
+      - >-
+        A slow page, or one people give up on without an error, leaves nothing
+        to look at.
 ---
 
 `main.tsx` calls `initTelemetry` once, as early as possible. It loads Dash0's

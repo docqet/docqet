@@ -1,6 +1,6 @@
 ---
 name: Getting paid
-summary: >-
+description: >-
   Paying the people who earned from each block: the engineer on it, their team
   lead and their teammates, each by their own Engineer Agreement.
 capabilities:

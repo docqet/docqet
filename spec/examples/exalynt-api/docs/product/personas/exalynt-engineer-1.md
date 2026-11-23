@@ -1,6 +1,6 @@
 ---
 name: Lena Fischer
-summary: >-
+description: >-
   Senior full-stack engineer, long at Exalynt, on a team assigned to a few
   clients. Owns blocks end to end, from starting one to marking it fulfilled.
 role: Exalynt Engineer

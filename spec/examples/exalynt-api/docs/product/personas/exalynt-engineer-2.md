@@ -1,6 +1,6 @@
 ---
 name: Ravi Menon
-summary: >-
+description: >-
   Recently joined Associate engineer on Lena's team, learning to own blocks
   end to end.
 role: Exalynt Engineer

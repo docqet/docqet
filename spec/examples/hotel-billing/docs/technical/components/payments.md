@@ -7,19 +7,20 @@ capabilities: [deposits, pay-by-link]
 gaps:
   - id: no-timeout-on-provider-calls
     outcome: reliability/beta/fails-clearly
-    text: >-
+    summary: >-
       Calls to the payment provider have no timeout, so a slow provider holds
       the request open until the platform gives up on it.
 tradeoffs:
   - id: providers-card-form
-    text: >-
+    summary: >-
       Guests type their card into the provider's hosted form, not one of
       ours.
-    gain: >-
-      Card numbers never reach our servers, so the hotel stays out of most
-      card-security rules.
-    cost: >-
-      The payment page looks like the provider's, not the hotel's.
+    benefits:
+      - >-
+        Card numbers never reach our servers, so the hotel stays out of most
+        card-security rules.
+    drawbacks:
+      - The payment page looks like the provider's, not the hotel's.
 ---
 
 The guest types their card into the provider's form, which hands the app a

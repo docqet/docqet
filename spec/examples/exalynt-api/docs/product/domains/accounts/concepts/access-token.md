@@ -5,7 +5,7 @@ description: >-
   them.
 confused-with:
   - concept: role
-    text: >-
+    summary: >-
       a role says what someone may do. A token only identifies who is
       calling.
 ---

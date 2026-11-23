@@ -39,19 +39,19 @@ A capability that's missing altogether isn't a gap: it's a draft capability.
 Open → Closed
 
 A closed gap is deleted, and git has its history. A gap we decide never to
-close becomes a [tradeoff](tradeoff.md), with its cost.
+close becomes a [tradeoff](tradeoff.md), with its drawbacks.
 
 ## In the spec
 
 Gaps are listed in the frontmatter of the doc they're on, each with an `id`
-unique in that doc, `text`, and optionally the `outcome` or `rule` it
+unique in that doc, a `summary`, and optionally the `outcome` or `rule` it
 falls short of. On [city tax](../../../spec/examples/hotel-billing/docs/product/domains/billing/capabilities/city-tax.md):
 
 ```yaml
 gaps:
   - id: children-corrected-by-hand
     rule: tax/children-pay-no-city-tax
-    text: >-
+    summary: >-
       Guests' ages aren't recorded, so city tax is added for every guest on a
       stay, and clerks correct it by hand for children.
 ```
@@ -63,7 +63,7 @@ names an outcome:
 gaps:
   - id: corrections-of-corrections-untested
     outcome: maintainability/ga/others-can-change
-    text: >-
+    summary: >-
       Nothing tests correcting a line that is itself a correction, ...
 ```
 

@@ -1,6 +1,6 @@
 ---
 name: Client directory
-summary: >-
+description: >-
   Exalynt's admins see every client organization, the blocks each has bought
   and how far the work has got, and assign the teams that serve it.
 stability: alpha
@@ -58,17 +58,18 @@ rules:
 concepts: [capacity-block, invoice, organization, team]
 gaps:
   - id: last-updated-misses-activity
-    text: >-
+    summary: >-
       When a client was last updated changes only when the organization itself
       does, such as its name or logo, not when the client does something.
   - id: agreements-are-placeholders
-    text: >-
+    summary: >-
       A client's agreements are still placeholders. Its coupons are a separate
       capability, Client coupons.
 tradeoffs:
   - id: no-primary-contact
-    text: A client's members aren't shown, since staff can't see them.
-    cost: There's no primary contact for a client.
+    summary: A client's members aren't shown, since staff can't see them.
+    drawbacks:
+      - There's no primary contact for a client.
 ---
 
 ## Includes

@@ -1,6 +1,6 @@
 ---
 name: Conversation spaces
-summary: >-
+description: >-
   A client's people and the Exalynt engineers who work with them talk about
   the work in a space of their own with the messaging provider, in Google Chat
   outside the app or with Stream inside it, and about each block in
@@ -31,52 +31,52 @@ rules:
 concepts: [space, space-membership, conversation]
 gaps:
   - id: behind-a-feature-flag
-    text: >-
+    summary: >-
       A block's conversations show on its page only while the `conversations`
       feature flag is on: on in development, off in production. Who belongs in
       each space is still kept in step with the messaging provider either way.
   - id: not-connected-in-production
-    text: >-
+    summary: >-
       Neither Google Chat nor Stream is connected in production yet, so nobody
       is really put in a space there, and a conversation can be started but
       not opened: it says it isn't connected.
   - id: google-chat-opens-the-whole-space
-    text: >-
+    summary: >-
       In Google Chat, a conversation opens beside the rest of the client's
       space, with every other conversation on its blocks, not on its own.
   - id: where-clients-see-conversations
-    text: >-
+    summary: >-
       With Google Chat, clients see a block's conversations only in Google
       Chat, not on their block page in the app. With Stream, they open them
       from their block page, which is still a prototype.
   - id: counts-read-on-opening
-    text: >-
+    summary: >-
       A conversation's counts are read when its block's page opens, not as
       messages come in.
   - id: deleted-chats-still-shown
-    text: A conversation deleted in Google Chat still shows on its block.
+    summary: A conversation deleted in Google Chat still shows on its block.
   - id: switching-providers-leaves-conversations
-    text: >-
+    summary: >-
       Switching messaging providers leaves a block's earlier conversations
       behind: the block shows only those with the provider in use, and their
       subjects can be used again.
   - id: stream-names-changeable-outside
-    text: >-
+    summary: >-
       With Stream, someone can change the name others see them by from outside
       the app. It's set back the next time they open a conversation.
   - id: stream-messages-final
-    text: With Stream, nobody can edit or delete a message once it's sent.
+    summary: With Stream, nobody can edit or delete a message once it's sent.
   - id: stream-organization-missing-for-removed
-    text: >-
+    summary: >-
       With Stream, each message shows the organization its writer is with,
       except for someone taken out of the client's space since, who shows
       with none.
   - id: stream-earlier-count-off
-    text: >-
+    summary: >-
       With Stream, a conversation opens with its latest messages, and says how
       many came before. That count can be off by messages deleted in Stream.
   - id: nothing-retried
-    text: >-
+    summary: >-
       Nothing is retried. If the messaging provider fails to put someone in a
       space, such as an engineer who just joined a client's team, they're
       asked to request access when they open its conversations, until a
@@ -86,28 +86,29 @@ gaps:
       it until they're taken out by hand. Starting a conversation says when it
       failed, and can be tried again.
   - id: older-organizations-not-with-provider
-    text: >-
+    summary: >-
       Organizations from before conversation spaces have their space, but the
       messaging provider doesn't have it, with everyone who belongs in it,
       until someone joins it or a conversation is started in it.
   - id: accepted-invitations-show-invited
-    text: >-
+    summary: >-
       Someone who accepts the messaging provider's invitation still shows as
       invited.
   - id: returning-people-not-put-back
-    text: >-
+    summary: >-
       Someone unbanned, or made one of Exalynt's people again, isn't put back
       in the spaces they were taken out of.
   - id: reply-limit
-    text: >-
+    summary: >-
       A conversation can't carry on past the most replies the messaging
       provider allows in one. Start another when it fills.
 tradeoffs:
   - id: stream-shows-gravatar
-    text: >-
+    summary: >-
       With Stream, someone without an uploaded photo shows their Gravatar, as
       they do everywhere else in the app.
-    cost: Stream keeps a link made from a hash of their email address.
+    drawbacks:
+      - Stream keeps a link made from a hash of their email address.
 decisions:
   - topic: Clients who can't join
     question: >-

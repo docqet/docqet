@@ -1,6 +1,6 @@
 ---
 name: Sam
-summary: Stays at the hotel, for work or on holiday, and pays for the stay.
+description: Stays at the hotel, for work or on holiday, and pays for the stay.
 role: Guest
 image: https://randomuser.me/api/portraits/men/32.jpg
 ---

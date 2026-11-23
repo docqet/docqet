@@ -156,7 +156,7 @@ export function mapItems(
               <FeatureCard
                 grip
                 name={feature.name}
-                description={feature.summary}
+                description={feature.description}
                 maturity={part.maturity}
                 capabilities={part.capabilities.flatMap((cid) => {
                   const c = find(state.capabilities, cid);

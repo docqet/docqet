@@ -1,6 +1,6 @@
 ---
 name: Maria
-summary: >-
+description: >-
   Runs the front desk: takes bookings, and checks guests in and out.
 role: Front desk
 title: Front desk clerk

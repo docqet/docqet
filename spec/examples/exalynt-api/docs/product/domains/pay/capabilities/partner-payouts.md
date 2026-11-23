@@ -1,6 +1,6 @@
 ---
 name: Partner payouts
-summary: >-
+description: >-
   Each partnership is paid what it earns into its own payout account, never
   its manager's, once an admin releases it, and its manager sees each payout.
 stability: beta
@@ -63,32 +63,33 @@ rules:
 concepts: [payout, partnership]
 gaps:
   - id: payouts-page-doesnt-say-why-held
-    text: >-
+    summary: >-
       The Payouts page doesn't say when the payout account is holding
       earnings up, beyond having none; Earnings does.
   - id: releasing-is-still-alpha
     outcome: security/alpha/stable-dependencies
-    text: >-
+    summary: >-
       Releasing payouts is the admin side of Payouts, which is still Alpha.
 tradeoffs:
   - id: pre-production-payouts-say-paid
-    text: >-
+    summary: >-
       Payouts released before production sent money through the payments
       partner are left saying Paid.
-    cost: >-
-      They say Paid, though nothing was sent.
+    drawbacks:
+      - They say Paid, though nothing was sent.
   - id: paid-means-reached-the-balance
-    text: >-
+    summary: >-
       Paid means the money has reached the partnership's balance with the
       payments partner, not its bank.
-    cost: >-
-      The payments partner pays it on to the bank itself, usually within a
-      couple of days.
+    drawbacks:
+      - >-
+        The payments partner pays it on to the bank itself, usually within a
+        couple of days.
   - id: sent-payouts-not-taken-back
-    text: >-
+    summary: >-
       A sent payout isn't taken back here.
-    cost: >-
-      Corrections are settled outside the product.
+    drawbacks:
+      - Corrections are settled outside the product.
 ---
 
 ## Includes

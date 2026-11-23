@@ -1,6 +1,6 @@
 ---
 name: Theo Lindqvist
-summary: >-
+description: >-
   Founder of an early-stage startup with no full engineering team, buying
   engineering to build the product.
 role: Client Admin

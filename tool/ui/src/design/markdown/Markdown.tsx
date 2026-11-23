@@ -19,7 +19,7 @@ import { capabilityTarget, featureTarget, type DocketState, type Pick, type Targ
  * show it as written, or, where it can't be formatted, as plain text.
  *
  * A doc's body is never part of what the doc is. What it is (its name,
- * summary and frontmatter fields) shows first, and its body apart from it, as
+ * description and frontmatter fields) shows first, and its body apart from it, as
  * more about it, under MORE_ABOUT, the same way for every type: folded in a
  * side panel (MoreAboutFold), and a section of its own on a detail page.
  *

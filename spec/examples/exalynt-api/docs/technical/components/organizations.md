@@ -8,7 +8,7 @@ meets: [security/ga/sound]
 gaps:
   - id: shapes-shared-with-less-stable-capabilities
     outcome: compatibility/ga/stable-interface
-    text: >-
+    summary: >-
       `GET /organization-roles`, the only way an API caller gets the role IDs
       to invite with or set a member's role, belongs to roles and returns its
       whole `OrganizationRole`, permissions included. The `Organization` schema
@@ -16,41 +16,43 @@ gaps:
       organizations and members relies on, so both are additive only.
   - id: sends-and-keys-never-pruned
     outcome: efficiency/beta/bounded
-    text: >-
+    summary: >-
       `organization_invitation_sends` and `organization_creation_keys` are
       never pruned: only the last day of sends and a retry's key are ever read,
       but rows stay forever. They're small, at most 50 sends per organization
       a day.
   - id: no-load-test
     outcome: efficiency/ga/speed-targets
-    text: >-
+    summary: >-
       The routes have never been tried at peak, and their running cost isn't
       known, including whether Clerk's plan limits fit expected sign-ups.
   - id: rollback-and-restore-untried
     outcome: reliability/ga/recovery
-    text: >-
+    summary: >-
       Deploys roll back by re-running an older commit, and there's a runbook
       for restoring deleted records from a backup, but neither has been
       practised for organizations.
 tradeoffs:
   - id: lists-returned-whole
-    text: >-
+    outcome: efficiency/beta/bounded
+    summary: >-
       Members, invitations, and `GET /v1/clients` are returned whole, not
       paged: an organization is sized for tens of members and Exalynt for tens
       to hundreds of clients.
-    cost: >-
-      The last-manager check reads every member and organization role on each
-      removal and role change.
+    drawbacks:
+      - >-
+        The last-manager check reads every member and organization role on each
+        removal and role change.
   - id: shared-invitation-routes
-    text: >-
+    summary: >-
       `GET /invitations` and `POST /invitations/{id}/accept` stay shared, with
       stable organization-only copies beside them: they also serve invitations
       to work with Exalynt and to manage a partnership, whose shape is still
       settling, so the stable contract for organizations is
       `/users/me/organization-invitations`.
-    cost: >-
-      There are two ways to list and accept an organization's invitation, and
-      onboarding reads both listings.
+    drawbacks:
+      - There are two ways to list and accept an organization's invitation.
+      - Onboarding reads both listings.
 ---
 
 Who made each change is the `user_id` on its request's log line, and `user.id`

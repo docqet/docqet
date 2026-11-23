@@ -39,7 +39,7 @@ capabilities, in the order to show them, and its tradeoffs.
 ```markdown
 ---
 name: Reservations
-summary: Taking bookings and handling changes to them, before the guest arrives.
+description: Taking bookings and handling changes to them, before the guest arrives.
 capabilities:
   - room-booking
   - cancellations
@@ -47,10 +47,10 @@ capabilities:
   - waitlist
 tradeoffs:
   - id: front-desk-bookings-only
-    text: >-
+    summary: >-
       Bookings are taken at the front desk, not from online travel agencies.
-    cost: >-
-      Clerks enter each agency booking by hand, as it arrives by email.
+    drawbacks:
+      - Clerks enter each agency booking by hand, as it arrives by email.
 ---
 ```
 

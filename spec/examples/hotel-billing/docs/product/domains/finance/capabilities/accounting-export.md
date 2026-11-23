@@ -1,6 +1,6 @@
 ---
 name: Accounting export
-summary: >-
+description: >-
   Bookkeepers export each closed day's takings to the hotel's accounting
   software.
 stability: alpha

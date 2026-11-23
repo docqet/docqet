@@ -33,7 +33,7 @@ export type Decision = {
 };
 
 /* What a concept is easily mistaken for: another concept, as linked, or a word that isn't one, and how they differ. */
-export type Confusion = { concept: string | null; term: string | null; text: string };
+export type Confusion = { concept: string | null; term: string | null; summary: string };
 
 /*
  * The frontmatter fields that say something rather than link, so each is its
@@ -69,7 +69,7 @@ export type Contribution = Fields & {
   domain: string;
   file: string;
   name: string;
-  summary?: string;
+  description?: string;
   /* A persona's role and title, which contributions should agree on as they do on its name. */
   role?: string | null;
   title?: string | null;
@@ -81,7 +81,7 @@ export type Contribution = Fields & {
  * A doc, put together from every contribution to it (see combine). Its ID
  * depends on its type, as the spec's Domains section says: a domain, feature
  * or capability keeps its own ID, one across everything; a rule or concept is
- * `<id>@<domain>`. Its name, summary, body and file are its first
+ * `<id>@<domain>`. Its name, description, body and file are its first
  * contribution's.
  */
 export type Doc = Fields & {
@@ -91,7 +91,7 @@ export type Doc = Fields & {
   domain: string;
   file: string;
   name: string;
-  summary?: string;
+  description?: string;
   body: string;
   from: Contribution[];
 };
@@ -191,8 +191,6 @@ export type Rule = Doc & {
 };
 
 export type Concept = Doc & { capabilities: string[]; rules: string[] };
-/* A concept as state.json has it: its `description` is what readers show under its name, as other docs' `summary` is. */
-type RawConcept = Omit<Raw<Concept>, "summary"> & { description?: string };
 
 /*
  * A type of person the software serves, one across every domain. What it
@@ -227,20 +225,23 @@ export type Gap = {
   outcome: string | null;
   /* The rule it doesn't hold to yet, as written; combining resolves it to `<id>@<domain>`. */
   rule: string | null;
-  text: string;
+  summary: string;
   /* Where it shows in the code, from `docket:gap` annotations. */
   places: EvidencePlace[];
 };
 
-/* A tradeoff: what we chose, what it gains us, and what it costs. On a capability, feature, mechanism or component; its ID is as a gap's. */
+/* A tradeoff: what we chose, its benefits, and its drawbacks. On a capability, feature, mechanism or component; its ID is as a gap's. */
 export type Tradeoff = {
   id: string;
   project?: string;
   domain?: string;
-  text: string;
-  /* What we hope to get by choosing it. Missing from state written before it, and optional in the docs. */
-  gain?: string | null;
-  cost: string;
+  /* The stability checklist outcome it falls short of on purpose, as `<quality>/<level>/<id>`, or null. */
+  outcome: string | null;
+  summary: string;
+  /* What we hope to get by choosing it, a point apiece. Empty when none is written down. */
+  benefits: string[];
+  /* What we give up or risk in return, a point apiece. */
+  drawbacks: string[];
   /* The code it explains, from `docket:tradeoff` annotations. */
   places: EvidencePlace[];
 };
@@ -336,14 +337,13 @@ export type StateFile = {
   /* A draft's `stability` is "draft". */
   capabilities: (Omit<Raw<Capability>, "stability" | "tradeoffs"> & { stability: Level | "draft"; tradeoffs?: string[] })[];
   rules: Omit<Raw<Rule>, "gaps">[];
-  concepts: RawConcept[];
+  concepts: Raw<Concept>[];
   /* Personas aren't in a domain, so these have no `domain`. Missing from state written before personas. */
   personas?: Omit<Raw<Persona>, "domain">[];
   /* Technical docs aren't in a domain either. Missing from state written before them, as is `tradeoffs`. */
   /* `applies` is missing from state written before it, meaning "project". */
   mechanisms?: (Omit<Raw<TechnicalDoc>, "domain" | "kind" | "applies"> & { applies?: "project" | "platform" })[];
-  /* A component's `description` is what readers show under its name, as a mechanism's `summary` is. */
-  components?: (Omit<Raw<TechnicalDoc>, "domain" | "kind" | "summary" | "applies"> & { description?: string })[];
+  components?: Omit<Raw<TechnicalDoc>, "domain" | "kind" | "applies">[];
   gaps: Gap[];
   tradeoffs?: Tradeoff[];
   problems: Problem[];
@@ -443,7 +443,7 @@ export function combine(files: StateFile[]): DocketState {
 
   /* Add one project's contribution to the doc with this ID, making it if it's the first. */
   function contribute<T extends Doc>(list: T[], id: string, project: string, raw: Omit<Raw<Doc>, "domain"> & { domain: string }, make: (base: Doc) => T): T {
-    const from: Contribution = { project, domain: raw.domain, file: raw.file, name: raw.name, summary: raw.summary, body: raw.body ?? "" };
+    const from: Contribution = { project, domain: raw.domain, file: raw.file, name: raw.name, description: raw.description, body: raw.body ?? "" };
     for (const key of FIELD_KEYS) if (key in raw) Object.assign(from, { [key]: raw[key] });
     /* Decisions from state written before they could close are open. */
     if (from.decisions)
@@ -516,7 +516,7 @@ export function combine(files: StateFile[]): DocketState {
       pending.push({ from: rule, domain: r.domain, rules: [], concepts: r.concepts });
     }
     for (const c of file.concepts) {
-      contribute(state.concepts, `${c.id}@${c.domain}`, project, { ...c, summary: c.description }, (base) => ({ ...base, capabilities: [], rules: [] }));
+      contribute(state.concepts, `${c.id}@${c.domain}`, project, c, (base) => ({ ...base, capabilities: [], rules: [] }));
     }
     /* A persona is in no domain; its contributions are told apart by project, as a domain's are. */
     for (const p of file.personas ?? []) {
@@ -535,7 +535,7 @@ export function combine(files: StateFile[]): DocketState {
       const entries =
         kind === "mechanism"
           ? (file.mechanisms ?? []).map((e) => ({ ...e, applies: e.applies ?? ("project" as const) }))
-          : (file.components ?? []).map(({ description, ...e }) => ({ ...e, summary: description, applies: "project" as const }));
+          : (file.components ?? []).map((e) => ({ ...e, applies: "project" as const }));
       for (const e of entries) {
         const doc = contribute(kind === "mechanism" ? state.mechanisms : state.components, e.id, project, { ...e, domain: "" }, (base) => ({
           ...base,
@@ -707,10 +707,10 @@ export function combine(files: StateFile[]): DocketState {
     d.band = band(d.maturity);
   }
 
-  /* Contradictions: a product doc whose name or summary differs between contributions, or a rule or concept within one domain, where a rule is its name and body. */
+  /* Contradictions: a product doc whose name or description differs between contributions, or a rule or concept within one domain, where a rule is its name and body. */
   const differing = (type: string, docs: Doc[]) => {
     for (const doc of docs) {
-      const said = new Set(doc.from.map((f) => [f.name, f.role ?? "", f.title ?? "", f.summary ?? "", type === "rule" ? f.body : ""].join("\n")));
+      const said = new Set(doc.from.map((f) => [f.name, f.role ?? "", f.title ?? "", f.description ?? "", type === "rule" ? f.body : ""].join("\n")));
       if (said.size < 2) continue;
       const who = list_(docProjects(doc).map(projectName));
       state.problems.push({
@@ -1035,18 +1035,28 @@ export const leftCount = (left: Left) => left.decisions.length + left.gaps.lengt
  * Where a checklist outcome stands for a capability:
  *
  * - gap: a gap on it, or on what it's built on, names the outcome
+ * - tradeoff: a tradeoff on it, or on what it's built on, names it: not met, by choice
  * - evidence: a mechanism or component it's built on says it meets it
  * - trust: nothing names it, so it counts as met on its level's word
  * - not-expected: its level doesn't expect it
  */
-export type OutcomeStanding = { standing: "gap" | "evidence" | "trust" | "not-expected"; gaps: Gap[]; by: TechnicalDoc[] };
+export type OutcomeStanding = { standing: "gap" | "tradeoff" | "evidence" | "trust" | "not-expected"; gaps: Gap[]; tradeoffs: Tradeoff[]; by: TechnicalDoc[] };
 
 export function outcomeStanding(state: DocketState, capability: Capability, outcome: ChecklistOutcome): OutcomeStanding {
   const on = builtOn(state, capability);
   const gaps = [...gapsById(state, capability.gaps), ...on.flatMap((e) => gapsById(state, e.gaps))].filter((g) => g.outcome === outcome.id);
+  const tradeoffs = [...tradeoffsById(state, capability.tradeoffs), ...on.flatMap((e) => tradeoffsById(state, e.tradeoffs))].filter((t) => t.outcome === outcome.id);
   const by = on.filter((e) => e.meets.includes(outcome.id));
-  const standing = !appliesAt(outcome, capability.stability) ? "not-expected" : gaps.length ? "gap" : by.length ? "evidence" : "trust";
-  return { standing, gaps, by };
+  const standing = !appliesAt(outcome, capability.stability)
+    ? "not-expected"
+    : gaps.length
+      ? "gap"
+      : tradeoffs.length
+        ? "tradeoff"
+        : by.length
+          ? "evidence"
+          : "trust";
+  return { standing, gaps, tradeoffs, by };
 }
 
 /* ——— Detail pages ——— */

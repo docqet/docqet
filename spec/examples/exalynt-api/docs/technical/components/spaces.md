@@ -9,17 +9,17 @@ capabilities: [conversation-spaces]
 gaps:
   - id: no-retries-or-synchronization
     outcome: reliability/ga/holds-up
-    text: >-
+    summary: >-
       A failed provider call is only on the span, and nothing compares our
       records with the provider's members. The only repair is
       `StartBlockConversation`, which puts everyone `belonging` to the space in
       it first; nothing takes out someone a failed removal left in.
   - id: sync-users-has-no-hook
-    text: >-
+    summary: >-
       `api sync users` has no hook, so a ban or deletion it applies doesn't
       take the user out of the provider's spaces.
   - id: hooks-run-however-flagged
-    text: >-
+    summary: >-
       The hooks run inside sign-up, accepting and removing members, however
       conversations are flagged: `CreateReferred` records a space in its
       transaction, and `CreateSpace`, `AddMembers` and `RemoveMembers` call the
@@ -27,7 +27,7 @@ gaps:
       The `conversations` flag only hides them in the UI. With `noop` in
       production they cost nothing.
   - id: space-id-nullable
-    text: >-
+    summary: >-
       `organizations.space_id` is nullable, as code deployed before spaces
       creates organizations without one while it rolls out.
 ---

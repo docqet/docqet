@@ -1,6 +1,6 @@
 ---
 name: Daniel Osei
-summary: >-
+description: >-
   Principal engineer who leads Lena and Ravi's team. Carries client blocks
   too, with coordination as a part-time responsibility rather than a
   management job.

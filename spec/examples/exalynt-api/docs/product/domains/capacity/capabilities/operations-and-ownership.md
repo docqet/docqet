@@ -1,13 +1,13 @@
 ---
 name: Operations and ownership
-summary: >-
+description: >-
   Clients choose whether they or Exalynt operate the software Exalynt builds
   for them, and keep what they own.
 stability: prototype
 personas: [client-admin-founder, client-admin-operations]
 gaps:
   - id: not-built
-    text: >-
+    summary: >-
       None of it is built: at MVP, no client's software is live under
       Exalynt's operations. Who operates it is agreed on a call, and the
       ownership commitments stay in the readme.

@@ -48,7 +48,7 @@ A rule belongs to the [domain](domain.md), not to a capability or a feature:
 A rule is one file in its domain's `rules/` folder, grouped by topic. Its ID is
 its path there: `booking/no-double-booking`.
 Its `name` is the rule in a few words, and `why` says why it holds, so
-whoever meets a case it didn't foresee can judge it. It has no `summary`: its
+whoever meets a case it didn't foresee can judge it. It has no `description`: its
 body, if it has one, states the rule in full where the name doesn't, and gives
 examples or how it plays out.
 [`no-double-booking.md`](../../../spec/examples/hotel-bookings/docs/product/domains/guest-stays/rules/booking/no-double-booking.md):

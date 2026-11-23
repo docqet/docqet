@@ -7,7 +7,7 @@ description: >-
   conversation space.
 confused-with:
   - concept: team
-    text: >-
+    summary: >-
       a team is a group of Exalynt's people. A space holds a team's
       engineers and a client's people together.
 ---

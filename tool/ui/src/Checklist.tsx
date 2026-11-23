@@ -84,6 +84,7 @@ export function StabilityChecklist({ state, checklist, capability }: { state: Do
   const shown = showAll ? sections : sections.filter((s) => s.expected.length);
   const expected = sections.flatMap((s) => s.expected);
   const unmet = sections.filter((s) => s.expected.some((o) => standing(o) === "gap")).map((s) => s.quality.name);
+  const byChoice = expected.filter((o) => standing(o) === "tradeoff").length;
   const name = STABILITY[level].name;
 
   return (
@@ -127,8 +128,9 @@ export function StabilityChecklist({ state, checklist, capability }: { state: Do
               <strong data-met={unmet.length ? "no" : "yes"}>
                 {expected.filter((o) => isMet(standing(o))).length} of {expected.length} {name} outcomes met
               </strong>
-              {unmet.length ? ` · Not met in ${unmet.join(", ")}` : null}. {expected.filter((o) => standing(o) === "evidence").length} with evidence from what
-              it's built on; anything a gap doesn't name counts as met.
+              {unmet.length ? ` · Not met in ${unmet.join(", ")}` : null}
+              {byChoice ? ` · ${byChoice} not met by choice` : null}. {expected.filter((o) => standing(o) === "evidence").length} with evidence from what
+              it's built on; anything a gap or tradeoff doesn't name counts as met.
             </>
           ) : STABILITY_LEVEL_IDS.indexOf(level) > STABILITY_LEVEL_IDS.indexOf(own) ? (
             <>
@@ -198,10 +200,20 @@ export function StabilityChecklist({ state, checklist, capability }: { state: Do
                                 {LEFT_KINDS[gapKind(g)].one}
                               </LeftLabel>
                             </span>
-                            {g.text}
+                            {g.summary}
                           </p>
                         ))}
-                        {appliesAt(o, own) && !of(o).gaps.length && of(o).by.length ? (
+                        {of(o).tradeoffs.map((t) => (
+                          <p key={t.id} className="sc-gap">
+                            <span className="explore-gap-kind">
+                              <LeftLabel kind="tradeoff" size={13}>
+                                Not met, by choice
+                              </LeftLabel>
+                            </span>
+                            {t.summary}
+                          </p>
+                        ))}
+                        {appliesAt(o, own) && !of(o).gaps.length && !of(o).tradeoffs.length && of(o).by.length ? (
                           <p className="sc-met-by">
                             Met by{" "}
                             {of(o).by.map((e, i) => (
@@ -240,10 +252,11 @@ const STANDING_LABELS: Record<Standing, string> = {
   evidence: "Met, with evidence",
   trust: "Met, on its level's word",
   gap: "Not met",
+  tradeoff: "Not met, by choice",
   "not-expected": "Not expected at its level",
 };
 
-/* Whether an outcome is met for this capability, with evidence or on trust, named by a gap, or not expected at its level. */
+/* Whether an outcome is met for this capability, with evidence or on trust, named by a gap or a tradeoff, or not expected at its level. */
 function StandingIcon({ standing }: { standing: Standing }) {
   return <StandingMark standing={standing} label={STANDING_LABELS[standing]} />;
 }

@@ -1,6 +1,6 @@
 ---
 name: David
-summary: Runs the hotel, and answers for its takings to the owners.
+description: Runs the hotel, and answers for its takings to the owners.
 role: Manager
 title: Hotel manager
 image: https://randomuser.me/api/portraits/men/52.jpg

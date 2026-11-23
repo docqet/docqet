@@ -1,6 +1,6 @@
 ---
 name: Telemetry
-summary: >-
+description: >-
   What the API emits and how to read it. The API exports over OTLP to the
   collector `OTEL_EXPORTER_OTLP_ENDPOINT` names, which in the cluster is the
   Grafana Alloy collector the exalynt/collector repo deploys, forwarding to
@@ -8,12 +8,12 @@ summary: >-
 meets: [observability/alpha/see-errors]
 gaps:
   - id: log-retention-not-set
-    text: >-
+    summary: >-
       Request log lines carry `remote_addr` and `user_id`, and how long
       Grafana Cloud keeps them is its default.
   - id: no-alerts-or-dashboards
     outcome: observability/beta/hears-of-errors
-    text: >-
+    summary: >-
       Alerts and dashboards aren't set up in Grafana Cloud, though the
       in-cluster Alloy collector now sends there. Each feature with a
       `.changes` counter needs an alert on the share of its routes ending in a

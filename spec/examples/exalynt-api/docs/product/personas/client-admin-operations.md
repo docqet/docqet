@@ -1,6 +1,6 @@
 ---
 name: Helen Marsh
-summary: >-
+description: >-
   Director of operations at a mid-sized equipment-rental business. Buys and
   steers custom software from Exalynt, and owns the budget and the
   relationship.

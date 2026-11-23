@@ -36,7 +36,7 @@ only what the code can't show, and has no level or domain of its own.
 ## In the spec
 
 A mechanism is a doc in `docs/technical/mechanisms/`. Its frontmatter holds its
-name and summary, `applies`, `project` or `platform` and `project` when left
+name and description, `applies`, `project` or `platform` and `project` when left
 out, and what tools compute with. It names neither code nor capabilities: the
 code points at it, and what it applies to is worked out, by the indexer for a
 project, and when projects are combined for a platform, since no one
@@ -48,7 +48,7 @@ shortened:
 ```markdown
 ---
 name: Deployment
-summary: >-
+description: >-
   How a change gets from the main branch to the hotel's server, and back off
   it again.
 meets:
@@ -57,7 +57,7 @@ meets:
 gaps:
   - id: migrations-only-go-forward
     outcome: reliability/ga/recovery
-    text: >-
+    summary: >-
       Migrations have no down step, so undoing a release that changed the
       schema means restoring the database from the night before.
 ---

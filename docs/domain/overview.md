@@ -83,7 +83,7 @@ flowchart TB
   subgraph differ ["Where intention and reality differ"]
     decision["Open decision<br/>not settled yet"]
     gap["Gap<br/>to close"]
-    tradeoff["Tradeoff<br/>chosen, with its cost"]
+    tradeoff["Tradeoff<br/>chosen, with its benefits and drawbacks"]
   end
 
   subgraph stability ["Stability"]
@@ -207,7 +207,7 @@ can be shown the same way and nothing is hidden:
 | --- | --- | --- |
 | **[Open decision](concepts/open-decision.md)** | What's intended isn't settled yet | Declared |
 | **[Gap](concepts/gap.md)** | The software doesn't do what's intended, or isn't built as intended | Declared |
-| **[Tradeoff](concepts/tradeoff.md)** | We chose this on purpose, and accept what it costs | Declared |
+| **[Tradeoff](concepts/tradeoff.md)** | We chose this on purpose, with its benefits and drawbacks | Declared |
 | **[Problem](concepts/problem.md)** | The docs are wrong or contradict each other | Derived |
 
 Each declared one is written on the thing it's about, once, and shown on
@@ -220,7 +220,7 @@ Nothing is declared on a project or a persona: theirs are worked out.
 | Domain | Ones whose answer becomes a rule or concept | — | — |
 | Feature | Ones whose answer adds a capability or rules one out | — | Non-goals: capabilities we've decided never to build |
 | Capability | Ones whose answer changes what it does | What people using it would notice | Limits it has by choice |
-| Mechanism or component | Ones whose answer becomes a tradeoff | What only someone working on the code would notice | Technical choices |
+| Mechanism or component | Ones whose answer becomes a tradeoff, a gap, or a mechanism or component | What only someone working on the code would notice | Technical choices |
 
 A rule holds none of them. A rule is decided once its doc exists, and a gap
 that says a capability doesn't hold to a rule yet is the capability's.
@@ -235,10 +235,11 @@ three standings:
 | Standing | When |
 | --- | --- |
 | **Not held** | A gap names it, for all of it or a part |
+| **Not held, by choice** | A tradeoff names it: only a checklist outcome |
 | **Held, with evidence** | Something in the repository points at it as [evidence](concepts/evidence.md) |
 | **Held, on trust** | Nothing names it, which is the usual case |
 
-A gap wins over evidence. Evidence is always optional: it shows how we know
+A gap wins over a tradeoff, and both win over evidence. Evidence is always optional: it shows how we know
 something holds, and its absence is never something left to do. A draft
 capability claims nothing yet.
 
@@ -298,7 +299,7 @@ Some things are never features or capabilities:
 
 - [Open decision](concepts/open-decision.md): a question not settled yet.
 - [Gap](concepts/gap.md): something we intend to close.
-- [Tradeoff](concepts/tradeoff.md): something we chose, knowing its cost.
+- [Tradeoff](concepts/tradeoff.md): something we chose, knowing its benefits and drawbacks.
 
 **Stability and maturity**
 

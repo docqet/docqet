@@ -5,7 +5,7 @@ description: >-
   assigned to. It decides who at Exalynt a client sees.
 confused-with:
   - concept: organization@accounts
-    text: >-
+    summary: >-
       a client's members are that organization's own people. A team's
       members are Exalynt's people.
 ---

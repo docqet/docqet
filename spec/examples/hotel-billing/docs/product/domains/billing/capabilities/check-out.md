@@ -1,6 +1,6 @@
 ---
 name: Check-out
-summary: >-
+description: >-
   Guests settle their bill as they leave, so nothing is left owing once
   they've gone.
 stability: alpha

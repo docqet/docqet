@@ -1,6 +1,6 @@
 ---
 name: Your profile
-summary: >-
+description: >-
   Everyone manages their own account in every app: their name and photo, their
   email addresses, the accounts they sign in with, their password, and the
   devices they're signed in on.
@@ -25,7 +25,7 @@ rules:
 gaps:
   - id: blank-names-allowed-outside-the-app
     rule: profile/at-least-one-name-is-kept
-    text: >-
+    summary: >-
       Only the app refuses a blank name. The sign-in provider is the source of
       truth for users and takes one from sign-up, a connected account, or its
       own tools, and Exalynt has to record what it holds, since refusing would
@@ -33,55 +33,55 @@ gaps:
       they set it, and a client sees them without one on their teams until
       then.
   - id: stuck-without-a-primary-address
-    text: >-
+    summary: >-
       Someone new without a primary address, which sign-up should prevent, is
       stuck with no way to add one: Exalynt has to fix them with the sign-in
       provider.
   - id: changes-arrive-late
-    text: >-
+    summary: >-
       A name or primary address reaches Exalynt only when the sign-in provider
       sends it, or through a sync, so others can see the old one until it
       arrives, and a retried older update can bring an old one back.
   - id: success-reported-as-failure
     outcome: usability/beta/clear-results
-    text: >-
+    summary: >-
       If an action succeeds but reading the result fails, the app says it
       failed.
   - id: no-new-confirmation-code
-    text: >-
+    summary: >-
       Confirming it's them can't send a new code: cancelling and retrying can.
   - id: provider-outage-signs-out
     outcome: reliability/beta/fails-clearly
-    text: >-
+    summary: >-
       If the sign-in provider fails to load, its cookies are cleared in the
       hope that helps, so even a brief outage signs that browser out.
   - id: turned-off-provider-accounts-hidden
-    text: >-
+    summary: >-
       An account from a provider later turned off isn't listed, so it can't
       be disconnected.
   - id: photo-removal-unconfirmed
-    text: Removing a photo isn't confirmed.
+    summary: Removing a photo isn't confirmed.
   - id: gravatar-looked-up-by-viewers
-    text: >-
+    summary: >-
       Gravatar is looked up from each viewer's browser, by a hash of the
       address of whoever they're looking at, for anyone without a photo.
       People are told this about themselves only.
   - id: devices-no-retry
     outcome: usability/beta/recover
-    text: >-
+    summary: >-
       If the list of devices fails to load, it says to reload, with no retry.
   - id: focus-lost-after-row-actions
     outcome: usability/beta/everyone
-    text: >-
+    summary: >-
       Signing a device out or making an address primary leaves keyboard focus
       nowhere useful, as what did it goes with its row.
   - id: provider-updates-not-tested-end-to-end
-    text: >-
+    summary: >-
       Updating a profile straight from the sign-in provider has no end-to-end
       test, as those tests run without the provider. Acceptance and unit tests
       cover it instead.
   - id: never-verified
-    text: >-
+    summary: >-
       Never verified: a completed connection of a Google account and
       disconnecting one, whether reported failures arrive, delivery of changes
       from the sign-in provider, and real screen-reader output.

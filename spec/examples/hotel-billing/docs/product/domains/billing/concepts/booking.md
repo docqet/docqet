@@ -5,7 +5,7 @@ description: >-
   was booked.
 confused-with:
   - term: The booking app's booking
-    text: >-
+    summary: >-
       a guest's hold on a room. Billing doesn't keep rooms free or taken,
       only what each stay costs.
 ---

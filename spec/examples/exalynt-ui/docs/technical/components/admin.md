@@ -16,75 +16,75 @@ capabilities:
 gaps:
   - id: clients-read-everything
     outcome: efficiency/beta/bounded
-    text: >-
+    summary: >-
       The Clients pages read every client and every block before showing
       anything, and the list pages them in the browser. Each block's invoice
       is read from the payment provider by the API, one at a time.
   - id: coupons-two-shapes
-    text: >-
+    summary: >-
       Client coupons (`data/coupons.ts`) and the revenue calculator's coupons
       are the same shape but separate code, and the two don't meet.
   - id: whole-lists-paged-in-browser
     outcome: efficiency/beta/bounded
-    text: >-
+    summary: >-
       The API sends every partnership and every pending invitation at once,
       and the Partners and Invitations lists page them in the browser.
   - id: roster-reads-everything
     outcome: efficiency/beta/bounded
-    text: >-
+    summary: >-
       Each Engineers page reads everyone, every team, client and block, once
       when it opens and again after a team change.
   - id: roster-assumes-global-reads
-    text: >-
+    summary: >-
       The Engineers pages are written for administrators: without
       `user:read`, `team:read`, `capacity:read` or `client:read` the roster
       doesn't load, and with a team or own scope it shows only what that
       reaches.
   - id: team-picker-ignores-permission
-    text: >-
+    summary: >-
       The team picker on the Engineers pages shows without `team:manage`, so
       the change is only refused by the API, and toasted.
   - id: terms-catalog-copied
-    text: >-
+    summary: >-
       The Commercial Terms an admin chooses from, on an invitation or when
       sending an engineer new terms, come from the UI's own copy of the
       catalog (`src/shared/terms.ts`), not the API's.
   - id: agreement-pdf-from-preview
-    text: >-
+    summary: >-
       A client's accepted agreements open their PDF from the API's agreement
       preview, filled in from the placeholder record each time, so they open
       only where `AGREEMENT_PREVIEW_ENABLED` is on (Compose, never
       production). They have to read the API's own agreement endpoints, as an
       engineer's page does.
   - id: readiness-per-person
-    text: >-
+    summary: >-
       Whether someone is ready for client work is read for one person at a
       time (`engineers/useReadiness.ts`), since asking whether they can be
       paid asks the payout provider, so the Engineers list can't show it.
       The list has no Agreement column either, as that would take a request
       per engineer.
   - id: partner-page-reads-manager-account
-    text: >-
+    summary: >-
       A partner's page reads its manager's own payout account, not the
       partnership's.
   - id: scheduling-placeholder-teams
-    text: >-
+    summary: >-
       Scheduling shows its own placeholder teams (`data/teams.ts`), which
       don't match the API's teams on the Teams page, so its preference for a
       client's teams isn't real.
   - id: creator-role-guarded-by-page
-    text: >-
+    summary: >-
       Only the Roles page stops the role given to an organization's creator
       being unmarked or deleted. The API allows it, and the next deploy gives
       creators a role again.
   - id: one-scope-per-permission
-    text: >-
+    summary: >-
       The role editor gives a permission one scope, though the API allows
       several, and saving keeps only the widest, so own and team becomes
       team.
   - id: roles-pages-untested
     outcome: functionality/beta/stays-correct
-    text: >-
+    summary: >-
       Roles is tested end to end only by the API's tests. The pages have no
       automated tests of their own.
 ---

@@ -1,6 +1,6 @@
 ---
 name: Staffing
-summary: >-
+description: >-
   Each scheduled block gets one engineer: an eligible engineer claims it from
   the client's shared queue, as [Claiming blocks](claiming-blocks.md) covers,
   or an admin assigns it.
@@ -36,13 +36,13 @@ concepts:
   - team
 gaps:
   - id: placeholder-staffing-view
-    text: >-
+    summary: >-
       The admin's week-by-week view of every team's capacity runs on
       placeholder data, with its own placeholder teams, so its preference for
       a client's teams isn't real yet. Assigning there changes nothing, and an
       admin has no real way to staff a block in the admin app yet.
   - id: no-releasing
-    text: >-
+    summary: >-
       An engineer can't release a block assigned to them that they can't
       fulfill: they ask an admin, who reassigns or unassigns it. Releasing is
       to need no approval, their lead's included, and to send the block
@@ -53,14 +53,14 @@ gaps:
       progress for whoever claims it next to carry on, and can be claimed even
       after its week ends, since that week can't move.
   - id: no-urgent-or-overdue-blocks
-    text: >-
+    summary: >-
       Nobody can spot urgent or overdue blocks. A block still unclaimed when
       its preferred week starts isn't flagged as urgent to team leads and
       admins, or kept urgent once that week ends: admins spot overbooked
       blocks and scheduled but unassigned blocks, and watch the unassigned
       ones by week.
   - id: no-team-lead-staffing
-    text: >-
+    summary: >-
       Team leads have no part in staffing beyond claiming blocks like any
       engineer, and an admin assigns, reassigns, unassigns and moves blocks.
       Leads can't yet see their supported clients' shared queues with urgent
@@ -70,19 +70,19 @@ gaps:
       lead or ask an admin to make it, or be alerted when an engineer releases
       a supported client's block, to arrange coverage.
   - id: leads-cant-move-weeks
-    text: >-
+    summary: >-
       Team leads can't move the preferred week of a block bought by a client
       their team supports. They're to be able to until the block is in
       progress, without the client's approval: the client is told and can
       choose another available week, and the commitment to fulfill or refund
       the block stands.
   - id: moving-takes-the-engineer-off
-    text: >-
+    summary: >-
       Moving a block always takes its engineer off. It's to keep its engineer
       if they can fit it in the new week, and only otherwise go back to the
       client's shared queue for that week, with the engineer told.
   - id: overbooking-not-flagged-per-team
-    text: >-
+    summary: >-
       The admin's overview flags a week only when all of Exalynt's bookings
       exceed all of its availability, so one team's overbooked week can be
       hidden by another's spare time, or by engineers on no team. Nothing is
@@ -90,31 +90,33 @@ gaps:
       fitted surfaces as a missed week, which an admin rebooks.
   - id: assignment-eligibility-unchecked
     rule: staffing/assignment-requires-eligibility
-    text: >-
+    summary: >-
       An admin putting an engineer on a block isn't checked for that
       engineer's eligibility.
   - id: assignment-availability-unchecked
     rule: staffing/assignment-must-fit-availability
-    text: >-
+    summary: >-
       An admin putting an engineer on a block isn't checked for that
       engineer's availability.
 tradeoffs:
   - id: leads-manage-only-their-own-team
-    text: >-
+    summary: >-
       A lead manages assignments directly only for their own team's engineers,
       and can't take a block from another team's engineer or assign one to
       them.
-    cost: >-
-      A cross-team transfer needs the other lead's coordination or an admin,
-      or the current engineer releases the block so an engineer on the other
-      team can claim it.
+    drawbacks:
+      - >-
+        A cross-team transfer needs the other lead's coordination or an admin,
+        or the current engineer releases the block so an engineer on the other
+        team can claim it.
   - id: no-lead-owns-a-queue
-    text: >-
+    summary: >-
       No lead owns a client's shared queue. A queued block doesn't belong to a
       lead's team just because the lead can see it.
-    cost: >-
-      No one lead answers for a queued block, so who escalates one that's
-      urgent is still open.
+    drawbacks:
+      - >-
+        No one lead answers for a queued block, so who escalates one that's
+        urgent is still open.
 decisions:
   - topic: Cross-team handoff
     question: >-

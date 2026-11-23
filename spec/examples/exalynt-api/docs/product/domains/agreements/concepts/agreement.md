@@ -8,7 +8,7 @@ description: >-
   [partnership](../../partnerships/concepts/partnership.md).
 confused-with:
   - concept: partnership@partnerships
-    text: the partner's own record. Its terms are held in its Partner Agreement.
+    summary: the partner's own record. Its terms are held in its Partner Agreement.
 ---
 
 - **Agreement Template**: a type of agreement's text.

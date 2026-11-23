@@ -1,6 +1,6 @@
 ---
 name: Room status
-summary: >-
+description: >-
   Housekeepers mark rooms clean or dirty, so the front desk knows which are
   ready.
 stability: prototype

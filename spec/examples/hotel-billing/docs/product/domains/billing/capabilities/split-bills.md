@@ -1,6 +1,6 @@
 ---
 name: Split bills
-summary: >-
+description: >-
   Clerks split a bill between guests sharing a room, or move charges onto
   another guest's bill.
 stability: prototype

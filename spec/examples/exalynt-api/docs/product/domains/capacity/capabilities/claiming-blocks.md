@@ -1,6 +1,6 @@
 ---
 name: Claiming blocks
-summary: >-
+description: >-
   Engineers see their weeks on My Schedule beside what their team's clients
   have scheduled that nobody's on, and claim the blocks that fit their
   availability, or unclaim one until its week starts.
@@ -36,40 +36,40 @@ concepts:
   - team
 gaps:
   - id: no-letting-go-once-started
-    text: >-
+    summary: >-
       Once a block's week has started, an engineer can't let go of it. They
       ask an admin, who takes them off it.
   - id: no-claim-notifications
-    text: Nobody is told when a block is claimed or unclaimed.
+    summary: Nobody is told when a block is claimed or unclaimed.
   - id: taken-off-untold
-    text: >-
+    summary: >-
       An engineer isn't told when a client's move or unschedule takes them off
       a block, so a client can take an engineer off by moving a block away and
       back. My Schedule shows it the next time it's read.
   - id: stranded-block-client-untold
-    text: >-
+    summary: >-
       When a claim leaves another block with nobody who can take it, that
       block's client isn't told, and it surfaces as a missed week an admin
       rebooks.
   - id: blocks-read-once
-    text: >-
+    summary: >-
       An engineer's blocks and their clients' blocks are read once on opening,
       so someone else's claim shows only on reading again, or when claiming
       the block is refused.
   - id: about-a-year-ahead
-    text: >-
+    summary: >-
       An engineer's weeks go about a year ahead, from the start of this month.
       A block scheduled further out isn't shown.
   - id: clicking-unclaims
-    text: >-
+    summary: >-
       Before a block's week starts, clicking it on My Schedule unclaims it, so
       an engineer can't open its page from there until the week starts.
   - id: no-teammates-weeks
-    text: >-
+    summary: >-
       An engineer can't see their teammates' weeks: who's on what, or how much
       room each has. A block's own page says who's on it.
   - id: unscheduled-blocks-unseen
-    text: >-
+    summary: >-
       An engineer doesn't see a block a client hasn't scheduled yet, and can't
       ask the client to schedule it from the product.
 decisions:

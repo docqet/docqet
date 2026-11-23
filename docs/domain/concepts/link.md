@@ -11,7 +11,7 @@ which domains a feature spans, or which mechanisms a capability relies on.
 
 - **Only frontmatter link fields and [annotations](annotation.md) count.**
   Markdown links, in a doc's body or in a frontmatter text value such as a
-  summary or a rule's why, are ordinary relative links, for readers. The
+  description or a rule's why, are ordinary relative links, for readers. The
   indexer reports any that are broken, but they're not relationships.
 - **Product docs never link to technical docs.** Components link to the
   capabilities that rely on them, and a mechanism applies to every capability
@@ -31,7 +31,8 @@ capability                 → personas, rules, concepts
 rule                       → concepts
 concept                    → concepts                  (confused-with)
 gap                        → an outcome, a rule        (outcome, rule)
-decision                   → any doc, gap or tradeoff  (became)
+tradeoff                   → an outcome                (outcome)
+decision                   → a doc, gap or tradeoff on its side  (became)
 component                  → capabilities, outcomes    (meets)
 mechanism                  → outcomes                  (meets)
 annotation                 → rules, capabilities, mechanisms, components    (docket:verifies, docket:implements)

@@ -1,6 +1,6 @@
 ---
 name: Partner earnings
-summary: >-
+description: >-
   Partners see what their partnership earns on each of its clients' blocks:
   what each block has earned or will, how long each client's earning window
   has left, and what's waiting to be paid.
@@ -91,42 +91,44 @@ rules:
 concepts: [partnership, payout-share, capacity-payout-basis, fulfilled]
 gaps:
   - id: earning-doesnt-name-its-payout
-    text: >-
+    summary: >-
       An earning doesn't say which payout carried it; the payout lists its
       blocks.
   - id: attribution-and-terms-from-partnerships
     outcome: security/alpha/stable-dependencies
-    text: >-
+    summary: >-
       Which clients are attributed to the partnership, and its terms, come
       from Partnerships, which is still Alpha.
 tradeoffs:
   - id: nothing-before-partnership-earnings
-    text: >-
+    summary: >-
       Partnerships earn only on blocks fulfilled since partnership earnings
       existed.
-    cost: >-
-      Blocks fulfilled before partnership earnings existed earn the
-      partnership nothing.
+    drawbacks:
+      - >-
+        Blocks fulfilled before partnership earnings existed earn the
+        partnership nothing.
   - id: earlier-blocks-count-after-attribution
-    text: >-
+    summary: >-
       Blocks a client bought before this was built count as bought for the
       partnership only if they were bought after the client was attributed to
       it.
-    cost: >-
-      Blocks bought before the client was attributed earn the partnership
-      nothing.
+    drawbacks:
+      - >-
+        Blocks bought before the client was attributed earn the partnership
+        nothing.
   - id: client-price-and-coupons-not-shown
-    text: >-
+    summary: >-
       What the client paid for a block, and any coupon on it, isn't shown, as
       it never changes what the partnership earns.
-    cost: >-
-      Partners can't see what their clients paid.
+    drawbacks:
+      - Partners can't see what their clients paid.
   - id: refunds-settled-outside-the-product
-    text: >-
+    summary: >-
       A refund after a block is fulfilled changes nothing the partnership
       earned.
-    cost: >-
-      Exalynt settles it outside the product.
+    drawbacks:
+      - Exalynt settles it outside the product.
 ---
 
 ## Includes

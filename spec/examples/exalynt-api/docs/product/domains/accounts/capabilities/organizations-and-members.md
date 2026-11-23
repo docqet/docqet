@@ -1,6 +1,6 @@
 ---
 name: Organizations and members
-summary: >-
+description: >-
   Clients sign up, create the organization their people share, invite others
   to it, and give each member a role.
 stability: ga
@@ -80,107 +80,113 @@ rules:
 concepts: [organization, role, team]
 gaps:
   - id: invitations-never-expire
-    text: >-
+    summary: >-
       Invitations never expire and can't be resent: an Admin revokes one and
       invites the same address again.
   - id: referral-relies-on-alpha-partnerships
     outcome: security/alpha/stable-dependencies
-    text: >-
+    summary: >-
       Which partner referred the organization comes from Partnerships, which
       is still Alpha.
   - id: logo-only-in-the-portal
-    text: >-
+    summary: >-
       Only the portal shows the organization's logo: the console and the
       admin still show initials.
   - id: team-assignment-by-load-only
-    text: >-
+    summary: >-
       Assigning a new client a team goes only by load, not by what kind of
       work suits a team, and two clients signing up at once can land on the
       same team.
   - id: sign-up-shows-the-team
     outcome: security/beta/misuse
-    text: >-
+    summary: >-
       Anyone who signs up sees the names and email addresses of the team
       they're given, with no one at Exalynt having looked at them first.
       Since anyone can create organizations, doing it again and again can
       show more than one team.
   - id: no-alert-on-failures
     outcome: observability/beta/hears-of-errors
-    text: >-
+    summary: >-
       Exalynt doesn't alert itself when sign-up, inviting or joining start
       failing: someone notices first.
   - id: success-not-agreed
     outcome: utility/beta/success-agreed
-    text: >-
+    summary: >-
       What success looks like hasn't been agreed with the client, so nothing
       yet shows it's met in real use.
   - id: no-availability-target
     outcome: reliability/ga/availability
-    text: No availability target has been agreed.
+    summary: No availability target has been agreed.
   - id: no-speed-target
     outcome: efficiency/ga/speed-targets
-    text: >-
+    summary: >-
       No response-time target has been agreed, and it hasn't been tried at
       peak load.
   - id: retention-not-decided
     outcome: security/beta/duties
-    text: >-
+    summary: >-
       How long an organization's data is kept after it closes isn't decided:
       nothing is deleted, even on request.
   - id: no-privacy-notice
     outcome: security/beta/duties
-    text: >-
+    summary: >-
       Sign-up doesn't link to a privacy notice, and the agreements with the
       services that hold people's details (sign-in, email, monitoring) aren't
       confirmed.
   - id: supported-browsers-not-stated
     outcome: compatibility/ga/every-platform
-    text: >-
+    summary: >-
       Which browsers and devices it supports isn't stated, and it hasn't been
       checked against them.
   - id: accessibility-standard-not-stated
     outcome: usability/ga/all-accessible
-    text: >-
+    summary: >-
       The accessibility standard it meets isn't stated, and it hasn't been
       checked against one.
   - id: no-support-commitments
     outcome: supportability/ga/help
-    text: >-
+    summary: >-
       There's no stated support response time, no status page or outage
       notice, and no commitment to review serious incidents.
 tradeoffs:
   - id: closing-by-email
-    text: >-
+    summary: >-
       Closing the account is a conversation with Exalynt, by email from the
       Organization page.
-    cost: >-
-      Nothing in the portal starts or tracks it, and the organization isn't
-      deleted afterwards.
+    drawbacks:
+      - Nothing in the portal starts or tracks it.
+      - The organization isn't deleted afterwards.
   - id: fifty-invitations-a-day
-    text: >-
+    summary: >-
       An organization, and each person, can send 50 invitations a day.
-    cost: >-
-      An organization inviting more people than that waits until the next
-      day.
+    drawbacks:
+      - >-
+        An organization inviting more people than that waits until the next
+        day.
   - id: members-unsorted-and-unpaged
-    text: >-
+    outcome: efficiency/beta/bounded
+    summary: >-
       The list of members can't be sorted or paged: it shows every member, by
       name.
-    cost: A large organization's list is long to look through.
+    drawbacks:
+      - A large organization's list is long to look through.
   - id: last-save-wins
-    text: >-
+    summary: >-
       The last save wins on the organization's name and on member roles:
       nothing checks what the person last read.
-    cost: >-
-      Two people changing the same thing at once can undo each other's change
-      without knowing.
+    drawbacks:
+      - >-
+        Two people changing the same thing at once can undo each other's change
+        without knowing.
   - id: any-role-from-member-management
-    text: >-
+    summary: >-
       Whoever can manage members can give anyone any role, Admin included.
-    cost: A role that manages members can do everything.
+    drawbacks:
+      - A role that manages members can do everything.
   - id: initials-without-a-photo
-    text: A member without a photo of their own shows initials.
-    cost: Members without a photo are told apart only by their initials.
+    summary: A member without a photo of their own shows initials.
+    drawbacks:
+      - Members without a photo are told apart only by their initials.
 ---
 
 ## Includes

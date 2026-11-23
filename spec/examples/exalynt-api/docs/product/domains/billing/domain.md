@@ -1,6 +1,6 @@
 ---
 name: Billing
-summary: Charging clients for the capacity they buy.
+description: Charging clients for the capacity they buy.
 ---
 
 The payment provider holds payment methods, billing details and invoices, and

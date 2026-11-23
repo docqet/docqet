@@ -1,6 +1,6 @@
 ---
 name: Estimates
-summary: >-
+description: >-
   Exalynt prepares estimates of what a project might take, and clients and
   prospects read them to see what each focus and the project would cost and
   take on every block type.
@@ -29,55 +29,58 @@ rules:
 concepts: [estimate, capacity-block, capacity-unit]
 gaps:
   - id: no-asking-for-estimates
-    text: >-
+    summary: >-
       Clients can't ask for an estimate, or for an updated one when the scope
       changes, in the product. They ask Exalynt outside it.
   - id: no-estimate-notifications
-    text: >-
+    summary: >-
       Nobody is told when an estimate is shared with their organization or
       changed.
   - id: prospects-attached-by-hand
-    text: >-
+    summary: >-
       A prospect's estimate is attached to their organization by hand once
       they've signed up.
   - id: fixed-operations-fee
-    text: The operations fee is fixed, so changing it takes a release.
+    summary: The operations fee is fixed, so changing it takes a release.
   - id: operations-not-shown
-    text: >-
+    summary: >-
       Operations aren't shown for now: there's no way to include them when
       writing an estimate, and nothing on the client's estimate or its PDF.
       Exalynt still keeps whether an estimate includes them, and its fee.
   - id: tried-paces-not-saved
-    text: Paces the client tries are never saved, and reset on leaving.
+    summary: Paces the client tries are never saved, and reset on leaving.
   - id: pdf-leaves-out-planned-pace
-    text: >-
+    summary: >-
       The PDF offers the project on each pace as an option, with every focus
       on it, and leaves out the pace each focus was planned on.
   - id: pdf-not-kept
-    text: >-
+    summary: >-
       The PDF is built on the reader's device, so it isn't stored or kept as
       sent.
   - id: pdf-layout-breaks
-    text: >-
+    summary: >-
       In the PDF, a title with no spaces runs off the page and into the
       footer, and web addresses get hyphenated.
   - id: no-retry-after-failed-load
     outcome: usability/beta/recover
-    text: A failed load says to reload, with no way to retry in place.
+    summary: A failed load says to reload, with no way to retry in place.
   - id: tested-only-through-the-api
     outcome: functionality/beta/stays-correct
-    text: >-
+    summary: >-
       The workflow is tested end to end only through the API. The console's
       own tests cover the math and what a save sends.
 tradeoffs:
   - id: last-save-wins
-    text: >-
+    summary: >-
       When two people edit one estimate at once, the later save replaces the
       earlier one, without a warning.
-    cost: The earlier person's changes are lost without them knowing.
+    drawbacks:
+      - The earlier person's changes are lost without them knowing.
   - id: deleting-is-permanent
-    text: Deleting an estimate is permanent.
-    cost: Getting one back means restoring a backup.
+    outcome: usability/beta/recover
+    summary: Deleting an estimate is permanent.
+    drawbacks:
+      - Getting one back means restoring a backup.
 decisions:
   - topic: Asking for estimates and engineers
     question: >-

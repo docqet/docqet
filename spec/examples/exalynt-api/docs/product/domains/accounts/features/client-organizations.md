@@ -1,6 +1,6 @@
 ---
 name: Client organizations
-summary: >-
+description: >-
   Giving each client business an account its people share, kept apart from
   every other client's.
 capabilities:

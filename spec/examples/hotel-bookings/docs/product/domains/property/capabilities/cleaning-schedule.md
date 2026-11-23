@@ -1,6 +1,6 @@
 ---
 name: Cleaning schedule
-summary: Housekeepers see which rooms to clean today, with early arrivals first.
+description: Housekeepers see which rooms to clean today, with early arrivals first.
 stability: prototype
 personas: [housekeeper]
 concepts: [room]

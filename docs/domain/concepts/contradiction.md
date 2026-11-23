@@ -13,7 +13,7 @@ can be fixed.
 What should agree:
 
 - **A domain's, feature's, capability's, persona's, mechanism's or component's
-  name and summary**, in every project that declares it. What else each
+  name and description**, in every project that declares it. What else each
   contribution says is its own: its body, and its frontmatter fields that
   aren't links, such as `decisions` or a rule's
   `why`. Those are shown side by side, labelled with their project and
@@ -37,16 +37,16 @@ Hotel Bookings writes check-out in Guest stays:
 
 ```yaml
 name: Check-out
-summary: >-
+description: >-
   Clerks check guests out on their departure day and take payment for anything
   still owed.
 ```
 
-Hotel Billing writes it in Billing, with a summary of its own:
+Hotel Billing writes it in Billing, with a description of its own:
 
 ```yaml
 name: Check-out
-summary: >-
+description: >-
   Guests settle their bill as they leave, so nothing is left owing once
   they've gone.
 ```

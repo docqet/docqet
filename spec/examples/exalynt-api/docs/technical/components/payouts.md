@@ -5,17 +5,17 @@ capabilities: [payouts, partner-payouts]
 gaps:
   - id: person-and-admin-lists-not-paged
     outcome: efficiency/beta/bounded
-    text: >-
+    summary: >-
       A person's and the admin's payout lists aren't paged:
       `GET /users/me/payouts` and `GET /payouts` return everything.
 tradeoffs:
   - id: waiting-worked-out-on-read
-    text: >-
+    summary: >-
       What's waiting is worked out on read, not stored as a run: there's no
       scheduler or draft to keep in step, and a week nobody released rolls
       into the next.
-    cost: >-
-      Every read asks the provider about each payee's account.
+    drawbacks:
+      - Every read asks the provider about each payee's account.
 ---
 
 **Never sent twice.**

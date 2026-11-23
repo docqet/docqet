@@ -6,7 +6,7 @@ description: >-
 capabilities: [fulfillment]
 gaps:
   - id: orphaned-objects
-    text: >-
+    summary: >-
       An object uploaded for an update that then fails to post, or taken off
       an update by an edit or delete, stays in the client's organization.
       Focuses do the same.

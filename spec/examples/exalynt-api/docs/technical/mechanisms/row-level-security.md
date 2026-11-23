@@ -1,44 +1,45 @@
 ---
 name: Row-level security
-summary: >-
+description: >-
   Postgres enforces the organization and partnership boundaries underneath the
   application's Bounds, so a query that forgets its Bounds still can't cross
   them in a request acting in an organization or a partnership.
 gaps:
   - id: no-organization-runs-on-platform
-    text: >-
+    summary: >-
       `X-Organization-ID` is optional, so anyone signed in can leave it out
       and run on `api_platform`. Holding no platform role, they hold no
       permissions and `authz.Require` refuses them, so nothing crosses today,
       but Bounds are all that stand in the way.
   - id: shared-tables-unprotected
-    text: >-
+    summary: >-
       Shared tables have no row-level security, `users` above all, as staff
       names appear across organizations: a query there that forgets to filter
       can read every user's name and email.
   - id: no-staff-audit-trail
     outcome: security/ga/traceable
-    text: >-
+    summary: >-
       What staff read across organizations isn't recorded beyond the request's
       log line. Left out by decision for now.
   - id: taken-id-is-a-conflict
-    text: >-
+    summary: >-
       A client-supplied ID that's already taken is a `409`, in any
       organization, as IDs are globally unique. Someone who already knows an ID
       can learn that it exists, and nothing else.
   - id: indexes-not-led-by-organization
-    text: >-
+    summary: >-
       Existing indexes don't all lead with `organization_id`, as some serve
       staff's views across organizations.
 tradeoffs:
   - id: setting-per-transaction
-    text: >-
+    summary: >-
       The organization or partnership is set with `SET LOCAL` in a
       transaction around each statement, a `UnitOfWork`'s or a short one of
       its own, rather than on a connection kept for the request.
-    cost: >-
-      A statement outside a `UnitOfWork` costs three more round trips, so work
-      issuing many belongs in one.
+    drawbacks:
+      - >-
+        A statement outside a `UnitOfWork` costs three more round trips, so work
+        issuing many belongs in one.
 ---
 
 Every table holding an organization's records has an `organization_id`, filled

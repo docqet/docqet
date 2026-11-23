@@ -1,6 +1,6 @@
 ---
 name: Partner home
-summary: >-
+description: >-
   Partners land on the partnership they manage at a glance, with the clients
   it has brought in, how to bring in more, and how it earns.
 stability: alpha
@@ -37,17 +37,17 @@ concepts: [partnership, capacity-payout-basis, payout-share]
 gaps:
   - id: failed-load-says-to-reload
     outcome: usability/beta/recover
-    text: >-
+    summary: >-
       If the clients or what each block earns can't be loaded, it says to
       reload: there's no retry on it.
   - id: missing-account-reminder-dropped-silently
     outcome: functionality/alpha/errors-visible
-    text: >-
+    summary: >-
       If the payout account can't be read, the reminder that there's none is
       left off, without saying so.
   - id: not-verified-for-everyone
     outcome: usability/beta/everyone
-    text: >-
+    summary: >-
       Dark mode, narrow phones, keyboard use, switching between partnerships,
       and real screen readers haven't been verified.
 ---

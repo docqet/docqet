@@ -1,6 +1,6 @@
 ---
 name: Extra charges
-summary: >-
+description: >-
   Staff add extras such as breakfast, parking or the minibar to a guest's
   bill.
 stability: ga

@@ -1,6 +1,6 @@
 ---
 name: Check-out
-summary: >-
+description: >-
   Clerks check guests out on their departure day and take payment for anything
   still owed.
 stability: ga

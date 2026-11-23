@@ -1,6 +1,6 @@
 ---
 name: Company accounts
-summary: >-
+description: >-
   Billing companies for their staff's stays, so the guests don't pay
   themselves.
 capabilities:

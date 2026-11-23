@@ -1,6 +1,6 @@
 ---
 name: Engineers
-summary: >-
+description: >-
   Exalynt's admins see everyone who works with Exalynt: their team, what
   they're working on, and whether they're ready for client work.
 stability: alpha
@@ -72,60 +72,61 @@ rules:
 concepts: [team, role]
 gaps:
   - id: readiness-one-at-a-time
-    text: >-
+    summary: >-
       Readiness shows only for one person at a time, as asking whether someone
       can be paid asks the payout provider, so the list of everyone can't say
       who isn't ready.
   - id: lists-every-platform-role
-    text: >-
+    summary: >-
       It lists everyone holding a platform role, whatever the role, not only
       engineers.
   - id: joined-is-account-creation
-    text: >-
+    summary: >-
       Joined is when their account was made, so someone who was a client first
       shows that earlier date.
   - id: moved-engineers-stay-on-blocks
-    text: >-
+    summary: >-
       Moving someone off a team leaves them on their blocks until they're
       reassigned, which can't be done in the apps yet.
   - id: reads-everything
     outcome: efficiency/beta/bounded
-    text: >-
+    summary: >-
       Everyone, every team, client and block is read on opening, and again
       after a team change.
   - id: role-shown-only-to-role-managers
-    text: Someone's role is named only to those who can manage roles.
+    summary: Someone's role is named only to those who can manage roles.
   - id: team-change-offered-then-refused
-    text: >-
+    summary: >-
       Changing someone's team is offered to those who can't manage teams, and
       is refused when tried.
   - id: role-and-applications-api-only
-    text: >-
+    summary: >-
       Someone's role and applications can't be changed in the apps, only by
       calling the API directly.
   - id: no-agreement-preview
-    text: >-
+    summary: >-
       There's no preview of an Engineer Agreement before sending it, and its
       terms come from the app's own copy of the terms catalog.
   - id: agreements-not-listed
-    text: >-
+    summary: >-
       The list of everyone doesn't say who has an Engineer Agreement, as that
       would take a request per engineer.
   - id: week-range-example-weak
     outcome: functionality/beta/stays-correct
-    text: >-
+    summary: >-
       The acceptance example for listing the blocks someone is on by week has
       no block before the weeks asked for, so losing the earlier limit
       wouldn't fail it.
 tradeoffs:
   - id: written-for-administrators
-    text: >-
+    summary: >-
       It's written for administrators: without full reads of people, teams,
       capacity and clients the list doesn't load, and with narrower reach it
       shows only what that reaches.
-    cost: >-
-      There's no rule for what a team-limited view of people shows, as only
-      the admin view matters for now.
+    drawbacks:
+      - >-
+        There's no rule for what a team-limited view of people shows, as only
+        the admin view matters for now.
 ---
 
 ## Includes

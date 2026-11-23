@@ -1,6 +1,6 @@
 ---
 name: Partner agreements
-summary: >-
+description: >-
   A partnership's manager reads and accepts the Partner Agreement Exalynt
   sends with its invitation, with its Commercial Terms, before working in the
   Partner Hub for that partnership.
@@ -23,35 +23,35 @@ rules:
 concepts: [agreement, partnership]
 gaps:
   - id: only-the-partner-hub-holds-to-the-agreement
-    text: >-
+    summary: >-
       Only the Partner Hub holds a partnership to its agreement: someone using
       the API directly can still do what managing it allows without one in
       effect.
   - id: no-new-terms
-    text: >-
+    summary: >-
       Nothing sends a partnership new terms after its invitation, so it has
       one Partner Agreement at most for now.
   - id: offered-only-through-alpha-invitations
     outcome: security/alpha/stable-dependencies
-    text: >-
+    summary: >-
       A partnership gets its Partner Agreement only through its invitation,
       sent and accepted in Partnerships, which is still Alpha.
   - id: unnamed-partnership-in-the-document
-    text: >-
+    summary: >-
       A partnership accepted before it's named shows "your partnership" in the
       document as accepted.
   - id: switching-relies-on-alpha-partnerships
     outcome: security/alpha/stable-dependencies
-    text: >-
+    summary: >-
       Switching between the partnerships someone manages relies on
       Partnerships, which is still Alpha.
   - id: generated-pdf-file-name
-    text: >-
+    summary: >-
       A PDF downloaded from the browser's viewer gets a generated file name,
       not the agreement's.
   - id: names-outside-western-european-alphabets
     outcome: usability/beta/everyone
-    text: >-
+    summary: >-
       A name with characters outside Western European alphabets shows them as
       "?" in the PDF, and the PDF keeps them that way once accepted.
 ---

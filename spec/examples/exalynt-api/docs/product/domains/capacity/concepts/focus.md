@@ -5,7 +5,7 @@ description: >-
   optional description, and the images, videos, and files that go with it.
 confused-with:
   - concept: estimate
-    text: >-
+    summary: >-
       an estimate's focuses are how planned work is grouped and sized. A
       block's focus says what one block's work is about, and isn't taken
       from an estimate.

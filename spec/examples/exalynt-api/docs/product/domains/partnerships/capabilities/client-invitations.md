@@ -1,6 +1,6 @@
 ---
 name: Client invitations
-summary: >-
+description: >-
   Partners invite people they know to become Exalynt clients by email, and
   each one who signs up as a new client is attributed to their partnership.
 stability: beta
@@ -36,34 +36,35 @@ rules:
 concepts: [partnership]
 gaps:
   - id: different-address-stays-sent
-    text: >-
+    summary: >-
       An invitation stays marked as sent when the person signs up with a
       different address from the one invited, though the link still
       attributes them.
   - id: existing-clients-spotted-by-name-only
-    text: >-
+    summary: >-
       A company that's already a client can only be spotted by having the
       same name, so one signing up under another name counts as new.
   - id: email-law-not-reviewed
     outcome: security/beta/duties
-    text: >-
+    summary: >-
       What the law asks of email a partner has Exalynt send to someone who
       never asked for it, such as a way to opt out, hasn't been reviewed, and
       the invitation has no opt-out.
   - id: referral-codes-from-partnerships
     outcome: security/alpha/stable-dependencies
-    text: >-
+    summary: >-
       The partnership's referral code, which every invitation carries, can
       only be attributed while its partnership is set up in Partnerships,
       which is still Alpha.
 tradeoffs:
   - id: revoked-links-still-attribute
-    text: >-
+    summary: >-
       Revoking an invitation doesn't stop its link: the email still has the
       link with the partnership's referral code.
-    cost: >-
-      Whoever uses a revoked invitation's link is still attributed to the
-      partnership.
+    drawbacks:
+      - >-
+        Whoever uses a revoked invitation's link is still attributed to the
+        partnership.
 ---
 
 ## Includes

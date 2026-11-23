@@ -15,20 +15,20 @@ capabilities:
   - getting-set-up
 gaps:
   - id: welcome-three-calls
-    text: >-
+    summary: >-
       Accepting an invitation on the welcome page is three calls: accepting,
       naming the partnership, and accepting its Partner Agreement. If naming
       fails the partner is told to name it in the hub, and if the agreement
       fails the hub opens on it to accept.
   - id: earnings-screens-untested
     outcome: functionality/beta/stays-correct
-    text: >-
+    summary: >-
       Earnings' screens are tested end to end only by the API's tests. The
       hub's unit tests cover the totals, each earning's state and note
       (`earningTotals`, `earningState`, `earningNote`) and reading every page.
   - id: payouts-screens-untested
     outcome: functionality/beta/stays-correct
-    text: >-
+    summary: >-
       Payouts' screens are tested end to end only by the API's tests. The
       hub's unit tests cover the rows (`toRows`, `failureText`) and reading
       every page.

@@ -16,12 +16,12 @@ capabilities:
 gaps:
   - id: listings-not-paged
     outcome: efficiency/beta/bounded
-    text: >-
+    summary: >-
       The admin's list of partnerships and of attributed clients, and
       someone's own partnerships, return everything.
 tradeoffs:
   - id: limits-counted-from-invitations
-    text: >-
+    summary: >-
       Sending limits are counted from the invitations themselves, not a
       limiter or a log of sends: the day's new invitations are a count of
       `client_invitations` rows created in the last 24 hours, revoked ones
@@ -29,9 +29,9 @@ tradeoffs:
       stored or run. That's why revoking sets `revoked_at` and blanks the
       address rather than deleting (migration 95): a deleted row would free up
       a slot, and the count needs no address.
-    cost: >-
-      Two invitations at the same moment can both pass the 50th, and the count
-      is a rolling 24 hours, not a calendar day.
+    drawbacks:
+      - Two invitations at the same moment can both pass the 50th.
+      - The count is a rolling 24 hours, not a calendar day.
 ---
 
 **Earning windows.** A client's earning window on the clients list comes from

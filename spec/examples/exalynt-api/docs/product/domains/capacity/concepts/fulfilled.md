@@ -5,7 +5,7 @@ description: >-
   it, and marking it fulfilled is final.
 confused-with:
   - concept: payout@pay
-    text: >-
+    summary: >-
       a separate lifecycle that starts once a block is fulfilled. A
       fulfilled block isn't necessarily paid out.
 ---

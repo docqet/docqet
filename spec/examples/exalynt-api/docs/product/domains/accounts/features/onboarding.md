@@ -1,6 +1,6 @@
 ---
 name: Onboarding
-summary: >-
+description: >-
   Bringing clients, engineers and partners in, and getting each ready to work.
 capabilities:
   - getting-set-up

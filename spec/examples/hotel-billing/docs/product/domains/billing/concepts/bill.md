@@ -5,7 +5,7 @@ description: >-
   it.
 confused-with:
   - term: Invoice
-    text: what a company is sent for a month of its staff's bills.
+    summary: what a company is sent for a month of its staff's bills.
 ---
 
 A bill is made of [charges](charge.md) and [payments](payment.md). Its balance

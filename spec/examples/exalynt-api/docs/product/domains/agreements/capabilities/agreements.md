@@ -1,6 +1,6 @@
 ---
 name: Agreements
-summary: >-
+description: >-
   Admins offer each party the agreement that binds it to Exalynt: a Client
   Agreement for an organization, an Engineer Agreement for someone working in
   the console, and a Partner Agreement for a partnership.
@@ -23,45 +23,45 @@ rules:
 concepts: [agreement, organization, partnership]
 gaps:
   - id: only-the-apps-hold-people-to-an-agreement
-    text: >-
+    summary: >-
       Only the apps hold people to an agreement: someone using the API
       directly can still do what their role allows without one in effect, and
       the admin app isn't gated.
   - id: new-versions-not-offered
-    text: >-
+    summary: >-
       A new version isn't offered to an organization or person that accepted
       an earlier one, and nothing sends a client new terms (it has none).
   - id: read-in-full-only-to-accept
-    text: >-
+    summary: >-
       An agreement is only read in full to accept it: nobody else can read
       one that's waiting, so an admin can't read an Engineer Agreement they've
       sent until it's accepted.
   - id: generated-pdf-file-name
-    text: >-
+    summary: >-
       A PDF downloaded from the browser's viewer gets a generated file name,
       not the agreement's.
   - id: names-outside-western-european-alphabets
     outcome: usability/beta/everyone
-    text: >-
+    summary: >-
       A name with characters outside Western European alphabets shows them as
       "?" in the PDF, and the PDF keeps them that way once accepted.
   - id: placeholder-client-agreement-records
-    text: >-
+    summary: >-
       Admins see only placeholder records of what clients have accepted, over
       placeholder clients. Nothing sends or accepts a client's agreement from
       there, and the real Client Agreements Exalynt keeps aren't shown.
   - id: placeholder-documents-local-only
-    text: >-
+    summary: >-
       Those placeholder records open their documents only in local
       development. They have to read the real agreements before this part
       leaves Prototype.
   - id: no-preview-before-sending
-    text: >-
+    summary: >-
       An admin has no preview of an Engineer Agreement before sending it, the
       terms they choose from are a copy of the real catalog, and the list of
       engineers doesn't say whose agreements are in effect.
   - id: shared-definitions-changed-in-place
-    text: >-
+    summary: >-
       How a shared definition changes once an accepted version uses it isn't
       decided yet. The definition of Fulfilled, and version 1 of the Client
       Agreement, were changed in place to say the engineer marks a block

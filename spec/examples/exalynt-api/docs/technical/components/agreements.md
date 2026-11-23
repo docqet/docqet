@@ -11,36 +11,39 @@ capabilities:
   - earnings
 tradeoffs:
   - id: apps-hold-people-to-agreements
-    text: >-
+    summary: >-
       The apps hold people to an agreement, not the API: the portal's,
       console's and hub's gates keep someone out until one is in effect, and
       the API answers what their role allows regardless.
-    cost: >-
-      Someone using the API directly can still do what their role allows
-      without an agreement in effect.
+    drawbacks:
+      - >-
+        Someone using the API directly can still do what their role allows
+        without an agreement in effect.
   - id: pdf-laid-out-in-go
-    text: >-
+    summary: >-
       The PDF is laid out in Go with fpdf's Helvetica, not a browser or a
       Unicode font, so there's no headless browser to run or font to ship.
-    cost: >-
-      A character outside Windows-1252 is "?" for good once accepted, so a
-      name with characters outside Western European alphabets keeps them as
-      "?" in its PDF.
+    drawbacks:
+      - >-
+        A character outside Windows-1252 is "?" for good once accepted, so a
+        name with characters outside Western European alphabets keeps them as
+        "?" in its PDF.
   - id: no-flag-before-gates
-    text: >-
+    summary: >-
       There's no flag in front of the console's or the portal's gate, like the
       other Beta features.
-    cost: >-
-      If reading agreements fails, every engineer is kept out of the console,
-      or every client out of the portal, until a fix or a rollback is
-      deployed.
+    drawbacks:
+      - >-
+        If reading agreements fails, every engineer is kept out of the console,
+        or every client out of the portal, until a fix or a rollback is
+        deployed.
   - id: accepted-agreements-outlive-their-user
-    text: >-
+    summary: >-
       Accepted agreements outlive their user: deleting a user clears `user_id`
       on their accepted ones (migration 91) and keeps their PDFs, since the PDF
       is the record of what was agreed.
-    cost: >-
-      A deleted person's name and email stay in those PDFs and rows.
+    drawbacks:
+      - A deleted person's name and email stay in those PDFs and rows.
 ---
 
 An offer is a row with its type, version and Commercial Terms. While it's

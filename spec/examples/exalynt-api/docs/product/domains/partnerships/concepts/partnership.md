@@ -7,7 +7,7 @@ description: >-
   representative.
 confused-with:
   - concept: organization@accounts
-    text: a client company's account. A partnership is never one.
+    summary: a client company's account. A partnership is never one.
 ---
 
 A partnership has one manager, a person, who can manage several. It has the name

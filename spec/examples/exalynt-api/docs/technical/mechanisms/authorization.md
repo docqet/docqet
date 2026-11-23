@@ -1,28 +1,30 @@
 ---
 name: Authorization
-summary: >-
+description: >-
   Decides what a caller may do and which records they may do it to, from the
   Principal authentication built. It knows nothing of tokens or the database.
   What the terms mean in the domain is in the role and organization concepts.
 tradeoffs:
   - id: member-manage-gives-any-role
-    text: >-
+    summary: >-
       `member:manage` gives any organization role, not only roles within the
       giver's own permissions: inviting someone or changing a member's role
       checks only that the role exists, so the default roles stay simple and
       only Admin, which holds every organization permission, manages members.
-    cost: >-
-      A custom role holding `member:manage` without, say, `invoice:pay` can
-      make its holder Admin, so in effect `member:manage` is every
-      organization permission. The API reference says so.
+    drawbacks:
+      - >-
+        A custom role holding `member:manage` without, say, `invoice:pay` can
+        make its holder Admin, so in effect `member:manage` is every
+        organization permission. The API reference says so.
   - id: application-access-not-enforced
-    text: >-
+    summary: >-
       Which applications someone is offered is `application_access`, held per
       user and not by role, and only the front ends act on it: they decide
       what to show by it, and the API keeps checking permissions.
-    cost: >-
-      Someone who isn't offered an application can still call its routes with
-      whatever their permissions allow.
+    drawbacks:
+      - >-
+        Someone who isn't offered an application can still call its routes with
+        whatever their permissions allow.
 ---
 
 | Term | What it is | Where |

@@ -1,6 +1,6 @@
 ---
 name: Partner program
-summary: >-
+description: >-
   Bringing Exalynt clients through partners, and paying partners for the
   clients they bring.
 capabilities:

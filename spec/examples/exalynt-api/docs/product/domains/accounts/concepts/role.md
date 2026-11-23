@@ -6,7 +6,7 @@ description: >-
   organization roles, for a client [organization](organization.md)'s members.
 confused-with:
   - concept: access-token
-    text: a token holds no access of its own. It acts with its user's roles.
+    summary: a token holds no access of its own. It acts with its user's roles.
 ---
 
 A permission is something checked before it's done, such as scheduling a block.

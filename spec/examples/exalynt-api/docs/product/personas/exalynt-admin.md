@@ -1,6 +1,6 @@
 ---
 name: Mira Castellan
-summary: >-
+description: >-
   Founder-operator who runs Exalynt's staffing, payouts, estimates,
   partnerships and roles, while also talking to clients and doing engineering.
 role: Exalynt Admin

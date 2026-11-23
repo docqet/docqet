@@ -1,6 +1,6 @@
 ---
 name: Pay by link
-summary: >-
+description: >-
   Guests pay their bill by card from a link the hotel sends them, without
   coming to the desk.
 stability: alpha
@@ -11,13 +11,14 @@ rules:
 concepts: [payment, bill]
 tradeoffs:
   - id: hotels-currency-only
-    text: Guests pay in the hotel's currency, not their own.
-    gain: >-
-      The bill, the payment and the hotel's books are all in one currency,
-      with no exchange rates to keep.
-    cost: >-
-      Their card provider converts it, at its own rate, so the amount on
-      their statement can differ from the bill.
+    summary: Guests pay in the hotel's currency, not their own.
+    benefits:
+      - The bill, the payment and the hotel's books are all in one currency.
+      - There are no exchange rates to keep.
+    drawbacks:
+      - >-
+        Their card provider converts it, at its own rate, so the amount on
+        their statement can differ from the bill.
 decisions:
   - question: Do guests pay before they leave, or wait until they're home?
 ---

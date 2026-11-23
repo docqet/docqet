@@ -1,6 +1,6 @@
 ---
 name: Tom
-summary: >-
+description: >-
   Looks after the hotel overnight, and makes sure each day is closed before
   morning.
 role: Front desk

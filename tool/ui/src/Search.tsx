@@ -42,7 +42,7 @@ type Entry = {
   key: string;
   kind: Kind;
   title: string;
-  /* What else it's found by: its summary and ID. */
+  /* What else it's found by: its description and ID. */
   text: string;
   /* A line under it, for context: what it's in, or applies to. */
   context: string;
@@ -122,7 +122,7 @@ function entries(state: DocketState): (Entry & { projects: string[] })[] {
       key: `domain:${d.id}`,
       kind: "domain" as const,
       title: d.name,
-      text: `${d.summary ?? ""} ${d.id}`,
+      text: `${d.description ?? ""} ${d.id}`,
       context: plural(d.features.length, "feature", "features"),
       target: { pick: { kind: "domain" as const, id: d.id } },
       projects: docProjects(d),
@@ -133,7 +133,7 @@ function entries(state: DocketState): (Entry & { projects: string[] })[] {
         key: `feature:${f.id}`,
         kind: "feature" as const,
         title: f.name,
-        text: `${f.summary ?? ""} ${f.id} ${spans}`,
+        text: `${f.description ?? ""} ${f.id} ${spans}`,
         context: `${spans} · ${plural(f.capabilities.length, "capability", "capabilities")}`,
         target: { pick: { kind: "feature" as const, id: f.id } },
         projects: docProjects(f),
@@ -143,7 +143,7 @@ function entries(state: DocketState): (Entry & { projects: string[] })[] {
       key: `capability:${c.id}`,
       kind: "capability" as const,
       title: c.name,
-      text: `${c.summary ?? ""} ${c.id} ${domains(docDomains(c))}`,
+      text: `${c.description ?? ""} ${c.id} ${domains(docDomains(c))}`,
       context: `${(c.feature && find(state.features, c.feature)?.name) || "Not in a feature"} · ${domains(docDomains(c))}`,
       level: c.stability,
       target: { pick: { kind: "capability" as const, id: c.id } },
@@ -169,8 +169,8 @@ function entries(state: DocketState): (Entry & { projects: string[] })[] {
       key: `concept:${c.id}`,
       kind: "concept" as const,
       title: c.name,
-      text: `${c.summary ?? ""} ${bareId(c.id)} ${c.from.map((f) => `${fieldsText(f)} ${f.body}`).join(" ")} ${domainName(state, c.domain)}`,
-      context: `${state.domains.length > 1 ? `${domainName(state, c.domain)} · ` : ""}${c.summary ?? plural(c.capabilities.length, "capability", "capabilities")}`,
+      text: `${c.description ?? ""} ${bareId(c.id)} ${c.from.map((f) => `${fieldsText(f)} ${f.body}`).join(" ")} ${domainName(state, c.domain)}`,
+      context: `${state.domains.length > 1 ? `${domainName(state, c.domain)} · ` : ""}${c.description ?? plural(c.capabilities.length, "capability", "capabilities")}`,
       target: { pick: { kind: "concept" as const, id: c.id } },
       projects: docProjects(c),
     })),
@@ -179,8 +179,8 @@ function entries(state: DocketState): (Entry & { projects: string[] })[] {
       key: `persona:${p.id}`,
       kind: "persona" as const,
       title: p.name,
-      text: `${p.summary ?? ""} ${p.id} ${p.from.map((f) => `${fieldsText(f)} ${f.body}`).join(" ")}`,
-      context: p.summary ?? plural(p.capabilities.length, "capability", "capabilities"),
+      text: `${p.description ?? ""} ${p.id} ${p.from.map((f) => `${fieldsText(f)} ${f.body}`).join(" ")}`,
+      context: p.description ?? plural(p.capabilities.length, "capability", "capabilities"),
       target: { pick: { kind: "persona" as const, id: p.id } },
       projects: docProjects(p),
     })),
@@ -190,7 +190,7 @@ function entries(state: DocketState): (Entry & { projects: string[] })[] {
 /*
  * How well an entry matches every term, or null if one is missing. A title
  * that starts with a term beats one with a word that does, which beats the
- * term anywhere in the title, which beats it only in the summary or ID.
+ * term anywhere in the title, which beats it only in the description or ID.
  */
 function score(entry: Entry, terms: string[]): number | null {
   const title = entry.title.toLowerCase();

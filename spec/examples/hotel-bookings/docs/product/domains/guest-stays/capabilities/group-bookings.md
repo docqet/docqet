@@ -1,6 +1,6 @@
 ---
 name: Group bookings
-summary: >-
+description: >-
   Clerks hold several rooms at once for a group travelling together, under one
   name.
 stability: prototype

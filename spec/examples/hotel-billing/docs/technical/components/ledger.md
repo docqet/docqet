@@ -8,19 +8,21 @@ meets: [reliability/beta/data-kept]
 gaps:
   - id: corrections-of-corrections-untested
     outcome: maintainability/ga/others-can-change
-    text: >-
+    summary: >-
       Nothing tests correcting a line that is itself a correction, so a change
       to `correct` could stop a twice-corrected charge netting to zero without
       anything failing.
 tradeoffs:
   - id: balance-worked-out-on-read
-    text: >-
+    outcome: efficiency/beta/bounded
+    summary: >-
       A bill's balance is added up from its lines every time it's asked for,
       not stored on the bill.
-    gain: >-
-      The balance can never disagree with the lines, and there's nothing to
-      keep in step when a line is added.
-    cost: Opening a bill gets slower as lines are added to it.
+    benefits:
+      - The balance can never disagree with the lines.
+      - There's nothing to keep in step when a line is added.
+    drawbacks:
+      - Opening a bill gets slower as lines are added to it.
 ---
 
 Everything that changes what a guest owes goes through `post`: room nights,

@@ -1,6 +1,6 @@
 ---
 name: Engineer onboarding
-summary: >-
+description: >-
   Engineers join Exalynt by an admin's invitation, on the team it names if it
   names one, since nobody signs up as an engineer on their own.
 stability: alpha
