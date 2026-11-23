@@ -22,7 +22,7 @@ feature and domain, but they're declared once.
 A question doesn't happen to anyone, so a decision has no impact of its own.
 What does happen is whatever the software does while it's open, and that's a
 [gap](gap.md). When a gap's cost depends on how the question is answered, the
-decision names it as riding on it, and shows the worst impact among those
+decision names it as riding on it, and shows the highest risk among those
 gaps, so it's clear what's at stake in leaving it open. The gap is still what
 counts toward [risk](risk.md), so nothing is counted twice. A gap that's
 really an unsettled question is written as both: the consequence as the gap,

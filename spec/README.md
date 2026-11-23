@@ -320,7 +320,7 @@ The body column is a suggestion of what's worth writing, not a structure.
   - **`gaps`**, while it's open, lists the gaps riding on it: those whose
     cost depends on how it's answered. Each is a gap's key on the same doc,
     or a gap's own ID, on the decision's side as `became` is. A decision has
-    no impact of its own; readers show the worst impact among its gaps.
+    no impact of its own; readers show the highest risk among its gaps.
 
 ```yaml
 decisions:
@@ -946,35 +946,54 @@ a level's color:
 
 ## Risk
 
-Readers order gaps by **risk**: what's at stake in each, so the ones that
+Readers score each gap's **risk**: what's at stake in it, so the ones that
 matter are read first. Nothing is written for it, and it isn't in
 `state.json`: readers work it out once projects are put together, since a
 mechanism that applies across a platform shows on every project's
-capabilities. A gap's risk comes from three things, in this order:
+capabilities. A product gap shows on its capability; a technical gap on
+every capability its mechanism or component serves. On each capability it
+shows on, a gap scores:
 
-1. **Its impact**: `damaging`, then `blocking`, `inconvenient` and
-   `negligible`, then gaps with none.
-2. **Whether it breaks a promise**: it names a rule, or a checklist outcome
-   that the level of a capability it shows on expects, so that outcome shows
-   as not met there.
-3. **Its exposure**: the sum, over every capability it shows on, of their
-   levels' weights in [maturity](#how-maturity-is-worked-out): Prototype 2,
-   Alpha 3, Beta 4, GA 6. A product gap shows on its capability; a technical
-   gap on every capability its mechanism or component serves. A draft adds
-   nothing.
+```text
+impact step × level weight × 1.5 if it breaks that level's promise
+```
+
+1. **Its impact step**: `negligible` 1, `inconvenient` 2, `blocking` 3,
+   `damaging` 4.
+2. **The capability's level weight**, as in
+   [maturity](#how-maturity-is-worked-out): Prototype 2, Alpha 3, Beta 4,
+   GA 6. A draft weighs 0.
+3. **Whether it breaks that level's promise**: it names a rule that
+   capability follows, or a checklist outcome that capability's level
+   expects, so that outcome shows as not met there. A draft makes no promise.
+
+Each score is put on 0 to 100 by a log scale, from 2, the least there is (a
+negligible gap on a Prototype), to 36, the most (a damaging gap breaking a
+promise on GA), and rounded: `100 × ln(raw ÷ 2) ÷ ln(18)`. A draft scores
+0. A gap's risk is its highest
+score. A gap with no `impact` has no risk. Its **verdict** is the band its
+risk falls in: `acceptable` below 33, `tolerable` from 33, and
+`unacceptable` from 67. Its **exposure** is how its scores spread: how many
+capabilities carry each score, highest first. Readers order gaps by risk, highest first, then by
+exposure, comparing the number of capabilities at each score from the
+highest down, then gaps with no impact.
 
 The ledger's `corrections-of-corrections-untested` is `damaging`, and names
-`maintainability/ga/others-can-change`, which extra charges, at GA, expects.
-The ledger serves extra charges at GA, deposits at Beta, check-out and direct
-billing at Alpha, and split bills at Prototype: an exposure of
-6 + 4 + 3 + 3 + 2 = 18. It comes before any `inconvenient` gap, whatever that
-gap's exposure.
+`maintainability/ga/others-can-change`, which only GA expects. The ledger
+serves extra charges at GA, where it breaks that promise: 4 × 6 × 1.5 = 36,
+or 100. It serves deposits at Beta (72), check-out and direct billing at
+Alpha (62 each), and split bills at Prototype (48). Its risk is 100,
+`unacceptable`, and its exposure `100 on 1 · 72 on 1 · 62 on 2 · 48 on 1`.
 
-`when` is never part of risk. Tradeoffs are ordered the same way by their
-drawback's impact and their exposure, without the second step: a tradeoff
-that names an outcome falls short on purpose, so it breaks no promise. An
-open decision has no risk of its own, and shows the worst impact among the
-gaps it lists.
+Where several gaps are shown together, as for a capability, feature,
+domain, persona or component, each is scored only on the capabilities
+there, and readers show the highest risk and how many fall in each
+verdict.
+
+`when` is never part of risk. Tradeoffs are scored the same way by their
+drawback's impact, without the promise: a tradeoff that names an outcome
+falls short on purpose, so it breaks no promise. An open decision has no
+risk of its own, and shows the highest risk among the gaps it lists.
 
 ## Evidence
 

@@ -1,8 +1,10 @@
 # Risk
 
-Which [gaps](gap.md) matter most: an order worked out from each gap's impact,
-whether it breaks a promise a level makes, and its exposure. Nobody writes it
-down.
+What's at stake in leaving a [gap](gap.md) open: a score from 0 to 100,
+worked out from its impact, the [stability level](stability-level.md) of
+each capability it shows on, and whether it breaks the promise that level
+makes, with a verdict on whether that's acceptable. Gaps are ordered by it,
+riskiest first. Nobody writes it down.
 
 ## Details
 
@@ -13,20 +15,85 @@ written down:
 - **Impact**, declared on the gap: what happens to whoever relies on it when
   it bites. It's the one part of risk written by hand, since only people know
   the consequence.
-- **Whether it breaks a promise**, derived: it names a [rule](rule.md) the
-  capability follows, or a [stability checklist](stability-checklist.md)
-  outcome that the level of a capability it shows on expects. People
-  depending on that level are relying on something that isn't true yet.
-- **Exposure**, derived: how much depends on it. A product gap shows on its
-  capability, and a technical gap on every capability that relies on its
-  mechanism or component, so a gap in something many capabilities rely on
-  weighs more. Stable capabilities weigh more than early ones, as they do in
-  [maturity](maturity.md), since more people depend on them.
+- **Stability**, derived: the level of each capability it shows on. A
+  product gap shows on its capability, and a technical gap on every
+  capability that relies on its mechanism or component. Stable capabilities
+  weigh more than early ones, as they do in [maturity](maturity.md), since
+  more people depend on them, and on real data.
+- **Whether it breaks that level's promise**, derived, for each capability:
+  it names a [rule](rule.md) that capability follows, or a
+  [stability checklist](stability-checklist.md) outcome that capability's
+  level expects. People depending on that level are relying on something
+  that isn't true yet.
 
-Impact comes first: a damaging gap on one capability matters more than an
-inconvenient one across twenty. Within an impact, a gap that breaks a
-promise comes before one that doesn't, then the more exposed before the less.
-A gap with no impact rated comes last.
+On each capability it shows on, a gap scores:
+
+```text
+impact × level weight × 1.5 if it breaks that level's promise
+```
+
+put on 0 to 100 by a log scale, rounded to a whole number. 0 is the least
+there is, a negligible gap on a Prototype, 1 × 2 = 2, and 100 the most, a
+damaging gap that breaks a promise on GA, 4 × 6 × 1.5 = 36:
+
+```text
+score = 100 × ln(raw ÷ 2) ÷ ln(36 ÷ 2)
+```
+
+Since the raw score multiplies its parts, the log scale makes each of them
+add a steady amount instead: each step of impact or level, and breaking a
+promise, moves the score the same way wherever it starts. Equal distances on
+the scale mean equal multiples of what's at stake, so the verdicts' bands
+can be even thirds.
+
+| Impact         | Step |     | Level     | Weight |
+| -------------- | ---- | --- | --------- | ------ |
+| `negligible`   | 1    |     | Prototype | 2      |
+| `inconvenient` | 2    |     | Alpha     | 3      |
+| `blocking`     | 3    |     | Beta      | 4      |
+| `damaging`     | 4    |     | GA        | 6      |
+
+A draft weighs nothing, since it promises nothing, so a gap scores 0 there.
+The gap's **risk** is its highest score: what's at stake where it matters
+most. A gap with no impact rated has no risk, and comes after every gap
+that's rated.
+
+Stability can outweigh impact: a damaging gap on a Prototype, where data may
+be fake, scores 48, below a blocking gap on GA at 76.
+
+### Verdict
+
+A risk's **verdict** says whether it's OK to leave the gap open at the level
+it's at, by the band its score falls in:
+
+| Verdict        | Score     | What it means                                    |
+| -------------- | --------- | ------------------------------------------------ |
+| `acceptable`   | 0 to 32   | Fine to leave open.                              |
+| `tolerable`    | 33 to 66  | OK to leave for now, but worth closing.          |
+| `unacceptable` | 67 to 100 | Not OK to leave open at the level it's at.       |
+
+Every score there is, with the score where it breaks that level's promise
+after it:
+
+| Impact         | Prototype | Alpha   | Beta    | GA       |
+| -------------- | --------- | ------- | ------- | -------- |
+| `damaging`     | 48 / 62   | 62 / 76 | 72 / 86 | 86 / 100 |
+| `blocking`     | 38 / 52   | 52 / 66 | 62 / 76 | 76 / 90  |
+| `inconvenient` | 24 / 38   | 38 / 52 | 48 / 62 | 62 / 76  |
+| `negligible`   | 0 / 14    | 14 / 28 | 24 / 38 | 38 / 52  |
+
+Where there's more than one gap, as in a capability, feature, domain,
+persona or component, each is scored on the capabilities there, and they're
+shown as their highest risk and how many fall in each verdict.
+
+### Exposure
+
+A gap's **exposure** is how its risk spreads across the capabilities it
+shows on: how many carry each score, highest first, such as
+`100 on 1 · 72 on 1 · 62 on 2`. Of two gaps with the same risk, the one with
+more capabilities at that score comes first; if they're level there, the one
+with more at the next score, and so on. A gap in something many capabilities
+rely on is more exposed than one on a single capability.
 
 ### Impact
 
@@ -74,28 +141,34 @@ It's never part of risk, since Docket has no way to know whether the condition
 holds in the running system.
 
 A [tradeoff](tradeoff.md) rates its drawback the same way, so the choices we
-live with can be ordered by what we've accepted. It's ordered by impact, then
-exposure: one that names an outcome falls short on purpose, so it breaks no
-promise. An [open decision](open-decision.md) has no impact of its own, since
-a question doesn't happen to anyone, but it shows the worst impact among the
+live with can be ordered by what we've accepted. It's scored the same way,
+without the promise: one that names an outcome falls short on purpose, so it
+breaks no promise. An [open decision](open-decision.md) has no impact of its own, since
+a question doesn't happen to anyone, but it shows the highest risk among the
 gaps riding on it.
 
 ## In the spec
 
 Each gap's `impact` is in its doc. The ledger's untested corrections are
 `damaging`, when someone changes how corrections work. They name
-`maintainability/ga/others-can-change`, which extra charges, at GA, expects,
-so they break a promise. The ledger is relied on by extra charges at GA,
-deposits at Beta, check-out and direct billing at Alpha, and split bills at
-Prototype, so their exposure is:
+`maintainability/ga/others-can-change`, which only GA expects. The ledger is
+relied on by extra charges at GA, deposits at Beta, check-out and direct
+billing at Alpha, and split bills at Prototype, so they score:
 
 ```text
-6 + 4 + 3 + 3 + 2 = 18
+extra charges   GA, breaks its promise   4 × 6 × 1.5 = 36  → 100
+deposits        Beta                     4 × 4       = 16  →  72
+check-out       Alpha                    4 × 3       = 12  →  62
+direct billing  Alpha                    4 × 3       = 12  →  62
+split bills     Prototype                4 × 2       =  8  →  48
 ```
 
+Their risk is 100, unacceptable, and their exposure
+`100 on 1 · 72 on 1 · 62 on 2 · 48 on 1`.
+
 City tax's children corrected by hand are `inconvenient`, name a rule city tax
-follows, and show only on city tax, at Alpha: an exposure of 3. The ledger's
-gap comes first.
+follows, and show only on city tax, at Alpha: 2 × 3 × 1.5 = 9, or 52,
+tolerable. The ledger's gap comes first.
 
 Readers work out risk once projects are put together, since a mechanism that
 applies across a platform shows on every project's capabilities. Nothing is

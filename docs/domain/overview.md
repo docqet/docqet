@@ -60,9 +60,9 @@ verifies or implements it, or mark where a gap or tradeoff shows in the code.
 The **[indexer](concepts/indexer.md)** reads all of it, and works out each
 one's evidence, each feature's, domain's and project's
 **[maturity](concepts/maturity.md)**, each persona's
-**[readiness](concepts/readiness.md)**, and any problems. Readers order gaps
-by **[risk](concepts/risk.md)**, from the impact each declares and how much
-depends on it.
+**[readiness](concepts/readiness.md)**, and any problems. Readers score gaps
+by **[risk](concepts/risk.md)**, from the impact each declares, the level of
+each capability it's on, and whether it breaks that level's promise.
 
 ```mermaid
 flowchart TB
@@ -135,7 +135,8 @@ flowchart TB
   level -. "of capabilities" .-> maturity
   persona -.-> readiness
   maturity -. "of what serves them" .-> readiness
-  gap & tradeoff -. "impact and exposure" .-> risk
+  gap & tradeoff -. "impact" .-> risk
+  level -. "weight and promise" .-> risk
   project -. "its docs" .-> problem
 
   classDef derivedNode stroke-dasharray: 4 3
@@ -305,8 +306,9 @@ Some things are never features or capabilities:
 - [Open decision](concepts/open-decision.md): a question not settled yet.
 - [Gap](concepts/gap.md): something we intend to close.
 - [Tradeoff](concepts/tradeoff.md): something we chose, knowing its benefit and drawback.
-- [Risk](concepts/risk.md): which gaps matter most, from their impact and
-  how much depends on them.
+- [Risk](concepts/risk.md): what's at stake in a gap, scored from its impact,
+  the level of each capability it's on, and whether it breaks that level's
+  promise, and its exposure, how that spreads across them.
 
 **Stability and maturity**
 

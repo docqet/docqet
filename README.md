@@ -76,8 +76,8 @@ Docket separates what the software is meant to do from what it does:
 - **State is derived.** Tools read both and work out everything else, which
   nobody writes by hand: each rule's evidence, each feature's **maturity** (how
   much of it is stable), each persona's **readiness** (how ready the software
-  is for them), each gap's **risk** (its declared impact, and how much
-  depends on it), and any problems in the docs themselves.
+  is for them), each gap's **risk** (its declared impact, scored by
+  the stability of what it's on and whether it breaks that level's promise), and any problems in the docs themselves.
 - **The difference is the work.** What's declared is taken to hold, unless
   it's declared that it doesn't, or the evidence contradicts it. Docket names
   the ways intention and reality differ, open decisions, gaps, tradeoffs and
