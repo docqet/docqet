@@ -54,14 +54,6 @@ gaps:
     impact: inconvenient
     description: >-
       On a phone, how each client came and its earning window aren't shown.
-  - id: manual-attribution-from-partnerships
-    name: Attributing by hand relies on Alpha Partnerships
-    outcome: security/alpha/stable-dependencies
-    impact: blocking
-    description: >-
-      Clients Exalynt attributes, moves, or removes by hand go through
-      Partnerships, which is still Alpha.
-    when: A breaking change in Partnerships.
 ---
 
 ## Includes

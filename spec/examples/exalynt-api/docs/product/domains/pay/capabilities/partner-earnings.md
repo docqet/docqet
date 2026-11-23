@@ -97,14 +97,6 @@ gaps:
     description: >-
       An earning doesn't say which payout carried it; the payout lists its
       blocks.
-  - id: attribution-and-terms-from-partnerships
-    name: Attribution and terms rely on Alpha Partnerships
-    outcome: security/alpha/stable-dependencies
-    impact: inconvenient
-    description: >-
-      Which clients are attributed to the partnership, and its terms, come
-      from Partnerships, which is still Alpha.
-    when: Partnerships changes in a way that breaks what earnings rely on.
 tradeoffs:
   - id: nothing-before-partnership-earnings
     name: Earnings start from launch, not backdated

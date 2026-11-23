@@ -46,6 +46,10 @@ one doc, so check its other files before choosing a key.
 - **When a gap has a visible effect and a technical cause**, the gap goes on
   the capability, and the component's body explains the cause. A gap is never
   in both.
+- **Relying on something less stable isn't a gap.** When a capability, or
+  part of one, depends on a capability at a lower level, that capability's
+  level already says how much can be counted on, so don't write a gap saying
+  so. A gap is what falls short in the thing itself.
 - **Mark where it shows in the code** with `docket:gap <gap ID>` when there's
   a clear place, instead of a bare TODO.
 - **Closing a gap** removes it, its `docket:gap` annotations, and its key from

@@ -86,14 +86,6 @@ gaps:
     description: >-
       Invitations never expire and can't be resent: an Admin revokes one and
       invites the same address again.
-  - id: referral-relies-on-alpha-partnerships
-    name: Referrals rely on Alpha Partnerships
-    outcome: security/alpha/stable-dependencies
-    impact: inconvenient
-    description: >-
-      Which partner referred the organization comes from Partnerships, which
-      is still Alpha.
-    when: Partnerships makes a breaking change or resets its data.
   - id: logo-only-in-the-portal
     name: Logo shown only in the portal
     impact: negligible

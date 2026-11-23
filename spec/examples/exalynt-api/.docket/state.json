@@ -22,7 +22,7 @@
       "ga": 1
     },
     "rules": 368,
-    "gaps": 313,
+    "gaps": 303,
     "problems": 4,
     "tradeoffs": 62,
     "mechanisms": 6,
@@ -605,7 +605,6 @@
       ],
       "gaps": [
         "capability:organizations-and-members#invitations-never-expire",
-        "capability:organizations-and-members#referral-relies-on-alpha-partnerships",
         "capability:organizations-and-members#logo-only-in-the-portal",
         "capability:organizations-and-members#team-assignment-by-load-only",
         "capability:organizations-and-members#sign-up-shows-the-team",
@@ -921,7 +920,6 @@
       "gaps": [
         "capability:engineer-agreements#only-the-console-holds-to-the-agreement",
         "capability:engineer-agreements#new-versions-not-offered",
-        "capability:engineer-agreements#sending-relies-on-alpha-capabilities",
         "capability:engineer-agreements#earlier-engineers-kept-out",
         "capability:engineer-agreements#generated-pdf-file-name",
         "capability:engineer-agreements#names-outside-western-european-alphabets",
@@ -980,9 +978,7 @@
       "gaps": [
         "capability:partner-agreements#only-the-partner-hub-holds-to-the-agreement",
         "capability:partner-agreements#no-new-terms",
-        "capability:partner-agreements#offered-only-through-alpha-invitations",
         "capability:partner-agreements#unnamed-partnership-in-the-document",
-        "capability:partner-agreements#switching-relies-on-alpha-partnerships",
         "capability:partner-agreements#generated-pdf-file-name",
         "capability:partner-agreements#names-outside-western-european-alphabets"
       ],
@@ -1136,7 +1132,6 @@
         "capability:availability#browser-week-not-utc",
         "capability:availability#far-weeks-adjustable-outside-console",
         "capability:availability#team-changes-can-overbook",
-        "capability:availability#relies-on-staffing",
         "capability:availability#screen-readers-unreviewed",
         "capability:availability#deployment-and-team-access-unreviewed"
       ],
@@ -2148,8 +2143,7 @@
       "gaps": [
         "capability:client-invitations#different-address-stays-sent",
         "capability:client-invitations#existing-clients-spotted-by-name-only",
-        "capability:client-invitations#email-law-not-reviewed",
-        "capability:client-invitations#referral-codes-from-partnerships"
+        "capability:client-invitations#email-law-not-reviewed"
       ],
       "decisions": [],
       "body": "## Includes\n\n- Partners see the invitations the partnership has sent, newest first, and\n  whether each has signed up.\n- Partners resend an invitation, or revoke it.\n- Partners are told when the partnership has sent as many new invitations as it\n  can in a day, 50, or an invitation was sent too recently to resend, and when\n  to try again.\n- Clients sign up from a partner's email invitation, and are told when signing\n  up that the partner may earn from it.\n\n## Success\n\n- Partners invite people they know by email without help, and each one who signs\n  up as a new client is attributed to the partnership that invited them.",
@@ -2207,8 +2201,7 @@
       "gaps": [
         "capability:partner-clients#moving-restarts-since",
         "capability:partner-clients#no-attribution-notices",
-        "capability:partner-clients#phone-hides-how-and-window",
-        "capability:partner-clients#manual-attribution-from-partnerships"
+        "capability:partner-clients#phone-hides-how-and-window"
       ],
       "decisions": [],
       "body": "## Includes\n\n- Partners see the most recently attributed clients first, and how each came to\n  them: their referral code, their invitation, or Exalynt.\n- Partners see the latest clients at a glance where they land in the Partner\n  Hub, and go on to all of them.\n\n## Success\n\n- Every partner sees, without asking Exalynt, which clients are attributed to\n  their partnership, how each came, and how long it earns on each.",
@@ -2543,8 +2536,7 @@
         "concept:fulfilled@capacity"
       ],
       "gaps": [
-        "capability:partner-earnings#earning-doesnt-name-its-payout",
-        "capability:partner-earnings#attribution-and-terms-from-partnerships"
+        "capability:partner-earnings#earning-doesnt-name-its-payout"
       ],
       "decisions": [],
       "body": "## Includes\n\n- Partners see every block the partnership's clients bought within their earning\n  windows, the most recently bought first: its client, type, when it was bought,\n  its capacity payout basis and the partnership's percentage of it, the amount,\n  and whether that's not earned yet, waiting, on hold, on its way, or paid.\n- While a block isn't earned yet, partners see whether it's scheduled, and for\n  which week.\n- Partners see totals, on their phone as well: what the partnership has earned\n  and how much of it is paid, what's waiting to be paid out, and what's bought\n  but not earned yet.\n- Partners are told why earned earnings are on hold, when the partnership's\n  payout account can't be paid yet.\n\n## Success\n\n- Every partner sees, without asking Exalynt, what their partnership has earned\n  on each client's blocks, what's waiting to be paid, and what's bought but not\n  earned yet.",
@@ -2709,8 +2701,7 @@
         "concept:partnership@partnerships"
       ],
       "gaps": [
-        "capability:partner-payouts#payouts-page-doesnt-say-why-held",
-        "capability:partner-payouts#releasing-is-still-alpha"
+        "capability:partner-payouts#payouts-page-doesnt-say-why-held"
       ],
       "decisions": [],
       "body": "## Includes\n\n- Partners see every payout sent to the partnership, newest first: when it was\n  sent, the bank account it went to, whether it arrived, and the blocks it paid,\n  each with its client, basis, percentage and amount as they were when it was\n  sent.\n- Partners see why a payout failed, and when it was sent again.\n\n## Success\n\n- Every partnership is paid what it earns into its own account each week an\n  admin releases, and its manager sees each payout and what it carried without\n  asking Exalynt.",
@@ -12441,7 +12432,6 @@
         "security/ga/sound"
       ],
       "gaps": [
-        "component:organizations#shapes-shared-with-less-stable-capabilities",
         "component:organizations#sends-and-keys-never-pruned",
         "component:organizations#no-load-test",
         "component:organizations#rollback-and-restore-untried"
@@ -12870,17 +12860,6 @@
       "when": null,
       "name": "Invitations never expire and can't be resent",
       "description": "Invitations never expire and can't be resent: an Admin revokes one and invites the same address again.",
-      "places": []
-    },
-    {
-      "id": "capability:organizations-and-members#referral-relies-on-alpha-partnerships",
-      "domain": "accounts",
-      "outcome": "security/alpha/stable-dependencies",
-      "rule": null,
-      "impact": "inconvenient",
-      "when": "Partnerships makes a breaking change or resets its data.",
-      "name": "Referrals rely on Alpha Partnerships",
-      "description": "Which partner referred the organization comes from Partnerships, which is still Alpha.",
       "places": []
     },
     {
@@ -13401,17 +13380,6 @@
       "places": []
     },
     {
-      "id": "capability:engineer-agreements#sending-relies-on-alpha-capabilities",
-      "domain": "agreements",
-      "outcome": "security/alpha/stable-dependencies",
-      "rule": null,
-      "impact": "blocking",
-      "when": "A breaking change in Agreements or Engineer onboarding.",
-      "name": "Sending relies on Alpha capabilities",
-      "description": "An engineer only gets an Engineer Agreement through their console invitation or an admin sending one, and both are still Alpha, in Agreements and Engineer onboarding.",
-      "places": []
-    },
-    {
       "id": "capability:engineer-agreements#earlier-engineers-kept-out",
       "domain": "agreements",
       "outcome": null,
@@ -13478,17 +13446,6 @@
       "places": []
     },
     {
-      "id": "capability:partner-agreements#offered-only-through-alpha-invitations",
-      "domain": "agreements",
-      "outcome": "security/alpha/stable-dependencies",
-      "rule": null,
-      "impact": "blocking",
-      "when": "A breaking change in Partnerships' invitations.",
-      "name": "Offered only through Alpha invitations",
-      "description": "A partnership gets its Partner Agreement only through its invitation, sent and accepted in Partnerships, which is still Alpha.",
-      "places": []
-    },
-    {
       "id": "capability:partner-agreements#unnamed-partnership-in-the-document",
       "domain": "agreements",
       "outcome": null,
@@ -13497,17 +13454,6 @@
       "when": "Naming a partnership fails before its agreement is accepted.",
       "name": "Unnamed partnership stays unnamed in the document",
       "description": "A partnership accepted before it's named shows \"your partnership\" in the document as accepted.",
-      "places": []
-    },
-    {
-      "id": "capability:partner-agreements#switching-relies-on-alpha-partnerships",
-      "domain": "agreements",
-      "outcome": "security/alpha/stable-dependencies",
-      "rule": null,
-      "impact": "blocking",
-      "when": "A breaking change in Partnerships.",
-      "name": "Switching partnerships relies on Alpha",
-      "description": "Switching between the partnerships someone manages relies on Partnerships, which is still Alpha.",
       "places": []
     },
     {
@@ -13827,17 +13773,6 @@
       "when": "An engineer with claimed blocks moves to another team.",
       "name": "Team changes can overbook a week",
       "description": "A team change can still overbook a week, and that's only flagged across all of Exalynt.",
-      "places": []
-    },
-    {
-      "id": "capability:availability#relies-on-staffing",
-      "domain": "capacity",
-      "outcome": "security/alpha/stable-dependencies",
-      "rule": null,
-      "impact": "blocking",
-      "when": "Staffing makes a breaking change.",
-      "name": "Depends on Staffing, still Alpha",
-      "description": "Seeing availability next to assignments, and a lead seeing their team's, depend on Staffing, which is only Alpha.",
       "places": []
     },
     {
@@ -15205,17 +15140,6 @@
       "places": []
     },
     {
-      "id": "capability:client-invitations#referral-codes-from-partnerships",
-      "domain": "partnerships",
-      "outcome": "security/alpha/stable-dependencies",
-      "rule": null,
-      "impact": "blocking",
-      "when": "A breaking change in Partnerships.",
-      "name": "Referral codes rely on Alpha Partnerships",
-      "description": "The partnership's referral code, which every invitation carries, can only be attributed while its partnership is set up in Partnerships, which is still Alpha.",
-      "places": []
-    },
-    {
       "id": "capability:partner-clients#moving-restarts-since",
       "domain": "partnerships",
       "outcome": null,
@@ -15246,17 +15170,6 @@
       "when": null,
       "name": "Phones hide client source and earning window",
       "description": "On a phone, how each client came and its earning window aren't shown.",
-      "places": []
-    },
-    {
-      "id": "capability:partner-clients#manual-attribution-from-partnerships",
-      "domain": "partnerships",
-      "outcome": "security/alpha/stable-dependencies",
-      "rule": null,
-      "impact": "blocking",
-      "when": "A breaking change in Partnerships.",
-      "name": "Attributing by hand relies on Alpha Partnerships",
-      "description": "Clients Exalynt attributes, moves, or removes by hand go through Partnerships, which is still Alpha.",
       "places": []
     },
     {
@@ -15502,17 +15415,6 @@
       "places": []
     },
     {
-      "id": "capability:partner-earnings#attribution-and-terms-from-partnerships",
-      "domain": "pay",
-      "outcome": "security/alpha/stable-dependencies",
-      "rule": null,
-      "impact": "inconvenient",
-      "when": "Partnerships changes in a way that breaks what earnings rely on.",
-      "name": "Attribution and terms rely on Alpha Partnerships",
-      "description": "Which clients are attributed to the partnership, and its terms, come from Partnerships, which is still Alpha.",
-      "places": []
-    },
-    {
       "id": "capability:partner-payout-accounts#status-changes-show-on-next-load",
       "domain": "pay",
       "outcome": null,
@@ -15554,17 +15456,6 @@
       "when": "The partnership's payout account is holding earnings up.",
       "name": "Payouts page doesn't say why earnings are held",
       "description": "The Payouts page doesn't say when the payout account is holding earnings up, beyond having none; Earnings does.",
-      "places": []
-    },
-    {
-      "id": "capability:partner-payouts#releasing-is-still-alpha",
-      "domain": "pay",
-      "outcome": "security/alpha/stable-dependencies",
-      "rule": null,
-      "impact": "inconvenient",
-      "when": "Releasing payouts changes in a way that breaks what partners rely on.",
-      "name": "Releasing payouts is still Alpha",
-      "description": "Releasing payouts is the admin side of Payouts, which is still Alpha.",
       "places": []
     },
     {
@@ -15880,16 +15771,6 @@
       "when": "Two people edit the same estimate at once.",
       "name": "Later of two saves silently wins",
       "description": "A PUT doesn't check what the caller last read, so the later of two saves replaces the earlier one. An `If-Unmodified-Since` precondition with a `412` could be added without breaking anyone.",
-      "places": []
-    },
-    {
-      "id": "component:organizations#shapes-shared-with-less-stable-capabilities",
-      "outcome": "compatibility/ga/stable-interface",
-      "rule": null,
-      "impact": "inconvenient",
-      "when": "Roles needs to change `OrganizationRole`, or `GET /clients` needs to change `Organization`, in a way that isn't additive.",
-      "name": "Response shapes shared with less stable capabilities",
-      "description": "`GET /organization-roles`, the only way an API caller gets the role IDs to invite with or set a member's role, belongs to roles and returns its whole `OrganizationRole`, permissions included. The `Organization` schema is also what `GET /clients` returns. Changing either changes what organizations and members relies on, so both are additive only.",
       "places": []
     },
     {

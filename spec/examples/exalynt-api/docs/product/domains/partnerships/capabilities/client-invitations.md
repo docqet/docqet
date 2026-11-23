@@ -59,15 +59,6 @@ gaps:
       What the law asks of email a partner has Exalynt send to someone who
       never asked for it, such as a way to opt out, hasn't been reviewed, and
       the invitation has no opt-out.
-  - id: referral-codes-from-partnerships
-    name: Referral codes rely on Alpha Partnerships
-    outcome: security/alpha/stable-dependencies
-    impact: blocking
-    description: >-
-      The partnership's referral code, which every invitation carries, can
-      only be attributed while its partnership is set up in Partnerships,
-      which is still Alpha.
-    when: A breaking change in Partnerships.
 tradeoffs:
   - id: revoked-links-still-attribute
     name: Revoking leaves the emailed link working

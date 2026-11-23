@@ -37,14 +37,6 @@ gaps:
       Nothing sends a partnership new terms after its invitation, so it has
       one Partner Agreement at most for now.
     when: A partnership's terms need to change.
-  - id: offered-only-through-alpha-invitations
-    name: Offered only through Alpha invitations
-    outcome: security/alpha/stable-dependencies
-    impact: blocking
-    description: >-
-      A partnership gets its Partner Agreement only through its invitation,
-      sent and accepted in Partnerships, which is still Alpha.
-    when: A breaking change in Partnerships' invitations.
   - id: unnamed-partnership-in-the-document
     name: Unnamed partnership stays unnamed in the document
     impact: negligible
@@ -52,14 +44,6 @@ gaps:
       A partnership accepted before it's named shows "your partnership" in the
       document as accepted.
     when: Naming a partnership fails before its agreement is accepted.
-  - id: switching-relies-on-alpha-partnerships
-    name: Switching partnerships relies on Alpha
-    outcome: security/alpha/stable-dependencies
-    impact: blocking
-    description: >-
-      Switching between the partnerships someone manages relies on
-      Partnerships, which is still Alpha.
-    when: A breaking change in Partnerships.
   - id: generated-pdf-file-name
     name: Downloaded PDFs get a generated file name
     impact: negligible

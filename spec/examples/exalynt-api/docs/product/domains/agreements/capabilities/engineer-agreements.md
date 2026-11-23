@@ -39,15 +39,6 @@ gaps:
       A new version of the Engineer Agreement isn't offered to an engineer
       who accepted an earlier one.
     when: A new version of the Engineer Agreement is published.
-  - id: sending-relies-on-alpha-capabilities
-    name: Sending relies on Alpha capabilities
-    outcome: security/alpha/stable-dependencies
-    impact: blocking
-    description: >-
-      An engineer only gets an Engineer Agreement through their console
-      invitation or an admin sending one, and both are still Alpha, in
-      Agreements and Engineer onboarding.
-    when: A breaking change in Agreements or Engineer onboarding.
   - id: earlier-engineers-kept-out
     name: Existing engineers kept out until sent one
     impact: inconvenient

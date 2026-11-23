@@ -38,6 +38,9 @@ written as two gaps.
   shows what's at stake.
 
 A capability that's missing altogether isn't a gap: it's a draft capability.
+Relying on a capability at a lower level isn't a gap either, such as
+referrals relying on Partnerships at Alpha: that capability's level already
+says how much can be counted on, so a gap saying so would count it twice.
 
 ## Lifecycle
 

@@ -7,19 +7,6 @@ description: >-
 capabilities: [capability:organizations-and-members, capability:client-directory, capability:billing]
 meets: [security/ga/sound]
 gaps:
-  - id: shapes-shared-with-less-stable-capabilities
-    name: Response shapes shared with less stable capabilities
-    outcome: compatibility/ga/stable-interface
-    impact: inconvenient
-    description: >-
-      `GET /organization-roles`, the only way an API caller gets the role IDs
-      to invite with or set a member's role, belongs to roles and returns its
-      whole `OrganizationRole`, permissions included. The `Organization` schema
-      is also what `GET /clients` returns. Changing either changes what
-      organizations and members relies on, so both are additive only.
-    when: >-
-      Roles needs to change `OrganizationRole`, or `GET /clients` needs to
-      change `Organization`, in a way that isn't additive.
   - id: sends-and-keys-never-pruned
     name: Invitation sends and creation keys never pruned
     outcome: efficiency/beta/bounded

@@ -76,14 +76,6 @@ gaps:
       A team change can still overbook a week, and that's only flagged across
       all of Exalynt.
     when: An engineer with claimed blocks moves to another team.
-  - id: relies-on-staffing
-    name: Depends on Staffing, still Alpha
-    outcome: security/alpha/stable-dependencies
-    impact: blocking
-    description: >-
-      Seeing availability next to assignments, and a lead seeing their team's,
-      depend on Staffing, which is only Alpha.
-    when: Staffing makes a breaking change.
   - id: screen-readers-unreviewed
     name: Screen readers not reviewed
     outcome: usability/beta/everyone

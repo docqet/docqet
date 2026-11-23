@@ -70,13 +70,6 @@ gaps:
       The Payouts page doesn't say when the payout account is holding
       earnings up, beyond having none; Earnings does.
     when: The partnership's payout account is holding earnings up.
-  - id: releasing-is-still-alpha
-    name: Releasing payouts is still Alpha
-    outcome: security/alpha/stable-dependencies
-    impact: inconvenient
-    description: >-
-      Releasing payouts is the admin side of Payouts, which is still Alpha.
-    when: Releasing payouts changes in a way that breaks what partners rely on.
 tradeoffs:
   - id: pre-production-payouts-say-paid
     name: Pre-production payouts left saying Paid
