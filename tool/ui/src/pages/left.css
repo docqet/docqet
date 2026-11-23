@@ -1,0 +1,336 @@
+/*
+ * What's left and Decided (LeftPage, DecidedPage): filters kept in the
+ * address, compact rows with an impact down the left, and groups of them
+ * under what they're on.
+ */
+
+/* A count in a header tile, in its impact's color. */
+.lf-impact-value {
+  color: var(--impact);
+}
+
+.lf-intro {
+  max-width: 760px;
+  margin: -8px 0 20px;
+  font-size: 13.5px;
+  color: var(--muted);
+}
+
+.lf-faint {
+  font-size: 12.5px;
+  color: var(--faint);
+}
+
+/* ——— Filters ——— */
+
+.lf-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 24px;
+  margin: -8px 0 20px;
+}
+
+.lf-choice {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+}
+
+.lf-choice-label {
+  margin-right: 4px;
+  font-size: 11px;
+  font-weight: 650;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
+.lf-choice a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 9px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--muted);
+  text-decoration: none;
+  border: 1px solid var(--border-strong);
+  border-radius: 6px;
+}
+
+.lf-choice a:hover {
+  color: var(--text);
+  border-color: var(--faint);
+}
+
+.lf-choice a[aria-current] {
+  color: var(--accent);
+  background: var(--accent-soft);
+  border-color: color-mix(in srgb, var(--accent) 45%, transparent);
+}
+
+.lf-choice-count {
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  color: var(--faint);
+}
+
+.lf-choice a[aria-current] .lf-choice-count {
+  color: inherit;
+}
+
+/* ——— Cards, groups and rows ——— */
+
+.lf-card,
+.lf-list {
+  background: var(--popover);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+.lf-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* A list inside a group's card, which draws the border. */
+.lf-list.lf-bare {
+  background: none;
+  border: 0;
+  border-radius: 0;
+}
+
+.lf-group {
+  margin-bottom: 12px;
+  overflow: hidden;
+}
+
+.lf-group-head,
+.lf-holder-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 10px;
+}
+
+.lf-group-head {
+  padding: 10px 14px;
+  background: color-mix(in srgb, var(--text) 2.5%, transparent);
+  border-bottom: 1px solid var(--border);
+}
+
+.lf-holder {
+  padding: 14px 16px;
+}
+
+.lf-holder + .lf-holder {
+  border-top: 1px solid var(--border);
+}
+
+.lf-holder-head {
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+/* A row: its impact down the left, then what it says and, under that, a line of what it's on. */
+.lf-row {
+  display: grid;
+  grid-template-columns: 112px minmax(0, 1fr);
+  gap: 12px;
+  padding: 10px 14px;
+}
+
+.lf-row + .lf-row {
+  border-top: 1px solid var(--border);
+}
+
+.lf-impact {
+  padding-top: 2px;
+}
+
+.lf-row-body {
+  min-width: 0;
+}
+
+.lf-row-title {
+  display: -webkit-box;
+  overflow: hidden;
+  font-size: 14px;
+  font-weight: 550;
+  line-height: 1.45;
+  color: var(--text);
+  text-decoration: none;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+a.lf-row-title:hover {
+  color: var(--accent);
+}
+
+.lf-row-title code {
+  font-size: 0.92em;
+}
+
+.lf-row-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 12px;
+  margin-top: 4px;
+  font-size: 12.5px;
+  color: var(--muted);
+}
+
+.lf-row-meta .gap-kind-tag {
+  margin-right: 0;
+}
+
+.lf-promise {
+  font-weight: 600;
+  color: var(--warning);
+}
+
+.lf-subject-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.lf-subject {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-width: 0;
+  font-weight: 600;
+  color: inherit;
+  text-decoration: none;
+}
+
+.lf-subject:hover {
+  color: var(--accent);
+}
+
+.lf-subject svg {
+  flex: none;
+  width: 15px;
+  height: 15px;
+  font-size: 15px;
+}
+
+.lf-group-head .lf-subject,
+.lf-holder-head .lf-subject {
+  font-size: 14px;
+  color: var(--text);
+}
+
+.lf-more {
+  display: block;
+  width: 100%;
+  margin-top: 10px;
+  padding: 8px;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent);
+  background: none;
+  border: 1px dashed var(--border-strong);
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.lf-more:hover {
+  background: var(--accent-soft);
+}
+
+/* Under a group's few: a quiet line inside its card. */
+.lf-more.lf-more-inline {
+  margin: 0;
+  padding: 7px 14px 9px 138px;
+  text-align: left;
+  font-size: 12.5px;
+  border: 0;
+  border-top: 1px solid var(--border);
+  border-radius: 0;
+}
+
+/* ——— A tradeoff's two sides, compact ——— */
+
+.lf-sides {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin-top: 8px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.lf-side {
+  min-width: 0;
+  padding: 8px 12px;
+  font-size: 13px;
+  line-height: 1.45;
+  background: color-mix(in srgb, var(--side) 5%, transparent);
+}
+
+.lf-side + .lf-side {
+  border-left: 1px solid var(--border);
+}
+
+.lf-side[data-side="benefit"] {
+  --side: var(--ok);
+}
+
+.lf-side[data-side="drawback"] {
+  --side: var(--warning);
+}
+
+.lf-side-label {
+  display: block;
+  margin-bottom: 2px;
+  font-size: 10.5px;
+  font-weight: 650;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--side);
+}
+
+.lf-none {
+  font-style: italic;
+  color: var(--faint);
+}
+
+.lf-when {
+  margin-top: 4px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+@media (max-width: 720px) {
+  .lf-row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 4px;
+  }
+
+  .lf-more.lf-more-inline {
+    padding-left: 14px;
+  }
+
+  .lf-sides {
+    grid-template-columns: 1fr;
+  }
+
+  .lf-side + .lf-side {
+    border-left: 0;
+    border-top: 1px solid var(--border);
+  }
+}
+
+/* A group's risk, at the end of its heading. */
+.lf-group-risk {
+  margin-left: auto;
+}

@@ -20,6 +20,8 @@ export type TermId =
   | "technical-gap"
   | "tradeoff"
   | "open-decision"
+  | "risk"
+  | "exposure"
   | "evidence"
   | "readiness"
   | "stability-checklist"
@@ -122,6 +124,16 @@ export const TERMS: Record<TermId, TermEntry> = {
     means:
       "A question about what's intended that hasn't been settled yet, recorded so it isn't lost or quietly decided in code. Once settled, it closes, saying what it became.",
     more: "Does an early arrival's stay start that day?",
+  },
+  risk: {
+    name: "Risk",
+    means:
+      "What's at stake in leaving a gap open, from 0 to 100: its impact, weighed by the stability of each capability it's on, and higher where it breaks the promise that level makes. Its verdict says whether that's acceptable (under 33), tolerable (33 to 66) or unacceptable (67 and up).",
+    more: "A damaging gap that breaks a promise on a GA capability is 100, unacceptable; the same gap on a Prototype is 48, tolerable.",
+  },
+  exposure: {
+    name: "Exposure",
+    means: "How a gap's risk spreads across the capabilities it's on: its score on each. Of two gaps with the same risk, the one on more capabilities at that score comes first.",
   },
   evidence: {
     name: "Evidence",

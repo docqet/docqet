@@ -1,0 +1,230 @@
+/*
+ * A doc's detail page (Page.tsx), in the shell's View, PageHeader, Tabs and
+ * Sections. The older `.page-*` rules in styles.css still style what's
+ * reused from before, such as the feature cards and evidence lists.
+ */
+
+/* ——— Header ——— */
+
+.page-crumb {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.page-crumb svg {
+  font-size: 14px !important;
+}
+
+a.page-crumb {
+  color: inherit;
+  text-decoration: none;
+}
+
+a.page-crumb:hover {
+  color: var(--accent);
+}
+
+.page-kind-note {
+  font-weight: 500;
+  color: var(--faint);
+}
+
+.page-title-picture {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.page-draft {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+/* A contradiction, under the header and over the tabs. */
+.page-problem {
+  margin: -8px 0 20px;
+}
+
+.page-avatars-more {
+  align-self: center;
+  margin-left: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+/* ——— Sections ——— */
+
+.view-section .page-card {
+  padding: 14px 18px;
+}
+
+.page-line {
+  max-width: 760px;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--muted);
+}
+
+.page-line a,
+.page-nothing-left a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.page-nothing-left {
+  padding: 18px 20px;
+  font-size: 14px;
+  color: var(--ok);
+  background: color-mix(in srgb, var(--ok) 7%, transparent);
+  border: 1px solid color-mix(in srgb, var(--ok) 22%, transparent);
+  border-radius: 10px;
+}
+
+/* A line apiece: a domain's or feature's name, then its level, maturity or readiness. */
+.page-levels {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-width: 640px;
+  margin-bottom: 12px;
+  list-style: none;
+}
+
+.page-levels li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+  font-size: 13.5px;
+  border-bottom: 1px solid var(--border);
+}
+
+.page-levels li > a {
+  font-weight: 600;
+}
+
+.page-level-summary {
+  max-width: 420px;
+}
+
+.page-section-link {
+  color: var(--text) !important;
+}
+
+.page-section-link:hover {
+  color: var(--accent) !important;
+}
+
+/* A gap's text opens its page. */
+a.page-gap-link {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+
+a.page-gap-link:hover {
+  color: var(--accent);
+}
+
+.page-about {
+  max-width: 820px;
+}
+
+.page-source {
+  min-width: 0;
+}
+
+/* ——— Rows and tables ——— */
+
+.page-rows {
+  list-style: none;
+}
+
+a.concept-row {
+  text-decoration: none;
+}
+
+.page-row-icon {
+  display: inline-flex;
+  align-self: flex-start;
+  margin-top: 2px;
+}
+
+.page-table-scroll {
+  overflow-x: auto;
+  background: var(--popover);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+.page-table-scroll .view-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.view-table .page-cell-sub {
+  margin-top: 2px;
+  font-size: 12.5px;
+  font-weight: 400;
+  color: var(--muted);
+}
+
+.page-cap-table td:first-child {
+  min-width: 240px;
+}
+
+.page-cap-table td:not(:first-child) {
+  white-space: nowrap;
+}
+
+a.page-left-cell {
+  font-weight: 400;
+}
+
+.page-rule-table td {
+  vertical-align: top;
+}
+
+.page-rule-table td:first-child {
+  min-width: 280px;
+}
+
+.page-rule-cell {
+  display: flex;
+  gap: 8px;
+}
+
+.page-standing-cell {
+  white-space: nowrap;
+  color: var(--muted);
+}
+
+.page-standing-cell[data-tone="warn"] {
+  font-weight: 600;
+  color: var(--warning);
+}
+
+/* A domain's features, as cards that are links. */
+a.page-feature {
+  text-decoration: none;
+}
+
+/* How many capabilities are at each level, each with its level's squares, in its color. */
+.page-level-counts {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  font-size: 12.5px;
+  color: var(--muted);
+}
+
+.page-level-count {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  color: var(--level, var(--muted));
+}

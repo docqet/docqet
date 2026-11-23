@@ -200,7 +200,7 @@ export function StabilityChecklist({ state, checklist, capability }: { state: Do
                                 {LEFT_KINDS[gapKind(g)].one}
                               </LeftLabel>
                             </span>
-                            {g.summary}
+                            {g.name}
                           </p>
                         ))}
                         {of(o).tradeoffs.map((t) => (
@@ -210,23 +210,22 @@ export function StabilityChecklist({ state, checklist, capability }: { state: Do
                                 Not met, by choice
                               </LeftLabel>
                             </span>
-                            {t.summary}
+                            {t.name}
                           </p>
                         ))}
                         {appliesAt(o, own) && !of(o).gaps.length && !of(o).tradeoffs.length && of(o).by.length ? (
-                          <p className="sc-met-by">
-                            Met by{" "}
-                            {of(o).by.map((e, i) => (
-                              <span key={e.id}>
-                                {i ? ", " : ""}
-                                <TechnicalLink doc={e} />
-                              </span>
+                          <div className="sc-met-by">
+                            <span className="sc-met-by-label">Met by</span>
+                            {of(o).by.map((e) => (
+                              <TechnicalLink key={e.id} doc={e} />
                             ))}
-                            {(() => {
-                              const n = of(o).by.reduce((sum, e) => sum + e.evidence.implements.length + e.evidence.verifies.length, 0);
-                              return n ? `, with evidence in ${plural(n, "place", "places")}` : ", which nothing points at yet";
-                            })()}
-                          </p>
+                            <span className="sc-met-by-note">
+                              {(() => {
+                                const n = of(o).by.reduce((sum, e) => sum + e.evidence.implements.length + e.evidence.verifies.length, 0);
+                                return n ? `evidence in ${plural(n, "place", "places")}` : "nothing in the code points at it yet";
+                              })()}
+                            </span>
+                          </div>
                         ) : null}
                       </div>
                     </li>

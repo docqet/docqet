@@ -40,6 +40,10 @@
   /* A rule's tests: passing, or failing. */
   --ok: #15803d;
   --bad: #b91c1c;
+  /* A blocking gap's impact: orange, between the warning's amber and the damaging red. */
+  --blocking: #c2410c;
+  /* An inconvenient gap's impact: a soft yellow that marks it without drawing the eye. */
+  --inconvenient: #957a35;
 
   color-scheme: light;
 }
@@ -69,6 +73,8 @@
     --warning: #fbbf24;
     --ok: #4ade80;
     --bad: #f87171;
+    --blocking: #f97316;
+    --inconvenient: #d6c88f;
 
     color-scheme: dark;
   }
@@ -3565,11 +3571,53 @@ button.page-table-row:hover .page-table-name strong {
   color: var(--faint);
 }
 
-/* What meets an outcome, under it: the mechanisms and components that say so. */
+/*
+ * What meets an outcome, under it: a small label, the mechanisms and
+ * components that say so as chips, and how much evidence there is.
+ */
 .sc-met-by {
-  margin-top: 6px;
-  font-size: 12.5px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 6px;
+  margin-top: 8px;
+  font-size: 12px;
   color: var(--muted);
+}
+
+.sc-met-by-label {
+  margin-right: 2px;
+  font-size: 10.5px;
+  font-weight: 650;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
+.sc-met-by .link {
+  gap: 4px;
+  padding: 1px 8px 1px 6px;
+  line-height: 18px;
+  color: var(--concept);
+  text-decoration: none;
+  background: var(--concept-soft);
+  border: 1px solid color-mix(in srgb, var(--concept) 22%, transparent);
+  border-radius: 999px;
+}
+
+.sc-met-by .link:hover {
+  border-color: color-mix(in srgb, var(--concept) 55%, transparent);
+}
+
+.sc-met-by .link svg {
+  font-size: 14px;
+  color: currentColor;
+  opacity: 0.8;
+}
+
+.sc-met-by-note {
+  margin-left: 2px;
+  color: var(--faint);
 }
 
 .sc-gap .explore-left-meta {
@@ -4017,65 +4065,118 @@ button.page-table-row:hover .page-table-name strong {
   margin-right: 0;
 }
 
-.gap-head .risk-meter,
-.tradeoff-label .risk-meter {
+.gap-head .impact-badge,
+.tradeoff-label .impact-badge {
   margin-left: auto;
 }
 
 /*
  * What's at stake: an impact as steps rising from low to high, lit up to it,
- * and its name, both in its color, worst in the strongest. --impact is that
- * color, set by `data-impact` on the meter or the popover's card.
+ * and its name, both in its color. --impact is that color, set by
+ * `data-impact` on the meter or the popover's card. Only the two that take
+ * the outcome or worse are alarm colors. Inconvenient is a soft yellow and
+ * negligible is neutral, since they may rightly stay open for good, and a
+ * strong tint would make them read as warnings.
  */
 [data-impact="damaging"] {
   --impact: var(--bad);
 }
 
 [data-impact="blocking"] {
-  --impact: var(--warning);
+  --impact: var(--blocking);
 }
 
 [data-impact="inconvenient"] {
-  --impact: color-mix(in srgb, var(--warning) 55%, var(--muted));
+  --impact: var(--inconvenient);
 }
 
 [data-impact="negligible"] {
-  --impact: var(--muted);
+  --impact: var(--faint);
 }
 
 [data-impact="none"] {
   --impact: var(--faint);
 }
 
-.risk-meter {
+/* An impact as a badge: its name in a pill tinted with its color. */
+.impact-badge {
   flex: none;
   display: inline-flex;
   align-items: center;
-  gap: 7px;
+  padding: 0 7px;
   font-size: 12px;
   font-weight: 650;
-  line-height: 16px;
+  line-height: 18px;
   letter-spacing: 0;
   text-transform: none;
   white-space: nowrap;
   color: var(--impact);
+  background: color-mix(in srgb, var(--impact) 13%, transparent);
+  border-radius: 999px;
+}
+
+.impact-badge[data-impact="none"] {
+  font-weight: 500;
+  background: none;
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--impact) 45%, transparent);
+}
+
+/*
+ * Risk's verdict as a color, --risk, set by `data-verdict`: unacceptable is
+ * the alarm color, tolerable the soft yellow, and acceptable neutral, since
+ * it may rightly stay open for good.
+ */
+[data-verdict="unacceptable"] {
+  --risk: var(--bad);
+}
+
+[data-verdict="tolerable"] {
+  --risk: var(--inconvenient);
+}
+
+[data-verdict="acceptable"],
+[data-verdict="none"] {
+  --risk: var(--faint);
+}
+
+/* A risk: bars rising to its verdict, and its score out of 100, in the verdict's color. */
+.risk-score {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 650;
+  line-height: 16px;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+  color: var(--risk);
   border-radius: 4px;
 }
 
-.risk-meter[data-impact="none"] {
+.risk-score[data-verdict="none"] {
   font-weight: 500;
 }
 
-.risk-meter[tabindex] {
+.risk-score[tabindex] {
   cursor: help;
 }
 
-.risk-meter[tabindex]:focus-visible {
+.risk-score[tabindex]:focus-visible {
   outline: 2px solid currentColor;
   outline-offset: 2px;
 }
 
-/* The steps: four bars rising like a signal, small beside its name, or wide across the popover. */
+.impact-badge[tabindex] {
+  cursor: help;
+}
+
+.impact-badge[tabindex]:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+/* A risk's steps: three bars rising like a signal, one for each verdict, small beside its score, or wide across the popover. */
 .risk-track {
   display: inline-flex;
   align-items: flex-end;
@@ -4094,19 +4195,15 @@ button.page-table-row:hover .page-table-name strong {
 }
 
 .risk-step:nth-child(2) {
-  height: 7px;
+  height: 8px;
 }
 
 .risk-step:nth-child(3) {
-  height: 10px;
-}
-
-.risk-step:nth-child(4) {
   height: 12px;
 }
 
 .risk-step[data-on] {
-  background: var(--impact);
+  background: var(--risk);
 }
 
 .risk-track.wide {
@@ -4122,25 +4219,21 @@ button.page-table-row:hover .page-table-name strong {
 }
 
 .risk-track.wide .risk-step:nth-child(1) {
-  height: 25%;
+  height: 33%;
 }
 
 .risk-track.wide .risk-step:nth-child(2) {
-  height: 50%;
+  height: 66%;
 }
 
 .risk-track.wide .risk-step:nth-child(3) {
-  height: 75%;
-}
-
-.risk-track.wide .risk-step:nth-child(4) {
   height: 100%;
 }
 
 /* Under the wide bar, each step's name, its own in its color. */
 .risk-scale {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   margin-top: 4px;
   font-size: 0.86em;
   color: var(--faint);
@@ -4152,11 +4245,23 @@ button.page-table-row:hover .page-table-name strong {
 
 .risk-scale > span[data-current] {
   font-weight: 650;
-  color: var(--impact);
+  color: var(--risk);
 }
 
 .risk-details-name {
   color: var(--impact);
+}
+
+.risk-details-verdict {
+  color: var(--risk);
+}
+
+.risk-riskiest {
+  margin-top: 8px;
+}
+
+.risk-on-score[data-verdict] {
+  color: var(--risk);
 }
 
 /* In a risk popover: what it's on, or what rides on it, a row apiece. */
@@ -4174,14 +4279,34 @@ button.page-table-row:hover .page-table-name strong {
   padding: 3px 0;
 }
 
+.risk-on-right {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+/* A capability's score, at the end of its row: the same width each, so they line up. */
+.risk-on-score {
+  min-width: 2.5em;
+  text-align: right;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.risk-on-promise {
+  color: var(--muted);
+  font-size: 0.92em;
+}
+
 .risk-note {
   margin-top: 6px;
   font-size: 0.92em;
   color: var(--muted);
 }
 
-/* A capability's row in what's left across several: the worst impact among its gaps, before how much is open. */
-.concept-row-summary .risk-meter {
+/* A capability's row in what's left across several: its risk, before how much is open. */
+.concept-row-summary .risk-score {
   margin-right: 8px;
   vertical-align: middle;
 }

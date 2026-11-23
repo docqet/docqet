@@ -1,8 +1,9 @@
 import { type ReactNode } from "react";
 import { Markdown, type Go } from "./design/markdown/Markdown";
 import { LeftItem, LeftList } from "./design/left/LeftMark";
-import { IMPACT_NAMES, RiskMeter, RiskSection } from "./design/risk/RiskMeter";
+import { RiskScore } from "./design/risk/RiskScore";
 import { Term } from "./design/term/Term";
+import { docHref } from "./routes";
 import {
   conceptLinked,
   decidedBy,
@@ -10,7 +11,7 @@ import {
   gapsById,
   pageHref,
   subjectOf,
-  worstImpact,
+  riskAcross,
   type Became,
   type BecameKind,
   type Contribution,
@@ -33,7 +34,7 @@ export function Text({ from, text, go }: { from: Contribution; text: string; go:
 
 /*
  * Open decisions, each its question under its topic, and, with gaps riding on
- * it, the worst impact among them: a decision has none of its own.
+ * it, the highest risk among them: a decision has none of its own.
  */
 export function DecisionList({ from, decisions, go }: { from: Contribution; decisions: Decision[]; go: Go }) {
   return (
@@ -46,19 +47,7 @@ export function DecisionList({ from, decisions, go }: { from: Contribution; deci
             <Text from={from} text={d.question} go={go} />
             {riding.length ? (
               <span className="decision-riding">
-                <RiskMeter impact={worstImpact(riding.map((g) => g.impact))} lead={riding.length > 1 ? "Worst" : undefined} eyebrow="Riding on this decision">
-                  <RiskSection label={riding.length === 1 ? "The gap riding on it" : `The ${riding.length} gaps riding on it`}>
-                    <ul className="risk-on">
-                      {riding.map((g) => (
-                        <li key={g.id}>
-                          <span>{g.summary.length > 110 ? `${g.summary.slice(0, 110).trimEnd()}…` : g.summary}</span>
-                          <strong>{g.impact ? IMPACT_NAMES[g.impact].name : "Not rated"}</strong>
-                        </li>
-                      ))}
-                    </ul>
-                    <div className="risk-note">A decision has no impact of its own: what's at stake is what these cost while it's open.</div>
-                  </RiskSection>
-                </RiskMeter>
+                <RiskScore risk={riskAcross(go.state, riding)} of="what rides on this decision" />
                 {riding.length === 1 ? "A gap is" : `${riding.length} gaps are`} riding on it
               </span>
             ) : null}
@@ -145,20 +134,23 @@ const KIND_WORDS: Record<BecameKind, string> = {
 
 /*
  * Where something a decision became is shown, and what to call it: its own
- * page, or for a rule its domain's, which lists it, and for a gap or tradeoff
- * the page of what it's on.
+ * page, or for a tradeoff the Decided tab of what it's on.
  */
 function placeOf(state: DocketState, b: Became): { href: string | null; name: string } {
   if (!b.id) return { href: null, name: b.ref };
-  if (b.kind === "gap" || b.kind === "tradeoff") {
-    const item = (b.kind === "gap" ? state.gaps : state.tradeoffs).find((i) => i.id === b.id);
+  if (b.kind === "gap") {
+    const gap = state.gaps.find((i) => i.id === b.id);
+    return { href: docHref("gap", b.id), name: gap?.name ?? b.ref };
+  }
+  if (b.kind === "tradeoff") {
+    const tradeoff = state.tradeoffs.find((i) => i.id === b.id);
     const on = subjectOf({ id: b.id });
     const kind = on.type as "capability" | "feature" | "mechanism" | "component";
-    return { href: pageHref({ kind, id: on.id }), name: item?.summary ?? b.ref };
+    return { href: docHref(kind, on.id, "decided"), name: tradeoff?.name ?? b.ref };
   }
   if (b.kind === "rule") {
     const rule = find(state.rules, b.id);
-    return { href: rule ? pageHref({ kind: "domain", id: rule.domain }) : null, name: rule?.name ?? b.ref };
+    return { href: docHref("rule", b.id), name: rule?.name ?? b.ref };
   }
   const lists: Record<string, { id: string; name: string }[]> = {
     domain: state.domains,

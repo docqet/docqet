@@ -15,7 +15,6 @@ import {
   docDomains,
   fieldsText,
   domainName,
-  capabilityTarget,
   find,
   bareId,
   docProjects,
@@ -26,15 +25,13 @@ import {
   type Project,
   type Rule,
   type Pick,
-  type Target,
 } from "./state";
 
 /*
- * What choosing a result does: opens a domain, feature, capability or
- * concept in the side panel, which brings it into view on the map; shows the
- * capabilities that follow a rule on the map; or shows only that project.
+ * What choosing a result does: opens a domain, feature, capability, concept,
+ * persona or rule on its page, or shows only that project.
  */
-export type Selection = { pick: Pick } | Target | { project: string };
+export type Selection = { pick: Pick } | { rule: string } | { project: string };
 
 type Kind = "project" | "domain" | "feature" | "capability" | "rule" | "concept" | "persona";
 
@@ -112,11 +109,6 @@ function index(state: DocketState, all: Project[]): Entry[] {
 function entries(state: DocketState): (Entry & { projects: string[] })[] {
   /* "Guest stays + Billing": the domains something is written in. Found by them too. */
   const domains = (ids: string[]) => ids.map((id) => domainName(state, id)).join(" + ");
-  /* Where a rule is on the map: every capability that follows it. */
-  const where = (capabilityIds: string[]) => {
-    const targets = capabilityIds.map((id) => capabilityTarget(state, id));
-    return { items: [...new Set(targets.flatMap((t) => t.items))], row: targets.map((t) => t.row).join(",") };
-  };
   return [
     ...state.domains.map((d) => ({
       key: `domain:${d.id}`,
@@ -149,21 +141,15 @@ function entries(state: DocketState): (Entry & { projects: string[] })[] {
       target: { pick: { kind: "capability" as const, id: c.id } },
       projects: docProjects(c),
     })),
-    ...state.rules.flatMap((r) =>
-      r.capabilities.length
-        ? [
-            {
-              key: `rule:${r.id}`,
-              kind: "rule" as const,
-              title: r.name,
-              text: `${r.from.map((f) => f.body).join(" ")} ${bareId(r.id)}`,
-              context: appliesTo(state, r),
-              target: where(r.capabilities),
-              projects: docProjects(r),
-            },
-          ]
-        : [],
-    ),
+    ...state.rules.map((r) => ({
+      key: `rule:${r.id}`,
+      kind: "rule" as const,
+      title: r.name,
+      text: `${r.from.map((f) => f.body).join(" ")} ${bareId(r.id)}`,
+      context: r.capabilities.length ? appliesTo(state, r) : domainName(state, r.domain),
+      target: { rule: r.id },
+      projects: docProjects(r),
+    })),
     /* Found by what they mean, too, so "guest" finds Booking. */
     ...state.concepts.map((c) => ({
       key: `concept:${c.id}`,
@@ -355,7 +341,7 @@ export default function Search({
           <div className="search-results" id="search-results" role="listbox">
             {!terms.length ? (
               <div className="search-empty">
-                Find a project, domain, feature, capability, rule, concept, or persona, and show it on the map.
+                Find a project, domain, feature, capability, rule, concept, or persona, and open it.
               </div>
             ) : groups.length ? (
               groups.map((g) => (

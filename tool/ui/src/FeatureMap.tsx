@@ -5,7 +5,7 @@ import { CapabilityCard } from "./design/catalog/CapabilityCard";
 import { FeatureCard } from "./design/catalog/FeatureCard";
 import { MaturityRing } from "./design/maturity/MaturityRing";
 import { RingGlyph } from "./design/maturity/RingGlyph";
-import { ContradictionHint, DecisionsHint, GapsHint, RulesHint } from "./CapabilityHints";
+import { ContradictionHint, EvidenceHint, RiskDot } from "./CapabilityHints";
 import { ConceptChips, ConceptIcon } from "./Concepts";
 import { PersonaCard } from "./Personas";
 import { ProjectIcon } from "./PlatformFilter";
@@ -17,15 +17,18 @@ import {
   domainName,
   featureCard,
   find,
-  openDecisions,
+  gapsById,
   personaCard,
   projectName,
   partOf,
+  ruleStanding,
+  riskAcross,
   type Capability,
   type Doc,
   type DocketState,
   type Domain,
   type Pick,
+  type RuleStanding,
 } from "./state";
 import { Tip } from "./design/Tip";
 
@@ -40,31 +43,62 @@ const PERSONA_SLOT = 240;
 const GAP = 28;
 
 /*
- * A capability's line on a card in a domain: its name, with how many rules,
- * open decisions and product gaps it has and any contradiction after it, and
- * its level in that domain. Clicking it opens the rest in the side panel.
+ * A capability's line on a card in a domain: its name, any contradiction, its
+ * risk, the highest score among its gaps on it, and its level in that domain.
+ * How its rules hold sits in it too, shown only while the map is colored by
+ * evidence. `data` is what the map's lenses color its row or card by: its
+ * risk's verdict and how its rules hold, as map.css reads them.
+ * Clicking it opens it in the peek.
  */
 function line(state: DocketState, c: Capability, domain: string) {
   const here = c.levels.find((l) => l.domain === domain)?.level ?? c.stability;
   const contradictions = contradictionsOf(state, "capability", c.id).map((p) => p.message);
+  const gaps = gapsById(state, c.gaps);
+  const risk = riskAcross(state, gaps, [c]);
+  const evidence = rulesHold(state, c);
   return {
     name: c.name,
     level: here,
     hint: (
       <>
         <ContradictionHint messages={contradictions} />
-        <RulesHint count={c.rules.filter((id) => find(state.rules, id)).length} />
-        <DecisionsHint count={openDecisions(c).length} />
-        <GapsHint count={c.gaps.filter((id) => state.gaps.some((g) => g.id === id)).length} />
+        <RiskDot risk={risk} />
+        <EvidenceHint standing={evidence?.standing ?? null} label={evidence?.label ?? ""} />
       </>
     ),
+    data: {
+      "data-verdict": gaps.length ? (risk.verdict ?? "none") : undefined,
+      "data-evidence": evidence?.standing,
+    },
   };
 }
 
 /*
- * A click on a card opens what it is in the side panel: the capability whose
- * row it's on, or else the card's own. Not a click on its grip or a button
- * in it, such as a concept, nor one in a popover it opened.
+ * How a capability's rules hold, all together: not, where a gap says one
+ * doesn't; with evidence, where every one has some; or else on trust. With the
+ * counts, in words. Null for one with no rules.
+ */
+function rulesHold(state: DocketState, c: Capability): { standing: RuleStanding; label: string } | null {
+  const standings = c.rules.flatMap((id) => {
+    const rule = find(state.rules, id);
+    return rule ? [ruleStanding(c, rule)] : [];
+  });
+  if (!standings.length) return null;
+  const notHeld = standings.filter((s) => s === "gap").length;
+  const withEvidence = standings.filter((s) => s === "evidence").length;
+  const n = standings.length;
+  const standing: RuleStanding = notHeld ? "gap" : withEvidence === n ? "evidence" : "trust";
+  const label = [
+    `${n - notHeld} of ${n} ${n === 1 ? "rule" : "rules"} held, ${withEvidence} with evidence`,
+    ...(notHeld ? [`${notHeld} not held yet: a gap says so`] : []),
+  ].join("; ");
+  return { standing, label };
+}
+
+/*
+ * A click on a card opens what it is in the peek: the capability whose row
+ * it's on, or else the card's own. Not a click on its grip or a button in it,
+ * nor one in a popover it opened.
  */
 const opener = (onOpen: (pick: Pick) => void, pick: Pick) => (e: MouseEvent<HTMLElement>) => {
   const target = e.target as HTMLElement;
@@ -78,22 +112,19 @@ const opener = (onOpen: (pick: Pick) => void, pick: Pick) => (e: MouseEvent<HTML
  * has a part in, holding the capabilities that domain builds, at their levels
  * there, and each capability in no feature on a card of its own. A feature
  * that spans domains has a card in each, saying where else it is. The cards
- * are the design system's, rethemed. Each feature ends with the concepts its
- * capabilities use there, which open in the concepts panel. With several
- * projects showing, each card says which define it, and one that projects
- * contradict each other on says so. Above the domains, each persona has a small
- * card of their own, in no region. With `cards`, only those are on the
- * map, as a filter leaves them. Clicking a card, or a capability's row on
- * one, calls `onOpen` with it.
+ * are the design system's, rethemed, and kept to what shows how things
+ * relate: names, levels and maturity, and each feature ends with the
+ * concepts its capabilities use there, which open in the peek; what's left
+ * and the rules are on each one's page. With several projects showing, each card says which define it,
+ * and one that projects contradict each other on has a warning. Above the
+ * domains, each persona has a small card of their own, in no region. With
+ * `cards`, only those are on the map, as a filter leaves them. Clicking a
+ * card, or a capability's row on one, calls `onOpen` with it.
  */
-export function mapItems(
-  state: DocketState,
-  openConcept: (id: string) => void,
-  onOpen: (pick: Pick) => void,
-  cards?: Set<string>,
-): CanvasItem[] {
+export function mapItems(state: DocketState, onOpen: (pick: Pick) => void, cards?: Set<string>): CanvasItem[] {
   const header = (doc: Doc, type: string, domain: string) => {
-    const problems = contradictionsOf(state, type, doc.id).map((p) => p.message);
+    /* A capability's own card says so on its line instead. */
+    const problems = type === "capability" ? [] : contradictionsOf(state, type, doc.id).map((p) => p.message);
     const elsewhere = type === "feature" ? (find(state.features, doc.id)?.parts ?? []).filter((p) => p.domain !== domain) : [];
     /* Its projects, said only where they aren't just those of its domain, which its region names. */
     const projects = [...new Set(doc.from.filter((f) => f.domain === domain).map((f) => f.project))];
@@ -116,33 +147,26 @@ export function mapItems(
             </span>
           </Tip>
         ) : null}
-        {problems.length ? (
-          <Tip title={problems.join("\n")}>
-            <span className="card-contradiction">
-              <ContradictionHint messages={problems} tip={false} />
-              {problems.length === 1 ? "Contradiction" : `${problems.length} contradictions`}
-            </span>
-          </Tip>
-        ) : null}
+        <ContradictionHint messages={problems} />
       </span>
     );
   };
   const items: CanvasItem[] = state.domains.flatMap((domain) => [
     ...domain.capabilities.flatMap((id) => {
       const c = find(state.capabilities, id);
-      return c
-        ? [
-            {
-              id: capabilityCard(c.id, domain.id),
-              node: (
-                <div className="slot" data-capability={c.id} onClick={opener(onOpen, { kind: "capability", id: c.id })}>
-                  {header(c, "capability", domain.id)}
-                  <CapabilityCard grip {...line(state, c, domain.id)} />
-                </div>
-              ),
-            },
-          ]
-        : [];
+      if (!c) return [];
+      const { data, ...row } = line(state, c, domain.id);
+      return [
+        {
+          id: capabilityCard(c.id, domain.id),
+          node: (
+            <div className="slot" data-capability={c.id} {...data} onClick={opener(onOpen, { kind: "capability", id: c.id })}>
+              {header(c, "capability", domain.id)}
+              <CapabilityCard grip {...row} />
+            </div>
+          ),
+        },
+      ];
     }),
     ...domain.features.flatMap((id) => {
       const feature = find(state.features, id);
@@ -158,8 +182,6 @@ export function mapItems(
               <FeatureCard
                 grip
                 name={feature.name}
-                description={feature.description}
-                hint={<DecisionsHint count={openDecisions(feature).length} />}
                 maturity={part.maturity}
                 capabilities={part.capabilities.flatMap((cid) => {
                   const c = find(state.capabilities, cid);
@@ -169,7 +191,7 @@ export function mapItems(
                   concepts.length ? (
                     <span className="feature-concepts">
                       <ConceptIcon size={15} />
-                      <ConceptChips concepts={concepts} onOpen={openConcept} />
+                      <ConceptChips concepts={concepts} onOpen={(id) => onOpen({ kind: "concept", id })} />
                     </span>
                   ) : undefined
                 }
@@ -201,8 +223,8 @@ const cardsIn = (domain: Domain) => [
 
 /*
  * Each domain as a region behind its cards, labelled on one line with its
- * name, the projects that define it when several are showing, how many open
- * decisions it has, and right after them its maturity, worked out from its parts of features. A domain's region wraps
+ * name, the projects that define it when several are showing, and its
+ * maturity, worked out from its parts of features. A domain's region wraps
  * whichever of its cards are on the map, so one with none drawn has none.
  * Clicking it calls `onOpen` with it.
  */
@@ -230,7 +252,6 @@ export function mapGroups(state: DocketState, onOpen: (pick: Pick) => void): Can
               ) : null}
             </span>
           </Tip>
-          <DecisionsHint count={openDecisions(domain).length} />
           {domain.maturity !== null ? (
             <span className="area-maturity" data-no-pan>
               <MaturityRing

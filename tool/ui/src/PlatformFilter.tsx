@@ -79,7 +79,7 @@ export default function PlatformFilter({
         className="project-switch"
         aria-haspopup="menu"
         aria-expanded={anchor ? true : undefined}
-        onClick={(e) => setAnchor(e.currentTarget.closest<HTMLElement>(".brand"))}
+        onClick={(e) => setAnchor(e.currentTarget.closest<HTMLElement>(".project"))}
       >
         <strong>{platform.name}</strong>
         <UnfoldMoreRoundedIcon aria-hidden sx={{ fontSize: 16 }} />

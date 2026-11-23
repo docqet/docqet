@@ -1,4 +1,4 @@
-import Tooltip from "@mui/material/Tooltip";
+import Tooltip, { type TooltipProps } from "@mui/material/Tooltip";
 import type { ReactElement, ReactNode } from "react";
 
 /*
@@ -11,10 +11,10 @@ import type { ReactElement, ReactNode } from "react";
  * name its words or `aria-label` give it. Text with line breaks keeps them.
  * With no title, it's just what it's on.
  */
-export function Tip({ title, children }: { title: ReactNode; children: ReactElement }) {
+export function Tip({ title, placement, children }: { title: ReactNode; placement?: TooltipProps["placement"]; children: ReactElement }) {
   if (title === null || title === undefined || title === "" || title === false) return children;
   return (
-    <Tooltip title={title} describeChild disableInteractive enterDelay={300} enterNextDelay={150} slotProps={{ tooltip: { sx: { whiteSpace: "pre-line" } } }}>
+    <Tooltip title={title} placement={placement} describeChild disableInteractive enterDelay={300} enterNextDelay={150} slotProps={{ tooltip: { sx: { whiteSpace: "pre-line" } } }}>
       {children}
     </Tooltip>
   );

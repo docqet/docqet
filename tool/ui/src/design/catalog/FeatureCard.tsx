@@ -25,6 +25,8 @@ export type FeatureCapability = {
   details?: ReactNode;
   /** Something small after its name (see CapabilityLabel). */
   hint?: ReactNode;
+  /** Data attributes on its row, such as what the app colors it by: `{ "data-verdict": "tolerable" }`. */
+  data?: Record<`data-${string}`, string | undefined>;
 };
 
 export type FeatureCardProps = {
@@ -168,6 +170,7 @@ export function FeatureCard({
               key={capability.id ?? capability.name}
               component="li"
               data-capability={capability.id}
+              {...capability.data}
               sx={{
                 px: 2,
                 py: 1,

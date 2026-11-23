@@ -1,0 +1,264 @@
+/*
+ * The overview (OverviewPage.tsx): the header's maturity mark, then a
+ * section each for stability by domain, readiness by persona, the riskiest
+ * gaps and, with several showing, the projects. All plain rows, no folds.
+ */
+
+.ov-faint {
+  color: var(--faint);
+  font-weight: 500;
+  font-size: 13px;
+}
+
+.ov-ellipsis {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.ov-link {
+  color: inherit;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.ov-link:hover {
+  color: var(--accent);
+}
+
+/* ——— Header ——— */
+
+.ov-maturity {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ov-band {
+  font-size: 14px;
+  font-weight: 650;
+}
+
+.ov-breakdown {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ov-breakdown li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 4px 0;
+}
+
+/* ——— Stability by domain ——— */
+
+.ov-domains {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ov-domains li {
+  display: grid;
+  grid-template-columns: minmax(120px, 220px) 150px minmax(120px, 1fr) 210px;
+  align-items: center;
+  gap: 16px;
+  padding: 8px 0;
+  font-size: 13.5px;
+  border-bottom: 1px solid var(--border);
+}
+
+.ov-count {
+  font-size: 12.5px;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  color: var(--muted);
+}
+
+/* ——— Readiness by persona ——— */
+
+.ov-personas {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 0 32px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ov-personas li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  font-size: 13.5px;
+  border-bottom: 1px solid var(--border);
+}
+
+.ov-personas li > a {
+  flex: 1;
+}
+
+/* ——— Riskiest gaps ——— */
+
+.ov-gaps {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ov-gaps li {
+  display: grid;
+  grid-template-columns: 130px minmax(0, 1fr) minmax(0, 220px);
+  align-items: center;
+  gap: 16px;
+  padding: 10px 0;
+  font-size: 13.5px;
+  border-bottom: 1px solid var(--border);
+}
+
+.ov-gap-impact {
+  display: inline-flex;
+}
+
+.ov-gap-summary {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-height: 1.45;
+  color: inherit;
+  text-decoration: none;
+}
+
+.ov-gap-summary:hover {
+  color: var(--accent);
+}
+
+.ov-on {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  font-size: 12.5px;
+  color: var(--muted);
+  text-decoration: none;
+}
+
+.ov-on svg {
+  flex: none;
+}
+
+.ov-on:hover {
+  color: var(--accent);
+}
+
+/* ——— Projects ——— */
+
+.ov-projects {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ov-projects li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  font-size: 13.5px;
+  border-bottom: 1px solid var(--border);
+}
+
+.ov-projects li > a {
+  flex: 1;
+}
+
+/* ——— Narrow screens: rows wrap rather than squeeze ——— */
+
+@media (max-width: 640px) {
+  .ov-domains li {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .ov-gaps li {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 6px;
+  }
+}
+
+/* A domain's capabilities as a bar split by level, with how many there are. */
+.ov-bar-cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.ov-bar {
+  flex: 1;
+  display: flex;
+  gap: 2px;
+  height: 8px;
+  overflow: hidden;
+  border-radius: 4px;
+}
+
+.ov-seg {
+  min-width: 4px;
+  background: var(--level);
+}
+
+/* A draft has no level, so no color: a faint hatch, there but not started. */
+.ov-seg-draft {
+  background: repeating-linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--faint) 45%, transparent) 0 2px,
+    transparent 2px 4px
+  );
+}
+
+.ov-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  margin-top: 12px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.ov-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ov-swatch {
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+  background: var(--level);
+}
+
+/* What's left in a domain, as the Features list shows it, linking to its What's left tab. */
+.ov-left {
+  display: flex;
+  justify-content: flex-end;
+  white-space: nowrap;
+}
+
+@media (max-width: 860px) {
+  .ov-domains li {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .ov-bar-cell,
+  .ov-left {
+    grid-column: 1 / -1;
+    justify-content: flex-start;
+  }
+}

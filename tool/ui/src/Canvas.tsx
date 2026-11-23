@@ -76,6 +76,10 @@ export type CanvasHandle = {
 /* `groups` are the regions resized, each at least this box. */
 type Saved = { positions: Record<string, Pos>; groups?: Record<string, Box>; view?: View };
 
+/* How far down the frame the content has to stay below `over`, such as a bar floating over its top, or 0 with none. */
+const clearBelow = (frame: HTMLElement, over: HTMLElement | null) =>
+  over ? Math.max(0, over.getBoundingClientRect().bottom - frame.getBoundingClientRect().top) : 0;
+
 const clamp = (zoom: number) => Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, zoom));
 
 /*
@@ -93,6 +97,8 @@ const clamp = (zoom: number) => Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, zoom));
  * `groups` are regions behind cards, each wrapping its own, and `show` can
  * bring one of them into view too. `links` draws a line from one card to each
  * of some others, under the cards, such as from a persona to what serves them.
+ * `lens` is set on the canvas as `data-lens`, for the page's styles to color
+ * the cards by, without them rebuilding.
  */
 export default function Canvas({
   items,
@@ -102,6 +108,8 @@ export default function Canvas({
   clearOf,
   fitKey,
   links,
+  clearRight = 0,
+  lens,
   ref,
 }: {
   items: CanvasItem[];
@@ -113,6 +121,9 @@ export default function Canvas({
   fitKey?: string;
   /* Lines from one card to others, or null for none. Those not on the map are left out. */
   links?: { from: string; to: string[] } | null;
+  /* How much of the frame's right edge a panel floating over it covers, so what's shown is centered in the rest. */
+  clearRight?: number;
+  lens?: string;
   ref?: Ref<CanvasHandle>;
 }) {
   const frame = useRef<HTMLDivElement>(null);
@@ -208,7 +219,7 @@ export default function Canvas({
       const f = frame.current;
       const b = bounds(positions, own);
       if (!f || !b) return;
-      const top = (clearOf.current?.getBoundingClientRect().bottom ?? 0) + PAD / 2;
+      const top = clearBelow(f, clearOf.current) + PAD / 2;
       const across = (f.clientWidth - PAD * 2) / b.width;
       const down = (f.clientHeight - top - PAD) / b.height;
       const zoom = readable ? clamp(Math.max(Math.min(across, 1), 0.75)) : clamp(Math.min(across, down, 1));
@@ -314,17 +325,18 @@ export default function Canvas({
       maxY = Math.max(maxY, b.y + b.h);
     }
     const b = { x: minX, y: minY, w: maxX - minX, h: maxY - minY };
-    const top = (clearOf.current?.getBoundingClientRect().bottom ?? 0) + PAD / 2;
+    const top = clearBelow(f, clearOf.current) + PAD / 2;
     const room = f.clientHeight - top - PAD;
     /*
      * One card: close enough to read. Several, or a group: far enough out to
      * take them all in, where they fit.
      */
-    const fits = Math.min((f.clientWidth - PAD * 2) / b.w, room / b.h);
+    const width = Math.max(f.clientWidth - clearRight, f.clientWidth / 2);
+    const fits = Math.min((width - PAD * 2) / b.w, room / b.h);
     const floor = drawn.length > 1 || !sizes?.[drawn[0]] ? Math.min(0.85, fits) : 0.85;
     const zoom = clamp(Math.min(Math.max(Math.min(viewNow.current.zoom, fits), floor), 1));
     const y = top + Math.max(0, (room - b.h * zoom) / 2) - b.y * zoom;
-    glideTo({ zoom, x: f.clientWidth / 2 - (b.x + b.w / 2) * zoom, y });
+    glideTo({ zoom, x: width / 2 - (b.x + b.w / 2) * zoom, y });
     if (drawn.length === 1) setTop(drawn[0]);
     setFlash(drawn);
     const rows = row ? drawn.flatMap((id) => [...(nodes.current.get(id)?.querySelectorAll(row) ?? [])]) : [];
@@ -482,6 +494,7 @@ export default function Canvas({
     <div
       ref={frame}
       className={`canvas${active ? " dragging" : ""}`}
+      data-lens={lens}
       style={{
         backgroundSize: `${DOT * view.zoom}px ${DOT * view.zoom}px`,
         backgroundPosition: `${view.x}px ${view.y}px`,

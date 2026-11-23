@@ -239,7 +239,9 @@ export type Gap = {
   impact: Impact | null;
   /* What makes it bite, when it isn't already happening: context for people, never part of risk. */
   when: string | null;
-  summary: string;
+  /* What falls short, in a few words, and in a sentence or two. */
+  name: string;
+  description: string;
   /* Where it shows in the code, from `docket:gap` annotations. */
   places: EvidencePlace[];
 };
@@ -251,7 +253,9 @@ export type Tradeoff = {
   domain?: string;
   /* The stability checklist outcome it falls short of on purpose, as `<quality>/<level>/<id>`, or null. */
   outcome: string | null;
-  summary: string;
+  /* What we chose, in a few words, and in a sentence or two. */
+  name: string;
+  description: string;
   /* What we hope to get by choosing it, or null when it isn't written down. */
   benefit: string | null;
   /* What we give up or risk in return. */
@@ -1115,31 +1119,126 @@ export function showsOn(state: DocketState, item: { id: string }): Capability[] 
 }
 
 /*
- * What's at stake in a gap or tradeoff, as the spec's Risk section works it
- * out: its impact; whether it breaks a promise, naming a rule, or an outcome
- * the level of a capability it shows on expects; and its exposure, the
- * maturity weights of the levels it shows on, drafts adding nothing. A
- * tradeoff breaks no promise: one that names an outcome falls short on
- * purpose. `when` is never part of it.
+ * What's at stake in leaving a gap or tradeoff open, as the spec's Risk
+ * section works it out, on each capability it shows on: its impact's step,
+ * times that capability's level's weight in maturity, times 1.5 where it
+ * breaks a promise that level makes, naming a rule the capability follows or
+ * an outcome its level expects, put on 0 to 100 by a log scale, so each
+ * step of impact or level, and breaking a promise, adds a steady amount: 0
+ * is a negligible gap on a Prototype, and 100 a damaging gap breaking a
+ * promise on GA. A draft weighs nothing, and scores 0. Its risk is the highest
+ * of those, or null with no impact rated; its verdict, the band that falls
+ * in; its exposure, how its scores spread across the capabilities, highest
+ * first. A tradeoff breaks no promise: one that names an outcome falls short
+ * on purpose. `when` is never part of it.
  */
-export type Risk = { impact: Impact | null; promise: boolean; exposure: number; capabilities: number; on: Capability[] };
+export const IMPACT_STEPS: Record<Impact, number> = { negligible: 1, inconvenient: 2, blocking: 3, damaging: 4 };
+export const PROMISE_FACTOR = 1.5;
+/* The lowest and highest raw scores there are, which are 0 and 100: a negligible gap on a Prototype, and a damaging gap breaking a promise on GA. */
+const RAW_MIN = IMPACT_STEPS.negligible * MATURITY_LEVELS.prototype.weight;
+const RAW_MAX = IMPACT_STEPS.damaging * MATURITY_LEVELS.ga.weight * PROMISE_FACTOR;
+const onScale = (raw: number) => (raw > 0 ? Math.round((Math.log(raw / RAW_MIN) / Math.log(RAW_MAX / RAW_MIN)) * 100) : 0);
+
+/* Whether leaving it open is acceptable, by the band its risk falls in, worst first. */
+export const VERDICTS = ["unacceptable", "tolerable", "acceptable"] as const;
+export type Verdict = (typeof VERDICTS)[number];
+/* In thirds. */
+export const VERDICT_FROM: Record<Verdict, number> = { unacceptable: 67, tolerable: 33, acceptable: 0 };
+export const verdictOf = (score: number | null): Verdict | null =>
+  score === null ? null : score >= VERDICT_FROM.unacceptable ? "unacceptable" : score >= VERDICT_FROM.tolerable ? "tolerable" : "acceptable";
+
+export type RiskOn = { capability: Capability; weight: number; promise: boolean; score: number };
+export type Risk = {
+  impact: Impact | null;
+  score: number | null;
+  verdict: Verdict | null;
+  /* Whether it breaks a promise on any capability it shows on. */
+  promise: boolean;
+  /* Each capability it shows on, highest score first, then most stable. */
+  on: RiskOn[];
+  capabilities: number;
+  /* How many capabilities carry each score, highest first: "36 on 2 · 12 on 1". */
+  exposure: { score: number; capabilities: number }[];
+};
 
 export function riskOf(state: DocketState, item: Gap | Tradeoff): Risk {
-  const on = showsOn(state, item);
-  const exposure = on.reduce((n, c) => n + (c.stability ? MATURITY_LEVELS[c.stability].weight : 0), 0);
-  let promise = false;
-  if ("rule" in item) {
-    const outcome = item.outcome ? checklistOutcome(state.checklist, item.outcome)?.outcome : undefined;
-    promise = !!item.rule || (!!outcome && on.some((c) => appliesAt(outcome, c.stability)));
+  const outcome = "rule" in item && item.outcome ? checklistOutcome(state.checklist, item.outcome)?.outcome : undefined;
+  const rule = "rule" in item ? item.rule : null;
+  const step = item.impact ? IMPACT_STEPS[item.impact] : 0;
+  const on = showsOn(state, item)
+    .map((capability): RiskOn => {
+      const weight = capability.stability ? MATURITY_LEVELS[capability.stability].weight : 0;
+      const promise = weight > 0 && ((!!rule && capability.rules.includes(rule)) || (!!outcome && appliesAt(outcome, capability.stability)));
+      return { capability, weight, promise, score: onScale(step * weight * (promise ? PROMISE_FACTOR : 1)) };
+    })
+    .sort((a, b) => b.score - a.score || b.weight - a.weight);
+  const exposure: Risk["exposure"] = [];
+  for (const o of on) {
+    const last = exposure[exposure.length - 1];
+    if (last?.score === o.score) last.capabilities++;
+    else exposure.push({ score: o.score, capabilities: 1 });
   }
-  return { impact: item.impact, promise, exposure, capabilities: on.length, on };
+  return {
+    impact: item.impact,
+    score: item.impact ? (on[0]?.score ?? 0) : null,
+    verdict: verdictOf(item.impact ? (on[0]?.score ?? 0) : null),
+    promise: on.some((o) => o.promise),
+    on,
+    capabilities: on.length,
+    exposure: item.impact ? exposure : [],
+  };
 }
+
+/*
+ * What's at stake across some gaps or tradeoffs, as in a capability, feature,
+ * domain, persona or component: each one's risk and verdict there, its
+ * highest score on the capabilities `within` where given, or its risk
+ * anywhere, riskiest first; the highest of those, and its verdict; and how many fall in each
+ * verdict. Its score is null with none rated.
+ */
+export type RiskAcross<T> = {
+  score: number | null;
+  verdict: Verdict | null;
+  items: { item: T; score: number | null; verdict: Verdict | null }[];
+  /* How many fall in each verdict. */
+  counts: Record<Verdict, number>;
+  unrated: number;
+};
+
+export function riskAcross<T extends Gap | Tradeoff>(state: DocketState, items: T[], within?: Capability[]): RiskAcross<T> {
+  const ids = within ? new Set(within.map((c) => c.id)) : null;
+  const scored = items
+    .map((item) => {
+      const risk = riskOf(state, item);
+      const score = risk.score === null || !ids ? risk.score : Math.max(0, ...risk.on.filter((o) => ids.has(o.capability.id)).map((o) => o.score));
+      return { item, score, verdict: verdictOf(score) };
+    })
+    .sort((a, b) => (b.score ?? -1) - (a.score ?? -1));
+  const score = scored[0]?.score ?? null;
+  return {
+    score,
+    verdict: verdictOf(score),
+    items: scored,
+    counts: Object.fromEntries(VERDICTS.map((v) => [v, scored.filter((s) => s.verdict === v).length])) as Record<Verdict, number>,
+    unrated: scored.filter((s) => s.score === null).length,
+  };
+}
+
+/* A risk score as written. */
+export const riskScore = (score: number) => String(score);
 
 /* An impact's place, worst first, with none after every one. */
 export const impactRank = (impact: Impact | null) => (impact ? IMPACTS.indexOf(impact) : IMPACTS.length);
 
-/* Riskiest first: by impact, then breaking a promise, then exposure. */
-export const byRisk = (a: Risk, b: Risk) => impactRank(a.impact) - impactRank(b.impact) || Number(b.promise) - Number(a.promise) || b.exposure - a.exposure;
+/* Riskiest first: by score, none rated last, then by exposure, comparing each capability's score in turn, highest first. */
+export function byRisk(a: Risk, b: Risk): number {
+  if (a.score === null || b.score === null) return Number(a.score === null) - Number(b.score === null);
+  for (let i = 0; i < Math.max(a.on.length, b.on.length); i++) {
+    const d = (b.on[i]?.score ?? -1) - (a.on[i]?.score ?? -1);
+    if (d) return d;
+  }
+  return 0;
+}
 
 /* Items in order of their risk, riskiest first, keeping the given order among equals. `of` says which gap or tradeoff each is. */
 export function inRiskOrder<T>(state: DocketState, items: T[], of: (item: T) => Gap | Tradeoff): T[] {
@@ -1172,7 +1271,7 @@ function showingParams(): URLSearchParams {
 /* A detail page, as `?capability=deposits` or `?view=gaps`, showing the same platform and projects as this page. */
 export function pageHref(pick: PageAt, section?: string): string {
   const params = showingParams();
-  if (pick.kind === "gaps") params.set("view", "gaps");
+  if (pick.kind === "gaps") params.set("view", "left");
   else params.set(pick.kind, pick.id);
   return `?${params}${section ? `#${section}` : ""}`;
 }
@@ -1184,8 +1283,9 @@ export function pageHref(pick: PageAt, section?: string): string {
  */
 export function mapHref(at?: Pick): string {
   const params = showingParams();
+  params.set("view", "map");
   if (at) params.set("show", `${at.kind}:${at.id}`);
-  return params.size ? `?${params}` : window.location.pathname;
+  return `?${params}`;
 }
 
 const PICK_KINDS: Pick["kind"][] = ["domain", "feature", "capability", "concept", "persona"];

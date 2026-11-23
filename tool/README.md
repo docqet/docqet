@@ -24,92 +24,84 @@ DOCKET_STATE=path/to/state.json npm run dev   # any other state.json
 DOCKET_STATE=a/state.json:b/state.json npm run dev   # several, separated as in PATH
 ```
 
-With more than one project on a platform, the UI shows them all on one map:
+### How it's laid out
 
-- **Seeing them**: each card says which projects define it, and so does each
-  search result and doc in the side panel. Each domain is one region, holding
-  every project's part of it, and a feature that spans domains has a card in
-  each, saying where else it is.
-- **Platforms**: the map shows one platform at a time, the projects whose
-  `docket.yaml` names the same platform. The platform's name in the header
+A bar across the top says where you are and finds anything: the platform and
+its projects, search, and the glossary of Docket's words. A nav down the side
+picks which question you're asking:
+
+| Section | Answers | Address |
+| --- | --- | --- |
+| Overview | How is it doing? Maturity, what's left, who it's least ready for, where each domain stands, the riskiest gaps | (none) |
+| Map | How does it fit together? Domains, features and capabilities on a canvas, with their personas | `?view=map` |
+| Features | What can it do? Domains, features and capabilities as a tree | `?view=features` |
+| Personas | Who it serves, and how ready it is for each | `?view=personas` |
+| Language | What the words mean: concepts, and the rules that must hold | `?view=language` |
+| How it's built | Mechanisms and components | `?view=built` |
+| What's left | Gaps and open decisions, by impact | `?view=left` |
+| Decided | Tradeoffs, non-goals and closed decisions | `?view=decided` |
+| Doc problems | Contradictions and mistakes in the docs | `?view=problems` |
+
+Every domain, feature, capability, persona, concept, rule, mechanism,
+component and gap has a page of its own, such as `?capability=deposits`: a
+header saying what it is and how it's doing, then tabs, each answering one
+question about it, kept in the address as `&tab=left`. A count in a header
+links to the tab that lists what it counts. Every link opens in the same tab,
+so back returns, and the platform and projects showing ride along in the
+address.
+
+On the map, clicking something opens a small peek beside the canvas: what it
+is, three figures, its riskiest gaps and a link to its page. "Color by" tints
+the canvas by stability, risk, readiness for a persona, or evidence. Where
+the cards sit is this browser's own, for each platform.
+
+### Several projects
+
+- **Platforms**: the UI shows one platform at a time, the projects whose
+  `docket.yaml` names the same platform. The platform's name in the top bar
   opens a list of every platform to switch to, each with its maturity, then
-  the platform's projects to tick, some or all of them. Searching for a
-  project and choosing it shows only that one. The map, search, concepts,
-  counts and maturity then cover only those, and
-  `?platform=<id>&project=<id>,<id>` in the address says which are showing.
-  With no platform named, it's the first, and with no projects named, all of
-  its projects are. Each platform keeps its own card layout.
-- **Maturity**: with one project showing, the header has its own. With
-  several, it's worked out from all their parts of features, the same way as
-  one project's, and its popover lists each project's.
+  the platform's projects to tick, some or all of them. Everything then covers
+  only those, and `?platform=<id>&project=<id>,<id>` in the address says which
+  are showing. With no platform named, it's the first, and with no projects
+  named, all of its projects are.
+- **Seeing them**: a doc's page and each search result say which projects
+  define it. On the map, each domain is one region holding every project's
+  part of it, and a feature that spans domains has a card in each.
+- **Maturity**: with several projects showing, it's worked out from all their
+  parts of features, the same way as one project's, and its popover lists
+  each project's.
 
-The side panel summarizes a doc: what it is, how far along it is, what's
-left, and who it serves. Its tradeoffs and the rules it follows are folded
-until opened, each with how many it holds. Each rule it follows has the same
-mark as on the checklist: held with evidence, held on trust, or not held yet,
-when one of the capability's gaps names it. Its
-**Details** link opens everything about it, such as what it's built on, each
-rule's evidence, the stability checklist and the code, in a new tab, at an
-address like `?capability=deposits` that keeps the projects showing.
+### How things are shown
 
-Every doc shows what it is apart from its body, the same way everywhere.
-First what it is, from its frontmatter: its name, description, level, and fields
-such as a rule's why or what a concept is confused with. Then its body, the Markdown
-its authors wrote, under *More about it*: folded in the side panel, the
-concepts panel and a rule's row, and a section of its own on a detail page.
-A doc with no body shows nothing there.
+Every doc shows what it is apart from its body, the same way everywhere: first
+what it is, from its frontmatter, then its body, the Markdown its authors
+wrote, in its page's About tab. A doc with no body has no About tab.
+
+Each of Docket's words, where it labels something, opens what it means on
+hover. Each stability level, maturity, readiness and impact opens a popover
+saying what it means for that thing. In lists, a capability's stability is
+just its mark.
 
 Where the software differs from what's intended shows where it's declared,
-and wherever it matters. Each kind looks the same everywhere, on the map, in
-the side panel, on a detail page and on the checklist: one mark and one color
-per kind (gaps, open decisions, tradeoffs), and each
-item a row with its mark, which a detail page adds more under. A gap's mark is
-an open circle with a dotted edge, the same for product and technical gaps,
-and each gap is labelled *Product* or *Technical*. On the same line, at its
-end, is what's at stake: its impact as four steps rising from low to high,
-lit up to it, with its name, from *Negligible* in the faintest color to
-*Damaging* in the strongest. It opens a popover, as maturity and readiness do, with the
-impact's test, whether the gap breaks a promise its level makes, the
-capabilities it's on and the exposure they add up to, and when it bites. A
-tradeoff's drawback, and the gaps riding on a decision, have one too.
+and wherever it matters, with one mark per kind everywhere: gaps, open
+decisions and tradeoffs.
 
-- **Open decisions** show on the map as their mark and how many: on each
-  capability's row, after a feature's name and after a domain's, each
-  counting its own. In the side panel's lists, each row counts what opening
-  it shows under what's left; a domain's features, and mechanisms and
-  components, count their own.
-- **What's left** on a capability lists its open decisions and its gaps,
-  and nothing else: missing evidence is never something left to do. Its gaps
-  are one list, its product gaps and the technical gaps of the mechanisms and
-  components it's built on together, riskiest first, as the spec's Risk
-  section orders them. A technical gap says how many capabilities it's on, and
-  any gap says when it bites. Over the list, how many there are of each kind;
-  with both, each count shows only that kind, and pressing it again shows
-  all. A feature's or domain's adds its own open decisions, and lists its
-  capabilities with the worst impact among their gaps, worst first; a
-  persona's leaves technical gaps out.
-- **An open decision** with gaps riding on it shows the worst impact among
-  them, and how many there are.
-- **Tradeoffs** show on their capability, and on a feature as what it's
-  decided not to build, riskiest first by their drawback's impact: in the
-  side panel, what was chosen; on the detail page, each with its benefit and
-  drawback side by side, the drawback's impact and when it bites, and the
-  code it explains.
+- **Gaps** are listed one line each, by name, grouped by impact, worst first,
+  with the milder impacts folded. A gap's page has its name, what it's in, its
+  impact, whether it breaks a promise, when it bites, and its links: the rule
+  or checklist outcome it falls short of, what it shows on, the decision it
+  waits on, and where the code marks it.
+- **What's left** is the open decisions and the gaps, and nothing else:
+  missing evidence is never something left to do. Counts of it show the gap
+  and decision marks with how many, and the worst impact.
+- **Tradeoffs** are listed the same way as gaps, grouped by their drawback's
+  impact. Opening one shows its drawback, its benefit where one is written
+  down, and the checklist outcome it falls short of on purpose.
 - **Drafts** show as the word Draft, with no mark, and count toward no
   maturity or readiness.
 - **The checklist** marks each outcome not met, not met by choice (a tradeoff
   names it), met with evidence (a mechanism or component the capability is
-  built on meets it), or met on its level's word. A tradeoff's detail card
-  says which outcome it falls short of.
-- **A mechanism's or component's page**, at `?mechanism=deployment` or
-  `?component=bookings`, has how it's built, its technical gaps, tradeoffs,
-  where it is in the code, the outcomes it meets, open decisions, and what it
-  applies to or what relies on it.
-- **Gaps and tradeoffs**, at `?view=gaps` and from the header, has every gap
-  and tradeoff, every open decision by where it is, for everything, product
-  gaps, or technical gaps. Gaps are riskiest first, in one list with what
-  each is on above it, or grouped by what they're on, and say how many there
-  are of each impact.
+  built on meets it), or met on its level's word.
 
 `npm run build` writes a static site to `dist/`. Put a `state.json` beside its
 `index.html` and serve the folder. Nothing else runs on the server. To show

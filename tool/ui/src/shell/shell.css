@@ -1,0 +1,480 @@
+/*
+ * The shell: a bar across the top, a nav down the side, and the view filling
+ * the rest. The view scrolls on its own, so the bar and nav stay put. The
+ * map's canvas, which is fixed to the window on its own, fills the view's
+ * area instead.
+ */
+
+.shell {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  grid-template-rows: 56px minmax(0, 1fr);
+  grid-template-areas: "top top" "side main";
+  height: 100%;
+}
+
+/* ——— Top bar ——— */
+
+.shell-top {
+  grid-area: top;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 16px;
+  background: var(--popover);
+  border-bottom: 1px solid var(--border);
+  z-index: 10;
+}
+
+.shell-brand {
+  display: inline-flex;
+  color: inherit;
+  text-decoration: none;
+}
+
+.shell-divider {
+  width: 1px;
+  height: 22px;
+  background: var(--border);
+}
+
+.shell-search {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  min-width: 0;
+}
+
+/* The search's button sits in the bar rather than floating over a canvas. */
+.shell-search .search-trigger {
+  width: min(440px, 100%);
+  box-shadow: none;
+  backdrop-filter: none;
+  background: color-mix(in srgb, var(--text) 3%, transparent);
+}
+
+.shell-icon-link {
+  display: inline-flex;
+  padding: 6px;
+  color: var(--muted);
+  border-radius: 6px;
+}
+
+.shell-icon-link:hover,
+.shell-icon-link[aria-current="page"] {
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+
+/* ——— Side nav ——— */
+
+.shell-side {
+  grid-area: side;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 14px 10px;
+  overflow-y: auto;
+  background: var(--popover);
+  border-right: 1px solid var(--border);
+}
+
+.shell-side-group {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.shell-side-label {
+  padding: 0 10px 4px;
+  font-size: 11px;
+  font-weight: 650;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
+.shell-side-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 10px;
+  font-size: 13.5px;
+  font-weight: 550;
+  color: var(--muted);
+  text-decoration: none;
+  border-radius: 7px;
+}
+
+.shell-side-item:hover {
+  color: var(--text);
+  background: color-mix(in srgb, var(--text) 4%, transparent);
+}
+
+.shell-side-item[aria-current="page"] {
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.shell-side-icon {
+  display: inline-flex;
+  flex: none;
+}
+
+.shell-side-icon svg {
+  font-size: 19px;
+  width: 19px;
+  height: 19px;
+  color: inherit !important;
+}
+
+.shell-side-name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.shell-side-count {
+  font-size: 11.5px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--faint);
+}
+
+.shell-side-item[aria-current="page"] .shell-side-count {
+  color: var(--accent);
+}
+
+/* ——— The view ——— */
+
+.shell-main {
+  grid-area: main;
+  position: relative;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* What the map fixes to the window sits in the view's area instead. */
+.shell-main .canvas,
+.shell-main .zoom {
+  position: absolute;
+}
+
+/* A detail page from before the shell scrolls in the view, under the shell's own bar. */
+.shell-main .page {
+  height: 100%;
+}
+
+/* ——— Narrow screens: the side nav becomes icons only ——— */
+
+@media (max-width: 860px) {
+  .shell {
+    grid-template-columns: 56px minmax(0, 1fr);
+  }
+
+  .shell-side-label,
+  .shell-side-name,
+  .shell-side-count {
+    display: none;
+  }
+
+  .shell-side-item {
+    justify-content: center;
+    padding: 9px 0;
+  }
+
+  .shell-brand .wordmark {
+    display: none;
+  }
+}
+
+/* ——— Layout parts (layout.tsx) ——— */
+
+.view {
+  height: 100%;
+  overflow-y: auto;
+}
+
+.view-wrap {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 28px 32px 64px;
+}
+
+.view-wrap.view-wide {
+  max-width: none;
+}
+
+.view-head {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.view-trail {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
+  font-size: 12.5px;
+  color: var(--muted);
+}
+
+.view-trail a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.view-trail a:hover {
+  color: var(--accent);
+}
+
+.view-head-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.view-head-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.view-kind {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.view-title-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 14px;
+}
+
+.view-title {
+  font-size: 28px;
+  line-height: 1.2;
+  letter-spacing: -0.025em;
+}
+
+.view-marks {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.view-lede {
+  max-width: 760px;
+  margin-top: 8px;
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+.view-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.view-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.stat-tile {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+  padding: 14px 16px;
+  color: inherit;
+  text-decoration: none;
+  background: var(--popover);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+.stat-tile-link:hover {
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow);
+}
+
+.stat-tile[data-tone="warn"] .stat-tile-value {
+  color: var(--warning);
+}
+
+.stat-tile[data-tone="ok"] .stat-tile-value {
+  color: var(--ok);
+}
+
+.stat-tile-label {
+  font-size: 11px;
+  font-weight: 650;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
+.stat-tile-value {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 30px;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.stat-tile-note {
+  font-size: 12.5px;
+  color: var(--muted);
+}
+
+/* Tabs wrap onto a second line on a narrow screen rather than scrolling, so no scrollbar ever shows. */
+.view-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  margin: 0 0 24px;
+  border-bottom: 1px solid var(--border);
+}
+
+.view-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 12px 10px;
+  margin-bottom: -1px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--muted);
+  white-space: nowrap;
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+}
+
+.view-tab:hover {
+  color: var(--text);
+}
+
+.view-tab[aria-current="page"] {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+.view-tab-count {
+  min-width: 18px;
+  padding: 1px 6px;
+  font-size: 11px;
+  font-weight: 600;
+  text-align: center;
+  color: var(--muted);
+  background: color-mix(in srgb, var(--text) 7%, transparent);
+  border-radius: 999px;
+}
+
+.view-section {
+  margin-bottom: 32px;
+}
+
+.view-section-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.view-section-head h2 {
+  font-size: 16px;
+  letter-spacing: -0.01em;
+}
+
+.view-section-count {
+  min-width: 18px;
+  padding: 1px 6px;
+  font-size: 11px;
+  font-weight: 600;
+  text-align: center;
+  color: var(--muted);
+  background: color-mix(in srgb, var(--text) 7%, transparent);
+  border-radius: 999px;
+}
+
+.view-section-aside {
+  margin-left: auto;
+  font-size: 13px;
+}
+
+.view-section-aside a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.view-section-note {
+  margin: -6px 0 12px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.view-empty {
+  padding: 24px 0;
+  color: var(--faint);
+}
+
+/*
+ * A plain table for index pages: a row per thing, its name first. Rows that
+ * open something have a link in their first cell.
+ */
+.view-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13.5px;
+}
+
+.view-table th {
+  padding: 8px 12px;
+  font-size: 11px;
+  font-weight: 650;
+  letter-spacing: 0.06em;
+  text-align: left;
+  text-transform: uppercase;
+  color: var(--faint);
+  border-bottom: 1px solid var(--border);
+}
+
+.view-table td {
+  padding: 10px 12px;
+  vertical-align: middle;
+  border-bottom: 1px solid var(--border);
+}
+
+.view-table tbody tr:hover {
+  background: color-mix(in srgb, var(--text) 2.5%, transparent);
+}
+
+.view-table a {
+  color: inherit;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.view-table a:hover {
+  color: var(--accent);
+}
+
+.view-table .num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
