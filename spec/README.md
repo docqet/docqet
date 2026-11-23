@@ -15,7 +15,8 @@ tool. Anyone can adopt the format or write their own indexer for it.
   service, in a repository of its own: guest bills, payments, company accounts
   and closing the day. It's a second project to show beside the first. It works
   in the Billing and Finance domains, and contributes Billing's part of Front
-  desk, a feature that's mostly Guest stays'.
+  desk, a feature that's mostly Guest stays'. Both are part of the Hotel
+  platform.
 
 ## Principles
 
@@ -582,6 +583,9 @@ defined, and usually implemented.
 project:
   id: hotel-bookings
   name: Hotel Bookings
+platform:
+  id: hotel
+  name: Hotel
 ```
 
 - **`project`** is metadata, not a boundary: it says where each doc comes
@@ -591,6 +595,17 @@ project:
     unique among them. It's lowercase, with hyphens, like a doc's ID.
   - **`name`** is what people see, named for the software: Hotel Bookings,
     not Guest stays.
+- **`platform`**, optional, says which **platform** the project is part of:
+  the projects that make up one product together, such as its web, mobile and
+  desktop apps, or the services behind it. Projects with the same platform
+  `id` are shown together and their docs combined; projects on different
+  platforms never are. A project that names no platform is a platform of its
+  own.
+  - **`id`** is lowercase, with hyphens, and the same in every project on the
+    platform.
+  - **`name`** is what people see, named for the product: Hotel, not Hotel
+    Bookings. Every project on the platform should give the same one; readers
+    use the first project's.
 
 A doc's domain is the folder under `docs/product/domains/` it's in, so
 nothing in a doc says it. Moving a doc to another folder moves it. Both hotel examples work
@@ -679,8 +694,10 @@ GA in Guest stays and Alpha in Billing, so it's Alpha in short.
 ### Combining
 
 Each project's `state.json` is indexed from its own repository, so it only
-knows its own contributions. Showing several projects together **combines**
-their states:
+knows its own contributions. Showing several projects of one platform
+together **combines** their states. Projects on different platforms are never
+combined, since they're different products and the same ID can mean
+different things in each:
 
 1. Put each doc's contributions together by type and ID, as above.
 2. Resolve links to rules and concepts across every domain showing.
@@ -696,7 +713,8 @@ their states:
 It holds everything the UI shows, so the UI never reads the repository itself,
 and showing several projects together means reading each one's state.json.
 
-- **Header**: the `project` (its ID and name), and the commit indexed.
+- **Header**: the `project` (its ID and name), its `platform` (ID and name)
+  when `docket.yaml` declares one, and the commit indexed.
 - **`summary`**: the project's maturity and band, how many domains and
   features there are, capabilities per level, how many rules, how many gaps
   and how many problems. This is the

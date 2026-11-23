@@ -2,3 +2,7 @@
 project:
   id: hotel-bookings
   name: Hotel Bookings
+# The platform it's part of, with the hotel's other projects.
+platform:
+  id: hotel
+  name: Hotel

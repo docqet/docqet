@@ -31,7 +31,7 @@ import {
 import { DomainIcon } from "./FeatureMap";
 import Logo from "./Logo";
 import { PersonaAvatar, ReadinessMeter, personaNameAndRole } from "./Personas";
-import { ProjectIcon } from "./ProjectFilter";
+import { ProjectIcon } from "./PlatformFilter";
 import {
   bareId,
   byFeature,

@@ -15,7 +15,7 @@ import { StabilityMark } from "./design/stability/StabilityMark";
 import { ConceptChips, Markdown, PageLink, PanelHeader } from "./Concepts";
 import { DomainIcon } from "./FeatureMap";
 import { PersonaAvatar, PersonaIcon, ReadinessMeter, personaNameAndRole, type ReadinessBasis } from "./Personas";
-import { ProjectIcon } from "./ProjectFilter";
+import { ProjectIcon } from "./PlatformFilter";
 import {
   appliesAt,
   capabilityTarget,

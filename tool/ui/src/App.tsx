@@ -16,7 +16,7 @@ import { DomainIcon, mapGroups, mapItems, tidyMap } from "./FeatureMap";
 import Logo from "./Logo";
 import DetailPage from "./Page";
 import { PersonaIcon } from "./Personas";
-import ProjectFilter from "./ProjectFilter";
+import PlatformFilter, { type PlatformChoice } from "./PlatformFilter";
 import Search, { type Selection } from "./Search";
 import {
   cardsOf,
@@ -33,29 +33,33 @@ import {
   pageInUrl,
   personaCard,
   pickList,
+  platformsOf,
   projectOf,
   type DocketState,
   type Pick,
-  type Project,
+  type Platform,
   type StateFile,
   type Target,
 } from "./state";
 
-/* The projects named in the page's address, as `?project=<id>,<id>`. None means every one. */
-const projectsInUrl = () =>
-  (new URLSearchParams(window.location.search).get("project") ?? "").split(",").filter(Boolean);
+/* The platform and projects named in the page's address, as `?platform=<id>&project=<id>,<id>`. */
+const showingInUrl = () => {
+  const params = new URLSearchParams(window.location.search);
+  return { platform: params.get("platform"), projects: (params.get("project") ?? "").split(",").filter(Boolean) };
+};
 
 /*
- * Docket's one page: the features and capabilities of every project it can
- * read, mapped together on a canvas, under a header with their maturity.
+ * Docket's one page: the features and capabilities of one platform's
+ * projects, mapped together on a canvas, under a header with their maturity.
  * `projects.json` lists the projects' state, or else there's the one
- * `state.json`. The page can be filtered to some of them, and the address
- * says which. Where the cards sit is this browser's own. An address naming
- * one doc, such as `?capability=deposits`, shows its detail page instead.
+ * `state.json`. The page shows one platform at a time, and can be filtered to
+ * some of its projects; the address says which. Where the cards sit is this
+ * browser's own, for each platform. An address naming one doc, such as
+ * `?capability=deposits`, shows its detail page instead.
  */
 export default function App() {
   const [files, setFiles] = useState<StateFile[] | null>(null);
-  const [wanted, setWanted] = useState(projectsInUrl);
+  const [wanted, setWanted] = useState(showingInUrl);
   const [page, setPage] = useState(pageInUrl);
   const [error, setError] = useState<string | null>(null);
 
@@ -64,7 +68,7 @@ export default function App() {
       .then((paths) => Promise.all(paths.length ? paths.map((p) => loadState(p)) : [loadState()]))
       .then(setFiles, (e: unknown) => setError(String(e)));
     const onPop = () => {
-      setWanted(projectsInUrl());
+      setWanted(showingInUrl());
       setPage(pageInUrl());
     };
     window.addEventListener("popstate", onPop);
@@ -72,17 +76,35 @@ export default function App() {
   }, []);
 
   const all = useMemo(() => (files ?? []).map(projectOf), [files]);
-  /* The projects showing: those the address names that can be read, or else all of them. */
+  /* Each platform, with the maturity of all its projects together. */
+  const platforms = useMemo(
+    () =>
+      platformsOf(all).map((p) => {
+        const ids = p.projects.map((x) => x.id);
+        return { ...p, maturity: maturityOf(combine((files ?? []).filter((f) => ids.includes(f.project.id)))) };
+      }),
+    [all, files],
+  );
+  /*
+   * The platform showing: the one the address names, or else the one its
+   * first named project is in, or else the first. And its projects showing:
+   * those the address names, or else all of them.
+   */
+  const platform = useMemo(() => {
+    const named = platforms.find((p) => p.id === wanted.platform) ?? platforms.find((p) => p.projects.some((x) => x.id === wanted.projects[0]));
+    return named ?? platforms[0];
+  }, [platforms, wanted]);
   const chosen = useMemo(() => {
-    const known = all.map((p) => p.id);
-    const named = wanted.filter((id) => known.includes(id));
+    const known = platform?.projects.map((p) => p.id) ?? [];
+    const named = wanted.projects.filter((id) => known.includes(id));
     return named.length ? named : known;
-  }, [all, wanted]);
+  }, [platform, wanted]);
   const state = useMemo(() => files && combine(files.filter((f) => chosen.includes(f.project.id))), [files, chosen]);
 
   useEffect(() => {
-    if (state && !page) document.title = state.projects.length === 1 ? `${state.projects[0].name} · Docket` : "Docket";
-  }, [state, page]);
+    if (state && platform && !page)
+      document.title = `${state.projects.length === 1 ? state.projects[0].name : platform.name} · Docket`;
+  }, [state, platform, page]);
 
   /* From one detail page to another, in the same tab, so back returns. */
   const go = (pick: Pick) => {
@@ -90,10 +112,16 @@ export default function App() {
     setPage(pick);
   };
 
-  const choose = (ids: string[]) => {
-    const everything = ids.length === all.length;
-    window.history.pushState(null, "", everything ? window.location.pathname : `?project=${ids.map(encodeURIComponent).join(",")}`);
-    setWanted(everything ? [] : ids);
+  /* Show a platform, and some of its projects, or all of them with none named. The address names the platform only when there's a choice of them. */
+  const choose = (platformId: string, ids: string[] = []) => {
+    const of = platforms.find((p) => p.id === platformId);
+    if (!of) return;
+    const projects = ids.length === of.projects.length ? [] : ids;
+    const params = new URLSearchParams();
+    if (platforms.length > 1) params.set("platform", platformId);
+    if (projects.length) params.set("project", projects.join(","));
+    window.history.pushState(null, "", params.size ? `?${params}` : window.location.pathname);
+    setWanted({ platform: platformId, projects });
   };
 
   if (error) {
@@ -109,24 +137,39 @@ export default function App() {
       </div>
     );
   }
-  if (!state || !files) return <div className="message faint">Loading…</div>;
+  if (!state || !files || !platform) return <div className="message faint">Loading…</div>;
   if (page) return <DetailPage state={state} page={page} onGo={go} />;
 
-  /* Keyed by the projects there are, so a different set starts its canvas afresh. */
-  const key = all.map((p) => p.id).join(",");
-  return <View key={key} layoutKey={key} state={state} all={all} onProjects={choose} />;
+  /* Keyed by the platform's projects, so each platform has a canvas of its own and a different set starts it afresh. */
+  const key = platform.projects.map((p) => p.id).join(",");
+  return (
+    <View
+      key={key}
+      layoutKey={key}
+      state={state}
+      platform={platform}
+      platforms={platforms}
+      onPlatform={(id) => choose(id)}
+      onProjects={(ids) => choose(platform.id, ids)}
+    />
+  );
 }
 
 function View({
   state,
-  all,
+  platform,
+  platforms,
   layoutKey,
+  onPlatform,
   onProjects,
 }: {
   state: DocketState;
-  /* Every project there is, showing or not. */
-  all: Project[];
+  /* The platform showing, with every one of its projects, showing or not. */
+  platform: Platform;
+  /* Every platform there is, with its maturity. */
+  platforms: PlatformChoice[];
   layoutKey: string;
+  onPlatform: (id: string) => void;
   onProjects: (ids: string[]) => void;
 }) {
   const header = useRef<HTMLDivElement>(null);
@@ -243,7 +286,9 @@ function View({
       ) : null}
       <Header
         state={state}
-        all={all}
+        platform={platform}
+        platforms={platforms}
+        onPlatform={onPlatform}
         onProjects={onProjects}
         ref={header}
         onSelect={select}
@@ -344,7 +389,9 @@ function FilterStyle({ concepts, capabilities }: { concepts: string[]; capabilit
 
 function Header({
   state,
-  all,
+  platform,
+  platforms,
+  onPlatform,
   onProjects,
   ref,
   onSelect,
@@ -353,7 +400,9 @@ function Header({
   filters,
 }: {
   state: DocketState;
-  all: Project[];
+  platform: Platform;
+  platforms: PlatformChoice[];
+  onPlatform: (id: string) => void;
   onProjects: (ids: string[]) => void;
   ref: Ref<HTMLDivElement>;
   onSelect: (selection: Selection) => void;
@@ -375,11 +424,17 @@ function Header({
       <div className="panel brand" data-no-pan>
         <Logo />
         <span className="divider" aria-hidden />
-        <ProjectFilter showing={state.projects} all={all} onChange={onProjects} />
+        <PlatformFilter
+          showing={state.projects}
+          platform={platform}
+          platforms={platforms}
+          onPlatform={onPlatform}
+          onProjects={onProjects}
+        />
       </div>
 
       <div className="finders">
-        <Search state={state} all={all} onSelect={onSelect} />
+        <Search state={state} all={platform.projects} onSelect={onSelect} />
       </div>
 
       <div className="panel stats" data-no-pan>

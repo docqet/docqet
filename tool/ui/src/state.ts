@@ -189,6 +189,8 @@ export type DocketState = {
 export type Project = {
   id: string;
   name: string;
+  /* The platform it's part of: the one its docket.yaml declares, or else a platform of its own, named for it. */
+  platform: { id: string; name: string };
   commit: string;
   indexedAt: string;
   maturity: number | null;
@@ -202,6 +204,8 @@ type Raw<T extends Doc> = Omit<T, "from" | "levels" | "parts" | "project">;
 export type StateFile = {
   docket: string;
   project: { id: string; name: string };
+  /* Missing when the project declares no platform, and from state written before platforms. */
+  platform?: { id: string; name: string };
   commit: string;
   indexedAt: string;
   summary: { maturity: number | null; band: Level | null };
@@ -222,11 +226,26 @@ export type StateFile = {
 /* A project's header and summary, from its state.json. */
 export const projectOf = (file: StateFile): Project => ({
   ...file.project,
+  platform: file.platform ?? file.project,
   commit: file.commit,
   indexedAt: file.indexedAt,
   maturity: file.summary.maturity,
   band: file.summary.band,
 });
+
+/* Projects that are shown together, as one product: those that declare the same platform. */
+export type Platform = { id: string; name: string; projects: Project[] };
+
+/* Every platform, in the order their first projects are read, each with its projects in order. Its name is its first project's to say. */
+export function platformsOf(all: Project[]): Platform[] {
+  const platforms: Platform[] = [];
+  for (const p of all) {
+    const platform = platforms.find((x) => x.id === p.platform.id);
+    if (platform) platform.projects.push(p);
+    else platforms.push({ ...p.platform, projects: [p] });
+  }
+  return platforms;
+}
 
 const LEVEL_ORDER: readonly Level[] = STABILITY_LEVEL_IDS;
 
@@ -764,22 +783,28 @@ export const leftCount = (left: Left) => left.decisions.length + left.gaps.lengt
 
 const PAGE_KINDS: Pick["kind"][] = ["domain", "feature", "capability", "concept", "persona"];
 
-/* The projects showing, as the address has them, carried over to the pages it links to. */
-const projectParam = () => new URLSearchParams(window.location.search).get("project");
-
-/* A doc's detail page, as `?capability=deposits`, showing the same projects as this page. */
-export function pageHref(pick: Pick, section?: string): string {
+/* The platform and projects showing, as the address has them, carried over to the pages it links to. */
+function showingParams(): URLSearchParams {
+  const now = new URLSearchParams(window.location.search);
   const params = new URLSearchParams();
-  const project = projectParam();
-  if (project) params.set("project", project);
+  for (const key of ["platform", "project"]) {
+    const value = now.get(key);
+    if (value) params.set(key, value);
+  }
+  return params;
+}
+
+/* A doc's detail page, as `?capability=deposits`, showing the same platform and projects as this page. */
+export function pageHref(pick: Pick, section?: string): string {
+  const params = showingParams();
   params.set(pick.kind, pick.id);
   return `?${params}${section ? `#${section}` : ""}`;
 }
 
-/* The map, showing the same projects as this page. */
+/* The map, showing the same platform and projects as this page. */
 export function mapHref(): string {
-  const project = projectParam();
-  return project ? `?${new URLSearchParams({ project })}` : window.location.pathname;
+  const params = showingParams();
+  return params.size ? `?${params}` : window.location.pathname;
 }
 
 /* The doc whose detail page the address names, or null for the map. */

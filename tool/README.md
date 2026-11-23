@@ -24,17 +24,21 @@ DOCKET_STATE=path/to/state.json npm run dev   # any other state.json
 DOCKET_STATE=a/state.json:b/state.json npm run dev   # several, separated as in PATH
 ```
 
-With more than one project, the UI shows them all on one map:
+With more than one project on a platform, the UI shows them all on one map:
 
 - **Seeing them**: each card says which projects define it, and so does each
   search result and doc in the side panel. Each domain is one region, holding
   every project's part of it, and a feature that spans domains has a card in
   each, saying where else it is.
-- **Filtering them**: the projects' name in the header opens a list to tick
-  some or all of them, each with its maturity, and searching for a project and
-  choosing it shows only that one. The map, search, concepts, counts and
-  maturity then cover only those, and `?project=<id>,<id>` in the address says
-  which are showing. With none named, all of them are.
+- **Platforms**: the map shows one platform at a time, the projects whose
+  `docket.yaml` names the same platform. The platform's name in the header
+  opens a list of every platform to switch to, each with its maturity, then
+  the platform's projects to tick, some or all of them. Searching for a
+  project and choosing it shows only that one. The map, search, concepts,
+  counts and maturity then cover only those, and
+  `?platform=<id>&project=<id>,<id>` in the address says which are showing.
+  With no platform named, it's the first, and with no projects named, all of
+  its projects are. Each platform keeps its own card layout.
 - **Maturity**: with one project showing, the header has its own. With
   several, it's worked out from all their parts of features, the same way as
   one project's, and its popover lists each project's.

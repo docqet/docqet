@@ -8,7 +8,7 @@ import { RingGlyph } from "./design/maturity/RingGlyph";
 import { ContradictionHint, GapsHint, RulesHint } from "./CapabilityHints";
 import { ConceptChips, ConceptIcon } from "./Concepts";
 import { PersonaCard } from "./Personas";
-import { ProjectIcon } from "./ProjectFilter";
+import { ProjectIcon } from "./PlatformFilter";
 import {
   capabilityCard,
   conceptsOf,

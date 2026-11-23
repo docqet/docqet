@@ -4,6 +4,10 @@
     "id": "hotel-bookings",
     "name": "Hotel Bookings"
   },
+  "platform": {
+    "id": "hotel",
+    "name": "Hotel"
+  },
   "commit": "4f2c9e1",
   "indexedAt": "2026-11-18T15:04:00Z",
   "summary": {

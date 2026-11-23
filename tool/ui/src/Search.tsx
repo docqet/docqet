@@ -10,7 +10,7 @@ import { StabilityTrack } from "./design/stability/StabilityTrack";
 import { ConceptIcon } from "./Concepts";
 import { PersonaIcon } from "./Personas";
 import { DomainIcon } from "./FeatureMap";
-import { ProjectIcon } from "./ProjectFilter";
+import { ProjectIcon } from "./PlatformFilter";
 import {
   docDomains,
   domainName,
@@ -81,10 +81,10 @@ function appliesTo(state: DocketState, rule: Rule): string {
 }
 
 /*
- * Everything there is to find, with where each is on the canvas. Projects
- * are found whether they're showing or not, from `all`. With several projects
- * showing, everything else says which projects define it, and is found by
- * their names too.
+ * Everything there is to find, with where each is on the canvas. The
+ * platform's projects are found whether they're showing or not, from `all`.
+ * With several projects showing, everything else says which projects define
+ * it, and is found by their names too.
  */
 function index(state: DocketState, all: Project[]): Entry[] {
   const several = state.projects.length > 1;
