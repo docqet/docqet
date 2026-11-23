@@ -1,4 +1,5 @@
 ---
+id: removed-addresses-stop-email-immediately
 name: Removed addresses stop email immediately
 ---
 

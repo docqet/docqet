@@ -1,4 +1,5 @@
 ---
+id: permissions-follow-where-someone-acts
 name: Permissions follow where someone acts
 ---
 

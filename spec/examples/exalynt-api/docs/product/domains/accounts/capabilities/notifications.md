@@ -1,37 +1,38 @@
 ---
+id: notifications
 name: Notifications
 description: People choose which notifications they get and where they go.
 stability: prototype
 personas:
-  - client-admin-founder
-  - client-admin-operations
-  - client-member
-  - client-billing
-  - exalynt-engineer-1
-  - exalynt-engineer-2
-  - exalynt-team-lead
-  - exalynt-admin
-  - partner
+  - persona:client-admin-founder
+  - persona:client-admin-operations
+  - persona:client-member
+  - persona:client-billing
+  - persona:exalynt-engineer-1
+  - persona:exalynt-engineer-2
+  - persona:exalynt-team-lead
+  - persona:exalynt-admin
+  - persona:partner
 rules:
-  - notifications/each-app-offers-its-own-notifications
-  - notifications/nobody-hears-of-their-own-actions
-  - notifications/notifications-respect-what-someone-can-see
-  - notifications/turned-off-notifications-arent-sent
-  - notifications/recipients-choose-the-channels
-  - notifications/choices-are-private
-  - notifications/one-set-of-choices-across-organizations
-  - notifications/some-notifications-cant-be-turned-off
-  - notifications/email-only-to-verified-addresses
-  - notifications/what-clients-are-told
-  - notifications/what-engineers-are-told
-  - notifications/what-team-leads-are-also-told
-  - notifications/what-admins-are-told
-  - notifications/payout-release-reminders
-  - notifications/what-partners-are-told
-  - notifications/billing-and-member-notifications-follow-role
-  - notifications/lost-access-stops-notifications
-  - notifications/removed-channels-fall-back-to-others
-  - notifications/removed-addresses-stop-email-immediately
+  - rule:each-app-offers-its-own-notifications
+  - rule:nobody-hears-of-their-own-actions
+  - rule:notifications-respect-what-someone-can-see
+  - rule:turned-off-notifications-arent-sent
+  - rule:recipients-choose-the-channels
+  - rule:choices-are-private
+  - rule:one-set-of-choices-across-organizations
+  - rule:some-notifications-cant-be-turned-off
+  - rule:email-only-to-verified-addresses
+  - rule:what-clients-are-told
+  - rule:what-engineers-are-told
+  - rule:what-team-leads-are-also-told
+  - rule:what-admins-are-told
+  - rule:payout-release-reminders
+  - rule:what-partners-are-told
+  - rule:billing-and-member-notifications-follow-role
+  - rule:lost-access-stops-notifications
+  - rule:removed-channels-fall-back-to-others
+  - rule:removed-addresses-stop-email-immediately
 gaps:
   - id: admins-see-engineer-choices-in-the-console
     name: Admins see engineers' choices in the console

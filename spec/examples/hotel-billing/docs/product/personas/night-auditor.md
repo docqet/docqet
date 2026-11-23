@@ -1,4 +1,5 @@
 ---
+id: night-auditor
 name: Tom
 description: >-
   Looks after the hotel overnight, and makes sure each day is closed before

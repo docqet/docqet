@@ -1,14 +1,15 @@
 ---
+id: extra-charges
 name: Extra charges
 description: >-
   Staff add extras such as breakfast, parking or the minibar to a guest's
   bill.
 stability: ga
-personas: [front-desk-clerk]
+personas: [persona:front-desk-clerk]
 rules:
-  - bills/charges-are-never-changed
-  - bills/closed-bills-dont-change
-concepts: [bill, charge]
+  - rule:charges-are-never-changed
+  - rule:closed-bills-dont-change
+concepts: [concept:bill, concept:charge]
 ---
 
 ## Includes

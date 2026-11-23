@@ -1,4 +1,5 @@
 ---
+id: removed-members-leave-every-clients-view
 name: Removed members leave every client's view
 ---
 

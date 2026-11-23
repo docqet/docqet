@@ -1,4 +1,5 @@
 ---
+id: last-in-first-out-with-an-exact-fit-first
 name: Last in, first out, with an exact fit first
 why: >-
   The clients who scheduled first keep their place, and as little room as

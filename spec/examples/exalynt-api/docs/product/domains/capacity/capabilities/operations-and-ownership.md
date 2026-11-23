@@ -1,10 +1,11 @@
 ---
+id: operations-and-ownership
 name: Operations and ownership
 description: >-
   Clients choose whether they or Exalynt operate the software Exalynt builds
   for them, and keep what they own.
 stability: prototype
-personas: [client-admin-founder, client-admin-operations]
+personas: [persona:client-admin-founder, persona:client-admin-operations]
 gaps:
   - id: not-built
     name: Operations and ownership not built

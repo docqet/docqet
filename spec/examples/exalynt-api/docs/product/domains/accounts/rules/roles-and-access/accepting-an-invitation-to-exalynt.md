@@ -1,4 +1,5 @@
 ---
+id: accepting-an-invitation-to-exalynt
 name: Accepting an invitation to Exalynt
 ---
 

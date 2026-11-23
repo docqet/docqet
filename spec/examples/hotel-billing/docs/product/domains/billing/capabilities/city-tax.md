@@ -1,19 +1,20 @@
 ---
+id: city-tax
 name: City tax
 description: >-
   The software adds the city's tourist tax to each guest's bill, night by
   night.
 stability: alpha
-personas: [manager, front-desk-clerk]
+personas: [persona:manager, persona:front-desk-clerk]
 rules:
-  - tax/city-tax-per-guest-night
-  - tax/children-pay-no-city-tax
-  - tax/city-tax-stops-after-seven-nights
-concepts: [bill, charge]
+  - rule:city-tax-per-guest-night
+  - rule:children-pay-no-city-tax
+  - rule:city-tax-stops-after-seven-nights
+concepts: [concept:bill, concept:charge]
 gaps:
   - id: children-corrected-by-hand
     name: City tax charged for children
-    rule: tax/children-pay-no-city-tax
+    rule: rule:children-pay-no-city-tax
     impact: inconvenient
     description: >-
       Guests' ages aren't recorded, so city tax is added for every guest on a

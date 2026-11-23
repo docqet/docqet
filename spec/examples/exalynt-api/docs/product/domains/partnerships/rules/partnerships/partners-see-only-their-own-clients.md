@@ -1,4 +1,5 @@
 ---
+id: partners-see-only-their-own-clients
 name: Partners see only their own clients
 ---
 

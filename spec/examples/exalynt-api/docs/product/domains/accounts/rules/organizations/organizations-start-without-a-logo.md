@@ -1,4 +1,5 @@
 ---
+id: organizations-start-without-a-logo
 name: Organizations start without a logo
 ---
 

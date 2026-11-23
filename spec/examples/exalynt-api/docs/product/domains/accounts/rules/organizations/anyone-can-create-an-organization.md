@@ -1,4 +1,5 @@
 ---
+id: anyone-can-create-an-organization
 name: Anyone can create an organization
 ---
 

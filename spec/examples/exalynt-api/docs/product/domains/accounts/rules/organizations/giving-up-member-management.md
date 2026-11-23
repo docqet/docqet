@@ -1,4 +1,5 @@
 ---
+id: giving-up-member-management
 name: Giving up member management
 ---
 

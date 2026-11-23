@@ -1,4 +1,5 @@
 ---
+id: assignment-requires-eligibility
 name: Assignment requires eligibility
 ---
 

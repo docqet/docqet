@@ -1,4 +1,5 @@
 ---
+id: organization-listings-show-logo-status
 name: Organization listings show logo status
 ---
 

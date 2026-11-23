@@ -1,4 +1,5 @@
 ---
+id: room-comes-from-assigned-teams
 name: Room comes from assigned teams
 ---
 

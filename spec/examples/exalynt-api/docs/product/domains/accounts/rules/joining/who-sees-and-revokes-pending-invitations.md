@@ -1,4 +1,5 @@
 ---
+id: who-sees-and-revokes-pending-invitations
 name: Who sees and revokes pending invitations
 ---
 

@@ -1,4 +1,5 @@
 ---
+id: team-names-are-unique
 name: Team names are unique
 ---
 

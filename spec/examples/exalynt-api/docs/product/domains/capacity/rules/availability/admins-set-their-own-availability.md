@@ -1,4 +1,5 @@
 ---
+id: admins-set-their-own-availability
 name: Admins set their own availability
 ---
 

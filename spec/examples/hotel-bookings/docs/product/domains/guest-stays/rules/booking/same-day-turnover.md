@@ -1,6 +1,7 @@
 ---
+id: same-day-turnover
 name: A stay can start on the day another ends
-concepts: [booking, room]
+concepts: [concept:booking, concept:room]
 why: >-
   Guests check out by 11:00 and check in from 15:00, which leaves time to
   clean the room.

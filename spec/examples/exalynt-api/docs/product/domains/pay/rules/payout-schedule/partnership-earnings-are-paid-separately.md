@@ -1,4 +1,5 @@
 ---
+id: partnership-earnings-are-paid-separately
 name: Partnership earnings are paid separately
 ---
 

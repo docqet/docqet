@@ -1,4 +1,5 @@
 ---
+id: one-pending-invitation-per-person
 name: One pending invitation per person
 ---
 

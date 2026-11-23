@@ -1,4 +1,5 @@
 ---
+id: clients-follow-a-blocks-status
 name: Clients follow a block's status
 ---
 

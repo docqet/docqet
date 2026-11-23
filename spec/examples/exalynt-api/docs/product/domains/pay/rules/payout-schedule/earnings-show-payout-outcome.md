@@ -1,4 +1,5 @@
 ---
+id: earnings-show-payout-outcome
 name: Earnings show payout outcome
 ---
 

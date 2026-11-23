@@ -1,52 +1,53 @@
 ---
+id: partner-payout-accounts
 name: Partner payout accounts
 description: >-
   Partners set up and look after the one bank account each partnership they
   manage is paid to, its own apart from theirs and any other partnership's.
 stability: beta
-personas: [partner]
+personas: [persona:partner]
 rules:
-  - payout-accounts/one-payout-account-per-person
-  - payout-accounts/a-partnerships-payout-account-is-its-own
-  - payout-accounts/removing-a-payout-account
-  - payout-accounts/seeing-whether-an-account-can-be-paid
-  - payout-accounts/payout-accounts-stay-private-to-their-owner
-  - payout-accounts/admins-see-only-payment-readiness
-  - payout-accounts/limited-tokens-cant-reach-payout-accounts
-  - earnings-and-payouts/shares-earned-at-fulfillment
-  - earnings-and-payouts/payout-basis-per-capacity-unit
-  - earnings-and-payouts/engineer-earns-the-engineer-share
-  - earnings-and-payouts/team-leads-earn-team-lead-share
-  - earnings-and-payouts/available-teammates-earn-team-support-share
-  - earnings-and-payouts/unlisted-shares-earn-nothing
-  - earnings-and-payouts/shares-dont-reduce-each-other
-  - earnings-and-payouts/partnership-share-earned-at-fulfillment
-  - earnings-and-payouts/partnerships-earn-under-their-agreement-in-effect
-  - earnings-and-payouts/coupons-never-change-shares
-  - earnings-and-payouts/unclaimed-shares-stay-with-exalynt
-  - earnings-and-payouts/when-basis-and-percentages-are-fixed
-  - earnings-and-payouts/each-share-rounds-on-its-own
-  - earnings-and-payouts/refunds-after-fulfillment-change-nothing
-  - earnings-and-payouts/reassignment-before-fulfillment-earns-nothing
-  - earnings-and-payouts/when-team-support-earners-are-fixed
-  - earnings-and-payouts/when-the-team-lead-beneficiary-is-fixed
-  - earnings-and-payouts/no-lead-means-no-lead-share
-  - earnings-and-payouts/one-team-lead-share-per-block
-  - earnings-and-payouts/invalid-payout-account-delays-lead-share
-  - earnings-and-payouts/partner-status-leaves-engineers-unchanged
-  - earnings-and-payouts/earnings-belong-to-the-partnership
-  - earnings-and-payouts/partnership-terms-set-at-invitation
-  - earnings-and-payouts/partnership-share-of-payout-basis
-  - earnings-and-payouts/engineering-capacity-is-the-only-basis
-  - earnings-and-payouts/earning-window-opens-at-first-purchase
-  - earnings-and-payouts/earning-windows-never-reset-or-pause
-  - earnings-and-payouts/unfulfilled-capacity-earns-partnerships-nothing
-  - earnings-and-payouts/attribution-at-purchase-decides-the-partnership
-  - earnings-and-payouts/partnerships-earn-without-a-payout-account
-  - earnings-and-payouts/manager-controls-the-partnerships-payout-account
-  - earnings-and-payouts/exalynt-bears-partnership-earnings
-  - earnings-and-payouts/partners-see-only-their-partnerships-earnings
-concepts: [payout, partnership]
+  - rule:one-payout-account-per-person
+  - rule:a-partnerships-payout-account-is-its-own
+  - rule:removing-a-payout-account
+  - rule:seeing-whether-an-account-can-be-paid
+  - rule:payout-accounts-stay-private-to-their-owner
+  - rule:admins-see-only-payment-readiness
+  - rule:limited-tokens-cant-reach-payout-accounts
+  - rule:shares-earned-at-fulfillment
+  - rule:payout-basis-per-capacity-unit
+  - rule:engineer-earns-the-engineer-share
+  - rule:team-leads-earn-team-lead-share
+  - rule:available-teammates-earn-team-support-share
+  - rule:unlisted-shares-earn-nothing
+  - rule:shares-dont-reduce-each-other
+  - rule:partnership-share-earned-at-fulfillment
+  - rule:partnerships-earn-under-their-agreement-in-effect
+  - rule:coupons-never-change-shares
+  - rule:unclaimed-shares-stay-with-exalynt
+  - rule:when-basis-and-percentages-are-fixed
+  - rule:each-share-rounds-on-its-own
+  - rule:refunds-after-fulfillment-change-nothing
+  - rule:reassignment-before-fulfillment-earns-nothing
+  - rule:when-team-support-earners-are-fixed
+  - rule:when-the-team-lead-beneficiary-is-fixed
+  - rule:no-lead-means-no-lead-share
+  - rule:one-team-lead-share-per-block
+  - rule:invalid-payout-account-delays-lead-share
+  - rule:partner-status-leaves-engineers-unchanged
+  - rule:earnings-belong-to-the-partnership
+  - rule:partnership-terms-set-at-invitation
+  - rule:partnership-share-of-payout-basis
+  - rule:engineering-capacity-is-the-only-basis
+  - rule:earning-window-opens-at-first-purchase
+  - rule:earning-windows-never-reset-or-pause
+  - rule:unfulfilled-capacity-earns-partnerships-nothing
+  - rule:attribution-at-purchase-decides-the-partnership
+  - rule:partnerships-earn-without-a-payout-account
+  - rule:manager-controls-the-partnerships-payout-account
+  - rule:exalynt-bears-partnership-earnings
+  - rule:partners-see-only-their-partnerships-earnings
+concepts: [concept:payout, concept:partnership@partnerships]
 gaps:
   - id: status-changes-show-on-next-load
     name: Status changes show only on next load

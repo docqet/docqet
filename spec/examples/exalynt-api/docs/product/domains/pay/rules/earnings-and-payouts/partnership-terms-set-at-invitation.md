@@ -1,4 +1,5 @@
 ---
+id: partnership-terms-set-at-invitation
 name: Partnership terms set at invitation
 ---
 

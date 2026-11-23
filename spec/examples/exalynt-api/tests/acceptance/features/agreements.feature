@@ -3,7 +3,7 @@ Feature: Agreements
   engineer under their Engineer Agreement, and a partnership under its Partner
   Agreement, whose Commercial Terms an admin sets.
 
-  # docket:verifies rule:agreements/engineer-agreement-follows-the-invitations-terms
+  # docket:verifies rule:engineer-agreement-follows-the-invitations-terms@agreements
   Rule: An engineer is offered the Engineer Agreement on the terms their invitation set
 
     Example: Invited with an Engineer Share of 62%
@@ -12,7 +12,7 @@ Feature: Agreements
       Then Theo has an Engineer Agreement to accept, with an Engineer Share of 62%
       And Theo has no Engineer Agreement in effect
 
-  # docket:verifies rule:agreements/an-engineer-agreement-can-have-no-commercial-terms
+  # docket:verifies rule:an-engineer-agreement-can-have-no-commercial-terms@agreements
   Rule: An admin can send an Engineer Agreement with no Commercial Terms
 
     Example: Invited with no Commercial Terms
@@ -24,7 +24,7 @@ Feature: Agreements
       When an admin sends Theo one with no Commercial Terms
       Then Theo has an Engineer Agreement to accept, with no Commercial Terms
 
-  # docket:verifies rule:agreements/acceptance-puts-an-agreement-in-effect
+  # docket:verifies rule:acceptance-puts-an-agreement-in-effect@agreements
   Rule: An agreement is in effect only once accepted, and the latest accepted supersedes any before it
 
     Example: Accepting the one offered
@@ -32,7 +32,7 @@ Feature: Agreements
       When Theo accepts it
       Then it's Theo's Engineer Agreement in effect
 
-  # docket:verifies rule:agreements/new-terms-wait-for-acceptance
+  # docket:verifies rule:new-terms-wait-for-acceptance@agreements
   Rule: New terms hold only once accepted; until then the agreement in effect keeps its own
 
     Example: Sent, not yet accepted
@@ -45,7 +45,7 @@ Feature: Agreements
       When Theo accepts it
       Then Theo's Engineer Agreement in effect has an Engineer Share of 65%
 
-  # docket:verifies rule:agreements/a-newer-agreement-replaces-one-waiting
+  # docket:verifies rule:a-newer-agreement-replaces-one-waiting@agreements
   Rule: A newer agreement replaces one still waiting
 
     Example: Sent twice before accepting
@@ -53,7 +53,7 @@ Feature: Agreements
       When an admin sends Theo one with an Engineer Share of 65%
       Then Theo has one Engineer Agreement to accept, with an Engineer Share of 65%
 
-  # docket:verifies rule:agreements/only-the-waiting-agreement-is-accepted-once
+  # docket:verifies rule:only-the-waiting-agreement-is-accepted-once@agreements
   Rule: Only the waiting agreement can be accepted, and only once
 
     Example: Accepting one that was replaced
@@ -81,7 +81,7 @@ Feature: Agreements
       Then they're refused
       And it's still the partnership's Partner Agreement in effect
 
-  # docket:verifies rule:agreements/accepted-agreements-never-change
+  # docket:verifies rule:accepted-agreements-never-change@agreements
   Rule: Accepted agreements never change
 
     Example: The engineer's name changes after accepting
@@ -94,7 +94,7 @@ Feature: Agreements
       When Acme is renamed to Acme Labs
       Then Acme's accepted Client Agreement still names Acme
 
-  # docket:verifies rule:agreements/accepted-agreements-outlive-their-partys-account
+  # docket:verifies rule:accepted-agreements-outlive-their-partys-account@agreements
   Rule: An accepted agreement outlives its party's account
 
     Example: An engineer's account is deleted
@@ -102,7 +102,7 @@ Feature: Agreements
       When Theo's account is deleted
       Then the Engineer Agreement Theo accepted is still kept, naming Theo
 
-  # docket:verifies rule:agreements/agreements-stay-private
+  # docket:verifies rule:agreements-stay-private@agreements
   Rule: Agreements stay private
 
     Example: An engineer sees only their own
@@ -140,7 +140,7 @@ Feature: Agreements
       Then they're refused
       And Grace's partnership's is still waiting to be accepted
 
-  # docket:verifies rule:agreements/a-new-organization-is-offered-the-client-agreement
+  # docket:verifies rule:a-new-organization-is-offered-the-client-agreement@agreements
   Rule: An organization is offered the Client Agreement when it's created
 
     Example: A client creates an organization
@@ -149,7 +149,7 @@ Feature: Agreements
       Then Acme has a Client Agreement to accept
       And Acme has no Client Agreement in effect
 
-  # docket:verifies rule:agreements/who-accepts-a-client-agreement
+  # docket:verifies rule:who-accepts-a-client-agreement@agreements
   Rule: An organization's Client Agreement is accepted for it by someone whose role can manage it
 
     Example: An Admin accepts
@@ -168,7 +168,7 @@ Feature: Agreements
         | Member  |
         | Billing |
 
-  # docket:verifies rule:agreements/manager-accepts-the-partner-agreement
+  # docket:verifies rule:manager-accepts-the-partner-agreement@agreements
   Rule: A partnership's Partner Agreement is accepted by its manager
 
     Example: The manager accepts
@@ -182,7 +182,7 @@ Feature: Agreements
       Then they're refused
       And the partnership still has no Partner Agreement in effect
 
-  # docket:verifies rule:agreements/reading-the-partner-agreement-before-accepting
+  # docket:verifies rule:reading-the-partner-agreement-before-accepting@agreements
   Rule: An invited partner can read the Partner Agreement before accepting, and only the address invited can
 
     Example: The person invited

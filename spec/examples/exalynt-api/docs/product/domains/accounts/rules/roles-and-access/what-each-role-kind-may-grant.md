@@ -1,4 +1,5 @@
 ---
+id: what-each-role-kind-may-grant
 name: What each role kind may grant
 ---
 

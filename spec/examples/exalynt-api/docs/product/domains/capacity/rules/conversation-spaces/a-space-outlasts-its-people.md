@@ -1,4 +1,5 @@
 ---
+id: a-space-outlasts-its-people
 name: A space outlasts its people
 why: What was said stays available with the messaging provider.
 ---

@@ -1,4 +1,5 @@
 ---
+id: a-partnership-stands-apart-from-organizations
 name: A partnership stands apart from organizations
 ---
 

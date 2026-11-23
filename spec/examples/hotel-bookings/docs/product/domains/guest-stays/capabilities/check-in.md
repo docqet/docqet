@@ -1,10 +1,11 @@
 ---
+id: check-in
 name: Check-in
 description: Clerks check guests in when they arrive and give them their room.
 stability: beta
-personas: [front-desk-clerk]
-rules: [booking/no-double-booking]
-concepts: [booking, room]
+personas: [persona:front-desk-clerk]
+rules: [rule:no-double-booking]
+concepts: [concept:booking, concept:room]
 ---
 
 ## Includes

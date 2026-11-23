@@ -26,7 +26,8 @@ docket:<verb> <type>:<id> [<type>:<id> ...]
 ```
 
 `implements` and `verifies` take `rule`, `capability`, `mechanism` and
-`component`, and can name several at once. A mechanism's or component's
+`component`, and can name several at once. A rule always names its domain, as
+`rule:<id>@<domain>`, since code is in no domain. A mechanism's or component's
 `implements` annotations are how it's found in the code, since its doc names
 no paths. `gap` and `tradeoff` take the ID of
 one, as `<type>:<id>#<key>`. An annotation is on the first line below it
@@ -36,14 +37,14 @@ uses.
 A unit test:
 
 ```ts
-// docket:verifies rule:booking/minimum-stay
+// docket:verifies rule:minimum-stay@guest-stays
 it("rejects a stay that ends the day it starts", () => {
 ```
 
 A database constraint, which also marks the tradeoff behind it:
 
 ```sql
-  -- docket:implements rule:booking/no-double-booking component:bookings
+  -- docket:implements rule:no-double-booking@guest-stays component:bookings
   -- docket:tradeoff component:bookings#constraint-not-lock
   EXCLUDE USING gist (room_id WITH =, nights WITH &&) WHERE (status <> 'cancelled')
 ```

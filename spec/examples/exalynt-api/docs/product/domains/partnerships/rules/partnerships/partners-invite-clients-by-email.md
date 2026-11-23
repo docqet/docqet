@@ -1,4 +1,5 @@
 ---
+id: partners-invite-clients-by-email
 name: Partners invite clients by email
 ---
 

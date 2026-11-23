@@ -1,4 +1,5 @@
 ---
+id: lapsed-blocks-must-be-moved-first
 name: Lapsed blocks must be moved first
 ---
 

@@ -1,4 +1,5 @@
 ---
+id: limited-tokens-reveal-only-their-organizations
 name: Limited tokens reveal only their organizations
 ---
 

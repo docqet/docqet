@@ -1,4 +1,5 @@
 ---
+id: authentication
 name: Authentication
 description: >-
   Decides who is calling each request, and puts the `authz.Principal` the rest

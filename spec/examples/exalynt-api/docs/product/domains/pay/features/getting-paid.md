@@ -1,12 +1,13 @@
 ---
+id: getting-paid
 name: Getting paid
 description: >-
   Paying the people who earned from each block: the engineer on it, their team
   lead and their teammates, each by their own Engineer Agreement.
 capabilities:
-  - earnings
-  - payouts
-  - payout-accounts
+  - capability:earnings
+  - capability:payouts
+  - capability:payout-accounts
 ---
 
 Each week's payouts are seen by an admin before they're sent, and go out once

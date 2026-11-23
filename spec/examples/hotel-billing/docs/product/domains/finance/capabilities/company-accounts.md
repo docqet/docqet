@@ -1,12 +1,13 @@
 ---
+id: company-accounts
 name: Company accounts
 description: >-
   Bookkeepers set up companies that pay for their staff's stays, each with a
   credit limit.
 stability: beta
-personas: [bookkeeper]
-rules: [company-accounts/credit-limit]
-concepts: [company-account]
+personas: [persona:bookkeeper]
+rules: [rule:credit-limit]
+concepts: [concept:company-account]
 ---
 
 ## Includes

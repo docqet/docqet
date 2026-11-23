@@ -1,4 +1,5 @@
 ---
+id: room
 name: Room
 description: A room guests can stay in, known by its number.
 ---

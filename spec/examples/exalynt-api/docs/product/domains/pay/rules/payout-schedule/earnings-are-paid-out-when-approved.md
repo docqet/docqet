@@ -1,4 +1,5 @@
 ---
+id: earnings-are-paid-out-when-approved
 name: Earnings are paid out when approved
 ---
 

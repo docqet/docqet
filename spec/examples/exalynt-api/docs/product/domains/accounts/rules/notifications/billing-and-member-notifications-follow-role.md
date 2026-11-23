@@ -1,4 +1,5 @@
 ---
+id: billing-and-member-notifications-follow-role
 name: Billing and member notifications follow role
 ---
 

@@ -1,4 +1,5 @@
 ---
+id: buying-charges-at-once
 name: Buying charges at once
 ---
 

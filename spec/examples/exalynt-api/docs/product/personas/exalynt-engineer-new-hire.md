@@ -1,4 +1,5 @@
 ---
+id: exalynt-engineer-new-hire
 name: Theo Lindqvist
 description: >-
   Mid-level full-stack engineer just hired by Exalynt, coming from a product

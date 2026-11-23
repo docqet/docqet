@@ -1,4 +1,5 @@
 ---
+id: one-payout-account-per-person
 name: One payout account per person
 ---
 

@@ -1,6 +1,7 @@
 ---
+id: city-tax-per-guest-night
 name: City tax is charged per guest, per night
-concepts: [bill, charge]
+concepts: [concept:bill, concept:charge]
 why: >-
   The hotel owes the city tax for every guest night, whether or not it charged
   the guest.

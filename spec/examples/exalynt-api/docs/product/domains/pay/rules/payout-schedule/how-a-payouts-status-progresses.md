@@ -1,4 +1,5 @@
 ---
+id: how-a-payouts-status-progresses
 name: How a payout's status progresses
 ---
 

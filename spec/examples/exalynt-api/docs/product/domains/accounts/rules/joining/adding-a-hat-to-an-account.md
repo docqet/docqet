@@ -1,4 +1,5 @@
 ---
+id: adding-a-hat-to-an-account
 name: Adding a hat to an account
 ---
 

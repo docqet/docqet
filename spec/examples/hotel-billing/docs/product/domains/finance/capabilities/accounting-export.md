@@ -1,12 +1,13 @@
 ---
+id: accounting-export
 name: Accounting export
 description: >-
   Bookkeepers export each closed day's takings to the hotel's accounting
   software.
 stability: alpha
-personas: [bookkeeper]
-rules: [night-audit/closed-days-dont-change]
-concepts: [business-day]
+personas: [persona:bookkeeper]
+rules: [rule:closed-days-dont-change]
+concepts: [concept:business-day]
 decisions:
   - question: >-
       Is a day at a time what the accountant wants, or one export a month?

@@ -1,4 +1,5 @@
 ---
+id: team-scoped-capacity-access
 name: Team-scoped capacity access
 ---
 

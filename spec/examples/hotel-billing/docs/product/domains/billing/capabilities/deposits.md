@@ -1,13 +1,14 @@
 ---
+id: deposits
 name: Deposits
 description: The software takes a deposit on the guest's card when a stay is booked.
 stability: beta
-personas: [manager, front-desk-clerk]
+personas: [persona:manager, persona:front-desk-clerk]
 rules:
-  - payments/deposit-is-the-first-night
-  - payments/deposit-counts-towards-the-bill
-  - payments/card-numbers-are-never-kept
-concepts: [payment, bill]
+  - rule:deposit-is-the-first-night
+  - rule:deposit-counts-towards-the-bill
+  - rule:card-numbers-are-never-kept
+concepts: [concept:payment, concept:bill]
 decisions:
   - topic: Long stays
     question: Is a week's stay still secured by one night's deposit?

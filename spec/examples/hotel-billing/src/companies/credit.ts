@@ -2,14 +2,14 @@ import { balance, type Bill } from "../ledger/ledger";
 
 export type CompanyAccount = { id: string; creditLimit: number; owed: number; guests: string[] };
 
-// docket:implements rule:company-accounts/credit-limit
+// docket:implements rule:credit-limit@finance
 export function assertWithinLimit(account: CompanyAccount, amount: number): void {
   if (account.owed + amount > account.creditLimit) {
     throw new Error(`That would take ${account.id} over its credit limit`);
   }
 }
 
-// docket:implements rule:company-accounts/only-named-guests
+// docket:implements rule:only-named-guests@finance
 export function assertNamedGuest(account: CompanyAccount, guestId: string): void {
   if (!account.guests.includes(guestId)) {
     throw new Error(`${account.id} doesn't pay for this guest's stays`);

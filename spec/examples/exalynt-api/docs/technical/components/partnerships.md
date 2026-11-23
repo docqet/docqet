@@ -1,4 +1,5 @@
 ---
+id: partnerships
 name: Partnerships
 description: >-
   Partnerships and what their managers do in them: invite clients, see the
@@ -7,12 +8,12 @@ description: >-
   doc](../mechanisms/row-level-security.md), and Partner Agreements themselves
   are in [agreements](agreements.md).
 capabilities:
-  - partnerships
-  - client-invitations
-  - partner-clients
-  - partner-agreements
-  - partner-home
-  - organizations-and-members
+  - capability:partnerships
+  - capability:client-invitations
+  - capability:partner-clients
+  - capability:partner-agreements
+  - capability:partner-home
+  - capability:organizations-and-members
 gaps:
   - id: listings-not-paged
     name: Partnership listings not paged

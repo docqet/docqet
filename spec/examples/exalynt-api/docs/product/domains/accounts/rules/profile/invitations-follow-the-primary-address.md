@@ -1,4 +1,5 @@
 ---
+id: invitations-follow-the-primary-address
 name: Invitations follow the primary address
 ---
 

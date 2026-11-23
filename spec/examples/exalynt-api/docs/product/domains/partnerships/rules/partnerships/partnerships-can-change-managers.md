@@ -1,4 +1,5 @@
 ---
+id: partnerships-can-change-managers
 name: Partnerships can change managers
 ---
 

@@ -1,4 +1,5 @@
 ---
+id: only-the-invitee-can-accept
 name: Only the invitee can accept
 ---
 

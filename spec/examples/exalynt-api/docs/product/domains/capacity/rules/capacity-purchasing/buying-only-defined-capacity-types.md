@@ -1,4 +1,5 @@
 ---
+id: buying-only-defined-capacity-types
 name: Buying only defined capacity types
 ---
 

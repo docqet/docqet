@@ -1,4 +1,5 @@
 ---
+id: deleted-objects-cant-be-found
 name: Deleted objects can't be found
 ---
 

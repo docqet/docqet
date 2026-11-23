@@ -1,4 +1,5 @@
 ---
+id: limited-tokens-must-name-an-organization
 name: Limited tokens must name an organization
 ---
 

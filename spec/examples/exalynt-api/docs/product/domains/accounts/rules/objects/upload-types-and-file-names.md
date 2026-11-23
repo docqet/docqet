@@ -1,4 +1,5 @@
 ---
+id: upload-types-and-file-names
 name: Upload types and file names
 ---
 

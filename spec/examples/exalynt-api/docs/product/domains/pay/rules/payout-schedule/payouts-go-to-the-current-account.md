@@ -1,4 +1,5 @@
 ---
+id: payouts-go-to-the-current-account
 name: Payouts go to the current account
 ---
 

@@ -1,4 +1,5 @@
 ---
+id: earnings-wait-for-a-valid-account
 name: Earnings wait for a valid account
 ---
 

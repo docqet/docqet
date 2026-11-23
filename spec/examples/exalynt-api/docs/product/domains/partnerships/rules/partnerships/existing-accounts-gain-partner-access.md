@@ -1,4 +1,5 @@
 ---
+id: existing-accounts-gain-partner-access
 name: Existing accounts gain partner access
 ---
 

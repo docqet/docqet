@@ -1,6 +1,7 @@
 ---
+id: overpayments-are-refunded
 name: Overpayments are refunded
-concepts: [payment, bill]
+concepts: [concept:payment, concept:bill]
 ---
 
 A guest who has paid more than their bill is refunded the difference before the

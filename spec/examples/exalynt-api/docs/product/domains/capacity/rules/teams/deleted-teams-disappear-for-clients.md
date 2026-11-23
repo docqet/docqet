@@ -1,4 +1,5 @@
 ---
+id: deleted-teams-disappear-for-clients
 name: Deleted teams disappear for clients
 ---
 

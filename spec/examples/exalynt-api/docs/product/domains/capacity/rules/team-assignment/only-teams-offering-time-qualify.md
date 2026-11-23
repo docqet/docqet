@@ -1,4 +1,5 @@
 ---
+id: only-teams-offering-time-qualify
 name: Only teams offering time qualify
 ---
 

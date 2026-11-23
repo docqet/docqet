@@ -1,4 +1,5 @@
 ---
+id: booking
 name: Booking
 description: >-
   A guest's hold on one room for a stay, from a check-in date to a check-out

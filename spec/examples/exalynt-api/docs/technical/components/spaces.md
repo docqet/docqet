@@ -1,11 +1,12 @@
 ---
+id: spaces
 name: Spaces
 description: >-
   Our records of each organization's conversation space and who we put in it,
   kept in step with the messaging provider as memberships change, and blocks'
   conversations there. The provider is behind messaging: Google Chat or
   Stream.
-capabilities: [conversation-spaces]
+capabilities: [capability:conversation-spaces]
 gaps:
   - id: no-retries-or-synchronization
     name: No retries or sync with the provider

@@ -54,9 +54,9 @@
       "name": "Guest bills",
       "description": "Keeping an accurate record of what each guest owes during their stay.",
       "capabilities": [
-        "extra-charges",
-        "city-tax",
-        "split-bills"
+        "capability:extra-charges",
+        "capability:city-tax",
+        "capability:split-bills"
       ],
       "decisions": [],
       "body": "",
@@ -69,9 +69,9 @@
       "name": "Payments",
       "description": "Getting paid for stays, before the guest arrives and while they're here.",
       "capabilities": [
-        "deposits",
-        "pay-by-link",
-        "refunds"
+        "capability:deposits",
+        "capability:pay-by-link",
+        "capability:refunds"
       ],
       "decisions": [],
       "body": "",
@@ -84,9 +84,9 @@
       "name": "Company accounts",
       "description": "Billing companies for their staff's stays, so the guests don't pay themselves.",
       "capabilities": [
-        "company-accounts",
-        "direct-billing",
-        "invoices"
+        "capability:company-accounts",
+        "capability:direct-billing",
+        "capability:invoices"
       ],
       "decisions": [],
       "body": "",
@@ -99,9 +99,9 @@
       "name": "Closing the day",
       "description": "Making each day's takings final, and handing them to the hotel's accounts.",
       "capabilities": [
-        "night-audit",
-        "daily-takings",
-        "accounting-export"
+        "capability:night-audit",
+        "capability:daily-takings",
+        "capability:accounting-export"
       ],
       "decisions": [],
       "body": "",
@@ -114,7 +114,7 @@
       "name": "Front desk",
       "description": "Welcoming guests when they arrive and settling up when they leave.",
       "capabilities": [
-        "check-out"
+        "capability:check-out"
       ],
       "decisions": [],
       "body": "Billing's part of the front desk is settling the bill at check-out. Checking\nguests in and out is Guest stays'.",
@@ -131,13 +131,13 @@
       "description": "Keeps the hotel's books, and invoices the companies that pay for their staff's stays.",
       "image": "https://randomuser.me/api/portraits/women/90.jpg",
       "capabilities": [
-        "company-accounts",
-        "invoices",
-        "accounting-export"
+        "capability:company-accounts",
+        "capability:invoices",
+        "capability:accounting-export"
       ],
       "features": [
-        "company-accounts",
-        "closing-the-day"
+        "feature:company-accounts",
+        "feature:closing-the-day"
       ],
       "body": "## Needs\n\n- To get each day's takings into the accounting software without typing them in.\n- To invoice every company once a month, and see what each one owes.\n- To keep companies within the credit the hotel allows them.\n\n## Knows\n\nBookkeeping, and the hotel's accounting software, well. Less about how the front\ndesk works.\n\n## Context\n\nPart time, two or three days a week, at a desk in the back office. Month end is\ntheir busiest time.\n\n## Expects\n\nDays that are closed and stay closed, invoice numbers that run in order, and an\nexport their accounting software takes as it is.\n\n## Cares about\n\nBooks that balance. A day that changes after they've exported it means finding\nthe difference by hand."
     },
@@ -150,20 +150,20 @@
       "description": "Runs the front desk: takes bookings, and checks guests in and out.",
       "image": "https://randomuser.me/api/portraits/women/68.jpg",
       "capabilities": [
-        "extra-charges",
-        "city-tax",
-        "split-bills",
-        "deposits",
-        "pay-by-link",
-        "direct-billing",
-        "check-out",
-        "refunds"
+        "capability:extra-charges",
+        "capability:city-tax",
+        "capability:split-bills",
+        "capability:deposits",
+        "capability:pay-by-link",
+        "capability:direct-billing",
+        "capability:check-out",
+        "capability:refunds"
       ],
       "features": [
-        "guest-bills",
-        "payments",
-        "company-accounts",
-        "front-desk"
+        "feature:guest-bills",
+        "feature:payments",
+        "feature:company-accounts",
+        "feature:front-desk"
       ],
       "body": "## Needs\n\n- To see everything a guest owes on one bill, so check-out is a single payment.\n- To put extras on a bill the moment they happen, so nothing is forgotten.\n- To let company guests leave without paying, knowing their company will be\n  invoiced.\n\n## Knows\n\nWhat every extra costs, and which guests' companies pay for their stays. Not an\naccountant: they think in bills, not ledgers.\n\n## Context\n\nAt the desk, with the guest in front of them and often a queue behind. Check-out\nmornings are the busiest part of their day.\n\n## Expects\n\nA bill that reads like a receipt: each night, each extra, then the total.\nPayments by card at the desk.\n\n## Cares about\n\nA bill the guest doesn't argue with. A charge they can't explain, or one they\ncan't take off when it was a mistake, makes for a hard conversation."
     },
@@ -176,15 +176,15 @@
       "description": "Stays at the hotel, for work or on holiday, and pays for the stay.",
       "image": "https://randomuser.me/api/portraits/men/32.jpg",
       "capabilities": [
-        "pay-by-link",
-        "direct-billing",
-        "check-out",
-        "refunds"
+        "capability:pay-by-link",
+        "capability:direct-billing",
+        "capability:check-out",
+        "capability:refunds"
       ],
       "features": [
-        "payments",
-        "company-accounts",
-        "front-desk"
+        "feature:payments",
+        "feature:company-accounts",
+        "feature:front-desk"
       ],
       "body": "## Needs\n\n- To pay without queueing at the desk on the way out.\n- To leave without paying when their company is paying for the stay.\n- A bill they can understand, with nothing on it they didn't have.\n\n## Knows\n\nNothing about the hotel's systems. Pays for things online and by card all the\ntime.\n\n## Context\n\nOn their phone, often in a hurry: packing, catching a train, or already home.\n\n## Expects\n\nPaying by link to work like any other online payment, in a minute or two.\n\n## Cares about\n\nNot being charged twice, and not being chased for something they've paid."
     },
@@ -197,15 +197,15 @@
       "description": "Runs the hotel, and answers for its takings to the owners.",
       "image": "https://randomuser.me/api/portraits/men/52.jpg",
       "capabilities": [
-        "city-tax",
-        "deposits",
-        "night-audit",
-        "daily-takings"
+        "capability:city-tax",
+        "capability:deposits",
+        "capability:night-audit",
+        "capability:daily-takings"
       ],
       "features": [
-        "guest-bills",
-        "payments",
-        "closing-the-day"
+        "feature:guest-bills",
+        "feature:payments",
+        "feature:closing-the-day"
       ],
       "body": "## Needs\n\n- To see each day's takings, final and broken down, without waiting for the\n  bookkeeper.\n- To be sure every night, every extra and the city's tax are charged, so the\n  hotel isn't out of pocket.\n- To be covered when a guest who booked never arrives.\n\n## Knows\n\nThe hotel's numbers: occupancy, the average rate, last year's takings. Not the\ndetails of how the books are kept.\n\n## Context\n\nLooks at the numbers first thing each morning, on a laptop or their phone.\n\n## Expects\n\nTotals for rooms, food and drink, and tax, the way the owners ask for them.\n\n## Cares about\n\nNumbers that don't change once a day is closed. If yesterday's takings move,\nthey stop trusting all of them."
     },
@@ -218,10 +218,10 @@
       "description": "Looks after the hotel overnight, and makes sure each day is closed before morning.",
       "image": "https://randomuser.me/api/portraits/men/71.jpg",
       "capabilities": [
-        "night-audit"
+        "capability:night-audit"
       ],
       "features": [
-        "closing-the-day"
+        "feature:closing-the-day"
       ],
       "body": "## Needs\n\n- To know the day was closed and every guest charged for the night, without\n  staying up to do it by hand.\n- To close the day themselves when the audit didn't run on its own.\n\n## Knows\n\nThe night audit's steps, from years of doing them on paper. Less at ease with\nsoftware that does them for them.\n\n## Context\n\nAt the front desk overnight, alone, with few guests around and no one to ask.\n\n## Expects\n\nTo see, at a glance, that tonight's audit has run, and what it charged.\n\n## Cares about\n\nNot handing over to the morning shift with yesterday still open."
     }
@@ -235,20 +235,20 @@
       "description": "Staff add extras such as breakfast, parking or the minibar to a guest's bill.",
       "stability": "ga",
       "personas": [
-        "front-desk-clerk"
+        "persona:front-desk-clerk"
       ],
       "rules": [
-        "bills/charges-are-never-changed",
-        "bills/closed-bills-dont-change"
+        "rule:charges-are-never-changed",
+        "rule:closed-bills-dont-change"
       ],
       "concepts": [
-        "bill",
-        "charge"
+        "concept:bill",
+        "concept:charge"
       ],
       "gaps": [],
       "decisions": [],
       "body": "## Includes\n\n- Clerks correct a charge that was added by mistake.\n\n## Success\n\n- No guest leaves with an extra that never reached their bill.",
-      "feature": "guest-bills",
+      "feature": "feature:guest-bills",
       "evidence": {
         "implements": [],
         "verifies": []
@@ -263,24 +263,24 @@
       "description": "The software adds the city's tourist tax to each guest's bill, night by night.",
       "stability": "alpha",
       "personas": [
-        "manager",
-        "front-desk-clerk"
+        "persona:manager",
+        "persona:front-desk-clerk"
       ],
       "rules": [
-        "tax/city-tax-per-guest-night",
-        "tax/children-pay-no-city-tax",
-        "tax/city-tax-stops-after-seven-nights"
+        "rule:city-tax-per-guest-night",
+        "rule:children-pay-no-city-tax",
+        "rule:city-tax-stops-after-seven-nights"
       ],
       "concepts": [
-        "bill",
-        "charge"
+        "concept:bill",
+        "concept:charge"
       ],
       "gaps": [
         "capability:city-tax#children-corrected-by-hand"
       ],
       "decisions": [],
       "body": "## Includes\n\n- Clerks see the city tax on a guest's bill, night by night.",
-      "feature": "guest-bills",
+      "feature": "feature:guest-bills",
       "evidence": {
         "implements": [],
         "verifies": []
@@ -295,14 +295,14 @@
       "description": "Clerks split a bill between guests sharing a room, or move charges onto another guest's bill.",
       "stability": "prototype",
       "personas": [
-        "front-desk-clerk"
+        "persona:front-desk-clerk"
       ],
       "rules": [
-        "bills/moving-charges-keeps-the-total"
+        "rule:moving-charges-keeps-the-total"
       ],
       "concepts": [
-        "bill",
-        "charge"
+        "concept:bill",
+        "concept:charge"
       ],
       "gaps": [],
       "decisions": [
@@ -316,7 +316,7 @@
         }
       ],
       "body": "",
-      "feature": "guest-bills",
+      "feature": "feature:guest-bills",
       "evidence": {
         "implements": [],
         "verifies": []
@@ -331,17 +331,17 @@
       "description": "The software takes a deposit on the guest's card when a stay is booked.",
       "stability": "beta",
       "personas": [
-        "manager",
-        "front-desk-clerk"
+        "persona:manager",
+        "persona:front-desk-clerk"
       ],
       "rules": [
-        "payments/deposit-is-the-first-night",
-        "payments/deposit-counts-towards-the-bill",
-        "payments/card-numbers-are-never-kept"
+        "rule:deposit-is-the-first-night",
+        "rule:deposit-counts-towards-the-bill",
+        "rule:card-numbers-are-never-kept"
       ],
       "concepts": [
-        "payment",
-        "bill"
+        "concept:payment",
+        "concept:bill"
       ],
       "gaps": [],
       "decisions": [
@@ -355,7 +355,7 @@
         }
       ],
       "body": "## Includes\n\n- Clerks see whether a stay's deposit has been paid.\n- Clerks take a deposit again when the guest's card was declined.",
-      "feature": "payments",
+      "feature": "feature:payments",
       "evidence": {
         "implements": [
           {
@@ -382,16 +382,16 @@
       "description": "Guests pay their bill by card from a link the hotel sends them, without coming to the desk.",
       "stability": "alpha",
       "personas": [
-        "guest",
-        "front-desk-clerk"
+        "persona:guest",
+        "persona:front-desk-clerk"
       ],
       "rules": [
-        "payments/card-numbers-are-never-kept",
-        "bills/closed-bills-dont-change"
+        "rule:card-numbers-are-never-kept",
+        "rule:closed-bills-dont-change"
       ],
       "concepts": [
-        "payment",
-        "bill"
+        "concept:payment",
+        "concept:bill"
       ],
       "gaps": [],
       "decisions": [
@@ -405,7 +405,7 @@
         }
       ],
       "body": "## Includes\n\n- Clerks send a guest a link to pay what they owe.",
-      "feature": "payments",
+      "feature": "feature:payments",
       "evidence": {
         "implements": [
           {
@@ -428,18 +428,18 @@
       "description": "Bookkeepers set up companies that pay for their staff's stays, each with a credit limit.",
       "stability": "beta",
       "personas": [
-        "bookkeeper"
+        "persona:bookkeeper"
       ],
       "rules": [
-        "company-accounts/credit-limit"
+        "rule:credit-limit"
       ],
       "concepts": [
-        "company-account"
+        "concept:company-account"
       ],
       "gaps": [],
       "decisions": [],
       "body": "## Includes\n\n- Bookkeepers name the guests whose stays a company pays for.\n- Bookkeepers see what each company owes.",
-      "feature": "company-accounts",
+      "feature": "feature:company-accounts",
       "evidence": {
         "implements": [],
         "verifies": []
@@ -454,21 +454,21 @@
       "description": "Clerks move a guest's bill to their company's account at check-out, so the guest leaves without paying.",
       "stability": "alpha",
       "personas": [
-        "front-desk-clerk",
-        "guest"
+        "persona:front-desk-clerk",
+        "persona:guest"
       ],
       "rules": [
-        "company-accounts/credit-limit",
-        "company-accounts/only-named-guests"
+        "rule:credit-limit",
+        "rule:only-named-guests"
       ],
       "concepts": [
-        "bill",
-        "company-account"
+        "concept:bill@billing",
+        "concept:company-account"
       ],
       "gaps": [],
       "decisions": [],
       "body": "",
-      "feature": "company-accounts",
+      "feature": "feature:company-accounts",
       "evidence": {
         "implements": [],
         "verifies": []
@@ -485,20 +485,20 @@
       "description": "Bookkeepers invoice each company once a month for its staff's stays.",
       "stability": "alpha",
       "personas": [
-        "bookkeeper"
+        "persona:bookkeeper"
       ],
       "rules": [
-        "invoices/invoice-numbers-run-in-sequence"
+        "rule:invoice-numbers-run-in-sequence"
       ],
       "concepts": [
-        "company-account"
+        "concept:company-account"
       ],
       "gaps": [
         "capability:invoices#no-payment-reminders"
       ],
       "decisions": [],
       "body": "## Includes\n\n- Bookkeepers record a company's payment against its invoice.",
-      "feature": "company-accounts",
+      "feature": "feature:company-accounts",
       "evidence": {
         "implements": [],
         "verifies": []
@@ -513,23 +513,23 @@
       "description": "The software closes each business day overnight, charging every guest in the hotel for that night's room.",
       "stability": "ga",
       "personas": [
-        "night-auditor",
-        "manager"
+        "persona:night-auditor",
+        "persona:manager"
       ],
       "rules": [
-        "night-audit/one-room-charge-per-night",
-        "night-audit/closed-days-dont-change",
-        "bills/charges-are-never-changed"
+        "rule:one-room-charge-per-night",
+        "rule:closed-days-dont-change",
+        "rule:charges-are-never-changed@billing"
       ],
       "concepts": [
-        "business-day",
-        "bill",
-        "charge"
+        "concept:business-day",
+        "concept:bill@billing",
+        "concept:charge@billing"
       ],
       "gaps": [],
       "decisions": [],
       "body": "## Includes\n\n- Night auditors see whether tonight's audit has run, and what it charged.\n- Night auditors start the audit by hand when it hasn't run.\n\n## Success\n\n- Every morning starts with yesterday closed, without anyone staying up for it.",
-      "feature": "closing-the-day",
+      "feature": "feature:closing-the-day",
       "evidence": {
         "implements": [],
         "verifies": []
@@ -544,19 +544,19 @@
       "description": "Managers see each closed day's takings, for rooms, food and drink, and tax.",
       "stability": "beta",
       "personas": [
-        "manager"
+        "persona:manager"
       ],
       "rules": [
-        "night-audit/closed-days-dont-change"
+        "rule:closed-days-dont-change"
       ],
       "concepts": [
-        "business-day",
-        "charge"
+        "concept:business-day",
+        "concept:charge@billing"
       ],
       "gaps": [],
       "decisions": [],
       "body": "## Includes\n\n- Managers compare a day with the same day last year.",
-      "feature": "closing-the-day",
+      "feature": "feature:closing-the-day",
       "evidence": {
         "implements": [],
         "verifies": []
@@ -571,13 +571,13 @@
       "description": "Bookkeepers export each closed day's takings to the hotel's accounting software.",
       "stability": "alpha",
       "personas": [
-        "bookkeeper"
+        "persona:bookkeeper"
       ],
       "rules": [
-        "night-audit/closed-days-dont-change"
+        "rule:closed-days-dont-change"
       ],
       "concepts": [
-        "business-day"
+        "concept:business-day"
       ],
       "gaps": [],
       "decisions": [
@@ -591,7 +591,7 @@
         }
       ],
       "body": "",
-      "feature": "closing-the-day",
+      "feature": "feature:closing-the-day",
       "evidence": {
         "implements": [],
         "verifies": []
@@ -606,15 +606,15 @@
       "description": "Guests settle their bill as they leave, so nothing is left owing once they've gone.",
       "stability": "alpha",
       "personas": [
-        "front-desk-clerk",
-        "guest"
+        "persona:front-desk-clerk",
+        "persona:guest"
       ],
       "rules": [
-        "bills/closed-bills-dont-change"
+        "rule:closed-bills-dont-change"
       ],
       "concepts": [
-        "bill",
-        "booking"
+        "concept:bill",
+        "concept:booking"
       ],
       "gaps": [],
       "decisions": [
@@ -628,7 +628,7 @@
         }
       ],
       "body": "## Includes\n\n- Clerks see a departing guest's bill, with every night and charge on it.\n- Clerks take payment for the balance, and close the bill.",
-      "feature": "front-desk",
+      "feature": "feature:front-desk",
       "evidence": {
         "implements": [],
         "verifies": []
@@ -643,18 +643,18 @@
       "description": "Clerks refund a guest what they've paid over their bill, before the bill closes.",
       "stability": "draft",
       "personas": [
-        "front-desk-clerk",
-        "guest"
+        "persona:front-desk-clerk",
+        "persona:guest"
       ],
       "rules": [
-        "payments/overpayments-are-refunded"
+        "rule:overpayments-are-refunded"
       ],
       "concepts": [
-        "payment",
-        "bill"
+        "concept:payment",
+        "concept:bill"
       ],
       "gaps": [],
-      "feature": "payments",
+      "feature": "feature:payments",
       "evidence": {
         "implements": [],
         "verifies": []
@@ -675,17 +675,17 @@
   ],
   "rules": [
     {
-      "id": "bills/charges-are-never-changed",
+      "id": "charges-are-never-changed",
       "domain": "billing",
       "file": "docs/product/domains/billing/rules/bills/charges-are-never-changed.md",
       "name": "A charge is never changed or deleted",
       "capabilities": [
-        "extra-charges",
-        "night-audit"
+        "capability:extra-charges",
+        "capability:night-audit"
       ],
       "concepts": [
-        "charge",
-        "bill"
+        "concept:charge",
+        "concept:bill"
       ],
       "why": "The hotel's accountant and the tax office need to see every charge that was made, including the mistakes.",
       "body": "A charge is corrected by adding a charge for the opposite amount, never by\nchanging or deleting it.",
@@ -707,19 +707,19 @@
       }
     },
     {
-      "id": "bills/closed-bills-dont-change",
+      "id": "closed-bills-dont-change",
       "domain": "billing",
       "file": "docs/product/domains/billing/rules/bills/closed-bills-dont-change.md",
       "name": "A closed bill can't change",
       "capabilities": [
-        "extra-charges",
-        "pay-by-link",
-        "check-out"
+        "capability:extra-charges",
+        "capability:pay-by-link",
+        "capability:check-out"
       ],
       "concepts": [
-        "bill",
-        "charge",
-        "payment"
+        "concept:bill",
+        "concept:charge",
+        "concept:payment"
       ],
       "why": null,
       "body": "Nothing can be charged or paid on a closed bill. A charge that arrives after\nthe guest has left goes on a new bill for the same stay.",
@@ -741,16 +741,16 @@
       }
     },
     {
-      "id": "tax/city-tax-per-guest-night",
+      "id": "city-tax-per-guest-night",
       "domain": "billing",
       "file": "docs/product/domains/billing/rules/tax/city-tax-per-guest-night.md",
       "name": "City tax is charged per guest, per night",
       "capabilities": [
-        "city-tax"
+        "capability:city-tax"
       ],
       "concepts": [
-        "bill",
-        "charge"
+        "concept:bill",
+        "concept:charge"
       ],
       "why": "The hotel owes the city tax for every guest night, whether or not it charged the guest.",
       "body": "Each guest on a stay is charged the city's tax for each night, at the rate on\nthat night.",
@@ -772,15 +772,15 @@
       }
     },
     {
-      "id": "tax/children-pay-no-city-tax",
+      "id": "children-pay-no-city-tax",
       "domain": "billing",
       "file": "docs/product/domains/billing/rules/tax/children-pay-no-city-tax.md",
       "name": "Children pay no city tax",
       "capabilities": [
-        "city-tax"
+        "capability:city-tax"
       ],
       "concepts": [
-        "charge"
+        "concept:charge"
       ],
       "why": null,
       "body": "Guests under 16 aren't charged city tax.",
@@ -790,15 +790,15 @@
       }
     },
     {
-      "id": "tax/city-tax-stops-after-seven-nights",
+      "id": "city-tax-stops-after-seven-nights",
       "domain": "billing",
       "file": "docs/product/domains/billing/rules/tax/city-tax-stops-after-seven-nights.md",
       "name": "City tax stops after seven nights",
       "capabilities": [
-        "city-tax"
+        "capability:city-tax"
       ],
       "concepts": [
-        "charge"
+        "concept:charge"
       ],
       "why": null,
       "body": "A guest staying longer than seven nights is charged city tax for the first\nseven only.",
@@ -814,16 +814,16 @@
       }
     },
     {
-      "id": "bills/moving-charges-keeps-the-total",
+      "id": "moving-charges-keeps-the-total",
       "domain": "billing",
       "file": "docs/product/domains/billing/rules/bills/moving-charges-keeps-the-total.md",
       "name": "Moving charges keeps the total",
       "capabilities": [
-        "split-bills"
+        "capability:split-bills"
       ],
       "concepts": [
-        "bill",
-        "charge"
+        "concept:bill",
+        "concept:charge"
       ],
       "why": null,
       "body": "Splitting a bill or moving charges between bills never changes the total owed\nacross them.",
@@ -833,15 +833,15 @@
       }
     },
     {
-      "id": "payments/deposit-is-the-first-night",
+      "id": "deposit-is-the-first-night",
       "domain": "billing",
       "file": "docs/product/domains/billing/rules/payments/deposit-is-the-first-night.md",
       "name": "A deposit is the first night",
       "capabilities": [
-        "deposits"
+        "capability:deposits"
       ],
       "concepts": [
-        "payment"
+        "concept:payment"
       ],
       "why": null,
       "body": "A stay's deposit is the first night's room rate, with its city tax.",
@@ -863,16 +863,16 @@
       }
     },
     {
-      "id": "payments/deposit-counts-towards-the-bill",
+      "id": "deposit-counts-towards-the-bill",
       "domain": "billing",
       "file": "docs/product/domains/billing/rules/payments/deposit-counts-towards-the-bill.md",
       "name": "A deposit counts towards the bill",
       "capabilities": [
-        "deposits"
+        "capability:deposits"
       ],
       "concepts": [
-        "payment",
-        "bill"
+        "concept:payment",
+        "concept:bill"
       ],
       "why": null,
       "body": "A deposit is a payment on the guest's bill, so the guest pays only the rest at\ncheck-out.",
@@ -899,16 +899,16 @@
       }
     },
     {
-      "id": "payments/card-numbers-are-never-kept",
+      "id": "card-numbers-are-never-kept",
       "domain": "billing",
       "file": "docs/product/domains/billing/rules/payments/card-numbers-are-never-kept.md",
       "name": "Card numbers are never kept",
       "capabilities": [
-        "deposits",
-        "pay-by-link"
+        "capability:deposits",
+        "capability:pay-by-link"
       ],
       "concepts": [
-        "payment"
+        "concept:payment"
       ],
       "why": "Holding card numbers would put the hotel under the card schemes' security audits.",
       "body": "The hotel never stores a guest's card number. Only the payment provider holds\nit.",
@@ -935,17 +935,17 @@
       }
     },
     {
-      "id": "company-accounts/credit-limit",
+      "id": "credit-limit",
       "domain": "finance",
       "file": "docs/product/domains/finance/rules/company-accounts/credit-limit.md",
       "name": "A company can't go over its credit limit",
       "capabilities": [
-        "company-accounts",
-        "direct-billing"
+        "capability:company-accounts",
+        "capability:direct-billing"
       ],
       "concepts": [
-        "company-account",
-        "bill"
+        "concept:company-account",
+        "concept:bill@billing"
       ],
       "why": null,
       "body": "A bill can't move to a company's account if it would take what the company owes\nover its credit limit.",
@@ -967,16 +967,16 @@
       }
     },
     {
-      "id": "company-accounts/only-named-guests",
+      "id": "only-named-guests",
       "domain": "finance",
       "file": "docs/product/domains/finance/rules/company-accounts/only-named-guests.md",
       "name": "Only named guests' bills go to a company",
       "capabilities": [
-        "direct-billing"
+        "capability:direct-billing"
       ],
       "concepts": [
-        "company-account",
-        "bill"
+        "concept:company-account",
+        "concept:bill@billing"
       ],
       "why": null,
       "body": "A bill can move to a company's account only if the company has named the guest\nas someone whose stays it pays for.",
@@ -992,15 +992,15 @@
       }
     },
     {
-      "id": "invoices/invoice-numbers-run-in-sequence",
+      "id": "invoice-numbers-run-in-sequence",
       "domain": "finance",
       "file": "docs/product/domains/finance/rules/invoices/invoice-numbers-run-in-sequence.md",
       "name": "Invoice numbers run in sequence",
       "capabilities": [
-        "invoices"
+        "capability:invoices"
       ],
       "concepts": [
-        "company-account"
+        "concept:company-account"
       ],
       "why": "The tax office requires it, so it can tell no invoice is missing.",
       "body": "Each invoice's number is one more than the last, with none skipped or used\ntwice.",
@@ -1022,16 +1022,16 @@
       }
     },
     {
-      "id": "night-audit/one-room-charge-per-night",
+      "id": "one-room-charge-per-night",
       "domain": "finance",
       "file": "docs/product/domains/finance/rules/night-audit/one-room-charge-per-night.md",
       "name": "A guest is charged once a night for their room",
       "capabilities": [
-        "night-audit"
+        "capability:night-audit"
       ],
       "concepts": [
-        "business-day",
-        "charge"
+        "concept:business-day",
+        "concept:charge@billing"
       ],
       "why": null,
       "body": "Each guest in the hotel is charged for their room once for each night, even if\nthe audit is started more than once.",
@@ -1058,18 +1058,18 @@
       }
     },
     {
-      "id": "night-audit/closed-days-dont-change",
+      "id": "closed-days-dont-change",
       "domain": "finance",
       "file": "docs/product/domains/finance/rules/night-audit/closed-days-dont-change.md",
       "name": "A closed day can't change",
       "capabilities": [
-        "night-audit",
-        "daily-takings",
-        "accounting-export"
+        "capability:night-audit",
+        "capability:daily-takings",
+        "capability:accounting-export"
       ],
       "concepts": [
-        "business-day",
-        "charge"
+        "concept:business-day",
+        "concept:charge@billing"
       ],
       "why": "A closed day's takings have already gone to the accountant.",
       "body": "Once a business day is closed, nothing is added to it. A correction to a closed\nday goes on the current one.",
@@ -1091,14 +1091,14 @@
       }
     },
     {
-      "id": "payments/overpayments-are-refunded",
+      "id": "overpayments-are-refunded",
       "domain": "billing",
       "file": "docs/product/domains/billing/rules/payments/overpayments-are-refunded.md",
       "name": "Overpayments are refunded",
       "capabilities": [],
       "concepts": [
-        "payment",
-        "bill"
+        "concept:payment",
+        "concept:bill"
       ],
       "why": null,
       "body": "A guest who has paid more than their bill is refunded the difference before the\nbill closes.",
@@ -1116,24 +1116,24 @@
       "name": "Bill",
       "description": "Everything a guest owes for one stay, and everything they've paid towards it.",
       "capabilities": [
-        "extra-charges",
-        "city-tax",
-        "split-bills",
-        "deposits",
-        "pay-by-link",
-        "direct-billing",
-        "night-audit",
-        "check-out"
+        "capability:extra-charges",
+        "capability:city-tax",
+        "capability:split-bills",
+        "capability:deposits",
+        "capability:pay-by-link",
+        "capability:direct-billing",
+        "capability:night-audit",
+        "capability:check-out"
       ],
       "rules": [
-        "bills/charges-are-never-changed",
-        "bills/closed-bills-dont-change",
-        "tax/city-tax-per-guest-night",
-        "bills/moving-charges-keeps-the-total",
-        "payments/deposit-counts-towards-the-bill",
-        "company-accounts/credit-limit",
-        "company-accounts/only-named-guests",
-        "payments/overpayments-are-refunded"
+        "rule:charges-are-never-changed",
+        "rule:closed-bills-dont-change",
+        "rule:city-tax-per-guest-night",
+        "rule:moving-charges-keeps-the-total",
+        "rule:deposit-counts-towards-the-bill",
+        "rule:credit-limit@finance",
+        "rule:only-named-guests@finance",
+        "rule:overpayments-are-refunded"
       ],
       "confusedWith": [
         {
@@ -1151,13 +1151,13 @@
       "name": "Business day",
       "description": "The hotel's day for its accounts, from one night audit to the next.",
       "capabilities": [
-        "night-audit",
-        "daily-takings",
-        "accounting-export"
+        "capability:night-audit",
+        "capability:daily-takings",
+        "capability:accounting-export"
       ],
       "rules": [
-        "night-audit/one-room-charge-per-night",
-        "night-audit/closed-days-dont-change"
+        "rule:one-room-charge-per-night",
+        "rule:closed-days-dont-change"
       ],
       "confusedWith": [],
       "body": "A business day isn't a calendar day. It runs from when one night audit closes\nthe day before, usually around 03:00, until the next audit closes it. A\nbreakfast at 02:00 is on the previous business day.\n\n## Lifecycle\n\n1. Open\n2. Closed"
@@ -1169,21 +1169,21 @@
       "name": "Charge",
       "description": "One amount a guest owes, such as a night's room, a breakfast or a night's city tax.",
       "capabilities": [
-        "extra-charges",
-        "city-tax",
-        "split-bills",
-        "night-audit",
-        "daily-takings"
+        "capability:extra-charges",
+        "capability:city-tax",
+        "capability:split-bills",
+        "capability:night-audit",
+        "capability:daily-takings"
       ],
       "rules": [
-        "bills/charges-are-never-changed",
-        "bills/closed-bills-dont-change",
-        "tax/city-tax-per-guest-night",
-        "tax/children-pay-no-city-tax",
-        "tax/city-tax-stops-after-seven-nights",
-        "bills/moving-charges-keeps-the-total",
-        "night-audit/one-room-charge-per-night",
-        "night-audit/closed-days-dont-change"
+        "rule:charges-are-never-changed",
+        "rule:closed-bills-dont-change",
+        "rule:city-tax-per-guest-night",
+        "rule:children-pay-no-city-tax",
+        "rule:city-tax-stops-after-seven-nights",
+        "rule:moving-charges-keeps-the-total",
+        "rule:one-room-charge-per-night@finance",
+        "rule:closed-days-dont-change@finance"
       ],
       "confusedWith": [],
       "body": "Each charge is on one [bill](bill.md), and on the\n[business day](../../finance/concepts/business-day.md) it was added. A correction is a charge for the\nopposite amount, pointing at the charge it corrects."
@@ -1195,14 +1195,14 @@
       "name": "Company account",
       "description": "A company that pays for its staff's stays, and what it owes the hotel.",
       "capabilities": [
-        "company-accounts",
-        "direct-billing",
-        "invoices"
+        "capability:company-accounts",
+        "capability:direct-billing",
+        "capability:invoices"
       ],
       "rules": [
-        "company-accounts/credit-limit",
-        "company-accounts/only-named-guests",
-        "invoices/invoice-numbers-run-in-sequence"
+        "rule:credit-limit",
+        "rule:only-named-guests",
+        "rule:invoice-numbers-run-in-sequence"
       ],
       "confusedWith": [],
       "body": "A company account has a credit limit, and names the guests whose\n[bills](../../billing/concepts/bill.md) it pays. It's invoiced once a month for the bills moved to it."
@@ -1214,15 +1214,15 @@
       "name": "Payment",
       "description": "Money a guest has paid towards their bill, by card or in cash.",
       "capabilities": [
-        "deposits",
-        "pay-by-link"
+        "capability:deposits",
+        "capability:pay-by-link"
       ],
       "rules": [
-        "bills/closed-bills-dont-change",
-        "payments/deposit-is-the-first-night",
-        "payments/deposit-counts-towards-the-bill",
-        "payments/card-numbers-are-never-kept",
-        "payments/overpayments-are-refunded"
+        "rule:closed-bills-dont-change",
+        "rule:deposit-is-the-first-night",
+        "rule:deposit-counts-towards-the-bill",
+        "rule:card-numbers-are-never-kept",
+        "rule:overpayments-are-refunded"
       ],
       "confusedWith": [],
       "body": "A deposit is a payment taken before the guest arrives. A card payment is\nknown by the provider's reference, never by the card's number.\n\n## Lifecycle\n\n1. Pending\n2. Paid\n\nA pending card payment can instead be Declined."
@@ -1234,7 +1234,7 @@
       "name": "Booking",
       "description": "What a guest is charged for a stay: its nights, at the rate agreed when it was booked.",
       "capabilities": [
-        "check-out"
+        "capability:check-out"
       ],
       "rules": [],
       "confusedWith": [
@@ -1255,11 +1255,11 @@
       "name": "Ledger",
       "description": "Every amount a guest owes or pays, as lines on their bill that are only ever added, never changed.",
       "capabilities": [
-        "extra-charges",
-        "split-bills",
-        "deposits",
-        "check-out",
-        "direct-billing"
+        "capability:extra-charges",
+        "capability:split-bills",
+        "capability:deposits",
+        "capability:check-out",
+        "capability:direct-billing"
       ],
       "meets": [
         "reliability/beta/data-kept"
@@ -1295,8 +1295,8 @@
       "name": "Payments",
       "description": "Taking card payments through the payment provider, for deposits and payment links.",
       "capabilities": [
-        "deposits",
-        "pay-by-link"
+        "capability:deposits",
+        "capability:pay-by-link"
       ],
       "meets": [],
       "gaps": [
@@ -1324,7 +1324,7 @@
       "id": "capability:city-tax#children-corrected-by-hand",
       "domain": "billing",
       "outcome": null,
-      "rule": "tax/children-pay-no-city-tax",
+      "rule": "rule:children-pay-no-city-tax",
       "impact": "inconvenient",
       "when": null,
       "name": "City tax charged for children",

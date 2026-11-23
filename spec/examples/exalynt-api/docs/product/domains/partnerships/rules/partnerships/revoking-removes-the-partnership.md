@@ -1,4 +1,5 @@
 ---
+id: revoking-removes-the-partnership
 name: Revoking removes the partnership
 ---
 

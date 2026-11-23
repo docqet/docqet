@@ -1,4 +1,5 @@
 ---
+id: client-admins-run-the-organization
 name: Client Admins run the organization
 ---
 

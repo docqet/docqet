@@ -1,4 +1,5 @@
 ---
+id: admins-resolve-cross-team-conflicts
 name: Admins resolve cross-team conflicts
 ---
 

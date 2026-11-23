@@ -1,4 +1,5 @@
 ---
+id: unpaid-invoices-are-paid-with-the-provider
 name: Unpaid invoices are paid with the provider
 ---
 

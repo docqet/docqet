@@ -1,6 +1,6 @@
 Feature: Cancellations
 
-  # docket:verifies rule:cancellations/free-cancellation-window
+  # docket:verifies rule:free-cancellation-window@guest-stays
   Rule: Cancelling 48 hours ahead is free
 
     Scenario: Cancelling three days ahead is refunded in full

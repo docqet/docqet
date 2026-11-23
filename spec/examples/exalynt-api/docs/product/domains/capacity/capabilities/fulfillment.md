@@ -1,65 +1,66 @@
 ---
+id: fulfillment
 name: Fulfillment
 description: >-
   A block's engineer starts it once its week begins, and marks it fulfilled
   when the work is done, with nobody reviewing it.
 stability: alpha
 personas:
-  - exalynt-engineer-1
-  - exalynt-engineer-2
-  - exalynt-team-lead
-  - exalynt-admin
-  - client-admin-founder
-  - client-admin-operations
-  - client-member
+  - persona:exalynt-engineer-1
+  - persona:exalynt-engineer-2
+  - persona:exalynt-team-lead
+  - persona:exalynt-admin
+  - persona:client-admin-founder
+  - persona:client-admin-operations
+  - persona:client-member
 rules:
-  - fulfillment/engineers-start-their-blocks-from-the-start-of-the-week
-  - fulfillment/engineers-mark-their-blocks-fulfilled
-  - fulfillment/started-before-fulfilled
-  - fulfillment/fulfilled-is-final
-  - fulfillment/clients-follow-a-blocks-status
-  - fulfillment/a-focus-is-its-own-record
-  - fulfillment/who-changes-a-focus
-  - fulfillment/focus-attachments-are-the-clients
-  - fulfillment/no-fulfillment-deadline
-  - fulfillment/engineers-post-updates-on-their-blocks
-  - fulfillment/only-its-writer-changes-an-update
-  - fulfillment/clients-read-a-blocks-updates
-  - fulfillment/starting-a-block-records-who-and-when
-  - earnings-and-payouts/shares-earned-at-fulfillment
-  - earnings-and-payouts/payout-basis-per-capacity-unit
-  - earnings-and-payouts/engineer-earns-the-engineer-share
-  - earnings-and-payouts/team-leads-earn-team-lead-share
-  - earnings-and-payouts/available-teammates-earn-team-support-share
-  - earnings-and-payouts/unlisted-shares-earn-nothing
-  - earnings-and-payouts/shares-dont-reduce-each-other
-  - earnings-and-payouts/partnership-share-earned-at-fulfillment
-  - earnings-and-payouts/partnerships-earn-under-their-agreement-in-effect
-  - earnings-and-payouts/coupons-never-change-shares
-  - earnings-and-payouts/unclaimed-shares-stay-with-exalynt
-  - earnings-and-payouts/when-basis-and-percentages-are-fixed
-  - earnings-and-payouts/each-share-rounds-on-its-own
-  - earnings-and-payouts/refunds-after-fulfillment-change-nothing
-  - earnings-and-payouts/reassignment-before-fulfillment-earns-nothing
-  - earnings-and-payouts/when-team-support-earners-are-fixed
-  - earnings-and-payouts/when-the-team-lead-beneficiary-is-fixed
-  - earnings-and-payouts/no-lead-means-no-lead-share
-  - earnings-and-payouts/one-team-lead-share-per-block
-  - earnings-and-payouts/invalid-payout-account-delays-lead-share
-  - earnings-and-payouts/partner-status-leaves-engineers-unchanged
-  - earnings-and-payouts/earnings-belong-to-the-partnership
-  - earnings-and-payouts/partnership-terms-set-at-invitation
-  - earnings-and-payouts/partnership-share-of-payout-basis
-  - earnings-and-payouts/engineering-capacity-is-the-only-basis
-  - earnings-and-payouts/earning-window-opens-at-first-purchase
-  - earnings-and-payouts/earning-windows-never-reset-or-pause
-  - earnings-and-payouts/unfulfilled-capacity-earns-partnerships-nothing
-  - earnings-and-payouts/attribution-at-purchase-decides-the-partnership
-  - earnings-and-payouts/partnerships-earn-without-a-payout-account
-  - earnings-and-payouts/manager-controls-the-partnerships-payout-account
-  - earnings-and-payouts/exalynt-bears-partnership-earnings
-  - earnings-and-payouts/partners-see-only-their-partnerships-earnings
-concepts: [capacity-block, fulfilled, focus, payout-share]
+  - rule:engineers-start-their-blocks-from-the-start-of-the-week
+  - rule:engineers-mark-their-blocks-fulfilled
+  - rule:started-before-fulfilled
+  - rule:fulfilled-is-final
+  - rule:clients-follow-a-blocks-status
+  - rule:a-focus-is-its-own-record
+  - rule:who-changes-a-focus
+  - rule:focus-attachments-are-the-clients
+  - rule:no-fulfillment-deadline
+  - rule:engineers-post-updates-on-their-blocks
+  - rule:only-its-writer-changes-an-update
+  - rule:clients-read-a-blocks-updates
+  - rule:starting-a-block-records-who-and-when
+  - rule:shares-earned-at-fulfillment@pay
+  - rule:payout-basis-per-capacity-unit@pay
+  - rule:engineer-earns-the-engineer-share@pay
+  - rule:team-leads-earn-team-lead-share@pay
+  - rule:available-teammates-earn-team-support-share@pay
+  - rule:unlisted-shares-earn-nothing@pay
+  - rule:shares-dont-reduce-each-other@pay
+  - rule:partnership-share-earned-at-fulfillment@pay
+  - rule:partnerships-earn-under-their-agreement-in-effect@pay
+  - rule:coupons-never-change-shares@pay
+  - rule:unclaimed-shares-stay-with-exalynt@pay
+  - rule:when-basis-and-percentages-are-fixed@pay
+  - rule:each-share-rounds-on-its-own@pay
+  - rule:refunds-after-fulfillment-change-nothing@pay
+  - rule:reassignment-before-fulfillment-earns-nothing@pay
+  - rule:when-team-support-earners-are-fixed@pay
+  - rule:when-the-team-lead-beneficiary-is-fixed@pay
+  - rule:no-lead-means-no-lead-share@pay
+  - rule:one-team-lead-share-per-block@pay
+  - rule:invalid-payout-account-delays-lead-share@pay
+  - rule:partner-status-leaves-engineers-unchanged@pay
+  - rule:earnings-belong-to-the-partnership@pay
+  - rule:partnership-terms-set-at-invitation@pay
+  - rule:partnership-share-of-payout-basis@pay
+  - rule:engineering-capacity-is-the-only-basis@pay
+  - rule:earning-window-opens-at-first-purchase@pay
+  - rule:earning-windows-never-reset-or-pause@pay
+  - rule:unfulfilled-capacity-earns-partnerships-nothing@pay
+  - rule:attribution-at-purchase-decides-the-partnership@pay
+  - rule:partnerships-earn-without-a-payout-account@pay
+  - rule:manager-controls-the-partnerships-payout-account@pay
+  - rule:exalynt-bears-partnership-earnings@pay
+  - rule:partners-see-only-their-partnerships-earnings@pay
+concepts: [concept:capacity-block, concept:fulfilled, concept:focus, concept:payout-share@pay]
 gaps:
   - id: no-start-or-fulfill-notifications
     name: No notice of starts or fulfillment

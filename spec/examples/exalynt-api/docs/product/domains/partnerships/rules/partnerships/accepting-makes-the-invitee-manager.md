@@ -1,4 +1,5 @@
 ---
+id: accepting-makes-the-invitee-manager
 name: Accepting makes the invitee manager
 ---
 

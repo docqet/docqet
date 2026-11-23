@@ -2,7 +2,7 @@ Feature: Team assignment
   A new client is given a team as it signs up, so it can schedule its work
   without waiting on Exalynt. Exalynt can still change a client's teams.
 
-  # docket:verifies rule:team-assignment/least-unfulfilled-capacity-wins
+  # docket:verifies rule:least-unfulfilled-capacity-wins@capacity
   Rule: A new client gets the team with the least unfulfilled capacity
 
     Example: One team has less unfulfilled
@@ -44,7 +44,7 @@ Feature: Team assignment
       When a new client signs up
       Then the new client is given Platform
 
-  # docket:verifies rule:team-assignment/fewest-clients-breaks-ties
+  # docket:verifies rule:fewest-clients-breaks-ties@capacity
   Rule: Between teams with as much unfulfilled capacity, it gets the one with the fewest clients
 
     Example: Clients who never bought anything
@@ -53,7 +53,7 @@ Feature: Team assignment
       When a new client signs up
       Then the new client is given Data
 
-  # docket:verifies rule:team-assignment/only-teams-offering-time-qualify
+  # docket:verifies rule:only-teams-offering-time-qualify@capacity
   Rule: Only a team with an engineer offering time in the coming weeks can be given
 
     Example: The emptiest team has no engineers
@@ -68,7 +68,7 @@ Feature: Team assignment
       When a new client signs up
       Then the new client is given Data
 
-  # docket:verifies rule:team-assignment/signing-up-without-a-team
+  # docket:verifies rule:signing-up-without-a-team@capacity
   Rule: A new client signs up even when it can't be given a team, and waits for Exalynt to assign one
 
     Example: No team qualifies

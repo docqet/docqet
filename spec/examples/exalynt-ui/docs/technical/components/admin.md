@@ -1,18 +1,19 @@
 ---
+id: admin
 name: Admin
 description: >-
   The admin, where Exalynt's admins run clients, partners, engineers, teams,
   roles and payouts.
 capabilities:
-  - client-directory
-  - client-coupons
-  - partnerships
-  - engineers
-  - agreements
-  - teams
-  - staffing
-  - payouts
-  - roles
+  - capability:client-directory
+  - capability:client-coupons
+  - capability:partnerships
+  - capability:engineers
+  - capability:agreements
+  - capability:teams
+  - capability:staffing
+  - capability:payouts
+  - capability:roles
 gaps:
   - id: clients-read-everything
     name: Clients pages read every client and block

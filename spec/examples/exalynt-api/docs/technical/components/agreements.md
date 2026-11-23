@@ -1,14 +1,15 @@
 ---
+id: agreements
 name: Agreements
 description: >-
   Client, Engineer and Partner Agreements: rendered from versioned templates,
   offered to a party, accepted, and kept as the PDF made when accepted.
 capabilities:
-  - agreements
-  - client-agreements
-  - engineer-agreements
-  - partner-agreements
-  - earnings
+  - capability:agreements
+  - capability:client-agreements
+  - capability:engineer-agreements
+  - capability:partner-agreements
+  - capability:earnings
 tradeoffs:
   - id: apps-hold-people-to-agreements
     name: Agreements enforced in the apps, not the API

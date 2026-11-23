@@ -1,4 +1,5 @@
 ---
+id: gaining-a-hat-takes-nothing-away
 name: Gaining a hat takes nothing away
 ---
 

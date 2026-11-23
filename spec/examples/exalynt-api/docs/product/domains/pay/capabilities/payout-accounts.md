@@ -1,19 +1,20 @@
 ---
+id: payout-accounts
 name: Payout accounts
 description: >-
   People and partnerships each have one bank account their payouts go to,
   which they add, change, fix, remove, and see whether it can be paid.
 stability: alpha
-personas: [exalynt-engineer-1, exalynt-engineer-2, partner]
+personas: [persona:exalynt-engineer-1, persona:exalynt-engineer-2, persona:partner]
 rules:
-  - payout-accounts/one-payout-account-per-person
-  - payout-accounts/a-partnerships-payout-account-is-its-own
-  - payout-accounts/removing-a-payout-account
-  - payout-accounts/seeing-whether-an-account-can-be-paid
-  - payout-accounts/payout-accounts-stay-private-to-their-owner
-  - payout-accounts/admins-see-only-payment-readiness
-  - payout-accounts/limited-tokens-cant-reach-payout-accounts
-concepts: [payout, partnership]
+  - rule:one-payout-account-per-person
+  - rule:a-partnerships-payout-account-is-its-own
+  - rule:removing-a-payout-account
+  - rule:seeing-whether-an-account-can-be-paid
+  - rule:payout-accounts-stay-private-to-their-owner
+  - rule:admins-see-only-payment-readiness
+  - rule:limited-tokens-cant-reach-payout-accounts
+concepts: [concept:payout, concept:partnership@partnerships]
 gaps:
   - id: one-account-one-country
     name: One account, its country fixed once chosen

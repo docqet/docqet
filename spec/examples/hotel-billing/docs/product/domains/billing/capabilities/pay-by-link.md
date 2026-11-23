@@ -1,14 +1,15 @@
 ---
+id: pay-by-link
 name: Pay by link
 description: >-
   Guests pay their bill by card from a link the hotel sends them, without
   coming to the desk.
 stability: alpha
-personas: [guest, front-desk-clerk]
+personas: [persona:guest, persona:front-desk-clerk]
 rules:
-  - payments/card-numbers-are-never-kept
-  - bills/closed-bills-dont-change
-concepts: [payment, bill]
+  - rule:card-numbers-are-never-kept
+  - rule:closed-bills-dont-change
+concepts: [concept:payment, concept:bill]
 tradeoffs:
   - id: hotels-currency-only
     name: Hotel's currency only

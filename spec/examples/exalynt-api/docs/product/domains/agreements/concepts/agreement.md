@@ -1,4 +1,5 @@
 ---
+id: agreement
 name: Agreement
 description: >-
   The terms a party has with Exalynt. There are three types: a Client
@@ -7,7 +8,7 @@ description: >-
   leading a team too, and a Partner Agreement for a
   [partnership](../../partnerships/concepts/partnership.md).
 confused-with:
-  - concept: partnership@partnerships
+  - concept: concept:partnership@partnerships
     summary: the partner's own record. Its terms are held in its Partner Agreement.
 ---
 

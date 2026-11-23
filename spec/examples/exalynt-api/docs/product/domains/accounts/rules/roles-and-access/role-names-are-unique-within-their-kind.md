@@ -1,4 +1,5 @@
 ---
+id: role-names-are-unique-within-their-kind
 name: Role names are unique within their kind
 ---
 

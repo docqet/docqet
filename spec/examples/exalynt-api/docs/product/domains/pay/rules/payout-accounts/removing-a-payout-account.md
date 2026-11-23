@@ -1,4 +1,5 @@
 ---
+id: removing-a-payout-account
 name: Removing a payout account
 why: >-
   The payments partner holds a payout until it reaches the bank, and won't

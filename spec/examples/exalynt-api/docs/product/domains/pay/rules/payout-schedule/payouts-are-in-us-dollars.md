@@ -1,4 +1,5 @@
 ---
+id: payouts-are-in-us-dollars
 name: Payouts are in US dollars
 ---
 

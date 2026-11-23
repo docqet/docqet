@@ -1,26 +1,27 @@
 ---
+id: partner-agreements
 name: Partner agreements
 description: >-
   A partnership's manager reads and accepts the Partner Agreement Exalynt
   sends with its invitation, with its Commercial Terms, before working in the
   Partner Hub for that partnership.
 stability: beta
-personas: [partner, exalynt-admin]
+personas: [persona:partner, persona:exalynt-admin]
 rules:
-  - agreements/engineer-agreement-follows-the-invitations-terms
-  - agreements/an-engineer-agreement-can-have-no-commercial-terms
-  - agreements/acceptance-puts-an-agreement-in-effect
-  - agreements/new-terms-wait-for-acceptance
-  - agreements/a-newer-agreement-replaces-one-waiting
-  - agreements/only-the-waiting-agreement-is-accepted-once
-  - agreements/a-new-organization-is-offered-the-client-agreement
-  - agreements/who-accepts-a-client-agreement
-  - agreements/manager-accepts-the-partner-agreement
-  - agreements/reading-the-partner-agreement-before-accepting
-  - agreements/accepted-agreements-never-change
-  - agreements/accepted-agreements-outlive-their-partys-account
-  - agreements/agreements-stay-private
-concepts: [agreement, partnership]
+  - rule:engineer-agreement-follows-the-invitations-terms
+  - rule:an-engineer-agreement-can-have-no-commercial-terms
+  - rule:acceptance-puts-an-agreement-in-effect
+  - rule:new-terms-wait-for-acceptance
+  - rule:a-newer-agreement-replaces-one-waiting
+  - rule:only-the-waiting-agreement-is-accepted-once
+  - rule:a-new-organization-is-offered-the-client-agreement
+  - rule:who-accepts-a-client-agreement
+  - rule:manager-accepts-the-partner-agreement
+  - rule:reading-the-partner-agreement-before-accepting
+  - rule:accepted-agreements-never-change
+  - rule:accepted-agreements-outlive-their-partys-account
+  - rule:agreements-stay-private
+concepts: [concept:agreement, concept:partnership@partnerships]
 gaps:
   - id: only-the-partner-hub-holds-to-the-agreement
     name: Only the Partner Hub enforces the agreement

@@ -1,12 +1,13 @@
 ---
+id: refunds
 name: Refunds
 description: >-
   Clerks refund a guest what they've paid over their bill, before the bill
   closes.
 stability: draft
-personas: [front-desk-clerk, guest]
-rules: [payments/overpayments-are-refunded]
-concepts: [payment, bill]
+personas: [persona:front-desk-clerk, persona:guest]
+rules: [rule:overpayments-are-refunded]
+concepts: [concept:payment, concept:bill]
 decisions:
   - topic: Where the money goes
     question: >-

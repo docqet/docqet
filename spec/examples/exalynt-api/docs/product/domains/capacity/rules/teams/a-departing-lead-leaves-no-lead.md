@@ -1,4 +1,5 @@
 ---
+id: a-departing-lead-leaves-no-lead
 name: A departing lead leaves no lead
 ---
 

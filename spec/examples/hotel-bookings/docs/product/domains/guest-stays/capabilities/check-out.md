@@ -1,11 +1,12 @@
 ---
+id: check-out
 name: Check-out
 description: >-
   Clerks check guests out on their departure day and take payment for anything
   still owed.
 stability: ga
-personas: [front-desk-clerk]
-concepts: [booking]
+personas: [persona:front-desk-clerk]
+concepts: [concept:booking]
 ---
 
 ## Includes

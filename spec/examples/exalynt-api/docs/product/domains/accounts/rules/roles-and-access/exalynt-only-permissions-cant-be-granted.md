@@ -1,4 +1,5 @@
 ---
+id: exalynt-only-permissions-cant-be-granted
 name: Exalynt-only permissions can't be granted
 ---
 

@@ -1,4 +1,5 @@
 ---
+id: removing-someone-already-gone
 name: Removing someone already gone
 ---
 

@@ -1,21 +1,22 @@
 ---
+id: portal
 name: Portal
 description: >-
   The client portal, where a client organization's people buy and schedule
   capacity, follow their blocks, read estimates, pay, and manage the
   organization.
 capabilities:
-  - client-home
-  - getting-set-up
-  - teams
-  - capacity-purchasing
-  - scheduling
-  - fulfillment
-  - conversation-spaces
-  - estimates
-  - billing
-  - organizations-and-members
-  - client-agreements
+  - capability:client-home
+  - capability:getting-set-up
+  - capability:teams
+  - capability:capacity-purchasing
+  - capability:scheduling
+  - capability:fulfillment
+  - capability:conversation-spaces
+  - capability:estimates
+  - capability:billing
+  - capability:organizations-and-members
+  - capability:client-agreements
 gaps:
   - id: home-screens-untested
     name: Home screens untested in the portal

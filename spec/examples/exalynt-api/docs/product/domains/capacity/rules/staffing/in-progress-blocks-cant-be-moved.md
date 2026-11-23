@@ -1,4 +1,5 @@
 ---
+id: in-progress-blocks-cant-be-moved
 name: In-progress blocks can't be moved
 ---
 

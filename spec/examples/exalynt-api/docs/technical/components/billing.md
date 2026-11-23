@@ -1,11 +1,12 @@
 ---
+id: billing
 name: Billing
 description: >-
   How the API charges for capacity through a payment provider. Clients handle
   payment methods, billing details, and invoices on the provider's own pages.
   How a provider plugs in is in the [provider boundary
   doc](../mechanisms/provider-boundary.md).
-capabilities: [billing, capacity-purchasing]
+capabilities: [capability:billing, capability:capacity-purchasing]
 meets: [reliability/beta/fails-clearly]
 tradeoffs:
   - id: provider-is-source-of-truth

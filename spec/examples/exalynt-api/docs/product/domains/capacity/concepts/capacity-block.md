@@ -1,13 +1,14 @@
 ---
+id: capacity-block
 name: Capacity block
 description: >-
   One purchase of Engineering Capacity, scheduled into a single week. Its type
   sets its size: **Flex** is 1 [unit](capacity-unit.md), **Core** 2, and
   **Dedicated** 4.
 confused-with:
-  - concept: capacity-unit
+  - concept: concept:capacity-unit
     summary: a quarter of one engineer's week, the size a block is measured in.
-  - concept: payout@pay
+  - concept: concept:payout@pay
     summary: >-
       a separate lifecycle that starts once a block is fulfilled. A
       fulfilled block isn't necessarily paid out.

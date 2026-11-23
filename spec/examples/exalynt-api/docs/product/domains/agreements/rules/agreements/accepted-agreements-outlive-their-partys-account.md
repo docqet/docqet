@@ -1,4 +1,5 @@
 ---
+id: accepted-agreements-outlive-their-partys-account
 name: Accepted agreements outlive their party's account
 ---
 

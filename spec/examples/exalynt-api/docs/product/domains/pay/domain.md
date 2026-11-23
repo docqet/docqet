@@ -1,4 +1,5 @@
 ---
+id: pay
 name: Earnings and pay
 description: >-
   What people and partnerships earn from each block, and getting it to them.

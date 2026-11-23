@@ -1,13 +1,14 @@
 ---
+id: block-delivery
 name: Block delivery
 description: >-
   Getting each block a client buys scheduled into a week, staffed by an
   engineer, and worked until it's fulfilled.
 capabilities:
-  - scheduling
-  - claiming-blocks
-  - staffing
-  - fulfillment
+  - capability:scheduling
+  - capability:claiming-blocks
+  - capability:staffing
+  - capability:fulfillment
 ---
 
 ## How it goes

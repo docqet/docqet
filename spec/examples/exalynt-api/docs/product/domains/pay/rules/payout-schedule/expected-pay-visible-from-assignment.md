@@ -1,4 +1,5 @@
 ---
+id: expected-pay-visible-from-assignment
 name: Expected pay visible from assignment
 ---
 

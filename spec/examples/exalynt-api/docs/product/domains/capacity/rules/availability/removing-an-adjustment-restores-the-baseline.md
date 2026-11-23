@@ -1,4 +1,5 @@
 ---
+id: removing-an-adjustment-restores-the-baseline
 name: Removing an adjustment restores the baseline
 ---
 

@@ -1,4 +1,5 @@
 ---
+id: warned-before-stranding-another-block
 name: Warned before stranding another block
 why: >-
   An engineer whose team supports several clients can use up the only room one

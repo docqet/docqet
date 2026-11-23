@@ -1,4 +1,5 @@
 ---
+id: invoice
 name: Invoice
 description: >-
   What a purchase of capacity issues. Exalynt keeps a small record of it that

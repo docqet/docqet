@@ -1,14 +1,15 @@
 ---
+id: organization
 name: Organization
 description: >-
   An organization is a client of Exalynt: the account its people share, which
   buys capacity and is billed.
 confused-with:
-  - concept: team@capacity
+  - concept: concept:team@capacity
     summary: >-
       an organization's members are its own people. A team is Exalynt's
       people, assigned to work with it.
-  - concept: partnership@partnerships
+  - concept: concept:partnership@partnerships
     summary: >-
       a partnership is its own record, separate from any client
       organization.

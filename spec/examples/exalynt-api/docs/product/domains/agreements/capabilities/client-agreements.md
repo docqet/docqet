@@ -1,29 +1,30 @@
 ---
+id: client-agreements
 name: Client agreements
 description: >-
   A client organization's Admin reads and accepts its Client Agreement on its
   behalf, before anyone can use the portal for it.
 stability: beta
 personas:
-  - client-admin-founder
-  - client-admin-operations
-  - client-member
-  - client-billing
+  - persona:client-admin-founder
+  - persona:client-admin-operations
+  - persona:client-member
+  - persona:client-billing
 rules:
-  - agreements/engineer-agreement-follows-the-invitations-terms
-  - agreements/an-engineer-agreement-can-have-no-commercial-terms
-  - agreements/acceptance-puts-an-agreement-in-effect
-  - agreements/new-terms-wait-for-acceptance
-  - agreements/a-newer-agreement-replaces-one-waiting
-  - agreements/only-the-waiting-agreement-is-accepted-once
-  - agreements/a-new-organization-is-offered-the-client-agreement
-  - agreements/who-accepts-a-client-agreement
-  - agreements/manager-accepts-the-partner-agreement
-  - agreements/reading-the-partner-agreement-before-accepting
-  - agreements/accepted-agreements-never-change
-  - agreements/accepted-agreements-outlive-their-partys-account
-  - agreements/agreements-stay-private
-concepts: [agreement, organization]
+  - rule:engineer-agreement-follows-the-invitations-terms
+  - rule:an-engineer-agreement-can-have-no-commercial-terms
+  - rule:acceptance-puts-an-agreement-in-effect
+  - rule:new-terms-wait-for-acceptance
+  - rule:a-newer-agreement-replaces-one-waiting
+  - rule:only-the-waiting-agreement-is-accepted-once
+  - rule:a-new-organization-is-offered-the-client-agreement
+  - rule:who-accepts-a-client-agreement
+  - rule:manager-accepts-the-partner-agreement
+  - rule:reading-the-partner-agreement-before-accepting
+  - rule:accepted-agreements-never-change
+  - rule:accepted-agreements-outlive-their-partys-account
+  - rule:agreements-stay-private
+concepts: [concept:agreement, concept:organization@accounts]
 gaps:
   - id: only-the-portal-holds-to-the-agreement
     name: Only the portal enforces the agreement

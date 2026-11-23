@@ -1,15 +1,16 @@
 ---
+id: teams
 name: Teams
 description: >-
   Who at Exalynt a client sees and, through the `team` scope, which clients'
   records an engineer can reach.
 capabilities:
-  - teams
-  - client-directory
-  - engineers
-  - engineer-onboarding
-  - organizations-and-members
-  - staffing
+  - capability:teams
+  - capability:client-directory
+  - capability:engineers
+  - capability:engineer-onboarding
+  - capability:organizations-and-members
+  - capability:staffing
 ---
 
 `teams`, `team_members` (keyed by user, so the one-team rule is the primary

@@ -1,4 +1,5 @@
 ---
+id: own-scoped-capacity-access
 name: Own-scoped capacity access
 ---
 

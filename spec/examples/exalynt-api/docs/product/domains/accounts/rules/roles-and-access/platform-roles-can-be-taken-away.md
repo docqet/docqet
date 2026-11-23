@@ -1,4 +1,5 @@
 ---
+id: platform-roles-can-be-taken-away
 name: Platform roles can be taken away
 ---
 

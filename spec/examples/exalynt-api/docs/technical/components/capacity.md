@@ -1,16 +1,17 @@
 ---
+id: capacity
 name: Capacity
 description: >-
   Blocks of engineering capacity: bought, scheduled into a week, staffed,
   started, and fulfilled, each with at most one focus.
 capabilities:
-  - capacity-purchasing
-  - client-home
-  - scheduling
-  - claiming-blocks
-  - staffing
-  - fulfillment
-  - client-directory
+  - capability:capacity-purchasing
+  - capability:client-home
+  - capability:scheduling
+  - capability:claiming-blocks
+  - capability:staffing
+  - capability:fulfillment
+  - capability:client-directory
 gaps:
   - id: buying-and-scheduling-not-load-tested
     name: Buying and scheduling never load-tested

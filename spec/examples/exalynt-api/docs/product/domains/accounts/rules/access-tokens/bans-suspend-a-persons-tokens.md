@@ -1,4 +1,5 @@
 ---
+id: bans-suspend-a-persons-tokens
 name: Bans suspend a person's tokens
 ---
 

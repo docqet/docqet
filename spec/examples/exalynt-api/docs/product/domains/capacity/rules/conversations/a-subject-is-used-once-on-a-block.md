@@ -1,4 +1,5 @@
 ---
+id: a-subject-is-used-once-on-a-block
 name: A subject is used once on a block
 ---
 

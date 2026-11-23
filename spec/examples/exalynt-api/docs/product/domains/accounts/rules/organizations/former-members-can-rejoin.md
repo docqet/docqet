@@ -1,4 +1,5 @@
 ---
+id: former-members-can-rejoin
 name: Former members can rejoin
 ---
 

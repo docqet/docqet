@@ -1,4 +1,5 @@
 ---
+id: your-profile
 name: Your profile
 description: >-
   Everyone manages their own account in every app: their name and photo, their
@@ -6,26 +7,26 @@ description: >-
   devices they're signed in on.
 stability: beta
 personas:
-  - client-admin-founder
-  - client-admin-operations
-  - client-member
-  - client-billing
-  - exalynt-admin
-  - exalynt-engineer-1
-  - exalynt-engineer-2
-  - exalynt-engineer-new-hire
-  - exalynt-team-lead
-  - partner
+  - persona:client-admin-founder
+  - persona:client-admin-operations
+  - persona:client-member
+  - persona:client-billing
+  - persona:exalynt-admin
+  - persona:exalynt-engineer-1
+  - persona:exalynt-engineer-2
+  - persona:exalynt-engineer-new-hire
+  - persona:exalynt-team-lead
+  - persona:partner
 rules:
-  - profile/everyone-sees-the-name-given
-  - profile/invitations-follow-the-primary-address
-  - profile/at-least-one-name-is-kept
-  - profile-photos/everyone-sees-the-uploaded-photo
-  - profile-photos/removed-photos-are-no-longer-shown
+  - rule:everyone-sees-the-name-given
+  - rule:invitations-follow-the-primary-address
+  - rule:at-least-one-name-is-kept
+  - rule:everyone-sees-the-uploaded-photo
+  - rule:removed-photos-are-no-longer-shown
 gaps:
   - id: blank-names-allowed-outside-the-app
     name: Blank names allowed outside the app
-    rule: profile/at-least-one-name-is-kept
+    rule: rule:at-least-one-name-is-kept
     impact: inconvenient
     description: >-
       Only the app refuses a blank name. The sign-in provider is the source of

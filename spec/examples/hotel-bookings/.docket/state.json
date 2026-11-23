@@ -49,7 +49,7 @@
           "status": "closed",
           "answer": "Yes. The two stays don't share a night, and there's time to clean the room between check-out and check-in.",
           "became": [
-            "rule:booking/same-day-turnover"
+            "rule:same-day-turnover"
           ],
           "gaps": []
         }
@@ -73,10 +73,10 @@
       "name": "Reservations",
       "description": "Taking bookings and handling changes to them, before the guest arrives.",
       "capabilities": [
-        "room-booking",
-        "cancellations",
-        "group-bookings",
-        "waitlist"
+        "capability:room-booking",
+        "capability:cancellations",
+        "capability:group-bookings",
+        "capability:waitlist"
       ],
       "decisions": [
         {
@@ -112,8 +112,8 @@
       "name": "Front desk",
       "description": "Welcoming guests when they arrive and settling up when they leave.",
       "capabilities": [
-        "check-in",
-        "check-out"
+        "capability:check-in",
+        "capability:check-out"
       ],
       "decisions": [],
       "body": "",
@@ -126,8 +126,8 @@
       "name": "Housekeeping",
       "description": "Keeping rooms ready for the next guest.",
       "capabilities": [
-        "room-status",
-        "cleaning-schedule"
+        "capability:room-status",
+        "capability:cleaning-schedule"
       ],
       "decisions": [],
       "body": "",
@@ -144,18 +144,18 @@
       "description": "Runs the front desk: takes bookings, and checks guests in and out.",
       "image": "https://randomuser.me/api/portraits/women/68.jpg",
       "capabilities": [
-        "room-booking",
-        "cancellations",
-        "check-in",
-        "check-out",
-        "group-bookings",
-        "room-status",
-        "waitlist"
+        "capability:room-booking",
+        "capability:cancellations",
+        "capability:check-in",
+        "capability:check-out",
+        "capability:group-bookings",
+        "capability:room-status",
+        "capability:waitlist"
       ],
       "features": [
-        "reservations",
-        "front-desk",
-        "housekeeping"
+        "feature:reservations",
+        "feature:front-desk",
+        "feature:housekeeping"
       ],
       "body": "## Needs\n\n- To tell a guest at once whether a room is free for their dates, and hold it\n  for them, without ever giving the same room to two guests.\n- To check guests in and out quickly, so nobody waits at the desk.\n- To know which rooms are ready before a guest arrives, without phoning\n  housekeeping.\n\n## Knows\n\nEvery room in the hotel, the regulars, and the cancellation policy by heart.\nComfortable with a computer, but has learned the system on the job, not from a\nmanual.\n\n## Context\n\nAt the desk all shift, on a shared desktop, with a guest or the phone waiting\nmost of the time. Interrupted constantly, so anything they start may be finished\nminutes later.\n\n## Expects\n\nThe paper diary's view of the hotel: rooms down the side, nights across the top.\nTalks about stays, rooms and arrivals, not reservations or inventory.\n\n## Cares about\n\nNever having to tell a guest standing in front of them that their room was given\naway. They'll go back to the paper diary the first time the app gets that wrong."
     },
@@ -168,11 +168,11 @@
       "description": "Cleans and readies the rooms between guests.",
       "image": "https://randomuser.me/api/portraits/women/26.jpg",
       "capabilities": [
-        "cleaning-schedule",
-        "room-status"
+        "capability:cleaning-schedule",
+        "capability:room-status"
       ],
       "features": [
-        "housekeeping"
+        "feature:housekeeping"
       ],
       "body": "## Needs\n\n- To know which rooms to clean first, so arriving guests don't wait for a room.\n- To tell the front desk a room is ready without walking back down to say so.\n\n## Knows\n\nThe building, floor by floor, and how long each kind of room takes. Uses a phone\nevery day, but rarely for work.\n\n## Context\n\nOn their feet, moving from room to room with a trolley, a phone in their pocket.\nGloves on much of the time, so anything they do has to take a tap or two.\n\n## Expects\n\nA list of rooms, in the order they'll do them. Talks about rooms being clean,\ndirty or ready.\n\n## Cares about\n\nNot being rushed by the front desk for a room they didn't know was urgent."
     },
@@ -185,7 +185,7 @@
       "description": "Runs the hotel, and answers for its takings to the owners.",
       "image": "https://randomuser.me/api/portraits/men/52.jpg",
       "capabilities": [
-        "rate-calendar"
+        "capability:rate-calendar"
       ],
       "features": [],
       "body": "## Needs\n\n- To set what each room costs, night by night, so busy dates earn more.\n\n## Knows\n\nThe local market and the hotel's busy seasons. Reads a spreadsheet well, and\nexpects software to do the arithmetic for them.\n\n## Context\n\nAt a desk in the back office, a few times a week, in between everything else\nrunning a hotel brings.\n\n## Expects\n\nA calendar of rates, like the one they keep in a spreadsheet today.\n\n## Cares about\n\nRates they can change in a minute when a big event is announced, and being sure\nthe front desk is quoting them."
@@ -200,16 +200,16 @@
       "description": "Clerks book a free room for a guest's stay.",
       "stability": "beta",
       "personas": [
-        "front-desk-clerk"
+        "persona:front-desk-clerk"
       ],
       "rules": [
-        "booking/no-double-booking",
-        "booking/minimum-stay",
-        "booking/same-day-turnover"
+        "rule:no-double-booking",
+        "rule:minimum-stay",
+        "rule:same-day-turnover"
       ],
       "concepts": [
-        "booking",
-        "room"
+        "concept:booking",
+        "concept:room"
       ],
       "gaps": [
         "capability:room-booking#calendar-needs-a-mouse"
@@ -227,7 +227,7 @@
         }
       ],
       "body": "## Includes\n\n- Clerks see which rooms are free for a stay.\n- Clerks move a booking to new dates.\n\n## Success\n\n- The front desk stops keeping the paper diary alongside the app.",
-      "feature": "reservations",
+      "feature": "feature:reservations",
       "evidence": {
         "implements": [
           {
@@ -256,14 +256,14 @@
       "description": "Clerks cancel a booking when a guest's plans change, and the guest is refunded what the cancellation policy allows.",
       "stability": "alpha",
       "personas": [
-        "front-desk-clerk"
+        "persona:front-desk-clerk"
       ],
       "rules": [
-        "cancellations/free-cancellation-window",
-        "cancellations/late-cancellation-fee"
+        "rule:free-cancellation-window",
+        "rule:late-cancellation-fee"
       ],
       "concepts": [
-        "booking"
+        "concept:booking"
       ],
       "gaps": [
         "capability:cancellations#late-cancellations-refunded-in-full"
@@ -279,7 +279,7 @@
         }
       ],
       "body": "## Includes\n\n- Clerks tell a guest what they'd be refunded if they cancelled now.",
-      "feature": "reservations",
+      "feature": "feature:reservations",
       "evidence": {
         "implements": [],
         "verifies": []
@@ -294,19 +294,19 @@
       "description": "Clerks check guests in when they arrive and give them their room.",
       "stability": "beta",
       "personas": [
-        "front-desk-clerk"
+        "persona:front-desk-clerk"
       ],
       "rules": [
-        "booking/no-double-booking"
+        "rule:no-double-booking"
       ],
       "concepts": [
-        "booking",
-        "room"
+        "concept:booking",
+        "concept:room"
       ],
       "gaps": [],
       "decisions": [],
       "body": "## Includes\n\n- Clerks see today's arrivals.\n- Clerks move a guest to another room for the rest of their stay.\n\n## Success\n\n- A guest with a booking is checked in within two minutes of reaching the desk.",
-      "feature": "front-desk",
+      "feature": "feature:front-desk",
       "evidence": {
         "implements": [],
         "verifies": []
@@ -321,16 +321,16 @@
       "description": "Clerks check guests out on their departure day and take payment for anything still owed.",
       "stability": "ga",
       "personas": [
-        "front-desk-clerk"
+        "persona:front-desk-clerk"
       ],
       "rules": [],
       "concepts": [
-        "booking"
+        "concept:booking"
       ],
       "gaps": [],
       "decisions": [],
       "body": "## Includes\n\n- Clerks see today's departures.\n\n## Success\n\n- The front desk closes the day with every departure settled.",
-      "feature": "front-desk",
+      "feature": "feature:front-desk",
       "evidence": {
         "implements": [],
         "verifies": []
@@ -345,11 +345,11 @@
       "description": "Housekeepers see which rooms to clean today, with early arrivals first.",
       "stability": "prototype",
       "personas": [
-        "housekeeper"
+        "persona:housekeeper"
       ],
       "rules": [],
       "concepts": [
-        "room"
+        "concept:room@guest-stays"
       ],
       "gaps": [],
       "decisions": [
@@ -363,7 +363,7 @@
         }
       ],
       "body": "",
-      "feature": "housekeeping",
+      "feature": "feature:housekeeping",
       "evidence": {
         "implements": [],
         "verifies": []
@@ -378,14 +378,14 @@
       "description": "Clerks hold several rooms at once for a group travelling together, under one name.",
       "stability": "prototype",
       "personas": [
-        "front-desk-clerk"
+        "persona:front-desk-clerk"
       ],
       "rules": [
-        "booking/no-double-booking",
-        "booking/minimum-stay"
+        "rule:no-double-booking",
+        "rule:minimum-stay"
       ],
       "concepts": [
-        "booking"
+        "concept:booking"
       ],
       "gaps": [],
       "decisions": [
@@ -399,7 +399,7 @@
         }
       ],
       "body": "",
-      "feature": "reservations",
+      "feature": "feature:reservations",
       "evidence": {
         "implements": [],
         "verifies": []
@@ -414,7 +414,7 @@
       "description": "Managers set each room type's nightly rate, date by date.",
       "stability": "prototype",
       "personas": [
-        "manager"
+        "persona:manager"
       ],
       "rules": [],
       "concepts": [],
@@ -445,12 +445,12 @@
       "description": "Housekeepers mark rooms clean or dirty, so the front desk knows which are ready.",
       "stability": "prototype",
       "personas": [
-        "housekeeper",
-        "front-desk-clerk"
+        "persona:housekeeper",
+        "persona:front-desk-clerk"
       ],
       "rules": [],
       "concepts": [
-        "room@guest-stays"
+        "concept:room@guest-stays"
       ],
       "gaps": [],
       "decisions": [
@@ -464,7 +464,7 @@
         }
       ],
       "body": "## Includes\n\n- Clerks see which rooms are ready for arriving guests.",
-      "feature": "housekeeping",
+      "feature": "feature:housekeeping",
       "evidence": {
         "implements": [],
         "verifies": []
@@ -479,17 +479,17 @@
       "description": "Clerks put a guest on a waitlist when every room is taken, and offer them the first room that frees up for their stay.",
       "stability": "draft",
       "personas": [
-        "front-desk-clerk"
+        "persona:front-desk-clerk"
       ],
       "rules": [
-        "booking/no-double-booking"
+        "rule:no-double-booking"
       ],
       "concepts": [
-        "booking",
-        "room"
+        "concept:booking",
+        "concept:room"
       ],
       "gaps": [],
-      "feature": "reservations",
+      "feature": "feature:reservations",
       "evidence": {
         "implements": [],
         "verifies": []
@@ -510,18 +510,18 @@
   ],
   "rules": [
     {
-      "id": "booking/no-double-booking",
+      "id": "no-double-booking",
       "domain": "guest-stays",
       "file": "docs/product/domains/guest-stays/rules/booking/no-double-booking.md",
       "name": "A room can't be double-booked",
       "capabilities": [
-        "room-booking",
-        "check-in",
-        "group-bookings"
+        "capability:room-booking",
+        "capability:check-in",
+        "capability:group-bookings"
       ],
       "concepts": [
-        "booking",
-        "room"
+        "concept:booking",
+        "concept:room"
       ],
       "why": null,
       "body": "Two bookings for the same room can't share a night. A cancelled booking no\nlonger holds its nights.",
@@ -563,16 +563,16 @@
       }
     },
     {
-      "id": "booking/minimum-stay",
+      "id": "minimum-stay",
       "domain": "guest-stays",
       "file": "docs/product/domains/guest-stays/rules/booking/minimum-stay.md",
       "name": "A stay is at least one night",
       "capabilities": [
-        "room-booking",
-        "group-bookings"
+        "capability:room-booking",
+        "capability:group-bookings"
       ],
       "concepts": [
-        "booking"
+        "concept:booking"
       ],
       "why": null,
       "body": "A booking's check-out date is after its check-in date.",
@@ -594,16 +594,16 @@
       }
     },
     {
-      "id": "booking/same-day-turnover",
+      "id": "same-day-turnover",
       "domain": "guest-stays",
       "file": "docs/product/domains/guest-stays/rules/booking/same-day-turnover.md",
       "name": "A stay can start on the day another ends",
       "capabilities": [
-        "room-booking"
+        "capability:room-booking"
       ],
       "concepts": [
-        "booking",
-        "room"
+        "concept:booking",
+        "concept:room"
       ],
       "why": "Guests check out by 11:00 and check in from 15:00, which leaves time to clean the room.",
       "body": "A room can be booked from the day an earlier booking checks out, because the\ntwo stays don't share a night.",
@@ -619,15 +619,15 @@
       }
     },
     {
-      "id": "cancellations/free-cancellation-window",
+      "id": "free-cancellation-window",
       "domain": "guest-stays",
       "file": "docs/product/domains/guest-stays/rules/cancellations/free-cancellation-window.md",
       "name": "Cancelling 48 hours ahead is free",
       "capabilities": [
-        "cancellations"
+        "capability:cancellations"
       ],
       "concepts": [
-        "booking"
+        "concept:booking"
       ],
       "why": null,
       "body": "A booking cancelled at least 48 hours before check-in is refunded in full.",
@@ -654,15 +654,15 @@
       }
     },
     {
-      "id": "cancellations/late-cancellation-fee",
+      "id": "late-cancellation-fee",
       "domain": "guest-stays",
       "file": "docs/product/domains/guest-stays/rules/cancellations/late-cancellation-fee.md",
       "name": "A late cancellation costs the first night",
       "capabilities": [
-        "cancellations"
+        "capability:cancellations"
       ],
       "concepts": [
-        "booking"
+        "concept:booking"
       ],
       "why": "The room usually can't be rebooked at such short notice.",
       "body": "A booking cancelled less than 48 hours before check-in is refunded everything\nexcept the first night.",
@@ -680,18 +680,18 @@
       "name": "Booking",
       "description": "A guest's hold on one room for a stay, from a check-in date to a check-out date.",
       "capabilities": [
-        "room-booking",
-        "cancellations",
-        "check-in",
-        "check-out",
-        "group-bookings"
+        "capability:room-booking",
+        "capability:cancellations",
+        "capability:check-in",
+        "capability:check-out",
+        "capability:group-bookings"
       ],
       "rules": [
-        "booking/no-double-booking",
-        "booking/minimum-stay",
-        "booking/same-day-turnover",
-        "cancellations/free-cancellation-window",
-        "cancellations/late-cancellation-fee"
+        "rule:no-double-booking",
+        "rule:minimum-stay",
+        "rule:same-day-turnover",
+        "rule:free-cancellation-window",
+        "rule:late-cancellation-fee"
       ],
       "confusedWith": [],
       "body": "A booking is for one [room](room.md). Its nights run from the check-in date up\nto, but not including, the check-out date.\n\n## Lifecycle\n\n1. Confirmed\n2. Checked in\n3. Checked out\n\nA confirmed booking can instead be Cancelled, any time before check-in."
@@ -703,14 +703,14 @@
       "name": "Room",
       "description": "A room guests can stay in, known by its number.",
       "capabilities": [
-        "room-booking",
-        "check-in",
-        "cleaning-schedule",
-        "room-status"
+        "capability:room-booking",
+        "capability:check-in",
+        "capability:cleaning-schedule",
+        "capability:room-status"
       ],
       "rules": [
-        "booking/no-double-booking",
-        "booking/same-day-turnover"
+        "rule:no-double-booking",
+        "rule:same-day-turnover"
       ],
       "confusedWith": [],
       "body": "Each room has a type, such as double or twin, which sets its rate. A room is\n[booked](booking.md) a night at a time."
@@ -724,14 +724,14 @@
       "description": "How a change gets from the main branch to the hotel's server, and back off it again.",
       "applies": "project",
       "capabilities": [
-        "room-booking",
-        "cancellations",
-        "check-in",
-        "check-out",
-        "cleaning-schedule",
-        "group-bookings",
-        "rate-calendar",
-        "room-status"
+        "capability:room-booking",
+        "capability:cancellations",
+        "capability:check-in",
+        "capability:check-out",
+        "capability:cleaning-schedule",
+        "capability:group-bookings",
+        "capability:rate-calendar",
+        "capability:room-status"
       ],
       "meets": [
         "reliability/beta/undo-release",
@@ -779,9 +779,9 @@
       "name": "Bookings",
       "description": "Where a room is held for a stay, and where no double-booking is enforced.",
       "capabilities": [
-        "room-booking",
-        "group-bookings",
-        "check-in"
+        "capability:room-booking",
+        "capability:group-bookings",
+        "capability:check-in"
       ],
       "meets": [],
       "gaps": [
@@ -819,7 +819,7 @@
       "id": "capability:cancellations#late-cancellations-refunded-in-full",
       "domain": "guest-stays",
       "outcome": null,
-      "rule": "cancellations/late-cancellation-fee",
+      "rule": "rule:late-cancellation-fee",
       "impact": "damaging",
       "when": null,
       "name": "Late cancellations refunded in full",

@@ -1,4 +1,5 @@
 ---
+id: tokens-cover-all-organizations-by-default
 name: Tokens cover all organizations by default
 ---
 

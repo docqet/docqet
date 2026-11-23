@@ -1,4 +1,5 @@
 ---
+id: admins-see-only-payment-readiness
 name: Admins see only payment readiness
 ---
 

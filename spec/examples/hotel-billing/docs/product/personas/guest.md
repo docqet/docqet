@@ -1,4 +1,5 @@
 ---
+id: guest
 name: Sam
 description: Stays at the hotel, for work or on holiday, and pays for the stay.
 role: Guest

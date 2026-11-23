@@ -1,4 +1,5 @@
 ---
+id: claiming-staffs-the-block-directly
 name: Claiming staffs the block directly
 ---
 

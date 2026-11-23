@@ -1,10 +1,11 @@
 ---
+id: payout
 name: Payout
 description: >-
   Money sent to a payee, made up of earnings. A payout is always current or
   historical, never in the future: what's still to come is earnings.
 confused-with:
-  - concept: payout-share
+  - concept: concept:payout-share
     summary: >-
       what someone is owed from a block, which exists from when the block
       is assigned. A payout is the money that pays it.

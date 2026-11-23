@@ -1,12 +1,13 @@
 ---
+id: capacity-payout-basis
 name: Capacity payout basis
 description: >-
   The amount that engineer, team-lead, and partnership shares of a block are
   calculated from.
 confused-with:
-  - concept: capacity-block@capacity
+  - concept: concept:capacity-block@capacity
     summary: what a client buys, at a price the basis doesn't depend on.
-  - concept: payout-share
+  - concept: concept:payout-share
     summary: one person's or partnership's part of the basis, not the basis itself.
 ---
 

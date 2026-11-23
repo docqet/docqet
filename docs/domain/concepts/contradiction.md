@@ -58,7 +58,7 @@ contradiction appears when they're combined, as a problem naming both:
 {
   "type": "contradiction",
   "subject": "capability:check-out",
-  "capabilities": ["check-out"],
+  "capabilities": ["capability:check-out"],
   "message": "Hotel Bookings and Hotel Billing describe Check-out differently."
 }
 ```

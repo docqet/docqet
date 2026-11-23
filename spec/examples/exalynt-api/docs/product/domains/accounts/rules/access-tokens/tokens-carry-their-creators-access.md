@@ -1,4 +1,5 @@
 ---
+id: tokens-carry-their-creators-access
 name: Tokens carry their creator's access
 ---
 

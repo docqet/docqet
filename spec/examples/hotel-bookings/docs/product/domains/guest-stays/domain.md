@@ -1,4 +1,5 @@
 ---
+id: guest-stays
 name: Guest stays
 description: Looking after guests from their booking to their check-out.
 decisions:
@@ -13,5 +14,5 @@ decisions:
     answer: >-
       Yes. The two stays don't share a night, and there's time to clean the
       room between check-out and check-in.
-    became: [rule:booking/same-day-turnover]
+    became: [rule:same-day-turnover]
 ---

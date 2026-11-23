@@ -1,4 +1,5 @@
 ---
+id: listing-people-requires-a-platform-role
 name: Listing people requires a platform role
 ---
 

@@ -1,4 +1,5 @@
 ---
+id: new-members-hold-their-roles-permissions
 name: New members hold their role's permissions
 ---
 

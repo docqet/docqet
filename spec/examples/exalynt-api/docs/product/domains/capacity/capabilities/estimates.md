@@ -1,4 +1,5 @@
 ---
+id: estimates
 name: Estimates
 description: >-
   Exalynt prepares estimates of what a project might take, and clients and
@@ -6,27 +7,27 @@ description: >-
   take on every block type.
 stability: beta
 personas:
-  - client-admin-founder
-  - client-admin-operations
-  - client-member
-  - exalynt-engineer-1
-  - exalynt-engineer-2
-  - exalynt-admin
+  - persona:client-admin-founder
+  - persona:client-admin-operations
+  - persona:client-member
+  - persona:exalynt-engineer-1
+  - persona:exalynt-engineer-2
+  - persona:exalynt-admin
 rules:
-  - estimates/focus-sizes-and-block-prices
-  - estimates/each-focus-has-its-own-pace
-  - estimates/discounts-apply-to-the-whole-project
-  - estimates/estimates-keep-their-original-prices
-  - estimates/estimates-record-their-author
-  - estimates/replacing-replaces-everything
-  - estimates/clients-read-only-their-own-estimates
-  - estimates/only-exalynt-writes-estimates
-  - estimates/engineers-work-on-supported-clients-estimates
-  - estimates/prospects-see-estimates-once-attached
-  - estimates/deleting-an-estimate-is-permanent
-  - estimates/estimates-are-for-organizations-or-prospects
-  - estimates/a-focus-belongs-to-one-estimate
-concepts: [estimate, capacity-block, capacity-unit]
+  - rule:focus-sizes-and-block-prices
+  - rule:each-focus-has-its-own-pace
+  - rule:discounts-apply-to-the-whole-project
+  - rule:estimates-keep-their-original-prices
+  - rule:estimates-record-their-author
+  - rule:replacing-replaces-everything
+  - rule:clients-read-only-their-own-estimates
+  - rule:only-exalynt-writes-estimates
+  - rule:engineers-work-on-supported-clients-estimates
+  - rule:prospects-see-estimates-once-attached
+  - rule:deleting-an-estimate-is-permanent
+  - rule:estimates-are-for-organizations-or-prospects
+  - rule:a-focus-belongs-to-one-estimate
+concepts: [concept:estimate, concept:capacity-block, concept:capacity-unit]
 gaps:
   - id: no-asking-for-estimates
     name: Clients can't ask for estimates

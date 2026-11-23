@@ -1,11 +1,12 @@
 ---
+id: client-coupons
 name: Client coupons
 description: >-
   Exalynt's admins give one client a coupon: a name, and a percentage or
   amount off each block they buy, either forever or on their next purchase.
 stability: prototype
-personas: [exalynt-admin]
-concepts: [organization]
+personas: [persona:exalynt-admin]
+concepts: [concept:organization@accounts]
 gaps:
   - id: placeholder-coupons
     name: Coupons are placeholder data

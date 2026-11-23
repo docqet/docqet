@@ -2,7 +2,7 @@ Feature: Joining Exalynt
   Clients sign up on their own, while engineers and partners join by an
   admin's invitation. A person keeps one account, however many hats they wear.
 
-  # docket:verifies rule:joining/one-account-however-many-hats rule:joining/adding-a-hat-to-an-account
+  # docket:verifies rule:one-account-however-many-hats@accounts rule:adding-a-hat-to-an-account@accounts
   Rule: Someone who takes on another hat keeps their one account, and gains what the new hat needs alongside what they had
 
     Example: A client member becomes an engineer
@@ -19,7 +19,7 @@ Feature: Joining Exalynt
       Then Theo manages the partnership and has the Partner Hub
       And Theo still has the console
 
-  # docket:verifies rule:joining/gaining-a-hat-takes-nothing-away
+  # docket:verifies rule:gaining-a-hat-takes-nothing-away@accounts
   Rule: Gaining a hat never takes another away
 
     Example: An engineer becomes a partner
@@ -29,7 +29,7 @@ Feature: Joining Exalynt
       Then Theo is still on the Logistics team
       And Theo's Engineer Agreement in effect still has an Engineer Share of 70%
 
-  # docket:verifies rule:joining/invitations-stay-pending-until-resolved
+  # docket:verifies rule:invitations-stay-pending-until-resolved@accounts
   Rule: An invitation stays pending until it's accepted or revoked, and doesn't expire
 
     Example: An invitation sent long ago

@@ -1,4 +1,5 @@
 ---
+id: new-blocks-start-unstaffed
 name: New blocks start unstaffed
 ---
 

@@ -1,6 +1,6 @@
 Feature: City tax
 
-  # docket:verifies rule:tax/city-tax-per-guest-night
+  # docket:verifies rule:city-tax-per-guest-night@billing
   Rule: City tax is charged per guest, per night
 
     Scenario: Two guests staying three nights

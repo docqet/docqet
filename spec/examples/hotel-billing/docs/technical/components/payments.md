@@ -1,9 +1,10 @@
 ---
+id: payments
 name: Payments
 description: >-
   Taking card payments through the payment provider, for deposits and payment
   links.
-capabilities: [deposits, pay-by-link]
+capabilities: [capability:deposits, capability:pay-by-link]
 gaps:
   - id: no-timeout-on-provider-calls
     name: No timeout on payment provider calls

@@ -1,10 +1,11 @@
 ---
+id: onboarding
 name: Onboarding
 description: >-
   Bringing clients, engineers and partners in, and getting each ready to work.
 capabilities:
-  - getting-set-up
-  - engineer-onboarding
+  - capability:getting-set-up
+  - capability:engineer-onboarding
 ---
 
 ## Clients

@@ -1,6 +1,7 @@
 ---
+id: closed-days-dont-change
 name: A closed day can't change
-concepts: [business-day, charge]
+concepts: [concept:business-day, concept:charge@billing]
 why: A closed day's takings have already gone to the accountant.
 ---
 

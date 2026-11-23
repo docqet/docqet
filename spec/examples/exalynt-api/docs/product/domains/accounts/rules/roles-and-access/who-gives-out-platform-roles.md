@@ -1,4 +1,5 @@
 ---
+id: who-gives-out-platform-roles
 name: Who gives out platform roles
 ---
 

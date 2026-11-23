@@ -1,4 +1,5 @@
 ---
+id: email-only-to-verified-addresses
 name: Email only to verified addresses
 ---
 

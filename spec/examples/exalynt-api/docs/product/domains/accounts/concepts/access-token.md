@@ -1,10 +1,11 @@
 ---
+id: access-token
 name: Access token
 description: >-
   A personal access token lets someone's scripts and tools call the API as
   them.
 confused-with:
-  - concept: role
+  - concept: concept:role
     summary: >-
       a role says what someone may do. A token only identifies who is
       calling.

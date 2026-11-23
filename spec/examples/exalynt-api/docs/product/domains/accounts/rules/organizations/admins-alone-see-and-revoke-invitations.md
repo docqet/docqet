@@ -1,4 +1,5 @@
 ---
+id: admins-alone-see-and-revoke-invitations
 name: Admins alone see and revoke invitations
 ---
 

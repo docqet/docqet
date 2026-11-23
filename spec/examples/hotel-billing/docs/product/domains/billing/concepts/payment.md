@@ -1,4 +1,5 @@
 ---
+id: payment
 name: Payment
 description: Money a guest has paid towards their bill, by card or in cash.
 ---

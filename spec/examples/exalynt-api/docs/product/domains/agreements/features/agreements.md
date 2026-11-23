@@ -1,11 +1,12 @@
 ---
+id: agreements
 name: Agreements
 description: >-
   Putting every client, engineer and partnership under terms they've read and
   accepted before they work with Exalynt.
 capabilities:
-  - agreements
-  - client-agreements
-  - engineer-agreements
-  - partner-agreements
+  - capability:agreements
+  - capability:client-agreements
+  - capability:engineer-agreements
+  - capability:partner-agreements
 ---

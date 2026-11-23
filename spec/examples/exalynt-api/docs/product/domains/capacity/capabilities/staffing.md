@@ -1,39 +1,40 @@
 ---
+id: staffing
 name: Staffing
 description: >-
   Each scheduled block gets one engineer: an eligible engineer claims it from
   the client's shared queue, as [Claiming blocks](claiming-blocks.md) covers,
   or an admin assigns it.
 stability: alpha
-personas: [exalynt-admin]
+personas: [persona:exalynt-admin]
 rules:
-  - staffing/listing-an-engineers-blocks
-  - staffing/claiming-staffs-the-block-directly
-  - staffing/claiming-requires-eligibility
-  - staffing/claims-must-fit-availability
-  - staffing/unclaiming-before-the-week-starts
-  - staffing/warned-before-stranding-another-block
-  - staffing/new-blocks-start-unstaffed
-  - staffing/exalynt-staff-assign-engineers
-  - staffing/only-capacity-managers-assign-engineers
-  - staffing/taking-an-engineer-off-a-block
-  - staffing/one-engineer-per-block
-  - staffing/assignment-requires-eligibility
-  - staffing/assignment-must-fit-availability
-  - staffing/engineers-are-never-overbooked
-  - staffing/admins-resolve-cross-team-conflicts
-  - staffing/no-claiming-an-assigned-block
-  - staffing/leaving-a-clients-teams-releases-its-upcoming-blocks
-  - staffing/late-claims-during-the-preferred-week
-  - staffing/lapsed-blocks-must-be-moved-first
-  - staffing/in-progress-blocks-cant-be-moved
+  - rule:listing-an-engineers-blocks
+  - rule:claiming-staffs-the-block-directly
+  - rule:claiming-requires-eligibility
+  - rule:claims-must-fit-availability
+  - rule:unclaiming-before-the-week-starts
+  - rule:warned-before-stranding-another-block
+  - rule:new-blocks-start-unstaffed
+  - rule:exalynt-staff-assign-engineers
+  - rule:only-capacity-managers-assign-engineers
+  - rule:taking-an-engineer-off-a-block
+  - rule:one-engineer-per-block
+  - rule:assignment-requires-eligibility
+  - rule:assignment-must-fit-availability
+  - rule:engineers-are-never-overbooked
+  - rule:admins-resolve-cross-team-conflicts
+  - rule:no-claiming-an-assigned-block
+  - rule:leaving-a-clients-teams-releases-its-upcoming-blocks
+  - rule:late-claims-during-the-preferred-week
+  - rule:lapsed-blocks-must-be-moved-first
+  - rule:in-progress-blocks-cant-be-moved
 concepts:
-  - capacity-block
-  - shared-queue
-  - eligible-engineer
-  - preferred-week
-  - effective-availability
-  - team
+  - concept:capacity-block
+  - concept:shared-queue
+  - concept:eligible-engineer
+  - concept:preferred-week
+  - concept:effective-availability
+  - concept:team
 gaps:
   - id: placeholder-staffing-view
     name: Staffing view runs on placeholder data
@@ -106,7 +107,7 @@ gaps:
     when: One team is overbooked in a week when another team has time to spare.
   - id: assignment-eligibility-unchecked
     name: Assignments not checked for eligibility
-    rule: staffing/assignment-requires-eligibility
+    rule: rule:assignment-requires-eligibility
     impact: damaging
     description: >-
       An admin putting an engineer on a block isn't checked for that
@@ -116,7 +117,7 @@ gaps:
       support.
   - id: assignment-availability-unchecked
     name: Assignments not checked for availability
-    rule: staffing/assignment-must-fit-availability
+    rule: rule:assignment-must-fit-availability
     impact: inconvenient
     description: >-
       An admin putting an engineer on a block isn't checked for that

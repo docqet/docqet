@@ -1,4 +1,5 @@
 ---
+id: managing-tokens-requires-a-session
 name: Managing tokens requires a session
 ---
 

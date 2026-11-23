@@ -1,4 +1,5 @@
 ---
+id: partners-see-each-clients-earning-window
 name: Partners see each client's earning window
 ---
 

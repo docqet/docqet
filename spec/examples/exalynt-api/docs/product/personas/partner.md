@@ -1,4 +1,5 @@
 ---
+id: partner
 name: Grace Holloway
 description: >-
   Independent consultant who already works with Exalynt and makes an

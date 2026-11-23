@@ -1,9 +1,10 @@
 ---
+id: work-updates
 name: Work updates
 description: >-
   What engineers write about a block's work as they do it, shown on its page
   with when it was started and fulfilled.
-capabilities: [fulfillment]
+capabilities: [capability:fulfillment]
 gaps:
   - id: orphaned-objects
     name: Unused uploaded objects never cleaned up

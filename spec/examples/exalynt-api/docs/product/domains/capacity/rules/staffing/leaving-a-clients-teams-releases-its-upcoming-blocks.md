@@ -1,4 +1,5 @@
 ---
+id: leaving-a-clients-teams-releases-its-upcoming-blocks
 name: Leaving a client's teams releases its upcoming blocks
 why: >-
   An engineer who no longer supports a client can't see or unclaim its blocks,

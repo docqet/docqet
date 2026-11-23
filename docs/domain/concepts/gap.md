@@ -57,7 +57,7 @@ falls short of, its `impact`, and `when` it bites. On [city tax](../../../spec/e
 gaps:
   - id: children-corrected-by-hand
     name: City tax charged for children
-    rule: tax/children-pay-no-city-tax
+    rule: rule:children-pay-no-city-tax
     impact: inconvenient
     description: >-
       Guests' ages aren't recorded, so city tax is added for every guest on a

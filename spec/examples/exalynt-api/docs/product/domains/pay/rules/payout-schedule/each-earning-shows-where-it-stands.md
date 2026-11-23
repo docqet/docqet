@@ -1,4 +1,5 @@
 ---
+id: each-earning-shows-where-it-stands
 name: Each earning shows where it stands
 ---
 

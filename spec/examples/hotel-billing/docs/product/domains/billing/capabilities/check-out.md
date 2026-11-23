@@ -1,12 +1,13 @@
 ---
+id: check-out
 name: Check-out
 description: >-
   Guests settle their bill as they leave, so nothing is left owing once
   they've gone.
 stability: alpha
-personas: [front-desk-clerk, guest]
-rules: [bills/closed-bills-dont-change]
-concepts: [bill, booking]
+personas: [persona:front-desk-clerk, persona:guest]
+rules: [rule:closed-bills-dont-change]
+concepts: [concept:bill, concept:booking]
 decisions:
   - question: >-
       Do guests want their bill emailed as they leave, or printed at the

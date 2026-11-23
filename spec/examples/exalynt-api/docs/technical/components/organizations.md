@@ -1,9 +1,10 @@
 ---
+id: organizations
 name: Organizations
 description: >-
   Client organizations, their members, invitations, payment customer, and
   logo.
-capabilities: [organizations-and-members, client-directory, billing]
+capabilities: [capability:organizations-and-members, capability:client-directory, capability:billing]
 meets: [security/ga/sound]
 gaps:
   - id: shapes-shared-with-less-stable-capabilities

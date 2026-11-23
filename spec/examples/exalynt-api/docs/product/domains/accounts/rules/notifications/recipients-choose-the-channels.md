@@ -1,4 +1,5 @@
 ---
+id: recipients-choose-the-channels
 name: Recipients choose the channels
 ---
 

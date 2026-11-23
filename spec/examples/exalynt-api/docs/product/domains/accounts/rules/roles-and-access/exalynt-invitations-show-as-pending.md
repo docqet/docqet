@@ -1,4 +1,5 @@
 ---
+id: exalynt-invitations-show-as-pending
 name: Exalynt invitations show as pending
 ---
 

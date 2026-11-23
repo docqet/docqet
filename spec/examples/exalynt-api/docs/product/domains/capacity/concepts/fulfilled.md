@@ -1,10 +1,11 @@
 ---
+id: fulfilled
 name: Fulfilled
 description: >-
   A block is fulfilled once its engineer marks it fulfilled. Nobody reviews
   it, and marking it fulfilled is final.
 confused-with:
-  - concept: payout@pay
+  - concept: concept:payout@pay
     summary: >-
       a separate lifecycle that starts once a block is fulfilled. A
       fulfilled block isn't necessarily paid out.

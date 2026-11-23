@@ -8,7 +8,7 @@ Feature: Estimates
     Given capacity costs $2,500 a unit on Flex, $2,375 on Core, and $2,250 on Dedicated
     And Acme and Globex are clients
 
-  # docket:verifies rule:estimates/focus-sizes-and-block-prices
+  # docket:verifies rule:focus-sizes-and-block-prices@capacity
   Rule: A Focus's size spans a range of units, and each block type prices them
 
     Scenario Outline: One sized Focus
@@ -33,7 +33,7 @@ Feature: Estimates
       Then the estimate has 2 Focuses, 1 of them unsized
       And it comes to 1, 2, or 3 units
 
-  # docket:verifies rule:estimates/each-focus-has-its-own-pace
+  # docket:verifies rule:each-focus-has-its-own-pace@capacity
   Rule: Each Focus is planned at a pace, and the estimate costs every Focus at its own
 
     Example: Focuses at different paces
@@ -44,7 +44,7 @@ Feature: Estimates
       When an admin writes an estimate with one Focus sized S and no pace
       Then the Focus is planned on Dedicated
 
-  # docket:verifies rule:estimates/discounts-apply-to-the-whole-project
+  # docket:verifies rule:discounts-apply-to-the-whole-project@capacity
   Rule: A discount takes a percentage off the whole project
 
     Background:
@@ -62,7 +62,7 @@ Feature: Estimates
       When the admin gives it 60% off and 50% off
       Then the estimate is as it was
 
-  # docket:verifies rule:estimates/estimates-keep-their-original-prices
+  # docket:verifies rule:estimates-keep-their-original-prices@capacity
   Rule: An estimate keeps the prices it was written at
 
     Example: Prices rise after an estimate is written
@@ -70,14 +70,14 @@ Feature: Estimates
       When Dedicated rises to $2,500 a unit
       Then on Dedicated it still costs $6,750, $9,000, or $13,500
 
-  # docket:verifies rule:estimates/estimates-record-their-author
+  # docket:verifies rule:estimates-record-their-author@capacity
   Rule: An estimate records who wrote it
 
     Example: An admin writes an estimate
       When Alex, an admin, writes an estimate for Acme
       Then the estimate says Alex wrote it
 
-  # docket:verifies rule:estimates/replacing-replaces-everything
+  # docket:verifies rule:replacing-replaces-everything@capacity
   Rule: Replacing an estimate replaces all of it
 
     Example: Focuses left out are dropped, and those kept are changed
@@ -86,7 +86,7 @@ Feature: Estimates
       Then the estimate has only "Reports", sized L
       And it comes to 6, 8, or 12 units
 
-  # docket:verifies rule:estimates/clients-read-only-their-own-estimates
+  # docket:verifies rule:clients-read-only-their-own-estimates@capacity
   Rule: A client reads their own organization's estimates and no one else's
 
     Example: A client lists estimates
@@ -99,7 +99,7 @@ Feature: Estimates
       When a member of Acme opens it
       Then there's no such estimate
 
-  # docket:verifies rule:estimates/only-exalynt-writes-estimates
+  # docket:verifies rule:only-exalynt-writes-estimates@capacity
   Rule: Only Exalynt writes, changes, and deletes estimates
 
     Scenario Outline: A client member tries to <action>
@@ -114,7 +114,7 @@ Feature: Estimates
         | change Acme's estimate     |
         | delete Acme's estimate     |
 
-  # docket:verifies rule:estimates/engineers-work-on-supported-clients-estimates
+  # docket:verifies rule:engineers-work-on-supported-clients-estimates@capacity
   Rule: An engineer works on the estimates of the clients their team supports
 
     Background:
@@ -144,7 +144,7 @@ Feature: Estimates
       When Sam writes an estimate for a prospect
       Then no estimate is written
 
-  # docket:verifies rule:estimates/prospects-see-estimates-once-attached
+  # docket:verifies rule:prospects-see-estimates-once-attached@capacity
   Rule: A prospect sees their estimate only once it's attached to their organization
 
     Example: Before it's attached
@@ -159,7 +159,7 @@ Feature: Estimates
       When the admin attaches the estimate to Initech
       Then a member of Initech can open it
 
-  # docket:verifies rule:estimates/deleting-an-estimate-is-permanent
+  # docket:verifies rule:deleting-an-estimate-is-permanent@capacity
   Rule: Deleting an estimate is permanent
 
     Example: An admin deletes an estimate
@@ -167,14 +167,14 @@ Feature: Estimates
       When the admin deletes it
       Then nobody can open it, the admin included
 
-  # docket:verifies rule:estimates/estimates-are-for-organizations-or-prospects
+  # docket:verifies rule:estimates-are-for-organizations-or-prospects@capacity
   Rule: An estimate is for an existing organization, or for a prospect
 
     Example: An organization that doesn't exist
       When an admin writes an estimate for an organization that doesn't exist
       Then no estimate is written
 
-  # docket:verifies rule:estimates/a-focus-belongs-to-one-estimate
+  # docket:verifies rule:a-focus-belongs-to-one-estimate@capacity
   Rule: A Focus belongs to one estimate
 
     Example: Reusing another estimate's Focus

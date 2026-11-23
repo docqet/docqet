@@ -1,4 +1,5 @@
 ---
+id: everyone-sees-the-uploaded-photo
 name: Everyone sees the uploaded photo
 ---
 

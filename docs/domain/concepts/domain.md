@@ -44,8 +44,9 @@ guest is charged for a stay in Billing. Both are right, each in its domain.
 
 ## In the spec
 
-A domain is a folder under `docs/product/domains/`, and the folder's name is
-its ID. Everything written in its words is inside it:
+A domain is a folder under `docs/product/domains/` with a `domain.md`, whose
+`id` is the domain's ID. The folder's name means nothing. Everything written in
+its words is inside it:
 
 ```text
 docs/product/domains/guest-stays/
@@ -62,6 +63,7 @@ worth saying about it in its body:
 
 ```markdown
 ---
+id: guest-stays
 name: Guest stays
 description: Looking after guests from their booking to their check-out.
 decisions:

@@ -1,4 +1,5 @@
 ---
+id: acceptance-puts-an-agreement-in-effect
 name: Acceptance puts an agreement in effect
 ---
 

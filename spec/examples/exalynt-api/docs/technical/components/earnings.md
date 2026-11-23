@@ -1,9 +1,10 @@
 ---
+id: earnings
 name: Earnings
 description: >-
   What engineers, leads, and partnerships earn on fulfilled blocks, recorded
   as each is fulfilled.
-capabilities: [earnings, partner-earnings, partner-clients, partner-home]
+capabilities: [capability:earnings, capability:partner-earnings, capability:partner-clients, capability:partner-home]
 gaps:
   - id: person-earnings-not-paged
     name: A person's earnings not paged

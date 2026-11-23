@@ -1,4 +1,5 @@
 ---
+id: purchases-are-quoted-with-their-tax
 name: Purchases are quoted with their tax
 ---
 

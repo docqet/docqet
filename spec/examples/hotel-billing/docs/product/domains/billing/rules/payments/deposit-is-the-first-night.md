@@ -1,6 +1,7 @@
 ---
+id: deposit-is-the-first-night
 name: A deposit is the first night
-concepts: [payment]
+concepts: [concept:payment]
 ---
 
 A stay's deposit is the first night's room rate, with its city tax.

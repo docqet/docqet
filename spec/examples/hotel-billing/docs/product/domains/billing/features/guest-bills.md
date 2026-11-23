@@ -1,8 +1,9 @@
 ---
+id: guest-bills
 name: Guest bills
 description: Keeping an accurate record of what each guest owes during their stay.
 capabilities:
-  - extra-charges
-  - city-tax
-  - split-bills
+  - capability:extra-charges
+  - capability:city-tax
+  - capability:split-bills
 ---

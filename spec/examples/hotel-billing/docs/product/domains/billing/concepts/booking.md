@@ -1,4 +1,5 @@
 ---
+id: booking
 name: Booking
 description: >-
   What a guest is charged for a stay: its nights, at the rate agreed when it

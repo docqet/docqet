@@ -17,23 +17,26 @@ leave decisions about intention with people.
 ```text
 docket.yaml                                 the project's id and name, and its platform
 docs/product/                               what it should do, in the domain's words
-├── personas/<slug>.md                      who it serves, across every domain
+├── personas/                               who it serves, across every domain
 └── domains/<domain>/
     ├── domain.md                           a part of the business with its own language
-    ├── features/<slug>.md                  a job the product does, listing its capabilities
-    ├── capabilities/<slug>.md              one result of value; the only docs with a level
-    ├── rules/<topic>/<slug>.md             one rule per file: what must always or never happen
-    └── concepts/<slug>.md                  what a word means in this domain
+    ├── features/                           a job the product does, listing its capabilities
+    ├── capabilities/                       one result of value; the only docs with a level
+    ├── rules/                              one rule per file: what must always or never happen
+    └── concepts/                           what a word means in this domain
 docs/technical/                             how it's meant to be built, in the code's words
-├── mechanisms/<slug>.md                    how something works across the whole project
-└── components/<slug>.md                    one area of the code, and the capabilities relying on it
+├── mechanisms/                             how something works across the whole project
+└── components/                             one area of the code, and the capabilities relying on it
 .docket/state.json                          derived by `docket index`, never edited
 ```
 
-A doc's ID is its path under its type's folder, without `.md`, so the rule
-`docs/product/domains/guest-stays/rules/booking/no-double-booking.md` is
-`booking/no-double-booking`. There's no `id:` field. Renaming or moving a file
-changes its ID, and every link and annotation to it has to follow.
+Every doc says its ID in its `id` field, such as `id: no-double-booking`, and
+everything else names it by reference, `<type>:<id>`, such as
+`rule:no-double-booking`, in frontmatter and annotations alike. Searching for
+a reference finds everything that names the doc. A file's name and the folders
+it's in below its type's mean nothing, so rename or move files freely within
+their type's folder. Name a new file after its ID. Changing an ID is a breaking
+change: every reference to it has to follow.
 
 Each doc's structure is its YAML frontmatter. Its body is free Markdown that
 nothing reads. [docs.md](docs.md) has every type's fields.
@@ -82,7 +85,7 @@ changed, not docs to fill in the structure.
 | A new area of code has something the code can't say                        | A component, with `docket:implements` on its entry points. Most code needs no doc                                                         |
 | How something already documented works has changed                         | Its body, so it no longer says something untrue                                                                                           |
 | A domain word is used in a new sense, or a new one appears                 | A concept, or a change to it                                                                                                              |
-| A doc was renamed or moved                                                 | Every link and annotation to its old ID                                                                                                   |
+| A doc's ID changed                                                         | Every link and annotation to its old ID, in this project and any other on the platform                                                    |
 | Code that an annotation names was deleted or moved                         | Move or remove the annotation with it                                                                                                     |
 
 [gaps-and-decisions.md](gaps-and-decisions.md) covers gaps, tradeoffs and
@@ -126,7 +129,9 @@ Nothing checks Docket docs automatically yet, so check them yourself:
 
 - Frontmatter is valid YAML, has each required field, and uses only the values
   the spec allows (see [docs.md](docs.md)).
-- Every link and annotation resolves: search for each ID you wrote or renamed.
+- Every link and annotation is a `<type>:<id>` reference that resolves: search
+  for each one you wrote or changed. No two docs of a type share an ID in one
+  domain.
 - Every rule is followed by at least one capability, and every capability is in
   at most one feature.
 - Every gap's or tradeoff's `outcome` is an ID in

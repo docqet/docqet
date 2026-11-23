@@ -1,4 +1,5 @@
 ---
+id: charge
 name: Charge
 description: >-
   One amount a guest owes, such as a night's room, a breakfast or a night's

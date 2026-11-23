@@ -1,4 +1,5 @@
 ---
+id: signing-up-without-a-team
 name: Signing up without a team
 ---
 

@@ -1,4 +1,5 @@
 ---
+id: partnership
 name: Partnership
 description: >-
   A partner's own record in the Partnership Program, separate from any client
@@ -6,7 +7,7 @@ description: >-
   named after them, and an agency's after the agency, managed by its
   representative.
 confused-with:
-  - concept: organization@accounts
+  - concept: concept:organization@accounts
     summary: a client company's account. A partnership is never one.
 ---
 

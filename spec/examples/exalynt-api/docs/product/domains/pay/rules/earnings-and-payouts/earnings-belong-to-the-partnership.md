@@ -1,4 +1,5 @@
 ---
+id: earnings-belong-to-the-partnership
 name: Earnings belong to the partnership
 ---
 

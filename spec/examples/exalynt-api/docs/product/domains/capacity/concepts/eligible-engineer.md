@@ -1,4 +1,5 @@
 ---
+id: eligible-engineer
 name: Eligible engineer
 description: An engineer on a team assigned to the purchasing client.
 ---

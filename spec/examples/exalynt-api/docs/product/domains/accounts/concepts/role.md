@@ -1,11 +1,12 @@
 ---
+id: role
 name: Role
 description: >-
   A role is a named set of permissions that says what someone may do. There
   are two kinds: platform roles, for people who work with Exalynt, and
   organization roles, for a client [organization](organization.md)'s members.
 confused-with:
-  - concept: access-token
+  - concept: concept:access-token
     summary: a token holds no access of its own. It acts with its user's roles.
 ---
 

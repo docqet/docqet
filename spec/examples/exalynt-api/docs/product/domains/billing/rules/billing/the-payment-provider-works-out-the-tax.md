@@ -1,4 +1,5 @@
 ---
+id: the-payment-provider-works-out-the-tax
 name: The payment provider works out the tax
 why: >-
   Exalynt is responsible for making sure sales tax is collected, but not for

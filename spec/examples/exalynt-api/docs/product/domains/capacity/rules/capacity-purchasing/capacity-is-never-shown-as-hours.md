@@ -1,4 +1,5 @@
 ---
+id: capacity-is-never-shown-as-hours
 name: Capacity is never shown as hours
 ---
 

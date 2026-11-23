@@ -1,4 +1,5 @@
 ---
+id: earnings-are-sent-only-once
 name: Earnings are sent only once
 ---
 

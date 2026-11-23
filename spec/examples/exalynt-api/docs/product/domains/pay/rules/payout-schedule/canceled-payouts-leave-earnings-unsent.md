@@ -1,4 +1,5 @@
 ---
+id: canceled-payouts-leave-earnings-unsent
 name: Canceled payouts leave earnings unsent
 ---
 

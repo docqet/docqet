@@ -1,4 +1,5 @@
 ---
+id: removed-photos-are-no-longer-shown
 name: Removed photos are no longer shown
 ---
 

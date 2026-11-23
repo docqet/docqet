@@ -1,4 +1,5 @@
 ---
+id: only-the-waiting-agreement-is-accepted-once
 name: Only the waiting agreement is accepted, once
 ---
 

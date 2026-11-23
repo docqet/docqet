@@ -1,4 +1,5 @@
 ---
+id: partners-see-only-their-partnerships-earnings
 name: Partners see only their partnership's earnings
 ---
 

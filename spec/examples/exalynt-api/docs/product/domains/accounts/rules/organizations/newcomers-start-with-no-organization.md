@@ -1,4 +1,5 @@
 ---
+id: newcomers-start-with-no-organization
 name: Newcomers start with no organization
 ---
 

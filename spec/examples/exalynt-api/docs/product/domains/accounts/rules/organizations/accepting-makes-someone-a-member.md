@@ -1,4 +1,5 @@
 ---
+id: accepting-makes-someone-a-member
 name: Accepting makes someone a member
 ---
 

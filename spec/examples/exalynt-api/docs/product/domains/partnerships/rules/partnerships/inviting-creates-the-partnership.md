@@ -1,4 +1,5 @@
 ---
+id: inviting-creates-the-partnership
 name: Inviting creates the partnership
 ---
 

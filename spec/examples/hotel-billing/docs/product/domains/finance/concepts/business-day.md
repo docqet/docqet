@@ -1,4 +1,5 @@
 ---
+id: business-day
 name: Business day
 description: The hotel's day for its accounts, from one night audit to the next.
 ---

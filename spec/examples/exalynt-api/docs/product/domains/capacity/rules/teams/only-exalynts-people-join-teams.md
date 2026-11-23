@@ -1,4 +1,5 @@
 ---
+id: only-exalynts-people-join-teams
 name: Only Exalynt's people join teams
 ---
 

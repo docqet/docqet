@@ -1,4 +1,5 @@
 ---
+id: partnership-share-of-payout-basis
 name: Partnership share of payout basis
 ---
 

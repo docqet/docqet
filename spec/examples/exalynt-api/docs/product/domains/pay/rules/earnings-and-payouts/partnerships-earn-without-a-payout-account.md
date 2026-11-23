@@ -1,4 +1,5 @@
 ---
+id: partnerships-earn-without-a-payout-account
 name: Partnerships earn without a payout account
 ---
 

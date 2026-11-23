@@ -25,7 +25,7 @@ the refunds draft started following the rule:
 ```json
 {
   "type": "unlinked-rule",
-  "subject": "rule:payments/overpayments-are-refunded",
+  "subject": "rule:overpayments-are-refunded",
   "capabilities": [],
   "message": "No capability follows this rule.",
   "domain": "billing"

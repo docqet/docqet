@@ -1,4 +1,5 @@
 ---
+id: billing
 name: Billing
 description: Charging clients for the capacity they buy.
 ---

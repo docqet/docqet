@@ -1,4 +1,5 @@
 ---
+id: earning-windows-never-reset-or-pause
 name: Earning windows never reset or pause
 ---
 

@@ -1,4 +1,5 @@
 ---
+id: getting-set-up
 name: Getting set up
 description: >-
   People see what they still have to set up: a client before work can start,
@@ -6,18 +7,18 @@ description: >-
   can be paid.
 stability: alpha
 personas:
-  - client-admin-founder
-  - client-admin-operations
-  - exalynt-engineer-new-hire
-  - partner
+  - persona:client-admin-founder
+  - persona:client-admin-operations
+  - persona:exalynt-engineer-new-hire
+  - persona:partner
 rules:
-  - onboarding/engineers-join-by-invitation-only
-  - onboarding/existing-accounts-gain-the-engineer-role
-  - onboarding/admins-see-and-revoke-all-invitations
-  - onboarding/invalid-payout-accounts-delay-payment
-  - onboarding/when-an-engineer-is-ready
-  - onboarding/invited-engineers-join-their-team
-concepts: [organization, team]
+  - rule:engineers-join-by-invitation-only
+  - rule:existing-accounts-gain-the-engineer-role
+  - rule:admins-see-and-revoke-all-invitations
+  - rule:invalid-payout-accounts-delay-payment
+  - rule:when-an-engineer-is-ready
+  - rule:invited-engineers-join-their-team
+concepts: [concept:organization, concept:team@capacity]
 gaps:
   - id: missing-for-some-client-roles
     name: Missing for some client roles

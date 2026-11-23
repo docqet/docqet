@@ -1,22 +1,23 @@
 ---
+id: capacity-purchasing
 name: Capacity purchasing
 description: >-
   Clients buy engineering capacity in blocks, charged at once to their
   organization's default payment method on one invoice, to schedule now or
   later.
 stability: beta
-personas: [client-admin-founder, client-admin-operations]
+personas: [persona:client-admin-founder, persona:client-admin-operations]
 rules:
-  - capacity-purchasing/blocks-stay-within-their-organization
-  - capacity-purchasing/capacity-types-listed-smallest-first
-  - capacity-purchasing/buying-only-defined-capacity-types
-  - capacity-purchasing/capacity-is-never-shown-as-hours
-  - capacity-purchasing/clients-never-choose-who-works
-  - capacity-purchasing/buying-before-having-a-team
-  - capacity-purchasing/blocks-are-bought-then-scheduled
-  - capacity-purchasing/block-numbers-are-per-organization
-  - capacity-purchasing/retrying-a-purchase-never-charges-twice
-concepts: [capacity-block, capacity-unit, invoice]
+  - rule:blocks-stay-within-their-organization
+  - rule:capacity-types-listed-smallest-first
+  - rule:buying-only-defined-capacity-types
+  - rule:capacity-is-never-shown-as-hours
+  - rule:clients-never-choose-who-works
+  - rule:buying-before-having-a-team
+  - rule:blocks-are-bought-then-scheduled
+  - rule:block-numbers-are-per-organization
+  - rule:retrying-a-purchase-never-charges-twice
+concepts: [concept:capacity-block, concept:capacity-unit, concept:invoice@billing]
 gaps:
   - id: block-list-filters-reset
     name: Block list filters reset on return
@@ -34,7 +35,7 @@ gaps:
     when: A block's payment fails.
   - id: retry-protection-expires
     name: Double-charge protection expires
-    rule: capacity-purchasing/retrying-a-purchase-never-charges-twice
+    rule: rule:retrying-a-purchase-never-charges-twice
     impact: damaging
     description: >-
       A retried purchase is protected from charging twice only for as long as
@@ -49,7 +50,7 @@ gaps:
     when: The payment provider errors on a purchase.
   - id: unknown-outcome-retry-while-open
     name: Unclear purchase retry safe only while open
-    rule: capacity-purchasing/retrying-a-purchase-never-charges-twice
+    rule: rule:retrying-a-purchase-never-charges-twice
     impact: damaging
     description: >-
       If it can't be told whether a purchase went through, the client is told

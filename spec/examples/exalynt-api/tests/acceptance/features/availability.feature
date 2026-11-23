@@ -2,7 +2,7 @@ Feature: Availability
   Engineers set a recurring weekly baseline and one-off adjustments for
   particular weeks, which together make their effective availability.
 
-  # docket:verifies rule:availability/how-a-weeks-availability-is-decided
+  # docket:verifies rule:how-a-weeks-availability-is-decided@capacity
   Rule: A week's availability is the engineer's adjustment for it, otherwise their baseline once it has started, otherwise nothing
 
     Example: The baseline applies
@@ -26,7 +26,7 @@ Feature: Availability
       When they look at this week
       Then this week offers nothing
 
-  # docket:verifies rule:availability/reductions-need-no-approval
+  # docket:verifies rule:reductions-need-no-approval@capacity
   Rule: An engineer's reduction of their availability takes effect without approval
 
     Example: Taking a week off
@@ -41,7 +41,7 @@ Feature: Availability
       Then next week offers 3 units
       And the week after offers 2 units
 
-  # docket:verifies rule:availability/only-its-owner-sets-availability
+  # docket:verifies rule:only-its-owner-sets-availability@capacity
   Rule: Nobody sets anyone else's availability
 
     Example: A teammate tries
@@ -54,7 +54,7 @@ Feature: Availability
       When an admin tries to adjust a week of theirs
       Then it's refused
 
-  # docket:verifies rule:availability/admins-set-their-own-availability
+  # docket:verifies rule:admins-set-their-own-availability@capacity
   Rule: Admins set their own availability, as engineers do
 
     Example: An admin sets their baseline
@@ -62,7 +62,7 @@ Feature: Availability
       When they set a baseline of 2 units a week
       Then this week offers 2 units
 
-  # docket:verifies rule:availability/who-sees-an-engineers-availability
+  # docket:verifies rule:who-sees-an-engineers-availability@capacity
   Rule: An engineer's availability is seen by them, their team, and admins
 
     Example: A lead sees their team
@@ -85,7 +85,7 @@ Feature: Availability
       When one looks at the other's weeks
       Then they see them
 
-  # docket:verifies rule:availability/one-baseline-per-engineer
+  # docket:verifies rule:one-baseline-per-engineer@capacity
   Rule: An engineer has one baseline
 
     Example: Setting a second
@@ -93,7 +93,7 @@ Feature: Availability
       When they set another
       Then it's refused, and their baseline is unchanged
 
-  # docket:verifies rule:availability/adjustments-never-overlap
+  # docket:verifies rule:adjustments-never-overlap@capacity
   Rule: An engineer's adjustments never cover the same week
 
     Example: Overlapping
@@ -106,7 +106,7 @@ Feature: Availability
       When they adjust the week right after
       Then both adjustments stand
 
-  # docket:verifies rule:availability/removing-an-adjustment-restores-the-baseline
+  # docket:verifies rule:removing-an-adjustment-restores-the-baseline@capacity
   Rule: Removing an adjustment returns its weeks to the baseline
 
     Example: Removing one
@@ -114,7 +114,7 @@ Feature: Availability
       When they remove the adjustment
       Then next week offers 4 units
 
-  # docket:verifies rule:availability/availability-comes-in-quarter-weeks
+  # docket:verifies rule:availability-comes-in-quarter-weeks@capacity
   Rule: Availability is offered in whole weeks, in quarters of a week
 
     Scenario Outline: What's refused
@@ -127,7 +127,7 @@ Feature: Availability
         | 1     | Monday  | 5     |
         | 53    | Monday  | 2     |
 
-  # docket:verifies rule:availability/reductions-make-room-by-taking-blocks-out
+  # docket:verifies rule:reductions-make-room-by-taking-blocks-out@capacity
   Rule: A reduction that leaves too little room takes blocks out
 
     Example: The engineer comes off their own block, and it stays for a teammate
@@ -149,7 +149,7 @@ Feature: Availability
       Then they're told the block would go back to its client
       And next week still offers 4 units
 
-  # docket:verifies rule:availability/reductions-never-touch-started-work
+  # docket:verifies rule:reductions-never-touch-started-work@capacity
   Rule: A reduction never takes out work that has started
 
     Example: A block in progress
@@ -157,7 +157,7 @@ Feature: Availability
       When they set next week to unavailable
       Then it's refused
 
-  # docket:verifies rule:availability/past-weeks-cant-change
+  # docket:verifies rule:past-weeks-cant-change@capacity
   Rule: Weeks that have gone by can't be changed
 
     Example: Changing the baseline leaves past weeks as they were

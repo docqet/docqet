@@ -1,4 +1,5 @@
 ---
+id: buying-requires-a-payment-method
 name: Buying requires a payment method
 ---
 

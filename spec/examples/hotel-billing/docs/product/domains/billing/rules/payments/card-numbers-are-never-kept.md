@@ -1,6 +1,7 @@
 ---
+id: card-numbers-are-never-kept
 name: Card numbers are never kept
-concepts: [payment]
+concepts: [concept:payment]
 why: >-
   Holding card numbers would put the hotel under the card schemes' security
   audits.

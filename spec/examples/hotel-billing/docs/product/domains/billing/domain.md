@@ -1,4 +1,5 @@
 ---
+id: billing
 name: Billing
 description: Charging guests for their stays, and getting paid.
 ---

@@ -1,10 +1,11 @@
 ---
+id: space-membership
 name: Space membership
 description: >-
   A space membership is someone's place in a [space](space.md): that they're
   in it, or invited, or that the messaging provider can't reach them.
 confused-with:
-  - concept: organization@accounts
+  - concept: concept:organization@accounts
     summary: >-
       membership: being one of an organization's people is what puts
       someone in its space, not the same thing.

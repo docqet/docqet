@@ -1,4 +1,5 @@
 ---
+id: accounts
 name: Accounts and access
 description: Who people are, the accounts they share, and what each may do.
 ---

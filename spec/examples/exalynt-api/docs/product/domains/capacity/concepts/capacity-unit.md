@@ -1,9 +1,10 @@
 ---
+id: capacity-unit
 name: Capacity unit
 description: >-
   A quarter of one engineer's week. Clients see units and blocks, never hours.
 confused-with:
-  - concept: capacity-block
+  - concept: concept:capacity-block
     summary: one purchase, which holds one or more units.
 ---
 

@@ -1,4 +1,5 @@
 ---
+id: clients-cant-see-a-teams-other-clients
 name: Clients can't see a team's other clients
 ---
 

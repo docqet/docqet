@@ -1,4 +1,5 @@
 ---
+id: no-minimum-payout
 name: No minimum payout
 ---
 

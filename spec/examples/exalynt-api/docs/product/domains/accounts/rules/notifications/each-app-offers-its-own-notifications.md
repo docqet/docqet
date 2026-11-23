@@ -1,4 +1,5 @@
 ---
+id: each-app-offers-its-own-notifications
 name: Each app offers its own notifications
 ---
 

@@ -1,49 +1,50 @@
 ---
+id: roles
 name: Roles
 description: >-
   Exalynt's admins decide what people may do by making roles: platform roles
   for people who work with Exalynt, and organization roles for client
   organizations' members.
 stability: alpha
-personas: [exalynt-admin]
+personas: [persona:exalynt-admin]
 rules:
-  - roles-and-access/permissions-follow-where-someone-acts
-  - roles-and-access/no-platform-role-means-no-permissions
-  - roles-and-access/creators-get-the-creator-role
-  - roles-and-access/member-permissions-follow-their-role
-  - roles-and-access/outsiders-cant-change-organization-roles
-  - roles-and-access/acting-as-engineer-or-client-never-both
-  - roles-and-access/team-scoped-capacity-access
-  - roles-and-access/own-scoped-capacity-access
-  - roles-and-access/read-only-engineers-cant-staff-blocks
-  - roles-and-access/only-exalynt-lists-its-clients
-  - roles-and-access/what-each-role-kind-may-grant
-  - roles-and-access/exalynt-only-permissions-cant-be-granted
-  - roles-and-access/roles-grant-only-what-their-kind-allows
-  - roles-and-access/who-reads-permissions-and-makes-roles
-  - roles-and-access/deleted-roles-cant-be-found
-  - roles-and-access/held-platform-roles-cant-be-deleted
-  - roles-and-access/invited-roles-cant-be-deleted
-  - roles-and-access/who-gives-out-platform-roles
-  - roles-and-access/role-names-are-unique-within-their-kind
-  - roles-and-access/only-one-creator-role
-  - roles-and-access/the-creator-role-can-manage-members
-  - roles-and-access/held-organization-roles-cant-be-deleted
-  - roles-and-access/held-roles-keep-member-management
-  - roles-and-access/people-lists-exclude-clients
-  - roles-and-access/listing-people-requires-a-platform-role
-  - roles-and-access/platform-roles-arent-organization-roles
-  - roles-and-access/role-edits-keep-the-description
-  - roles-and-access/roles-stay-with-their-own-kind
-  - roles-and-access/platform-roles-can-be-taken-away
-  - roles-and-access/who-invites-people-to-exalynt
-  - roles-and-access/exalynt-invitations-show-as-pending
-  - roles-and-access/accepting-an-invitation-to-exalynt
-  - roles-and-access/new-people-have-no-applications
-  - roles-and-access/applications-show-on-the-person
-  - roles-and-access/who-sets-application-access
-  - roles-and-access/inviting-with-applications-needs-access
-concepts: [role, organization]
+  - rule:permissions-follow-where-someone-acts
+  - rule:no-platform-role-means-no-permissions
+  - rule:creators-get-the-creator-role
+  - rule:member-permissions-follow-their-role
+  - rule:outsiders-cant-change-organization-roles
+  - rule:acting-as-engineer-or-client-never-both
+  - rule:team-scoped-capacity-access
+  - rule:own-scoped-capacity-access
+  - rule:read-only-engineers-cant-staff-blocks
+  - rule:only-exalynt-lists-its-clients
+  - rule:what-each-role-kind-may-grant
+  - rule:exalynt-only-permissions-cant-be-granted
+  - rule:roles-grant-only-what-their-kind-allows
+  - rule:who-reads-permissions-and-makes-roles
+  - rule:deleted-roles-cant-be-found
+  - rule:held-platform-roles-cant-be-deleted
+  - rule:invited-roles-cant-be-deleted
+  - rule:who-gives-out-platform-roles
+  - rule:role-names-are-unique-within-their-kind
+  - rule:only-one-creator-role
+  - rule:the-creator-role-can-manage-members
+  - rule:held-organization-roles-cant-be-deleted
+  - rule:held-roles-keep-member-management
+  - rule:people-lists-exclude-clients
+  - rule:listing-people-requires-a-platform-role
+  - rule:platform-roles-arent-organization-roles
+  - rule:role-edits-keep-the-description
+  - rule:roles-stay-with-their-own-kind
+  - rule:platform-roles-can-be-taken-away
+  - rule:who-invites-people-to-exalynt
+  - rule:exalynt-invitations-show-as-pending
+  - rule:accepting-an-invitation-to-exalynt
+  - rule:new-people-have-no-applications
+  - rule:applications-show-on-the-person
+  - rule:who-sets-application-access
+  - rule:inviting-with-applications-needs-access
+concepts: [concept:role, concept:organization]
 gaps:
   - id: holders-not-shown
     name: Role holder counts not shown
@@ -78,7 +79,7 @@ gaps:
     when: An admin takes a permission off a built-in role, or renames one.
   - id: creator-role-guarded-only-by-the-app
     name: Creator role guarded only by the app
-    rule: roles-and-access/creators-get-the-creator-role
+    rule: rule:creators-get-the-creator-role
     impact: blocking
     description: >-
       Only the app stops the role given to creators being unmarked or

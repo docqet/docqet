@@ -41,6 +41,7 @@ shortened:
 
 ```markdown
 ---
+id: front-desk-clerk
 name: Maria
 description: >-
   Runs the front desk: takes bookings, and checks guests in and out.

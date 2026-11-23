@@ -1,31 +1,32 @@
 ---
+id: billing
 name: Billing
 description: >-
   Clients pay for the capacity they buy with their default payment method, and
   each purchase issues an invoice.
 stability: beta
 personas:
-  - client-admin-founder
-  - client-admin-operations
-  - client-billing
-  - exalynt-admin
+  - persona:client-admin-founder
+  - persona:client-admin-operations
+  - persona:client-billing
+  - persona:exalynt-admin
 rules:
-  - billing/who-manages-billing
-  - billing/buying-requires-a-payment-method
-  - billing/buying-charges-at-once
-  - billing/the-payment-provider-works-out-the-tax
-  - billing/purchases-are-quoted-with-their-tax
-  - billing/a-changed-total-buys-nothing
-  - billing/tax-needs-to-know-where-the-client-is
-  - billing/declined-purchases-buy-nothing
-  - billing/at-most-20-blocks-per-purchase
-  - billing/paying-an-invoice-releases-its-capacity
-  - billing/organizations-billing-stays-separate
-  - billing/unpaid-invoices-are-paid-with-the-provider
-  - billing/company-details-stay-untouched
-  - billing/when-company-details-count-as-given
-  - billing/capacity-fees-and-infrastructure-billed-separately
-concepts: [invoice, capacity-block]
+  - rule:who-manages-billing
+  - rule:buying-requires-a-payment-method
+  - rule:buying-charges-at-once
+  - rule:the-payment-provider-works-out-the-tax
+  - rule:purchases-are-quoted-with-their-tax
+  - rule:a-changed-total-buys-nothing
+  - rule:tax-needs-to-know-where-the-client-is
+  - rule:declined-purchases-buy-nothing
+  - rule:at-most-20-blocks-per-purchase
+  - rule:paying-an-invoice-releases-its-capacity
+  - rule:organizations-billing-stays-separate
+  - rule:unpaid-invoices-are-paid-with-the-provider
+  - rule:company-details-stay-untouched
+  - rule:when-company-details-count-as-given
+  - rule:capacity-fees-and-infrastructure-billed-separately
+concepts: [concept:invoice, concept:capacity-block@capacity]
 gaps:
   - id: no-fees-or-infrastructure-charges
     name: Operations and infrastructure charges not shown

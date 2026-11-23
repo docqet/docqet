@@ -1,4 +1,5 @@
 ---
+id: shares-dont-reduce-each-other
 name: Shares don't reduce each other
 ---
 

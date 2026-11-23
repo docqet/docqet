@@ -1,4 +1,5 @@
 ---
+id: unfulfilled-capacity-earns-partnerships-nothing
 name: Unfulfilled capacity earns partnerships nothing
 ---
 

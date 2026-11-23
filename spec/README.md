@@ -58,17 +58,17 @@ tool. Anyone can adopt the format or write their own indexer for it.
 docket.yaml                              config: the project's ID and name
 docs/
 └── product/
-    ├── personas/<slug>.md               who the software serves, across every domain
+    ├── personas/                        who the software serves, across every domain
     └── domains/
         └── <domain>/                    one folder per domain the project works in
-            ├── domain.md                the domain's name and summary
-            ├── features/<slug>.md       the product's jobs, each grouping capabilities
-            ├── capabilities/<slug>.md   the only docs with a stability level
-            ├── rules/<topic>/<slug>.md  one rule per file, grouped by topic
-            └── concepts/<slug>.md
+            ├── domain.md                the domain's ID, name and summary
+            ├── features/                the product's jobs, each grouping capabilities
+            ├── capabilities/            the only docs with a stability level
+            ├── rules/                   one rule per file, in folders of your own, such as by topic
+            └── concepts/
 └── technical/
-    ├── mechanisms/<slug>.md             how something works across the project
-    └── components/<slug>.md             how one area of the code is built
+    ├── mechanisms/                      how something works across the project
+    └── components/                      how one area of the code is built
 <code and tests, anywhere>               docket:implements, verifies, gap and tradeoff comments
 .docket/state.json                       written by `docket index`, gitignored
 ```
@@ -88,6 +88,8 @@ these changes:
   bold-label lines such as `**Stability:** Alpha`, Why and Open decisions.
   Everything else, such as a persona's needs, what a capability includes and
   a concept's lifecycle, is free Markdown in the body.
+- Each doc says its own ID in an `id` field, so its file can be renamed or
+  moved without breaking anything that links to it.
 - Rules are one per file instead of one file per topic.
 - A capability is its one-sentence description, saying who or what does what.
   "What people can do", with a heading per role, is gone: the people it
@@ -129,32 +131,49 @@ real repository it's gitignored.
 
 ## IDs
 
-A doc's ID is its path under its type's folder, without `.md`: in its domain
-for those written in one, or under `personas/` for a persona. A domain's ID is
-its folder's name:
+Every doc says its ID in its `id` field, the first in its frontmatter. Where
+the file is says only two things: its type, from the type's folder it's
+under, and its domain, from the domain's folder it's in. Its file name, and
+any folders it's in below its type's, are the author's to choose and change,
+and renaming or moving a file within its type's folder breaks nothing.
 
-| Type       | Folder                                        | Example ID                  |
-| ---------- | --------------------------------------------- | --------------------------- |
-| domain     | `docs/product/domains/`                       | `guest-stays`               |
-| feature    | `docs/product/domains/<domain>/features/`     | `reservations`              |
-| capability | `docs/product/domains/<domain>/capabilities/` | `room-booking`              |
-| rule       | `docs/product/domains/<domain>/rules/`        | `booking/no-double-booking` |
-| concept    | `docs/product/domains/<domain>/concepts/`     | `booking`                   |
-| persona    | `docs/product/personas/`                      | `front-desk-clerk`          |
-| mechanism     | `docs/technical/mechanisms/`                     | `deployment`                |
-| component  | `docs/technical/components/`                  | `bookings`                  |
+| Type       | Under                                         | Example ID          |
+| ---------- | --------------------------------------------- | ------------------- |
+| domain     | `docs/product/domains/<domain>/domain.md`     | `guest-stays`       |
+| feature    | `docs/product/domains/<domain>/features/`     | `reservations`      |
+| capability | `docs/product/domains/<domain>/capabilities/` | `room-booking`      |
+| rule       | `docs/product/domains/<domain>/rules/`        | `no-double-booking` |
+| concept    | `docs/product/domains/<domain>/concepts/`     | `booking`           |
+| persona    | `docs/product/personas/`                      | `front-desk-clerk`  |
+| mechanism  | `docs/technical/mechanisms/`                  | `deployment`        |
+| component  | `docs/technical/components/`                  | `bookings`          |
 
-- **IDs, links and values are kebab case**: lowercase words joined by
-  hyphens, such as `room-booking`, `not-decided` or `ga`.
-  Tools show values with their own labels, such as GA for `ga`.
-- **No `id:` field.** The path is the ID, so there's nothing to drift. Renaming
-  a file renames the doc, and the indexer reports every link and annotation the
-  rename left dangling.
-- **Where the type isn't obvious, the ID carries it**, as `<type>:<id>`, such
-  as `rule:booking/no-double-booking` in an annotation or a problem's
-  `subject` in `state.json`. In frontmatter the field name gives the
-  type, so links there are bare: `rules: [booking/no-double-booking]`.
-- **A gap's or tradeoff's ID** is its doc's ID plus its key:
+- **IDs and values are kebab case**: lowercase words joined by hyphens, such
+  as `room-booking`, `not-decided` or `ga`. Tools show values with their own
+  labels, such as GA for `ga`.
+- **A project has one doc of each type with a given ID in each domain**, and
+  one domain, persona, mechanism or component with a given ID in all. A
+  second is a `duplicate-id` problem. The same ID in another domain, or in
+  another project, is a contribution or another definition, as
+  [Domains](#domains) describes.
+- **Name the file after its ID**, as the examples do, so it's easy to find.
+  That's a convention: nothing reads a file's name.
+- **Changing an ID is a breaking change.** Everything that names it, in its
+  project and in others on its platform, has to change with it, and the
+  indexer reports each one left dangling. Readers show the `name`, so a doc
+  can be renamed for people without changing its ID.
+- **A reference names its type**, as `<type>:<id>`, such as
+  `rule:no-double-booking`, everywhere one is written: frontmatter links,
+  annotations, a decision's `became`, and `state.json`. A reference reads
+  the same in a doc as in code, so searching for one finds everything that
+  names that doc. A link of the wrong type for its field, such as a concept
+  in `rules`, is `invalid-frontmatter`.
+
+  ```yaml
+  rules: [rule:no-double-booking, rule:minimum-stay]
+  ```
+
+- **A gap's or tradeoff's ID** is its doc's reference plus its key:
   `capability:room-booking#calendar-needs-a-mouse`,
   `feature:reservations#front-desk-bookings-only` or
   `component:ledger#balance-worked-out-on-read`.
@@ -162,9 +181,11 @@ its folder's name:
   domain, feature, capability, persona, mechanism or component ID names one
   thing across every project. A rule or concept ID names one definition
   within a domain.
-- **A link to another domain's rule or concept** adds `@<domain>`:
-  `concepts: [booking@guest-stays]`, or
-  `docket:verifies rule:bills/closed-bills-dont-change@billing`.
+- **A reference to a rule or concept names its domain** as `@<domain>`,
+  unless it's from a doc in the same domain: `concepts:
+  [concept:booking@guest-stays]`. An annotation has no domain of its own, so
+  it always names one: `docket:verifies rule:closed-bills-dont-change@billing`
+  (see [Which rule or concept a link means](#which-rule-or-concept-a-link-means)).
 
 ## Frontmatter and body
 
@@ -172,6 +193,7 @@ Every doc is a Markdown file in two parts: YAML frontmatter, then a body.
 
 ```markdown
 ---
+id: bill
 name: Bill
 description: >-
   Everything a guest owes for one stay, and everything they've paid towards
@@ -246,8 +268,8 @@ Everything else is the body. That means:
 
 ## Doc types
 
-Every doc has a `name`, and every doc but a rule has a `description`, both
-required:
+Every doc has an `id` (see [IDs](#ids)) and a `name`, and every doc but a
+rule has a `description`, all required:
 
 - **`name`** is what it's called, such as `Room booking`. A persona's is the
   invented person's, such as `Maria`, and a rule's is the rule in a few words.
@@ -263,14 +285,14 @@ two that is the thing itself.
 
 | Type | Frontmatter, in order | Its body, if it has one | Example |
 | --- | --- | --- | --- |
-| domain | `name`, `description`, `decisions` | Anything more about the part of the business | [guest-stays](examples/hotel-bookings/docs/product/domains/guest-stays/domain.md) |
-| feature | `name`, `description`, `capabilities` (required), `tradeoffs`, `decisions` | Anything more about the job | [reservations](examples/hotel-bookings/docs/product/domains/guest-stays/features/reservations.md) |
-| capability | `name`, `description`, `stability` (required), `personas`, `rules`, `concepts`, `gaps`, `tradeoffs`, `decisions` | Anything more about what it does, such as what else it includes, or how we'll know it's working | [room-booking](examples/hotel-bookings/docs/product/domains/guest-stays/capabilities/room-booking.md) |
-| rule | `name`, `concepts`, `why` | The rule in full, where its name doesn't say it all, and examples or how it plays out | [same-day-turnover](examples/hotel-bookings/docs/product/domains/guest-stays/rules/booking/same-day-turnover.md) |
-| concept | `name`, `description`, `confused-with` | Its details: what it's made of, how it relates to other concepts, and the states it moves through | [booking](examples/hotel-bookings/docs/product/domains/guest-stays/concepts/booking.md) |
-| persona | `name`, `description`, `role`, `title`, `image` | Anything more about who they are, such as what they need, what they know, their context, what they expect, and what they care about | [front-desk-clerk](examples/hotel-bookings/docs/product/personas/front-desk-clerk.md) |
-| mechanism | `name`, `description`, `applies`, `meets`, `gaps`, `tradeoffs`, `decisions` | How it works | [deployment](examples/hotel-bookings/docs/technical/mechanisms/deployment.md) |
-| component | `name`, `description`, `capabilities`, `meets`, `gaps`, `tradeoffs`, `decisions` | How it works | [bookings](examples/hotel-bookings/docs/technical/components/bookings.md) |
+| domain | `id`, `name`, `description`, `decisions` | Anything more about the part of the business | [guest-stays](examples/hotel-bookings/docs/product/domains/guest-stays/domain.md) |
+| feature | `id`, `name`, `description`, `capabilities` (required), `tradeoffs`, `decisions` | Anything more about the job | [reservations](examples/hotel-bookings/docs/product/domains/guest-stays/features/reservations.md) |
+| capability | `id`, `name`, `description`, `stability` (required), `personas`, `rules`, `concepts`, `gaps`, `tradeoffs`, `decisions` | Anything more about what it does, such as what else it includes, or how we'll know it's working | [room-booking](examples/hotel-bookings/docs/product/domains/guest-stays/capabilities/room-booking.md) |
+| rule | `id`, `name`, `concepts`, `why` | The rule in full, where its name doesn't say it all, and examples or how it plays out | [same-day-turnover](examples/hotel-bookings/docs/product/domains/guest-stays/rules/booking/same-day-turnover.md) |
+| concept | `id`, `name`, `description`, `confused-with` | Its details: what it's made of, how it relates to other concepts, and the states it moves through | [booking](examples/hotel-bookings/docs/product/domains/guest-stays/concepts/booking.md) |
+| persona | `id`, `name`, `description`, `role`, `title`, `image` | Anything more about who they are, such as what they need, what they know, their context, what they expect, and what they care about | [front-desk-clerk](examples/hotel-bookings/docs/product/personas/front-desk-clerk.md) |
+| mechanism | `id`, `name`, `description`, `applies`, `meets`, `gaps`, `tradeoffs`, `decisions` | How it works | [deployment](examples/hotel-bookings/docs/technical/mechanisms/deployment.md) |
+| component | `id`, `name`, `description`, `capabilities`, `meets`, `gaps`, `tradeoffs`, `decisions` | How it works | [bookings](examples/hotel-bookings/docs/technical/components/bookings.md) |
 
 The body column is a suggestion of what's worth writing, not a structure.
 
@@ -306,7 +328,7 @@ The body column is a suggestion of what's worth writing, not a structure.
     decided.
   - **`became`**, once it's closed, lists what the answer was written as, one
     item or several: a doc as `<type>:<id>`, such as
-    `rule:booking/same-day-turnover` or `capability:group-bookings`, or a
+    `rule:same-day-turnover` or `capability:group-bookings`, or a
     gap's or tradeoff's own ID, such as
     `capability:room-booking#calendar-needs-a-mouse`. Each stays on the
     decision's side: a decision on a domain, feature or capability becomes
@@ -371,11 +393,12 @@ it ("Clerks move a booking to new dates"), or how we'll know it does its job.
 
 ```yaml
 ---
+id: room-booking
 name: Room booking
 description: Clerks book a free room for a guest's stay.
 stability: beta
-personas: [front-desk-clerk]
-rules: [booking/no-double-booking, booking/minimum-stay]
+personas: [persona:front-desk-clerk]
+rules: [rule:no-double-booking, rule:minimum-stay]
 ---
 
 ## Includes
@@ -396,6 +419,7 @@ since the same people work across domains.
 
 ```markdown
 ---
+id: front-desk-clerk
 name: Maria
 description: Runs the front desk: takes bookings, and checks guests in and out.
 role: Front desk
@@ -451,6 +475,7 @@ however many capabilities rely on it.
 
 ```markdown
 ---
+id: deployment
 name: Deployment
 description: >-
   How a change gets from the main branch to the hotel's server, and back off
@@ -536,27 +561,34 @@ capability refers to the rules it follows, and that's the only link between a
 rule and the product:
 
 - **A rule can apply to many capabilities**, in one feature or several. In the
-  example, `booking/no-double-booking` applies to room booking and group
+  example, `rule:no-double-booking` applies to room booking and group
   bookings in Reservations, and to check-in in Front desk.
 - **A feature has no rules of its own.** Its rules are the ones its
   capabilities follow. Features don't list rules, and `state.json` doesn't
   either: a reader works them out from the feature's capabilities.
-- **A rule's `<topic>` is a part of its domain**, such as `booking`, never a
-  capability or a feature. A rule keeps its ID as capabilities start or stop following it.
+- **A rule keeps its ID as capabilities start or stop following it.** Rules
+  can be kept in folders under `rules/`, such as one for each part of the
+  domain, like `booking/`, but never one for a capability or a feature. The
+  folders are for people and mean nothing to tools.
 - **Following a rule claims it holds.** For each capability that follows it,
   a rule has a standing: not held, when one of the capability's gaps names it
   in `rule`; held with evidence, when anything verifies or implements it; or
   held on trust, when nothing names it. A gap wins over evidence.
 
 Links in Markdown, in the body or in a frontmatter text value, are ordinary
-relative links, for readers. The indexer reports any that are broken, but only
-frontmatter link fields and annotations count as relationships.
+relative links, for readers. They're paths, so moving a file can break them,
+and the indexer reports any that are broken. Only frontmatter link fields and
+annotations count as relationships, and they use IDs, so moving a file never
+breaks those.
 
 ## Gaps and tradeoffs
 
 Gaps and tradeoffs live in frontmatter, so the UI can count and group them.
-Each has a key that's unique within its doc, and is recorded in exactly one
-place: the doc it's about.
+Each has a key, and is recorded in exactly one place: the doc it's about. Its
+key is unique among the gaps and tradeoffs of that doc across every project
+and domain that writes it, so its ID means one gap or tradeoff: a capability
+written in two domains can't have a gap with the same key in each. A second is
+a `duplicate-id` problem.
 
 | Declared on | Gaps | Tradeoffs |
 | --- | --- | --- |
@@ -629,7 +661,7 @@ gaps:
 gaps:
   - id: children-corrected-by-hand
     name: City tax charged for children
-    rule: tax/children-pay-no-city-tax
+    rule: rule:children-pay-no-city-tax
     impact: inconvenient
     description: >-
       Guests' ages aren't recorded, so city tax is added for every guest on a
@@ -802,10 +834,11 @@ A feature's doc lists its capabilities, in the order to show them:
 name: Reservations
 description: Taking bookings and handling changes to them, before the guest arrives.
 capabilities:
-  - room-booking
-  - cancellations
-  - group-bookings
+  - capability:room-booking
+  - capability:cancellations
+  - capability:group-bookings
 ---
+id: reservations
 ```
 
 - **A capability is in at most one feature.** One in none is allowed, and
@@ -1057,16 +1090,17 @@ docket:<verb> <type>:<id> [<type>:<id> ...]
     nobody "fixes" it.
 - **`<type>:<id>`** is a `rule`, `capability`, `mechanism` or `component` for
   `verifies` and `implements`, and a gap's or tradeoff's ID for `gap` and
-  `tradeoff`. An annotation can name several, of any of its types:
+  `tradeoff`. A rule always names its domain, as `rule:<id>@<domain>`. An
+  annotation can name several, of any of its types:
   `docket:implements capability:room-booking component:bookings`.
 
 ```ts
-// docket:verifies rule:booking/minimum-stay
+// docket:verifies rule:minimum-stay@guest-stays
 it("rejects a stay that ends the day it starts", () => {
 ```
 
 ```gherkin
-  # docket:verifies rule:booking/no-double-booking
+  # docket:verifies rule:no-double-booking@guest-stays
   Rule: A room can't be double-booked
 ```
 
@@ -1135,9 +1169,10 @@ platform:
     Bookings. Every project on the platform should give the same one; readers
     use the first project's.
 
-A doc's domain is the folder under `docs/product/domains/` it's in, so
-nothing in a doc says it. Moving a doc to another folder moves it. Both hotel examples work
-in two domains each.
+A doc's domain is the one whose `domain.md` is in the folder under
+`docs/product/domains/` that the doc is in, so nothing in a doc says it, and
+the folder's own name means nothing. Moving a doc to another domain's folder
+moves it to that domain. Both hotel examples work in two domains each.
 
 ## Domains
 
@@ -1155,6 +1190,7 @@ anything more worth saying about it in its body:
 ---
 name: Guest stays
 description: Looking after guests from their booking to their check-out.
+id: guest-stays
 ---
 ```
 
@@ -1189,19 +1225,20 @@ Putting contributions together:
 
 ### Which rule or concept a link means
 
-A capability's, rule's or concept's link to a rule or concept means, in order:
+A link to a rule or concept means the one in the domain it names with
+`@<domain>`, or, naming none, the one in its own domain: the domain of the
+doc it's in. Nothing else is looked at, so what a link means never changes
+because a doc was added or removed in another domain. A link that names no
+domain and has nothing with that ID in its own is an `unknown-id` problem,
+fixed by naming the domain it means.
 
-1. The one named, when the link says `@<domain>`.
-2. Its own domain's.
-3. The only one with that ID, when just one domain has it.
+An annotation in code is in no domain, so a rule it names always names its
+domain too. One that doesn't is `invalid-annotation`.
 
-Otherwise the link is ambiguous: two or more domains have that ID, and neither
-is the link's own. That's a problem, and the link names its domain to fix it.
-
-In the examples, Billing's check-out uses `booking`, and gets Billing's
-definition, since that's its own domain's. Were Billing to have no `booking`,
-it would get Guest stays', the only one. An annotation in code resolves the
-same way, from the domains of the repository it's in.
+In the examples, Billing's check-out uses `concept:booking`, and gets
+Billing's definition, since that's its own domain's. Room status, in
+Property, uses Guest stays' room as `concept:room@guest-stays`, since Property
+has no `room` of its own.
 
 ### Contradictions
 
@@ -1233,15 +1270,16 @@ combined, since they're different products and the same ID can mean
 different things in each:
 
 1. Put each doc's contributions together by type and ID, as above.
-2. Resolve links to rules and concepts across every domain showing.
+2. Resolve links to rules and concepts named in other projects' domains.
 3. Give each mechanism that applies to its platform every capability the
    platform's projects serve: each project's declared capabilities, other
    than drafts, and the ones its components list.
 4. Work out the reverse links again across everything, and each
    capability's level in short, the lowest across the domains that build it.
    Readers then work out maturity, readiness and risk from all of it.
-5. Add the problems combining finds: contradictions and ambiguous links. Drop
-   an `unknown-id` problem when the link resolves to another project's doc.
+5. Add the problems combining finds: contradictions, and gap or tradeoff IDs
+   declared in more than one project. Drop an `unknown-id` problem when the
+   link resolves to another project's doc.
 
 ## Index output
 
@@ -1256,7 +1294,7 @@ and showing several projects together means reading each one's state.json.
   components and problems. This is the at-a-glance view.
 - **`domains`**: each of the project's `domain.md` files.
 - **`features`**: each with its capabilities and its `tradeoffs`. Each
-  capability names the feature it's in, or `null`,
+  capability names the feature it's in, as a reference, or `null`,
   and lists its `gaps` and `tradeoffs`, by ID. Its `stability` can be
   `"draft"`.
 - **`personas`**: each with its `name`, `role` and `title`, `role` and
@@ -1266,8 +1304,10 @@ and showing several projects together means reading each one's state.json.
 - **One list per doc type**: each entry has its ID, its `domain`, file, name,
   description, and links, in both directions, its type's other frontmatter fields,
   and its `body` as Markdown, exactly as written, or `""` with none. A doc
-  declared in two of the project's domains has an entry for each. Links are
-  written as declared, with `@<domain>` where the doc named one.
+  declared in two of the project's domains has an entry for each. Its own
+  `id` is bare, as its frontmatter has it. Its links, in both directions, are
+  references, `<type>:<id>`, as declared, with `@<domain>` where the doc
+  named one.
 - **Fields are named in camel case**, as the rest of `state.json` is:
   `confused-with` is `confusedWith`. A field the doc leaves out is there
   anyway, as `[]` for a list and `null` otherwise, such as a rule's `why`
@@ -1312,18 +1352,19 @@ and showing several projects together means reading each one's state.json.
 | Type                  | Raised when                                                                                                      |
 | --------------------- | ---------------------------------------------------------------------------------------------------------------- |
 | `unknown-id`          | A link, annotation, `rule`, `became` or a decision's `gaps` names a doc, gap or tradeoff that doesn't exist.     |
-| `invalid-frontmatter` | A required field is missing, or a value isn't allowed.                                                           |
+| `invalid-frontmatter` | A required field is missing, or a value isn't allowed, such as a link of the wrong type for its field, or a domain folder has no `domain.md` to give its ID. |
+| `duplicate-id`        | A project has two docs of one type with the same ID in one domain, or two domains, personas, mechanisms or components with the same ID, or a doc has two gaps or tradeoffs with the same key across the projects and domains that write it. |
 | `broken-link`         | A relative link in a doc's body or a text value doesn't resolve.                                                 |
 | `unlinked-rule`       | No capability follows a rule.                                                                                    |
 | `in-two-features`     | More than one feature lists the same capability.                                                                 |
 | `contradiction`       | Contributions that should agree don't, as Domains describes.                                                     |
-| `ambiguous-link`      | A link could mean the rule or concept of two or more domains.                                                    |
+| `invalid-annotation`  | An annotation names a rule without its domain.                                                                   |
 | `unknown-outcome`     | A gap's or tradeoff's `outcome`, or an entry in `meets`, isn't a checklist outcome.                              |
 | `became-other-side`   | A decision's `became` or `gaps` names a technical doc, or its gap or tradeoff, from a product doc, or the other way round. |
 
 `in-two-features` is a contradiction too, when the listings
 are in different projects. Combining raises `contradiction` and
-`ambiguous-link`, and those.
+`duplicate-id`, and those.
 
 ## Open decisions
 

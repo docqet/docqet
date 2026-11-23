@@ -1,4 +1,5 @@
 ---
+id: scheduling
 name: Scheduling
 description: >-
   Clients schedule each block into a week that has room, against what the
@@ -6,30 +7,30 @@ description: >-
   week, or take it back out, until that week starts.
 stability: beta
 personas:
-  - client-admin-founder
-  - client-admin-operations
-  - client-member
-  - exalynt-admin
+  - persona:client-admin-founder
+  - persona:client-admin-operations
+  - persona:client-member
+  - persona:exalynt-admin
 rules:
-  - scheduling/scheduling-comes-before-work
-  - scheduling/unscheduled-blocks-reserve-no-room
-  - scheduling/room-comes-from-assigned-teams
-  - scheduling/clients-of-a-team-share-room
-  - scheduling/no-scheduling-into-a-full-week
-  - scheduling/clients-move-blocks-until-the-week-starts
-  - scheduling/clients-unschedule-blocks-until-the-week-starts
-  - scheduling/last-in-first-out-with-an-exact-fit-first
-  - scheduling/only-what-cant-fit-comes-out
-  - scheduling/weeks-are-never-overbooked
-  - scheduling/exalynt-can-move-lapsed-blocks
-  - scheduling/starting-means-work-has-begun
-  - scheduling/the-preferred-week-is-a-target
+  - rule:scheduling-comes-before-work
+  - rule:unscheduled-blocks-reserve-no-room
+  - rule:room-comes-from-assigned-teams
+  - rule:clients-of-a-team-share-room
+  - rule:no-scheduling-into-a-full-week
+  - rule:clients-move-blocks-until-the-week-starts
+  - rule:clients-unschedule-blocks-until-the-week-starts
+  - rule:last-in-first-out-with-an-exact-fit-first
+  - rule:only-what-cant-fit-comes-out
+  - rule:weeks-are-never-overbooked
+  - rule:exalynt-can-move-lapsed-blocks
+  - rule:starting-means-work-has-begun
+  - rule:the-preferred-week-is-a-target
 concepts:
-  - capacity-block
-  - preferred-week
-  - shared-queue
-  - eligible-engineer
-  - team
+  - concept:capacity-block
+  - concept:preferred-week
+  - concept:shared-queue
+  - concept:eligible-engineer
+  - concept:team
 gaps:
   - id: clients-cant-spot-overbooking
     name: Clients can't spot overbooked or unassigned blocks
@@ -92,7 +93,7 @@ gaps:
     when: A client with several teams shares one of them with another client.
   - id: team-changes-can-overbook
     name: Team changes can overbook a week
-    rule: scheduling/weeks-are-never-overbooked
+    rule: rule:weeks-are-never-overbooked
     impact: inconvenient
     description: >-
       Team changes aren't checked against bookings, so a week can end up

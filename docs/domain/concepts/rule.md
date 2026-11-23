@@ -45,8 +45,9 @@ A rule belongs to the [domain](domain.md), not to a capability or a feature:
 
 ## In the spec
 
-A rule is one file in its domain's `rules/` folder, grouped by topic. Its ID is
-its path there: `booking/no-double-booking`.
+A rule is one file in its domain's `rules/` folder, which can have folders of
+its own, such as one per topic. Its ID is its `id` field, such as
+`no-double-booking`, so it stays the same if the file moves between folders.
 Its `name` is the rule in a few words, and `why` says why it holds, so
 whoever meets a case it didn't foresee can judge it. It has no `description`: its
 body, if it has one, states the rule in full where the name doesn't, and gives
@@ -55,8 +56,9 @@ examples or how it plays out.
 
 ```markdown
 ---
+id: no-double-booking
 name: A room can't be double-booked
-concepts: [booking, room]
+concepts: [concept:booking, concept:room]
 ---
 
 Two bookings for the same room can't share a night. A cancelled booking no
@@ -71,12 +73,12 @@ why: The room usually can't be rebooked at such short notice.
 ```
 
 Capabilities follow it by listing it, as room booking does with
-`rules: [booking/no-double-booking, ...]`. A capability in another domain
-names its domain: `booking/no-double-booking@guest-stays`. Places in the
+`rules: [rule:no-double-booking, ...]`. A capability in another domain
+names its domain: `rule:no-double-booking@guest-stays`. Places in the
 repository point at it as evidence, such as this Gherkin rule:
 
 ```gherkin
-  # docket:verifies rule:booking/no-double-booking
+  # docket:verifies rule:no-double-booking@guest-stays
   Rule: A room can't be double-booked
 ```
 

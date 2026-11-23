@@ -1,4 +1,5 @@
 ---
+id: no-earnings-on-other-partners
 name: No earnings on other partners
 ---
 

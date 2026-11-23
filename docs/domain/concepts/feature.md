@@ -39,13 +39,14 @@ capabilities, in the order to show them, and its tradeoffs.
 
 ```markdown
 ---
+id: reservations
 name: Reservations
 description: Taking bookings and handling changes to them, before the guest arrives.
 capabilities:
-  - room-booking
-  - cancellations
-  - group-bookings
-  - waitlist
+  - capability:room-booking
+  - capability:cancellations
+  - capability:group-bookings
+  - capability:waitlist
 tradeoffs:
   - id: front-desk-bookings-only
     name: Front desk bookings only

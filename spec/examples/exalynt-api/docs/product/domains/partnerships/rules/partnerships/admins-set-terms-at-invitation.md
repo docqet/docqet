@@ -1,4 +1,5 @@
 ---
+id: admins-set-terms-at-invitation
 name: Admins set terms at invitation
 ---
 

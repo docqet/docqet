@@ -3,7 +3,7 @@ Feature: Roles and platform access
   role there decides it; acting in none, their platform role does. Exalynt's
   people also have the applications they've been given.
 
-  # docket:verifies rule:organizations/organization-only-actions-need-an-organization rule:roles-and-access/permissions-follow-where-someone-acts
+  # docket:verifies rule:organization-only-actions-need-an-organization@accounts rule:permissions-follow-where-someone-acts@accounts
   Rule: What someone may do follows where they act
 
     Example: Inside an organization, their organization role decides
@@ -16,7 +16,7 @@ Feature: Roles and platform access
       When Ada buys capacity, acting in no organization
       Then it's refused
 
-  # docket:verifies rule:roles-and-access/no-platform-role-means-no-permissions
+  # docket:verifies rule:no-platform-role-means-no-permissions@accounts
   Rule: Acting in no organization, someone with no platform role holds no permissions
 
     Example: A client's Admin outside their organization
@@ -24,7 +24,7 @@ Feature: Roles and platform access
       When Ada looks at capacity, acting in no organization
       Then it's refused
 
-  # docket:verifies rule:organizations/anyone-can-create-an-organization rule:roles-and-access/creators-get-the-creator-role
+  # docket:verifies rule:anyone-can-create-an-organization@accounts rule:creators-get-the-creator-role@accounts
   Rule: A new organization's creator holds the role given to creators
 
     Example: Creating an organization
@@ -32,7 +32,7 @@ Feature: Roles and platform access
       Then Ada holds the role given to creators in Acme
       And Ada can buy capacity for Acme
 
-  # docket:verifies rule:roles-and-access/member-permissions-follow-their-role
+  # docket:verifies rule:member-permissions-follow-their-role@accounts
   Rule: A member's permissions follow their role
 
     Background:
@@ -43,7 +43,7 @@ Feature: Roles and platform access
       When Ben changes another member's role
       Then it's refused
 
-  # docket:verifies rule:roles-and-access/outsiders-cant-change-organization-roles
+  # docket:verifies rule:outsiders-cant-change-organization-roles@accounts
   Rule: Someone can't change roles in an organization they don't belong to
 
     Example: An Admin of another organization
@@ -52,7 +52,7 @@ Feature: Roles and platform access
       Then it's refused
       And Ben's role is as it was
 
-  # docket:verifies rule:roles-and-access/acting-as-engineer-or-client-never-both
+  # docket:verifies rule:acting-as-engineer-or-client-never-both@accounts
   Rule: Someone who is both an engineer and a client member acts as one or the other, never both
 
     Background:
@@ -67,7 +67,7 @@ Feature: Roles and platform access
       When Ada looks at capacity, acting in no organization
       Then Ada sees Globex's block and not Acme's
 
-  # docket:verifies rule:roles-and-access/team-scoped-capacity-access rule:teams/engineers-work-only-with-supported-clients
+  # docket:verifies rule:team-scoped-capacity-access@accounts rule:engineers-work-only-with-supported-clients@capacity
   Rule: An engineer allowed to read capacity at team scope sees only what their team supports
 
     Background:
@@ -93,7 +93,7 @@ Feature: Roles and platform access
       When Ada lists clients
       Then Ada finds exactly Acme
 
-  # docket:verifies rule:roles-and-access/own-scoped-capacity-access
+  # docket:verifies rule:own-scoped-capacity-access@accounts
   Rule: An engineer allowed to read capacity only at their own scope sees only the blocks they're staffed on
 
     Example: Two blocks
@@ -102,7 +102,7 @@ Feature: Roles and platform access
       When Ada looks at capacity
       Then Ada sees only the block Ada is staffed on
 
-  # docket:verifies rule:roles-and-access/read-only-engineers-cant-staff-blocks
+  # docket:verifies rule:read-only-engineers-cant-staff-blocks@accounts
   Rule: An engineer who can only read can't staff a block
 
     Example: Staffing
@@ -111,7 +111,7 @@ Feature: Roles and platform access
       When Ada puts an engineer on the block
       Then it's refused
 
-  # docket:verifies rule:roles-and-access/only-exalynt-lists-its-clients
+  # docket:verifies rule:only-exalynt-lists-its-clients@accounts
   Rule: Only Exalynt lists its clients
 
     Scenario Outline: A client tries
@@ -122,7 +122,7 @@ Feature: Roles and platform access
         | what    |
         | clients |
 
-  # docket:verifies rule:roles-and-access/what-each-role-kind-may-grant
+  # docket:verifies rule:what-each-role-kind-may-grant@accounts
   Rule: What each kind of role may grant
 
     Scenario Outline: The permissions on offer
@@ -135,14 +135,14 @@ Feature: Roles and platform access
         | managing roles   | platform roles only                                                  |
         | reading capacity | organization roles, and platform roles at global, team, or own scope |
 
-  # docket:verifies rule:roles-and-access/exalynt-only-permissions-cant-be-granted
+  # docket:verifies rule:exalynt-only-permissions-cant-be-granted@accounts
   Rule: Nobody can grant what only Exalynt's own systems hold
 
     Example: Syncing identities
       When someone who manages roles reads the permissions roles can grant
       Then syncing identities isn't among them
 
-  # docket:verifies rule:roles-and-access/roles-grant-only-what-their-kind-allows
+  # docket:verifies rule:roles-grant-only-what-their-kind-allows@accounts
   Rule: A role only grants what its kind may grant
 
     Scenario Outline: Refused grants
@@ -159,7 +159,7 @@ Feature: Roles and platform access
         | organization | managing roles                         |
         | organization | syncing identities                     |
 
-  # docket:verifies rule:roles-and-access/who-reads-permissions-and-makes-roles
+  # docket:verifies rule:who-reads-permissions-and-makes-roles@accounts
   Rule: Only someone who manages roles reads the permissions roles can grant, or makes roles
 
     Scenario Outline: A client tries
@@ -172,7 +172,7 @@ Feature: Roles and platform access
         | make a platform role                 |
         | make an organization role            |
 
-  # docket:verifies rule:roles-and-access/deleted-roles-cant-be-found
+  # docket:verifies rule:deleted-roles-cant-be-found@accounts
   Rule: Once a role is deleted, it can't be found
 
     Scenario Outline: Deleting a role nobody holds
@@ -185,7 +185,7 @@ Feature: Roles and platform access
         | platform     |
         | organization |
 
-  # docket:verifies rule:roles-and-access/held-platform-roles-cant-be-deleted
+  # docket:verifies rule:held-platform-roles-cant-be-deleted@accounts
   Rule: A platform role someone holds can't be deleted
 
     Example: Held
@@ -198,7 +198,7 @@ Feature: Roles and platform access
       When Exalynt deletes Reviewer
       Then Reviewer can't be found
 
-  # docket:verifies rule:roles-and-access/invited-roles-cant-be-deleted
+  # docket:verifies rule:invited-roles-cant-be-deleted@accounts
   Rule: A role someone has been invited to can't be deleted
 
     Example: A pending invitation
@@ -206,7 +206,7 @@ Feature: Roles and platform access
       When Exalynt deletes Reviewer
       Then it's refused
 
-  # docket:verifies rule:roles-and-access/who-gives-out-platform-roles
+  # docket:verifies rule:who-gives-out-platform-roles@accounts
   Rule: Only someone who manages people's roles gives out platform roles
 
     Example: Giving a role to someone else
@@ -219,7 +219,7 @@ Feature: Roles and platform access
       When Ada gives Ada a platform role
       Then it's refused
 
-  # docket:verifies rule:roles-and-access/role-names-are-unique-within-their-kind
+  # docket:verifies rule:role-names-are-unique-within-their-kind@accounts
   Rule: Role names are unique among their kind, ignoring case
 
     Scenario Outline: A name already taken
@@ -232,7 +232,7 @@ Feature: Roles and platform access
         | platform     |
         | organization |
 
-  # docket:verifies rule:roles-and-access/only-one-creator-role
+  # docket:verifies rule:only-one-creator-role@accounts
   Rule: Only one organization role is given to creators
 
     Example: Marking another role
@@ -241,7 +241,7 @@ Feature: Roles and platform access
       Then Owner is given to creators
       And Admin isn't
 
-  # docket:verifies rule:roles-and-access/the-creator-role-can-manage-members
+  # docket:verifies rule:the-creator-role-can-manage-members@accounts
   Rule: The role given to creators can manage members
 
     Example: Marking a role that can't
@@ -249,7 +249,7 @@ Feature: Roles and platform access
       When Exalynt marks Viewer to be given to creators
       Then it's refused
 
-  # docket:verifies rule:roles-and-access/held-organization-roles-cant-be-deleted
+  # docket:verifies rule:held-organization-roles-cant-be-deleted@accounts
   Rule: An organization role someone holds can't be deleted
 
     Example: Held
@@ -257,7 +257,7 @@ Feature: Roles and platform access
       When Exalynt deletes Reviewer
       Then it's refused
 
-  # docket:verifies rule:roles-and-access/held-roles-keep-member-management
+  # docket:verifies rule:held-roles-keep-member-management@accounts
   Rule: An organization role someone holds keeps the ability to manage members
 
     Example: Taking it away
@@ -266,7 +266,7 @@ Feature: Roles and platform access
       Then it's refused
       And Admin can still manage members
 
-  # docket:verifies rule:roles-and-access/people-lists-exclude-clients
+  # docket:verifies rule:people-lists-exclude-clients@accounts
   Rule: Acting in no organization, the people listed are only those who work with Exalynt, holding a platform role, never clients
 
     Example: Exalynt lists its people
@@ -276,7 +276,7 @@ Feature: Roles and platform access
       Then Ada is listed
       And Gina isn't listed
 
-  # docket:verifies rule:roles-and-access/listing-people-requires-a-platform-role
+  # docket:verifies rule:listing-people-requires-a-platform-role@accounts
   Rule: Someone with no platform role can't list people
 
     Example: A client's member

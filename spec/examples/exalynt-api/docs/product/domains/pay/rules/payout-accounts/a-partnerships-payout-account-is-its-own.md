@@ -1,4 +1,5 @@
 ---
+id: a-partnerships-payout-account-is-its-own
 name: A partnership's payout account is its own
 why: >-
   Partnerships are separate payees, whether a person or a business stands

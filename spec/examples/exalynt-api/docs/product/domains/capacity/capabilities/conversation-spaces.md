@@ -1,4 +1,5 @@
 ---
+id: conversation-spaces
 name: Conversation spaces
 description: >-
   A client's people and the Exalynt engineers who work with them talk about
@@ -7,28 +8,28 @@ description: >-
   conversations they start there, each on a subject of its own.
 stability: prototype
 personas:
-  - client-admin-founder
-  - client-admin-operations
-  - client-member
-  - exalynt-engineer-1
-  - exalynt-engineer-2
-  - exalynt-team-lead
-  - exalynt-admin
+  - persona:client-admin-founder
+  - persona:client-admin-operations
+  - persona:client-member
+  - persona:exalynt-engineer-1
+  - persona:exalynt-engineer-2
+  - persona:exalynt-team-lead
+  - persona:exalynt-admin
 rules:
-  - conversation-spaces/every-organization-has-a-space
-  - conversation-spaces/joining-an-organization-puts-you-in-its-space
-  - conversation-spaces/a-teams-engineers-are-in-its-clients-spaces
-  - conversation-spaces/spaces-follow-engineers-between-teams
-  - conversation-spaces/leaving-exalynt-takes-you-out-of-every-space
-  - conversation-spaces/clients-are-invited-and-some-can-only-be-emailed
-  - conversation-spaces/only-exalynt-sees-a-space-from-the-app
-  - conversation-spaces/a-space-outlasts-its-people
-  - conversations/conversations-start-by-hand-on-a-subject
-  - conversations/a-subject-is-used-once-on-a-block
-  - conversations/none-start-on-a-fulfilled-block
-  - conversations/anyone-at-the-client-or-on-a-team-supporting-it-starts-its-blocks-conversations
-  - conversations/a-blocks-conversations-are-for-its-client-and-the-teams-supporting-it
-concepts: [space, space-membership, conversation]
+  - rule:every-organization-has-a-space
+  - rule:joining-an-organization-puts-you-in-its-space
+  - rule:a-teams-engineers-are-in-its-clients-spaces
+  - rule:spaces-follow-engineers-between-teams
+  - rule:leaving-exalynt-takes-you-out-of-every-space
+  - rule:clients-are-invited-and-some-can-only-be-emailed
+  - rule:only-exalynt-sees-a-space-from-the-app
+  - rule:a-space-outlasts-its-people
+  - rule:conversations-start-by-hand-on-a-subject
+  - rule:a-subject-is-used-once-on-a-block
+  - rule:none-start-on-a-fulfilled-block
+  - rule:anyone-at-the-client-or-on-a-team-supporting-it-starts-its-blocks-conversations
+  - rule:a-blocks-conversations-are-for-its-client-and-the-teams-supporting-it
+concepts: [concept:space, concept:space-membership, concept:conversation]
 gaps:
   - id: behind-a-feature-flag
     name: Conversations behind a feature flag

@@ -404,6 +404,35 @@ const rank = (level: CapabilityLevel) => (level === null ? -1 : LEVEL_ORDER.inde
 /* A rule's or concept's ID without its domain: `booking@billing` is `booking`. */
 export const bareId = (id: string) => (id.includes("@") ? id.slice(0, id.lastIndexOf("@")) : id);
 
+/* The rule or concept a link from a doc in `domain` means, keyed as combining keys them: the domain it names, else its own. */
+const inDomain = (link: string, domain: string) => (link.includes("@") ? link : `${link}@${domain}`);
+
+/* A reference's ID, keeping any `@<domain>`: `rule:no-double-booking` is `no-double-booking`. */
+const idOf = (ref: string) => ref.slice(ref.indexOf(":") + 1);
+
+/*
+ * One project's state with its links as IDs. State.json writes every link as
+ * a reference, `<type>:<id>`, as the docs do, and the page keys each doc by its
+ * ID in its type's list, so it reads the links it resolves by ID alone. A
+ * decision's `became` and a problem's `subject` name several types, so they
+ * stay references.
+ */
+function linksById(file: StateFile): StateFile {
+  const ids = (refs: string[] | undefined) => (refs ?? []).map(idOf);
+  const capabilities = <T extends { capabilities: string[] }>(e: T) => ({ ...e, capabilities: ids(e.capabilities) });
+  return {
+    ...file,
+    features: file.features.map(capabilities),
+    capabilities: file.capabilities.map((c) => ({ ...c, personas: ids(c.personas), rules: ids(c.rules), concepts: ids(c.concepts) })),
+    rules: file.rules.map((r) => ({ ...r, concepts: ids(r.concepts) })),
+    concepts: file.concepts.map((c) => (c.confusedWith ? { ...c, confusedWith: c.confusedWith.map((w) => ({ ...w, concept: w.concept && idOf(w.concept) })) } : c)),
+    mechanisms: file.mechanisms?.map(capabilities),
+    components: file.components?.map(capabilities),
+    gaps: file.gaps.map((g) => ({ ...g, rule: g.rule && idOf(g.rule) })),
+    problems: file.problems.map((p) => ({ ...p, capabilities: ids(p.capabilities) })),
+  };
+}
+
 /* Add one project's evidence, missing from state written before evidence, without repeating a place a doc's other entry already added. */
 const addEvidence = (into: Evidence, from: Evidence | undefined, project: string) => {
   for (const verb of ["implements", "verifies"] as const)
@@ -428,8 +457,8 @@ const band = (m: number | null) => (m === null ? null : maturityBand(m));
  *   Features and capabilities span domains: each domain that writes one has
  *   a part in it, and a capability keeps its level in each.
  * - Rules and concepts are their domain's, keyed `<id>@<domain>`, so the same
- *   ID in two domains is two definitions. A link to one means its own
- *   domain's, else the only one, else it's ambiguous.
+ *   ID in two domains is two definitions. A link to one means the domain it
+ *   names, else its own domain's.
  *
  * Then reverse links, parts and maturity are worked out again across
  * everything, and the contradictions between contributions become problems.
@@ -484,7 +513,7 @@ export function combine(files: StateFile[]): DocketState {
   }
   const newDomain = (base: Doc): Domain => ({ ...base, features: [], capabilities: [], maturity: null, band: null });
 
-  for (const file of files) {
+  for (const file of files.map(linksById)) {
     const project = file.project.id;
     const platform = projectOf(file).platform.id;
     state.projects.push(projectOf(file));
@@ -610,25 +639,13 @@ export function combine(files: StateFile[]): DocketState {
     }
   }
 
-  const domainName = (id: string) => find(state.domains, id)?.name ?? id;
   const projectName = (id: string) => find(state.projects, id)?.name ?? id;
 
-  /* Links to rules and concepts: the one named, its own domain's, else the only one. */
+  /* Links to rules and concepts: the domain named, else its own. */
   for (const p of pending) {
     const resolve = (list: Doc[], link: string): string[] => {
-      if (link.includes("@")) return find(list, link) ? [link] : [];
-      if (find(list, `${link}@${p.domain}`)) return [`${link}@${p.domain}`];
-      const matches = list.filter((d) => bareId(d.id) === link);
-      if (matches.length > 1) {
-        const capability = state.capabilities.includes(p.from as Capability);
-        state.problems.push({
-          type: "ambiguous-link",
-          subject: capability ? `capability:${p.from.id}` : `rule:${p.from.id}`,
-          capabilities: capability ? [p.from.id] : [],
-          message: `${p.from.name}, in ${domainName(p.domain)}, names ${link}, which ${list_(matches.map((m) => domainName(m.domain)))} each have. Name the domain, as ${link}@<domain>.`,
-        });
-      }
-      return matches.length === 1 ? [matches[0].id] : [];
+      const id = inDomain(link, p.domain);
+      return find(list, id) ? [id] : [];
     };
     if ("rules" in p.from && p.from.rules) union(p.from.rules, p.rules.flatMap((l) => resolve(state.rules, l)));
     union(p.from.concepts, p.concepts.flatMap((l) => resolve(state.concepts, l)));
@@ -646,11 +663,10 @@ export function combine(files: StateFile[]): DocketState {
   for (const e of [...state.mechanisms, ...state.components]) {
     for (const id of e.capabilities) union(find(state.capabilities, id)?.builtBy ?? [], [`${e.kind}:${e.id}`]);
   }
-  /* A gap's rule means its own domain's, else the only one with that ID, as a capability's link to one does. */
+  /* A gap's rule means the domain it names, else its own, as a capability's link to one does. */
   for (const g of state.gaps) {
     if (!g.rule) continue;
-    const matches = g.rule.includes("@") ? state.rules.filter((r) => r.id === g.rule) : state.rules.filter((r) => bareId(r.id) === g.rule);
-    const rule = matches.find((r) => r.domain === g.domain) ?? (matches.length === 1 ? matches[0] : undefined);
+    const rule = find(state.rules, inDomain(g.rule, g.domain ?? ""));
     g.rule = rule?.id ?? null;
     if (rule) union(rule.gaps, [g.id]);
   }
@@ -675,13 +691,7 @@ export function combine(files: StateFile[]): DocketState {
     const kind = ref.slice(0, ref.indexOf(":")) as BecameKind;
     const id = ref.slice(ref.indexOf(":") + 1);
     const list = lists[kind] ?? [];
-    if (kind === "rule" || kind === "concept") {
-      const docs = list as Doc[];
-      if (id.includes("@")) return { ref, kind, id: find(docs, id)?.id ?? null };
-      const matches = docs.filter((d) => bareId(d.id) === id);
-      const hit = matches.find((d) => d.domain === f.domain) ?? (matches.length === 1 ? matches[0] : undefined);
-      return { ref, kind, id: hit?.id ?? null };
-    }
+    if (kind === "rule" || kind === "concept") return { ref, kind, id: find(list as Doc[], inDomain(id, f.domain))?.id ?? null };
     return { ref, kind, id: find(list, id)?.id ?? null };
   };
   /* The gaps riding on each decision: a key means a gap on its own doc; a gap's own ID is found as `became` finds one. */
@@ -776,6 +786,24 @@ export function combine(files: StateFile[]): DocketState {
   differing("persona", state.personas);
   differing("mechanism", state.mechanisms);
   differing("component", state.components);
+
+  /* A gap's or tradeoff's ID means one, so two projects declaring the same one is a duplicate. Within a project, its indexer reports it. */
+  const declaredBy = new Map<string, string[]>();
+  for (const g of [...state.gaps, ...state.tradeoffs]) {
+    const ref = g.id.slice(0, g.id.lastIndexOf("@"));
+    declaredBy.set(ref, [...(declaredBy.get(ref) ?? []), g.project ?? ""]);
+  }
+  for (const [ref, projects] of declaredBy) {
+    const by = [...new Set(projects)];
+    if (by.length < 2) continue;
+    const doc = ref.slice(0, ref.indexOf("#"));
+    state.problems.push({
+      type: "duplicate-id",
+      subject: doc,
+      capabilities: doc.startsWith("capability:") ? [doc.slice(doc.indexOf(":") + 1)] : [],
+      message: `${list_(by.map(projectName))} each declare ${ref}. Give one of them another key.`,
+    });
+  }
   return state;
 }
 
@@ -816,11 +844,11 @@ export const personaCapabilitiesIn = (state: DocketState, persona: Persona, feat
 /* The capabilities a project contributes to, each judged as a whole. */
 export const projectCapabilities = (state: DocketState, project: string) => state.capabilities.filter((c) => c.from.some((f) => f.project === project));
 
-/* The contradictions and ambiguous links a doc has, as combining found them. */
+/* The contradictions a doc has, and gap or tradeoff IDs its projects both declare, as combining found them. */
 export const contradictionsOf = (state: DocketState, type: string, id: string) =>
   state.problems.filter(
     (p) =>
-      (p.type === "contradiction" || p.type === "ambiguous-link" || p.type === "in-two-features") &&
+      (p.type === "contradiction" || p.type === "duplicate-id" || p.type === "in-two-features") &&
       p.subject === `${type}:${id}`,
   );
 
@@ -1030,15 +1058,8 @@ export function decidedBy(state: DocketState, kind: BecameKind, id: string): { o
   );
 }
 
-/*
- * The concept a link from a doc in `domain` means: the one named with
- * `@<domain>`, else its own domain's, else the only one with that ID.
- */
-export function conceptLinked(state: DocketState, link: string, domain: string): Concept | undefined {
-  if (link.includes("@")) return find(state.concepts, link);
-  const same = state.concepts.filter((c) => bareId(c.id) === link);
-  return same.find((c) => c.domain === domain) ?? (same.length === 1 ? same[0] : undefined);
-}
+/* The concept a link from a doc in `domain` means: the one in the domain it names with `@<domain>`, else its own domain's. */
+export const conceptLinked = (state: DocketState, link: string, domain: string): Concept | undefined => find(state.concepts, inDomain(link, domain));
 
 /*
  * Whether a capability holds to a rule it follows: not yet, when one of its

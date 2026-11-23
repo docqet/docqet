@@ -1,4 +1,5 @@
 ---
+id: buying-before-having-a-team
 name: Buying before having a team
 ---
 

@@ -1,13 +1,14 @@
 ---
+id: room-booking
 name: Room booking
 description: Clerks book a free room for a guest's stay.
 stability: beta
-personas: [front-desk-clerk]
+personas: [persona:front-desk-clerk]
 rules:
-  - booking/no-double-booking
-  - booking/minimum-stay
-  - booking/same-day-turnover
-concepts: [booking, room]
+  - rule:no-double-booking
+  - rule:minimum-stay
+  - rule:same-day-turnover
+concepts: [concept:booking, concept:room]
 gaps:
   - id: calendar-needs-a-mouse
     name: Calendar needs a mouse

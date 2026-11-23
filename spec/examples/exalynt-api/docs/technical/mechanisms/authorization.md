@@ -1,4 +1,5 @@
 ---
+id: authorization
 name: Authorization
 description: >-
   Decides what a caller may do and which records they may do it to, from the

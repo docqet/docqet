@@ -1,4 +1,5 @@
 ---
+id: what-admins-are-told
 name: What admins are told
 ---
 

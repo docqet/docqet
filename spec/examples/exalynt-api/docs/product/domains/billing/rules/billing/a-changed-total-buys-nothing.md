@@ -1,4 +1,5 @@
 ---
+id: a-changed-total-buys-nothing
 name: A changed total buys nothing
 ---
 

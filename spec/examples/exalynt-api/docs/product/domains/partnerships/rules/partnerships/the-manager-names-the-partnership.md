@@ -1,4 +1,5 @@
 ---
+id: the-manager-names-the-partnership
 name: The manager names the partnership
 ---
 

@@ -1,4 +1,5 @@
 ---
+id: stability-marks
 name: Stability marks
 description: >-
   How every app page shows its stability level, from one record of every

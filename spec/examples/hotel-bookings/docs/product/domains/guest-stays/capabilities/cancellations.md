@@ -1,18 +1,19 @@
 ---
+id: cancellations
 name: Cancellations
 description: >-
   Clerks cancel a booking when a guest's plans change, and the guest is
   refunded what the cancellation policy allows.
 stability: alpha
-personas: [front-desk-clerk]
+personas: [persona:front-desk-clerk]
 rules:
-  - cancellations/free-cancellation-window
-  - cancellations/late-cancellation-fee
-concepts: [booking]
+  - rule:free-cancellation-window
+  - rule:late-cancellation-fee
+concepts: [concept:booking]
 gaps:
   - id: late-cancellations-refunded-in-full
     name: Late cancellations refunded in full
-    rule: cancellations/late-cancellation-fee
+    rule: rule:late-cancellation-fee
     impact: damaging
     description: >-
       The late-cancellation fee isn't charged yet, so every cancellation is

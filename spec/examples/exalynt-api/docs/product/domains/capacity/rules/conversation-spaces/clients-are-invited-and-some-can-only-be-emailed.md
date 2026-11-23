@@ -1,4 +1,5 @@
 ---
+id: clients-are-invited-and-some-can-only-be-emailed
 name: Clients are invited, and some can only be emailed
 ---
 

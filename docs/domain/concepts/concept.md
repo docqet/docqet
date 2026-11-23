@@ -12,8 +12,8 @@ the concepts they work with, and [rules](rule.md) the ones they're written in.
 A concept means what it says within its [domain](domain.md). Billing's booking
 is "what a guest is charged for a stay", and that's a second definition of the
 word, not a mistake in Guest stays' or Billing's. A link to a concept means its
-own domain's, else the only one with that ID, unless it names a domain as
-`booking@guest-stays`.
+own domain's, unless it names another domain, as
+`concept:booking@guest-stays`.
 
 ## In the spec
 
@@ -27,6 +27,7 @@ in Guest stays:
 
 ```markdown
 ---
+id: booking
 name: Booking
 description: >-
   A guest's hold on one room for a stay, from a check-in date to a check-out

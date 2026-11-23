@@ -1,4 +1,5 @@
 ---
+id: new-terms-wait-for-acceptance
 name: New terms wait for acceptance
 ---
 

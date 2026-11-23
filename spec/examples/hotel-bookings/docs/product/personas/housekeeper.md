@@ -1,4 +1,5 @@
 ---
+id: housekeeper
 name: Ana
 description: Cleans and readies the rooms between guests.
 role: Housekeeping

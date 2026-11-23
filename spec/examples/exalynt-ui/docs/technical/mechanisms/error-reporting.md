@@ -1,4 +1,5 @@
 ---
+id: error-reporting
 name: Error reporting
 description: >-
   How the apps report unexpected failures from the browser, so someone looking

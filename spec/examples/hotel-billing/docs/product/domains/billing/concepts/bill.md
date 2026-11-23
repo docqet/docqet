@@ -1,4 +1,5 @@
 ---
+id: bill
 name: Bill
 description: >-
   Everything a guest owes for one stay, and everything they've paid towards

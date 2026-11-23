@@ -1,4 +1,5 @@
 ---
+id: client-admin-founder
 name: Theo Lindqvist
 description: >-
   Founder of an early-stage startup with no full engineering team, buying

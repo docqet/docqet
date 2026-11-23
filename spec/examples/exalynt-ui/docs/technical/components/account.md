@@ -1,14 +1,15 @@
 ---
+id: account
 name: Account
 description: >-
   The profile every app mounts at `/<app>/account`: the signed-in person's own
   account, their bio, their access tokens, their notification choices, and the
   app's theme.
 capabilities:
-  - your-profile
-  - teams
-  - access-tokens
-  - notifications
+  - capability:your-profile
+  - capability:teams
+  - capability:access-tokens
+  - capability:notifications
 gaps:
   - id: sync-no-end-to-end-test
     name: User sync has no end-to-end test

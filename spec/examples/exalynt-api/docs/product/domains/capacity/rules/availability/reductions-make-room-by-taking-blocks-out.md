@@ -1,4 +1,5 @@
 ---
+id: reductions-make-room-by-taking-blocks-out
 name: Reductions make room by taking blocks out
 why: >-
   A week is never overbooked, and clients keep their place in a week wherever

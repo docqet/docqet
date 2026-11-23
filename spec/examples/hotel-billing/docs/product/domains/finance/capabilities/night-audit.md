@@ -1,15 +1,16 @@
 ---
+id: night-audit
 name: Night audit
 description: >-
   The software closes each business day overnight, charging every guest in the
   hotel for that night's room.
 stability: ga
-personas: [night-auditor, manager]
+personas: [persona:night-auditor, persona:manager]
 rules:
-  - night-audit/one-room-charge-per-night
-  - night-audit/closed-days-dont-change
-  - bills/charges-are-never-changed
-concepts: [business-day, bill, charge]
+  - rule:one-room-charge-per-night
+  - rule:closed-days-dont-change
+  - rule:charges-are-never-changed@billing
+concepts: [concept:business-day, concept:bill@billing, concept:charge@billing]
 ---
 
 ## Includes

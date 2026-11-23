@@ -1,4 +1,5 @@
 ---
+id: company-account
 name: Company account
 description: A company that pays for its staff's stays, and what it owes the hotel.
 ---

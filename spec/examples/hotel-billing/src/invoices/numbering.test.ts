@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { nextInvoiceNumber } from "./numbering";
 
 describe("nextInvoiceNumber", () => {
-  // docket:verifies rule:invoices/invoice-numbers-run-in-sequence
+  // docket:verifies rule:invoice-numbers-run-in-sequence@finance
   it("follows the last invoice's number", () => {
     expect(nextInvoiceNumber(41)).toBe(42);
   });

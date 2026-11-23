@@ -1,4 +1,5 @@
 ---
+id: secret-shown-only-once
 name: Secret shown only once
 ---
 

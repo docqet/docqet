@@ -1,4 +1,5 @@
 ---
+id: discounts-apply-to-the-whole-project
 name: Discounts apply to the whole project
 ---
 

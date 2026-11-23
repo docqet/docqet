@@ -1,6 +1,7 @@
 ---
+id: no-double-booking
 name: A room can't be double-booked
-concepts: [booking, room]
+concepts: [concept:booking, concept:room]
 ---
 
 Two bookings for the same room can't share a night. A cancelled booking no

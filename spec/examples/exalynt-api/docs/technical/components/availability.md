@@ -1,8 +1,9 @@
 ---
+id: availability
 name: Availability
 description: >-
   How much of a week each engineer offers, which Capacity adds up per team.
-capabilities: [availability, scheduling, claiming-blocks, staffing]
+capabilities: [capability:availability, capability:scheduling, capability:claiming-blocks, capability:staffing]
 gaps:
   - id: not-load-tested
     name: Availability never load-tested

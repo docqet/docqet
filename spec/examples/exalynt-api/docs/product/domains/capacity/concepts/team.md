@@ -1,10 +1,11 @@
 ---
+id: team
 name: Team
 description: >-
   A team is a group of Exalynt's people who work with the clients it's
   assigned to. It decides who at Exalynt a client sees.
 confused-with:
-  - concept: organization@accounts
+  - concept: concept:organization@accounts
     summary: >-
       a client's members are that organization's own people. A team's
       members are Exalynt's people.

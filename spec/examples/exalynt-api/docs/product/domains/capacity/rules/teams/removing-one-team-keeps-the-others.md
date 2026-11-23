@@ -1,4 +1,5 @@
 ---
+id: removing-one-team-keeps-the-others
 name: Removing one team keeps the others
 ---
 

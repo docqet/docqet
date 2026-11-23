@@ -1,4 +1,5 @@
 ---
+id: paying-an-invoice-releases-its-capacity
 name: Paying an invoice releases its capacity
 ---
 

@@ -1,14 +1,15 @@
 ---
+id: client-home
 name: Client home
 description: >-
   Clients land on a page showing what's happening with their capacity, and
   what's waiting on them.
 stability: beta
-personas: [client-admin-founder, client-admin-operations, client-member]
+personas: [persona:client-admin-founder, persona:client-admin-operations, persona:client-member]
 rules:
-  - scheduling/exalynt-can-move-lapsed-blocks
-  - scheduling/the-preferred-week-is-a-target
-concepts: [capacity-block]
+  - rule:exalynt-can-move-lapsed-blocks
+  - rule:the-preferred-week-is-a-target
+concepts: [concept:capacity-block]
 gaps:
   - id: engineer-not-always-named
     name: Block's engineer not always named

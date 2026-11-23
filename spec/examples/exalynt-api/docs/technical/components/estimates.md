@@ -1,7 +1,8 @@
 ---
+id: estimates
 name: Estimates
 description: An estimate and everything in it is one document, replaced whole.
-capabilities: [estimates]
+capabilities: [capability:estimates]
 gaps:
   - id: later-save-wins
     name: Later of two saves silently wins

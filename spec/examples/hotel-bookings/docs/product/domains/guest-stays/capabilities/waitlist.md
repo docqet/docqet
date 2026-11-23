@@ -1,12 +1,13 @@
 ---
+id: waitlist
 name: Waitlist
 description: >-
   Clerks put a guest on a waitlist when every room is taken, and offer them
   the first room that frees up for their stay.
 stability: draft
-personas: [front-desk-clerk]
-rules: [booking/no-double-booking]
-concepts: [booking, room]
+personas: [persona:front-desk-clerk]
+rules: [rule:no-double-booking]
+concepts: [concept:booking, concept:room]
 decisions:
   - topic: Who goes first
     question: Whoever asked first, or whoever's stay fits the free nights best?

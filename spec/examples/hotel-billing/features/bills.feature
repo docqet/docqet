@@ -1,6 +1,6 @@
 Feature: Guest bills
 
-  # docket:verifies rule:bills/charges-are-never-changed
+  # docket:verifies rule:charges-are-never-changed@billing
   Rule: A charge is never changed or deleted
 
     Scenario: A mistaken charge is corrected with the opposite amount

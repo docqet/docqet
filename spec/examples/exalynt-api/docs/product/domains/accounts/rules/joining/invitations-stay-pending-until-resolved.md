@@ -1,4 +1,5 @@
 ---
+id: invitations-stay-pending-until-resolved
 name: Invitations stay pending until resolved
 ---
 

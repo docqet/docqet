@@ -1,4 +1,5 @@
 ---
+id: conversation
 name: Conversation
 description: >-
   A conversation is the talk about one subject on a [capacity

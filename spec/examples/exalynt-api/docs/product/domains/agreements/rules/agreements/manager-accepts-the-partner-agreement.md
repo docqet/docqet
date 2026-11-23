@@ -1,4 +1,5 @@
 ---
+id: manager-accepts-the-partner-agreement
 name: Manager accepts the Partner Agreement
 ---
 

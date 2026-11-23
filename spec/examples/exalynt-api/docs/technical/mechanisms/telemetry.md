@@ -1,4 +1,5 @@
 ---
+id: telemetry
 name: Telemetry
 description: >-
   What the API emits and how to read it. The API exports over OTLP to the

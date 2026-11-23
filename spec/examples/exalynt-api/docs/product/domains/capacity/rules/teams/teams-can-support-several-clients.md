@@ -1,4 +1,5 @@
 ---
+id: teams-can-support-several-clients
 name: Teams can support several clients
 ---
 

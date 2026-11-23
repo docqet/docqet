@@ -6,7 +6,7 @@ export type PaymentProvider = {
 // gets a token for it.
 // docket:implements capability:deposits capability:pay-by-link component:payments
 // docket:gap component:payments#no-timeout-on-provider-calls
-// docket:implements rule:payments/card-numbers-are-never-kept
+// docket:implements rule:card-numbers-are-never-kept@billing
 export async function takePayment(provider: PaymentProvider, cardToken: string, amount: number, billId: string): Promise<string> {
   const { reference } = await provider.createPayment({ cardToken, amount, billId });
   return reference;

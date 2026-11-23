@@ -1,4 +1,5 @@
 ---
+id: revoked-invitations-cant-be-accepted
 name: Revoked invitations can't be accepted
 ---
 

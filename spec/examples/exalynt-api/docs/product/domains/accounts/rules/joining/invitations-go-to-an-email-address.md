@@ -1,4 +1,5 @@
 ---
+id: invitations-go-to-an-email-address
 name: Invitations go to an email address
 ---
 

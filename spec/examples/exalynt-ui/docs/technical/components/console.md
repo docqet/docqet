@@ -1,20 +1,21 @@
 ---
+id: console
 name: Console
 description: >-
   The console, where Exalynt's engineers set themselves up, claim and work
   their blocks, offer their time, write estimates, and see what they're paid.
 capabilities:
-  - getting-set-up
-  - claiming-blocks
-  - fulfillment
-  - conversation-spaces
-  - teams
-  - availability
-  - earnings
-  - payouts
-  - payout-accounts
-  - estimates
-  - engineer-agreements
+  - capability:getting-set-up
+  - capability:claiming-blocks
+  - capability:fulfillment
+  - capability:conversation-spaces
+  - capability:teams
+  - capability:availability
+  - capability:earnings
+  - capability:payouts
+  - capability:payout-accounts
+  - capability:estimates
+  - capability:engineer-agreements
 gaps:
   - id: setup-reads-on-every-page
     name: Setup bubble rereads on every page

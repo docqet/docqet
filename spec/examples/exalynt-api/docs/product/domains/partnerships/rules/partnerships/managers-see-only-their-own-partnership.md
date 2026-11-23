@@ -1,4 +1,5 @@
 ---
+id: managers-see-only-their-own-partnership
 name: Managers see only their own partnership
 ---
 

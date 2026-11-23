@@ -1,4 +1,5 @@
 ---
+id: manager
 name: David
 description: Runs the hotel, and answers for its takings to the owners.
 role: Manager

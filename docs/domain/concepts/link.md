@@ -17,9 +17,11 @@ which domains a feature spans, or which mechanisms a capability relies on.
   capabilities that rely on them, and a mechanism applies to every capability
   its project serves, so the product stays the same whatever the
   implementation.
-- **A link to another domain's rule or concept names it**, as
-  `booking@guest-stays`. Otherwise it means its own domain's, else the only one
-  with that ID.
+- **A link to another domain's rule or concept names that domain**, as
+  `concept:booking@guest-stays`. Otherwise it means its own domain's, and
+  nothing else, so it never changes meaning when another domain adds a rule
+  or concept with the same ID. An annotation is in no domain, so a rule it
+  names always names its domain.
 
 ## In the spec
 
@@ -39,18 +41,20 @@ annotation                 → rules, capabilities, mechanisms, components    (d
                            → gaps, tradeoffs           (docket:gap, docket:tradeoff)
 ```
 
-In frontmatter, the field name gives the type, so links are bare IDs:
+A link is a reference, `<type>:<id>`, the same in frontmatter as in an
+annotation, so searching for one finds every doc and every place in the code
+that names it:
 
 ```yaml
-rules: [booking/no-double-booking]
-concepts: [booking@guest-stays]
+rules: [rule:no-double-booking]
+concepts: [concept:booking@guest-stays]
 ```
 
 A concept's `confused-with` is a link too, when an item names a `concept`,
-such as `concept: booking@guest-stays`, rather than a `term`.
+such as `concept: concept:booking@guest-stays`, rather than a `term`.
 
-In an annotation, the type is part of the ID:
-`docket:verifies rule:booking/no-double-booking`.
+An annotation names it the same way, with the rule's domain:
+`docket:verifies rule:no-double-booking@guest-stays`.
 
 ## Not to be confused with
 

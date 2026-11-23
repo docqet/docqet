@@ -1,4 +1,5 @@
 ---
+id: admins-see-and-revoke-all-invitations
 name: Admins see and revoke all invitations
 ---
 

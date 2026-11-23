@@ -1,4 +1,5 @@
 ---
+id: partnerships
 name: Partnerships
 description: >-
   The Partnership Program: partners who bring Exalynt clients, and earn on

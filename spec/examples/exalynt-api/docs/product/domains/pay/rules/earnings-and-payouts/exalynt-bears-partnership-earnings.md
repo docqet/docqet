@@ -1,4 +1,5 @@
 ---
+id: exalynt-bears-partnership-earnings
 name: Exalynt bears partnership earnings
 ---
 

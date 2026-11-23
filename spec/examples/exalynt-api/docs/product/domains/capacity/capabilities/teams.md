@@ -1,55 +1,56 @@
 ---
+id: teams
 name: Teams
 description: >-
   Exalynt groups its people into teams to work with the clients they're
   assigned to, and a client's teams decide who at Exalynt it sees.
 stability: beta
 personas:
-  - client-admin-founder
-  - client-admin-operations
-  - client-member
-  - exalynt-engineer-1
-  - exalynt-engineer-2
-  - exalynt-engineer-new-hire
-  - exalynt-team-lead
-  - exalynt-admin
+  - persona:client-admin-founder
+  - persona:client-admin-operations
+  - persona:client-member
+  - persona:exalynt-engineer-1
+  - persona:exalynt-engineer-2
+  - persona:exalynt-engineer-new-hire
+  - persona:exalynt-team-lead
+  - persona:exalynt-admin
 rules:
-  - teams/only-exalynt-makes-teams
-  - teams/team-names-are-unique
-  - teams/clients-can-have-several-teams
-  - teams/teams-can-support-several-clients
-  - teams/clients-cant-see-a-teams-other-clients
-  - teams/clients-see-only-their-supporting-teams
-  - teams/member-access-to-teams-follows-role
-  - teams/exalynts-view-of-teams
-  - teams/engineers-work-only-with-supported-clients
-  - teams/only-exalynt-assigns-teams
-  - teams/repeat-assignment-changes-nothing
-  - teams/what-counts-as-a-team-update
-  - teams/removing-one-team-keeps-the-others
-  - teams/deleted-teams-disappear-for-clients
-  - teams/members-are-listed-lead-first
-  - teams/one-team-per-engineer
-  - teams/one-lead-per-team
-  - teams/a-departing-lead-leaves-no-lead
-  - teams/removed-members-leave-every-clients-view
-  - teams/removing-someone-already-gone
-  - teams/only-exalynts-people-join-teams
-  - engineer-profiles/who-edits-a-bio
-  - engineer-profiles/who-sees-a-bio
-  - engineer-profiles/bios-are-at-most-500-characters
-  - engineer-profiles/clearing-a-bio-leaves-none
-  - team-assignment/least-unfulfilled-capacity-wins
-  - team-assignment/fewest-clients-breaks-ties
-  - team-assignment/only-teams-offering-time-qualify
-  - team-assignment/signing-up-without-a-team
-  - onboarding/engineers-join-by-invitation-only
-  - onboarding/existing-accounts-gain-the-engineer-role
-  - onboarding/admins-see-and-revoke-all-invitations
-  - onboarding/invalid-payout-accounts-delay-payment
-  - onboarding/when-an-engineer-is-ready
-  - onboarding/invited-engineers-join-their-team
-concepts: [team, organization]
+  - rule:only-exalynt-makes-teams
+  - rule:team-names-are-unique
+  - rule:clients-can-have-several-teams
+  - rule:teams-can-support-several-clients
+  - rule:clients-cant-see-a-teams-other-clients
+  - rule:clients-see-only-their-supporting-teams
+  - rule:member-access-to-teams-follows-role
+  - rule:exalynts-view-of-teams
+  - rule:engineers-work-only-with-supported-clients
+  - rule:only-exalynt-assigns-teams
+  - rule:repeat-assignment-changes-nothing
+  - rule:what-counts-as-a-team-update
+  - rule:removing-one-team-keeps-the-others
+  - rule:deleted-teams-disappear-for-clients
+  - rule:members-are-listed-lead-first
+  - rule:one-team-per-engineer
+  - rule:one-lead-per-team
+  - rule:a-departing-lead-leaves-no-lead
+  - rule:removed-members-leave-every-clients-view
+  - rule:removing-someone-already-gone
+  - rule:only-exalynts-people-join-teams
+  - rule:who-edits-a-bio
+  - rule:who-sees-a-bio
+  - rule:bios-are-at-most-500-characters
+  - rule:clearing-a-bio-leaves-none
+  - rule:least-unfulfilled-capacity-wins
+  - rule:fewest-clients-breaks-ties
+  - rule:only-teams-offering-time-qualify
+  - rule:signing-up-without-a-team
+  - rule:engineers-join-by-invitation-only@accounts
+  - rule:existing-accounts-gain-the-engineer-role@accounts
+  - rule:admins-see-and-revoke-all-invitations@accounts
+  - rule:invalid-payout-accounts-delay-payment@accounts
+  - rule:when-an-engineer-is-ready@accounts
+  - rule:invited-engineers-join-their-team@accounts
+concepts: [concept:team, concept:organization@accounts]
 gaps:
   - id: no-resending-invitations
     name: Invitations can't be resent

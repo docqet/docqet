@@ -1,6 +1,7 @@
 ---
+id: invoice-numbers-run-in-sequence
 name: Invoice numbers run in sequence
-concepts: [company-account]
+concepts: [concept:company-account]
 why: The tax office requires it, so it can tell no invoice is missing.
 ---
 

@@ -1,4 +1,5 @@
 ---
+id: effective-availability
 name: Effective availability
 description: An engineer's weekly baseline plus their one-off adjustments.
 ---

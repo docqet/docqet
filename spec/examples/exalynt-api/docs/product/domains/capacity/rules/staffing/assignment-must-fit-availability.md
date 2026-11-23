@@ -1,4 +1,5 @@
 ---
+id: assignment-must-fit-availability
 name: Assignment must fit availability
 ---
 

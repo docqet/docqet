@@ -1,4 +1,5 @@
 ---
+id: row-level-security
 name: Row-level security
 description: >-
   Postgres enforces the organization and partnership boundaries underneath the

@@ -1,4 +1,5 @@
 ---
+id: roles-grant-only-what-their-kind-allows
 name: Roles grant only what their kind allows
 ---
 

@@ -1,7 +1,8 @@
 ---
+id: payouts
 name: Payouts
 description: How earnings become money sent, to people and to partnerships.
-capabilities: [payouts, partner-payouts]
+capabilities: [capability:payouts, capability:partner-payouts]
 gaps:
   - id: person-and-admin-lists-not-paged
     name: Payout lists not paged

@@ -1,4 +1,5 @@
 ---
+id: no-platform-role-means-no-permissions
 name: No platform role means no permissions
 ---
 

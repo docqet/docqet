@@ -1,4 +1,5 @@
 ---
+id: admins-release-payouts
 name: Admins release payouts
 ---
 

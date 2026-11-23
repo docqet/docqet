@@ -1,4 +1,5 @@
 ---
+id: partnerships-earn-under-their-agreement-in-effect
 name: Partnerships earn under their agreement in effect
 ---
 

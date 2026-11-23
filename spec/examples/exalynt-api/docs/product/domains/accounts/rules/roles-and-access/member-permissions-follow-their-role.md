@@ -1,4 +1,5 @@
 ---
+id: member-permissions-follow-their-role
 name: Member permissions follow their role
 ---
 

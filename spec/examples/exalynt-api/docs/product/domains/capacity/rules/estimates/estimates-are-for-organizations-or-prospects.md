@@ -1,4 +1,5 @@
 ---
+id: estimates-are-for-organizations-or-prospects
 name: Estimates are for organizations or prospects
 ---
 

@@ -1,39 +1,40 @@
 ---
+id: partner-clients
 name: Partner clients
 description: >-
   Partners see the clients attributed to their partnership: who they are, how
   each came to it, since when, and how long the partnership earns on each.
 stability: beta
-personas: [partner]
+personas: [persona:partner]
 rules:
-  - partnerships/inviting-creates-the-partnership
-  - partnerships/accepting-makes-the-invitee-manager
-  - partnerships/the-manager-names-the-partnership
-  - partnerships/admins-set-terms-at-invitation
-  - partnerships/revoking-removes-the-partnership
-  - partnerships/managers-see-only-their-own-partnership
-  - partnerships/enrolling-is-voluntary
-  - partnerships/a-partnership-stands-apart-from-organizations
-  - partnerships/partnerships-can-change-managers
-  - partnerships/existing-accounts-gain-partner-access
-  - partnerships/partners-invite-clients-by-email
-  - partnerships/invitations-can-be-resent-or-revoked
-  - partnerships/invitations-are-limited
-  - partnerships/partners-see-only-their-own-invitations
-  - partnerships/one-referral-code-per-partnership
-  - partnerships/the-code-used-decides-the-partnership
-  - partnerships/referral-codes-attribute-only-new-clients
-  - partnerships/one-partnership-per-client
-  - partnerships/no-attribution-to-the-managers-organization
-  - partnerships/admins-can-adjust-attribution
-  - partnerships/no-earnings-on-other-partners
-  - partnerships/referred-clients-work-like-any-other
-  - partnerships/partners-see-only-their-own-clients
-  - partnerships/partners-see-each-clients-earning-window
-  - partnerships/what-partners-can-see
-  - partnerships/clients-see-who-referred-them
-  - partnerships/introductions-dont-affect-engineer-assignment
-concepts: [partnership]
+  - rule:inviting-creates-the-partnership
+  - rule:accepting-makes-the-invitee-manager
+  - rule:the-manager-names-the-partnership
+  - rule:admins-set-terms-at-invitation
+  - rule:revoking-removes-the-partnership
+  - rule:managers-see-only-their-own-partnership
+  - rule:enrolling-is-voluntary
+  - rule:a-partnership-stands-apart-from-organizations
+  - rule:partnerships-can-change-managers
+  - rule:existing-accounts-gain-partner-access
+  - rule:partners-invite-clients-by-email
+  - rule:invitations-can-be-resent-or-revoked
+  - rule:invitations-are-limited
+  - rule:partners-see-only-their-own-invitations
+  - rule:one-referral-code-per-partnership
+  - rule:the-code-used-decides-the-partnership
+  - rule:referral-codes-attribute-only-new-clients
+  - rule:one-partnership-per-client
+  - rule:no-attribution-to-the-managers-organization
+  - rule:admins-can-adjust-attribution
+  - rule:no-earnings-on-other-partners
+  - rule:referred-clients-work-like-any-other
+  - rule:partners-see-only-their-own-clients
+  - rule:partners-see-each-clients-earning-window
+  - rule:what-partners-can-see
+  - rule:clients-see-who-referred-them
+  - rule:introductions-dont-affect-engineer-assignment
+concepts: [concept:partnership]
 gaps:
   - id: moving-restarts-since
     name: Moving a client loses its history

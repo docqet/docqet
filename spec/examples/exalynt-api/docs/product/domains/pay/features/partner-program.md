@@ -1,12 +1,13 @@
 ---
+id: partner-program
 name: Partner program
 description: >-
   Bringing Exalynt clients through partners, and paying partners for the
   clients they bring.
 capabilities:
-  - partner-earnings
-  - partner-payouts
-  - partner-payout-accounts
+  - capability:partner-earnings
+  - capability:partner-payouts
+  - capability:partner-payout-accounts
 ---
 
 Pay's part of the program: what a partnership earns on its clients' blocks, and

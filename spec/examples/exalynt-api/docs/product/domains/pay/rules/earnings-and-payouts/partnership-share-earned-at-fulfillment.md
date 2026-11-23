@@ -1,4 +1,5 @@
 ---
+id: partnership-share-earned-at-fulfillment
 name: Partnership share earned at fulfillment
 ---
 

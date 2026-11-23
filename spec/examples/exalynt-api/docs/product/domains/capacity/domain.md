@@ -1,4 +1,5 @@
 ---
+id: capacity
 name: Engineering capacity
 description: >-
   Selling engineering capacity in blocks, and scheduling, staffing and

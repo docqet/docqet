@@ -1,4 +1,5 @@
 ---
+id: notifications-respect-what-someone-can-see
 name: Notifications respect what someone can see
 ---
 

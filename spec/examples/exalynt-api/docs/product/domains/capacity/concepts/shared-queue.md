@@ -1,4 +1,5 @@
 ---
+id: shared-queue
 name: Shared queue
 description: >-
   Each client's scheduled, unassigned blocks. Engineers and leads on any team

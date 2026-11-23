@@ -22,21 +22,23 @@ export async function saveBooking(db: Pool, booking: Booking): Promise<void> {
 ```
 
 ```sql
-  -- docket:implements rule:booking/no-double-booking component:bookings
+  -- docket:implements rule:no-double-booking@guest-stays component:bookings
   -- docket:tradeoff component:bookings#constraint-not-lock
   EXCLUDE USING gist (room_id WITH =, nights WITH &&) WHERE (status <> 'cancelled')
 ```
 
 ```gherkin
-  # docket:verifies rule:booking/no-double-booking
+  # docket:verifies rule:no-double-booking@guest-stays
   Rule: A room can't be double-booked
 ```
 
 - **It's on the first line below it** that isn't blank or another annotation.
   Put it directly above the function, test, constraint or step it's about.
   One at the top of a file stands for the whole file.
-- **A rule or concept in another domain** adds `@<domain>`:
-  `docket:verifies rule:bills/closed-bills-dont-change@billing`.
+- **A rule always names its domain**, as `rule:<id>@<domain>`:
+  `docket:verifies rule:closed-bills-dont-change@billing`. Code is in no
+  domain, so a rule without one is a problem, even in a repository with one
+  domain.
 - **Annotations are claims.** Add one only where it's true: a test that
   verifies a rule actually checks it, and code that implements one actually
   enforces it.
@@ -57,6 +59,6 @@ what it names. So whenever you:
 - **write code that enforces a rule, or a test that checks one**, annotate it;
 - **move or delete annotated code**, move or delete its annotation with it;
 - **change what annotated code does**, check the annotation is still true;
-- **rename or move a doc**, update every annotation naming its old ID
+- **change a doc's ID**, update every annotation naming its old ID
   (`grep -rn "<type>:<old-id>"`);
 - **close a gap**, remove its `docket:gap` annotations.

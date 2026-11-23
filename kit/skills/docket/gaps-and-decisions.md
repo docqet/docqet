@@ -20,10 +20,10 @@ it. When and how it's closed is up to them, so a gap never says.
 
 ```yaml
 gaps:
-  - id: calendar-needs-a-mouse        # unique in this doc
+  - id: calendar-needs-a-mouse        # unique on this doc, in every project and domain that writes it
     name: Calendar needs a mouse      # what falls short, in a few words
     outcome: usability/beta/everyone  # optional: the checklist outcome it falls short of
-    rule: booking/minimum-stay        # optional: a rule the capability follows but doesn't hold yet
+    rule: rule:minimum-stay           # optional: a rule the capability follows but doesn't hold yet
     impact: blocking                  # see below
     description: >-
       The room calendar can't be used from the keyboard, so clerks need a
@@ -31,8 +31,10 @@ gaps:
     when: A clerk can't use a mouse.  # optional: what makes it bite, if it isn't already
 ```
 
-A gap's ID is its doc's ID plus its key:
+A gap's ID is its doc's reference plus its key:
 `capability:room-booking#calendar-needs-a-mouse`.
+A doc written in several domains or projects, such as a capability, is still
+one doc, so check its other files before choosing a key.
 
 - **Most gaps name no outcome.** They're limits on what the capability does.
   Name an outcome only when the gap is the reason the capability's level falls

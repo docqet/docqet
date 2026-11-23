@@ -1,4 +1,5 @@
 ---
+id: logos-must-be-raster-images
 name: Logos must be raster images
 ---
 

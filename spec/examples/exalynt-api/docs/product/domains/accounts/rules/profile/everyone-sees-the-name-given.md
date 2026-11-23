@@ -1,4 +1,5 @@
 ---
+id: everyone-sees-the-name-given
 name: Everyone sees the name given
 ---
 

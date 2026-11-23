@@ -1,4 +1,5 @@
 ---
+id: space
 name: Space
 description: >-
   A space is where people talk about the work with the messaging provider,
@@ -6,7 +7,7 @@ description: >-
   [organization](../../accounts/concepts/organization.md) has one, its
   conversation space.
 confused-with:
-  - concept: team
+  - concept: concept:team
     summary: >-
       a team is a group of Exalynt's people. A space holds a team's
       engineers and a client's people together.

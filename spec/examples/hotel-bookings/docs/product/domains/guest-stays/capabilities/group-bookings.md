@@ -1,14 +1,15 @@
 ---
+id: group-bookings
 name: Group bookings
 description: >-
   Clerks hold several rooms at once for a group travelling together, under one
   name.
 stability: prototype
-personas: [front-desk-clerk]
+personas: [persona:front-desk-clerk]
 rules:
-  - booking/no-double-booking
-  - booking/minimum-stay
-concepts: [booking]
+  - rule:no-double-booking
+  - rule:minimum-stay
+concepts: [concept:booking]
 decisions:
   - question: >-
       Do groups want one booking with many rooms, or many bookings linked

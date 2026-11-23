@@ -1,4 +1,5 @@
 ---
+id: blocks-are-bought-then-scheduled
 name: Blocks are bought, then scheduled
 ---
 

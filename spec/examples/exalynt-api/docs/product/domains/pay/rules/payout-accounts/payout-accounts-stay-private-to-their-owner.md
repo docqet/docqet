@@ -1,4 +1,5 @@
 ---
+id: payout-accounts-stay-private-to-their-owner
 name: Payout accounts stay private to their owner
 ---
 

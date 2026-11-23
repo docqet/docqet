@@ -1,4 +1,5 @@
 ---
+id: exalynts-view-of-teams
 name: Exalynt's view of teams
 ---
 

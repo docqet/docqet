@@ -1,4 +1,5 @@
 ---
+id: joining-an-organization-puts-you-in-its-space
 name: Joining an organization puts you in its space
 ---
 

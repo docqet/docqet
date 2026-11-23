@@ -1,6 +1,7 @@
 ---
+id: charges-are-never-changed
 name: A charge is never changed or deleted
-concepts: [charge, bill]
+concepts: [concept:charge, concept:bill]
 why: >-
   The hotel's accountant and the tax office need to see every charge that was
   made, including the mistakes.

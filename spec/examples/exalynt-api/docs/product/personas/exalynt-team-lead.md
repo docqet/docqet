@@ -1,4 +1,5 @@
 ---
+id: exalynt-team-lead
 name: Daniel Osei
 description: >-
   Principal engineer who leads Lena and Ravi's team. Carries client blocks

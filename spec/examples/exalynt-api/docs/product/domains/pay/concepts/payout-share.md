@@ -1,15 +1,16 @@
 ---
+id: payout-share
 name: Payout share
 description: >-
   One part of a [capacity block](../../capacity/concepts/capacity-block.md)'s
   [capacity payout basis](capacity-payout-basis.md), owed to whoever earned
   it. Also called an earning.
 confused-with:
-  - concept: payout
+  - concept: concept:payout
     summary: >-
       money sent, made up of earnings. A share is what's owed, and it
       exists before any payout does.
-  - concept: capacity-payout-basis
+  - concept: concept:capacity-payout-basis
     summary: the whole amount a share is a percentage of.
 ---
 

@@ -1,13 +1,14 @@
 ---
+id: partner-program
 name: Partner program
 description: >-
   Bringing Exalynt clients through partners, and paying partners for the
   clients they bring.
 capabilities:
-  - partnerships
-  - client-invitations
-  - partner-clients
-  - partner-home
+  - capability:partnerships
+  - capability:client-invitations
+  - capability:partner-clients
+  - capability:partner-home
 ---
 
 ## Enrolling a partner

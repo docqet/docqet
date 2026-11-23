@@ -1,4 +1,5 @@
 ---
+id: api-docs
 name: API docs
 description: >-
   The reference at `GET /docs/api`: the OpenAPI spec bundled into one

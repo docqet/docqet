@@ -1,4 +1,5 @@
 ---
+id: property
 name: Property
 description: Keeping the hotel ready for guests.
 ---

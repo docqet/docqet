@@ -1,4 +1,5 @@
 ---
+id: attribution-at-purchase-decides-the-partnership
 name: Attribution at purchase decides the partnership
 ---
 

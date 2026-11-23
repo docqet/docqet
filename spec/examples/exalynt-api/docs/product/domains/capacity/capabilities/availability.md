@@ -1,4 +1,5 @@
 ---
+id: availability
 name: Availability
 description: >-
   Engineers set how much of each week they offer, in capacity units, and that
@@ -6,24 +7,24 @@ description: >-
   it directly.
 stability: beta
 personas:
-  - exalynt-engineer-1
-  - exalynt-engineer-2
-  - exalynt-team-lead
-  - exalynt-admin
+  - persona:exalynt-engineer-1
+  - persona:exalynt-engineer-2
+  - persona:exalynt-team-lead
+  - persona:exalynt-admin
 rules:
-  - availability/how-a-weeks-availability-is-decided
-  - availability/reductions-need-no-approval
-  - availability/only-its-owner-sets-availability
-  - availability/admins-set-their-own-availability
-  - availability/who-sees-an-engineers-availability
-  - availability/one-baseline-per-engineer
-  - availability/adjustments-never-overlap
-  - availability/removing-an-adjustment-restores-the-baseline
-  - availability/availability-comes-in-quarter-weeks
-  - availability/reductions-make-room-by-taking-blocks-out
-  - availability/reductions-never-touch-started-work
-  - availability/past-weeks-cant-change
-concepts: [effective-availability, capacity-unit, capacity-block]
+  - rule:how-a-weeks-availability-is-decided
+  - rule:reductions-need-no-approval
+  - rule:only-its-owner-sets-availability
+  - rule:admins-set-their-own-availability
+  - rule:who-sees-an-engineers-availability
+  - rule:one-baseline-per-engineer
+  - rule:adjustments-never-overlap
+  - rule:removing-an-adjustment-restores-the-baseline
+  - rule:availability-comes-in-quarter-weeks
+  - rule:reductions-make-room-by-taking-blocks-out
+  - rule:reductions-never-touch-started-work
+  - rule:past-weeks-cant-change
+concepts: [concept:effective-availability, concept:capacity-unit, concept:capacity-block]
 gaps:
   - id: no-spotting-overbooked-engineers
     name: Overbooked engineers go unnoticed

@@ -1,9 +1,10 @@
 ---
+id: focuses
 name: Focuses
 description: >-
   A block's focus: what its work is about, with images, videos, and files from
   its organization's objects.
-capabilities: [fulfillment]
+capabilities: [capability:fulfillment]
 ---
 
 A focus is its own row in `focuses`, with `focus_attachments`, and blocks point

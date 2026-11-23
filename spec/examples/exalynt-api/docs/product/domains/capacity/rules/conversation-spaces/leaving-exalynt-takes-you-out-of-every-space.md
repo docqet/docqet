@@ -1,4 +1,5 @@
 ---
+id: leaving-exalynt-takes-you-out-of-every-space
 name: Leaving Exalynt takes you out of every space
 why: >-
   Someone no longer at Exalynt, or banned, must not keep reading what clients

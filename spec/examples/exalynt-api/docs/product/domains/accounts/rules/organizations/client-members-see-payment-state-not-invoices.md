@@ -1,4 +1,5 @@
 ---
+id: client-members-see-payment-state-not-invoices
 name: Client Members see payment state, not invoices
 ---
 

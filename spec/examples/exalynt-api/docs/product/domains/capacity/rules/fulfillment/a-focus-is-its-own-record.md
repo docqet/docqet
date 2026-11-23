@@ -1,4 +1,5 @@
 ---
+id: a-focus-is-its-own-record
 name: A focus is its own record
 ---
 

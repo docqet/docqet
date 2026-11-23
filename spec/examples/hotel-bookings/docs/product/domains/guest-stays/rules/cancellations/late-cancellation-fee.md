@@ -1,6 +1,7 @@
 ---
+id: late-cancellation-fee
 name: A late cancellation costs the first night
-concepts: [booking]
+concepts: [concept:booking]
 why: The room usually can't be rebooked at such short notice.
 ---
 

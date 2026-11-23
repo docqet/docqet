@@ -1,4 +1,5 @@
 ---
+id: how-a-weeks-availability-is-decided
 name: How a week's availability is decided
 ---
 

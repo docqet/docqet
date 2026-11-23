@@ -1,18 +1,19 @@
 ---
+id: hub
 name: Hub
 description: >-
   The Partner Hub, where a partnership's manager follows the clients it has
   brought in, invites more, and sees what it earns and how it's paid.
 capabilities:
-  - partner-home
-  - partnerships
-  - client-invitations
-  - partner-clients
-  - partner-earnings
-  - partner-payouts
-  - partner-payout-accounts
-  - partner-agreements
-  - getting-set-up
+  - capability:partner-home
+  - capability:partnerships
+  - capability:client-invitations
+  - capability:partner-clients
+  - capability:partner-earnings
+  - capability:partner-payouts
+  - capability:partner-payout-accounts
+  - capability:partner-agreements
+  - capability:getting-set-up
 gaps:
   - id: welcome-three-calls
     name: Accepting an invitation takes three calls

@@ -24,7 +24,7 @@ Room booking's declared part is its doc:
 
 ```yaml
 stability: beta
-rules: [booking/no-double-booking, booking/minimum-stay, booking/same-day-turnover]
+rules: [rule:no-double-booking, rule:minimum-stay, rule:same-day-turnover]
 ```
 
 Its derived part is in [state](state.md), worked out from that doc and
@@ -34,7 +34,7 @@ that names it:
 ```json
 {
   "id": "room-booking",
-  "feature": "reservations",
+  "feature": "feature:reservations",
   "evidence": {
     "implements": [{ "file": "src/booking/repository.ts", "line": 6, "text": "..." }]
   }

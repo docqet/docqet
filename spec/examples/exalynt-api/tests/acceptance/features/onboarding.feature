@@ -2,7 +2,7 @@ Feature: Onboarding and eligibility
   Engineers join Exalynt by an admin's invitation. A payout account is what gets
   them paid, and they can be assigned capacity without one.
 
-  # docket:verifies rule:onboarding/invited-engineers-join-their-team
+  # docket:verifies rule:invited-engineers-join-their-team@accounts
   Rule: An engineer invited onto a team joins it on accepting
 
     Example: Joining the team they were invited to

@@ -1,9 +1,10 @@
 ---
+id: payments
 name: Payments
 description: >-
   Getting paid for stays, before the guest arrives and while they're here.
 capabilities:
-  - deposits
-  - pay-by-link
-  - refunds
+  - capability:deposits
+  - capability:pay-by-link
+  - capability:refunds
 ---

@@ -1,14 +1,15 @@
 ---
+id: direct-billing
 name: Direct billing
 description: >-
   Clerks move a guest's bill to their company's account at check-out, so the
   guest leaves without paying.
 stability: alpha
-personas: [front-desk-clerk, guest]
+personas: [persona:front-desk-clerk, persona:guest]
 rules:
-  - company-accounts/credit-limit
-  - company-accounts/only-named-guests
-concepts: [bill, company-account]
+  - rule:credit-limit
+  - rule:only-named-guests
+concepts: [concept:bill@billing, concept:company-account]
 tradeoffs:
   - id: whole-bill-moves
     name: Whole bills move, not single charges

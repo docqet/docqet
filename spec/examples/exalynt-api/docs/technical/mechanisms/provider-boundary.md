@@ -1,4 +1,5 @@
 ---
+id: provider-boundary
 name: Provider boundary
 description: >-
   How the API reaches third-party services so that one can be swapped or

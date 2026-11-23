@@ -1,4 +1,5 @@
 ---
+id: earning-window-opens-at-first-purchase
 name: Earning window opens at first purchase
 ---
 

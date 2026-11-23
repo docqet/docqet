@@ -1,4 +1,5 @@
 ---
+id: access-tokens
 name: Access tokens
 description: >-
   People create personal access tokens so their scripts and tools can call the
@@ -6,42 +7,42 @@ description: >-
   choose.
 stability: beta
 personas:
-  - client-admin-founder
-  - client-admin-operations
-  - client-member
-  - client-billing
-  - exalynt-admin
-  - exalynt-engineer-1
-  - exalynt-engineer-2
-  - exalynt-engineer-new-hire
-  - exalynt-team-lead
-  - partner
+  - persona:client-admin-founder
+  - persona:client-admin-operations
+  - persona:client-member
+  - persona:client-billing
+  - persona:exalynt-admin
+  - persona:exalynt-engineer-1
+  - persona:exalynt-engineer-2
+  - persona:exalynt-engineer-new-hire
+  - persona:exalynt-team-lead
+  - persona:partner
 rules:
-  - access-tokens/tokens-carry-their-creators-access
-  - access-tokens/role-changes-apply-at-once
-  - access-tokens/tokens-stay-in-their-creators-organizations
-  - access-tokens/secret-shown-only-once
-  - access-tokens/managing-tokens-requires-a-session
-  - access-tokens/tokens-are-private-to-their-owner
-  - access-tokens/revoked-tokens-stop-working
-  - access-tokens/tokens-cover-all-organizations-by-default
-  - access-tokens/limited-tokens-work-only-where-limited
-  - access-tokens/limited-tokens-must-name-an-organization
-  - access-tokens/unlimited-tokens-follow-their-creator
-  - access-tokens/limits-need-the-creators-membership
-  - access-tokens/limited-tokens-reveal-only-their-organizations
-  - access-tokens/a-tokens-organizations-are-fixed
-  - access-tokens/limited-tokens-cant-act-elsewhere
-  - access-tokens/unknown-tokens-sign-no-one-in
-  - access-tokens/expired-tokens-sign-no-one-in
-  - access-tokens/expired-tokens-stay-listed
-  - access-tokens/deleting-someone-deletes-their-tokens
-  - access-tokens/bans-suspend-a-persons-tokens
-  - access-tokens/last-use-is-recorded
-  - access-tokens/limited-tokens-keep-an-organization
-  - access-tokens/limits-never-widen
-  - access-tokens/owners-see-a-tokens-limits
-concepts: [access-token, organization, role]
+  - rule:tokens-carry-their-creators-access
+  - rule:role-changes-apply-at-once
+  - rule:tokens-stay-in-their-creators-organizations
+  - rule:secret-shown-only-once
+  - rule:managing-tokens-requires-a-session
+  - rule:tokens-are-private-to-their-owner
+  - rule:revoked-tokens-stop-working
+  - rule:tokens-cover-all-organizations-by-default
+  - rule:limited-tokens-work-only-where-limited
+  - rule:limited-tokens-must-name-an-organization
+  - rule:unlimited-tokens-follow-their-creator
+  - rule:limits-need-the-creators-membership
+  - rule:limited-tokens-reveal-only-their-organizations
+  - rule:a-tokens-organizations-are-fixed
+  - rule:limited-tokens-cant-act-elsewhere
+  - rule:unknown-tokens-sign-no-one-in
+  - rule:expired-tokens-sign-no-one-in
+  - rule:expired-tokens-stay-listed
+  - rule:deleting-someone-deletes-their-tokens
+  - rule:bans-suspend-a-persons-tokens
+  - rule:last-use-is-recorded
+  - rule:limited-tokens-keep-an-organization
+  - rule:limits-never-widen
+  - rule:owners-see-a-tokens-limits
+concepts: [concept:access-token, concept:organization, concept:role]
 gaps:
   - id: old-code-ignores-limits
     name: Older code ignores token limits
@@ -85,7 +86,7 @@ gaps:
     when: Someone creates a great many tokens.
   - id: bans-can-arrive-late
     name: Bans can arrive late or out of order
-    rule: access-tokens/bans-suspend-a-persons-tokens
+    rule: rule:bans-suspend-a-persons-tokens
     impact: damaging
     description: >-
       A ban can arrive late or out of order: a banned user's tokens work until
@@ -96,7 +97,7 @@ gaps:
     when: Someone is banned.
   - id: bans-not-always-recorded
     name: Some bans can't be recorded
-    rule: access-tokens/bans-suspend-a-persons-tokens
+    rule: rule:bans-suspend-a-persons-tokens
     impact: damaging
     description: >-
       A ban can't always be recorded: a banned user with no primary email

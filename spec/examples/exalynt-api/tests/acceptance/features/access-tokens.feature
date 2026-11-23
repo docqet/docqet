@@ -6,7 +6,7 @@ Feature: Access tokens
   Background:
     Given Acme and Globex are clients
 
-  # docket:verifies rule:access-tokens/tokens-carry-their-creators-access
+  # docket:verifies rule:tokens-carry-their-creators-access@accounts
   Rule: A token has its creator's access when it's used, within any limit it has
 
     Example: In an organization, it has their role there
@@ -19,7 +19,7 @@ Feature: Access tokens
       When the token is used in no organization
       Then it can do what an engineer at Exalynt can
 
-  # docket:verifies rule:access-tokens/role-changes-apply-at-once
+  # docket:verifies rule:role-changes-apply-at-once@accounts
   Rule: A change to its creator's roles or memberships applies at once
 
     Example: Their role changes
@@ -32,7 +32,7 @@ Feature: Access tokens
       When Ada is removed from Acme
       Then the token can't act in Acme
 
-  # docket:verifies rule:access-tokens/tokens-stay-in-their-creators-organizations
+  # docket:verifies rule:tokens-stay-in-their-creators-organizations@accounts
   Rule: A token can't act in an organization its creator doesn't belong to
 
     Example: Another client's organization
@@ -40,7 +40,7 @@ Feature: Access tokens
       When the token is used in Globex
       Then it's refused
 
-  # docket:verifies rule:access-tokens/secret-shown-only-once
+  # docket:verifies rule:secret-shown-only-once@accounts
   Rule: The secret is shown once, when the token is created
 
     Example: Creating a token
@@ -53,7 +53,7 @@ Feature: Access tokens
       Then Ada sees the token
       And its secret isn't shown
 
-  # docket:verifies rule:access-tokens/managing-tokens-requires-a-session
+  # docket:verifies rule:managing-tokens-requires-a-session@accounts
   Rule: Managing tokens needs a signed-in session
 
     Scenario Outline: A token can't manage tokens
@@ -67,7 +67,7 @@ Feature: Access tokens
         | list tokens    |
         | revoke a token |
 
-  # docket:verifies rule:access-tokens/tokens-are-private-to-their-owner
+  # docket:verifies rule:tokens-are-private-to-their-owner@accounts
   Rule: A token is only its owner's to see or revoke
 
     Example: Someone else doesn't see it
@@ -81,7 +81,7 @@ Feature: Access tokens
       Then Bea finds no such token
       And Ada's token still works
 
-  # docket:verifies rule:access-tokens/revoked-tokens-stop-working
+  # docket:verifies rule:revoked-tokens-stop-working@accounts
   Rule: A revoked token can no longer sign anyone in
 
     Example: Revoking a token
@@ -89,7 +89,7 @@ Feature: Access tokens
       When Ada revokes it
       Then the token doesn't sign anyone in
 
-  # docket:verifies rule:access-tokens/tokens-cover-all-organizations-by-default
+  # docket:verifies rule:tokens-cover-all-organizations-by-default@accounts
   Rule: A token works in all of its creator's organizations unless they limit it when creating it
 
     Example: Choosing some organizations
@@ -109,7 +109,7 @@ Feature: Access tokens
       When the token is used in Acme
       Then it can do what a Member of Acme can
 
-  # docket:verifies rule:access-tokens/limited-tokens-work-only-where-limited
+  # docket:verifies rule:limited-tokens-work-only-where-limited@accounts
   Rule: A limited token works only in its organizations, with its creator's role in each
 
     Example: With their role in each
@@ -124,7 +124,7 @@ Feature: Access tokens
       When the token is used in Globex
       Then it's refused
 
-  # docket:verifies rule:access-tokens/limited-tokens-must-name-an-organization
+  # docket:verifies rule:limited-tokens-must-name-an-organization@accounts
   Rule: A limited token has to name one of its organizations
 
     Example: Naming none
@@ -133,7 +133,7 @@ Feature: Access tokens
       When the token is used in no organization
       Then it's refused
 
-  # docket:verifies rule:access-tokens/unlimited-tokens-follow-their-creator
+  # docket:verifies rule:unlimited-tokens-follow-their-creator@accounts
   Rule: A token that works in all organizations follows its creator
 
     Example: An organization they join later
@@ -142,7 +142,7 @@ Feature: Access tokens
       And the token is used in Globex
       Then it can do what a Member of Globex can
 
-  # docket:verifies rule:access-tokens/limits-need-the-creators-membership
+  # docket:verifies rule:limits-need-the-creators-membership@accounts
   Rule: A token can only be limited to organizations its creator belongs to
 
     Scenario Outline: Choosing somewhere else
@@ -165,7 +165,7 @@ Feature: Access tokens
       When Erin creates a token limited to Acme
       Then no token is created
 
-  # docket:verifies rule:access-tokens/limited-tokens-reveal-only-their-organizations
+  # docket:verifies rule:limited-tokens-reveal-only-their-organizations@accounts
   Rule: A limited token reveals only its own organizations
 
     Example: Asking where its creator belongs
@@ -181,7 +181,7 @@ Feature: Access tokens
       When the token is used in Globex and in an organization Ada isn't in
       Then it's refused the same way in both
 
-  # docket:verifies rule:access-tokens/a-tokens-organizations-are-fixed
+  # docket:verifies rule:a-tokens-organizations-are-fixed@accounts
   Rule: A token's organizations are fixed when it's created
 
     Example: Joining another organization doesn't add it
@@ -190,7 +190,7 @@ Feature: Access tokens
       And the token is used in Globex
       Then it's refused
 
-  # docket:verifies rule:access-tokens/limited-tokens-cant-act-elsewhere
+  # docket:verifies rule:limited-tokens-cant-act-elsewhere@accounts
   Rule: A limited token can't act for its creator outside its organizations
 
     Scenario Outline: Things that aren't in any of its organizations
@@ -218,14 +218,14 @@ Feature: Access tokens
 
   # Edge rules
 
-  # docket:verifies rule:access-tokens/unknown-tokens-sign-no-one-in
+  # docket:verifies rule:unknown-tokens-sign-no-one-in@accounts
   Rule: An unknown token doesn't sign anyone in
 
     Example: A token no one created
       When a token no one created is used
       Then it's refused
 
-  # docket:verifies rule:access-tokens/expired-tokens-sign-no-one-in
+  # docket:verifies rule:expired-tokens-sign-no-one-in@accounts
   Rule: An expired token doesn't sign anyone in
 
     Example: Past its expiry
@@ -233,7 +233,7 @@ Feature: Access tokens
       When the token is used
       Then it's refused
 
-  # docket:verifies rule:access-tokens/expired-tokens-stay-listed
+  # docket:verifies rule:expired-tokens-stay-listed@accounts
   Rule: An expired token stays listed until it's revoked
 
     Example: Listing an expired token
@@ -241,7 +241,7 @@ Feature: Access tokens
       When Ada lists their tokens
       Then Ada sees the token
 
-  # docket:verifies rule:access-tokens/deleting-someone-deletes-their-tokens
+  # docket:verifies rule:deleting-someone-deletes-their-tokens@accounts
   Rule: Deleting someone deletes their tokens
 
     Example: Their account is deleted
@@ -249,7 +249,7 @@ Feature: Access tokens
       When Ada's account is deleted
       Then the token doesn't sign anyone in
 
-  # docket:verifies rule:access-tokens/bans-suspend-a-persons-tokens
+  # docket:verifies rule:bans-suspend-a-persons-tokens@accounts
   Rule: A banned person's tokens don't work until the ban is lifted
 
     Example: They're banned
@@ -263,7 +263,7 @@ Feature: Access tokens
       When Ada's ban is lifted
       Then Ada's token still works
 
-  # docket:verifies rule:access-tokens/last-use-is-recorded
+  # docket:verifies rule:last-use-is-recorded@accounts
   Rule: Using a token records when it was last used
 
     Example: First use
@@ -271,7 +271,7 @@ Feature: Access tokens
       When the token is used
       Then Ada sees when it was last used
 
-  # docket:verifies rule:access-tokens/limited-tokens-keep-an-organization
+  # docket:verifies rule:limited-tokens-keep-an-organization@accounts
   Rule: A limited token has at least one organization
 
     Example: Choosing none
@@ -279,7 +279,7 @@ Feature: Access tokens
       When Ada creates a token limited to no organizations
       Then no token is created
 
-  # docket:verifies rule:access-tokens/limits-never-widen
+  # docket:verifies rule:limits-never-widen@accounts
   Rule: A limit never widens
 
     Example: Leaving one of its organizations
@@ -301,7 +301,7 @@ Feature: Access tokens
       When Ada joins Acme as a Member
       Then the token works in Acme
 
-  # docket:verifies rule:access-tokens/owners-see-a-tokens-limits
+  # docket:verifies rule:owners-see-a-tokens-limits@accounts
   Rule: A token's owner sees which organizations it's limited to
 
     Example: Listing a limited token

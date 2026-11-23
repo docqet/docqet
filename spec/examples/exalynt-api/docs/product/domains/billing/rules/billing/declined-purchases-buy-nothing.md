@@ -1,4 +1,5 @@
 ---
+id: declined-purchases-buy-nothing
 name: Declined purchases buy nothing
 ---
 

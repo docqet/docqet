@@ -1,4 +1,5 @@
 ---
+id: preferred-week
 name: Preferred week
 description: >-
   The week a client schedules a block for. It's a target Exalynt strives for,

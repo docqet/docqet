@@ -1,4 +1,5 @@
 ---
+id: reading-the-partner-agreement-before-accepting
 name: Reading the Partner Agreement before accepting
 ---
 

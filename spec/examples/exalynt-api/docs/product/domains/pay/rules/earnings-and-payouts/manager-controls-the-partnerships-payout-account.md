@@ -1,4 +1,5 @@
 ---
+id: manager-controls-the-partnerships-payout-account
 name: Manager controls the partnership's payout account
 ---
 

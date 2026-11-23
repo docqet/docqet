@@ -1,4 +1,5 @@
 ---
+id: available-teammates-earn-team-support-share
 name: Available teammates earn Team Support Share
 ---
 
