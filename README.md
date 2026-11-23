@@ -13,10 +13,11 @@ evidence of what it actually does, and readable by everyone with a stake in it.
 
 Docket is an open format, and the tools that read it, for writing down what
 your software is meant to do: its capabilities, the rules they follow, the
-people they serve, how stable each one is, and the gaps we know about. Each is
-a small plain-language doc in the repository, changed in the same commit as the
-code. Code and tests point back at them as evidence. Tools then show everyone,
-technical or not, what's intended, what's real, and the gap between.
+people they serve, how stable each one is, how it's meant to be built, and the
+gaps and tradeoffs we know about. Each is a small plain-language doc in the
+repository, changed in the same commit as the code. Code and tests point back
+at them as evidence. Tools then show everyone, technical or not, what's
+intended, what's real, and the gap between.
 
 **Contents:** [The problem](#the-problem) · [How it works](#how-it-works) · [Who it's for](#who-its-for) · [How it supports software engineering](#how-it-supports-software-engineering) · [What Docket isn't](#what-docket-isnt) · [Does it belong in Docket?](#does-it-belong-in-docket) · [Proposed architecture](#proposed-architecture) · [Where it is today](#where-it-is-today) · [Open questions](#open-questions) · [Layout](#layout)
 
@@ -58,7 +59,9 @@ Docket separates what the software is meant to do from what it does:
 - **Intention is declared.** Docket's docs in a repository say what the
   software should do and must never do: its capabilities, the people they
   serve, the rules they follow, how stable each one is meant to be, and the
-  gaps we know about. They're written before or alongside the code, so they can
+  gaps we know about. Beside them, technical docs say how it's meant to be
+  built, in the code's words: the tradeoffs made on purpose, and the technical
+  gaps still open. They're written before or alongside the code, so they can
   say what the software is meant to do even when it doesn't do it yet, or
   doesn't do it correctly.
 - **Evidence is linked.** Code, tests and commits show what the software
@@ -66,23 +69,27 @@ Docket separates what the software is meant to do from what it does:
   can go from a rule to the code that enforces it and the tests that check it.
   Evidence can take many forms, and we're deliberately keeping it open. Today
   it's annotations: a `docket:implements` or `docket:verifies` comment that
-  says which rules or capabilities a place in the repository is about. Later it
-  may include commits, pull requests, CI results and more.
+  says which rules, capabilities or systems a place in the repository is
+  about, and a `docket:gap` or `docket:tradeoff` comment that marks where a
+  known gap or a deliberate choice shows in the code. Later it may include
+  commits, pull requests, CI results and more.
 - **State is derived.** Tools read both and work out everything else, which
   nobody writes by hand: each rule's evidence, each feature's **maturity** (how
   much of it is stable), each persona's **readiness** (how ready the software
   is for them), and any problems in the docs themselves.
 - **The difference is the work.** Where intention has no evidence, or the
   evidence contradicts it, someone has something to build, fix or decide.
-  Docket shows those gaps and contradictions, rather than hiding them or
-  quietly resolving them.
+  Docket names the ways intention and reality differ, open decisions, gaps,
+  tradeoffs, missing evidence and problems, and shows each where it matters,
+  rather than hiding it or quietly resolving it. See
+  [where intention and reality differ](docs/domain/overview.md#where-intention-and-reality-differ).
 
 That makes it easy for anyone, person or agent, technical or not, to:
 
 - **See where the software is**: what it can do, who it does it for, and how
   stable each part is.
-- **Know what's left**: each part's known gaps, and what its stability level
-  expects that it doesn't yet meet.
+- **Know what's left**: each part's known gaps, when each comes due, and what
+  its stability level expects that it doesn't yet meet.
 - **Understand the domain**: what its concepts mean, and which rules must
   always hold.
 - **Check the evidence**: go from any capability or rule to the code that
@@ -101,14 +108,16 @@ Intention is written to be:
 - **Plain Markdown and YAML**, which a person can write by hand. Docket works
   without agents, though we recommend them to get the most from it.
 
-Agents can help write intention down, and can draft it from existing code, for
-example to bring Docket to a repository that already exists. A draft taken from
-code repeats what the code does, bugs included, so it's marked as a draft, and
-a person confirms each part before it counts as declared.
+Agents can help write intention down, and can work it out from existing code, for
+example to bring Docket to a repository that already exists. Intention taken
+from code repeats what the code does, bugs included, so it's marked as
+unconfirmed, and a person confirms each part before it counts as declared.
 
-[What Docket's concepts mean](docs/domain/concepts.md) defines each of these
-terms precisely: domains, features, capabilities, rules, concepts, personas,
-known gaps, stability levels, maturity and evidence.
+[The overview of Docket's concepts](docs/domain/overview.md) shows how they
+fit together: domains, features, capabilities, rules, concepts, personas,
+systems and components, open decisions, gaps and tradeoffs, stability levels,
+maturity and evidence. Each has [a doc of its own](docs/domain/concepts/) that
+defines it precisely, with an example of how it's written down.
 
 ## Who it's for
 
@@ -157,11 +166,11 @@ down:
 
 | Judgment means…                            | Docket records                                                                                                                       |
 | ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------ |
-| **Evaluating tradeoffs**                   | Accepted tradeoffs: known gaps we've decided to live with                                                                            |
-| **Amid uncertainty**                       | Known gaps, open decisions, and Prototype and Alpha levels, so what isn't known yet is said plainly                                  |
-| **Deciding at the right moment**           | Open decisions, held in the capability until it's time to settle them, so they aren't lost or quietly decided in code                |
+| **Evaluating tradeoffs**                   | Tradeoffs: what we chose instead of what, what it costs, and what would make us look again                                           |
+| **Amid uncertainty**                       | Known gaps, open decisions, drafts, and Prototype and Alpha levels, so what isn't known or done yet is said plainly                  |
+| **Deciding at the right moment**           | Open decisions, held where their answer will go until it's time to settle them, and when each gap comes due                          |
 | **Deciding how much is enough**            | Each capability's stability level, and the stability checklist: what that level generally expects, and what would be overengineering |
-| **Taking responsibility for the outcomes** | Every decision made in a commit and reviewed in a pull request. Intention an agent drafts counts only once a person confirms it      |
+| **Taking responsibility for the outcomes** | Every decision made in a commit and reviewed in a pull request. Intention an agent writes counts only once a person confirms it      |
 
 Sound judgment rests on evidence and is honest about uncertainty, and Docket
 helps with both. It can't show whether a decision was made with integrity, or
@@ -170,11 +179,24 @@ with the people affected at its center. That's up to the people making it.
 ### Craft
 
 Craft is how well the software is built: clear, simple, secure, dependable and
-maintainable, and built with care. Docket can't see that. It shows the standard
-each stability level expects, grouped by qualities such as reliability and
-security, and the known gaps where the work falls short of it. Docket counts a
-checklist outcome as met unless a known gap names it, so what it shows about
-craft is what people declare, not evidence of it.
+maintainable, and built with care. Docket can't judge code. It holds the
+team's intention about how the software is built, and shows where the build
+falls short of it:
+
+- **Tradeoffs made on purpose**, what each costs, and what would make us look
+  again, so a shortcut someone chose isn't mistaken for one someone missed.
+- **Deliberate code, marked.** A `docket:tradeoff` comment says code that
+  looks wrong is meant to be that way, so neither a person nor an agent
+  "fixes" it. A bug no longer looks just like a deliberate choice.
+- **Technical gaps**, marked where they are in the code instead of as bare
+  TODOs, and when each comes due, from the levels of the capabilities that
+  rely on that code.
+- **The standard each stability level expects**, grouped by qualities such as
+  reliability and security, with each outcome not met, met with evidence from
+  a system that meets it, or met on trust.
+
+What Docket shows about craft is still mostly what people declare. It makes
+that declaration specific, and puts it beside the code it's about.
 
 ### Agents
 
@@ -183,7 +205,7 @@ Exalynt's view of
 is that AI's judgments often lack the circumstances behind a decision, and the
 discipline supplies them: what the AI needs to know, and whether what comes
 back is right. Docket gives agents the first, the declared intention, before
-they change code. It leaves the second with people: nothing an agent drafts
+they change code. It leaves the second with people: nothing an agent writes
 counts until a person confirms it.
 
 Docket informs judgment and shows the standard of craft, but it does neither.
@@ -203,9 +225,10 @@ decisions, and the evidence behind them, visible to everyone.
 - **A guarantee of accuracy.** People write intention and annotations, and
   people make mistakes. Docket gets you closer to the truth than going without,
   and points out what it can tell is wrong, but it never claims to be perfect.
-- **A description of how the software is built.** It records what value the
-  software provides, never its screens, services or technologies. Architecture
-  and runbooks belong in engineering docs.
+- **A copy of what the code already says.** It records what the code can't
+  show: what the software is meant to do, and the intention behind how it's
+  built. Lists of endpoints, tables or services, and diagrams drawn from the
+  code, stay in the code. Runbooks belong wherever a team keeps them.
 - **A score to maximize.** Maturity is an indication, not a target. Starting
   new work lowers it, and 100% isn't the goal.
 - **A place to change intention outside the repository.** Intention is only
@@ -224,26 +247,30 @@ Before adding something to Docket, ask:
    change it.
 3. **Does it inform judgment, rather than make the decision?** Docket shows
    levels, gaps and evidence. People decide what they mean.
-4. **Is it about the value the software provides, not how it's built?**
+4. **Is it intention the code can't show?** What the software should do, in
+   the domain's words, or how it's meant to be built and why, in the code's,
+   and not what a reader could learn from the code in a few minutes.
 
 Something that answers yes to all four probably belongs. Something that fails
 one probably belongs in another tool, which Docket can link to. For example:
 
-| Idea                                                                                    | Belongs?   | Why                                                                          |
-| --------------------------------------------------------------------------------------- | ---------- | ---------------------------------------------------------------------------- |
-| A pull request comment previewing what the change does to the state                     | Yes        | Makes intention and evidence easier to see, in the review itself             |
-| An API agents query for a capability's rules and level before changing its code         | Yes        | Keeps agents' work tied to the declared intention                            |
-| A history of each capability's level, and of maturity, over time                        | Yes        | Shows where the software is going, all derived from the repository           |
-| Release notes for stakeholders, written from what changed in the state                  | Yes        | Makes the state easy to take in for people who don't read code               |
-| An editor that lets people who don't use git propose a change, as a pull request        | Yes, later | Opens intention to more people, and the change still lands in the repository |
-| A CI check that fails when the Docket docs are broken, such as a link to a missing rule | Yes, later | Keeps the docs correct. It checks the docs, never the software               |
-| Notifying people when a capability they depend on is demoted or its rules change        | Yes, later | Tells people when what they rely on changes                                  |
-| A known gap linking to the issue where its fix is tracked                               | Yes        | Connects the gap to the work, while planning stays in the tracker            |
-| A read-only view a team shares with its product's customers                             | Yes, later | Customers have a stake too, and see only what they're allowed to             |
-| Owners, estimates and due dates on known gaps                                           | No         | Planning the work is a task tracker's job (fails 1 and 3)                    |
-| Diagrams of services and components drawn from the code                                 | No         | Describes how it's built, not what value it provides (fails 4)               |
-| A coverage percentage on each capability                                                | No         | A score that stands in for judgment (fails 3)                                |
-| A form on the server that changes a capability without a commit                         | No         | Makes the server a second place to declare intention (fails 2)               |
+| Idea                                                                                    | Belongs?   | Why                                                                                         |
+| --------------------------------------------------------------------------------------- | ---------- | ------------------------------------------------------------------------------------------- |
+| A pull request comment previewing what the change does to the state                     | Yes        | Makes intention and evidence easier to see, in the review itself                            |
+| An API agents query for a capability's rules and level before changing its code         | Yes        | Keeps agents' work tied to the declared intention                                           |
+| A history of each capability's level, and of maturity, over time                        | Yes        | Shows where the software is going, all derived from the repository                          |
+| Release notes for stakeholders, written from what changed in the state                  | Yes        | Makes the state easy to take in for people who don't read code                              |
+| An editor that lets people who don't use git propose a change, as a pull request        | Yes, later | Opens intention to more people, and the change still lands in the repository                |
+| A CI check that fails when the Docket docs are broken, such as a link to a missing rule | Yes, later | Keeps the docs correct. It checks the docs, never the software                              |
+| Notifying people when a capability they depend on is demoted or its rules change        | Yes, later | Tells people when what they rely on changes                                                 |
+| A known gap linking to the issue where its fix is tracked                               | Yes        | Connects the gap to the work, while planning stays in the tracker                           |
+| A tradeoff and what it costs, beside the code it explains                               | Yes        | Intention about how it's built that the code can't show                                     |
+| A read-only view a team shares with its product's customers                             | Yes, later | Customers have a stake too, and see only what they're allowed to                            |
+| Owners, estimates and due dates on known gaps                                           | No         | Planning the work is a task tracker's job (fails 1 and 3)                                   |
+| Diagrams of services and components drawn from the code                                 | No         | The code already shows it (fails 4)                                                         |
+| A coverage percentage on each capability                                                | No         | A score that stands in for judgment (fails 3)                                               |
+| A complexity score for each component                                                   | No         | Measures the code rather than stating intention, and stands in for judgment (fails 3 and 4) |
+| A form on the server that changes a capability without a commit                         | No         | Makes the server a second place to declare intention (fails 2)                              |
 
 ## Proposed architecture
 
@@ -336,8 +363,10 @@ Things we haven't decided, to settle as the prototype answers them:
 - **Which commits apply.** Only the default branch, or branches and pull
   requests too, to preview a change before it merges?
 - **How projects and clients map onto access control** on the server.
-- **How a draft is marked in the spec**, so intention an agent drafted from
-  code isn't counted as declared until a person confirms it.
+- **How unconfirmed intention is marked in the spec**, so intention an agent
+  wrote from existing code isn't counted as declared until a person confirms
+  it. It's not a draft capability, which a person has declared and nobody has
+  started.
 - **Which other forms of evidence to accept**, such as commits, pull requests
   and CI results, and how each is linked to the intention it's about.
 
@@ -345,7 +374,7 @@ Things we haven't decided, to settle as the prototype answers them:
 
 | Directory        | What's in it                                                                                    |
 | ---------------- | ----------------------------------------------------------------------------------------------- |
-| [`docs/`](docs/) | Docket's own docs, starting with [what its concepts mean](docs/domain/concepts.md)              |
+| [`docs/`](docs/) | Docket's own docs, starting with [an overview of its concepts](docs/domain/overview.md)         |
 | [`spec/`](spec/) | The format: doc types, frontmatter, IDs, code and test annotations, and the `state.json` schema |
 | [`kit/`](kit/)   | The agent development kit: skills and rules that keep docs and annotations current              |
 | [`tool/`](tool/) | The `docket` command (indexer) and the UI that reads its output                                 |
