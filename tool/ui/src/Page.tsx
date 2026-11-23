@@ -26,14 +26,14 @@ import {
   Places,
   
   checklistCounts,
-  domainCapabilities,
   levelName,
   plural,
   type ExploreKind,
   Maturity,
 } from "./Explore";
 import { DomainIcon } from "./FeatureMap";
-import { PersonaAvatar, ReadinessMeter, personaNameAndRole, readinessBasis } from "./Personas";
+import { PersonaAvatar, personaNameAndRole, personaReadiness } from "./Personas";
+import { ReadinessMark, StillNeeds, needsLine, readinessLabel } from "./Readiness";
 import { ProjectIcon } from "./PlatformFilter";
 import {
   bareId,
@@ -49,6 +49,13 @@ import {
   openDecisions,
   closedDecisions,
   decidedBy,
+  domainCapabilities,
+  isReady,
+  needsOf,
+  personaCapabilitiesIn,
+  readinessOf,
+  startedOf,
+  type Readiness,
   type BecameKind,
   pageHref,
   
@@ -59,7 +66,6 @@ import {
   leftIn,
   nextLevel,
   partOf,
-  personaReadinessIn,
   pickList,
   projectName,
   
@@ -414,6 +420,36 @@ function Avatars({ personas }: { personas: Persona[] }) {
       ))}
       {more > 0 ? <span className="page-avatars-more">+{more}</span> : null}
     </span>
+  );
+}
+
+/* ——— Readiness ——— */
+
+/* How ready it is, as a figure in the header, linking to what it still needs on its first tab. */
+function ReadinessStat({ readiness, tab }: { readiness: Readiness; tab: string }) {
+  const ready = isReady(readiness);
+  const note = [
+    ...(readiness.notReady.length ? [`${readiness.notReady.length} not ready yet`] : []),
+    ...(readiness.notStarted.length ? [`${readiness.notStarted.length} not started`] : []),
+  ].join(" · ");
+  return (
+    <Stat
+      label="Readiness"
+      term="readiness"
+      value={readinessLabel(readiness) ?? "Nothing started"}
+      note={note || (ready ? "Every started capability" : "Drafts don't count")}
+      tone={ready ? "ok" : undefined}
+      href={`${tabHref(tab)}#still-needs`}
+    />
+  );
+}
+
+/* What it still needs before people can use it, as a section of its first tab. */
+function StillNeedsSection({ readiness, readyText }: { readiness: Readiness; readyText: string }) {
+  return (
+    <Section id="still-needs" title="What it still needs" term="readiness" note="Before people can use it: each capability not ready yet, and what would make it ready.">
+      <StillNeeds readiness={readiness} readyText={readyText} />
+    </Section>
   );
 }
 
@@ -810,6 +846,8 @@ function CapabilityPage({ capability, route, ...go }: PageProps & { capability: 
   const left = leftAcross(state, [capability]);
   const decided = decidedCount(state, capability, "capability", capability.tradeoffs);
   const ruleCount = (s: "gap" | "evidence" | "trust") => rules.filter((r) => ruleStanding(capability, r) === s).length;
+  const needs = level ? needsOf(state, capability) : null;
+  const ready = needs ? !needs.belowBeta && !needs.gaps.length : null;
 
   const tabs: TabDef[] = [
     { id: "overview", label: "Overview" },
@@ -847,6 +885,14 @@ function CapabilityPage({ capability, route, ...go }: PageProps & { capability: 
         marks={level ? <StabilityMark level={level} feature={capability.name} size="extra-long" /> : <span className="page-draft">Draft</span>}
         stats={
           <>
+            <Stat
+              label="Readiness"
+              term="readiness"
+              value={ready === null ? "Not started" : ready ? "Ready" : "Not ready yet"}
+              note={!needs ? "A draft is neither ready nor not" : ready ? "At Beta or above, with no unacceptable gap" : needsLine(needs)}
+              tone={ready ? "ok" : undefined}
+              href={needs?.gaps.length ? tabHref("left") : undefined}
+            />
             <LeftStat left={left} of={capability.name} />
             <Stat
               label="Rules" term="rule"
@@ -973,8 +1019,9 @@ function CapabilityPage({ capability, route, ...go }: PageProps & { capability: 
 }
 
 /*
- * A feature: what it is and how mature, then its capabilities, what's left
- * across them, who it serves, what it's decided, and its body.
+ * A feature: what it is, how mature and how ready, with what it still needs
+ * to be ready, then its capabilities, what's left across them, who it
+ * serves, what it's decided, and its body.
  */
 function FeaturePage({ feature, route, ...go }: PageProps & { feature: Feature }) {
   const { state, onOpen, onConcept } = go;
@@ -982,6 +1029,7 @@ function FeaturePage({ feature, route, ...go }: PageProps & { feature: Feature }
   const concepts = featureConcepts(state, feature);
   const personas = state.personas.filter((p) => p.features.includes(feature.id));
   const left = leftAcross(state, capabilities, { kind: "feature", doc: feature });
+  const readiness = readinessOf(state, capabilities);
   const decided = decidedCount(state, feature, "feature", feature.tradeoffs);
   const tabs: TabDef[] = [
     { id: "overview", label: "Overview" },
@@ -1003,6 +1051,7 @@ function FeaturePage({ feature, route, ...go }: PageProps & { feature: Feature }
         stats={
           <>
             <Stat label="Capabilities" term="capability" value={capabilities.length || "None"} note={<LevelBar capabilities={capabilities} />} href={tabHref("capabilities")} />
+            <ReadinessStat readiness={readiness} tab="overview" />
             <LeftStat left={left} of={feature.name} />
             <Stat
               label="Serves"
@@ -1038,6 +1087,7 @@ function FeaturePage({ feature, route, ...go }: PageProps & { feature: Feature }
               <p className="page-line">No capabilities yet.</p>
             )}
           </Section>
+          <StillNeedsSection readiness={readiness} readyText="Ready: every started capability is at Beta or above, with no unacceptable gap." />
           <TopGaps state={state} left={left} />
           {concepts.length ? (
             <Section title={<><Term id="concept">Concepts</Term> its capabilities use</>} count={concepts.length}>
@@ -1085,8 +1135,9 @@ function FeaturePage({ feature, route, ...go }: PageProps & { feature: Feature }
 }
 
 /*
- * A domain: what it is and how mature, then its features, its language (the
- * concepts and rules it defines), what's left across it, and its body.
+ * A domain: what it is, how mature and how ready, with what it still needs
+ * to be ready, then its features, its language (the concepts and rules it
+ * defines), what's left across it, and its body.
  */
 function DomainPage({ domain, route, ...go }: PageProps & { domain: Domain }) {
   const { state } = go;
@@ -1096,6 +1147,7 @@ function DomainPage({ domain, route, ...go }: PageProps & { domain: Domain }) {
   const concepts = state.concepts.filter((c) => c.domain === domain.id).sort((a, b) => a.name.localeCompare(b.name));
   const rules = state.rules.filter((r) => r.domain === domain.id);
   const left = leftAcross(state, capabilities, { kind: "domain", doc: domain });
+  const readiness = readinessOf(state, capabilities);
   const decided = decidedCount(state, domain, "domain", []);
   const tabs: TabDef[] = [
     { id: "overview", label: "Overview" },
@@ -1122,6 +1174,7 @@ function DomainPage({ domain, route, ...go }: PageProps & { domain: Domain }) {
               href={tabHref("features")}
             />
             <Stat label="Capabilities" term="capability" value={capabilities.length || "None"} note={<LevelBar capabilities={capabilities} />} href={tabHref("features")} />
+            <ReadinessStat readiness={readiness} tab="overview" />
             <Stat
               label="Language" term="concept"
               value={plural(concepts.length, "concept", "concepts")}
@@ -1143,6 +1196,7 @@ function DomainPage({ domain, route, ...go }: PageProps & { domain: Domain }) {
               <p className="page-line">A part of the business the software doesn't serve yet.</p>
             )}
           </Section>
+          <StillNeedsSection readiness={readiness} readyText="Ready: every started capability with a part in it is at Beta or above, with no unacceptable gap." />
           <TopGaps state={state} left={left} />
         </>
       ) : tab === "features" ? (
@@ -1217,9 +1271,9 @@ function DomainPage({ domain, route, ...go }: PageProps & { domain: Domain }) {
 }
 
 /*
- * A persona: how ready the software is for them, then what serves them, by
- * feature, what's left for them (only what someone using it would notice),
- * and their body.
+ * A persona: how ready the software is for them, and what it still needs to
+ * be, then what serves them, by feature, what's left for them (only what
+ * someone using it would notice), and their body.
  */
 function PersonaPage({ persona, route, ...go }: PageProps & { persona: Persona }) {
   const { state } = go;
@@ -1228,6 +1282,7 @@ function PersonaPage({ persona, route, ...go }: PageProps & { persona: Persona }
   const loose = capabilities.filter((c) => !c.feature);
   const domains = [...new Set(capabilities.flatMap((c) => docDomains(c)))];
   const left = leftAcross(state, capabilities, undefined, false);
+  const readiness = personaReadiness(state, persona);
   const { name, role } = personaNameAndRole(persona);
   const came = decidedBy(state, "persona", persona.id).length;
   const tabs: TabDef[] = [
@@ -1251,7 +1306,7 @@ function PersonaPage({ persona, route, ...go }: PageProps & { persona: Persona }
           </span>
         }
         trail={domains.length ? <DomainTrail state={state} domains={domains} /> : undefined}
-        marks={persona.readiness !== null ? <ReadinessMeter value={persona.readiness} basis={readinessBasis(state, persona)} large /> : <span className="faint">No readiness yet</span>}
+        marks={<ReadinessMark readiness={readiness} of={`Readiness for ${name}`} large />}
         stats={
           <>
             <Stat label="Features" term="feature" value={features.length || "None"} note="that serve them" href={tabHref("serves")} />
@@ -1264,21 +1319,19 @@ function PersonaPage({ persona, route, ...go }: PageProps & { persona: Persona }
       {tab === "readiness" ? (
         <>
           <Sources {...go} kind="persona" doc={persona} title="Who they are" />
-          <Section title="By feature" count={features.length} note="How ready each feature is for them, from the levels of its capabilities that serve them.">
+          <StillNeedsSection readiness={readiness} readyText={`Ready for ${name}: everything started that serves them is at Beta or above, with no unacceptable gap.`} />
+          <Section title="By feature" count={features.length} note="How ready each feature is for them, from its capabilities that serve them.">
             {features.length ? (
               <ul className="page-levels">
-                {features.map((f) => {
-                  const readiness = personaReadinessIn(state, persona, f);
-                  return (
-                    <li key={f.id}>
-                      <a className="page-crumb" href={docHref("feature", f.id)}>
-                        {NAMES.feature.icon}
-                        {f.name}
-                      </a>
-                      {readiness !== null ? <ReadinessMeter value={readiness} basis={readinessBasis(state, persona, f)} /> : <span className="faint">No readiness yet</span>}
-                    </li>
-                  );
-                })}
+                {features.map((f) => (
+                  <li key={f.id}>
+                    <a className="page-crumb" href={docHref("feature", f.id)}>
+                      {NAMES.feature.icon}
+                      {f.name}
+                    </a>
+                    <ReadinessMark readiness={readinessOf(state, personaCapabilitiesIn(state, persona, f))} of={`${f.name}'s readiness for ${name}`} />
+                  </li>
+                ))}
               </ul>
             ) : (
               <p className="page-line">No feature serves them yet.</p>
@@ -1296,7 +1349,7 @@ function PersonaPage({ persona, route, ...go }: PageProps & { persona: Persona }
       ) : tab === "serves" ? (
         <>
           {features.map((f) => {
-            const readiness = personaReadinessIn(state, persona, f);
+            const inFeature = readinessOf(state, personaCapabilitiesIn(state, persona, f));
             return (
               <Section
                 key={f.id}
@@ -1306,7 +1359,7 @@ function PersonaPage({ persona, route, ...go }: PageProps & { persona: Persona }
                     {f.name}
                   </a>
                 }
-                aside={readiness !== null ? <ReadinessMeter value={readiness} basis={readinessBasis(state, persona, f)} /> : undefined}
+                aside={startedOf(inFeature) ? <ReadinessMark readiness={inFeature} of={`${f.name}'s readiness for ${name}`} /> : undefined}
               >
                 <CapabilityTable state={state} capabilities={capabilities.filter((c) => c.feature === f.id)} technical={false} />
               </Section>

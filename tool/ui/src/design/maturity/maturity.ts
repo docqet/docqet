@@ -2,9 +2,10 @@ import { STABILITY_LEVEL_IDS, type StabilityLevelId } from "../stability/stabili
 
 // Maturity: how far along a Feature or a project is, meaning how close the
 // work under way is to being stable and supported, as a percentage worked out
-// from its Capabilities' stability levels.
-// Copied from Exalynt's design system; the spec's "Features and maturity" has the rules,
-// and the indexer works them out. The UI uses these for bands and colors.
+// from its Capabilities' stability levels, for planning. Whether people can
+// use it is readiness, which doesn't depend on maturity.
+// Copied from Exalynt's design system; the spec's "Features and maturity" has the rules.
+// The UI works them out from these (see state.ts), as nothing in state.json says.
 
 /** Where maturity counts as healthy for most businesses; the last quarter is room to keep evolving. */
 export const HEALTHY_MATURITY = 75;

@@ -74,10 +74,13 @@ Docket separates what the software is meant to do from what it does:
   known gap or a deliberate choice shows in the code. Later it may include
   commits, pull requests, CI results and more.
 - **State is derived.** Tools read both and work out everything else, which
-  nobody writes by hand: each rule's evidence, each feature's **maturity** (how
-  much of it is stable), each persona's **readiness** (how ready the software
-  is for them), each gap's **risk** (its declared impact, scored by
-  the stability of what it's on and whether it breaks that level's promise), and any problems in the docs themselves.
+  nobody writes by hand: each rule's evidence, each gap's **risk** (its
+  declared impact, scored by the stability of what it's on and whether it
+  breaks that level's promise), each feature's **maturity** (how far along
+  it is), the **readiness** of each capability, feature,
+  domain and persona (whether it's ready enough to use, at Beta or GA with
+  nothing unacceptable open, and if not, what's left), and any problems in the
+  docs themselves.
 - **The difference is the work.** What's declared is taken to hold, unless
   it's declared that it doesn't, or the evidence contradicts it. Docket names
   the ways intention and reality differ, open decisions, gaps, tradeoffs and
@@ -120,7 +123,7 @@ unconfirmed, and a person confirms each part before it counts as declared.
 [The overview of Docket's concepts](docs/domain/overview.md) shows how they
 fit together: domains, features, capabilities, rules, concepts, personas,
 mechanisms and components, open decisions, gaps and tradeoffs, stability levels,
-maturity and evidence. Each has [a doc of its own](docs/domain/concepts/) that
+maturity, readiness and evidence. Each has [a doc of its own](docs/domain/concepts/) that
 defines it precisely, with an example of how it's written down.
 
 ## Who it's for
@@ -235,7 +238,8 @@ decisions, and the evidence behind them, visible to everyone.
   built. Lists of endpoints, tables or services, and diagrams drawn from the
   code, stay in the code. Runbooks belong wherever a team keeps them.
 - **A score to maximize.** Maturity is an indication, not a target. Starting
-  new work lowers it, and 100% isn't the goal.
+  new work lowers it, and 100% isn't the goal. Readiness says what's left
+  before people can use something, and being ready isn't being finished.
 - **A place to change intention outside the repository.** Intention is only
   ever changed in a repository, so it's reviewed with the code. Servers and
   other tools read it and show it, never edit it.

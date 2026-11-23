@@ -17,14 +17,8 @@ feature whose capabilities are all at one level lands in that level's band.
 
 ## In the spec
 
-Nothing is written for it in a doc. The indexer writes it beside each
-maturity in [state](state.md), as the level it's named for:
-
-```json
-{ "id": "reservations", "maturity": 42, "band": "alpha" }
-```
-
-Readers show it by its own name: Reservations is Emerging.
+Nothing is written for it, and readers work it out beside each maturity.
+Reservations, at 42%, is Emerging.
 
 ## Not to be confused with
 

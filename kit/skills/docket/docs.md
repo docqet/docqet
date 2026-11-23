@@ -62,7 +62,7 @@ decisions: []
 ---
 ```
 
-A feature has no level, rules or gaps. Its maturity comes from its
+A feature has no level, rules or gaps. Its maturity and readiness come from its
 capabilities, its rules are theirs, and a capability it lacks is a draft
 capability. A capability is in at most one feature.
 

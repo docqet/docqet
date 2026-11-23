@@ -11,8 +11,6 @@
   "commit": "01de8f9",
   "indexedAt": "2026-11-23T12:00:00Z",
   "summary": {
-    "maturity": 55,
-    "band": "beta",
     "domains": 6,
     "features": 12,
     "personas": 10,
@@ -36,8 +34,6 @@
       "file": "docs/product/domains/accounts/domain.md",
       "name": "Accounts and access",
       "description": "Who people are, the accounts they share, and what each may do.",
-      "maturity": 66,
-      "band": "beta",
       "decisions": [],
       "body": "Everyone has one account, whichever hats they wear: a client's member, one of\nExalynt's engineers, a partner, or several at once. Clients' organizations are\nkept apart from each other, and what someone may do in each comes from their\nrole there."
     },
@@ -46,8 +42,6 @@
       "file": "docs/product/domains/agreements/domain.md",
       "name": "Agreements",
       "description": "The terms each client, engineer and partnership works with Exalynt under.",
-      "maturity": 55,
-      "band": "beta",
       "decisions": [],
       "body": "Each party reads and accepts its own agreement before it can work: a Client\nAgreement for an organization, an Engineer Agreement for an engineer, and a\nPartner Agreement for a partnership."
     },
@@ -56,8 +50,6 @@
       "file": "docs/product/domains/billing/domain.md",
       "name": "Billing",
       "description": "Charging clients for the capacity they buy.",
-      "maturity": 45,
-      "band": "alpha",
       "decisions": [],
       "body": "The payment provider holds payment methods, billing details and invoices, and\nworks out the tax on each invoice. Exalynt never calculates tax itself."
     },
@@ -66,8 +58,6 @@
       "file": "docs/product/domains/capacity/domain.md",
       "name": "Engineering capacity",
       "description": "Selling engineering capacity in blocks, and scheduling, staffing and delivering it week by week.",
-      "maturity": 47,
-      "band": "alpha",
       "decisions": [],
       "body": "Clients see capacity in units and blocks, never hours: a unit is a quarter of\none engineer's week. What a week has room for comes from what the engineers on\na client's teams offer."
     },
@@ -76,8 +66,6 @@
       "file": "docs/product/domains/partnerships/domain.md",
       "name": "Partnerships",
       "description": "The Partnership Program: partners who bring Exalynt clients, and earn on them.",
-      "maturity": 49,
-      "band": "alpha",
       "decisions": [],
       "body": "A partnership is a partner's own record, separate from any client\norganization. The clients it brings are attributed to it, and it earns on\ntheir blocks for a while after."
     },
@@ -86,8 +74,6 @@
       "file": "docs/product/domains/pay/domain.md",
       "name": "Earnings and pay",
       "description": "What people and partnerships earn from each block, and getting it to them.",
-      "maturity": 49,
-      "band": "alpha",
       "decisions": [],
       "body": "An earning is what someone is owed for a block. A payout is money sent, made up\nof earnings, once an admin has released it."
     }
@@ -103,8 +89,6 @@
         "roles",
         "access-tokens"
       ],
-      "maturity": 49,
-      "band": "alpha",
       "decisions": [],
       "body": "",
       "tradeoffs": []
@@ -118,8 +102,6 @@
       "capabilities": [
         "organizations-and-members"
       ],
-      "maturity": 100,
-      "band": "ga",
       "decisions": [],
       "body": "",
       "tradeoffs": []
@@ -134,8 +116,6 @@
         "getting-set-up",
         "engineer-onboarding"
       ],
-      "maturity": 35,
-      "band": "alpha",
       "decisions": [],
       "body": "## Clients\n\nA business signs up on its own and gets to its first block booked into a week:\n\n1. Someone at the business signs up, without an invitation, and creates an\n   organization.\n2. One of its Admins accepts the\n   [Client Agreement](../../agreements/capabilities/client-agreements.md) on its\n   behalf, before anyone can use the portal for it.\n3. Exalynt gives the organization a team as it signs up, when one has an\n   engineer offering time. If none does, it waits without a team until an admin\n   assigns one, and can still buy.\n4. The client sees what's still needed before work can start, and adds a\n   payment method and company details.\n5. They [buy a block](../../capacity/capabilities/capacity-purchasing.md), and\n   [schedule it](../../capacity/capabilities/scheduling.md) for a preferred\n   week.\n\nA client who signed up with a partner's referral code, link or invitation is\nattributed to that partnership, and told when signing up that the partner may\nearn from it. Others join later by an Admin's invitation, each with a role.\n\n## Engineers\n\nAn admin invites the engineer by email, choosing their team, if any, and\nsetting the Commercial Terms of their\n[Engineer Agreement](../../agreements/capabilities/engineer-agreements.md). The\nengineer accepts, signing up first if they need to, reads and accepts the\nagreement, and then sets their availability, the bank account their payouts go\nto, and a short bio, until they're ready for client work. Someone who already\nhas an account keeps it, and gains the console alongside what they had.\n\n## Partners\n\nHow partners are enrolled is part of the\n[Partner program](../../partnerships/features/partner-program.md).",
       "tradeoffs": []
@@ -150,8 +130,6 @@
         "your-profile",
         "notifications"
       ],
-      "maturity": 45,
-      "band": "alpha",
       "decisions": [],
       "body": "",
       "tradeoffs": []
@@ -168,8 +146,6 @@
         "engineer-agreements",
         "partner-agreements"
       ],
-      "maturity": 55,
-      "band": "beta",
       "decisions": [],
       "body": "",
       "tradeoffs": []
@@ -184,8 +160,6 @@
         "billing",
         "client-coupons"
       ],
-      "maturity": 45,
-      "band": "alpha",
       "decisions": [],
       "body": "",
       "tradeoffs": []
@@ -202,8 +176,6 @@
         "staffing",
         "fulfillment"
       ],
-      "maturity": 49,
-      "band": "alpha",
       "decisions": [],
       "body": "## How it goes\n\n1. The client schedules the block for a preferred week that has room.\n2. An engineer claims it from the client's shared queue, or an admin assigns\n   an eligible engineer to it.\n3. The engineer starts it, any time from the start of its week, and can add a\n   focus saying what its work is about, unless the client already has.\n4. The engineer marks it fulfilled. Nobody reviews it, and the client sees it\n   go from in progress to fulfilled.\n5. The people who earned from it see what it earned them, and are paid once an\n   admin releases the week's payouts. That's\n   [Getting paid](../../pay/features/getting-paid.md).\n\nA block the client moves before its week starts comes off its engineer and goes\nback to the shared queue for its new week. A block nobody is on when its week\nends stays scheduled and still owed, and an admin moves it to a coming week.",
       "tradeoffs": []
@@ -219,8 +191,6 @@
         "capacity-purchasing",
         "client-home"
       ],
-      "maturity": 60,
-      "band": "beta",
       "decisions": [],
       "body": "",
       "tradeoffs": []
@@ -237,8 +207,6 @@
         "engineers",
         "client-directory"
       ],
-      "maturity": 49,
-      "band": "alpha",
       "decisions": [],
       "body": "",
       "tradeoffs": []
@@ -253,8 +221,6 @@
         "conversation-spaces",
         "operations-and-ownership"
       ],
-      "maturity": 15,
-      "band": "prototype",
       "decisions": [],
       "body": "",
       "tradeoffs": []
@@ -271,8 +237,6 @@
         "partner-clients",
         "partner-home"
       ],
-      "maturity": 60,
-      "band": "beta",
       "decisions": [],
       "body": "## Enrolling a partner\n\n1. An admin invites the partner by email and sets the partnership's terms. The\n   invitation creates a new partnership for them to manage.\n2. The partner signs up, if they need to, and reads the\n   [Partner Agreement](../../agreements/capabilities/partner-agreements.md) the\n   invitation offers.\n3. They name the partnership and accept, in one step: that accepts the\n   invitation and the Partner Agreement together.\n4. They see the partnership's terms, and its referral code and sign-up link to\n   share, or invite people by email.\n5. They see what's left before they can be paid, and set up the\n   [payout account](../../pay/capabilities/partner-payout-accounts.md) the\n   partnership's earnings go to.\n\nSomeone who already has an account keeps it. A partner who manages several\npartnerships switches between them, viewing one at a time.",
       "tradeoffs": []
@@ -288,8 +252,6 @@
         "payouts",
         "payout-accounts"
       ],
-      "maturity": 35,
-      "band": "alpha",
       "decisions": [],
       "body": "Each week's payouts are seen by an admin before they're sent, and go out once\nthe admin releases them. An earning that can't be paid is held, with what needs\nfixing, and a failed payout is sent again.",
       "tradeoffs": []
@@ -305,8 +267,6 @@
         "partner-payouts",
         "partner-payout-accounts"
       ],
-      "maturity": 60,
-      "band": "beta",
       "decisions": [],
       "body": "Pay's part of the program: what a partnership earns on its clients' blocks, and\npaying it to the partnership's own account, never its manager's.",
       "tradeoffs": []
@@ -11626,7 +11586,6 @@
         "clients-and-teams",
         "partner-program"
       ],
-      "readiness": 56,
       "body": "## Needs\n\n- To buy engineering capacity and book it into a week straight away, so work\n  starts without the wait of hiring.\n- To see what's still needed before work can start, and what happens next.\n- To know what each piece of the product will cost and how many weeks it takes,\n  from Exalynt's estimates, so they can plan within tight money.\n- To see every week who's on each block, what it's about, and when it's\n  fulfilled, so they can tell what the money bought.\n\n## Knows\n\nTheir market and what the product should do. Semi-technical: reads some code and\nmay have sketched a prototype with AI. New to Exalynt's terms.\n\n## Context\n\nLaptop and phone, once or twice a week around checkpoints, fitted between\ncustomer and investor conversations. Money is tight and things feel urgent.\n\n## Expects\n\nTo talk in MVPs and roadmaps, iterate quickly, and compare Exalynt with hiring a\ncontractor.\n\n## Cares about\n\nVisible progress every week for the money spent. Gives up if they can't tell\nwhat they paid for or what happens next, or if starting work feels slow."
     },
     {
@@ -11669,7 +11628,6 @@
         "clients-and-teams",
         "partner-program"
       ],
-      "readiness": 56,
       "body": "## Needs\n\n- To buy blocks and schedule them for the weeks that suit the business, in a few\n  minutes between meetings.\n- To see where the work stands each week, and the named engineer on each block,\n  without having to ask.\n- To know what the work will cost and how many weeks it takes, from Exalynt's\n  estimates, so they can plan the budget.\n- To bring colleagues in and give each the right role, so others can follow the\n  work or pay the invoices.\n\n## Knows\n\nTheir business and its processes in depth. Doesn't code. Has worked with\nsoftware vendors, but blocks of capacity are new.\n\n## Context\n\nLaptop, between meetings, once or twice a week around checkpoints. Buys and\nschedules in short, interrupted sittings.\n\n## Expects\n\nTo talk in weeks, budget and outcomes, never hours. \"Sprint\" and \"ticket\" mean\nlittle. Expects plain language and ordinary vendor invoices.\n\n## Cares about\n\nSeeing real progress and a named engineer. Gives up if they can't tell what they\npaid for or what happens next."
     },
     {
@@ -11695,7 +11653,6 @@
         "agreements",
         "paying-for-capacity"
       ],
-      "readiness": 66,
       "body": "## Needs\n\n- To keep the company's payment methods current, and choose the one charged by\n  default.\n- To find every invoice, with its tax and payment status, and download it to\n  file.\n- To be told at once when a payment fails, and pay the unpaid invoice, so the\n  blocks it bought aren't left waiting.\n\n## Knows\n\nAccounts payable and the company's cards. Little about the engineering: a block\nis a line item.\n\n## Context\n\nLaptop, a few times a month in batches, or when a failed-payment notice arrives.\nPressed at month end.\n\n## Expects\n\nAn invoice list, statuses and a downloadable PDF, like any vendor portal.\n\n## Cares about\n\nAmounts that match and are easy to file. Gives up if invoices are hard to find\nor a failed payment is unclear."
     },
     {
@@ -11729,7 +11686,6 @@
         "block-delivery",
         "clients-and-teams"
       ],
-      "readiness": 60,
       "body": "## Needs\n\n- To see where each block stands, and read its focus and updates, without having\n  to ask for them.\n- To say what a block should work on, in their own words and with their own\n  screenshots and files, so what they asked for reaches the engineers.\n- To talk with the engineers about a block, and know they were heard.\n- To move a block to another week before it starts, when the business needs it.\n\n## Knows\n\nThe daily process and its exceptions. Not technical. Didn't choose Exalynt, and\ncan't buy capacity or see billing.\n\n## Context\n\nLaptop, between calls, once or twice a week. Mostly reads where the work stands,\nand sometimes moves a block.\n\n## Expects\n\nTo talk about customers and cases, and to find updates without having to ask for\nthem.\n\n## Cares about\n\nWhether what they asked for moved. Gives up if updates read as technical, or if\nit's unclear anyone heard them."
     },
     {
@@ -11773,7 +11729,6 @@
         "partner-program",
         "getting-paid"
       ],
-      "readiness": 46,
       "body": "## Needs\n\n- To spot what needs them at once: scheduled blocks nobody's on, overbooked\n  weeks, failed payments, and earnings on hold, and be told when one comes up.\n- To put an eligible engineer on a block, or take one off, across every client\n  and team.\n- To see the week's payouts by payee, with what each line is for, before\n  releasing them, so money moves only once it's been checked.\n- To bring engineers and partners in on the terms chosen, and see when each\n  engineer is ready for client work.\n\n## Knows\n\nEvery rule, and is technical. Will use the API where the UI has no way to do\nsomething.\n\n## Context\n\nDesktop, daily, in short bursts between calls and engineering. Approves and\nreleases payouts, usually once per week.\n\n## Expects\n\nExalynt's own vocabulary, views that lead with exceptions, and notifications\nthat say when something needs them.\n\n## Cares about\n\nSpotting unassigned blocks, failed payments and shares on hold right away. Gives\nup on anything that hides exceptions, makes money moves hard to double-check, or\nneeds a long unbroken sitting."
     },
     {
@@ -11809,7 +11764,6 @@
         "buying-capacity",
         "getting-paid"
       ],
-      "readiness": 49,
       "body": "## Needs\n\n- To set their availability once, and change a week when they need to, so\n  clients schedule only what they can do.\n- To claim the blocks that fit their weeks, seeing what each will earn them\n  before they claim it.\n- To start a block, post what they did, and mark it fulfilled in a few clicks,\n  so the app stays out of the way of the work.\n- To see what each block earned and when it was paid, with numbers that match.\n\n## Knows\n\nBlocks and the client's business. Skips instructions and moves fast.\n\n## Context\n\nLaptop, at the start and end of the week around blocks. Coding is the real job.\n\n## Expects\n\nGitHub and Linear-style speed, with the app staying out of the way.\n\n## Cares about\n\nKnowing what a block pays before starting, and numbers that match. Gives up on\nanything that makes saying what they did feel like a timesheet."
     },
     {
@@ -11845,7 +11799,6 @@
         "buying-capacity",
         "getting-paid"
       ],
-      "readiness": 49,
       "body": "## Needs\n\n- To know what's expected of them in a block's week, and what it will earn them,\n  before they claim it.\n- To be told why a block doesn't fit them, or why their earnings are on hold and\n  what to fix, rather than just being refused.\n- To see where each of their blocks stands and what its next step is, so they\n  don't get it wrong in front of a client.\n- To set up the bank account their payouts go to, and see whether it can be\n  paid.\n\n## Knows\n\nSolid coding, less client experience. Unsure of terms like eligibility, shares\nand Planned, and may still be setting up their payout account.\n\n## Context\n\nLaptop, at the start and end of the week around blocks. Reads carefully and goes\nslower.\n\n## Expects\n\nTools like GitHub and Linear, plus an explanation when Exalynt's process differs\nfrom them.\n\n## Cares about\n\nNot doing it wrong in front of a client, knowing what a block pays, and why they\ncan't be assigned if that happens. Gives up on unexplained refusals and terms."
     },
     {
@@ -11871,7 +11824,6 @@
         "agreements",
         "clients-and-teams"
       ],
-      "readiness": 53,
       "body": "## Needs\n\n- To read the terms that set what they earn, and accept their Engineer\n  Agreement, so they know how and when they'll be paid.\n- To see what they have left to set up, and whether they're ready for client\n  work, so nothing is missed before a client depends on them.\n- To add their bank account on the payments partner's form, knowing Exalynt's\n  admins never see its details.\n- Once ready, to be told where to find their first block.\n\n## Knows\n\nStrong technically. Knows from their hiring conversation that Exalynt sells\nblocks of engineering capacity and pays per block. Has never seen the app, and\ndoesn't know terms like preferred week, baseline or team support.\n\n## Context\n\nLaptop, one sitting after their current work, opening the email within a day.\n\n## Expects\n\nSetup like GitHub or Linear, a clear list of what's left, and someone to ask if\nstuck, without wanting to bother the person who hired them.\n\n## Cares about\n\nKnowing they've done everything needed before a client depends on them, and when\nand how they'll get paid. Hesitant to hand over bank details without knowing why\nor who holds them. Gives up on dead ends and on not being able to tell if\nanything is left to do."
     },
     {
@@ -11901,7 +11853,6 @@
         "block-delivery",
         "getting-paid"
       ],
-      "readiness": 46,
       "body": "## Needs\n\n- To see the whole team's availability, blocks and progress in one place, so\n  they can spot who's stuck or overloaded.\n- To start a teammate's block, set its focus, or post an update on it, so a\n  block doesn't stall.\n- To be told when someone joins or leaves the team, or can't be assigned blocks\n  any more.\n- To see what they earn as lead apart from their own engineering earnings, with\n  the fulfilled blocks each share came from.\n\n## Knows\n\nEngineering, Exalynt's model, and the team's clients. Uses their final say\nrarely.\n\n## Context\n\nLaptop, at the start and end of the week around their own blocks. Checks who's\nstuck.\n\n## Expects\n\nTo see the team at a glance. Knows GitHub and Linear-style tools.\n\n## Cares about\n\nBlocks not stalling, nobody getting overloaded, and lead earnings shown\nseparately from their own. Gives up if they have to go person by person to see\nthe team."
     },
     {
@@ -11936,7 +11887,6 @@
         "partner-program",
         "getting-paid"
       ],
-      "readiness": 51,
       "body": "## Needs\n\n- To copy their referral code or sign-up link, or invite someone by email, in a\n  moment when making an introduction.\n- To see what the partnership has earned, what's been paid and what's still\n  waiting, client by client, on their phone as well.\n- To see how long they earn on each client, without remembering how earning\n  windows work.\n- To be paid into the partnership's own account, and told why when earnings are\n  held.\n\n## Knows\n\nExalynt's work and reputation. Forgets how the hub and earning windows work\nbetween visits.\n\n## Context\n\nA few times a year, often from an emailed link on a phone, wanting the code to\nshare or what they've earned.\n\n## Expects\n\nA simple earnings statement. No quotas or selling.\n\n## Cares about\n\nClear numbers that match, and payouts that arrive. Leaves if it feels like a\nsales tool."
     }
   ],

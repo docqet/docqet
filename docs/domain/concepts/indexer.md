@@ -10,7 +10,7 @@ particular commit.
 anyone can write their own. It doesn't parse code, run tests or read their
 results. It reads the [docs](doc.md), finds every
 [annotation](annotation.md) by its text, and works out evidence, reverse
-links, maturity, readiness and [problems](problem.md).
+links and [problems](problem.md).
 
 It isn't built yet. The examples' state is written by hand, to show what it
 would produce.

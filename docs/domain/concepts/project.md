@@ -32,11 +32,11 @@ paid.
   product together, shown and combined as one. Hotel Bookings and Hotel
   Billing are both on Hotel. A project that names no platform is a platform of
   its own.
-- **It has no stability level.** It has a [maturity](maturity.md), worked out
-  from its parts of features. Several projects shown together have one too,
-  worked out from all their parts the same way, as if they were one project.
-  Showing only some projects works out each feature's and domain's maturity
-  from what those projects say.
+- **It has no stability level.** It has a [maturity](maturity.md), worked
+  out from its features, and a [readiness](readiness.md), from every
+  capability it shows. Several projects shown together have both too, as if
+  they were one project. Showing only some projects works out each feature's
+  and domain's from what those projects say.
 
 ## In the spec
 
@@ -57,8 +57,8 @@ is what people see, named for the software, not for a domain. Which domains it
 works in is the folders under `docs/product/domains/`, so nothing here says
 it. `platform` is optional, as the [platform](platform.md) says.
 
-Its [state](state.md) starts with the same, the commit it describes, and its
-maturity:
+Its [state](state.md) starts with the same, the commit it describes, and a
+summary:
 
 ```json
 {
@@ -66,7 +66,7 @@ maturity:
   "project": { "id": "hotel-bookings", "name": "Hotel Bookings" },
   "platform": { "id": "hotel", "name": "Hotel" },
   "commit": "4f2c9e1",
-  "summary": { "maturity": 60, "band": "beta", "domains": 2, "features": 3 }
+  "summary": { "domains": 2, "features": 3 }
 }
 ```
 

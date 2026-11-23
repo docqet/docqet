@@ -1,4 +1,4 @@
-import { MATURITY_LEVELS, featureMaturity, maturityBand, projectMaturity } from "./design/maturity/maturity";
+import { featureMaturity, maturityBand, projectMaturity } from "./design/maturity/maturity";
 import { STABILITY_LEVEL_IDS, type StabilityLevelId } from "./design/stability/stability";
 
 /*
@@ -105,7 +105,7 @@ export type Domain = Doc & {
   features: string[];
   /* The capabilities in no feature that it builds part of. */
   capabilities: string[];
-  /* 0 to 100, worked out from its parts of features, or null with none. */
+  /* 0 to 100, worked out from its parts of features, or null with none. Readers work it out; state.json doesn't say. */
   maturity: number | null;
   band: Level | null;
 };
@@ -118,7 +118,7 @@ export type Feature = Doc & {
   capabilities: string[];
   /* Its part in each domain, in the order they come up. */
   parts: Part[];
-  /* 0 to 100, from every part of its capabilities, or null with none. */
+  /* 0 to 100, from its capabilities, each once at its level in short, or null with none. */
   maturity: number | null;
   band: Level | null;
   /* Its tradeoffs: capabilities we've decided never to build, as it declares them. */
@@ -208,8 +208,6 @@ export type Persona = Doc & {
   /* Every capability that lists it, and the features those are in. */
   capabilities: string[];
   features: string[];
-  /* How ready the software is for them, 0 to 100: the maturity of every capability that serves them, or null with none. */
-  readiness: number | null;
 };
 
 /*
@@ -326,7 +324,7 @@ export type DocketState = {
   checklist: Checklist | null;
 };
 
-/* A place where software is defined, as its state.json's header and summary have it. */
+/* A place where software is defined, as its state.json's header has it, with its maturity, worked out from its features alone. */
 export type Project = {
   id: string;
   name: string;
@@ -349,7 +347,8 @@ export type StateFile = {
   platform?: { id: string; name: string };
   commit: string;
   indexedAt: string;
-  summary: { maturity: number | null; band: Level | null };
+  /* Its counts, such as capabilities at each level. The page works out its own, so it reads none of them. */
+  summary?: { capabilities?: Record<Level | "draft", number> };
   /* Each of its domain.md files. A domain is its own domain, so these have no `domain`. */
   domains: Omit<Raw<Domain>, "domain" | "features" | "capabilities">[];
   /* `tradeoffs` is missing from state written before tradeoffs. */
@@ -373,14 +372,14 @@ export type StateFile = {
   checklist?: Checklist;
 };
 
-/* A project's header and summary, from its state.json. */
+/* A project's header, from its state.json. Its maturity is worked out once its features are put together (see combine). */
 export const projectOf = (file: StateFile): Project => ({
   ...file.project,
   platform: file.platform ?? file.project,
   commit: file.commit,
   indexedAt: file.indexedAt,
-  maturity: file.summary.maturity,
-  band: file.summary.band,
+  maturity: null,
+  band: null,
 });
 
 /* Projects that are shown together, as one product: those that declare the same platform. */
@@ -549,7 +548,6 @@ export function combine(files: StateFile[]): DocketState {
         image: p.image ?? null,
         capabilities: [],
         features: [],
-        readiness: null,
       }));
     }
     /* Mechanisms and components are in no domain; their contributions are told apart by project, as a persona's are. */
@@ -719,7 +717,8 @@ export function combine(files: StateFile[]): DocketState {
   /*
    * Each feature's part in each domain: the capabilities that domain builds,
    * or lists in its own doc of the feature, with its maturity from their
-   * levels in that domain alone. The feature's maturity counts every part.
+   * levels in that domain alone. The feature's own maturity spans its
+   * domains, so it counts each capability once, at its level in short.
    */
   const levelsIn = (id: string, domain?: string) =>
     (find(state.capabilities, id)?.levels ?? []).filter((l) => !domain || l.domain === domain).map((l) => l.level);
@@ -734,21 +733,25 @@ export function combine(files: StateFile[]): DocketState {
       f.parts.push({ domain, capabilities, maturity, band: band(maturity) });
       union(find(state.domains, domain)?.features ?? [], [f.id]);
     }
-    f.maturity = featureMaturity(f.capabilities.flatMap((id) => levelsIn(id)));
+    f.maturity = featureMaturity(f.capabilities.flatMap((id) => find(state.capabilities, id)?.stability ?? []));
     f.band = band(f.maturity);
   }
   for (const c of state.capabilities) {
     if (!c.feature) for (const l of c.levels) union(find(state.domains, l.domain)?.capabilities ?? [], [c.id]);
   }
-  /* Each persona's capabilities, their features, and their readiness: those capabilities' maturity, from their levels in every domain, as a feature's is. */
+  /* Each persona's capabilities, and the features those are in. */
   for (const c of state.capabilities) for (const id of c.personas) union(find(state.personas, id)?.capabilities ?? [], [c.id]);
   for (const p of state.personas) {
     union(p.features, state.features.filter((f) => p.capabilities.some((id) => f.capabilities.includes(id))).map((f) => f.id));
-    p.readiness = featureMaturity(p.capabilities.flatMap((id) => levelsIn(id)));
   }
   for (const d of state.domains) {
     d.maturity = projectMaturity(d.features.map((id) => partOf(find(state.features, id), d.id)?.maturity ?? null));
     d.band = band(d.maturity);
+  }
+  /* Each project's maturity, from its features alone: with several, each project is put together again on its own. */
+  for (const p of state.projects) {
+    p.maturity = files.length === 1 ? maturityOf(state) : maturityOf(combine(files.filter((f) => f.project.id === p.id)));
+    p.band = band(p.maturity);
   }
 
   /* Contradictions: a product doc whose name or description differs between contributions, or a rule or concept within one domain, where a rule is its name and body. */
@@ -787,20 +790,31 @@ export const docDomains = (doc: Doc) => [...new Set(doc.from.map((f) => f.domain
 export const domainName = (state: DocketState, id: string) => find(state.domains, id)?.name ?? id;
 export const projectName = (state: DocketState, id: string) => find(state.projects, id)?.name ?? id;
 
-/* The maturity of everything showing: one project's, or several's worked out from all their parts of features the same way. */
-export const maturityOf = (state: DocketState): number | null =>
-  state.projects.length === 1
-    ? state.projects[0].maturity
-    : projectMaturity(state.features.flatMap((f) => f.parts.map((p) => p.maturity)));
-
-/* How ready a feature is for a persona: the maturity of just the capabilities in it that serve them. */
-export function personaReadinessIn(state: DocketState, persona: Persona, feature: Feature): number | null {
-  const ids = feature.capabilities.filter((id) => persona.capabilities.includes(id));
-  return featureMaturity(ids.flatMap((id) => (find(state.capabilities, id)?.levels ?? []).map((l) => l.level)));
-}
+/*
+ * The maturity of everything showing, one project or several: from its
+ * features' maturities, each weighted as a capability in its band would be,
+ * so a capability that spans domains counts once.
+ */
+export const maturityOf = (state: DocketState): number | null => projectMaturity(state.features.map((f) => f.maturity));
 
 /* A feature's part in a domain, if it has one. */
 export const partOf = (feature: Feature | undefined, domain: string) => feature?.parts.find((p) => p.domain === domain);
+
+/* Capabilities by ID, in the order given, leaving out any not showing. */
+export const capabilitiesById = (state: DocketState, ids: string[]) => ids.flatMap((id) => find(state.capabilities, id) ?? []);
+
+/* Every capability with a part in a domain: those in its parts of features, and those in no feature. */
+export function domainCapabilities(state: DocketState, domain: Domain): Capability[] {
+  const ids = [...domain.features.flatMap((id) => partOf(find(state.features, id), domain.id)?.capabilities ?? []), ...domain.capabilities];
+  return capabilitiesById(state, [...new Set(ids)]);
+}
+
+/* The capabilities in a feature that serve a persona. */
+export const personaCapabilitiesIn = (state: DocketState, persona: Persona, feature: Feature) =>
+  capabilitiesById(state, feature.capabilities.filter((id) => persona.capabilities.includes(id)));
+
+/* The capabilities a project contributes to, each judged as a whole. */
+export const projectCapabilities = (state: DocketState, project: string) => state.capabilities.filter((c) => c.from.some((f) => f.project === project));
 
 /* The contradictions and ambiguous links a doc has, as combining found them. */
 export const contradictionsOf = (state: DocketState, type: string, id: string) =>
@@ -1120,25 +1134,28 @@ export function showsOn(state: DocketState, item: { id: string }): Capability[] 
 /*
  * What's at stake in leaving a gap or tradeoff open, as the spec's Risk
  * section works it out, on each capability it shows on: its impact's step,
- * times that capability's level's weight in maturity, times 1.5 where it
- * breaks a promise that level makes, naming a rule the capability follows or
- * an outcome its level expects, put on 0 to 100 by a log scale, so each
- * step of impact or level, and breaking a promise, adds a steady amount: 0
- * is a negligible gap on a Prototype, and 100 a damaging gap breaking a
- * promise on GA. A draft weighs nothing, and scores 0. Its risk is the highest
- * of those, or null with no impact rated; its verdict, the band that falls
- * in; its exposure, how its scores spread across the capabilities, highest
- * first. A tradeoff breaks no promise: one that names an outcome falls short
- * on purpose. `when` is never part of it.
+ * times that capability's level's weight in risk, times 1.5 where it breaks
+ * a promise that level makes, naming a rule the capability follows or an
+ * outcome its level expects, put on 0 to 100 by a log scale, so each step of
+ * impact or level, and breaking a promise, adds a steady amount: 0 is a
+ * negligible gap on a Prototype, and 100 a damaging gap breaking a promise on
+ * GA. A draft weighs nothing, and scores 0. Its risk is the highest of
+ * those, or null with no impact
+ * rated; its verdict, the third of the scale that falls in; its exposure, how
+ * its scores spread across the capabilities, highest first. A tradeoff breaks
+ * no promise: one that names an outcome falls short on purpose. `when` is
+ * never part of it.
  */
 export const IMPACT_STEPS: Record<Impact, number> = { negligible: 1, inconvenient: 2, blocking: 3, damaging: 4 };
 export const PROMISE_FACTOR = 1.5;
+/* How much each level weighs in risk: the higher, the more people rely on it. A draft weighs nothing. Risk's own, apart from maturity's. */
+export const RISK_WEIGHTS: Record<Level, number> = { prototype: 2, alpha: 3, beta: 4, ga: 6 };
 /* The lowest and highest raw scores there are, which are 0 and 100: a negligible gap on a Prototype, and a damaging gap breaking a promise on GA. */
-const RAW_MIN = IMPACT_STEPS.negligible * MATURITY_LEVELS.prototype.weight;
-const RAW_MAX = IMPACT_STEPS.damaging * MATURITY_LEVELS.ga.weight * PROMISE_FACTOR;
+const RAW_MIN = IMPACT_STEPS.negligible * RISK_WEIGHTS.prototype;
+const RAW_MAX = IMPACT_STEPS.damaging * RISK_WEIGHTS.ga * PROMISE_FACTOR;
 const onScale = (raw: number) => (raw > 0 ? Math.round((Math.log(raw / RAW_MIN) / Math.log(RAW_MAX / RAW_MIN)) * 100) : 0);
 
-/* Whether leaving it open is acceptable, by the band its risk falls in, worst first. */
+/* Whether leaving it open is acceptable, by the third of the scale its risk falls in, worst first. */
 export const VERDICTS = ["unacceptable", "tolerable", "acceptable"] as const;
 export type Verdict = (typeof VERDICTS)[number];
 /* In thirds. */
@@ -1160,17 +1177,24 @@ export type Risk = {
   exposure: { score: number; capabilities: number }[];
 };
 
-export function riskOf(state: DocketState, item: Gap | Tradeoff): Risk {
+/* How a gap or tradeoff scores on one capability, as riskOf works it out. */
+function riskOn(state: DocketState, item: Gap | Tradeoff): (capability: Capability) => RiskOn {
   const outcome = "rule" in item && item.outcome ? checklistOutcome(state.checklist, item.outcome)?.outcome : undefined;
   const rule = "rule" in item ? item.rule : null;
   const step = item.impact ? IMPACT_STEPS[item.impact] : 0;
+  return (capability) => {
+    const weight = capability.stability ? RISK_WEIGHTS[capability.stability] : 0;
+    const promise = weight > 0 && ((!!rule && capability.rules.includes(rule)) || (!!outcome && appliesAt(outcome, capability.stability)));
+    const score = onScale(step * weight * (promise ? PROMISE_FACTOR : 1));
+    return { capability, weight, promise, score };
+  };
+}
+
+export function riskOf(state: DocketState, item: Gap | Tradeoff): Risk {
   const on = showsOn(state, item)
-    .map((capability): RiskOn => {
-      const weight = capability.stability ? MATURITY_LEVELS[capability.stability].weight : 0;
-      const promise = weight > 0 && ((!!rule && capability.rules.includes(rule)) || (!!outcome && appliesAt(outcome, capability.stability)));
-      return { capability, weight, promise, score: onScale(step * weight * (promise ? PROMISE_FACTOR : 1)) };
-    })
+    .map(riskOn(state, item))
     .sort((a, b) => b.score - a.score || b.weight - a.weight);
+  const rated = item.impact !== null;
   const exposure: Risk["exposure"] = [];
   for (const o of on) {
     const last = exposure[exposure.length - 1];
@@ -1179,14 +1203,69 @@ export function riskOf(state: DocketState, item: Gap | Tradeoff): Risk {
   }
   return {
     impact: item.impact,
-    score: item.impact ? (on[0]?.score ?? 0) : null,
-    verdict: verdictOf(item.impact ? (on[0]?.score ?? 0) : null),
+    score: rated ? (on[0]?.score ?? 0) : null,
+    verdict: verdictOf(rated ? (on[0]?.score ?? 0) : null),
     promise: on.some((o) => o.promise),
     on,
     capabilities: on.length,
-    exposure: item.impact ? exposure : [],
+    exposure: rated ? exposure : [],
   };
 }
+
+/* ——— Readiness ——— */
+
+/*
+ * Whether people can use it yet: good enough, not precise, and apart from
+ * maturity. A capability is ready when its level in short is Beta or GA,
+ * settled enough for real use, and no gap scores unacceptable on it, its own
+ * or one on what it's built on. Only gaps count, not tradeoffs. One that's
+ * started and not ready yet still needs to reach Beta, where it's below, and
+ * to close each of those gaps. A draft is not started: neither ready nor not.
+ */
+export type NotReady = { capability: Capability; belowBeta: boolean; gaps: Gap[] };
+
+/* The gaps that show on a capability: its own, and those of the mechanisms and components it's built on. */
+export const gapsOn = (state: DocketState, capability: Capability) => [
+  ...gapsById(state, capability.gaps),
+  ...builtOn(state, capability).flatMap((on) => gapsById(state, on.gaps)),
+];
+
+/* What a started capability still needs to be ready: nothing, once it's ready. */
+export function needsOf(state: DocketState, capability: Capability): NotReady {
+  const gaps = gapsOn(state, capability).filter((g) => verdictOf(riskOn(state, g)(capability).score) === "unacceptable");
+  return { capability, belowBeta: rank(capability.stability) < rank("beta"), gaps };
+}
+
+/*
+ * The readiness of some capabilities, as of a feature, domain, persona or
+ * project: those ready, those not ready yet with what each still needs, and
+ * the drafts, not started, which never count. It's Ready when every started
+ * one is, and has none with nothing started.
+ */
+export type Readiness = { ready: Capability[]; notReady: NotReady[]; notStarted: Capability[] };
+
+export function readinessOf(state: DocketState, capabilities: Capability[]): Readiness {
+  const readiness: Readiness = { ready: [], notReady: [], notStarted: [] };
+  for (const c of capabilities) {
+    if (c.stability === null) {
+      readiness.notStarted.push(c);
+      continue;
+    }
+    const needs = needsOf(state, c);
+    if (!needs.belowBeta && !needs.gaps.length) readiness.ready.push(c);
+    else readiness.notReady.push(needs);
+  }
+  return readiness;
+}
+
+/* How many it's worked out from: the started ones. */
+export const startedOf = (r: Readiness) => r.ready.length + r.notReady.length;
+
+/* Ready, not ready yet, or null with nothing started. */
+export const isReady = (r: Readiness): boolean | null => (startedOf(r) ? !r.notReady.length : null);
+
+/* How much of it is ready, 0 to 1, for putting the least ready first; null with nothing started. */
+export const readyShare = (r: Readiness) => (startedOf(r) ? r.ready.length / startedOf(r) : null);
 
 /*
  * What's at stake across some gaps or tradeoffs, as in a capability, feature,

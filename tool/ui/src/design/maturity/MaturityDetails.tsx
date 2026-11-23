@@ -83,8 +83,8 @@ export function MaturityDetails({
       <Box sx={{ mt: 1.5 }}>{BAND_SUMMARIES[band]}</Box>
       {breakdown ? <Box sx={section}>{breakdown}</Box> : null}
       <Box sx={[section, { fontSize: "0.92em", color: "text.secondary" }]}>
-        Maturity is how far along this {subject} is: how close the work under way is to being stable
-        and supported. Before relying on a part of it, check that part&rsquo;s stability.
+        Maturity is how far along the work on this {subject} is, for planning: how close the work under
+        way is to being stable and supported. Whether people can use it is its readiness.
       </Box>
     </DetailsCard>
   );

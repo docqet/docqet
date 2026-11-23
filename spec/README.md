@@ -32,9 +32,9 @@ tool. Anyone can adopt the format or write their own indexer for it.
   repository or derived from it.
 - **Declared vs. derived.** People and agents write the declared parts:
   stability, rules, decisions, gaps, tradeoffs and links. The indexer
-  computes the derived parts: maturity, readiness, evidence, reverse links and
-  problems. Readers work out what depends on other projects, such as which
-  outcomes a capability meets with evidence. Nobody edits derived state by
+  computes the derived parts: evidence, reverse links and problems. Readers
+  work out what depends on other projects, such as maturity, readiness, risk,
+  and which outcomes a capability meets with evidence. Nobody edits derived state by
   hand.
 - **Intention about the product, and about how it's built.** Product docs say
   what the software does, in the domain's words, and never name its
@@ -276,8 +276,8 @@ The body column is a suggestion of what's worth writing, not a structure.
 
 - **`stability`** is `draft`, `prototype`, `alpha`, `beta` or `ga`, which
   tools show as Draft, Prototype, Alpha, Beta and GA. Only capabilities have
-  one. A feature's maturity is worked out from its capabilities' levels, and a
-  domain's from its parts of features (see
+  one. A feature's, domain's and project's maturity, and their and personas'
+  [readiness](#readiness), are worked out from their capabilities' (see
   [Features and maturity](#features-and-maturity)).
 - **`personas`** lists the personas a capability serves: who does it, or who
   it's done for when the software does it.
@@ -810,8 +810,9 @@ capabilities:
 
 - **A capability is in at most one feature.** One in none is allowed, and
   shows on its own.
-- **A feature has no stability level.** It has a maturity instead, which the
-  indexer works out from its capabilities' levels. Nobody writes it down.
+- **A feature has no stability level.** It has a maturity, how far along it
+  is, and a [readiness](#readiness), whether people can use it yet, which
+  readers work out from its capabilities. Nobody writes them down.
 
 A feature can span domains: each domain a project writes a feature doc in
 contributes that domain's part of the job. Front desk is in Guest stays, with
@@ -829,8 +830,8 @@ percentage.
   feature's maturity. An established domain moves only a little, because what's
   already stable counts most.
 - **It's about the whole, not each part.** It's an indication, not a verdict.
-  Before depending on something, check the stability level of the capability
-  you need.
+  Whether people can use it yet is its [readiness](#readiness), which doesn't
+  depend on it.
 
 ### How maturity is worked out
 
@@ -848,7 +849,8 @@ that's mostly early work.
 | GA        | 100%  | 6      |
 
 A **feature's maturity** is the weighted average of its capabilities' scores,
-rounded to a whole percentage. Each score sits inside its level's band (below),
+rounded to a whole percentage. Each capability counts once, at its level in
+short: the lowest across the domains that build it. Each score sits inside its level's band (below),
 so a feature whose capabilities are all at Alpha is 35%, in Alpha's band, and
 never shows as more mature than it is. Drafts are left out, since no work has
 started on them. A feature with no capabilities but drafts has no maturity.
@@ -887,18 +889,18 @@ maturities, worked out the same way:
 - **A domain with no part that has a maturity has none.**
 
 In the hotel example, Guest stays has Reservations (42%, Emerging), which
-weighs 3, and Front desk (84%, Established), which weighs 6, so it's (42 × 3 +
-84 × 6) ÷ (3 + 6) = 630 ÷ 9 = 70%, Promising. Property has only Housekeeping,
-so it's 15%, Experimental. A feature's maturity counts every domain's part:
-shown with Hotel Billing, Front desk has check-out at GA in Guest stays and at
-Alpha in Billing.
+weighs 3, and its part of Front desk (84%, Established), which weighs 6, so
+it's (42 × 3 + 84 × 6) ÷ (3 + 6) = 630 ÷ 9 = 70%, Promising. Property has only
+Housekeeping, so it's 15%, Experimental. Front desk's own maturity counts
+check-out once, at its level in short: shown with Hotel Billing, check-out is
+GA in Guest stays and Alpha in Billing, so Front desk is (60 × 4 + 35 × 3) ÷
+(4 + 3) = 345 ÷ 7 ≈ 49%, Emerging.
 
-A **project's maturity** is worked out the same way from its parts of
-features: each feature's part in each domain the project works in, as the
-project declares it. Hotel Bookings has Reservations (42%), Front desk (84%)
-and Housekeeping (15%), so it's (42 × 3 + 84 × 6 + 15 × 2) ÷ (3 + 6 + 2) =
+A **project's maturity** is worked out the same way from its features, so a
+capability that spans domains still counts once. Hotel Bookings has
+Reservations (42%), Front desk (84%) and Housekeeping (15%), so it's (42 × 3 + 84 × 6 + 15 × 2) ÷ (3 + 6 + 2) =
 660 ÷ 11 = 60%, Promising. Several projects shown together have a maturity
-too, worked out from all their parts the same way, as if they were one
+too, worked out from all their features the same way, as if they were one
 project. Showing only some projects works out each feature's and domain's
 maturity from the capabilities those projects declare.
 
@@ -906,35 +908,70 @@ Maturity isn't a finish line, and 100% isn't the goal. It means everything
 under way is GA. Software that keeps growing usually has newer parts settling
 in, and stays Established as it does.
 
-### Readiness
+Readers work out maturity and bands, and they aren't in `state.json`, since a
+capability's level in short needs every project that builds part of it.
 
-A persona has a **readiness** instead of a maturity: how ready the software is
-for them, from the maturity of what they need. What they need is every
-capability that lists them, so their readiness is worked out as a feature's
-maturity is, from those capabilities' levels in each domain that builds part of
-them, drafts left out. In Hotel Bookings, the front desk clerk has room booking
-and check-in at Beta, cancellations at Alpha, check-out at GA, group bookings
-and room status at Prototype, and the waitlist as a draft, so they're (60 × 4 × 2 + 35 × 3 + 100 × 6 + 15 × 2 × 2) ÷
-(4 × 2 + 3 + 6 + 2 × 2) = 1245 ÷ 21 ≈ 59% ready.
+## Readiness
 
-- **A feature's readiness for a persona** is worked out the same way, from just
-  the capabilities in it that serve them. Front desk is 84% mature, and 84%
-  ready for the front desk clerk, since both its capabilities serve them.
-- **A persona no capability lists has no readiness.**
-- **Readiness counts toward nothing else.** A domain's or project's maturity
-  comes from its features, never from personas.
+Readers work out whether the software is **ready**: ready enough for people to
+use it, and if not, what it still needs. It answers that well enough to act
+on, not precisely. Nothing is written for it, and it isn't in `state.json`:
+it depends on [risk](#risk) and on a capability's level in short, and both
+need projects put together.
 
-Readiness has its own scale, so it's never mistaken for maturity, though it's
-worked out from it. It's a quarter of the scale each, as maturity's bands are,
-with names of its own, and readers show it as a straight bar, not as a ring in
-a level's color:
+A **capability is ready** when:
 
-| Readiness     | From | What it tells you                                                       |
-| ------------- | ---- | ----------------------------------------------------------------------- |
-| Not ready yet | 0%   | Most of what they need is still being explored.                         |
-| Partly ready  | 25%  | Some of it works, but much of what they need is still taking shape.     |
-| Mostly ready  | 50%  | Enough is settled or stable for them to rely on day to day.             |
-| Ready         | 75%  | What they need is mostly stable and supported.                          |
+1. **Its level in short is Beta or GA.** Beta is the first level settled
+   enough for real use, and the lowest level across the domains that build
+   it is the one people can count on everywhere.
+2. **No gap is `unacceptable` on it**: no gap's risk, scored on that
+   capability, falls in the `unacceptable` third.
+
+A capability that's started but not ready is **not ready yet**, and **what it
+needs** is to reach Beta, when it's below, and to close each gap that's
+unacceptable on it. A draft is **not started**: it's neither.
+
+Everything else's readiness is how many of its started capabilities are
+ready, such as `2 of 4 ready`. It's **Ready** when all of them are, and **Not
+ready yet** otherwise, with what each capability that isn't still needs.
+Drafts are listed as not started and never count, so writing one down never
+makes anything less ready. Something with no started capabilities has no
+readiness.
+
+| Readiness of                | Counts                                                          |
+| --------------------------- | --------------------------------------------------------------- |
+| A feature                   | Its capabilities                                                |
+| A domain                    | Every capability with a part in it                              |
+| A project, or several shown | Every capability showing                                        |
+| A persona                   | Every capability that lists them                                |
+| A feature, for a persona    | The capabilities in it that serve them                          |
+
+A capability always counts whole, at its level in short, even where only
+part of it is in the domain or project counted, since people use the whole
+of it.
+
+In Hotel Billing, the manager has city tax at Alpha, deposits at Beta, and
+daily takings at Beta and night audit at GA, with no gaps. Deposits relies on
+the ledger, whose untested corrections are `damaging` and score 72 there,
+`unacceptable`. So the manager is `2 of 4 ready`, and what's left is:
+
+```text
+city tax   reach Beta, now Alpha
+deposits   close component:ledger#corrections-of-corrections-untested (72)
+```
+
+The night auditor has only night audit, so they're Ready.
+
+In Hotel Bookings, the front desk clerk is `0 of 6 ready`. Room booking,
+check-in and check-out are at Beta or GA, but every one of them waits on the
+deployment's migrations only going forward, `damaging`, which scores 72 on
+Beta and 100 on GA. Room booking also waits on its calendar needing a mouse.
+Cancellations, group bookings and room status need to reach Beta first, and
+the waitlist isn't started.
+
+A count says how much of it is ready, not whether what's missing matters to
+someone. That's for people to judge: a persona who can do without the one
+capability that isn't ready can start using the rest.
 
 ## Risk
 
@@ -962,9 +999,8 @@ impact step × level weight × 1.5 if it breaks that level's promise
 Each score is put on 0 to 100 by a log scale, from 2, the least there is (a
 negligible gap on a Prototype), to 36, the most (a damaging gap breaking a
 promise on GA), and rounded: `100 × ln(raw ÷ 2) ÷ ln(18)`. A draft scores
-0. A gap's risk is its highest
-score. A gap with no `impact` has no risk. Its **verdict** is the band its
-risk falls in: `acceptable` below 33, `tolerable` from 33, and
+0. A gap's risk is its highest score. A gap with no `impact` has no risk. Its **verdict** is
+the third its risk falls in: `acceptable` below 33, `tolerable` from 33, and
 `unacceptable` from 67. Its **exposure** is how its scores spread: how many
 capabilities carry each score, highest first. Readers order gaps by risk, highest first, then by
 exposure, comparing the number of capabilities at each score from the
@@ -1201,33 +1237,31 @@ different things in each:
 3. Give each mechanism that applies to its platform every capability the
    platform's projects serve: each project's declared capabilities, other
    than drafts, and the ones its components list.
-4. Work out the reverse links, maturity and bands again across everything.
-   A capability counts once per domain that builds part of it, at that
-   domain's level, since each part is work under way.
+4. Work out the reverse links again across everything, and each
+   capability's level in short, the lowest across the domains that build it.
+   Readers then work out maturity, readiness and risk from all of it.
 5. Add the problems combining finds: contradictions and ambiguous links. Drop
    an `unknown-id` problem when the link resolves to another project's doc.
 
 ## Index output
 
 `docket index` writes `.docket/state.json` ([example](examples/hotel-bookings/.docket/state.json)).
-It holds everything the UI shows, so the UI never reads the repository itself,
+It holds everything the UI needs, so the UI never reads the repository itself,
 and showing several projects together means reading each one's state.json.
 
 - **Header**: the `project` (its ID and name), its `platform` (ID and name)
   when `docket.yaml` declares one, and the commit indexed.
-- **`summary`**: the project's maturity and band, how many domains and
-  features there are, capabilities per level with `draft` among them, how
-  many rules, gaps, tradeoffs, mechanisms, components and problems. This is the
-  at-a-glance view.
-- **`domains`**: each of the project's `domain.md` files, with the domain's
-  maturity worked out from what this project declares in it.
-- **`features`**: each with its capabilities, its `tradeoffs` and its
-  maturity worked out. Each capability names the feature it's in, or `null`,
+- **`summary`**: how many domains and features there are, capabilities per
+  level with `draft` among them, how many rules, gaps, tradeoffs, mechanisms,
+  components and problems. This is the at-a-glance view.
+- **`domains`**: each of the project's `domain.md` files.
+- **`features`**: each with its capabilities and its `tradeoffs`. Each
+  capability names the feature it's in, or `null`,
   and lists its `gaps` and `tradeoffs`, by ID. Its `stability` can be
   `"draft"`.
 - **`personas`**: each with its `name`, `role` and `title`, `role` and
   `title` as `null` where it has none, the capabilities that list them, the features
-  those are in, and their `readiness` worked out. Personas aren't in a domain, so
+  those are in. Personas aren't in a domain, so
   these have no `domain`.
 - **One list per doc type**: each entry has its ID, its `domain`, file, name,
   description, and links, in both directions, its type's other frontmatter fields,

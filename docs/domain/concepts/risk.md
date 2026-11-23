@@ -18,8 +18,8 @@ written down:
 - **Stability**, derived: the level of each capability it shows on. A
   product gap shows on its capability, and a technical gap on every
   capability that relies on its mechanism or component. Stable capabilities
-  weigh more than early ones, as they do in [maturity](maturity.md), since
-  more people depend on them, and on real data.
+  weigh more than early ones, since more people depend on them, and on real
+  data.
 - **Whether it breaks that level's promise**, derived, for each capability:
   it names a [rule](rule.md) that capability follows, or a
   [stability checklist](stability-checklist.md) outcome that capability's
@@ -43,8 +43,8 @@ score = 100 × ln(raw ÷ 2) ÷ ln(36 ÷ 2)
 Since the raw score multiplies its parts, the log scale makes each of them
 add a steady amount instead: each step of impact or level, and breaking a
 promise, moves the score the same way wherever it starts. Equal distances on
-the scale mean equal multiples of what's at stake, so the verdicts' bands
-can be even thirds.
+the scale mean equal multiples of what's at stake, so the verdicts can be
+even thirds of it.
 
 | Impact         | Step |     | Level     | Weight |
 | -------------- | ---- | --- | --------- | ------ |
@@ -64,7 +64,8 @@ be fake, scores 48, below a blocking gap on GA at 76.
 ### Verdict
 
 A risk's **verdict** says whether it's OK to leave the gap open at the level
-it's at, by the band its score falls in:
+it's at, by the third its score falls in. A capability with a gap that's
+`unacceptable` on it isn't [ready](readiness.md):
 
 | Verdict        | Score     | What it means                                    |
 | -------------- | --------- | ------------------------------------------------ |
@@ -179,5 +180,7 @@ written for it in [state](state.md). The spec has
 
 - [Stability level](stability-level.md): how much you can depend on a
   capability. Risk orders what's left before you can.
+- [Readiness](readiness.md): whether the software is ready to use. It counts
+  only the gaps that are `unacceptable`.
 - A priority: Docket doesn't say when a gap is closed. Risk says what's at
   stake; deciding what to do first is up to the people doing it.

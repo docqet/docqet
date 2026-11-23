@@ -5,9 +5,10 @@ import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import FilterListRoundedIcon from "@mui/icons-material/FilterListRounded";
 import WidgetsOutlinedIcon from "@mui/icons-material/WidgetsOutlined";
 import { ConceptIcon } from "./Concepts";
-import { Maturity, Readiness, domainCapabilities } from "./Explore";
+import { Maturity } from "./Explore";
 import { DomainIcon } from "./FeatureMap";
-import { PersonaAvatar, PersonaIcon, personaNameAndRole, readinessBasis } from "./Personas";
+import { PersonaAvatar, PersonaIcon, personaNameAndRole, personaReadiness } from "./Personas";
+import { ReadinessMark } from "./Readiness";
 import { docHref, type DocKind } from "./routes";
 import { InlineMarkdown } from "./design/markdown/Markdown";
 import { ImpactBadge } from "./design/risk/ImpactBadge";
@@ -15,6 +16,7 @@ import { RiskScore } from "./design/risk/RiskScore";
 import { StabilityMark } from "./design/stability/StabilityMark";
 import { Term } from "./design/term/Term";
 import {
+  domainCapabilities,
   domainName,
   find,
   gapsById,
@@ -142,7 +144,7 @@ function summarize(state: DocketState, at: Pick): Summary | null {
     name,
     role,
     picture: <PersonaAvatar persona={p} size={40} />,
-    mark: <Readiness value={p.readiness} basis={readinessBasis(state, p)} />,
+    mark: <ReadinessMark readiness={personaReadiness(state, p)} of={`Readiness for ${name}`} large />,
     figures: [
       { label: "Capabilities", value: capabilities.length, tab: "serves" },
       { label: "Features", value: p.features.length, tab: "readiness" },

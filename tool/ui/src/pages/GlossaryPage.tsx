@@ -1,12 +1,10 @@
 import { useEffect } from "react";
-import { Term } from "../design/term/Term";
 import Box from "@mui/material/Box";
 import { RingGlyph } from "../design/maturity/RingGlyph";
 import { MATURITY_BANDS, MATURITY_LEVELS } from "../design/maturity/maturity";
 import { STABILITY, STABILITY_LEVEL_IDS, levelColor, type StabilityLevelId } from "../design/stability/stability";
 import { StabilityMark } from "../design/stability/StabilityMark";
 import { TERMS, type TermId } from "../design/term/terms";
-import { readinessName } from "../Personas";
 import { sectionHref, type Route } from "../routes";
 import { Empty, PageHeader, Section, Tabs, View, currentTab, type TabDef } from "../shell/layout";
 import type { ChecklistExample, ChecklistKind, ChecklistLevel, DocketState } from "../state";
@@ -78,14 +76,20 @@ function Terms() {
               <>
                 <article id="stability-level" className="dp-term">
                   <h3>Stability level</h3>
-                  <p>How much people can depend on a capability right now: Prototype, Alpha, Beta or GA, or a draft, not started, with none.</p>
+                  <p>
+                    How much people can depend on a capability right now: Prototype, Alpha, Beta or GA, or a draft, not started, with none. Beta is the bar for
+                    real use: settled enough to rely on.
+                  </p>
                   <p className="dp-term-more">
                     <a href={levelsHref("levels")}>Each level, and what to expect from it</a>
                   </p>
                 </article>
                 <article id="maturity" className="dp-term">
                   <h3>Maturity</h3>
-                  <p>How far along a feature, domain or project is, as a percentage worked out from its capabilities' levels, in one of four bands.</p>
+                  <p>
+                    How far along the work on a feature, domain or project is, for planning: a weighted average of its capabilities' levels, in one of four bands.
+                    It doesn't say whether people can use it: that's readiness.
+                  </p>
                   <p className="dp-term-more">
                     <a href={levelsHref("maturity")}>How it's worked out, and its bands</a>
                   </p>
@@ -109,21 +113,13 @@ const BAND_SUMMARIES: Record<StabilityLevelId, string> = {
   ga: "Well established. Most of it is stable and supported, while any newer parts settle in.",
 };
 
-/* What each step of readiness tells whoever is looking, as the persona's readiness says it. */
-const READINESS_SUMMARIES = [
-  "Most of what they need is still being explored, and could change completely or be dropped.",
-  "Some of what they need works, but much of it is still taking shape, so expect changes and bugs.",
-  "Enough of what they need is settled or stable for them to rely on day to day.",
-  "What they need is mostly stable and supported, while any newer parts settle in.",
-];
-
 function Levels() {
   return (
     <>
       <Section
         id="levels"
         title="Stability levels"
-        note="How much people can depend on a capability right now. Its builders declare it, and it moves up from Prototype through Alpha and Beta to General Availability as it's proven in real use. A level is about dependability, not quality: a GA capability can still have bugs and gaps."
+        note="How much people can depend on a capability right now. Its builders declare it, and it moves up from Prototype through Alpha and Beta to General Availability as it's proven in real use. Beta is the bar for real use. A level is about dependability, not quality: a GA capability can still have bugs and gaps."
       >
         <div className="dp-levels">
           <article id="draft" className="dp-level">
@@ -157,11 +153,12 @@ function Levels() {
       <Section
         id="maturity"
         title="Maturity"
-        note="How far along a feature, domain or project is: how much of the work under way is stable and supported. It's an indication about the whole, not a verdict on each part; before depending on something, check the level of the capability you need."
+        note="How far along the work on a feature, domain or project is, for planning: how much of the work under way is stable and supported. It's an indication about the whole, not a verdict on each part, and it doesn't say whether people can use it: that's readiness."
       >
         <p className="dp-note">
-          A feature's maturity is the average of its capabilities' scores, each weighted by its level, drafts left out. A domain's comes from its parts of
-          features, and a project's from all of its. Starting new work lowers it without anything getting worse, and 100% isn't the goal.
+          A feature's maturity is the average of its capabilities' scores, each weighted by its level, drafts left out. A capability that spans domains counts
+          once, at its lowest level. A domain's comes from its parts of features, each at its levels there, and a project's from its features, each weighted as
+          a capability in its band would be. Starting new work lowers it without anything getting worse, and 100% isn't the goal.
         </p>
         <table className="view-table dp-narrow-table">
           <thead>
@@ -206,30 +203,11 @@ function Levels() {
       </Section>
 
       <Section id="readiness" title="Readiness" term="readiness" note={TERMS.readiness.means}>
+        <p className="dp-note">{TERMS.readiness.more}</p>
         <p className="dp-note">
-          It's worked out as a feature's maturity is, from the levels of the capabilities that serve them. It has a scale of its own, so it's never mistaken for
-          maturity.
+          A capability not ready yet still needs to reach Beta, where it's below, and to close each gap whose risk on it is
+          unacceptable. A draft is not started: it's listed apart, and never makes anything less ready. Readiness doesn't depend on maturity.
         </p>
-        <table className="view-table">
-          <thead>
-            <tr>
-              <th><Term id="readiness" hoverOnly>Readiness</Term></th>
-              <th className="num">From</th>
-              <th>What it tells you</th>
-            </tr>
-          </thead>
-          <tbody>
-            {[0, 25, 50, 75].map((from, i) => (
-              <tr key={from}>
-                <td>
-                  <strong>{readinessName(from)}</strong>
-                </td>
-                <td className="num">{from}%</td>
-                <td>{READINESS_SUMMARIES[i]}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
       </Section>
     </>
   );

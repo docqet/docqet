@@ -16,7 +16,7 @@ import RulePage from "./pages/RulePage";
 import type { PlatformChoice } from "./PlatformFilter";
 import { navigate, routeOf, useSearch, type Route } from "./routes";
 import Shell from "./shell/Shell";
-import { combine, loadProjects, loadState, maturityOf, platformsOf, projectOf, type DocketState, type PageAt, type StateFile } from "./state";
+import { combine, loadProjects, loadState, maturityOf, platformsOf, type DocketState, type PageAt, type StateFile } from "./state";
 
 /* The platform and projects named in the address, as `?platform=<id>&project=<id>,<id>`. */
 const showingIn = (search: string) => {
@@ -43,7 +43,8 @@ export default function App() {
       .then(setFiles, (e: unknown) => setError(String(e)));
   }, []);
 
-  const all = useMemo(() => (files ?? []).map(projectOf), [files]);
+  /* Each project, with its maturity, worked out from it alone. */
+  const all = useMemo(() => (files ?? []).map((f) => combine([f]).projects[0]), [files]);
   /* Each platform, with the maturity of all its projects together. */
   const platforms: PlatformChoice[] = useMemo(
     () =>

@@ -11,8 +11,6 @@
   "commit": "9b31d07",
   "indexedAt": "2026-11-18T16:20:00Z",
   "summary": {
-    "maturity": 56,
-    "band": "beta",
     "domains": 2,
     "features": 5,
     "personas": 5,
@@ -36,8 +34,6 @@
       "file": "docs/product/domains/billing/domain.md",
       "name": "Billing",
       "description": "Charging guests for their stays, and getting paid.",
-      "maturity": 52,
-      "band": "beta",
       "decisions": [],
       "body": "A booking here is what a guest is charged for a stay, not the hold on a room\nthat Guest stays means by it."
     },
@@ -46,8 +42,6 @@
       "file": "docs/product/domains/finance/domain.md",
       "name": "Finance",
       "description": "Keeping the hotel's accounts, and getting paid by the companies it bills.",
-      "maturity": 61,
-      "band": "beta",
       "decisions": [],
       "body": ""
     }
@@ -64,8 +58,6 @@
         "city-tax",
         "split-bills"
       ],
-      "maturity": 67,
-      "band": "beta",
       "decisions": [],
       "body": "",
       "tradeoffs": []
@@ -81,8 +73,6 @@
         "pay-by-link",
         "refunds"
       ],
-      "maturity": 49,
-      "band": "alpha",
       "decisions": [],
       "body": "",
       "tradeoffs": []
@@ -98,8 +88,6 @@
         "direct-billing",
         "invoices"
       ],
-      "maturity": 45,
-      "band": "alpha",
       "decisions": [],
       "body": "",
       "tradeoffs": []
@@ -115,8 +103,6 @@
         "daily-takings",
         "accounting-export"
       ],
-      "maturity": 73,
-      "band": "beta",
       "decisions": [],
       "body": "",
       "tradeoffs": []
@@ -130,8 +116,6 @@
       "capabilities": [
         "check-out"
       ],
-      "maturity": 35,
-      "band": "alpha",
       "decisions": [],
       "body": "Billing's part of the front desk is settling the bill at check-out. Checking\nguests in and out is Guest stays'.",
       "tradeoffs": []
@@ -155,7 +139,6 @@
         "company-accounts",
         "closing-the-day"
       ],
-      "readiness": 45,
       "body": "## Needs\n\n- To get each day's takings into the accounting software without typing them in.\n- To invoice every company once a month, and see what each one owes.\n- To keep companies within the credit the hotel allows them.\n\n## Knows\n\nBookkeeping, and the hotel's accounting software, well. Less about how the front\ndesk works.\n\n## Context\n\nPart time, two or three days a week, at a desk in the back office. Month end is\ntheir busiest time.\n\n## Expects\n\nDays that are closed and stay closed, invoice numbers that run in order, and an\nexport their accounting software takes as it is.\n\n## Cares about\n\nBooks that balance. A day that changes after they've exported it means finding\nthe difference by hand."
     },
     {
@@ -182,7 +165,6 @@
         "company-accounts",
         "front-desk"
       ],
-      "readiness": 54,
       "body": "## Needs\n\n- To see everything a guest owes on one bill, so check-out is a single payment.\n- To put extras on a bill the moment they happen, so nothing is forgotten.\n- To let company guests leave without paying, knowing their company will be\n  invoiced.\n\n## Knows\n\nWhat every extra costs, and which guests' companies pay for their stays. Not an\naccountant: they think in bills, not ledgers.\n\n## Context\n\nAt the desk, with the guest in front of them and often a queue behind. Check-out\nmornings are the busiest part of their day.\n\n## Expects\n\nA bill that reads like a receipt: each night, each extra, then the total.\nPayments by card at the desk.\n\n## Cares about\n\nA bill the guest doesn't argue with. A charge they can't explain, or one they\ncan't take off when it was a mistake, makes for a hard conversation."
     },
     {
@@ -204,7 +186,6 @@
         "company-accounts",
         "front-desk"
       ],
-      "readiness": 35,
       "body": "## Needs\n\n- To pay without queueing at the desk on the way out.\n- To leave without paying when their company is paying for the stay.\n- A bill they can understand, with nothing on it they didn't have.\n\n## Knows\n\nNothing about the hotel's systems. Pays for things online and by card all the\ntime.\n\n## Context\n\nOn their phone, often in a hurry: packing, catching a train, or already home.\n\n## Expects\n\nPaying by link to work like any other online payment, in a minute or two.\n\n## Cares about\n\nNot being charged twice, and not being chased for something they've paid."
     },
     {
@@ -226,7 +207,6 @@
         "payments",
         "closing-the-day"
       ],
-      "readiness": 70,
       "body": "## Needs\n\n- To see each day's takings, final and broken down, without waiting for the\n  bookkeeper.\n- To be sure every night, every extra and the city's tax are charged, so the\n  hotel isn't out of pocket.\n- To be covered when a guest who booked never arrives.\n\n## Knows\n\nThe hotel's numbers: occupancy, the average rate, last year's takings. Not the\ndetails of how the books are kept.\n\n## Context\n\nLooks at the numbers first thing each morning, on a laptop or their phone.\n\n## Expects\n\nTotals for rooms, food and drink, and tax, the way the owners ask for them.\n\n## Cares about\n\nNumbers that don't change once a day is closed. If yesterday's takings move,\nthey stop trusting all of them."
     },
     {
@@ -243,7 +223,6 @@
       "features": [
         "closing-the-day"
       ],
-      "readiness": 100,
       "body": "## Needs\n\n- To know the day was closed and every guest charged for the night, without\n  staying up to do it by hand.\n- To close the day themselves when the audit didn't run on its own.\n\n## Knows\n\nThe night audit's steps, from years of doing them on paper. Less at ease with\nsoftware that does them for them.\n\n## Context\n\nAt the front desk overnight, alone, with few guests around and no one to ask.\n\n## Expects\n\nTo see, at a glance, that tonight's audit has run, and what it charged.\n\n## Cares about\n\nNot handing over to the morning shift with yesterday still open."
     }
   ],

@@ -19,8 +19,10 @@ it promises nothing, claims nothing on the
 [maturity](maturity.md) or [readiness](readiness.md). It shows as Draft, with
 no level's mark.
 
+- **Beta is the bar for real use.** A capability at Beta or GA, with no
+  gap that's unacceptable on it, is [ready](readiness.md).
 - **Only capabilities have one.** Features, domains and projects have a
-  maturity instead, and personas a readiness.
+  maturity and a readiness instead, and personas a readiness.
 - **A capability has one in each domain that builds part of it.** Where they
   differ, its level in short is the lowest, since that's what you can count on
   everywhere.
@@ -55,4 +57,7 @@ in Billing, says `stability: alpha`, so check-out is Alpha in short.
 
 - [Maturity](maturity.md): how far along a whole feature, domain or project
   is, worked out from its capabilities' levels.
+- [Readiness](readiness.md): whether a capability, or everything a feature,
+  domain, project or persona counts, is ready to use, worked out from levels
+  and gaps.
 - How good the work is: a level says how much people can depend on it.

@@ -24,8 +24,9 @@ next guest".
   the feature. The waitlist is a draft in Reservations.
 - **It can span domains.** Each [domain](domain.md) that does part of the job
   writes its own doc of the feature, and contributes its part.
-- **It has no stability level.** It has a [maturity](maturity.md), worked out
-  from its capabilities' levels.
+- **It has no stability level.** It has a [maturity](maturity.md), how far
+  along it is, and a [readiness](readiness.md), whether people can use it
+  yet, both worked out from its capabilities.
 
 Whether some work is a feature, a capability or neither is set out in the
 [overview](../overview.md#feature-capability-or-neither).
@@ -55,7 +56,7 @@ tradeoffs:
 ```
 
 A feature lists no rules: its rules are the ones its capabilities follow. Its
-maturity is worked out, never written here.
+maturity and readiness are worked out, never written here.
 
 ## Not to be confused with
 

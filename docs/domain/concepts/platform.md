@@ -17,8 +17,8 @@ Guest stays from Hotel Bookings and a part in Billing from Hotel Billing.
   platforms are never combined, since they're different products and the same
   ID can mean different things in each.
 - **One is shown at a time.** You choose a platform, then which of its
-  projects to show. Showing only some of them works out maturity from what
-  those projects say, as for any set of projects.
+  projects to show. Showing only some of them works out maturity and readiness
+  from what those projects say, as for any set of projects.
 - **A project without one is its own.** A project whose `docket.yaml` names
   no platform is a platform of one project, named after it.
 - **It's declared by its projects, not on its own.** There's no platform file:
@@ -28,8 +28,8 @@ Guest stays from Hotel Bookings and a part in Billing from Hotel Billing.
 - **A [mechanism](mechanism.md) can apply across it**, to every capability
   its projects serve, when one project runs something for all of them, such as
   an API gateway's authentication.
-- **It has no stability level.** Its maturity is worked out from all its
-  projects' parts of features, as if they were one project.
+- **It has no stability level.** Its maturity and readiness are worked out
+  from everything its projects show, as if they were one project.
 
 ## In the spec
 

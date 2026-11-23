@@ -7,8 +7,8 @@ description: How to read and keep current a repository's Docket docs (capabiliti
 
 Docket separates what software is meant to do from what it does. People
 declare the intention in small Markdown docs beside the code. Code and tests
-point back at it as evidence, and tools derive the rest: maturity, readiness,
-evidence, risk and problems. Your job in a Docket repository is to read the
+point back at it as evidence, and tools derive the rest: evidence, risk,
+maturity, readiness and problems. Your job in a Docket repository is to read the
 intention before you change anything, keep it true as you change things, and
 leave decisions about intention with people.
 

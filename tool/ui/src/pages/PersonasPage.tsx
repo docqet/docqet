@@ -1,20 +1,21 @@
-import { Readiness } from "../Explore";
 import { Term } from "../design/term/Term";
-import { PersonaAvatar, personaNameAndRole, readinessBasis } from "../Personas";
+import { PersonaAvatar, personaNameAndRole, personaReadiness } from "../Personas";
+import { ReadinessMark } from "../Readiness";
 import { docHref, type Route } from "../routes";
 import { Empty, PageHeader, View } from "../shell/layout";
-import { find, gapsById, riskAcross, type DocketState, type Persona } from "../state";
+import { find, gapsById, readyShare, riskAcross, type DocketState, type Persona } from "../state";
 import { GapsCell, Num } from "./indexParts";
 
 /*
  * Who the software serves, and how ready it is for each of them: a row per
- * persona, least ready first, with how many capabilities serve them and the
- * product gaps in those, the worst one's impact beside them. Those nothing
- * serves yet come first of all. Technical gaps are left out: they're what
+ * persona, least ready first, by how much of what serves them is ready, with
+ * how many capabilities serve them and the product gaps in those, the worst
+ * one's impact beside them. Those with nothing started come first of all. Technical gaps are left out: they're what
  * only someone working on the code would notice.
  */
 export default function PersonasPage({ state }: { state: DocketState; route: Route }) {
-  const personas = [...state.personas].sort((a, b) => (a.readiness ?? -1) - (b.readiness ?? -1));
+  const share = new Map(state.personas.map((p) => [p, readyShare(personaReadiness(state, p))]));
+  const personas = [...state.personas].sort((a, b) => (share.get(a) ?? -1) - (share.get(b) ?? -1));
   return (
     <View title="Personas" wide>
       <PageHeader title="Personas" lede="Who does it serve, and is it ready for them? Least ready first." />
@@ -58,7 +59,7 @@ function PersonaRow({ state, persona }: { state: DocketState; persona: Persona }
         </a>
       </td>
       <td>
-        <Readiness value={persona.readiness} basis={readinessBasis(state, persona)} />
+        <ReadinessMark readiness={personaReadiness(state, persona)} of={`Readiness for ${name}`} />
       </td>
       <td className="num">
         <Num n={capabilities.length} />

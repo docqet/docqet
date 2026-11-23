@@ -12,8 +12,8 @@ worked out from what they wrote.
   [annotations](annotation.md).
 - **Derived**: worked out by the [indexer](indexer.md), or by readers.
   [Evidence](evidence.md), [maturity](maturity.md), [bands](band.md),
-  [readiness](readiness.md), each checklist outcome's standing, reverse links
-  and [problems](problem.md). Nobody edits it by hand.
+  [readiness](readiness.md), [risk](risk.md), each
+  checklist outcome's standing, reverse links and [problems](problem.md). Nobody edits it by hand.
 
 Intention is only ever declared in a repository, so it's reviewed with the
 code. Servers and other tools read it and show it, but never change it.

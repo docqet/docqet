@@ -143,7 +143,8 @@ export const TERMS: Record<TermId, TermEntry> = {
   readiness: {
     name: "Readiness",
     means:
-      "How ready the software is for a persona: a percentage worked out from the maturity of everything they need, which is every capability that serves them.",
+      "Whether people can use it yet. A capability is ready when it's at Beta or GA, settled enough for real use, and no gap's risk on it is unacceptable; anything else is how many of its started capabilities are ready, and Ready when all of them are.",
+    more: "Reservations, with room booking at GA, deposits at Beta and waitlists at Alpha, is 2 of 3 ready: waitlists still need to reach Beta. A draft doesn't count either way.",
   },
   "stability-checklist": {
     name: "Stability checklist",

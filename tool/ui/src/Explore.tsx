@@ -21,7 +21,8 @@ import { Term } from "./design/term/Term";
 import { InlineMarkdown, MoreAboutFold } from "./design/markdown/Markdown";
 import { CameFrom, DecisionList, Facets, facets } from "./Fields";
 import { DomainIcon } from "./FeatureMap";
-import { PersonaAvatar, PersonaIcon, ReadinessMeter, personaNameAndRole, readinessBasis, type ReadinessBasis } from "./Personas";
+import { PersonaAvatar, PersonaIcon, personaNameAndRole } from "./Personas";
+import { ReadinessMark } from "./Readiness";
 import { ProjectIcon } from "./PlatformFilter";
 import {
   
@@ -47,8 +48,9 @@ import {
   verdictOf,
   pageHref,
   projectName,
-  partOf,
-  personaReadinessIn,
+  personaCapabilitiesIn,
+  readinessOf,
+  startedOf,
   
   type Capability,
   type CapabilityLevel,
@@ -56,7 +58,6 @@ import {
   type TechnicalDoc,
   type TechnicalKind,
   type EvidencePlace,
-  type Domain,
   type Doc,
   type DocketState,
   type Feature,
@@ -283,23 +284,6 @@ export function Maturity({ value, of, subject = "feature", count }: { value: num
 /* A capability's level by name: "GA", or "Draft" for one declared and not started. */
 export const levelName = (level: CapabilityLevel) => (level ? STABILITY[level].name : "Draft");
 
-/* How ready the software is for a persona, on readiness's own scale. */
-export function Readiness({ value, basis }: { value: number | null; basis: ReadinessBasis }) {
-  if (value === null)
-    return (
-      <Tip title="Nothing serves them yet, so there's no readiness.">
-        <span className="explore-level faint">No readiness yet</span>
-      </Tip>
-    );
-  return <ReadinessMeter value={value} basis={basis} large />;
-}
-
-
-/* Every capability with a part in a domain: those in its parts of features, and those in no feature. */
-export function domainCapabilities(state: DocketState, domain: Domain): Capability[] {
-  const ids = [...domain.features.flatMap((id) => partOf(find(state.features, id), domain.id)?.capabilities ?? []), ...domain.capabilities];
-  return [...new Set(ids)].flatMap((id) => find(state.capabilities, id) ?? []);
-}
 
 
 
@@ -1006,11 +990,13 @@ export function PersonaRows({ state, personas, feature, onOpen }: { state: Docke
   return (
     <ul>
       {personas.map((p) => {
-        const readiness = feature ? personaReadinessIn(state, p, feature) : null;
+        const readiness = feature ? readinessOf(state, personaCapabilitiesIn(state, p, feature)) : null;
         return (
           <li key={p.id}>
             <Row icon={<PersonaAvatar persona={p} size={28} />} {...rowName(p)} onClick={() => onOpen("persona", p.id)}>
-              {readiness !== null && feature ? <ReadinessMeter value={readiness} basis={readinessBasis(state, p, feature)} inButton /> : null}
+              {readiness && feature && startedOf(readiness) ? (
+                <ReadinessMark readiness={readiness} of={`${feature.name}'s readiness for ${personaNameAndRole(p).name}`} inButton />
+              ) : null}
             </Row>
           </li>
         );

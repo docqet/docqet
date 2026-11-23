@@ -7,12 +7,13 @@ with everything declared and derived.
 
 The UI shows only the state and never reads the repository itself. To show
 several projects together, it reads each one's state and **combines** them: it
-puts each doc's contributions together, works out reverse links and maturity
+puts each doc's contributions together, works out reverse links
 again across them, and finds the [contradictions](contradiction.md) between
 them. Showing only some projects combines just what they define.
 
 Some things are worked out only when the state is shown, since they depend on
-other projects: which outcomes a capability meets with evidence.
+other projects: which outcomes a capability meets with evidence,
+[risk](risk.md), [maturity](maturity.md) and [readiness](readiness.md).
 
 ## In the spec
 
@@ -27,8 +28,6 @@ with each list cut down to its keys:
   "commit": "4f2c9e1",
   "indexedAt": "2026-11-18T15:04:00Z",
   "summary": {
-    "maturity": 60,
-    "band": "beta",
     "capabilities": { "draft": 1, "prototype": 4, "alpha": 1, "beta": 2, "ga": 1 },
     "gaps": 4,
     "tradeoffs": 3,

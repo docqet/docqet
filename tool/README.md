@@ -32,7 +32,7 @@ picks which question you're asking:
 
 | Section | Answers | Address |
 | --- | --- | --- |
-| Overview | How is it doing? Maturity, what's left, who it's least ready for, where each domain stands, the riskiest gaps | (none) |
+| Overview | How is it doing? Maturity, readiness and what it still needs, who it's least ready for, where each domain stands, the riskiest gaps | (none) |
 | Map | How does it fit together? Domains, features and capabilities on a canvas, with their personas | `?view=map` |
 | Features | What can it do? Domains, features and capabilities as a tree | `?view=features` |
 | Personas | Who it serves, and how ready it is for each | `?view=personas` |
@@ -52,7 +52,7 @@ address.
 
 On the map, clicking something opens a small peek beside the canvas: what it
 is, three figures, its riskiest gaps and a link to its page. "Color by" tints
-the canvas by stability, risk, readiness for a persona, or evidence. Where
+the canvas by stability, risk or evidence. Where
 the cards sit is this browser's own, for each platform.
 
 ### Several projects
@@ -67,9 +67,30 @@ the cards sit is this browser's own, for each platform.
 - **Seeing them**: a doc's page and each search result say which projects
   define it. On the map, each domain is one region holding every project's
   part of it, and a feature that spans domains has a card in each.
-- **Maturity**: with several projects showing, it's worked out from all their
-  parts of features, the same way as one project's, and its popover lists
-  each project's.
+- **Maturity**: nothing in `state.json` says it, so the UI works it out,
+  for one project or several, the same way. With several showing, its
+  popover lists each project's.
+
+### Maturity and readiness
+
+Two different questions, worked out by the UI from each capability's level,
+neither from the other:
+
+- **Maturity** is how far along the work is, for planning: a weighted average
+  of capabilities' level scores, drafts left out, in one of four bands. A
+  domain's part of a feature counts its capabilities at their levels there.
+  Anything spanning domains counts each capability once, at its level in
+  short: a feature from its capabilities, and a project, or everything
+  showing, from its features. A domain comes from its parts of features. It
+  shows on features, domains, projects and the map, never on personas.
+- **Readiness** is whether people can use it yet. A capability is ready when
+  it's at Beta or GA and no gap's risk on it is unacceptable. Anything else is
+  how many of its started capabilities are ready, "2 of 3 ready", and Ready
+  when all are. Drafts are listed apart, as not started, and never count. It
+  shows on personas, on a feature for a persona, on the overview, and on
+  feature and domain pages, each of those with what it still needs: each
+  capability not ready yet, with whether it must reach Beta and the
+  unacceptable gaps to close, linking to each.
 
 ### How things are shown
 

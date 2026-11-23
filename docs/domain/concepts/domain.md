@@ -39,7 +39,8 @@ guest is charged for a stay in Billing. Both are right, each in its domain.
 - **It's one level.** A domain holds its parts of features, never other
   domains.
 - **It has no stability level.** It has a [maturity](maturity.md), worked out
-  from its parts of features.
+  from its parts of features, and a [readiness](readiness.md), from every
+  capability with a part in it.
 
 ## In the spec
 

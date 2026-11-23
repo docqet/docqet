@@ -1,11 +1,12 @@
 import Box from "@mui/material/Box";
 import type { Theme } from "@mui/material/styles";
 import { useMemo } from "react";
-import { Maturity, NAMES, TECHNICAL_NAMES, domainCapabilities, plural } from "../Explore";
+import { Maturity, NAMES, TECHNICAL_NAMES, plural } from "../Explore";
 import { Tip } from "../design/Tip";
 import { GapsCell } from "./indexParts";
 import { LeftFigure } from "../GapRows";
-import { PersonaAvatar, ReadinessMeter, readinessBasis, readinessName } from "../Personas";
+import { PersonaAvatar, personaReadiness } from "../Personas";
+import { ReadinessMark, StillNeeds, readinessLabel } from "../Readiness";
 import { InlineMarkdown } from "../design/markdown/Markdown";
 import { MaturityRing } from "../design/maturity/MaturityRing";
 import { RingGlyph } from "../design/maturity/RingGlyph";
@@ -16,7 +17,12 @@ import { Term } from "../design/term/Term";
 import { docHref, sectionHref, type Route } from "../routes";
 import { Empty, PageHeader, Section, Stat, View } from "../shell/layout";
 import {
+  domainCapabilities,
   find,
+  isReady,
+  readinessOf,
+  readyShare,
+  startedOf,
   gapsById,
   inRiskOrder,
   riskAcross,
@@ -34,22 +40,29 @@ import {
 import "./overview.css";
 
 /*
- * How the platform is doing, at a glance, with no panning: its maturity, who
- * it's least ready for, what's left and what's wrong in the docs, as tiles
- * that each link to where they're explained; then how stable each domain is,
- * how ready it is for each persona, and the few riskiest gaps. Summary only:
- * every count links on rather than listing.
+ * How the platform is doing, at a glance, with no panning: its maturity, how
+ * far along the work is, its readiness, whether people can use it, who it's
+ * least ready for, what's left and what's wrong in the docs, as tiles that
+ * each link to where they're explained; then what it still needs to be
+ * ready, how stable each domain is, how ready it is for each persona, and
+ * the few riskiest gaps. Summary only: every count links on rather than
+ * listing.
  */
 export default function OverviewPage({ state }: { state: DocketState; route: Route }) {
   const several = state.projects.length > 1;
   const name = several ? (state.projects[0]?.platform.name ?? "Platform") : (state.projects[0]?.name ?? "Project");
   const maturity = maturityOf(state);
 
+  const readiness = useMemo(() => readinessOf(state, state.capabilities), [state]);
+  /* Each persona with their readiness, least ready first, those with nothing started last. */
   const personas = useMemo(
-    () => [...state.personas].sort((a, b) => (a.readiness ?? Infinity) - (b.readiness ?? Infinity) || a.name.localeCompare(b.name)),
+    () =>
+      state.personas
+        .map((persona) => ({ persona, readiness: personaReadiness(state, persona) }))
+        .sort((a, b) => (readyShare(a.readiness) ?? Infinity) - (readyShare(b.readiness) ?? Infinity) || a.persona.name.localeCompare(b.persona.name)),
     [state],
   );
-  const leastReady = personas.find((p) => p.readiness !== null);
+  const leastReady = personas.find((p) => isReady(p.readiness) === false);
   const riskiest = useMemo(() => inRiskOrder(state, state.gaps, (g) => g).slice(0, 5), [state]);
   const decisions = [...state.domains, ...state.features, ...state.capabilities, ...state.mechanisms, ...state.components].reduce(
     (n, doc) => n + openDecisions(doc).length,
@@ -79,17 +92,29 @@ export default function OverviewPage({ state }: { state: DocketState; route: Rou
               }
               note={maturity === null ? "No capability has a level yet" : several ? "Across projects, from their features" : "From its features' capabilities"}
             />
+            <Stat
+              label="Readiness"
+              term="readiness"
+              href="#still-needs"
+              tone={isReady(readiness) ? "ok" : undefined}
+              value={readinessLabel(readiness) ?? <span className="ov-faint">Nothing started</span>}
+              note={
+                startedOf(readiness)
+                  ? `Of ${plural(startedOf(readiness), "started capability", "started capabilities")}${readiness.notStarted.length ? `, ${readiness.notStarted.length} not started` : ""}`
+                  : "Drafts don't count"
+              }
+            />
             {leastReady ? (
               <Stat
                 label="Least ready for"
-                href={docHref("persona", leastReady.id)}
+                href={docHref("persona", leastReady.persona.id)}
                 value={
                   <>
-                    <PersonaAvatar persona={leastReady} size={26} />
-                    <span className="ov-ellipsis">{leastReady.name}</span>
+                    <PersonaAvatar persona={leastReady.persona} size={26} />
+                    <span className="ov-ellipsis">{leastReady.persona.name}</span>
                   </>
                 }
-                note={`${readinessName(leastReady.readiness!)} · ${leastReady.readiness}% ready`}
+                note={readinessLabel(leastReady.readiness)}
               />
             ) : null}
             <Stat label="What's left" term="gap" href={sectionHref("left")} value={<LeftFigure gaps={state.gaps} decisions={decisions} risk={riskAcross(state, state.gaps)} of="everything" />} />
@@ -106,6 +131,15 @@ export default function OverviewPage({ state }: { state: DocketState; route: Rou
         }
       />
 
+      <Section
+        id="still-needs"
+        title="What it still needs"
+        term="readiness"
+        note="Before people can use it: each capability not ready yet, and what would make it ready."
+      >
+        <StillNeeds readiness={readiness} readyText="Ready: every started capability is at Beta or above, with no unacceptable gap." />
+      </Section>
+
       <Section title={<>Where each <Term id="domain">domain</Term> stands</>} count={state.domains.length} note="Its capabilities' stability, beside what's left on them, least mature first.">
         {state.domains.length ? <DomainStability state={state} /> : <Empty>No domains yet.</Empty>}
       </Section>
@@ -113,17 +147,13 @@ export default function OverviewPage({ state }: { state: DocketState; route: Rou
       {personas.length ? (
         <Section title={<><Term id="readiness">Readiness</Term> by persona</>} count={personas.length} note="How ready the software is for each of them, least ready first.">
           <ul className="ov-personas">
-            {personas.map((p) => (
+            {personas.map(({ persona: p, readiness: r }) => (
               <li key={p.id}>
                 <PersonaAvatar persona={p} size={32} />
                 <a className="ov-link ov-ellipsis" href={docHref("persona", p.id)}>
                   {p.name}
                 </a>
-                {p.readiness !== null ? (
-                  <ReadinessMeter value={p.readiness} basis={readinessBasis(state, p)} />
-                ) : (
-                  <span className="ov-faint">Nothing started</span>
-                )}
+                <ReadinessMark readiness={r} of={`Readiness for ${p.name}`} />
               </li>
             ))}
           </ul>

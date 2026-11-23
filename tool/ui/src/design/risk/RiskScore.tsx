@@ -5,7 +5,7 @@ import { plainText } from "../markdown/Markdown";
 
 /*
  * Risk: what's at stake in leaving a gap open, from 0 to 100, and the
- * verdict its band gives, as bars rising like a signal, one lit for each
+ * verdict the third of the scale it falls in gives, as bars rising like a signal, one lit for each
  * step of the verdict, in its color (--risk, from data-verdict).
  */
 
