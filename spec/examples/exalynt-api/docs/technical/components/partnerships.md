@@ -1,18 +1,11 @@
 ---
 name: Partnerships
-summary: >-
+description: >-
   Partnerships and what their managers do in them: invite clients, see the
   clients attributed to them, and accept their Partner Agreements. How a
   request acts in one is in the [row-level security
-  doc](../systems/row-level-security.md), and Partner Agreements themselves
+  doc](../mechanisms/row-level-security.md), and Partner Agreements themselves
   are in [agreements](agreements.md).
-start: >-
-  `internal/services/partnerships.go` (`ReachPartnership`),
-  `internal/services/client_invitations.go`,
-  `internal/services/partnership_clients.go`,
-  `internal/services/referrals.go`,
-  `internal/repositories/postgres/partnership.go`,
-  `internal/repositories/postgres/client_referral.go`
 capabilities:
   - partnerships
   - client-invitations
@@ -20,13 +13,6 @@ capabilities:
   - partner-agreements
   - partner-home
   - organizations-and-members
-code:
-  - internal/services/partnerships.go
-  - internal/services/client_invitations.go
-  - internal/services/partnership_clients.go
-  - internal/services/referrals.go
-  - internal/repositories/postgres/partnership.go
-  - internal/repositories/postgres/client_referral.go
 gaps:
   - id: listings-not-paged
     outcome: efficiency/beta/bounded
@@ -46,7 +32,6 @@ tradeoffs:
     cost: >-
       Two invitations at the same moment can both pass the 50th, and the count
       is a rolling 24 hours, not a calendar day.
-    revisit: a partner is seen going past the limit
 ---
 
 **Earning windows.** A client's earning window on the clients list comes from

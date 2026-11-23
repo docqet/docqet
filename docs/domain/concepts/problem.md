@@ -36,5 +36,5 @@ the refunds draft started following the rule:
 
 - [Gap](gap.md): something the software doesn't do yet, declared on purpose.
   A problem is a mistake in the docs.
-- No evidence: a rule or capability nothing points at. That's a prompt, not a
-  problem, since nothing requires evidence.
+- No evidence: a rule or capability nothing points at. That's neither a
+  problem nor something left to do: it holds on trust.

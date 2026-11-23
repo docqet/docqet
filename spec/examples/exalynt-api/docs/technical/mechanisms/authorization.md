@@ -4,48 +4,6 @@ summary: >-
   Decides what a caller may do and which records they may do it to, from the
   Principal authentication built. It knows nothing of tokens or the database.
   What the terms mean in the domain is in the role and organization concepts.
-start: >-
-  `internal/authz`, with `authz/catalog.go` and `authz/scope.go` first; each
-  table's bounds rule in `internal/repositories/postgres`;
-  `internal/services/caller.go`
-capabilities:
-  - organizations-and-members
-  - roles
-  - access-tokens
-  - your-profile
-  - getting-set-up
-  - engineer-onboarding
-  - estimates
-  - capacity-purchasing
-  - client-home
-  - scheduling
-  - claiming-blocks
-  - staffing
-  - fulfillment
-  - teams
-  - availability
-  - engineers
-  - client-directory
-  - conversation-spaces
-  - agreements
-  - client-agreements
-  - engineer-agreements
-  - partner-agreements
-  - billing
-  - earnings
-  - payouts
-  - payout-accounts
-  - partner-earnings
-  - partner-payouts
-  - partner-payout-accounts
-  - partnerships
-  - client-invitations
-  - partner-clients
-  - partner-home
-code:
-  - internal/authz/**
-  - internal/repositories/postgres/**
-  - internal/services/caller.go
 tradeoffs:
   - id: member-manage-gives-any-role
     text: >-
@@ -57,7 +15,6 @@ tradeoffs:
       A custom role holding `member:manage` without, say, `invoice:pay` can
       make its holder Admin, so in effect `member:manage` is every
       organization permission. The API reference says so.
-    revisit: a role other than Admin needs `member:manage`
   - id: application-access-not-enforced
     text: >-
       Which applications someone is offered is `application_access`, held per

@@ -5,47 +5,7 @@ summary: >-
   of the API works from on the context. Clerk only signs people in: users are
   copied to our database, and organizations, memberships, and roles are the
   API's own.
-start: >-
-  `internal/authn`, `internal/middleware/authentication/bearer.go`,
-  `internal/authz/principal.go`
-capabilities:
-  - organizations-and-members
-  - roles
-  - access-tokens
-  - your-profile
-  - getting-set-up
-  - engineer-onboarding
-  - estimates
-  - capacity-purchasing
-  - client-home
-  - scheduling
-  - claiming-blocks
-  - staffing
-  - fulfillment
-  - teams
-  - availability
-  - engineers
-  - client-directory
-  - conversation-spaces
-  - agreements
-  - client-agreements
-  - engineer-agreements
-  - partner-agreements
-  - billing
-  - earnings
-  - payouts
-  - payout-accounts
-  - partner-earnings
-  - partner-payouts
-  - partner-payout-accounts
-  - partnerships
-  - client-invitations
-  - partner-clients
-  - partner-home
-code:
-  - internal/authn/**
-  - internal/middleware/authentication/bearer.go
-  - internal/authz/principal.go
+applies: platform
 gaps:
   - id: rate-limit-per-instance
     text: >-

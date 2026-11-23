@@ -1,18 +1,14 @@
 ---
 name: Account
-summary: >-
+description: >-
   The profile every app mounts at `/<app>/account`: the signed-in person's own
   account, their bio, their access tokens, their notification choices, and the
   app's theme.
-start: >-
-  `src/account/`, starting at `Profile.tsx`, `AccessTokens.tsx` and
-  `Notifications.tsx`
 capabilities:
   - your-profile
   - teams
   - access-tokens
   - notifications
-code: [src/account/**, src/shared/bio.ts, src/components/BioField.tsx]
 gaps:
   - id: sync-no-end-to-end-test
     outcome: functionality/beta/stays-correct

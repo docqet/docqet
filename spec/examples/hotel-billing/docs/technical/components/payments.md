@@ -1,12 +1,9 @@
 ---
 name: Payments
-summary: >-
+description: >-
   Taking card payments through the payment provider, for deposits and payment
   links.
-start: >-
-  `src/payments/provider.ts`
 capabilities: [deposits, pay-by-link]
-code: [src/payments/**]
 gaps:
   - id: no-timeout-on-provider-calls
     outcome: reliability/beta/fails-clearly

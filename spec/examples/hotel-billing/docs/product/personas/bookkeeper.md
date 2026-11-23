@@ -6,12 +6,13 @@ summary: >-
 role: Back office
 title: Bookkeeper
 image: https://randomuser.me/api/portraits/women/90.jpg
-needs:
-  - To get each day's takings into the accounting software without typing them
-    in.
-  - To invoice every company once a month, and see what each one owes.
-  - To keep companies within the credit the hotel allows them.
 ---
+
+## Needs
+
+- To get each day's takings into the accounting software without typing them in.
+- To invoice every company once a month, and see what each one owes.
+- To keep companies within the credit the hotel allows them.
 
 ## Knows
 

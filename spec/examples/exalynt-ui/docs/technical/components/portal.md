@@ -1,11 +1,9 @@
 ---
 name: Portal
-summary: >-
+description: >-
   The client portal, where a client organization's people buy and schedule
   capacity, follow their blocks, read estimates, pay, and manage the
   organization.
-start: >-
-  `src/apps/portal/`, starting at `Layout.tsx` and `navigation.ts`
 capabilities:
   - client-home
   - getting-set-up
@@ -18,7 +16,6 @@ capabilities:
   - billing
   - organizations-and-members
   - client-agreements
-code: [src/apps/portal/**]
 gaps:
   - id: home-screens-untested
     outcome: functionality/beta/stays-correct

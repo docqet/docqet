@@ -15,7 +15,6 @@ tradeoffs:
       come straight to the desk.
     cost: >-
       Clerks enter each agency booking by hand, as it arrives by email.
-    revisit: agency bookings pass a fifth of all bookings
 decisions:
   - topic: Agency bookings
     question: Should bookings come in from online travel agencies?

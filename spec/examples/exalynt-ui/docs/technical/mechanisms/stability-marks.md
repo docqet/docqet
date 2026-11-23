@@ -3,50 +3,6 @@ name: Stability marks
 summary: >-
   How every app page shows its stability level, from one record of every
   feature in every app.
-start: >-
-  `src/featureStability.ts`, read by `PageHeader`, `SectionCard`, `SidebarNav`
-  and `PrototypeNotice`
-capabilities:
-  - client-home
-  - getting-set-up
-  - teams
-  - capacity-purchasing
-  - scheduling
-  - fulfillment
-  - conversation-spaces
-  - estimates
-  - billing
-  - client-agreements
-  - claiming-blocks
-  - availability
-  - earnings
-  - payouts
-  - payout-accounts
-  - engineer-agreements
-  - client-directory
-  - client-coupons
-  - partnerships
-  - engineers
-  - agreements
-  - staffing
-  - roles
-  - partner-home
-  - client-invitations
-  - partner-clients
-  - partner-earnings
-  - partner-payouts
-  - partner-payout-accounts
-  - partner-agreements
-  - your-profile
-  - access-tokens
-  - notifications
-code:
-  - src/featureStability.ts
-  - src/components/PrototypeNotice.tsx
-  - src/components/PageHeader.tsx
-  - src/components/SectionCard.tsx
-  - src/components/SidebarNav.tsx
-  - src/access/navigation.ts
 meets: [compatibility/prototype/marked]
 tradeoffs:
   - id: levels-kept-in-the-ui

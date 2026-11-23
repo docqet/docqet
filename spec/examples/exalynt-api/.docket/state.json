@@ -27,7 +27,7 @@
     "gaps": 313,
     "problems": 4,
     "tradeoffs": 62,
-    "systems": 6,
+    "mechanisms": 6,
     "components": 14
   },
   "domains": [
@@ -11048,7 +11048,6 @@
         "access-tokens"
       ],
       "rules": [],
-      "lifecycle": null,
       "confusedWith": [
         {
           "concept": "role",
@@ -11076,7 +11075,6 @@
         "teams"
       ],
       "rules": [],
-      "lifecycle": null,
       "confusedWith": [
         {
           "concept": "team@capacity",
@@ -11104,7 +11102,6 @@
         "engineers"
       ],
       "rules": [],
-      "lifecycle": null,
       "confusedWith": [
         {
           "concept": "access-token",
@@ -11130,15 +11127,6 @@
         "earnings"
       ],
       "rules": [],
-      "lifecycle": {
-        "states": [
-          "Offered",
-          "Accepted",
-          "In effect",
-          "Superseded"
-        ],
-        "text": "An agreement is offered to a party, who accepts it. The latest accepted is in effect, until a later one is accepted and supersedes it."
-      },
       "confusedWith": [
         {
           "concept": "partnership@partnerships",
@@ -11146,7 +11134,7 @@
           "text": "the partner's own record. Its terms are held in its Partner Agreement."
         }
       ],
-      "body": "- **Agreement Template**: a type of agreement's text.\n- **Agreement Version**: one version of a template.\n- **Standard Terms**: what every party of a type shares.\n- **Commercial Terms**: what's agreed with the named party, as a list of terms\n  chosen from a catalog, such as an Engineer Share or a Referral Share. Each term\n  applies only if it's listed.\n- **Accepted Agreement**: the exact text and Commercial Terms someone accepted,\n  kept as accepted.\n\nA shared list of definitions gives the meaning of the words every agreement uses.\nA [payout share](../../pay/concepts/payout-share.md) comes from the Commercial Terms of the agreement\nin effect."
+      "body": "- **Agreement Template**: a type of agreement's text.\n- **Agreement Version**: one version of a template.\n- **Standard Terms**: what every party of a type shares.\n- **Commercial Terms**: what's agreed with the named party, as a list of terms\n  chosen from a catalog, such as an Engineer Share or a Referral Share. Each term\n  applies only if it's listed.\n- **Accepted Agreement**: the exact text and Commercial Terms someone accepted,\n  kept as accepted.\n\nA shared list of definitions gives the meaning of the words every agreement uses.\nA [payout share](../../pay/concepts/payout-share.md) comes from the Commercial Terms of the agreement\nin effect.\n\n## Lifecycle\n\n1. Offered\n2. Accepted\n3. In effect\n4. Superseded\n\nAn agreement is offered to a party, who accepts it. The latest accepted is in\neffect, until a later one is accepted and supersedes it."
     },
     {
       "id": "invoice",
@@ -11160,16 +11148,8 @@
         "client-directory"
       ],
       "rules": [],
-      "lifecycle": {
-        "states": [
-          "Draft",
-          "Open",
-          "Paid, Void, or Uncollectible"
-        ],
-        "text": "An invoice stays open if a payment on it didn't go through, or is still clearing. Paying it makes it Paid. Voiding it makes it Void, and Uncollectible means it's been written off."
-      },
       "confusedWith": [],
-      "body": "Each block bought on an invoice points at it. An invoice's status is separate from\nthe status of any payment on it: one whose payment is clearing or has failed still\nreads Open, and that payment shows on its blocks. Each payment provider's own\nstatuses map onto Exalynt's."
+      "body": "Each block bought on an invoice points at it. An invoice's status is separate from\nthe status of any payment on it: one whose payment is clearing or has failed still\nreads Open, and that payment shows on its blocks. Each payment provider's own\nstatuses map onto Exalynt's.\n\n## Lifecycle\n\n1. Draft\n2. Open\n3. Paid, Void, or Uncollectible\n\nAn invoice stays open if a payment on it didn't go through, or is still\nclearing. Paying it makes it Paid. Voiding it makes it Void, and Uncollectible\nmeans it's been written off."
     },
     {
       "id": "capacity-block",
@@ -11191,17 +11171,6 @@
         "earnings"
       ],
       "rules": [],
-      "lifecycle": {
-        "states": [
-          "Pending payment (while the client's payment clears)",
-          "Unscheduled",
-          "Scheduled, unassigned (in the client's shared queue)",
-          "Assigned",
-          "In progress (once its engineer starts it, from the start of its week)",
-          "Fulfilled (once its engineer marks it fulfilled)"
-        ],
-        "text": "Purchasing, scheduling, assignment, starting, and fulfilling are separate steps. Nobody reviews a block: it's [fulfilled](fulfilled.md) once its engineer marks it so."
-      },
       "confusedWith": [
         {
           "concept": "capacity-unit",
@@ -11214,7 +11183,7 @@
           "text": "a separate lifecycle that starts once a block is fulfilled. A fulfilled block isn't necessarily paid out."
         }
       ],
-      "body": "A block belongs to the [organization](../../accounts/concepts/organization.md) that bought it, and is\nnumbered in turn within it, keeping its number, such as BLK-0001. Once\nscheduled, it has a [preferred week](preferred-week.md), and it sits in the\nclient's [shared queue](shared-queue.md) until it has an engineer. It can have a\n[focus](focus.md) saying what its work is about."
+      "body": "A block belongs to the [organization](../../accounts/concepts/organization.md) that bought it, and is\nnumbered in turn within it, keeping its number, such as BLK-0001. Once\nscheduled, it has a [preferred week](preferred-week.md), and it sits in the\nclient's [shared queue](shared-queue.md) until it has an engineer. It can have a\n[focus](focus.md) saying what its work is about.\n\n## Lifecycle\n\n1. Pending payment (while the client's payment clears)\n2. Unscheduled\n3. Scheduled, unassigned (in the client's shared queue)\n4. Assigned\n5. In progress (once its engineer starts it, from the start of its week)\n6. Fulfilled (once its engineer marks it fulfilled)\n\nPurchasing, scheduling, assignment, starting, and fulfilling are separate steps.\nNobody reviews a block: it's [fulfilled](fulfilled.md) once its engineer marks\nit so."
     },
     {
       "id": "capacity-unit",
@@ -11228,7 +11197,6 @@
         "estimates"
       ],
       "rules": [],
-      "lifecycle": null,
       "confusedWith": [
         {
           "concept": "capacity-block",
@@ -11248,14 +11216,8 @@
         "conversation-spaces"
       ],
       "rules": [],
-      "lifecycle": {
-        "states": [
-          "Started"
-        ],
-        "text": "A conversation is recorded once the messaging provider has started it, and stays for good."
-      },
       "confusedWith": [],
-      "body": "Someone starts a conversation by giving it a subject, such as \"Rate file\nformat\". With the messaging provider it opens with the block's number before\nthe subject, \"BLK-0037 - Rate file format\", since the space holds every\nblock's conversations. Everyone in the space can read and join it; it has no\npeople of its own.\n\nWhat's said stays with the messaging provider. The app reads only how many\nmessages a conversation has, when the latest was sent, and how many one of\nExalynt's people hasn't read, which the messaging provider can't say for a\nclient's."
+      "body": "Someone starts a conversation by giving it a subject, such as \"Rate file\nformat\". With the messaging provider it opens with the block's number before\nthe subject, \"BLK-0037 - Rate file format\", since the space holds every\nblock's conversations. Everyone in the space can read and join it; it has no\npeople of its own.\n\nWhat's said stays with the messaging provider. The app reads only how many\nmessages a conversation has, when the latest was sent, and how many one of\nExalynt's people hasn't read, which the messaging provider can't say for a\nclient's.\n\n## Lifecycle\n\n1. Started\n\nA conversation is recorded once the messaging provider has started it, and stays\nfor good."
     },
     {
       "id": "effective-availability",
@@ -11269,7 +11231,6 @@
         "staffing"
       ],
       "rules": [],
-      "lifecycle": null,
       "confusedWith": [],
       "body": "It's how much of a given week the engineer offers, in\n[capacity units](capacity-unit.md), from 0 to 4. The baseline is what they offer\nevery week. An adjustment replaces it for the weeks it covers, and a week with\nneither offers nothing."
     },
@@ -11285,7 +11246,6 @@
         "staffing"
       ],
       "rules": [],
-      "lifecycle": null,
       "confusedWith": [],
       "body": "Eligibility is about a [capacity block](capacity-block.md)'s client: an engineer\nis eligible for the blocks of the client [organizations](../../accounts/concepts/organization.md) their\n[team](team.md) is assigned to."
     },
@@ -11299,7 +11259,6 @@
         "estimates"
       ],
       "rules": [],
-      "lifecycle": null,
       "confusedWith": [
         {
           "concept": "focus",
@@ -11319,7 +11278,6 @@
         "fulfillment"
       ],
       "rules": [],
-      "lifecycle": null,
       "confusedWith": [
         {
           "concept": "estimate",
@@ -11340,7 +11298,6 @@
         "partner-earnings"
       ],
       "rules": [],
-      "lifecycle": null,
       "confusedWith": [
         {
           "concept": "payout@pay",
@@ -11362,7 +11319,6 @@
         "staffing"
       ],
       "rules": [],
-      "lifecycle": null,
       "confusedWith": [],
       "body": "Each scheduled [capacity block](capacity-block.md) has one preferred week."
     },
@@ -11378,7 +11334,6 @@
         "staffing"
       ],
       "rules": [],
-      "lifecycle": null,
       "confusedWith": [],
       "body": "Each client [organization](../../accounts/concepts/organization.md) has one shared queue, made up of its\n[capacity blocks](capacity-block.md) that have a\n[preferred week](preferred-week.md) and no engineer yet. The\n[teams](team.md) assigned to the client see the same queue."
     },
@@ -11392,13 +11347,6 @@
         "conversation-spaces"
       ],
       "rules": [],
-      "lifecycle": {
-        "states": [
-          "Invited",
-          "Member"
-        ],
-        "text": "Accepting the messaging provider's invitation makes someone a member. Someone who can't join stays unable to until they're added again. Being taken out of the space ends a membership at any point."
-      },
       "confusedWith": [
         {
           "concept": "organization@accounts",
@@ -11406,7 +11354,7 @@
           "text": "membership: being one of an organization's people is what puts someone in its space, not the same thing."
         }
       ],
-      "body": "Each membership is one person in one space. Exalynt's people are put in\ndirectly. A client's people may be invited instead, where the messaging provider\nrequires it, and are in once they accept. Someone the messaging provider can't\nreach, such as a client with no account there, can't join and is emailed\ninstead."
+      "body": "Each membership is one person in one space. Exalynt's people are put in\ndirectly. A client's people may be invited instead, where the messaging provider\nrequires it, and are in once they accept. Someone the messaging provider can't\nreach, such as a client with no account there, can't join and is emailed\ninstead.\n\n## Lifecycle\n\n1. Invited\n2. Member\n\nAccepting the messaging provider's invitation makes someone a member. Someone\nwho can't join stays unable to until they're added again. Being taken out of the\nspace ends a membership at any point."
     },
     {
       "id": "space",
@@ -11418,7 +11366,6 @@
         "conversation-spaces"
       ],
       "rules": [],
-      "lifecycle": null,
       "confusedWith": [
         {
           "concept": "team",
@@ -11446,7 +11393,6 @@
         "teams"
       ],
       "rules": [],
-      "lifecycle": null,
       "confusedWith": [
         {
           "concept": "organization@accounts",
@@ -11476,7 +11422,6 @@
         "payouts"
       ],
       "rules": [],
-      "lifecycle": null,
       "confusedWith": [
         {
           "concept": "organization@accounts",
@@ -11500,7 +11445,6 @@
         "payouts"
       ],
       "rules": [],
-      "lifecycle": null,
       "confusedWith": [
         {
           "concept": "capacity-block@capacity",
@@ -11529,15 +11473,6 @@
         "payouts"
       ],
       "rules": [],
-      "lifecycle": {
-        "states": [
-          "Upcoming",
-          "Earned",
-          "Sent",
-          "Paid"
-        ],
-        "text": "A share is upcoming from when the block is assigned, and earned when the block is fulfilled. An earned share can be on hold while its payee has no payout account that can be paid. It's sent when a payout carries it, and paid once that payout has arrived."
-      },
       "confusedWith": [
         {
           "concept": "payout",
@@ -11550,7 +11485,7 @@
           "text": "the whole amount a share is a percentage of."
         }
       ],
-      "body": "A block can have these shares:\n\n- **Engineer share**: for the engineer on the block.\n- **Team support share**: for each teammate with availability in the block's\n  week.\n- **Team-lead share**: for the lead of that engineer's team.\n- **Partnership share**: for the [partnership](../../partnerships/concepts/partnership.md) that introduced\n  the client.\n\nEach share is a percentage of the basis. An earning has a kind, and more kinds\nof paid work may come. A [payout](payout.md) is made up of earnings."
+      "body": "A block can have these shares:\n\n- **Engineer share**: for the engineer on the block.\n- **Team support share**: for each teammate with availability in the block's\n  week.\n- **Team-lead share**: for the lead of that engineer's team.\n- **Partnership share**: for the [partnership](../../partnerships/concepts/partnership.md) that introduced\n  the client.\n\nEach share is a percentage of the basis. An earning has a kind, and more kinds\nof paid work may come. A [payout](payout.md) is made up of earnings.\n\n## Lifecycle\n\n1. Upcoming\n2. Earned\n3. Sent\n4. Paid\n\nA share is upcoming from when the block is assigned, and earned when the block\nis fulfilled. An earned share can be on hold while its payee has no payout\naccount that can be paid. It's sent when a payout carries it, and paid once that\npayout has arrived."
     },
     {
       "id": "payout",
@@ -11566,13 +11501,6 @@
         "payouts"
       ],
       "rules": [],
-      "lifecycle": {
-        "states": [
-          "Processing",
-          "Paid, or Failed, or Canceled. A Paid payout can still become Failed if the bank returns it."
-        ],
-        "text": "A separate lifecycle that starts once a block is fulfilled. Each of its payout shares (engineer, team support, team lead, partnership) moves through its own payout and payment statuses. A fulfilled block isn't necessarily paid out."
-      },
       "confusedWith": [
         {
           "concept": "payout-share",
@@ -11580,7 +11508,7 @@
           "text": "what someone is owed from a block, which exists from when the block is assigned. A payout is the money that pays it."
         }
       ],
-      "body": "A payout is made up of earnings, which come from [payout shares](payout-share.md)\namong other things, and has no kind of its own. It goes to the payee's payout\naccount, which is one bank account."
+      "body": "A payout is made up of earnings, which come from [payout shares](payout-share.md)\namong other things, and has no kind of its own. It goes to the payee's payout\naccount, which is one bank account.\n\n## Lifecycle\n\n1. Processing\n2. Paid, or Failed, or Canceled. A Paid payout can still become Failed if the\n   bank returns it.\n\nA separate lifecycle that starts once a block is fulfilled. Each of its payout\nshares (engineer, team support, team lead, partnership) moves through its own\npayout and payment statuses. A fulfilled block isn't necessarily paid out."
     }
   ],
   "personas": [
@@ -11625,13 +11553,7 @@
         "partner-program"
       ],
       "readiness": 56,
-      "needs": [
-        "To buy engineering capacity and book it into a week straight away, so work starts without the wait of hiring.",
-        "To see what's still needed before work can start, and what happens next.",
-        "To know what each piece of the product will cost and how many weeks it takes, from Exalynt's estimates, so they can plan within tight money.",
-        "To see every week who's on each block, what it's about, and when it's fulfilled, so they can tell what the money bought."
-      ],
-      "body": "## Knows\n\nTheir market and what the product should do. Semi-technical: reads some code and\nmay have sketched a prototype with AI. New to Exalynt's terms.\n\n## Context\n\nLaptop and phone, once or twice a week around checkpoints, fitted between\ncustomer and investor conversations. Money is tight and things feel urgent.\n\n## Expects\n\nTo talk in MVPs and roadmaps, iterate quickly, and compare Exalynt with hiring a\ncontractor.\n\n## Cares about\n\nVisible progress every week for the money spent. Gives up if they can't tell\nwhat they paid for or what happens next, or if starting work feels slow."
+      "body": "## Needs\n\n- To buy engineering capacity and book it into a week straight away, so work\n  starts without the wait of hiring.\n- To see what's still needed before work can start, and what happens next.\n- To know what each piece of the product will cost and how many weeks it takes,\n  from Exalynt's estimates, so they can plan within tight money.\n- To see every week who's on each block, what it's about, and when it's\n  fulfilled, so they can tell what the money bought.\n\n## Knows\n\nTheir market and what the product should do. Semi-technical: reads some code and\nmay have sketched a prototype with AI. New to Exalynt's terms.\n\n## Context\n\nLaptop and phone, once or twice a week around checkpoints, fitted between\ncustomer and investor conversations. Money is tight and things feel urgent.\n\n## Expects\n\nTo talk in MVPs and roadmaps, iterate quickly, and compare Exalynt with hiring a\ncontractor.\n\n## Cares about\n\nVisible progress every week for the money spent. Gives up if they can't tell\nwhat they paid for or what happens next, or if starting work feels slow."
     },
     {
       "id": "client-admin-operations",
@@ -11674,13 +11596,7 @@
         "partner-program"
       ],
       "readiness": 56,
-      "needs": [
-        "To buy blocks and schedule them for the weeks that suit the business, in a few minutes between meetings.",
-        "To see where the work stands each week, and the named engineer on each block, without having to ask.",
-        "To know what the work will cost and how many weeks it takes, from Exalynt's estimates, so they can plan the budget.",
-        "To bring colleagues in and give each the right role, so others can follow the work or pay the invoices."
-      ],
-      "body": "## Knows\n\nTheir business and its processes in depth. Doesn't code. Has worked with\nsoftware vendors, but blocks of capacity are new.\n\n## Context\n\nLaptop, between meetings, once or twice a week around checkpoints. Buys and\nschedules in short, interrupted sittings.\n\n## Expects\n\nTo talk in weeks, budget and outcomes, never hours. \"Sprint\" and \"ticket\" mean\nlittle. Expects plain language and ordinary vendor invoices.\n\n## Cares about\n\nSeeing real progress and a named engineer. Gives up if they can't tell what they\npaid for or what happens next."
+      "body": "## Needs\n\n- To buy blocks and schedule them for the weeks that suit the business, in a few\n  minutes between meetings.\n- To see where the work stands each week, and the named engineer on each block,\n  without having to ask.\n- To know what the work will cost and how many weeks it takes, from Exalynt's\n  estimates, so they can plan the budget.\n- To bring colleagues in and give each the right role, so others can follow the\n  work or pay the invoices.\n\n## Knows\n\nTheir business and its processes in depth. Doesn't code. Has worked with\nsoftware vendors, but blocks of capacity are new.\n\n## Context\n\nLaptop, between meetings, once or twice a week around checkpoints. Buys and\nschedules in short, interrupted sittings.\n\n## Expects\n\nTo talk in weeks, budget and outcomes, never hours. \"Sprint\" and \"ticket\" mean\nlittle. Expects plain language and ordinary vendor invoices.\n\n## Cares about\n\nSeeing real progress and a named engineer. Gives up if they can't tell what they\npaid for or what happens next."
     },
     {
       "id": "client-billing",
@@ -11706,12 +11622,7 @@
         "paying-for-capacity"
       ],
       "readiness": 66,
-      "needs": [
-        "To keep the company's payment methods current, and choose the one charged by default.",
-        "To find every invoice, with its tax and payment status, and download it to file.",
-        "To be told at once when a payment fails, and pay the unpaid invoice, so the blocks it bought aren't left waiting."
-      ],
-      "body": "## Knows\n\nAccounts payable and the company's cards. Little about the engineering: a block\nis a line item.\n\n## Context\n\nLaptop, a few times a month in batches, or when a failed-payment notice arrives.\nPressed at month end.\n\n## Expects\n\nAn invoice list, statuses and a downloadable PDF, like any vendor portal.\n\n## Cares about\n\nAmounts that match and are easy to file. Gives up if invoices are hard to find\nor a failed payment is unclear."
+      "body": "## Needs\n\n- To keep the company's payment methods current, and choose the one charged by\n  default.\n- To find every invoice, with its tax and payment status, and download it to\n  file.\n- To be told at once when a payment fails, and pay the unpaid invoice, so the\n  blocks it bought aren't left waiting.\n\n## Knows\n\nAccounts payable and the company's cards. Little about the engineering: a block\nis a line item.\n\n## Context\n\nLaptop, a few times a month in batches, or when a failed-payment notice arrives.\nPressed at month end.\n\n## Expects\n\nAn invoice list, statuses and a downloadable PDF, like any vendor portal.\n\n## Cares about\n\nAmounts that match and are easy to file. Gives up if invoices are hard to find\nor a failed payment is unclear."
     },
     {
       "id": "client-member",
@@ -11745,13 +11656,7 @@
         "clients-and-teams"
       ],
       "readiness": 60,
-      "needs": [
-        "To see where each block stands, and read its focus and updates, without having to ask for them.",
-        "To say what a block should work on, in their own words and with their own screenshots and files, so what they asked for reaches the engineers.",
-        "To talk with the engineers about a block, and know they were heard.",
-        "To move a block to another week before it starts, when the business needs it."
-      ],
-      "body": "## Knows\n\nThe daily process and its exceptions. Not technical. Didn't choose Exalynt, and\ncan't buy capacity or see billing.\n\n## Context\n\nLaptop, between calls, once or twice a week. Mostly reads where the work stands,\nand sometimes moves a block.\n\n## Expects\n\nTo talk about customers and cases, and to find updates without having to ask for\nthem.\n\n## Cares about\n\nWhether what they asked for moved. Gives up if updates read as technical, or if\nit's unclear anyone heard them."
+      "body": "## Needs\n\n- To see where each block stands, and read its focus and updates, without having\n  to ask for them.\n- To say what a block should work on, in their own words and with their own\n  screenshots and files, so what they asked for reaches the engineers.\n- To talk with the engineers about a block, and know they were heard.\n- To move a block to another week before it starts, when the business needs it.\n\n## Knows\n\nThe daily process and its exceptions. Not technical. Didn't choose Exalynt, and\ncan't buy capacity or see billing.\n\n## Context\n\nLaptop, between calls, once or twice a week. Mostly reads where the work stands,\nand sometimes moves a block.\n\n## Expects\n\nTo talk about customers and cases, and to find updates without having to ask for\nthem.\n\n## Cares about\n\nWhether what they asked for moved. Gives up if updates read as technical, or if\nit's unclear anyone heard them."
     },
     {
       "id": "exalynt-admin",
@@ -11795,13 +11700,7 @@
         "getting-paid"
       ],
       "readiness": 46,
-      "needs": [
-        "To spot what needs them at once: scheduled blocks nobody's on, overbooked weeks, failed payments, and earnings on hold, and be told when one comes up.",
-        "To put an eligible engineer on a block, or take one off, across every client and team.",
-        "To see the week's payouts by payee, with what each line is for, before releasing them, so money moves only once it's been checked.",
-        "To bring engineers and partners in on the terms chosen, and see when each engineer is ready for client work."
-      ],
-      "body": "## Knows\n\nEvery rule, and is technical. Will use the API where the UI has no way to do\nsomething.\n\n## Context\n\nDesktop, daily, in short bursts between calls and engineering. Approves and\nreleases payouts, usually once per week.\n\n## Expects\n\nExalynt's own vocabulary, views that lead with exceptions, and notifications\nthat say when something needs them.\n\n## Cares about\n\nSpotting unassigned blocks, failed payments and shares on hold right away. Gives\nup on anything that hides exceptions, makes money moves hard to double-check, or\nneeds a long unbroken sitting."
+      "body": "## Needs\n\n- To spot what needs them at once: scheduled blocks nobody's on, overbooked\n  weeks, failed payments, and earnings on hold, and be told when one comes up.\n- To put an eligible engineer on a block, or take one off, across every client\n  and team.\n- To see the week's payouts by payee, with what each line is for, before\n  releasing them, so money moves only once it's been checked.\n- To bring engineers and partners in on the terms chosen, and see when each\n  engineer is ready for client work.\n\n## Knows\n\nEvery rule, and is technical. Will use the API where the UI has no way to do\nsomething.\n\n## Context\n\nDesktop, daily, in short bursts between calls and engineering. Approves and\nreleases payouts, usually once per week.\n\n## Expects\n\nExalynt's own vocabulary, views that lead with exceptions, and notifications\nthat say when something needs them.\n\n## Cares about\n\nSpotting unassigned blocks, failed payments and shares on hold right away. Gives\nup on anything that hides exceptions, makes money moves hard to double-check, or\nneeds a long unbroken sitting."
     },
     {
       "id": "exalynt-engineer-1",
@@ -11837,13 +11736,7 @@
         "getting-paid"
       ],
       "readiness": 49,
-      "needs": [
-        "To set their availability once, and change a week when they need to, so clients schedule only what they can do.",
-        "To claim the blocks that fit their weeks, seeing what each will earn them before they claim it.",
-        "To start a block, post what they did, and mark it fulfilled in a few clicks, so the app stays out of the way of the work.",
-        "To see what each block earned and when it was paid, with numbers that match."
-      ],
-      "body": "## Knows\n\nBlocks and the client's business. Skips instructions and moves fast.\n\n## Context\n\nLaptop, at the start and end of the week around blocks. Coding is the real job.\n\n## Expects\n\nGitHub and Linear-style speed, with the app staying out of the way.\n\n## Cares about\n\nKnowing what a block pays before starting, and numbers that match. Gives up on\nanything that makes saying what they did feel like a timesheet."
+      "body": "## Needs\n\n- To set their availability once, and change a week when they need to, so\n  clients schedule only what they can do.\n- To claim the blocks that fit their weeks, seeing what each will earn them\n  before they claim it.\n- To start a block, post what they did, and mark it fulfilled in a few clicks,\n  so the app stays out of the way of the work.\n- To see what each block earned and when it was paid, with numbers that match.\n\n## Knows\n\nBlocks and the client's business. Skips instructions and moves fast.\n\n## Context\n\nLaptop, at the start and end of the week around blocks. Coding is the real job.\n\n## Expects\n\nGitHub and Linear-style speed, with the app staying out of the way.\n\n## Cares about\n\nKnowing what a block pays before starting, and numbers that match. Gives up on\nanything that makes saying what they did feel like a timesheet."
     },
     {
       "id": "exalynt-engineer-2",
@@ -11879,13 +11772,7 @@
         "getting-paid"
       ],
       "readiness": 49,
-      "needs": [
-        "To know what's expected of them in a block's week, and what it will earn them, before they claim it.",
-        "To be told why a block doesn't fit them, or why their earnings are on hold and what to fix, rather than just being refused.",
-        "To see where each of their blocks stands and what its next step is, so they don't get it wrong in front of a client.",
-        "To set up the bank account their payouts go to, and see whether it can be paid."
-      ],
-      "body": "## Knows\n\nSolid coding, less client experience. Unsure of terms like eligibility, shares\nand Planned, and may still be setting up their payout account.\n\n## Context\n\nLaptop, at the start and end of the week around blocks. Reads carefully and goes\nslower.\n\n## Expects\n\nTools like GitHub and Linear, plus an explanation when Exalynt's process differs\nfrom them.\n\n## Cares about\n\nNot doing it wrong in front of a client, knowing what a block pays, and why they\ncan't be assigned if that happens. Gives up on unexplained refusals and terms."
+      "body": "## Needs\n\n- To know what's expected of them in a block's week, and what it will earn them,\n  before they claim it.\n- To be told why a block doesn't fit them, or why their earnings are on hold and\n  what to fix, rather than just being refused.\n- To see where each of their blocks stands and what its next step is, so they\n  don't get it wrong in front of a client.\n- To set up the bank account their payouts go to, and see whether it can be\n  paid.\n\n## Knows\n\nSolid coding, less client experience. Unsure of terms like eligibility, shares\nand Planned, and may still be setting up their payout account.\n\n## Context\n\nLaptop, at the start and end of the week around blocks. Reads carefully and goes\nslower.\n\n## Expects\n\nTools like GitHub and Linear, plus an explanation when Exalynt's process differs\nfrom them.\n\n## Cares about\n\nNot doing it wrong in front of a client, knowing what a block pays, and why they\ncan't be assigned if that happens. Gives up on unexplained refusals and terms."
     },
     {
       "id": "exalynt-engineer-new-hire",
@@ -11911,13 +11798,7 @@
         "clients-and-teams"
       ],
       "readiness": 53,
-      "needs": [
-        "To read the terms that set what they earn, and accept their Engineer Agreement, so they know how and when they'll be paid.",
-        "To see what they have left to set up, and whether they're ready for client work, so nothing is missed before a client depends on them.",
-        "To add their bank account on the payments partner's form, knowing Exalynt's admins never see its details.",
-        "Once ready, to be told where to find their first block."
-      ],
-      "body": "## Knows\n\nStrong technically. Knows from their hiring conversation that Exalynt sells\nblocks of engineering capacity and pays per block. Has never seen the app, and\ndoesn't know terms like preferred week, baseline or team support.\n\n## Context\n\nLaptop, one sitting after their current work, opening the email within a day.\n\n## Expects\n\nSetup like GitHub or Linear, a clear list of what's left, and someone to ask if\nstuck, without wanting to bother the person who hired them.\n\n## Cares about\n\nKnowing they've done everything needed before a client depends on them, and when\nand how they'll get paid. Hesitant to hand over bank details without knowing why\nor who holds them. Gives up on dead ends and on not being able to tell if\nanything is left to do."
+      "body": "## Needs\n\n- To read the terms that set what they earn, and accept their Engineer\n  Agreement, so they know how and when they'll be paid.\n- To see what they have left to set up, and whether they're ready for client\n  work, so nothing is missed before a client depends on them.\n- To add their bank account on the payments partner's form, knowing Exalynt's\n  admins never see its details.\n- Once ready, to be told where to find their first block.\n\n## Knows\n\nStrong technically. Knows from their hiring conversation that Exalynt sells\nblocks of engineering capacity and pays per block. Has never seen the app, and\ndoesn't know terms like preferred week, baseline or team support.\n\n## Context\n\nLaptop, one sitting after their current work, opening the email within a day.\n\n## Expects\n\nSetup like GitHub or Linear, a clear list of what's left, and someone to ask if\nstuck, without wanting to bother the person who hired them.\n\n## Cares about\n\nKnowing they've done everything needed before a client depends on them, and when\nand how they'll get paid. Hesitant to hand over bank details without knowing why\nor who holds them. Gives up on dead ends and on not being able to tell if\nanything is left to do."
     },
     {
       "id": "exalynt-team-lead",
@@ -11947,13 +11828,7 @@
         "getting-paid"
       ],
       "readiness": 46,
-      "needs": [
-        "To see the whole team's availability, blocks and progress in one place, so they can spot who's stuck or overloaded.",
-        "To start a teammate's block, set its focus, or post an update on it, so a block doesn't stall.",
-        "To be told when someone joins or leaves the team, or can't be assigned blocks any more.",
-        "To see what they earn as lead apart from their own engineering earnings, with the fulfilled blocks each share came from."
-      ],
-      "body": "## Knows\n\nEngineering, Exalynt's model, and the team's clients. Uses their final say\nrarely.\n\n## Context\n\nLaptop, at the start and end of the week around their own blocks. Checks who's\nstuck.\n\n## Expects\n\nTo see the team at a glance. Knows GitHub and Linear-style tools.\n\n## Cares about\n\nBlocks not stalling, nobody getting overloaded, and lead earnings shown\nseparately from their own. Gives up if they have to go person by person to see\nthe team."
+      "body": "## Needs\n\n- To see the whole team's availability, blocks and progress in one place, so\n  they can spot who's stuck or overloaded.\n- To start a teammate's block, set its focus, or post an update on it, so a\n  block doesn't stall.\n- To be told when someone joins or leaves the team, or can't be assigned blocks\n  any more.\n- To see what they earn as lead apart from their own engineering earnings, with\n  the fulfilled blocks each share came from.\n\n## Knows\n\nEngineering, Exalynt's model, and the team's clients. Uses their final say\nrarely.\n\n## Context\n\nLaptop, at the start and end of the week around their own blocks. Checks who's\nstuck.\n\n## Expects\n\nTo see the team at a glance. Knows GitHub and Linear-style tools.\n\n## Cares about\n\nBlocks not stalling, nobody getting overloaded, and lead earnings shown\nseparately from their own. Gives up if they have to go person by person to see\nthe team."
     },
     {
       "id": "partner",
@@ -11988,282 +11863,225 @@
         "getting-paid"
       ],
       "readiness": 51,
-      "needs": [
-        "To copy their referral code or sign-up link, or invite someone by email, in a moment when making an introduction.",
-        "To see what the partnership has earned, what's been paid and what's still waiting, client by client, on their phone as well.",
-        "To see how long they earn on each client, without remembering how earning windows work.",
-        "To be paid into the partnership's own account, and told why when earnings are held."
-      ],
-      "body": "## Knows\n\nExalynt's work and reputation. Forgets how the hub and earning windows work\nbetween visits.\n\n## Context\n\nA few times a year, often from an emailed link on a phone, wanting the code to\nshare or what they've earned.\n\n## Expects\n\nA simple earnings statement. No quotas or selling.\n\n## Cares about\n\nClear numbers that match, and payouts that arrive. Leaves if it feels like a\nsales tool."
+      "body": "## Needs\n\n- To copy their referral code or sign-up link, or invite someone by email, in a\n  moment when making an introduction.\n- To see what the partnership has earned, what's been paid and what's still\n  waiting, client by client, on their phone as well.\n- To see how long they earn on each client, without remembering how earning\n  windows work.\n- To be paid into the partnership's own account, and told why when earnings are\n  held.\n\n## Knows\n\nExalynt's work and reputation. Forgets how the hub and earning windows work\nbetween visits.\n\n## Context\n\nA few times a year, often from an emailed link on a phone, wanting the code to\nshare or what they've earned.\n\n## Expects\n\nA simple earnings statement. No quotas or selling.\n\n## Cares about\n\nClear numbers that match, and payouts that arrive. Leaves if it feels like a\nsales tool."
     }
   ],
-  "systems": [
+  "mechanisms": [
     {
       "id": "api-docs",
-      "file": "docs/technical/systems/api-docs.md",
+      "file": "docs/technical/mechanisms/api-docs.md",
       "name": "API docs",
       "summary": "The reference at `GET /docs/api`: the OpenAPI spec bundled into one document, rendered by Scalar, with each endpoint's stability and each group's maturity drawn on top by our own script.",
+      "applies": "project",
       "capabilities": [
+        "access-tokens",
+        "engineer-onboarding",
+        "getting-set-up",
+        "notifications",
         "organizations-and-members",
         "roles",
-        "access-tokens",
         "your-profile",
-        "getting-set-up",
-        "engineer-onboarding",
-        "estimates",
-        "capacity-purchasing",
-        "client-home",
-        "scheduling",
-        "claiming-blocks",
-        "staffing",
-        "fulfillment",
-        "teams",
-        "availability",
-        "engineers",
-        "client-directory",
-        "conversation-spaces",
         "agreements",
         "client-agreements",
         "engineer-agreements",
         "partner-agreements",
         "billing",
-        "earnings",
-        "payouts",
-        "payout-accounts",
-        "partner-earnings",
-        "partner-payouts",
-        "partner-payout-accounts",
-        "partnerships",
+        "client-coupons",
+        "availability",
+        "capacity-purchasing",
+        "claiming-blocks",
+        "client-directory",
+        "client-home",
+        "conversation-spaces",
+        "engineers",
+        "estimates",
+        "fulfillment",
+        "operations-and-ownership",
+        "scheduling",
+        "staffing",
+        "teams",
         "client-invitations",
         "partner-clients",
-        "partner-home"
-      ],
-      "code": [
-        {
-          "glob": "internal/handlers/http/docs.go",
-          "files": 1
-        },
-        {
-          "glob": "internal/handlers/http/docs_bundle.go",
-          "files": 1
-        },
-        {
-          "glob": "static/docs/**",
-          "files": 112
-        }
+        "partner-home",
+        "partnerships",
+        "earnings",
+        "partner-earnings",
+        "partner-payout-accounts",
+        "partner-payouts",
+        "payout-accounts",
+        "payouts"
       ],
       "meets": [
         "compatibility/prototype/marked"
       ],
       "gaps": [
-        "system:api-docs#marks-depend-on-scalar-markup",
-        "system:api-docs#no-release-notes"
+        "mechanism:api-docs#marks-depend-on-scalar-markup",
+        "mechanism:api-docs#no-release-notes"
       ],
       "tradeoffs": [],
       "evidence": {
         "implements": [],
         "verifies": []
       },
-      "start": "`internal/handlers/http/docs.go` (the page), `docs_bundle.go` (bundling, and every operation's level), `static/docs/api.yaml` and the files it references, `static/docs/stability-marks.js` and `.css`",
       "decisions": [],
       "body": "- `NewDocsHandler` bundles the spec once at startup, inlining every `$ref`.\n  An operation without a valid `x-stability` fails the bundle, so the API\n  won't start rather than serve an unlabeled endpoint.\n- The bundler gives each operation below GA an `x-badges` badge, ending its\n  name with an invisible U+2060 so the script can find exactly those badges.\n  It also writes every operation's level, each tag's levels, and the tags'\n  navigation order into `window.EXALYNT_STABILITY` on the page. The script\n  needs that because Scalar only draws a tag's operations once it's opened.\n- `stability-marks.js` watches Scalar's DOM and, as it renders, swaps those\n  badges for stability marks, adds a mark to each operation and a maturity\n  ring to each tag in the navigation, and adds the overview under the\n  introduction's `## Maturity` heading. Renaming that heading in `api.yaml`\n  changes the id the script looks for, and the overview silently disappears.\n- The levels, their colors and wording, and how maturity is weighted mirror\n  the design package's `stability/stability.ts` and `maturity/maturity.ts`.\n  They change there first, then here.\n- Scalar's markdown styles start with `.scalar-app .markdown`, and are loaded\n  after ours, so styles for anything we add inside the introduction start the\n  same way, or Scalar's list and link styles win.\n- The script relies on `li[data-sidebar-id]` links to `#tag/<slug>` in the\n  navigation, the `group/button-label` class, and each introduction heading\n  in its own child of `.introduction-description` with an id ending\n  `/description/<slug>`. That was checked by hand against Scalar on\n  2026-11-16. When Scalar changes them, the page falls back to Scalar's plain\n  badges and the overview's explanation alone."
     },
     {
       "id": "authentication",
-      "file": "docs/technical/systems/authentication.md",
+      "file": "docs/technical/mechanisms/authentication.md",
       "name": "Authentication",
       "summary": "Decides who is calling each request, and puts the `authz.Principal` the rest of the API works from on the context. Clerk only signs people in: users are copied to our database, and organizations, memberships, and roles are the API's own.",
+      "applies": "platform",
       "capabilities": [
+        "access-tokens",
+        "engineer-onboarding",
+        "getting-set-up",
+        "notifications",
         "organizations-and-members",
         "roles",
-        "access-tokens",
         "your-profile",
-        "getting-set-up",
-        "engineer-onboarding",
-        "estimates",
-        "capacity-purchasing",
-        "client-home",
-        "scheduling",
-        "claiming-blocks",
-        "staffing",
-        "fulfillment",
-        "teams",
-        "availability",
-        "engineers",
-        "client-directory",
-        "conversation-spaces",
         "agreements",
         "client-agreements",
         "engineer-agreements",
         "partner-agreements",
         "billing",
-        "earnings",
-        "payouts",
-        "payout-accounts",
-        "partner-earnings",
-        "partner-payouts",
-        "partner-payout-accounts",
-        "partnerships",
+        "client-coupons",
+        "availability",
+        "capacity-purchasing",
+        "claiming-blocks",
+        "client-directory",
+        "client-home",
+        "conversation-spaces",
+        "engineers",
+        "estimates",
+        "fulfillment",
+        "operations-and-ownership",
+        "scheduling",
+        "staffing",
+        "teams",
         "client-invitations",
         "partner-clients",
-        "partner-home"
-      ],
-      "code": [
-        {
-          "glob": "internal/authn/**",
-          "files": 10
-        },
-        {
-          "glob": "internal/middleware/authentication/bearer.go",
-          "files": 1
-        },
-        {
-          "glob": "internal/authz/principal.go",
-          "files": 1
-        }
+        "partner-home",
+        "partnerships",
+        "earnings",
+        "partner-earnings",
+        "partner-payout-accounts",
+        "partner-payouts",
+        "payout-accounts",
+        "payouts"
       ],
       "meets": [],
       "gaps": [
-        "system:authentication#rate-limit-per-instance"
+        "mechanism:authentication#rate-limit-per-instance"
       ],
       "tradeoffs": [],
       "evidence": {
         "implements": [],
         "verifies": []
       },
-      "start": "`internal/authn`, `internal/middleware/authentication/bearer.go`, `internal/authz/principal.go`",
       "decisions": [],
       "body": "```text\nAuthorization: Bearer <Clerk session JWT, or exa_pat_ token>\nX-Organization-ID: <our organization ID>          (optional)\n        │\n        ▼\nauthn   TokenVerifier          signature, issuer, expiry, azp → Claims\n        │                      (exa_pat_ skips this: AccessTokenResolver finds the user)\n        ▼\nauthn   Resolver               finds the user; with the header, checks membership and\n        │                      loads their organization role, without it, their platform role\n        ▼\nauthz   New…Principal          each permission → Bounds → Principal on the context\n```\n\nOne role applies per request, and the two kinds never merge. With\n`X-Organization-ID` it's the caller's role in that organization, once our\ndatabase confirms they're a member, or the request is a `403`. Without it, it's\ntheir platform role, if they have one. What a role then allows is in the\n[authorization doc](authorization.md).\n\n**Personal access tokens** only identify the user who created one. The token is\nfound by the SHA-256 of its secret, and from the user on the request resolves\nthrough `Resolver.ResolveUser`, exactly as a session's would. A token holds no\ngrants of its own, so a change to its user's roles or memberships applies to its\nnext request. `Principal.AccessTokenID` says a token authenticated the request.\n\n**Service actors** aren't users. The Clerk and Stripe webhooks, identity sync,\nand `api sync` each act as `authz.ServicePrincipal(id)`, with a fixed user ID\nfrom `internal/authn/webhookusers.go` and `authz.All` for every permission.\n\n**A user Clerk knows and we don't yet.** Our users normally follow Clerk by\nwebhook. Every session route uses `authn.SyncingResolver`, which, when the\ncaller's user isn't found, fetches them from Clerk as the identity-sync service\nactor and resolves once more. It only runs with `CLERK_SECRET_KEY` set, and\nonly because the user is missing, never because someone isn't a member or a\nrecord is out of bounds.\n\n**A Principal can't be forged.** Only `authz.ContextWithPrincipal` can set one,\nand only its constructors can set its Bounds. `authz.FromContext` returns a\ncopy, and fails closed with `ErrUnauthenticated` when there's none.\n\n**Refusals say little.** A caller only ever sees `unauthorized` or `forbidden`,\nand the specific reason goes to the logs. Clerk's signing keys or API being\nunreachable is a `503`, never a `401`, as it says nothing about the caller. A\nlimited token is refused with `403` before membership is looked at, unless the\nrequest names one of its organizations, so a refusal says nothing about where\nits user belongs. Its Principal carries the limit in `OrganizationLimit`.\n\n**Tokens can't mint tokens.** Creating, listing, and revoking tokens refuse a\nPrincipal with an `AccessTokenID`, so a leaked token can't mint more. Managing\ntokens needs a session.\n\n**End-to-end tests skip verification.** `AUTH_INSECURE_SKIP_VERIFICATION`\naccepts any session token unverified. The API refuses to start with it set\nalongside any Clerk setting."
     },
     {
       "id": "authorization",
-      "file": "docs/technical/systems/authorization.md",
+      "file": "docs/technical/mechanisms/authorization.md",
       "name": "Authorization",
       "summary": "Decides what a caller may do and which records they may do it to, from the Principal authentication built. It knows nothing of tokens or the database. What the terms mean in the domain is in the role and organization concepts.",
+      "applies": "project",
       "capabilities": [
+        "access-tokens",
+        "engineer-onboarding",
+        "getting-set-up",
+        "notifications",
         "organizations-and-members",
         "roles",
-        "access-tokens",
         "your-profile",
-        "getting-set-up",
-        "engineer-onboarding",
-        "estimates",
-        "capacity-purchasing",
-        "client-home",
-        "scheduling",
-        "claiming-blocks",
-        "staffing",
-        "fulfillment",
-        "teams",
-        "availability",
-        "engineers",
-        "client-directory",
-        "conversation-spaces",
         "agreements",
         "client-agreements",
         "engineer-agreements",
         "partner-agreements",
         "billing",
-        "earnings",
-        "payouts",
-        "payout-accounts",
-        "partner-earnings",
-        "partner-payouts",
-        "partner-payout-accounts",
-        "partnerships",
+        "client-coupons",
+        "availability",
+        "capacity-purchasing",
+        "claiming-blocks",
+        "client-directory",
+        "client-home",
+        "conversation-spaces",
+        "engineers",
+        "estimates",
+        "fulfillment",
+        "operations-and-ownership",
+        "scheduling",
+        "staffing",
+        "teams",
         "client-invitations",
         "partner-clients",
-        "partner-home"
-      ],
-      "code": [
-        {
-          "glob": "internal/authz/**",
-          "files": 9
-        },
-        {
-          "glob": "internal/repositories/postgres/**",
-          "files": 40
-        },
-        {
-          "glob": "internal/services/caller.go",
-          "files": 1
-        }
+        "partner-home",
+        "partnerships",
+        "earnings",
+        "partner-earnings",
+        "partner-payout-accounts",
+        "partner-payouts",
+        "payout-accounts",
+        "payouts"
       ],
       "meets": [],
       "gaps": [],
       "tradeoffs": [
-        "system:authorization#member-manage-gives-any-role",
-        "system:authorization#application-access-not-enforced"
+        "mechanism:authorization#member-manage-gives-any-role",
+        "mechanism:authorization#application-access-not-enforced"
       ],
       "evidence": {
         "implements": [],
         "verifies": []
       },
-      "start": "`internal/authz`, with `authz/catalog.go` and `authz/scope.go` first; each table's bounds rule in `internal/repositories/postgres`; `internal/services/caller.go`",
       "decisions": [],
       "body": "| Term | What it is | Where |\n| --- | --- | --- |\n| **Permission** | Something checked before doing it, as `resource:action`. Says what, never where | `authz.Catalog()` |\n| **Platform role** | What people working with Exalynt may do when a request acts in no organization. A set of grants; a user holds at most one | `users.platform_role_id` |\n| **Grant** | One permission at one scope, in a platform role | `authz.Grant` |\n| **Scope** | How far a platform grant reaches from the caller: `global`, `team`, or `own`. Only platform roles have them | `authz/scope.go` |\n| **Organization role** | What a member may do in that organization. A set of permissions; each membership holds one | `organization_members.role_id` |\n| **Bounds** | The records a caller may act on with a permission: these organizations and users, or all | `authz.Bounds` |\n\nA request's role turns into Bounds in the Principal: an organization role\nbounds each permission to that organization, and a platform role resolves each\nscope once, through its registry entry and `authz.Directory`. Services and\nrepositories only ever see Bounds, so a member's \"this organization\" and an\nengineer's \"my team's clients\" are checked the same way.\n\nA service requires the permission, then reads and writes within what it gets:\n\n```go\nbounds, err := authz.Require(ctx, authz.CapacitySchedule)  // ErrForbidden if not held\ncapacity, err := s.capacities.GetByID(ctx, bounds, id)     // ErrNotFound → ErrCapacityNotFound\n```\n\nEvery table whose records a caller acts on directly has one bounds rule, beside\nits columns: the condition matching a set of organizations, and the one\nmatching a set of users. `List` and `GetByID` both apply it. What hangs off a\nparent (such as messages) is read by the parent's ID once the parent has been\nread within Bounds, and needs no rule of its own. Creates go through\n`organizationFor`. `authz.Allows` says whether a permission is held at all, for\ndeciding what to show.\n\n`GET /v1/permissions` serves the catalog to whoever builds roles, and\n`authz.NormalizeGrants` and `authz.NormalizePermissions` check roles against it\non save.\n\nPostgres enforces the organization boundary again underneath: see\n[row-level security](row-level-security.md).\n\n**Out of bounds looks like not found.** A record outside the caller's Bounds\nis a `404`, so nobody can probe for another organization's records. Not\nholding the permission at all is a `403`. The zero `Bounds` cover nothing, so\na query whose Bounds were never set finds nothing. A permission at a scope\nthat covers nothing, such as `team` while on no team, gets empty Bounds and not\nan error.\n\n**`authz.All`** is for the API's own lookups, such as re-reading something\njust authorized under a lock. Every use in a service carries a comment saying\nwhy. A permission neither kind of role can grant, such as `identity:sync`, is\nheld only by service actors.\n\n**Stored roles.** Permissions and scopes are stored as text, so one removed\nfrom the code simply stops counting. `api provision roles --apply` runs on\nevery deploy and makes sure Admin, Member, and Billing hold at least what\n`authz.OrganizationRoles` gives them, so removing a permission from one of\nthose by hand lasts until the next deploy. A role any member holds, or marked\n`assign_to_creator`, keeps `member:manage` (`ErrRoleManagesMembers`), so an\norganization can't be left with nobody who can give it to anyone.\n\n**Bootstrap.** On a new deployment nobody can manage roles.\n`api access bootstrap --apply` makes someone the platform Administrator, and\nevery deploy runs it with `--create` for the platform's own administrator\n(`.kube/migrate-job.yaml`).\n\n**Adding to it.**\n\n- **A permission** is a constant and `Definition` in `authz/catalog.go`,\n  describing what each scope and the organization role give for it, and an\n  `authz.Require` in the operations that need it. The catalog tests fail for a\n  constant with no definition.\n- **A platform scope** is a constant and its registry entry in\n  `authz/scope.go`, which the scope tests fail without, offered on the\n  permissions it applies to in the catalog. Data it needs about the caller\n  comes through a method on `authz.Directory`, implemented in\n  `internal/authn/directory.go`, which keeps `authz` free of the\n  repositories. If it bounds records by something `authz.Bounds` doesn't hold,\n  that's a field there and a condition in each bounds rule that honors it.\n- **A resource** either has a bounds rule on its table, with `GetByID` taking\n  `authz.Bounds` and its query a `Bounds` field, or is read only through a\n  parent. Either way, its table needs row-level security.\n- **A new place a request can act** isn't a new scope. Partnerships are the\n  worked example: a route names it, `services.ReachPartnership` checks the\n  caller belongs, and the request then runs on that place's own database role.\n  A role table is only needed if admins must give its people different\n  permissions."
     },
     {
       "id": "provider-boundary",
-      "file": "docs/technical/systems/provider-boundary.md",
+      "file": "docs/technical/mechanisms/provider-boundary.md",
       "name": "Provider boundary",
       "summary": "How the API reaches third-party services so that one can be swapped or stubbed without its callers noticing. Each service's own setup and behavior has a provider doc.",
+      "applies": "project",
       "capabilities": [
-        "organizations-and-members",
-        "your-profile",
+        "access-tokens",
         "engineer-onboarding",
-        "capacity-purchasing",
-        "fulfillment",
-        "conversation-spaces",
+        "getting-set-up",
+        "notifications",
+        "organizations-and-members",
+        "roles",
+        "your-profile",
         "agreements",
         "client-agreements",
         "engineer-agreements",
         "partner-agreements",
         "billing",
-        "payouts",
-        "payout-accounts",
-        "partner-payouts",
-        "partner-payout-accounts",
+        "client-coupons",
+        "availability",
+        "capacity-purchasing",
+        "claiming-blocks",
+        "client-directory",
+        "client-home",
+        "conversation-spaces",
+        "engineers",
+        "estimates",
+        "fulfillment",
+        "operations-and-ownership",
+        "scheduling",
+        "staffing",
+        "teams",
+        "client-invitations",
+        "partner-clients",
+        "partner-home",
         "partnerships",
-        "client-invitations"
-      ],
-      "code": [
-        {
-          "glob": "internal/bootstrap/**",
-          "files": 8
-        },
-        {
-          "glob": "internal/payments/**",
-          "files": 8
-        },
-        {
-          "glob": "internal/payouts/**",
-          "files": 6
-        },
-        {
-          "glob": "internal/identity/**",
-          "files": 8
-        },
-        {
-          "glob": "internal/email/**",
-          "files": 23
-        },
-        {
-          "glob": "internal/flags/**",
-          "files": 3
-        },
-        {
-          "glob": "internal/storage/**",
-          "files": 4
-        },
-        {
-          "glob": "internal/cache/**",
-          "files": 4
-        },
-        {
-          "glob": "internal/messaging/**",
-          "files": 7
-        }
+        "earnings",
+        "partner-earnings",
+        "partner-payout-accounts",
+        "partner-payouts",
+        "payout-accounts",
+        "payouts"
       ],
       "meets": [],
       "gaps": [],
@@ -12272,140 +12090,127 @@
         "implements": [],
         "verifies": []
       },
-      "start": "`internal/bootstrap`; the interfaces in `internal/payments`, `internal/payouts`, `internal/identity`, `internal/email`, `internal/flags`, `internal/storage`, `internal/cache`, and `internal/messaging`",
       "decisions": [],
       "body": "Each type of provider is an interface in `internal/<type>`, with one\nimplementation per provider beneath it. An environment variable selects the\nprovider (the README's Configuration section lists them), and\n`internal/bootstrap` builds it, refusing to start when the selected one is\nmissing a setting it requires. Payments, payouts, email, flags, and messaging\ndefault to `noop` and storage to `memory`, so the local stack needs no third\nparty. Identity defaults to `clerk`, and has no stand-in.\n\nIn production, `.kube/configmap.yaml` selects each provider, and secrets are\nGitHub secrets that `.github/workflows/deploy.yml` renders into\n`.kube/secret.yaml`.\n\nEvery deploy's migrate Job (`.kube/migrate-job.yaml`) provisions what the code\ndefines, before the new pods start, and each step changes nothing when\neverything is in step:\n\n- `api migrate up`.\n- `api provision payments stripe --apply`, for the capacity types' products\n  and prices.\n- `api provision roles --apply`, for the organization roles.\n- `api access bootstrap --create --apply`, for the platform's own\n  administrator.\n\nEverything else in a provider doc's Setup is done by hand, and stays that way.\n\nEach provider that reaches an external service has a check on\n`GET /v1/healthz`, run every 30 seconds in the background. Noop, memory, and\nlocal providers have none.\n\n`/v1/readyz` leaves the providers out, so an outage at one never takes the API\nout of rotation. Bootstrap checks only that settings are present. Nothing at\nstart-up checks that a key works, or that a domain or bucket is right: those\nshow up as failures when they're used.\n\n**Adding a payments provider** needs, without changing the API's contract or\nthe front end:\n\n- An implementation of `payments.Provider` (`internal/payments/provider.go`) in\n  `internal/payments/<provider>`. Its package doc lists what a provider must\n  support: hosted pages for payment methods, billing details, invoices and each\n  invoice, charging a saved default off-session at once, working out, quoting,\n  and collecting each invoice's tax, idempotency keys kept for at least 24\n  hours, and statuses mapped onto the API's. A provider that can't work out tax\n  calls a tax service from inside its own implementation. Callers only ever\n  get the addresses of the provider's pages, and each `page` names what the\n  client is doing.\n- A webhook handler, with its own signature check and route, that calls\n  `InvoiceService.Sync` when one of its invoices changes.\n- Its settings in `internal/config` and `internal/bootstrap`, the README's\n  variables, and a provider doc.\n\nA provider with no hosted pages for payment methods, only an embedded card\nform, doesn't fit: it would need payment method screens of our own."
     },
     {
       "id": "row-level-security",
-      "file": "docs/technical/systems/row-level-security.md",
+      "file": "docs/technical/mechanisms/row-level-security.md",
       "name": "Row-level security",
       "summary": "Postgres enforces the organization and partnership boundaries underneath the application's Bounds, so a query that forgets its Bounds still can't cross them in a request acting in an organization or a partnership.",
+      "applies": "project",
       "capabilities": [
-        "organizations-and-members",
         "access-tokens",
+        "engineer-onboarding",
         "getting-set-up",
-        "estimates",
-        "capacity-purchasing",
-        "client-home",
-        "scheduling",
-        "claiming-blocks",
-        "staffing",
-        "fulfillment",
-        "agreements",
-        "client-agreements",
-        "partner-agreements",
-        "billing",
-        "earnings",
-        "payout-accounts",
-        "partner-earnings",
-        "partner-payouts",
-        "partner-payout-accounts",
-        "partnerships",
-        "client-invitations",
-        "partner-clients",
-        "partner-home"
-      ],
-      "code": [
-        {
-          "glob": "internal/repositories/postgres/unit_of_work.go",
-          "files": 1
-        },
-        {
-          "glob": "internal/repositories/unit_of_work.go",
-          "files": 1
-        },
-        {
-          "glob": "internal/services/partnerships.go",
-          "files": 1
-        },
-        {
-          "glob": "internal/repositories/postgres/row_level_security_integration_test.go",
-          "files": 1
-        },
-        {
-          "glob": "internal/repositories/postgres/partnership_row_level_security_integration_test.go",
-          "files": 1
-        }
-      ],
-      "meets": [],
-      "gaps": [
-        "system:row-level-security#no-organization-runs-on-platform",
-        "system:row-level-security#shared-tables-unprotected",
-        "system:row-level-security#no-staff-audit-trail",
-        "system:row-level-security#taken-id-is-a-conflict",
-        "system:row-level-security#indexes-not-led-by-organization"
-      ],
-      "tradeoffs": [
-        "system:row-level-security#setting-per-transaction"
-      ],
-      "evidence": {
-        "implements": [],
-        "verifies": []
-      },
-      "start": "`conn.exec` in `internal/repositories/postgres/unit_of_work.go`, `internal/repositories/unit_of_work.go`, `ReachPartnership` in `internal/services/partnerships.go`, and the tests `row_level_security_integration_test.go` and `partnership_row_level_security_integration_test.go` in `internal/repositories/postgres`",
-      "decisions": [],
-      "body": "Every table holding an organization's records has an `organization_id`, filled\nfrom its parent by a trigger, with row-level security forced. Every table with\na partnership's records that a request acting in one reaches has a\n`partnership_id`, or is `partnerships` itself, the same way.\n\n| Role | Connection | Used by | Reaches |\n| --- | --- | --- | --- |\n| `api_organization` | `DATABASE_ORGANIZATION_URL` | A request acting in an organization | That organization's rows, and shared tables as granted |\n| `api_partner` | `DATABASE_PARTNER_URL` | A request acting in a partnership, as its manager | That partnership's rows. No organization's, and no shared table |\n| `api_platform` | `DATABASE_PLATFORM_URL` | Staff, service actors, webhooks, the command line, and authentication | Every row. Bounds are all that limit it |\n| The owner | `DATABASE_URL` | Migrations and `api provision database` | Everything; it skips row-level security |\n\nThe connection is picked in one place, `conn.exec`, from\n`repositories.ScopeOf(ctx)`: the organization the Principal acts in, unless a\nservice has set another scope. On `api_organization`, every statement runs in a\ntransaction that sets `app.organization_id` with `SET LOCAL`: a `UnitOfWork`'s,\nor a short one of its own. `api_partner` sets `app.partnership_id` the same\nway. A statement with none set errors instead of returning rows.\n\n**Acting in a partnership.** No header names one. A route with one in its path\nreaches it through `services.ReachPartnership`, which reads who manages it on\n`api_platform` and, for its manager, returns\n`repositories.InPartnership(ctx, id)`. Everything after runs on `api_partner`,\nexcept reading the partnership's clients (below). Admins holding\n`partner:manage` stay on `api_platform`, as they do for organizations.\n\n**Reaching across organizations.** A few things a request acting in an\norganization does aren't that organization's. A service asks for them with\n`repositories.AcrossOrganizations(ctx)`, which only changes the connection, so\nBounds still apply. Use it only for what really is shared: what belongs to the\nperson calling (the organizations they're in, creating another, their\ninvitations), and what's shared by every client (how full a week is, as a\ntotal naming nobody).\n\n**What a partner's connection doesn't reach.** `api_partner` reaches no\n`users`, so a service reads people before it acts in the partnership. It\nreaches no `organizations` either, so a manager's list of their partnership's\nclients, which needs the clients' names, reads `partnership_clients` on\n`api_platform` once `ReachPartnership` has allowed it\n(`PartnershipClientService.List`). Only the query's `partnership_id` filter\nkeeps it to that partnership, and the policy does nothing there, so the filter\nstays, and what it returns of a client is only its name. The other way round,\na client's people read the name of the partnership that referred it the same\nway (`PartnershipClientService.ReferredBy`), keyed by their organization.\n\n**Limited tokens.** A token limited to some organizations doesn't widen\nthrough `AcrossOrganizations`: anything reading that way on the caller's\nbehalf honors `Principal.Limited()`.\n\n**Policies.** Each role's policies name only that role. A table holding both\nkinds of rows, such as `agreements`, has an `organization_isolation` policy for\n`api_organization` and a `partnership_isolation` one for `api_partner`, and\nneither evaluates the other's setting. `payout_recipients` holds people's and\npartnerships' recipients. It's in `sharedTables`, as it has no\n`organization_id`, but has row-level security: `api_partner` reaches only its\npartnership's, `api_organization` only people's, and `api_platform` every one.\nNothing but the service's lookup by the caller keeps one person from\nanother's.\n\n**Credentials.** The server refuses to start if any of the first three\nconnects as anyone else, or as a superuser or a role with `BYPASSRLS`. The\nowner must be a superuser, or have `BYPASSRLS` and `CREATEROLE`. Only the\n`migrate` Job has the owner's credential, not the API's pods (see\n`.kube/secret.yaml`). Changing a password takes down any pod still using it.\n\n**Adding a table** means deciding if it's an organization's, a partnership's,\nor shared:\n\n- **An organization's** has an `organization_id`, a trigger or a value for it,\n  row-level security, both policies, and grants to `api_organization`.\n- **A partnership's** is listed in `partnershipTables` in the partnership\n  integration test. If a request acting in the partnership needs it, it has a\n  `partnership_id`, row-level security, a `partnership_isolation` policy for\n  `api_partner`, a `platform_access` one, and grants to `api_partner`.\n- **A shared one** is listed in `sharedTables` in the integration test.\n\nThe integration tests fail for a table that's none of these.\n`api_organization` and `api_partner` get nothing on a new table until a\nmigration grants it, and `api_platform` gets it by default."
-    },
-    {
-      "id": "telemetry",
-      "file": "docs/technical/systems/telemetry.md",
-      "name": "Telemetry",
-      "summary": "What the API emits and how to read it. The API exports over OTLP to the collector `OTEL_EXPORTER_OTLP_ENDPOINT` names, which in the cluster is the Grafana Alloy collector the exalynt/collector repo deploys, forwarding to Grafana Cloud. The README's Configuration section covers the settings.",
-      "capabilities": [
+        "notifications",
         "organizations-and-members",
         "roles",
-        "access-tokens",
         "your-profile",
-        "getting-set-up",
-        "engineer-onboarding",
-        "estimates",
-        "capacity-purchasing",
-        "client-home",
-        "scheduling",
-        "claiming-blocks",
-        "staffing",
-        "fulfillment",
-        "teams",
-        "availability",
-        "engineers",
-        "client-directory",
-        "conversation-spaces",
         "agreements",
         "client-agreements",
         "engineer-agreements",
         "partner-agreements",
         "billing",
-        "earnings",
-        "payouts",
-        "payout-accounts",
-        "partner-earnings",
-        "partner-payouts",
-        "partner-payout-accounts",
-        "partnerships",
+        "client-coupons",
+        "availability",
+        "capacity-purchasing",
+        "claiming-blocks",
+        "client-directory",
+        "client-home",
+        "conversation-spaces",
+        "engineers",
+        "estimates",
+        "fulfillment",
+        "operations-and-ownership",
+        "scheduling",
+        "staffing",
+        "teams",
         "client-invitations",
         "partner-clients",
-        "partner-home"
+        "partner-home",
+        "partnerships",
+        "earnings",
+        "partner-earnings",
+        "partner-payout-accounts",
+        "partner-payouts",
+        "payout-accounts",
+        "payouts"
       ],
-      "code": [
-        {
-          "glob": "internal/telemetry/**",
-          "files": 6
-        }
+      "meets": [],
+      "gaps": [
+        "mechanism:row-level-security#no-organization-runs-on-platform",
+        "mechanism:row-level-security#shared-tables-unprotected",
+        "mechanism:row-level-security#no-staff-audit-trail",
+        "mechanism:row-level-security#taken-id-is-a-conflict",
+        "mechanism:row-level-security#indexes-not-led-by-organization"
+      ],
+      "tradeoffs": [
+        "mechanism:row-level-security#setting-per-transaction"
+      ],
+      "evidence": {
+        "implements": [],
+        "verifies": []
+      },
+      "decisions": [],
+      "body": "Every table holding an organization's records has an `organization_id`, filled\nfrom its parent by a trigger, with row-level security forced. Every table with\na partnership's records that a request acting in one reaches has a\n`partnership_id`, or is `partnerships` itself, the same way.\n\n| Role | Connection | Used by | Reaches |\n| --- | --- | --- | --- |\n| `api_organization` | `DATABASE_ORGANIZATION_URL` | A request acting in an organization | That organization's rows, and shared tables as granted |\n| `api_partner` | `DATABASE_PARTNER_URL` | A request acting in a partnership, as its manager | That partnership's rows. No organization's, and no shared table |\n| `api_platform` | `DATABASE_PLATFORM_URL` | Staff, service actors, webhooks, the command line, and authentication | Every row. Bounds are all that limit it |\n| The owner | `DATABASE_URL` | Migrations and `api provision database` | Everything; it skips row-level security |\n\nThe connection is picked in one place, `conn.exec`, from\n`repositories.ScopeOf(ctx)`: the organization the Principal acts in, unless a\nservice has set another scope. On `api_organization`, every statement runs in a\ntransaction that sets `app.organization_id` with `SET LOCAL`: a `UnitOfWork`'s,\nor a short one of its own. `api_partner` sets `app.partnership_id` the same\nway. A statement with none set errors instead of returning rows.\n\n**Acting in a partnership.** No header names one. A route with one in its path\nreaches it through `services.ReachPartnership`, which reads who manages it on\n`api_platform` and, for its manager, returns\n`repositories.InPartnership(ctx, id)`. Everything after runs on `api_partner`,\nexcept reading the partnership's clients (below). Admins holding\n`partner:manage` stay on `api_platform`, as they do for organizations.\n\n**Reaching across organizations.** A few things a request acting in an\norganization does aren't that organization's. A service asks for them with\n`repositories.AcrossOrganizations(ctx)`, which only changes the connection, so\nBounds still apply. Use it only for what really is shared: what belongs to the\nperson calling (the organizations they're in, creating another, their\ninvitations), and what's shared by every client (how full a week is, as a\ntotal naming nobody).\n\n**What a partner's connection doesn't reach.** `api_partner` reaches no\n`users`, so a service reads people before it acts in the partnership. It\nreaches no `organizations` either, so a manager's list of their partnership's\nclients, which needs the clients' names, reads `partnership_clients` on\n`api_platform` once `ReachPartnership` has allowed it\n(`PartnershipClientService.List`). Only the query's `partnership_id` filter\nkeeps it to that partnership, and the policy does nothing there, so the filter\nstays, and what it returns of a client is only its name. The other way round,\na client's people read the name of the partnership that referred it the same\nway (`PartnershipClientService.ReferredBy`), keyed by their organization.\n\n**Limited tokens.** A token limited to some organizations doesn't widen\nthrough `AcrossOrganizations`: anything reading that way on the caller's\nbehalf honors `Principal.Limited()`.\n\n**Policies.** Each role's policies name only that role. A table holding both\nkinds of rows, such as `agreements`, has an `organization_isolation` policy for\n`api_organization` and a `partnership_isolation` one for `api_partner`, and\nneither evaluates the other's setting. `payout_recipients` holds people's and\npartnerships' recipients. It's in `sharedTables`, as it has no\n`organization_id`, but has row-level security: `api_partner` reaches only its\npartnership's, `api_organization` only people's, and `api_platform` every one.\nNothing but the service's lookup by the caller keeps one person from\nanother's.\n\n**Credentials.** The server refuses to start if any of the first three\nconnects as anyone else, or as a superuser or a role with `BYPASSRLS`. The\nowner must be a superuser, or have `BYPASSRLS` and `CREATEROLE`. Only the\n`migrate` Job has the owner's credential, not the API's pods (see\n`.kube/secret.yaml`). Changing a password takes down any pod still using it.\n\n**Adding a table** means deciding if it's an organization's, a partnership's,\nor shared:\n\n- **An organization's** has an `organization_id`, a trigger or a value for it,\n  row-level security, both policies, and grants to `api_organization`.\n- **A partnership's** is listed in `partnershipTables` in the partnership\n  integration test. If a request acting in the partnership needs it, it has a\n  `partnership_id`, row-level security, a `partnership_isolation` policy for\n  `api_partner`, a `platform_access` one, and grants to `api_partner`.\n- **A shared one** is listed in `sharedTables` in the integration test.\n\nThe integration tests fail for a table that's none of these.\n`api_organization` and `api_partner` get nothing on a new table until a\nmigration grants it, and `api_platform` gets it by default."
+    },
+    {
+      "id": "telemetry",
+      "file": "docs/technical/mechanisms/telemetry.md",
+      "name": "Telemetry",
+      "summary": "What the API emits and how to read it. The API exports over OTLP to the collector `OTEL_EXPORTER_OTLP_ENDPOINT` names, which in the cluster is the Grafana Alloy collector the exalynt/collector repo deploys, forwarding to Grafana Cloud. The README's Configuration section covers the settings.",
+      "applies": "project",
+      "capabilities": [
+        "access-tokens",
+        "engineer-onboarding",
+        "getting-set-up",
+        "notifications",
+        "organizations-and-members",
+        "roles",
+        "your-profile",
+        "agreements",
+        "client-agreements",
+        "engineer-agreements",
+        "partner-agreements",
+        "billing",
+        "client-coupons",
+        "availability",
+        "capacity-purchasing",
+        "claiming-blocks",
+        "client-directory",
+        "client-home",
+        "conversation-spaces",
+        "engineers",
+        "estimates",
+        "fulfillment",
+        "operations-and-ownership",
+        "scheduling",
+        "staffing",
+        "teams",
+        "client-invitations",
+        "partner-clients",
+        "partner-home",
+        "partnerships",
+        "earnings",
+        "partner-earnings",
+        "partner-payout-accounts",
+        "partner-payouts",
+        "payout-accounts",
+        "payouts"
       ],
       "meets": [
         "observability/alpha/see-errors"
       ],
       "gaps": [
-        "system:telemetry#log-retention-not-set",
-        "system:telemetry#no-alerts-or-dashboards"
+        "mechanism:telemetry#log-retention-not-set",
+        "mechanism:telemetry#no-alerts-or-dashboards"
       ],
       "tradeoffs": [],
       "evidence": {
         "implements": [],
         "verifies": []
       },
-      "start": "`internal/telemetry`; each feature's counter is declared at the top of its service, such as `estimateChanges` in `internal/services/estimates.go`",
       "decisions": [],
       "body": "Every request gets a SERVER span named for its route template, with a CLIENT\nspan per query under it, such as `SELECT estimates`, and one per call to a\nprovider. Each log line carries `trace_id` and `span_id`, there's one per\nrequest, and a 5xx logs the error behind it.\n\nEach feature has a `<feature>.changes` counter, by `operation` and `outcome`.\nReading the names from the code is quickest: search for `Int64Counter(`.\n\nQueries' spans carry their text but never their values, and invitees' email\naddresses are never logged.\n\n**Reading it.**\n\n- A counter's `failure` includes a caller's mistake, such as a `404`, a `409`,\n  or a full week. The request spans say which.\n- Assigning a new client that finds no team counts as a `success` on\n  `teams.changes`. The `POST /v1/organizations` span has a `team not assigned`\n  event saying why.\n- A slow request with fast queries is waiting on a provider, which its CLIENT\n  spans show.\n- A `SELECT` waiting a long time on `users` or `capacities` means lock\n  contention on an engineer, a block, or a week.\n\n**Exporting.** `OTEL_EXPORTER_OTLP_ENDPOINT`'s port matches\n`OTEL_EXPORTER_OTLP_PROTOCOL`: the collector's HTTP port (4318) for\n`http/protobuf`, the default, or its gRPC port (4317) for `grpc`. A mismatch\nfails every export, and only the warnings on stderr say so."
     }
@@ -12415,19 +12220,9 @@
       "id": "access-tokens",
       "file": "docs/technical/components/access-tokens.md",
       "name": "Access tokens",
-      "summary": "Personal access tokens, which identify their creator to the API without a session. How one becomes a caller is in the [authentication doc](../systems/authentication.md).",
+      "description": "Personal access tokens, which identify their creator to the API without a session. How one becomes a caller is in the [authentication doc](../mechanisms/authentication.md).",
       "capabilities": [
         "access-tokens"
-      ],
-      "code": [
-        {
-          "glob": "internal/services/access_tokens.go",
-          "files": 1
-        },
-        {
-          "glob": "internal/authn/access_token.go",
-          "files": 1
-        }
       ],
       "meets": [],
       "gaps": [],
@@ -12436,7 +12231,6 @@
         "implements": [],
         "verifies": []
       },
-      "start": "`internal/services/access_tokens.go`, `internal/authn/access_token.go`",
       "decisions": [],
       "body": "Only the secret's SHA-256 is kept, unsalted on purpose: 256 random bits need no\nsalt or slow hash, and a request has to find its token by it. The secret can't\nbe shown again, so a token revoked by mistake can only be replaced. Revoking\ndeletes the row, and a revoked token is simply unknown.\n\nA banned user's tokens are refused, not deleted, as Clerk ending someone's\nsessions doesn't reach a token. `users.banned` follows Clerk's `banned` from\nthe `user.updated` webhook and `api sync users clerk`, and lifting the ban\nmakes the tokens work again. A lockout from failed sign-ins is short-lived and\ndoesn't count.\n\n`organization_ids` is NULL for a token with no limit. It's IDs in a column and\nnot rows with foreign keys, so nothing can empty the list and make a limited\ntoken look unlimited. Membership is still checked each request, so someone\nleaving an organization stops the token working there, and rejoining restores\nit.\n\nAnything that reads with `AcrossOrganizations` on the caller's behalf honors\n`Principal.Limited()`, as `GET /v1/users/me` and `GET /v1/organizations` do.\n`POST /v1/organizations`, the caller's invitations, and\n`/v1/users/me/payout-account` refuse a limited token instead.\n\n`access_tokens` has no row-level security, as a token belongs to a person and\nnot an organization. The `user_id` in each query is what keeps people apart.\n\nA refused token's span says why in `auth.access_token.refusal`, as the caller\nis only told it was refused. Spans carry `auth.method`, and a token's has\n`auth.access_token.id`.\n\n`last_used_at` changes at most once a minute, but the `UPDATE` is still sent\non each request. Failing to record it doesn't fail the request."
     },
@@ -12444,43 +12238,13 @@
       "id": "agreements",
       "file": "docs/technical/components/agreements.md",
       "name": "Agreements",
-      "summary": "Client, Engineer and Partner Agreements: rendered from versioned templates, offered to a party, accepted, and kept as the PDF made when accepted.",
+      "description": "Client, Engineer and Partner Agreements: rendered from versioned templates, offered to a party, accepted, and kept as the PDF made when accepted.",
       "capabilities": [
         "agreements",
         "client-agreements",
         "engineer-agreements",
         "partner-agreements",
         "earnings"
-      ],
-      "code": [
-        {
-          "glob": "internal/services/agreements.go",
-          "files": 1
-        },
-        {
-          "glob": "internal/agreements/**",
-          "files": 11
-        },
-        {
-          "glob": "internal/models/term.go",
-          "files": 1
-        },
-        {
-          "glob": "internal/repositories/postgres/agreement.go",
-          "files": 1
-        },
-        {
-          "glob": "internal/services/invitations.go",
-          "files": 1
-        },
-        {
-          "glob": "internal/services/organizations.go",
-          "files": 1
-        },
-        {
-          "glob": "internal/services/partnerships.go",
-          "files": 1
-        }
       ],
       "meets": [],
       "gaps": [],
@@ -12494,7 +12258,6 @@
         "implements": [],
         "verifies": []
       },
-      "start": "`internal/services/agreements.go` (`AgreementService`, `recordAcceptance`), `internal/agreements` (templates, `definitions.go`, `pdf.go`), `internal/models/term.go` (the terms catalog, `ChooseTerms`), `internal/repositories/postgres/agreement.go`; offers at invitation in `internal/services/invitations.go`, to an organization as it's created in `internal/services/organizations.go`, and to a partnership as it's invited in `internal/services/partnerships.go` (`OfferPartnerAgreement`). In the ui, `src/shared/apiAgreements.ts` (`acceptFailure`) and the gates in `src/apps/console/Layout.tsx`, `src/apps/portal/Layout.tsx` and `src/apps/hub/Layout.tsx`",
       "decisions": [],
       "body": "An offer is a row with its type, version and Commercial Terms. While it's\noffered, its document is rendered on every read, filled in with the party as\nthey are now. Accepting renders it once more, lays it out as a PDF in Go, puts\nthe PDF in object storage under a key of its own, then records the row as\naccepted. If recording fails, the PDF is deleted again, as best it can be. The\naccepted row keeps the party's name as the document named it, and the PDF is\nnever rendered again. Earnings read the terms of the latest accepted Engineer\nAgreement (`InEffectTerms`).\n\n**Who reads which agreements.** Engineers' agreements belong to no\norganization, so they're read on the platform connection\n(`AcrossOrganizations`), where row-level security lets everything through.\nOnly the service's party filter keeps one person from another's: nothing lists\nor gets without a party in the `AgreementQuery`, and an `AgreementQuery`\nnaming none matches nothing. An organization's are read on the organization\nconnection, where row-level security keeps them apart too. A partnership's are\nread by its manager on the partner connection, where row-level security keeps\npartnerships apart, but by an admin holding `partner:manage` on the platform\nconnection (`ReachPartnership`), where only `partnerParty`'s filter does.\n\n**One offer per party and type** is held by `DeleteOffered` and a partial\nunique index. Two admins sending at the same moment means one gets a `500`\nfrom the index, and sends again.\n\n**Deleting a user.** A user's offers are deleted by\n`UserService.DeleteByIdentity` before the user, since only accepted rows may be\nleft with no party. Deleting a user any other way, such as a test's cleanup,\ndeletes their agreements first or leaves rows behind.\n\n**Templates.** A template version that anyone has accepted never changes: the\nnext version is added instead. Shared definitions in `definitions.go` are\npulled into every version that uses them, so editing one rewrites every\nwaiting offer, though not accepted PDFs.\n\n**Deleting an organization or partnership.** `agreements.organization_id` is\n`ON DELETE CASCADE` (migration 76), so deleting an organization would delete\nits accepted Client Agreements and leave their PDFs behind. Nothing deletes an\norganization today; whatever first does decides what happens to them.\n`agreements.partnership_id` cascades the same way: today only revoking a\npartner's invitation deletes a partnership, and only before its agreement can\nbe accepted.\n\nThe `agreements/` keys in object storage are the only copy of what was\naccepted."
     },
@@ -12502,22 +12265,12 @@
       "id": "availability",
       "file": "docs/technical/components/availability.md",
       "name": "Availability",
-      "summary": "How much of a week each engineer offers, which Capacity adds up per team.",
+      "description": "How much of a week each engineer offers, which Capacity adds up per team.",
       "capabilities": [
         "availability",
         "scheduling",
         "claiming-blocks",
         "staffing"
-      ],
-      "code": [
-        {
-          "glob": "internal/services/availability.go",
-          "files": 1
-        },
-        {
-          "glob": "internal/repositories/postgres/availability.go",
-          "files": 1
-        }
       ],
       "meets": [],
       "gaps": [
@@ -12530,7 +12283,6 @@
         "implements": [],
         "verifies": []
       },
-      "start": "`internal/services/availability.go`, `internal/repositories/postgres/availability.go`",
       "decisions": [],
       "body": "An engineer has rows in `availabilities`, each a weekly RFC 5545 recurrence\nrule and not a row per week:\n\n| Kind | Rule | What it is |\n| --- | --- | --- |\n| `baseline` | `FREQ=WEEKLY` | What they offer each week from `starts_on`. One each, by a partial unique index |\n| `override` | `FREQ=WEEKLY;COUNT=n` | Replaces it for n weeks, at most 52. Never two for one week |\n| `past_baseline` | `FREQ=WEEKLY;COUNT=n` | What the baseline offered before it last changed. Never shown or changed |\n\nA week resolves to the override covering it, otherwise the baseline or past\nbaseline covering it, otherwise 0. `AvailabilityService.Weeks` does that for\none engineer and `CapacityService.totalUnits` for many, both through\n`applyWeeks`.\n\n**Past weeks** are protected in the service and not just the page. A baseline\nalready under way that changes leaves a `past_baseline` for its weeks so far,\nand its `starts_on` moves up. The seeders and tests' setup write earlier rows\nthrough the repository, which doesn't know about any of this.\n\n**Locking.** Every change first locks the engineer's `users` row\n(`AvailabilityRepository.LockUser`), so overlap checks hold. Setting a first\nbaseline doesn't need it, as the unique index allows only one.\n\n**Taking blocks out.** Every change runs through `AvailabilityService.change`,\nwhich compares the engineer's weeks before and after in the same transaction\nand has `CapacityService.fitEngineerWeeks` (`room_fitting.go`) take blocks out\nof the ones that went down. A dry run makes the change and rolls it back.\nScheduling and claiming read availability without the engineer's lock; the\nweek locks fitting takes serialize them.\n\n**A run of weeks at once.** `POST /availability/{id}/changes` sets a run of\nweeks in one transaction, replacing the overrides that cover them. The console\nused to do that with several calls, which passed through weeks briefly back at\nthe baseline: with blocks taken out on every reduction, that would take out\nblocks the final state still fits.\n\n**Who reaches it.** `availabilities` is shared and holds no client's data, so\nrow-level security doesn't apply. `api_organization` can only read it, for\nCapacity's room, and clients see only totals. `availability:manage` only ever\nreaches the caller's own: an admin can set their own and not an engineer's.\n\n`GET /v1/users/{id}/availability` isn't paged. Its window is capped at 53\nweeks, which acts as its page size."
     },
@@ -12538,28 +12290,10 @@
       "id": "billing",
       "file": "docs/technical/components/billing.md",
       "name": "Billing",
-      "summary": "How the API charges for capacity through a payment provider. Clients handle payment methods, billing details, and invoices on the provider's own pages. How a provider plugs in is in the [provider boundary doc](../systems/provider-boundary.md).",
+      "description": "How the API charges for capacity through a payment provider. Clients handle payment methods, billing details, and invoices on the provider's own pages. How a provider plugs in is in the [provider boundary doc](../mechanisms/provider-boundary.md).",
       "capabilities": [
         "billing",
         "capacity-purchasing"
-      ],
-      "code": [
-        {
-          "glob": "internal/services/billing.go",
-          "files": 1
-        },
-        {
-          "glob": "internal/services/invoices.go",
-          "files": 1
-        },
-        {
-          "glob": "internal/payments/provider.go",
-          "files": 1
-        },
-        {
-          "glob": "internal/handlers/http/webhooks/stripe/stripe.go",
-          "files": 1
-        }
       ],
       "meets": [
         "reliability/beta/fails-clearly"
@@ -12573,7 +12307,6 @@
         "implements": [],
         "verifies": []
       },
-      "start": "`internal/services/billing.go`, `internal/services/invoices.go`, `payments.Provider` (`internal/payments/provider.go`), `internal/handlers/http/webhooks/stripe/stripe.go`",
       "decisions": [],
       "body": "The API keeps only the organization's customer with the provider, and an\n`invoices` row: `provider`, `external_id`, `status`, and the purchase's\n`idempotency_key`. Each block points at its invoice, which is how a webhook\nfinds the blocks an invoice settles, and how a retry finds what it bought.\n\n`POST /v1/billing-sessions` sends a client to the provider. Its `page` names\nwhat the client is doing, never one of the provider's pages, and the provider\nopens what it has. `GET /v1/invoices/{id}` reads everything but the row from\nthe provider each time. Provider links to an invoice's page expire, so they're\nread when opened and never stored.\n\nA billing session's URL is a short-lived credential for the organization's\nbilling. It's never cached or logged, and its return address comes from\n`APP_URL`, never the request.\n\n**A purchase** asks the provider for the default, charges it on an invoice of\nits own, and only then records the invoice and blocks. The provider works out\nthe tax on it and adds it; `GET /v1/capacity-quote` asks it for the same\ninvoice's totals without charging, and a purchase sent with that total as\n`quoted_total_cents` is refused if the provider's total differs.\n\n- The charge happens before the invoice is written, and webhooks for an\n  invoice the API has no record of are acknowledged and ignored. The log line\n  says \"charged but not recorded on invoice\".\n- Retrying with the same `Idempotency-Key` records the blocks without charging\n  again, for as long as the provider keeps the key, at least 24 hours.\n- A default deleted between the check and the charge reads as a decline: the\n  invoice is voided and nothing is owed.\n- Provider calls happen while the organization's row is locked, so each has a\n  timeout. With Stripe that's 10 seconds, retried twice on a network error, so\n  half a minute at most.\n\n**Later status changes** come from the provider's webhook, or\n`api sync invoices`, each reading the provider's current state in a\ntransaction that locks the organization's row.\n\n- A webhook redelivered or out of order is safe, as it always reads current\n  state. A failed write catches up on the next webhook or `api sync invoices`.\n- `api sync invoices` only compares statuses, and only walks invoices the API\n  recorded.\n- The webhook acts as the API itself (`billing:sync`), and only on the invoice\n  its event names."
     },
@@ -12581,7 +12314,7 @@
       "id": "capacity",
       "file": "docs/technical/components/capacity.md",
       "name": "Capacity",
-      "summary": "Blocks of engineering capacity: bought, scheduled into a week, staffed, started, and fulfilled, each with at most one focus.",
+      "description": "Blocks of engineering capacity: bought, scheduled into a week, staffed, started, and fulfilled, each with at most one focus.",
       "capabilities": [
         "capacity-purchasing",
         "client-home",
@@ -12590,20 +12323,6 @@
         "staffing",
         "fulfillment",
         "client-directory"
-      ],
-      "code": [
-        {
-          "glob": "internal/services/capacity.go",
-          "files": 1
-        },
-        {
-          "glob": "internal/services/fulfillment.go",
-          "files": 1
-        },
-        {
-          "glob": "internal/repositories/postgres/capacity.go",
-          "files": 1
-        }
       ],
       "meets": [],
       "gaps": [
@@ -12617,7 +12336,6 @@
         "implements": [],
         "verifies": []
       },
-      "start": "`internal/services/capacity.go`, `internal/services/fulfillment.go`, `internal/repositories/postgres/capacity.go`",
       "decisions": [],
       "body": "A block moves `pending` → `available` → `scheduled` → `in_progress` →\n`fulfilled`, and back from `scheduled` to `available` when it's unscheduled\nbefore its week starts. `CapacityService.Start` moves it to `in_progress` and\n`FulfillmentService.Fulfill` to `fulfilled`, setting `fulfilled_at` and earning\nits shares in the same transaction.\n\nA client's room in a week comes only from the engineers on teams assigned to\nit. `GET /v1/capacity-weeks` reports it and scheduling checks it: what those\nengineers offer, the client's own scheduled blocks, and other clients' blocks\ntaking from the same engineers. `GET /v1/capacity-weeks` reads across\norganizations and returns only totals.\n\nWhen an engineer's availability goes down, `fitWeeks` in `room_fitting.go`\ntakes blocks out of each week it went down in: the engineer's own blocks by\n`staffed_at` (`pickToFree`), then blocks nobody's on by `scheduled_at`\n(`pickToFit`). Whether those fit is a maximum flow from each client's blocks to\nwhat the engineers on its teams have left, so a client with two teams isn't\ncounted in full against each. It covers only the clients linked to the\nengineer's team through shared clients. `api capacity fit-weeks` runs the same\nover every engineer and client, for weeks overbooked some other way.\n\n**Locking.** Everything that changes a block reads it `FOR UPDATE` first,\nincluding settling an invoice. Scheduling and claiming also take the same\nadvisory lock on the week before checking its room. The order is always row\nlock first, then week lock. Fitting locks every block booked in the weeks it\ncovers, then the weeks, then lists again, so it keeps the row-then-week order\nand still sees blocks scheduled in between. Block numbers come from a counter\non the organization's row, which that row's lock serializes.\n\n**Fitting and scheduling disagree at the edges.**\n\n- Fitting only unschedules blocks nobody's on, and only one whose removal\n  makes the shortfall smaller. Blocks whose engineer is on no team count only\n  against that engineer. What's still short after that is left, which a\n  reduction then refuses.\n- Scheduling still checks a client's room by `clientRoom`, which counts\n  another client's open blocks in full, so it can refuse a week fitting would\n  call room enough.\n- The claim preview (`ClaimPreview`) takes no locks, and asks whether one\n  engineer alone could take each other block, not whether the combined room\n  covers it as scheduling does. So it can warn of a block\n  `GET /v1/capacity-weeks` counts as fitting, and a claim made just after can\n  strand a block it didn't name.\n\n**Moving and unscheduling.** Moving a block takes any engineer off it, without\nworking out whether they fit the new week. Unscheduling one does too, and\ntakes no week lock, as freeing room can't overbook it. `scheduled_at` and\n`staffed_at` are set by `Capacity.SetWeek` and `SetEngineer`, not the\nrepository, and anything writing a block's week or engineer goes through them,\nor the latest-first order is wrong. Blocks booked before the column was added\ntook `updated_at` as their guess.\n\n**Starting and fulfilling.** `Start` is gated by `capacity:manage`, so a lead\nor admin who can manage a block can start it too, while `Fulfill` checks that\nthe caller is the block's engineer and no permission does. `Start` answers\nforbidden, not not found, to someone who can read the block but not manage it,\nand refuses before `WeekStart`, Monday in UTC. A fulfilled block can have no\n`fulfilled_at`: one fulfilled before review existed has none. Migration 00087\ndropped `capacity_review_events` and can't be undone, so code from before it\ncan't run against a database past it. Going back means restoring reviews from\na backup.\n\n**Focuses.** The repository fills `Capacity.Focus` on every read of blocks, a\nget or a list, with one more query, so anything reading blocks pays for it.\nThe rest of focuses is in [focuses](focuses.md).\n\n**Purchases.** A purchase carries on if the caller goes away, so closing the\npage can't leave a charge unrecorded. What the charge does is in the\n[billing doc](billing.md). `Idempotency-Key` is stored on the invoice and sent\nto the provider on each step. A repeat answers with what was bought, records\nwhat was charged but not recorded, or is a `409` if the first is under way,\ndiffers, or was voided. The portal keeps the key while the outcome is unknown,\nand makes a new one when the choices change.\n\n**Admins and claiming.** A caller acting in no organization, such as an admin,\nsees every engineer's availability and every booking. That's what the admin's\noverbooked-weeks note reads, so it only catches Exalynt-wide overbooking. Any\nplatform role other than Administrator needs `capacity:claim` granted at team\nscope on the Roles page. Administrator holds `capacity:claim` at team scope,\nthe only scope it offers, so an admin claims only for clients their team\nsupports."
     },
@@ -12625,22 +12343,12 @@
       "id": "earnings",
       "file": "docs/technical/components/earnings.md",
       "name": "Earnings",
-      "summary": "What engineers, leads, and partnerships earn on fulfilled blocks, recorded as each is fulfilled.",
+      "description": "What engineers, leads, and partnerships earn on fulfilled blocks, recorded as each is fulfilled.",
       "capabilities": [
         "earnings",
         "partner-earnings",
         "partner-clients",
         "partner-home"
-      ],
-      "code": [
-        {
-          "glob": "internal/services/earnings.go",
-          "files": 1
-        },
-        {
-          "glob": "internal/repositories/postgres/earning.go",
-          "files": 1
-        }
       ],
       "meets": [],
       "gaps": [
@@ -12651,7 +12359,6 @@
         "implements": [],
         "verifies": []
       },
-      "start": "`internal/services/earnings.go`, `internal/repositories/postgres/earning.go`",
       "decisions": [],
       "body": "An earning has exactly one payee, `user_id` or `partnership_id`, which\n`earnings_one_payee` enforces. A referral earning's `UserID` is `uuid.Nil` in\nthe model, so earnings are grouped or filtered by payee type, never by\n`UserID` alone.\n\n**Which partnership a block earns for** is `capacities.partnership_id`, set by\n`CapacityService.Create` from the attribution at purchase and never updated.\nIt isn't worked out from `partnership_clients`, which only says where the\nclient is attributed now. Migration 00094 filled it in for blocks bought\nbefore it, but only those bought since their client was attributed.\n\n**The earning window** has no column of its own: it opens at the earliest of\nthe client's blocks with that `partnership_id`. Deleting a block, as voiding\nits invoice does, can move it.\n\n**A partnership's earnings** are read on the platform connection once\n`ReachPartnership` has let the caller in, as its clients' blocks and names are\ntheirs, and `api_partner` reaches no organization's rows. They're paged a block\nat a time (`PagePartnership`): each of its blocks but pending ones, with its\nreferral earning, or with none for the service to work out what it would pay.\nA block bought after its client's window closed pays nothing and is dropped\nafter the query, so a page can be short. The terms are read once and the\nwindows once a page, rather than calling `referralShare` per block.\n\n`PagePartnership` doesn't read the block's engineer, and the resource never\nshows one on a referral earning: partners aren't told who worked a block.\n\nThe `Earning` resource, `EarningRepository` and\n`GET /partnerships/{id}/earnings` are shared with partner earnings, which is\nBeta, so they hold to Beta even though a person's earnings is Alpha."
     },
@@ -12659,23 +12366,9 @@
       "id": "estimates",
       "file": "docs/technical/components/estimates.md",
       "name": "Estimates",
-      "summary": "An estimate and everything in it is one document, replaced whole.",
+      "description": "An estimate and everything in it is one document, replaced whole.",
       "capabilities": [
         "estimates"
-      ],
-      "code": [
-        {
-          "glob": "internal/services/estimates.go",
-          "files": 1
-        },
-        {
-          "glob": "internal/models/estimate.go",
-          "files": 1
-        },
-        {
-          "glob": "internal/repositories/postgres/estimate.go",
-          "files": 1
-        }
       ],
       "meets": [],
       "gaps": [
@@ -12689,7 +12382,6 @@
         "implements": [],
         "verifies": []
       },
-      "start": "`internal/services/estimates.go`, `internal/models/estimate.go`, `internal/repositories/postgres/estimate.go`",
       "decisions": [],
       "body": "`PUT /v1/estimates/{id}` replaces the estimate in one transaction: it updates\nthe `estimates` row first, which locks it, then deletes its discounts and\nFocuses, which cascades to their notes, and inserts the new ones. Focuses,\nnotes, and discounts keep the IDs a request sends and get new UUIDv7s where it\nleaves them out, so the console can keep its React keys from the first\nkeystroke.\n\n`Replace` and `Delete` repeat the caller's bounds in their `WHERE`, against the\nrow as it stands once locked, so an estimate moved out of someone's team while\nthey were saving it isn't written over.\n\n`focus_count` and `units_*` are denormalized by `Estimate.RecountTotals` in the\nsame transaction, so a listing needn't add up Focuses. Costs aren't stored. A\nlisting carries each estimate's Focuses in brief and discounts in full, each\nloaded for the whole page in one extra query.\n\nThe console does the discount arithmetic too, so a change lands in both:\n`price - (price × total + 50) / 100` in whole cents.\n\n`include_operations` and `operations_fee_cents` stay in the API though the UI\ndoesn't show operations for now, and a save from the editor leaves the flag as\nit was.\n\nA Focus's pace is `estimate_focuses.capacity`; one written without it is\nplanned at Dedicated."
     },
@@ -12697,31 +12389,9 @@
       "id": "focuses",
       "file": "docs/technical/components/focuses.md",
       "name": "Focuses",
-      "summary": "A block's focus: what its work is about, with images, videos, and files from its organization's objects.",
+      "description": "A block's focus: what its work is about, with images, videos, and files from its organization's objects.",
       "capabilities": [
         "fulfillment"
-      ],
-      "code": [
-        {
-          "glob": "internal/services/focuses.go",
-          "files": 1
-        },
-        {
-          "glob": "internal/repositories/postgres/focus.go",
-          "files": 1
-        },
-        {
-          "glob": "internal/database/migrations/00087_focuses_and_fulfillment.sql",
-          "files": 1
-        },
-        {
-          "glob": "internal/database/migrations/00089_shared_focuses.sql",
-          "files": 1
-        },
-        {
-          "glob": "internal/database/migrations/00093_clients_change_focuses.sql",
-          "files": 1
-        }
       ],
       "meets": [],
       "gaps": [],
@@ -12730,7 +12400,6 @@
         "implements": [],
         "verifies": []
       },
-      "start": "`services.FocusService` (`internal/services/focuses.go`), `internal/repositories/postgres/focus.go`, migrations `00087_focuses_and_fulfillment.sql`, `00089_shared_focuses.sql` and `00093_clients_change_focuses.sql`",
       "decisions": [],
       "body": "A focus is its own row in `focuses`, with `focus_attachments`, and blocks point\nat it by `capacities.focus_id`, which several blocks can share.\n`FocusService.Use` keeps them to the focus's own organization; nothing in the\nschema does.\n\n**Who may change a focus** follows `focusBounds`\n(`internal/services/capacity_reach.go`) on any block it's on:\n`capacity:manage` for Exalynt's people, or, since that's platform-only,\n`focus:manage`, which only an organization role grants, for the client's own\nblocks. `Update` locks every such block. A focus on no block has no block to\ncheck, so `FocusService` treats it as not found for changes, while it can still\nbe read and put back on a block.\n\n`GET /focuses` checks those bounds reaching the organization, or else lists the\ncaller's blocks of that organization to see they manage one. That list is\nunpaginated, fine for an engineer's own blocks.\n\n**Row-level security.** `focuses` and `focus_attachments` are\norganization-scoped with row-level security, and `api_organization` may insert\nand update focuses and insert and delete their attachments, never delete a\nfocus. Its policies keep a client to its own. An attachment row carries its\nown `organization_id` for its policy, which `checkAttachments`\n(`internal/services/attachments.go`, shared with\n[work updates](work-updates.md)) keeps equal to its focus's by refusing another\norganization's object."
     },
@@ -12738,25 +12407,11 @@
       "id": "organizations",
       "file": "docs/technical/components/organizations.md",
       "name": "Organizations",
-      "summary": "Client organizations, their members, invitations, payment customer, and logo.",
+      "description": "Client organizations, their members, invitations, payment customer, and logo.",
       "capabilities": [
         "organizations-and-members",
         "client-directory",
         "billing"
-      ],
-      "code": [
-        {
-          "glob": "internal/services/organizations.go",
-          "files": 1
-        },
-        {
-          "glob": "internal/services/invitations.go",
-          "files": 1
-        },
-        {
-          "glob": "internal/services/organization_logos.go",
-          "files": 1
-        }
       ],
       "meets": [
         "security/ga/sound"
@@ -12775,15 +12430,14 @@
         "implements": [],
         "verifies": []
       },
-      "start": "`internal/services/organizations.go`, `internal/services/invitations.go`, `internal/services/organization_logos.go`",
       "decisions": [],
-      "body": "Who made each change is the `user_id` on its request's log line, and `user.id`\non its span: there's no audit table. Closing an account is done by hand, by the\nclose-an-organization runbook, and the organization routes' alert links the\nrespond-to-organization-errors runbook.\n\nSecurity was reviewed on 2026-11-19, for GA, by reading the code: routes and\npermissions, invitation acceptance, row-level security, logos, email, logs,\nand sign-up. It led to the daily invitation cap per person as well as per\norganization, treating a primary address Clerk marks unverified as none, and a\nsign-in redirect that can't name another host. What it accepted is the\n`member:manage` tradeoff in [authorization](../systems/authorization.md).\n\n**Invitations.** The daily invitation cap counts\n`organization_invitation_sends`, not invitations, which are deleted when\naccepted or revoked. It counts the organization's sends or the inviter's,\nacross organizations, so it's read across organizations before the\ntransaction, unlocked: invitations sent at the same moment can go a few over.\nAn invitation is saved and its email sent in one transaction, so a failing\nemail provider fails the request with `500` and nothing is saved.\n\n**Creating one.** `POST /organizations` with an `Idempotency-Key` returns the\norganization the caller first created with it (`organization_creation_keys`,\nkeyed by user and key), whatever name the retry sends. A retry that races the\nfirst request waits on the key's unique index, then returns the first's\norganization.\n\n**The last manager.** The last-manager check locks the organization's row\n(`SELECT … FOR UPDATE`), so two changes at once can't each count on the other\nmember to remain.\n\n**The payment customer.** `EnsurePaymentsCustomer` runs when someone goes to\nmanage billing, not at sign-up, so its failures show on\n`POST /v1/billing-sessions` and not on these routes. It calls the provider\nwhile holding the organization's row, with a 10-second timeout, so a slow\nprovider fails the request instead of holding every other change to the\norganization.\n\n- Creating a customer is idempotent: it looks by the ID on record, then by the\n  organization's ID in metadata, and carries an idempotency key. If the\n  database write fails after the provider created one, the next call finds\n  it.\n- Nothing overwrites a customer's details afterward, including renaming the\n  organization, so invoices keep the name the client gave the provider.\n\n**Logos.** A logo's bytes are stored first under a new key, then the row\npoints at them under the lock, and the old bytes are deleted at once. A failed\ndelete strands bytes with nothing pointing to them, which costs nothing for a\nreader."
+      "body": "Who made each change is the `user_id` on its request's log line, and `user.id`\non its span: there's no audit table. Closing an account is done by hand, by the\nclose-an-organization runbook, and the organization routes' alert links the\nrespond-to-organization-errors runbook.\n\nSecurity was reviewed on 2026-11-19, for GA, by reading the code: routes and\npermissions, invitation acceptance, row-level security, logos, email, logs,\nand sign-up. It led to the daily invitation cap per person as well as per\norganization, treating a primary address Clerk marks unverified as none, and a\nsign-in redirect that can't name another host. What it accepted is the\n`member:manage` tradeoff in [authorization](../mechanisms/authorization.md).\n\n**Invitations.** The daily invitation cap counts\n`organization_invitation_sends`, not invitations, which are deleted when\naccepted or revoked. It counts the organization's sends or the inviter's,\nacross organizations, so it's read across organizations before the\ntransaction, unlocked: invitations sent at the same moment can go a few over.\nAn invitation is saved and its email sent in one transaction, so a failing\nemail provider fails the request with `500` and nothing is saved.\n\n**Creating one.** `POST /organizations` with an `Idempotency-Key` returns the\norganization the caller first created with it (`organization_creation_keys`,\nkeyed by user and key), whatever name the retry sends. A retry that races the\nfirst request waits on the key's unique index, then returns the first's\norganization.\n\n**The last manager.** The last-manager check locks the organization's row\n(`SELECT … FOR UPDATE`), so two changes at once can't each count on the other\nmember to remain.\n\n**The payment customer.** `EnsurePaymentsCustomer` runs when someone goes to\nmanage billing, not at sign-up, so its failures show on\n`POST /v1/billing-sessions` and not on these routes. It calls the provider\nwhile holding the organization's row, with a 10-second timeout, so a slow\nprovider fails the request instead of holding every other change to the\norganization.\n\n- Creating a customer is idempotent: it looks by the ID on record, then by the\n  organization's ID in metadata, and carries an idempotency key. If the\n  database write fails after the provider created one, the next call finds\n  it.\n- Nothing overwrites a customer's details afterward, including renaming the\n  organization, so invoices keep the name the client gave the provider.\n\n**Logos.** A logo's bytes are stored first under a new key, then the row\npoints at them under the lock, and the old bytes are deleted at once. A failed\ndelete strands bytes with nothing pointing to them, which costs nothing for a\nreader."
     },
     {
       "id": "partnerships",
       "file": "docs/technical/components/partnerships.md",
       "name": "Partnerships",
-      "summary": "Partnerships and what their managers do in them: invite clients, see the clients attributed to them, and accept their Partner Agreements. How a request acts in one is in the [row-level security doc](../systems/row-level-security.md), and Partner Agreements themselves are in [agreements](agreements.md).",
+      "description": "Partnerships and what their managers do in them: invite clients, see the clients attributed to them, and accept their Partner Agreements. How a request acts in one is in the [row-level security doc](../mechanisms/row-level-security.md), and Partner Agreements themselves are in [agreements](agreements.md).",
       "capabilities": [
         "partnerships",
         "client-invitations",
@@ -12791,32 +12445,6 @@
         "partner-agreements",
         "partner-home",
         "organizations-and-members"
-      ],
-      "code": [
-        {
-          "glob": "internal/services/partnerships.go",
-          "files": 1
-        },
-        {
-          "glob": "internal/services/client_invitations.go",
-          "files": 1
-        },
-        {
-          "glob": "internal/services/partnership_clients.go",
-          "files": 1
-        },
-        {
-          "glob": "internal/services/referrals.go",
-          "files": 1
-        },
-        {
-          "glob": "internal/repositories/postgres/partnership.go",
-          "files": 1
-        },
-        {
-          "glob": "internal/repositories/postgres/client_referral.go",
-          "files": 1
-        }
       ],
       "meets": [],
       "gaps": [
@@ -12829,7 +12457,6 @@
         "implements": [],
         "verifies": []
       },
-      "start": "`internal/services/partnerships.go` (`ReachPartnership`), `internal/services/client_invitations.go`, `internal/services/partnership_clients.go`, `internal/services/referrals.go`, `internal/repositories/postgres/partnership.go`, `internal/repositories/postgres/client_referral.go`",
       "decisions": [],
       "body": "**Earning windows.** A client's earning window on the clients list comes from\n`EarningService.Windows`, one query for the page's clients\n(`CapacityRepository.FirstBoughtFor`), and a partnership's earnings use the\nsame `windows`, so how a window opens changes in one place, or the list and\nwhat's paid disagree.\n\n**Revoked invitations.** Every read of `client_invitations` but\n`CountInvitationsSince` leaves out revoked rows, as does the unique index on an\naddress, so a revoked address can be invited again. A new query does the same.\n\n**How a client came.** `findReferral` records `invitation` rather than\n`referral_code` when the code's partnership has a pending invitation to the\ncreator's address, since the invitation email's link carries the code.\nAttributions made before that kept `referral_code`, so older clients who came\nby invitation still read as by code.\n\n**Who referred a client.** A client's people read who referred it through\n`PartnershipClientService.ReferredBy` (`GET /organizations/{id}/referral`), on\n`api_platform` once `requireOrganization` has allowed it, as no organization's\nconnection reaches `partnership_clients` or `partnerships`. Only its\n`organization_id` key keeps it to that client, and what it returns is kept to\nthe partnership's name.\n\n`ListClients` and `ListInvitations` stay unpaged for the platform's own lookups\n(the admin list, attribution by address); the partner's listings go through\n`PageClients` and `PageInvitations`."
     },
@@ -12837,20 +12464,10 @@
       "id": "payouts",
       "file": "docs/technical/components/payouts.md",
       "name": "Payouts",
-      "summary": "How earnings become money sent, to people and to partnerships.",
+      "description": "How earnings become money sent, to people and to partnerships.",
       "capabilities": [
         "payouts",
         "partner-payouts"
-      ],
-      "code": [
-        {
-          "glob": "internal/services/payouts.go",
-          "files": 1
-        },
-        {
-          "glob": "internal/handlers/http/webhooks/stripe/thin.go",
-          "files": 1
-        }
       ],
       "meets": [],
       "gaps": [
@@ -12863,7 +12480,6 @@
         "implements": [],
         "verifies": []
       },
-      "start": "`internal/services/payouts.go`, and the webhook at `internal/handlers/http/webhooks/stripe/thin.go`",
       "decisions": [],
       "body": "**Never sent twice.**\n\n- A payout is saved before the provider is asked to send it, so its ID can be\n  the idempotency key. A crash in between would otherwise leave money sent\n  with no record of it, so the order stays.\n- Only an error that means nothing was sent lets a payout's earnings go. Any\n  other error from the provider leaves it Processing with no external ID, and\n  the next release sends it again under the same ID. Marking one of those\n  Failed would pay someone twice.\n- `payout_earnings.active` is what stops an earning being sent twice, through a\n  partial unique index. It's false once a payout has failed or been canceled,\n  which is what puts the earning back in the next release.\n- A webhook can arrive before the release has saved the provider's ID, and\n  it's acknowledged and ignored. The next event for that payout puts it right.\n\n**What a payout keeps.** A payout's lines copy the figures they had, and their\nforeign keys don't cascade, because what a sent payout lists must survive\nchanges to blocks, people, and clients.\n\n**Who reaches it.** `payouts` has no row-level security and only the platform\nrole can reach it. `PayoutService` always acts across organizations.\n\n**Payees.** A payee is a person or a partnership, and the same ID could in\nprinciple be either, so a release groups earnings by payee type and ID, and a\npayout listing filters on `payee_type` as well as `payee_id`.\n\n**Shared with partner payouts.** The release, `send`, the payouts tables and\nthe `Payout` resource are shared with partner payouts, which is Beta, so they\nhold to Beta even though the admin and console sides are Alpha: they change\nwithout breaking it, and schema is added with new migrations. A partnership's\npayouts are paged (`PagePayee`), but a person's and the admin's list still\nload whole through `List`.\n\n**Payouts from before Stripe Connect.** Payouts released on the `noop`\nprovider before production moved to Stripe Connect are kept, `provider` =\n`noop`, Paid with no money moved. That was decided, and they aren't treated as\nsent when reconciling with Stripe. Migration 98 cleared the `noop` recipients."
     },
@@ -12871,27 +12487,9 @@
       "id": "spaces",
       "file": "docs/technical/components/spaces.md",
       "name": "Spaces",
-      "summary": "Our records of each organization's conversation space and who we put in it, kept in step with the messaging provider as memberships change, and blocks' conversations there. The provider is behind messaging: Google Chat or Stream.",
+      "description": "Our records of each organization's conversation space and who we put in it, kept in step with the messaging provider as memberships change, and blocks' conversations there. The provider is behind messaging: Google Chat or Stream.",
       "capabilities": [
         "conversation-spaces"
-      ],
-      "code": [
-        {
-          "glob": "internal/services/spaces.go",
-          "files": 1
-        },
-        {
-          "glob": "internal/services/conversations.go",
-          "files": 1
-        },
-        {
-          "glob": "internal/database/migrations/00086_spaces.sql",
-          "files": 1
-        },
-        {
-          "glob": "internal/database/migrations/00090_block_conversations.sql",
-          "files": 1
-        }
       ],
       "meets": [],
       "gaps": [
@@ -12905,7 +12503,6 @@
         "implements": [],
         "verifies": []
       },
-      "start": "`services.SpaceService` (`internal/services/spaces.go`, and `conversations.go` for blocks' conversations) and the `services.Spaces` hook it implements; `messaging.Provider`; migrations `00086_spaces.sql` and `00090_block_conversations.sql`",
       "decisions": [],
       "body": "For spaces and memberships our row comes first and the provider follows. Its\n`provider` and `provider_id` stay null until the provider has the thing, and a\nrecord naming another provider counts as not made yet.\n\n- **A space** is recorded in `OrganizationService.CreateReferred`'s\n  transaction, with the organization.\n- **A block's conversation** is the other way round: `StartBlockConversation`\n  has the provider start it within the request, making the space with the\n  provider first if it isn't yet, and records it only once that worked, with\n  no transaction around the call. A failure records nothing and is the\n  caller's error (502), so they can try again.\n- **The membership changes with the provider** run after the change commits.\n  The services whose changes affect who belongs call one `Spaces` method each:\n  - `OrganizationService`: creating an organization, removing a member.\n  - `InvitationService`: accepting an invitation to an organization or the\n    platform.\n  - `TeamService`: assigning and unassigning a client, putting someone on a\n    team, taking them off, deleting a team.\n  - `RoleService`: taking a platform role away.\n  - `UserService`: banning a user, deleting a user.\n\n  Each service gets the hook through `SpacesWith`, wired in `serve`.\n- **Every method is the happy path for one change.** It skips what's already\n  done, records failures on the request's span, and never fails the change.\n- **Whatever a change unlinks is read before it**, such as a team's clients\n  before the team is deleted.\n\n`spaces` and `space_memberships` are api_platform's only: no grant opens them\nto the organization or partner roles. A block's conversations are for its\nclient too, so `SpaceService` checks `capacity:read` reaches the block's\norganization itself and then reads and writes across organizations, since it\nneeds the space.\n\n**Without the hook.** A hook that isn't wired is skipped silently: tests and\nthe CLIs build services without one. An organization created straight through\nthe repository, as test fixtures are, has no space, so starting a conversation\non its blocks is refused; the acceptance tests make Acme's and Globex's spaces\nthemselves. Deleting a user without the hook still deletes their memberships\nby cascade, but leaves them in the provider's spaces.\n\n**Two at once.** Two people starting a conversation on the same subject at\nonce both reach the provider before the unique index refuses the second, which\nleaves its thread with the provider and no record of it.\n\n**The noop provider** takes any space or conversation it's asked about as\nexisting, since it forgets everything on restart, so records it made earlier\nstill work locally.\n\n**Deleting an organization** leaves its space behind, since a space stands on\nits own. Acceptance tests and the seeders' reset leave such spaces in the\nlocal database."
     },
@@ -12913,7 +12510,7 @@
       "id": "teams",
       "file": "docs/technical/components/teams.md",
       "name": "Teams",
-      "summary": "Who at Exalynt a client sees and, through the `team` scope, which clients' records an engineer can reach.",
+      "description": "Who at Exalynt a client sees and, through the `team` scope, which clients' records an engineer can reach.",
       "capabilities": [
         "teams",
         "client-directory",
@@ -12922,20 +12519,6 @@
         "organizations-and-members",
         "staffing"
       ],
-      "code": [
-        {
-          "glob": "internal/services/teams.go",
-          "files": 1
-        },
-        {
-          "glob": "internal/services/team_assignment.go",
-          "files": 1
-        },
-        {
-          "glob": "internal/repositories/postgres/team.go",
-          "files": 1
-        }
-      ],
       "meets": [],
       "gaps": [],
       "tradeoffs": [],
@@ -12943,7 +12526,6 @@
         "implements": [],
         "verifies": []
       },
-      "start": "`internal/services/teams.go`, `internal/services/team_assignment.go`, `internal/repositories/postgres/team.go`",
       "decisions": [],
       "body": "`teams`, `team_members` (keyed by user, so the one-team rule is the primary\nkey), and `team_clients`. A partial unique index keeps one lead per team, and\na unique index on `lower(name)` holds names distinct.\n\n`OrganizationService.Create` assigns a new client a team once its organization\nexists, through `CapacityService.AssignLeastLoadedTeam`: fewest unfulfilled\nunits, then fewest clients, then first by name, among teams with an engineer\noffering time in one of the next three weeks. Assigning runs outside the\nsign-up's transaction so it can't undo the sign-up, and always as the system,\nnot the person signing up. When no team qualifies, the client signs up with\nnone.\n\n**Members.** Someone who loses their platform role keeps their row on the team\nbut isn't read as a member, so giving a role back restores them. A team's row\nis locked while someone's put on it, so two people made its lead at once take\nturns.\n\n**Releasing blocks.** Changing a team's members or clients, or deleting it,\nalso runs `CapacityService.ReleaseIneligible` in the same transaction, across\norganizations, which takes engineers off upcoming blocks of clients they no\nlonger support. That's wired with `TeamService.ReleaseBlocksWith` in `serve`;\na `TeamService` built without it, as in unit tests, leaves blocks alone. It\nlocks every upcoming block, which is fine at a few hundred.\n\n**Reads.** A client's teams and a person's team are read unpaginated inside\nthe API, the second on each request an engineer makes with a `team` grant.\nBoth are a few rows. Of a team's clients a caller sees only those they reach,\nso a client never learns who else a team works with. A list's cursor holds\nonly its place, so following another caller's reads only the caller's own\nteams."
     },
@@ -12951,27 +12533,9 @@
       "id": "work-updates",
       "file": "docs/technical/components/work-updates.md",
       "name": "Work updates",
-      "summary": "What engineers write about a block's work as they do it, shown on its page with when it was started and fulfilled.",
+      "description": "What engineers write about a block's work as they do it, shown on its page with when it was started and fulfilled.",
       "capabilities": [
         "fulfillment"
-      ],
-      "code": [
-        {
-          "glob": "internal/services/work_updates.go",
-          "files": 1
-        },
-        {
-          "glob": "internal/repositories/postgres/work_update.go",
-          "files": 1
-        },
-        {
-          "glob": "internal/database/migrations/00088_work_updates.sql",
-          "files": 1
-        },
-        {
-          "glob": "internal/services/attachments.go",
-          "files": 1
-        }
       ],
       "meets": [],
       "gaps": [
@@ -12982,7 +12546,6 @@
         "implements": [],
         "verifies": []
       },
-      "start": "`services.WorkUpdateService` (`internal/services/work_updates.go`), `internal/repositories/postgres/work_update.go`, migration `00088_work_updates.sql`. Attachments are checked by `checkAttachments` (`internal/services/attachments.go`), shared with [focuses](focuses.md)",
       "decisions": [],
       "body": "**Blocks and focuses.** `work_updates.capacity_id` and `focus_id` are both\nnullable, so an update can be about a focus alone, but no CHECK requires one\nof them: `WorkUpdateService` always sets the block. Nothing posts or lists\nfocus-only updates yet, and `writers` treats one as not found. Adding them\nmeans deciding whose permission reaches a focus on no block. Updates are\nlisted by `capacity_id` only, so an update stays on the block it was posted on\neven after the block's focus changes, and the focus it was about is only its\n`focus_id`.\n\n**Who writes.** `work_updates` and `work_update_attachments` are\norganization-scoped with row-level security, and `api_organization` has\n`SELECT` only. Only a request acting in no organization writes one.\n\n**Deleting** keeps the row: `Delete` empties text, metrics, links, and\nattachments and sets `deleted_at`. The list returns deleted updates, so\nclients show them as deleted rather than drop them.\n\n**Links and metrics** are JSONB that only the service checks. Links are http\nor https only, because the UI renders them as `href`s in the client's browser,\nand the service keeps that check.\n\n**Attachments.** Attachment bytes are served safely by\n`GET /objects/{id}/content` (attachment, nosniff, sandboxed), but the ui reads\nthem into object URLs, which belong to the app's origin and keep the\nuploader's content type. Every ui page that reads them goes through\n`objectURLOf` (ui `src/services/exalynt/objects.ts`), which keeps only plain\nimages and videos renderable, or an uploaded SVG or HTML file opened in a tab\nruns as the app. The portal will too, once it reads real updates.\n\n**Who started a block** is `capacities.started_by`, which isn't always its\nengineer: `Start` takes `capacity:manage` at team or global scope too. Blocks\nstarted before migration 00088 have no `started_at`."
     }
@@ -15285,70 +14848,70 @@
       "places": []
     },
     {
-      "id": "system:api-docs#marks-depend-on-scalar-markup",
+      "id": "mechanism:api-docs#marks-depend-on-scalar-markup",
       "outcome": null,
       "rule": null,
       "text": "`stability-marks.js` finds what it upgrades through Scalar's markup, and the page loads `@scalar/api-reference` from jsdelivr without a version, so any Scalar release can change it. When it does, the marks, rings and overview stop appearing without an error, and nothing tests the rendered page.",
       "places": []
     },
     {
-      "id": "system:api-docs#no-release-notes",
+      "id": "mechanism:api-docs#no-release-notes",
       "outcome": "compatibility/beta/changes-heard",
       "rule": null,
       "text": "Nothing tells people what changed in a release, for the API or the apps, Beta features included. Changes show only in the reference and in git history.",
       "places": []
     },
     {
-      "id": "system:authentication#rate-limit-per-instance",
+      "id": "mechanism:authentication#rate-limit-per-instance",
       "outcome": null,
       "rule": null,
       "text": "Each running instance counts its own rate limit, so an organization's real limit is `RATE_LIMIT_PER_MINUTE` times the instances running (`internal/middleware/ratelimit.go`).",
       "places": []
     },
     {
-      "id": "system:row-level-security#no-organization-runs-on-platform",
+      "id": "mechanism:row-level-security#no-organization-runs-on-platform",
       "outcome": null,
       "rule": null,
       "text": "`X-Organization-ID` is optional, so anyone signed in can leave it out and run on `api_platform`. Holding no platform role, they hold no permissions and `authz.Require` refuses them, so nothing crosses today, but Bounds are all that stand in the way.",
       "places": []
     },
     {
-      "id": "system:row-level-security#shared-tables-unprotected",
+      "id": "mechanism:row-level-security#shared-tables-unprotected",
       "outcome": null,
       "rule": null,
       "text": "Shared tables have no row-level security, `users` above all, as staff names appear across organizations: a query there that forgets to filter can read every user's name and email.",
       "places": []
     },
     {
-      "id": "system:row-level-security#no-staff-audit-trail",
+      "id": "mechanism:row-level-security#no-staff-audit-trail",
       "outcome": "security/ga/traceable",
       "rule": null,
       "text": "What staff read across organizations isn't recorded beyond the request's log line. Left out by decision for now.",
       "places": []
     },
     {
-      "id": "system:row-level-security#taken-id-is-a-conflict",
+      "id": "mechanism:row-level-security#taken-id-is-a-conflict",
       "outcome": null,
       "rule": null,
       "text": "A client-supplied ID that's already taken is a `409`, in any organization, as IDs are globally unique. Someone who already knows an ID can learn that it exists, and nothing else.",
       "places": []
     },
     {
-      "id": "system:row-level-security#indexes-not-led-by-organization",
+      "id": "mechanism:row-level-security#indexes-not-led-by-organization",
       "outcome": null,
       "rule": null,
       "text": "Existing indexes don't all lead with `organization_id`, as some serve staff's views across organizations.",
       "places": []
     },
     {
-      "id": "system:telemetry#log-retention-not-set",
+      "id": "mechanism:telemetry#log-retention-not-set",
       "outcome": null,
       "rule": null,
       "text": "Request log lines carry `remote_addr` and `user_id`, and how long Grafana Cloud keeps them is its default.",
       "places": []
     },
     {
-      "id": "system:telemetry#no-alerts-or-dashboards",
+      "id": "mechanism:telemetry#no-alerts-or-dashboards",
       "outcome": "observability/beta/hears-of-errors",
       "rule": null,
       "text": "Alerts and dashboards aren't set up in Grafana Cloud, though the in-cluster Alloy collector now sends there. Each feature with a `.changes` counter needs an alert on the share of its routes ending in a 5xx, over a few minutes, above about 1%, and a panel of those routes' request rate and p95 latency with its `.changes` counter by `operation` and `outcome`. Also needed: an alert on any `capacity.changes` with `reason` = `charged_not_recorded`, since a client has paid for nothing, one on `access_tokens.authentications` with `reason` `error` above a few in a few minutes, and client home's production alert. The organization routes' alert links the respond-to-organization-errors runbook.",
@@ -15473,7 +15036,6 @@
       "domain": "accounts",
       "text": "A token can do everything its user can, wherever it works: there are no scopes.",
       "cost": "A script that needs only a little access holds all of its user's.",
-      "revisit": null,
       "places": []
     },
     {
@@ -15481,7 +15043,6 @@
       "domain": "accounts",
       "text": "Managing tokens needs a session: a token can't list, create, or revoke tokens.",
       "cost": "Tokens can't be managed from scripts.",
-      "revisit": null,
       "places": []
     },
     {
@@ -15489,7 +15050,6 @@
       "domain": "accounts",
       "text": "A limited token still reaches its user's own record: it can read and change their profile, including updating it from the sign-in provider, and sees their platform role and applications.",
       "cost": "A limited token reaches more than its organizations, though none of it reveals another organization.",
-      "revisit": null,
       "places": []
     },
     {
@@ -15497,7 +15057,6 @@
       "domain": "accounts",
       "text": "A limited token can remove its user from one of its organizations, as their own session can.",
       "cost": "A script can take its user out of an organization. That's within its limit, and acts on nothing else.",
-      "revisit": null,
       "places": []
     },
     {
@@ -15505,7 +15064,6 @@
       "domain": "accounts",
       "text": "Last used is accurate to about a minute.",
       "cost": "When a token was last used can be up to a minute out.",
-      "revisit": null,
       "places": []
     },
     {
@@ -15513,7 +15071,6 @@
       "domain": "accounts",
       "text": "All of someone's tokens are read at once, then searched, filtered, and sorted on their own device.",
       "cost": "Opening the list loads every token someone has, however many there are.",
-      "revisit": null,
       "places": []
     },
     {
@@ -15521,7 +15078,6 @@
       "domain": "accounts",
       "text": "Requests that fail to authenticate aren't rate limited.",
       "cost": "A bad token costs one lookup, uncounted. A token can't be guessed.",
-      "revisit": null,
       "places": []
     },
     {
@@ -15529,7 +15085,6 @@
       "domain": "accounts",
       "text": "Clients aren't emailed when a block is scheduled, or when an availability change affects their capacity: the client scheduled the block themselves, and an availability change that matters reaches them as a moved preferred week.",
       "cost": "A client hears nothing of a scheduled block, nor of an availability change that doesn't move a preferred week.",
-      "revisit": null,
       "places": []
     },
     {
@@ -15537,7 +15092,6 @@
       "domain": "accounts",
       "text": "The list of notifications is placeholder data, Slack, Discord, and Microsoft Teams are pretend, and the choices are held in the browser until a reload.",
       "cost": "Nothing is actually sent.",
-      "revisit": null,
       "places": []
     },
     {
@@ -15545,7 +15099,6 @@
       "domain": "accounts",
       "text": "It shows only while its feature flag is on.",
       "cost": "Only those with the flag on can try it.",
-      "revisit": null,
       "places": []
     },
     {
@@ -15553,7 +15106,6 @@
       "domain": "accounts",
       "text": "One set of choices covers every organization someone belongs to, and each notification is to name the one it's about.",
       "cost": "Someone in several organizations can't choose differently for each.",
-      "revisit": null,
       "places": []
     },
     {
@@ -15561,7 +15113,6 @@
       "domain": "accounts",
       "text": "The last channel can't be removed, as what's always on needs somewhere to go. Being always on means at least one channel, not all of them.",
       "cost": "Nobody can remove every channel to stop notifications altogether.",
-      "revisit": null,
       "places": []
     },
     {
@@ -15569,7 +15120,6 @@
       "domain": "accounts",
       "text": "Closing the account is a conversation with Exalynt, by email from the Organization page.",
       "cost": "Nothing in the portal starts or tracks it, and the organization isn't deleted afterwards.",
-      "revisit": null,
       "places": []
     },
     {
@@ -15577,7 +15127,6 @@
       "domain": "accounts",
       "text": "An organization, and each person, can send 50 invitations a day.",
       "cost": "An organization inviting more people than that waits until the next day.",
-      "revisit": null,
       "places": []
     },
     {
@@ -15585,7 +15134,6 @@
       "domain": "accounts",
       "text": "The list of members can't be sorted or paged: it shows every member, by name.",
       "cost": "A large organization's list is long to look through.",
-      "revisit": null,
       "places": []
     },
     {
@@ -15593,7 +15141,6 @@
       "domain": "accounts",
       "text": "The last save wins on the organization's name and on member roles: nothing checks what the person last read.",
       "cost": "Two people changing the same thing at once can undo each other's change without knowing.",
-      "revisit": null,
       "places": []
     },
     {
@@ -15601,7 +15148,6 @@
       "domain": "accounts",
       "text": "Whoever can manage members can give anyone any role, Admin included.",
       "cost": "A role that manages members can do everything.",
-      "revisit": null,
       "places": []
     },
     {
@@ -15609,7 +15155,6 @@
       "domain": "accounts",
       "text": "A member without a photo of their own shows initials.",
       "cost": "Members without a photo are told apart only by their initials.",
-      "revisit": null,
       "places": []
     },
     {
@@ -15617,7 +15162,6 @@
       "domain": "agreements",
       "text": "Every member of an organization sees its agreements, whatever their role.",
       "cost": "Members and Billing see the organization's terms with Exalynt, not just its Admins.",
-      "revisit": null,
       "places": []
     },
     {
@@ -15625,7 +15169,6 @@
       "domain": "billing",
       "text": "Prices are listed before tax everywhere, such as on estimates and when choosing blocks.",
       "cost": "The tax is only known once an order is reviewed, since the payment provider works it out from the billing address.",
-      "revisit": null,
       "places": []
     },
     {
@@ -15633,7 +15176,6 @@
       "domain": "capacity",
       "text": "A client's members aren't shown, since staff can't see them.",
       "cost": "There's no primary contact for a client.",
-      "revisit": null,
       "places": []
     },
     {
@@ -15641,7 +15183,6 @@
       "domain": "capacity",
       "text": "A block shows who's on it and where it stands, not what was done on it.",
       "cost": "A client can't tell from home what was done on a block, and opens the block's own page for that.",
-      "revisit": null,
       "places": []
     },
     {
@@ -15649,7 +15190,6 @@
       "domain": "capacity",
       "text": "With Stream, someone without an uploaded photo shows their Gravatar, as they do everywhere else in the app.",
       "cost": "Stream keeps a link made from a hash of their email address.",
-      "revisit": null,
       "places": []
     },
     {
@@ -15657,7 +15197,6 @@
       "domain": "capacity",
       "text": "It's written for administrators: without full reads of people, teams, capacity and clients the list doesn't load, and with narrower reach it shows only what that reaches.",
       "cost": "There's no rule for what a team-limited view of people shows, as only the admin view matters for now.",
-      "revisit": "someone other than an administrator needs the list",
       "places": []
     },
     {
@@ -15665,7 +15204,6 @@
       "domain": "capacity",
       "text": "When two people edit one estimate at once, the later save replaces the earlier one, without a warning.",
       "cost": "The earlier person's changes are lost without them knowing.",
-      "revisit": "two people are seen editing one estimate at a time",
       "places": []
     },
     {
@@ -15673,7 +15211,6 @@
       "domain": "capacity",
       "text": "Deleting an estimate is permanent.",
       "cost": "Getting one back means restoring a backup.",
-      "revisit": null,
       "places": []
     },
     {
@@ -15681,7 +15218,6 @@
       "domain": "capacity",
       "text": "Marking a block fulfilled is final.",
       "cost": "A fulfilled block can't be reopened, even when it was marked fulfilled by mistake.",
-      "revisit": null,
       "places": []
     },
     {
@@ -15689,7 +15225,6 @@
       "domain": "capacity",
       "text": "A lead manages assignments directly only for their own team's engineers, and can't take a block from another team's engineer or assign one to them.",
       "cost": "A cross-team transfer needs the other lead's coordination or an admin, or the current engineer releases the block so an engineer on the other team can claim it.",
-      "revisit": null,
       "places": []
     },
     {
@@ -15697,7 +15232,6 @@
       "domain": "capacity",
       "text": "No lead owns a client's shared queue. A queued block doesn't belong to a lead's team just because the lead can see it.",
       "cost": "No one lead answers for a queued block, so who escalates one that's urgent is still open.",
-      "revisit": null,
       "places": []
     },
     {
@@ -15705,7 +15239,6 @@
       "domain": "capacity",
       "text": "Team names are unique across all teams, not per client.",
       "cost": "Two teams can't both be called \"Platform\", even for different clients.",
-      "revisit": null,
       "places": []
     },
     {
@@ -15713,7 +15246,6 @@
       "domain": "partnerships",
       "text": "Revoking an invitation doesn't stop its link: the email still has the link with the partnership's referral code.",
       "cost": "Whoever uses a revoked invitation's link is still attributed to the partnership.",
-      "revisit": null,
       "places": []
     },
     {
@@ -15721,7 +15253,6 @@
       "domain": "pay",
       "text": "Partnerships earn only on blocks fulfilled since partnership earnings existed.",
       "cost": "Blocks fulfilled before partnership earnings existed earn the partnership nothing.",
-      "revisit": null,
       "places": []
     },
     {
@@ -15729,7 +15260,6 @@
       "domain": "pay",
       "text": "Blocks a client bought before this was built count as bought for the partnership only if they were bought after the client was attributed to it.",
       "cost": "Blocks bought before the client was attributed earn the partnership nothing.",
-      "revisit": null,
       "places": []
     },
     {
@@ -15737,7 +15267,6 @@
       "domain": "pay",
       "text": "What the client paid for a block, and any coupon on it, isn't shown, as it never changes what the partnership earns.",
       "cost": "Partners can't see what their clients paid.",
-      "revisit": null,
       "places": []
     },
     {
@@ -15745,7 +15274,6 @@
       "domain": "pay",
       "text": "A refund after a block is fulfilled changes nothing the partnership earned.",
       "cost": "Exalynt settles it outside the product.",
-      "revisit": null,
       "places": []
     },
     {
@@ -15753,7 +15281,6 @@
       "domain": "pay",
       "text": "Each partnership has its own payout account, even when several are paid to the same bank account.",
       "cost": "Someone managing several partnerships that are paid to the same bank account sets it up on each, and goes through the payments partner's checks each time.",
-      "revisit": null,
       "places": []
     },
     {
@@ -15761,7 +15288,6 @@
       "domain": "pay",
       "text": "There's one account per partnership, and its country is fixed once it's chosen, as the payments partner's form holds one and verifies it for one country.",
       "cost": "A partnership can't be paid to a second account, or move its account to another country.",
-      "revisit": null,
       "places": []
     },
     {
@@ -15769,7 +15295,6 @@
       "domain": "pay",
       "text": "Mexico isn't offered as a country, since the payments partner can't send there.",
       "cost": "Partnerships can't be paid in Mexico.",
-      "revisit": null,
       "places": []
     },
     {
@@ -15777,7 +15302,6 @@
       "domain": "pay",
       "text": "Accounts are set up on the payments partner's form as it is.",
       "cost": "The form asks for business details, as if the partnership sold something: a website or a description of what it sells, and more of them outside the US. In Canada it also asks for an ID document and a selfie.",
-      "revisit": null,
       "places": []
     },
     {
@@ -15785,7 +15309,6 @@
       "domain": "pay",
       "text": "Once an account is set up, changing it happens in the payments partner's own dashboard rather than its form.",
       "cost": "Managers change the bank account somewhere other than where they set it up.",
-      "revisit": null,
       "places": []
     },
     {
@@ -15793,7 +15316,6 @@
       "domain": "pay",
       "text": "Removing an account closes it with the payments partner.",
       "cost": "Adding one again means going through their checks from the start.",
-      "revisit": null,
       "places": []
     },
     {
@@ -15801,7 +15323,6 @@
       "domain": "pay",
       "text": "Accounts set up before production used the payments partner were test ones, and were cleared.",
       "cost": "Partnerships set theirs up again.",
-      "revisit": null,
       "places": []
     },
     {
@@ -15809,7 +15330,6 @@
       "domain": "pay",
       "text": "Payouts released before production sent money through the payments partner are left saying Paid.",
       "cost": "They say Paid, though nothing was sent.",
-      "revisit": null,
       "places": []
     },
     {
@@ -15817,7 +15337,6 @@
       "domain": "pay",
       "text": "Paid means the money has reached the partnership's balance with the payments partner, not its bank.",
       "cost": "The payments partner pays it on to the bank itself, usually within a couple of days.",
-      "revisit": null,
       "places": []
     },
     {
@@ -15825,126 +15344,108 @@
       "domain": "pay",
       "text": "A sent payout isn't taken back here.",
       "cost": "Corrections are settled outside the product.",
-      "revisit": null,
       "places": []
     },
     {
-      "id": "system:authorization#member-manage-gives-any-role",
+      "id": "mechanism:authorization#member-manage-gives-any-role",
       "text": "`member:manage` gives any organization role, not only roles within the giver's own permissions: inviting someone or changing a member's role checks only that the role exists, so the default roles stay simple and only Admin, which holds every organization permission, manages members.",
       "cost": "A custom role holding `member:manage` without, say, `invoice:pay` can make its holder Admin, so in effect `member:manage` is every organization permission. The API reference says so.",
-      "revisit": "a role other than Admin needs `member:manage`",
       "places": []
     },
     {
-      "id": "system:authorization#application-access-not-enforced",
+      "id": "mechanism:authorization#application-access-not-enforced",
       "text": "Which applications someone is offered is `application_access`, held per user and not by role, and only the front ends act on it: they decide what to show by it, and the API keeps checking permissions.",
       "cost": "Someone who isn't offered an application can still call its routes with whatever their permissions allow.",
-      "revisit": null,
       "places": []
     },
     {
-      "id": "system:row-level-security#setting-per-transaction",
+      "id": "mechanism:row-level-security#setting-per-transaction",
       "text": "The organization or partnership is set with `SET LOCAL` in a transaction around each statement, a `UnitOfWork`'s or a short one of its own, rather than on a connection kept for the request.",
       "cost": "A statement outside a `UnitOfWork` costs three more round trips, so work issuing many belongs in one.",
-      "revisit": null,
       "places": []
     },
     {
       "id": "component:agreements#apps-hold-people-to-agreements",
       "text": "The apps hold people to an agreement, not the API: the portal's, console's and hub's gates keep someone out until one is in effect, and the API answers what their role allows regardless.",
       "cost": "Someone using the API directly can still do what their role allows without an agreement in effect.",
-      "revisit": "someone works through the API without an agreement",
       "places": []
     },
     {
       "id": "component:agreements#pdf-laid-out-in-go",
       "text": "The PDF is laid out in Go with fpdf's Helvetica, not a browser or a Unicode font, so there's no headless browser to run or font to ship.",
       "cost": "A character outside Windows-1252 is \"?\" for good once accepted, so a name with characters outside Western European alphabets keeps them as \"?\" in its PDF.",
-      "revisit": "a party's name needs one",
       "places": []
     },
     {
       "id": "component:agreements#no-flag-before-gates",
       "text": "There's no flag in front of the console's or the portal's gate, like the other Beta features.",
       "cost": "If reading agreements fails, every engineer is kept out of the console, or every client out of the portal, until a fix or a rollback is deployed.",
-      "revisit": "that happens",
       "places": []
     },
     {
       "id": "component:agreements#accepted-agreements-outlive-their-user",
       "text": "Accepted agreements outlive their user: deleting a user clears `user_id` on their accepted ones (migration 91) and keeps their PDFs, since the PDF is the record of what was agreed.",
       "cost": "A deleted person's name and email stay in those PDFs and rows.",
-      "revisit": "someone asks for theirs to be deleted",
       "places": []
     },
     {
       "id": "component:availability#recurrence-rules-not-weeks",
       "text": "Availability is stored as recurrence rules, not a `weeks` column. A column would do, as the rules are only ever `FREQ=WEEKLY` with an optional `COUNT`, but moving off them is an expand/contract migration on a table Capacity reads, with nothing to gain for now.",
       "cost": "The database can't filter by the weeks a rule covers, so `from` on the overrides list is widened by 51 weeks and checked in Go, and a page can come back short.",
-      "revisit": null,
       "places": []
     },
     {
       "id": "component:billing#provider-is-source-of-truth",
       "text": "The provider is the source of truth for invoices and billing details, and our row only links to it: we keep the least needed to find an invoice and relate its blocks.",
       "cost": "Reading an invoice is a call to the provider, and a provider without hosted pages doesn't fit.",
-      "revisit": null,
       "places": []
     },
     {
       "id": "component:billing#tax-inside-payments-provider",
       "text": "Tax is part of the payments provider, not a provider of its own: the provider already holds the billing address tax is worked out from, and issues the invoice the tax goes on, so a separate tax provider would pull billing details out of it and push tax lines back in.",
       "cost": "A payments provider that can't work out tax has to call a tax service inside its own implementation.",
-      "revisit": "two payments providers run at once and need one tax engine between them",
       "places": []
     },
     {
       "id": "component:capacity#combined-room",
       "text": "A week's room is combined, not per engineer: a block fits if the total covers it, even if no one engineer could do it alone, as the preferred week is a target and not a guarantee.",
       "cost": "A block can be scheduled into a week where no single engineer can fit it, and an admin sorts it out.",
-      "revisit": null,
       "places": []
     },
     {
       "id": "component:estimates#prices-copied-onto-estimate",
       "text": "Prices are copied onto the estimate when it's made, so a client's estimate doesn't change when prices do. Every response returns the copy as `capacity_prices`, and the console and portal price from it.",
       "cost": "A capacity type added later only reaches estimates made after it's recorded.",
-      "revisit": null,
       "places": []
     },
     {
       "id": "component:estimates#unindexed-search",
       "text": "Search is `ILIKE '%word%'` over four columns, with no index: at 2,000 estimates that's a few milliseconds, measured against the local stack on 2026-10-23.",
       "cost": "It scans.",
-      "revisit": "search gets slow, with a trigram index",
       "places": []
     },
     {
       "id": "component:organizations#lists-returned-whole",
       "text": "Members, invitations, and `GET /v1/clients` are returned whole, not paged: an organization is sized for tens of members and Exalynt for tens to hundreds of clients.",
       "cost": "The last-manager check reads every member and organization role on each removal and role change.",
-      "revisit": "an organization or the client list grows past those sizes",
       "places": []
     },
     {
       "id": "component:organizations#shared-invitation-routes",
       "text": "`GET /invitations` and `POST /invitations/{id}/accept` stay shared, with stable organization-only copies beside them: they also serve invitations to work with Exalynt and to manage a partnership, whose shape is still settling, so the stable contract for organizations is `/users/me/organization-invitations`.",
       "cost": "There are two ways to list and accept an organization's invitation, and onboarding reads both listings.",
-      "revisit": "the other kinds' capabilities are stable too",
       "places": []
     },
     {
       "id": "component:partnerships#limits-counted-from-invitations",
       "text": "Sending limits are counted from the invitations themselves, not a limiter or a log of sends: the day's new invitations are a count of `client_invitations` rows created in the last 24 hours, revoked ones included, and a resend compares the row's `sent_at`, so nothing else is stored or run. That's why revoking sets `revoked_at` and blanks the address rather than deleting (migration 95): a deleted row would free up a slot, and the count needs no address.",
       "cost": "Two invitations at the same moment can both pass the 50th, and the count is a rolling 24 hours, not a calendar day.",
-      "revisit": "a partner is seen going past the limit",
       "places": []
     },
     {
       "id": "component:payouts#waiting-worked-out-on-read",
       "text": "What's waiting is worked out on read, not stored as a run: there's no scheduler or draft to keep in step, and a week nobody released rolls into the next.",
       "cost": "Every read asks the provider about each payee's account.",
-      "revisit": "that's slow at real load",
       "places": []
     }
   ],

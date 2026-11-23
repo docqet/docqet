@@ -1,13 +1,10 @@
 ---
 name: Access tokens
-summary: >-
+description: >-
   Personal access tokens, which identify their creator to the API without a
   session. How one becomes a caller is in the [authentication
-  doc](../systems/authentication.md).
-start: >-
-  `internal/services/access_tokens.go`, `internal/authn/access_token.go`
+  doc](../mechanisms/authentication.md).
 capabilities: [access-tokens]
-code: [internal/services/access_tokens.go, internal/authn/access_token.go]
 ---
 
 Only the secret's SHA-256 is kept, unsalted on purpose: 256 random bits need no

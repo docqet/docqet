@@ -7,16 +7,18 @@ summary: >-
 role: Partner
 title: Independent consultant
 image: https://randomuser.me/api/portraits/women/79.jpg
-needs:
-  - To copy their referral code or sign-up link, or invite someone by email, in
-    a moment when making an introduction.
-  - To see what the partnership has earned, what's been paid and what's still
-    waiting, client by client, on their phone as well.
-  - To see how long they earn on each client, without remembering how earning
-    windows work.
-  - To be paid into the partnership's own account, and told why when earnings
-    are held.
 ---
+
+## Needs
+
+- To copy their referral code or sign-up link, or invite someone by email, in a
+  moment when making an introduction.
+- To see what the partnership has earned, what's been paid and what's still
+  waiting, client by client, on their phone as well.
+- To see how long they earn on each client, without remembering how earning
+  windows work.
+- To be paid into the partnership's own account, and told why when earnings are
+  held.
 
 ## Knows
 

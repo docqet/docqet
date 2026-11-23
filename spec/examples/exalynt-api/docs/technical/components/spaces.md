@@ -1,21 +1,11 @@
 ---
 name: Spaces
-summary: >-
+description: >-
   Our records of each organization's conversation space and who we put in it,
   kept in step with the messaging provider as memberships change, and blocks'
   conversations there. The provider is behind messaging: Google Chat or
   Stream.
-start: >-
-  `services.SpaceService` (`internal/services/spaces.go`, and
-  `conversations.go` for blocks' conversations) and the `services.Spaces` hook
-  it implements; `messaging.Provider`; migrations `00086_spaces.sql` and
-  `00090_block_conversations.sql`
 capabilities: [conversation-spaces]
-code:
-  - internal/services/spaces.go
-  - internal/services/conversations.go
-  - internal/database/migrations/00086_spaces.sql
-  - internal/database/migrations/00090_block_conversations.sql
 gaps:
   - id: no-retries-or-synchronization
     outcome: reliability/ga/holds-up

@@ -1,11 +1,8 @@
 ---
 name: Teams
-summary: >-
+description: >-
   Who at Exalynt a client sees and, through the `team` scope, which clients'
   records an engineer can reach.
-start: >-
-  `internal/services/teams.go`, `internal/services/team_assignment.go`,
-  `internal/repositories/postgres/team.go`
 capabilities:
   - teams
   - client-directory
@@ -13,10 +10,6 @@ capabilities:
   - engineer-onboarding
   - organizations-and-members
   - staffing
-code:
-  - internal/services/teams.go
-  - internal/services/team_assignment.go
-  - internal/repositories/postgres/team.go
 ---
 
 `teams`, `team_members` (keyed by user, so the one-team rule is the primary

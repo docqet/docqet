@@ -1,11 +1,8 @@
 ---
 name: Bookings
-summary: >-
+description: >-
   Where a room is held for a stay, and where no double-booking is enforced.
-start: >-
-  `src/booking/`, starting at `assertRoomFree` and `saveBooking`
 capabilities: [room-booking, group-bookings, check-in]
-code: [src/booking/**, db/migrations/001_bookings.sql]
 gaps:
   - id: clashes-logged-as-unknown
     outcome: observability/beta/hears-of-errors

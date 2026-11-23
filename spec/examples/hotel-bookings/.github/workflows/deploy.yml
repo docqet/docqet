@@ -10,7 +10,7 @@ on:
         required: true
 
 jobs:
-  # docket:implements system:deployment
+  # docket:implements mechanism:deployment
   deploy:
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
@@ -19,7 +19,7 @@ jobs:
       - run: ./scripts/deploy.sh "$GITHUB_SHA"
 
   # Rolls back to an image already built, without building anything.
-  # docket:verifies system:deployment
+  # docket:verifies mechanism:deployment
   rollback:
     if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest

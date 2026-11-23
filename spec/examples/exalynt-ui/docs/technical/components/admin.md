@@ -1,10 +1,8 @@
 ---
 name: Admin
-summary: >-
+description: >-
   The admin, where Exalynt's admins run clients, partners, engineers, teams,
   roles and payouts.
-start: >-
-  `src/apps/admin/`, starting at `Layout.tsx` and `navigation.ts`
 capabilities:
   - client-directory
   - client-coupons
@@ -15,7 +13,6 @@ capabilities:
   - staffing
   - payouts
   - roles
-code: [src/apps/admin/**]
 gaps:
   - id: clients-read-everything
     outcome: efficiency/beta/bounded

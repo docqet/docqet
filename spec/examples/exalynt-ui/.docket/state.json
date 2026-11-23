@@ -27,7 +27,7 @@
     "gaps": 45,
     "problems": 90,
     "tradeoffs": 5,
-    "systems": 2,
+    "mechanisms": 2,
     "components": 6
   },
   "domains": [],
@@ -36,74 +36,37 @@
   "rules": [],
   "concepts": [],
   "personas": [],
-  "systems": [
+  "mechanisms": [
     {
       "id": "error-reporting",
-      "file": "docs/technical/systems/error-reporting.md",
+      "file": "docs/technical/mechanisms/error-reporting.md",
       "name": "Error reporting",
       "summary": "How the apps report unexpected failures from the browser, so someone looking can see what went wrong.",
+      "applies": "project",
       "capabilities": [
-        "client-home",
-        "getting-set-up",
-        "billing",
-        "organizations-and-members",
-        "estimates",
         "your-profile",
-        "partner-home",
-        "partner-earnings",
-        "partner-payouts",
-        "partner-payout-accounts"
-      ],
-      "code": [
-        {
-          "glob": "src/shared/telemetry.ts",
-          "files": 1
-        }
-      ],
-      "meets": [
-        "observability/alpha/see-errors"
-      ],
-      "gaps": [],
-      "tradeoffs": [
-        "system:error-reporting#errors-only"
-      ],
-      "evidence": {
-        "implements": [],
-        "verifies": []
-      },
-      "start": "`src/shared/telemetry.ts`, through `initTelemetry` and `reportError`",
-      "decisions": [],
-      "body": "`main.tsx` calls `initTelemetry` once, as early as possible. It loads Dash0's\nweb SDK and starts it only when `VITE_TELEMETRY_ENDPOINT` (an OTLP/HTTP base\nURL) and `VITE_TELEMETRY_TOKEN` are set, as the deploy workflow sets them.\nLeft unset, as they are locally, both functions do nothing and the SDK is\nnever fetched. If the SDK can't load, errors go unreported rather than\nbreaking the app. This file is the app's only tie to the vendor, so moving\noff Dash0 changes it alone.\n\nPages call `reportError` with the error and a context of IDs and names of\nthings, never people's names, emails or anything they wrote. It leaves out\nwhat the caller expects: the API's 4xx answers (not found, forbidden,\ninvalid), and aborted requests, which are the page moving on.\n\n- **The token ships in the bundle**, so it must be one that can only\n  ingest.\n- **Only a page's origin and path are sent.** The SDK reports the page's URL\n  with every error, and its query and fragment can hold a secret or what\n  someone searched for, so `urlAttributeScrubber` drops them."
-    },
-    {
-      "id": "stability-marks",
-      "file": "docs/technical/systems/stability-marks.md",
-      "name": "Stability marks",
-      "summary": "How every app page shows its stability level, from one record of every feature in every app.",
-      "capabilities": [
-        "client-home",
-        "getting-set-up",
         "teams",
-        "capacity-purchasing",
-        "scheduling",
-        "fulfillment",
-        "conversation-spaces",
-        "estimates",
-        "billing",
-        "client-agreements",
-        "claiming-blocks",
-        "availability",
-        "earnings",
-        "payouts",
-        "payout-accounts",
-        "engineer-agreements",
+        "access-tokens",
+        "notifications",
         "client-directory",
         "client-coupons",
         "partnerships",
         "engineers",
         "agreements",
         "staffing",
+        "payouts",
         "roles",
+        "organizations-and-members",
+        "engineer-onboarding",
+        "getting-set-up",
+        "claiming-blocks",
+        "fulfillment",
+        "conversation-spaces",
+        "availability",
+        "earnings",
+        "payout-accounts",
+        "estimates",
+        "engineer-agreements",
         "partner-home",
         "client-invitations",
         "partner-clients",
@@ -111,48 +74,80 @@
         "partner-payouts",
         "partner-payout-accounts",
         "partner-agreements",
-        "your-profile",
-        "access-tokens",
-        "notifications"
+        "client-home",
+        "capacity-purchasing",
+        "scheduling",
+        "billing",
+        "client-agreements"
       ],
-      "code": [
-        {
-          "glob": "src/featureStability.ts",
-          "files": 1
-        },
-        {
-          "glob": "src/components/PrototypeNotice.tsx",
-          "files": 1
-        },
-        {
-          "glob": "src/components/PageHeader.tsx",
-          "files": 1
-        },
-        {
-          "glob": "src/components/SectionCard.tsx",
-          "files": 1
-        },
-        {
-          "glob": "src/components/SidebarNav.tsx",
-          "files": 1
-        },
-        {
-          "glob": "src/access/navigation.ts",
-          "files": 1
-        }
+      "meets": [
+        "observability/alpha/see-errors"
+      ],
+      "gaps": [],
+      "tradeoffs": [
+        "mechanism:error-reporting#errors-only"
+      ],
+      "evidence": {
+        "implements": [],
+        "verifies": []
+      },
+      "decisions": [],
+      "body": "`main.tsx` calls `initTelemetry` once, as early as possible. It loads Dash0's\nweb SDK and starts it only when `VITE_TELEMETRY_ENDPOINT` (an OTLP/HTTP base\nURL) and `VITE_TELEMETRY_TOKEN` are set, as the deploy workflow sets them.\nLeft unset, as they are locally, both functions do nothing and the SDK is\nnever fetched. If the SDK can't load, errors go unreported rather than\nbreaking the app. This file is the app's only tie to the vendor, so moving\noff Dash0 changes it alone.\n\nPages call `reportError` with the error and a context of IDs and names of\nthings, never people's names, emails or anything they wrote. It leaves out\nwhat the caller expects: the API's 4xx answers (not found, forbidden,\ninvalid), and aborted requests, which are the page moving on.\n\n- **The token ships in the bundle**, so it must be one that can only\n  ingest.\n- **Only a page's origin and path are sent.** The SDK reports the page's URL\n  with every error, and its query and fragment can hold a secret or what\n  someone searched for, so `urlAttributeScrubber` drops them."
+    },
+    {
+      "id": "stability-marks",
+      "file": "docs/technical/mechanisms/stability-marks.md",
+      "name": "Stability marks",
+      "summary": "How every app page shows its stability level, from one record of every feature in every app.",
+      "applies": "project",
+      "capabilities": [
+        "your-profile",
+        "teams",
+        "access-tokens",
+        "notifications",
+        "client-directory",
+        "client-coupons",
+        "partnerships",
+        "engineers",
+        "agreements",
+        "staffing",
+        "payouts",
+        "roles",
+        "organizations-and-members",
+        "engineer-onboarding",
+        "getting-set-up",
+        "claiming-blocks",
+        "fulfillment",
+        "conversation-spaces",
+        "availability",
+        "earnings",
+        "payout-accounts",
+        "estimates",
+        "engineer-agreements",
+        "partner-home",
+        "client-invitations",
+        "partner-clients",
+        "partner-earnings",
+        "partner-payouts",
+        "partner-payout-accounts",
+        "partner-agreements",
+        "client-home",
+        "capacity-purchasing",
+        "scheduling",
+        "billing",
+        "client-agreements"
       ],
       "meets": [
         "compatibility/prototype/marked"
       ],
       "gaps": [],
       "tradeoffs": [
-        "system:stability-marks#levels-kept-in-the-ui"
+        "mechanism:stability-marks#levels-kept-in-the-ui"
       ],
       "evidence": {
         "implements": [],
         "verifies": []
       },
-      "start": "`src/featureStability.ts`, read by `PageHeader`, `SectionCard`, `SidebarNav` and `PrototypeNotice`",
       "decisions": [],
       "body": "`FEATURES` in `src/featureStability.ts` names each app feature and its level,\ngrouped by app (`portal`, `console`, `admin`, `hub`), with the profile pages\nevery app has at the top. The rail (`access/navigation.ts`, drawn by\n`SidebarNav`), the page header and section cards take an entry as `feature`\nand show the design system's `StabilityMark` for it, so the sidebar and the\npages can't disagree, and moving a feature up is a one-line change.\n\n- **A Prototype page is topped by `PrototypeNotice`** instead, the design\n  system's `StabilityBanner`, which says plainly what isn't real on it,\n  usually that it runs on the app's `data/mock.ts`. Its `PageHeader` then\n  takes no `feature`, since the banner carries the level.\n- **A GA feature shows no mark.** Nothing passes it a `feature`, and its\n  entry stays as the record.\n- **Each entry's comment is its description.** It says what the feature is,\n  what's real and what isn't, and its known gaps, often only the technical\n  ones where the capability doc lists the rest.\n- **The levels mean what the file's header says.** Prototype runs on\n  placeholder data, or changes only the page's own state. Alpha reads and\n  writes the API. Beta has unit tests in CI for the logic the API doesn't\n  check, reports unexpected failures (see\n  [error reporting](error-reporting.md)), and has been through QA in a\n  browser.\n\nA level here is a page's, and Docket keeps levels only on capabilities. Most\npages have their capability's level. Where a page is still behind it, the\ncomponent doc says so: a client's block page in the portal, and the admin's\nScheduling, accepted agreements and engineer invitations."
     }
@@ -162,26 +157,12 @@
       "id": "account",
       "file": "docs/technical/components/account.md",
       "name": "Account",
-      "summary": "The profile every app mounts at `/<app>/account`: the signed-in person's own account, their bio, their access tokens, their notification choices, and the app's theme.",
+      "description": "The profile every app mounts at `/<app>/account`: the signed-in person's own account, their bio, their access tokens, their notification choices, and the app's theme.",
       "capabilities": [
         "your-profile",
         "teams",
         "access-tokens",
         "notifications"
-      ],
-      "code": [
-        {
-          "glob": "src/account/**",
-          "files": 45
-        },
-        {
-          "glob": "src/shared/bio.ts",
-          "files": 1
-        },
-        {
-          "glob": "src/components/BioField.tsx",
-          "files": 1
-        }
       ],
       "meets": [],
       "gaps": [
@@ -197,7 +178,6 @@
         "implements": [],
         "verifies": []
       },
-      "start": "`src/account/`, starting at `Profile.tsx`, `AccessTokens.tsx` and `Notifications.tsx`",
       "decisions": [],
       "body": "The account is the person's, not an organization's or a partnership's, so it\nreads the same in every app, and its requests name no organization.\n\nThe profile (`Profile.tsx`) stands in for Clerk's `UserProfile` modal. Its\nname, photo, email addresses, connected accounts, password and devices go\nstraight to Clerk, and reach the API through Clerk's `user.updated` webhook;\na new or removed photo also at once, as `DetailsSection` asks the API to read\nit. Anything sensitive asks the person to confirm it's them first\n(`ReverificationProvider`). The theme (`AppearanceSection`) is kept by this\nbrowser, not by Clerk. It's part of no capability.\n\nOnly the profile refuses a blank name. The API accepts one, since Clerk is\nthe source of truth for users and takes names from sign-up, a provider or its\ndashboard, and refusing its sync would leave that person unable to sign in.\nFor anyone without a photo, Gravatar is looked up from each viewer's\nbrowser, by a hash of the address of whoever they're looking at, and the\npage says so to people about themselves only. Unit tests in `src/account/`\ncover cleaning a name, what's reported, reading Clerk's settings, how a\nconnected account stands, how devices are named and ordered, finding an\naddress already on the account, Gravatar's URL, and the token list and\nlimits.\n\nThe bio (`BioSection`, on the profile of someone who works with Exalynt) is\nthe API's, and is part of Teams, since teammates and clients read it there.\nThe length check is in `src/shared/bio.ts` and `src/components/BioField.tsx`,\nwhich the admin's Teams uses too.\n\nAccess tokens and their organization limits are all the API's, read again\nafter each create or revoke. `tokenLimits.ts` shows only the organizations a\nlimited token's owner still belonged to when the page last read them, since\nthe API goes on returning any they've left. The example requests on the\npage read the secret from the environment, so they run as they are and the\nsecret stays out of the shell's history.\n\nNotifications is a Prototype on placeholder data (`data/notifications.ts`):\nthe choices are held in memory by `useNotificationSettings` until a reload,\nSlack, Discord and Microsoft Teams are pretend, and the API sends nothing. It\nshows only while the `notifications` flag is on in Flipt (`RequireFlag`).\nEach app shows the notifications for who someone is in it, and in the\nconsole, being a team lead comes from their team.\n\n`payoutAccount/` holds the payout account page that the console and the hub\nmount; it's described with them."
     },
@@ -205,7 +185,7 @@
       "id": "admin",
       "file": "docs/technical/components/admin.md",
       "name": "Admin",
-      "summary": "The admin, where Exalynt's admins run clients, partners, engineers, teams, roles and payouts.",
+      "description": "The admin, where Exalynt's admins run clients, partners, engineers, teams, roles and payouts.",
       "capabilities": [
         "client-directory",
         "client-coupons",
@@ -216,12 +196,6 @@
         "staffing",
         "payouts",
         "roles"
-      ],
-      "code": [
-        {
-          "glob": "src/apps/admin/**",
-          "files": 133
-        }
       ],
       "meets": [],
       "gaps": [
@@ -245,7 +219,6 @@
         "implements": [],
         "verifies": []
       },
-      "start": "`src/apps/admin/`, starting at `Layout.tsx` and `navigation.ts`",
       "decisions": [],
       "body": "The admin acts in no organization: its requests name none, so the caller's\nplatform role applies. It isn't gated on any agreement. Each page needs the\npermissions its data takes, such as `partner:manage` for Partners or\n`payout:manage` for Payouts, and the API refuses what the role doesn't allow.\n\nSome pages are still placeholders, marked Prototype:\n\n- The overview (`overview/`) runs on `data/mock.ts`, except its note of\n  overbooked weeks (`OverbookedWeeks`), which is the API's. The API adds up\n  every engineer against every booking across Exalynt, so one team's\n  overbooked week can be hidden by another's spare time.\n- Scheduling (`scheduling/`) runs on `data/mock.ts` and `data/teams.ts`.\n  Assigning changes only the page's state. It's marked Prototype in\n  `src/featureStability.ts`, below Staffing's Alpha.\n- The revenue calculator (`revenue/`) runs on `data/mock.ts`. It's part of\n  no capability.\n- A client's Coupons tab runs on `data/coupons.ts`, held in memory until a\n  reload.\n- A client's Agreements tab runs on `data/agreements.ts` and\n  `data/sentAgreements.ts`, over placeholder clients. It's marked Prototype,\n  below Agreements' Alpha; an engineer's agreements and a partner's are real.\n  `SendAgreementDialog` sends through the API only when it's given `onSend`,\n  which an engineer's page passes. Without one it records the agreement in\n  `data/sentAgreements.ts`, in this browser until a reload.\n\nThe rest reads and writes the API. `data/partners.ts` isn't placeholder\ndata: it keeps the API's partnerships in memory for the Partners pages, read\nonce by `loadPartners`.\n\nInviting people to work with Exalynt (`engineers/invitations.ts`, on the\nEngineers list) is marked Alpha, below Teams' Beta, which includes it. Each\npermission an invitation uses is checked apart: choosing the role takes\n`role:manage`, sending it `user_role:manage`, giving it applications\n`application_access:manage`, and giving it a team `team:manage`.\n\nEach deploy of the API puts back permissions taken off Admin, Member, Billing\nand Administrator, and the Roles page says so for a role by its name alone,\nso a role of the other kind with one of those names says it too."
     },
@@ -253,17 +226,11 @@
       "id": "auth",
       "file": "docs/technical/components/auth.md",
       "name": "Auth",
-      "summary": "Signing in and up, and onboarding: the pages that belong to no app, where someone gets an account and joins or creates what they'll work in.",
+      "description": "Signing in and up, and onboarding: the pages that belong to no app, where someone gets an account and joins or creates what they'll work in.",
       "capabilities": [
         "organizations-and-members",
         "engineer-onboarding",
         "partnerships"
-      ],
-      "code": [
-        {
-          "glob": "src/auth/**",
-          "files": 18
-        }
       ],
       "meets": [],
       "gaps": [],
@@ -274,7 +241,6 @@
         "implements": [],
         "verifies": []
       },
-      "start": "`src/auth/`, starting at `SignIn.tsx`, `SignUp.tsx` and `Onboarding.tsx`",
       "decisions": [],
       "body": "Sign-in and sign-up are our own forms over Clerk's `useSignIn` and\n`useSignUp`. Clerk decides what each needs next, and the forms are just the\nsteps for each answer. A social provider leaves for its consent screen and\ncomes back through `/sso-callback` (`SSOCallback.tsx`). What the instance\nallows, such as password length and which factors exist, is in Clerk's\ndashboard, and Clerk's own error sentences are shown as they come\n(`errors.ts`).\n\nSigning in with no app asked for lands on `Landing.tsx`: someone with one app\ngoes straight in, someone with several picks, and someone with none goes on to\nonboarding. Onboarding is where someone in no organization lands, and where an\ninvitation's email brings them. They accept an organization's invitation, or\nan invitation to work with Exalynt, which opens the console, or go on to the\nhub's welcome page for a partnership, or create an organization. Invitations\nand organizations are the API's; Clerk only signs people in. Each choice\nreloads the page it opens, so everything reads afresh what they've just been\ngiven.\n\nSign-up, onboarding, and switching or creating organizations are GA in\n`src/featureStability.ts`, with their rules covered by the API's acceptance\ntests.\n\n- **Creating an organization can't happen twice.** Onboarding holds one\n  `Idempotency-Key` for it. The logo is uploaded once the organization\n  exists: if that fails, the organization is kept and the page stays, to try\n  the logo again or go on without it.\n- **A referral code outlives the redirects.** It arrives on the sign-up link\n  as `ref` and is kept in this browser (`referralCode.ts`) until the\n  organization is created, past email verification or a provider's\n  redirect. Where storage is unavailable, the person types it instead. A\n  code the API refuses leaves nothing created.\n- **Onboarding sits outside the portal's `RequireOrganization`**, which sends\n  everyone in no organization there, so the redirect can't loop."
     },
@@ -282,7 +248,7 @@
       "id": "console",
       "file": "docs/technical/components/console.md",
       "name": "Console",
-      "summary": "The console, where Exalynt's engineers set themselves up, claim and work their blocks, offer their time, write estimates, and see what they're paid.",
+      "description": "The console, where Exalynt's engineers set themselves up, claim and work their blocks, offer their time, write estimates, and see what they're paid.",
       "capabilities": [
         "getting-set-up",
         "claiming-blocks",
@@ -295,12 +261,6 @@
         "payout-accounts",
         "estimates",
         "engineer-agreements"
-      ],
-      "code": [
-        {
-          "glob": "src/apps/console/**",
-          "files": 75
-        }
       ],
       "meets": [],
       "gaps": [
@@ -321,7 +281,6 @@
         "implements": [],
         "verifies": []
       },
-      "start": "`src/apps/console/`, starting at `Layout.tsx` and `navigation.ts`",
       "decisions": [],
       "body": "The console acts in no organization: its requests name none, so the caller's\nplatform role applies. Nobody works in it without an Engineer Agreement in\neffect, admins who also work as engineers included. Until they've accepted\none, `Layout.tsx` puts the one sent to them in place of every page, or says\nnone has been sent (`ConsoleGate`). The gate is the app's alone: the API\nstill answers what someone's role allows without an agreement in effect, and\nthe admin app isn't gated at all.\n\nTwo pages are still on placeholder data from `data/mock.ts`, through\n`data/relationships.ts`: the overview (`overview/`) and a client's page\n(`clients/`), both topped by a `PrototypeNotice`. Neither is part of a\ncapability yet. The overview does read the engineer's availability and the\nterms of their Engineer Agreement from the API. Everything else reads and\nwrites the API.\n\nMy Schedule (`assignments/`) claims and unclaims straight through the API,\nwhich holds the staffing rules. A refusal is toasted and everything is read\nagain. The weekly layout is drawn like the portal's Schedule, from\n`components/schedule/`.\n\nA block's page (`blocks/`) is at the block's id, not its number, since\nnumbers repeat across clients; the old `/console/assignments/:id` sends on to\nit. Its focus, timeline and conversations come from `src/components/block/`,\nshared with the portal's block page. The timeline is Alpha and the\nconversations Prototype in `src/featureStability.ts`, each with the level of\nits own capability. An update's or focus's images, videos and files are\nuploaded to the client's organization and read with the engineer's token\nonly when their section opens, and anything but a plain image or video is\nonly ever a download (`objectURLOf`). Until a messaging provider is set up,\nconversations are kept by the noop provider and can't be opened.\n\nThe payout account page is `src/account/payoutAccount/PayoutAccountPage.tsx`,\nthe same page the hub mounts for a partnership, here for the engineer's own\naccount. It's real, through the API, on Stripe Connect.\n\nEstimates' figures are worked out in the browser by `src/estimates/`, from\nthe sizes it shares with the API (`SIZES`) and the prices each estimate\ncarries, and unit tests pin them to the API's."
     },
@@ -329,7 +288,7 @@
       "id": "hub",
       "file": "docs/technical/components/hub.md",
       "name": "Hub",
-      "summary": "The Partner Hub, where a partnership's manager follows the clients it has brought in, invites more, and sees what it earns and how it's paid.",
+      "description": "The Partner Hub, where a partnership's manager follows the clients it has brought in, invites more, and sees what it earns and how it's paid.",
       "capabilities": [
         "partner-home",
         "partnerships",
@@ -340,12 +299,6 @@
         "partner-payout-accounts",
         "partner-agreements",
         "getting-set-up"
-      ],
-      "code": [
-        {
-          "glob": "src/apps/hub/**",
-          "files": 32
-        }
       ],
       "meets": [],
       "gaps": [
@@ -358,7 +311,6 @@
         "implements": [],
         "verifies": []
       },
-      "start": "`src/apps/hub/`, starting at `Layout.tsx`, `components/PartnershipProvider.tsx` and `navigation.ts`",
       "decisions": [],
       "body": "Every page acts in one of the partnerships the signed-in person manages.\n`PartnershipProvider` reads them from the API and opens the one they last\nlooked at in this browser, or else the first by name; someone who manages\nnone is told the hub has nothing for them. Switching partnership gives up on\nreads still going and reads everything again for the new one.\n\nA partnership works in the hub only once its Partner Agreement is in effect:\nuntil then `Layout.tsx` puts the agreement sent with its invitation in place\nof every page, for its manager to accept, and the switcher stays. The gate is\nthe hub's alone: the API still answers the partnership's manager without a\nPartner Agreement in effect. The welcome page (`welcome/`), where a partner\ninvitation lands, sits outside that gate, since someone who hasn't accepted\nhas no hub yet.\n\nEvery page reads and writes the API; the hub has no placeholder data.\nEarnings, Payouts and Clients read every page of theirs from the API, then\npage them in the browser; Home's Clients card asks for just the latest five.\nThe payout account page is `src/account/payoutAccount/PayoutAccountPage.tsx`,\nthe same page as the console's, for the partnership's own account, apart\nfrom its manager's. `holdNotice`, which says what holds earnings up, is unit\ntested.\n\nThe invitations list shows the API's refusals (an address it can't take, one\nalready invited, a limit reached) as the API words them. Any other failure is\nworded by the page."
     },
@@ -366,7 +318,7 @@
       "id": "portal",
       "file": "docs/technical/components/portal.md",
       "name": "Portal",
-      "summary": "The client portal, where a client organization's people buy and schedule capacity, follow their blocks, read estimates, pay, and manage the organization.",
+      "description": "The client portal, where a client organization's people buy and schedule capacity, follow their blocks, read estimates, pay, and manage the organization.",
       "capabilities": [
         "client-home",
         "getting-set-up",
@@ -379,12 +331,6 @@
         "billing",
         "organizations-and-members",
         "client-agreements"
-      ],
-      "code": [
-        {
-          "glob": "src/apps/portal/**",
-          "files": 76
-        }
       ],
       "meets": [],
       "gaps": [
@@ -408,7 +354,6 @@
         "implements": [],
         "verifies": []
       },
-      "start": "`src/apps/portal/`, starting at `Layout.tsx` and `navigation.ts`",
       "decisions": [],
       "body": "Every page acts in the organization being looked at. `AccessProvider` holds\nit and the reader's role in it, and `Layout.tsx` builds the rail from that\nrole: a role without capacity, estimate or team reads (Billing) doesn't get\nthose pages, and one without `invoice:read` (Member) doesn't get Billing. The\npages that are left check the same permissions, say why when the role can't\nsee them, and ask the API for nothing then. `RequireOrganization` sends\nsomeone in no organization to onboarding, or offers someone with the console\nto create one. Switching organization starts each page again.\n\nNobody works in an organization until its Client Agreement is in effect:\n`Layout.tsx` puts the agreement in place of every page (`AgreementGate`), for\nsomeone with `organization:manage` to accept, or tells anyone else an Admin\nhas to first. The organization switcher stays, to work in another. The gate\nis the app's alone: the API still answers what a member's role allows\nwithout an agreement in effect, so anything new that must wait for the\nagreement has to sit behind the gate.\n\nEvery page reads and writes the API: the portal has no placeholder data\n(`data/relationships.ts` only orders the API's teams). A block's own page\n(`capacity/View.tsx`) is marked Prototype in `src/featureStability.ts`, below\nFulfillment's Alpha, because whether it's the right page for a client is\nstill the question, not because its data is fake. Its focus, timeline and\nconversations are the console's, from `src/components/block/`.\n\nThe setup bubble's steps are worked out by `beforeWorkStarts`\n(`components/setup/`), which unit tests cover. Estimates' figures are worked\nout in the browser by `src/estimates/`, from the sizes it shares with the API\nand the prices each estimate carries; unit tests pin them to the API's.\n\nBuying holds one `Idempotency-Key` for each opening of\n`PurchaseCapacityDialog`, so trying again while the dialog is open can't\ncharge twice, and closing it starts a new purchase with a new key. The\nprovider's page for an invoice is opened at an address the API reads from the\nprovider each time, since those addresses expire, so the portal never keeps\none. The Schedule's weeks are the API's, rolling over at midnight UTC."
     }
@@ -732,297 +677,292 @@
   ],
   "tradeoffs": [
     {
-      "id": "system:error-reporting#errors-only",
+      "id": "mechanism:error-reporting#errors-only",
       "text": "Only errors are collected: uncaught ones, and those pages pass to `reportError`. No page views, request timings or session recordings.",
       "cost": "A slow page, or one people give up on without an error, leaves nothing to look at.",
-      "revisit": null,
       "places": []
     },
     {
-      "id": "system:stability-marks#levels-kept-in-the-ui",
+      "id": "mechanism:stability-marks#levels-kept-in-the-ui",
       "text": "Each page's level is declared once in the UI, in `src/featureStability.ts`, for the rail and the pages to read, apart from the capability docs' levels in the API's repository.",
       "cost": "A level change is made in both repositories, and nothing checks that they agree.",
-      "revisit": null,
       "places": []
     },
     {
       "id": "component:auth#clerks-screens-for-session-tasks",
       "text": "The session tasks Clerk can hold a session back for, a password reset it forces or two-step setup, use Clerk's own screens, dressed by `clerkAppearance`, since they're rare.",
       "cost": "Those few screens look like Clerk's rather than ours.",
-      "revisit": null,
       "places": []
     },
     {
       "id": "component:portal#provider-pages-for-billing",
       "text": "Payment methods, invoices and company details stay on the payment provider's own pages, which Billing opens at an address the API asks the provider for. The portal knows nothing of the provider, and shows only a label for the default payment method.",
       "cost": "Clients leave the portal to see an invoice or change how they pay, and a page left open in another tab doesn't see what they changed there.",
-      "revisit": null,
       "places": []
     },
     {
       "id": "component:portal#no-gravatar-for-members",
       "text": "Members show their own photo or their initials, never a Gravatar, which would send their address, hashed, to a third party.",
       "cost": "A member who hasn't uploaded a photo shows initials here, though their profile shows their Gravatar.",
-      "revisit": null,
       "places": []
     }
   ],
   "problems": [
     {
       "type": "unknown-id",
-      "subject": "system:error-reporting",
+      "subject": "mechanism:error-reporting",
       "capabilities": [],
       "message": "Capability client-home doesn't exist."
     },
     {
       "type": "unknown-id",
-      "subject": "system:error-reporting",
+      "subject": "mechanism:error-reporting",
       "capabilities": [],
       "message": "Capability getting-set-up doesn't exist."
     },
     {
       "type": "unknown-id",
-      "subject": "system:error-reporting",
+      "subject": "mechanism:error-reporting",
       "capabilities": [],
       "message": "Capability billing doesn't exist."
     },
     {
       "type": "unknown-id",
-      "subject": "system:error-reporting",
+      "subject": "mechanism:error-reporting",
       "capabilities": [],
       "message": "Capability organizations-and-members doesn't exist."
     },
     {
       "type": "unknown-id",
-      "subject": "system:error-reporting",
+      "subject": "mechanism:error-reporting",
       "capabilities": [],
       "message": "Capability estimates doesn't exist."
     },
     {
       "type": "unknown-id",
-      "subject": "system:error-reporting",
+      "subject": "mechanism:error-reporting",
       "capabilities": [],
       "message": "Capability your-profile doesn't exist."
     },
     {
       "type": "unknown-id",
-      "subject": "system:error-reporting",
+      "subject": "mechanism:error-reporting",
       "capabilities": [],
       "message": "Capability partner-home doesn't exist."
     },
     {
       "type": "unknown-id",
-      "subject": "system:error-reporting",
+      "subject": "mechanism:error-reporting",
       "capabilities": [],
       "message": "Capability partner-earnings doesn't exist."
     },
     {
       "type": "unknown-id",
-      "subject": "system:error-reporting",
+      "subject": "mechanism:error-reporting",
       "capabilities": [],
       "message": "Capability partner-payouts doesn't exist."
     },
     {
       "type": "unknown-id",
-      "subject": "system:error-reporting",
+      "subject": "mechanism:error-reporting",
       "capabilities": [],
       "message": "Capability partner-payout-accounts doesn't exist."
     },
     {
       "type": "unknown-id",
-      "subject": "system:stability-marks",
+      "subject": "mechanism:stability-marks",
       "capabilities": [],
       "message": "Capability client-home doesn't exist."
     },
     {
       "type": "unknown-id",
-      "subject": "system:stability-marks",
+      "subject": "mechanism:stability-marks",
       "capabilities": [],
       "message": "Capability getting-set-up doesn't exist."
     },
     {
       "type": "unknown-id",
-      "subject": "system:stability-marks",
+      "subject": "mechanism:stability-marks",
       "capabilities": [],
       "message": "Capability teams doesn't exist."
     },
     {
       "type": "unknown-id",
-      "subject": "system:stability-marks",
+      "subject": "mechanism:stability-marks",
       "capabilities": [],
       "message": "Capability capacity-purchasing doesn't exist."
     },
     {
       "type": "unknown-id",
-      "subject": "system:stability-marks",
+      "subject": "mechanism:stability-marks",
       "capabilities": [],
       "message": "Capability scheduling doesn't exist."
     },
     {
       "type": "unknown-id",
-      "subject": "system:stability-marks",
+      "subject": "mechanism:stability-marks",
       "capabilities": [],
       "message": "Capability fulfillment doesn't exist."
     },
     {
       "type": "unknown-id",
-      "subject": "system:stability-marks",
+      "subject": "mechanism:stability-marks",
       "capabilities": [],
       "message": "Capability conversation-spaces doesn't exist."
     },
     {
       "type": "unknown-id",
-      "subject": "system:stability-marks",
+      "subject": "mechanism:stability-marks",
       "capabilities": [],
       "message": "Capability estimates doesn't exist."
     },
     {
       "type": "unknown-id",
-      "subject": "system:stability-marks",
+      "subject": "mechanism:stability-marks",
       "capabilities": [],
       "message": "Capability billing doesn't exist."
     },
     {
       "type": "unknown-id",
-      "subject": "system:stability-marks",
+      "subject": "mechanism:stability-marks",
       "capabilities": [],
       "message": "Capability client-agreements doesn't exist."
     },
     {
       "type": "unknown-id",
-      "subject": "system:stability-marks",
+      "subject": "mechanism:stability-marks",
       "capabilities": [],
       "message": "Capability claiming-blocks doesn't exist."
     },
     {
       "type": "unknown-id",
-      "subject": "system:stability-marks",
+      "subject": "mechanism:stability-marks",
       "capabilities": [],
       "message": "Capability availability doesn't exist."
     },
     {
       "type": "unknown-id",
-      "subject": "system:stability-marks",
+      "subject": "mechanism:stability-marks",
       "capabilities": [],
       "message": "Capability earnings doesn't exist."
     },
     {
       "type": "unknown-id",
-      "subject": "system:stability-marks",
+      "subject": "mechanism:stability-marks",
       "capabilities": [],
       "message": "Capability payouts doesn't exist."
     },
     {
       "type": "unknown-id",
-      "subject": "system:stability-marks",
+      "subject": "mechanism:stability-marks",
       "capabilities": [],
       "message": "Capability payout-accounts doesn't exist."
     },
     {
       "type": "unknown-id",
-      "subject": "system:stability-marks",
+      "subject": "mechanism:stability-marks",
       "capabilities": [],
       "message": "Capability engineer-agreements doesn't exist."
     },
     {
       "type": "unknown-id",
-      "subject": "system:stability-marks",
+      "subject": "mechanism:stability-marks",
       "capabilities": [],
       "message": "Capability client-directory doesn't exist."
     },
     {
       "type": "unknown-id",
-      "subject": "system:stability-marks",
+      "subject": "mechanism:stability-marks",
       "capabilities": [],
       "message": "Capability client-coupons doesn't exist."
     },
     {
       "type": "unknown-id",
-      "subject": "system:stability-marks",
+      "subject": "mechanism:stability-marks",
       "capabilities": [],
       "message": "Capability partnerships doesn't exist."
     },
     {
       "type": "unknown-id",
-      "subject": "system:stability-marks",
+      "subject": "mechanism:stability-marks",
       "capabilities": [],
       "message": "Capability engineers doesn't exist."
     },
     {
       "type": "unknown-id",
-      "subject": "system:stability-marks",
+      "subject": "mechanism:stability-marks",
       "capabilities": [],
       "message": "Capability agreements doesn't exist."
     },
     {
       "type": "unknown-id",
-      "subject": "system:stability-marks",
+      "subject": "mechanism:stability-marks",
       "capabilities": [],
       "message": "Capability staffing doesn't exist."
     },
     {
       "type": "unknown-id",
-      "subject": "system:stability-marks",
+      "subject": "mechanism:stability-marks",
       "capabilities": [],
       "message": "Capability roles doesn't exist."
     },
     {
       "type": "unknown-id",
-      "subject": "system:stability-marks",
+      "subject": "mechanism:stability-marks",
       "capabilities": [],
       "message": "Capability partner-home doesn't exist."
     },
     {
       "type": "unknown-id",
-      "subject": "system:stability-marks",
+      "subject": "mechanism:stability-marks",
       "capabilities": [],
       "message": "Capability client-invitations doesn't exist."
     },
     {
       "type": "unknown-id",
-      "subject": "system:stability-marks",
+      "subject": "mechanism:stability-marks",
       "capabilities": [],
       "message": "Capability partner-clients doesn't exist."
     },
     {
       "type": "unknown-id",
-      "subject": "system:stability-marks",
+      "subject": "mechanism:stability-marks",
       "capabilities": [],
       "message": "Capability partner-earnings doesn't exist."
     },
     {
       "type": "unknown-id",
-      "subject": "system:stability-marks",
+      "subject": "mechanism:stability-marks",
       "capabilities": [],
       "message": "Capability partner-payouts doesn't exist."
     },
     {
       "type": "unknown-id",
-      "subject": "system:stability-marks",
+      "subject": "mechanism:stability-marks",
       "capabilities": [],
       "message": "Capability partner-payout-accounts doesn't exist."
     },
     {
       "type": "unknown-id",
-      "subject": "system:stability-marks",
+      "subject": "mechanism:stability-marks",
       "capabilities": [],
       "message": "Capability partner-agreements doesn't exist."
     },
     {
       "type": "unknown-id",
-      "subject": "system:stability-marks",
+      "subject": "mechanism:stability-marks",
       "capabilities": [],
       "message": "Capability your-profile doesn't exist."
     },
     {
       "type": "unknown-id",
-      "subject": "system:stability-marks",
+      "subject": "mechanism:stability-marks",
       "capabilities": [],
       "message": "Capability access-tokens doesn't exist."
     },
     {
       "type": "unknown-id",
-      "subject": "system:stability-marks",
+      "subject": "mechanism:stability-marks",
       "capabilities": [],
       "message": "Capability notifications doesn't exist."
     },

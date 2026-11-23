@@ -5,13 +5,15 @@ summary: >-
 role: Front desk
 title: Front desk clerk
 image: https://randomuser.me/api/portraits/women/68.jpg
-needs:
-  - To tell a guest at once whether a room is free for their dates, and hold it
-    for them, without ever giving the same room to two guests.
-  - To check guests in and out quickly, so nobody waits at the desk.
-  - To know which rooms are ready before a guest arrives, without phoning
-    housekeeping.
 ---
+
+## Needs
+
+- To tell a guest at once whether a room is free for their dates, and hold it
+  for them, without ever giving the same room to two guests.
+- To check guests in and out quickly, so nobody waits at the desk.
+- To know which rooms are ready before a guest arrives, without phoning
+  housekeeping.
 
 ## Knows
 

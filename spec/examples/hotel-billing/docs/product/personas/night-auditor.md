@@ -6,11 +6,13 @@ summary: >-
 role: Front desk
 title: Night auditor
 image: https://randomuser.me/api/portraits/men/71.jpg
-needs:
-  - To know the day was closed and every guest charged for the night, without
-    staying up to do it by hand.
-  - To close the day themselves when the audit didn't run on its own.
 ---
+
+## Needs
+
+- To know the day was closed and every guest charged for the night, without
+  staying up to do it by hand.
+- To close the day themselves when the audit didn't run on its own.
 
 ## Knows
 

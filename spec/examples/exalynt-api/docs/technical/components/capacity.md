@@ -1,11 +1,8 @@
 ---
 name: Capacity
-summary: >-
+description: >-
   Blocks of engineering capacity: bought, scheduled into a week, staffed,
   started, and fulfilled, each with at most one focus.
-start: >-
-  `internal/services/capacity.go`, `internal/services/fulfillment.go`,
-  `internal/repositories/postgres/capacity.go`
 capabilities:
   - capacity-purchasing
   - client-home
@@ -14,10 +11,6 @@ capabilities:
   - staffing
   - fulfillment
   - client-directory
-code:
-  - internal/services/capacity.go
-  - internal/services/fulfillment.go
-  - internal/repositories/postgres/capacity.go
 gaps:
   - id: buying-and-scheduling-not-load-tested
     outcome: efficiency/beta/realistic-volumes

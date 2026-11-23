@@ -1,15 +1,12 @@
 ---
 name: Auth
-summary: >-
+description: >-
   Signing in and up, and onboarding: the pages that belong to no app, where
   someone gets an account and joins or creates what they'll work in.
-start: >-
-  `src/auth/`, starting at `SignIn.tsx`, `SignUp.tsx` and `Onboarding.tsx`
 capabilities:
   - organizations-and-members
   - engineer-onboarding
   - partnerships
-code: [src/auth/**]
 tradeoffs:
   - id: clerks-screens-for-session-tasks
     text: >-

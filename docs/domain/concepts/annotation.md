@@ -8,7 +8,7 @@ what a place is about.
 It has one of four verbs:
 
 - **`docket:verifies`** and **`docket:implements`** make a place
-  [evidence](evidence.md) for the rules, capabilities, systems and components
+  [evidence](evidence.md) for the rules, capabilities, mechanisms and components
   it names.
 - **`docket:gap`** marks where a [gap](gap.md) shows in the code. It's tracked
   technical debt, in place of a bare TODO.
@@ -25,8 +25,10 @@ been left on something that's no longer about what it names.
 docket:<verb> <type>:<id> [<type>:<id> ...]
 ```
 
-`implements` and `verifies` take `rule`, `capability`, `system` and
-`component`, and can name several at once. `gap` and `tradeoff` take the ID of
+`implements` and `verifies` take `rule`, `capability`, `mechanism` and
+`component`, and can name several at once. A mechanism's or component's
+`implements` annotations are how it's found in the code, since its doc names
+no paths. `gap` and `tradeoff` take the ID of
 one, as `<type>:<id>#<key>`. An annotation is on the first line below it
 that isn't blank or another annotation, in whatever comment syntax the file
 uses.
@@ -41,7 +43,7 @@ it("rejects a stay that ends the day it starts", () => {
 A database constraint, which also marks the tradeoff behind it:
 
 ```sql
-  -- docket:implements rule:booking/no-double-booking
+  -- docket:implements rule:booking/no-double-booking component:bookings
   -- docket:tradeoff component:bookings#constraint-not-lock
   EXCLUDE USING gist (room_id WITH =, nights WITH &&) WHERE (status <> 'cancelled')
 ```
@@ -54,14 +56,14 @@ Code that implements a capability and a component, where a known gap shows:
 export async function saveBooking(db: Pool, booking: Booking): Promise<void> {
 ```
 
-A deploy workflow, as evidence for a system:
+A deploy workflow, as evidence for a mechanism:
 
 ```yaml
-  # docket:implements system:deployment
+  # docket:implements mechanism:deployment
   deploy:
 ```
 
 ## Not to be confused with
 
 - [Evidence](evidence.md): what the indexer works out from annotations, for
-  each rule, capability, system and component.
+  each rule, capability, mechanism and component.

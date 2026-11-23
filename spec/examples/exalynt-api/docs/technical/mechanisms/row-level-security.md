@@ -4,43 +4,6 @@ summary: >-
   Postgres enforces the organization and partnership boundaries underneath the
   application's Bounds, so a query that forgets its Bounds still can't cross
   them in a request acting in an organization or a partnership.
-start: >-
-  `conn.exec` in `internal/repositories/postgres/unit_of_work.go`,
-  `internal/repositories/unit_of_work.go`, `ReachPartnership` in
-  `internal/services/partnerships.go`, and the tests
-  `row_level_security_integration_test.go` and
-  `partnership_row_level_security_integration_test.go` in
-  `internal/repositories/postgres`
-capabilities:
-  - organizations-and-members
-  - access-tokens
-  - getting-set-up
-  - estimates
-  - capacity-purchasing
-  - client-home
-  - scheduling
-  - claiming-blocks
-  - staffing
-  - fulfillment
-  - agreements
-  - client-agreements
-  - partner-agreements
-  - billing
-  - earnings
-  - payout-accounts
-  - partner-earnings
-  - partner-payouts
-  - partner-payout-accounts
-  - partnerships
-  - client-invitations
-  - partner-clients
-  - partner-home
-code:
-  - internal/repositories/postgres/unit_of_work.go
-  - internal/repositories/unit_of_work.go
-  - internal/services/partnerships.go
-  - internal/repositories/postgres/row_level_security_integration_test.go
-  - internal/repositories/postgres/partnership_row_level_security_integration_test.go
 gaps:
   - id: no-organization-runs-on-platform
     text: >-

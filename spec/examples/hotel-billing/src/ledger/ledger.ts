@@ -10,7 +10,7 @@ export type Line = {
 
 export type Bill = { id: string; status: "open" | "closed"; lines: Line[] };
 
-// docket:implements system:ledger rule:bills/closed-bills-dont-change
+// docket:implements component:ledger rule:bills/closed-bills-dont-change
 export function post(bill: Bill, line: Line): void {
   if (bill.status === "closed") {
     throw new Error(`Bill ${bill.id} is closed`);
@@ -19,7 +19,7 @@ export function post(bill: Bill, line: Line): void {
 }
 
 // docket:implements rule:bills/charges-are-never-changed
-// docket:gap system:ledger#corrections-of-corrections-untested
+// docket:gap component:ledger#corrections-of-corrections-untested
 export function correct(bill: Bill, line: Line, id: string, businessDay: string): void {
   post(bill, {
     id,
@@ -31,7 +31,7 @@ export function correct(bill: Bill, line: Line, id: string, businessDay: string)
   });
 }
 
-// docket:tradeoff system:ledger#balance-worked-out-on-read
+// docket:tradeoff component:ledger#balance-worked-out-on-read
 export function balance(bill: Bill): number {
   return bill.lines.reduce((sum, line) => sum + line.amount, 0);
 }

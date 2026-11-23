@@ -1,12 +1,9 @@
 ---
 name: Ledger
-summary: >-
+description: >-
   Every amount a guest owes or pays, as lines on their bill that are only ever
   added, never changed.
-start: >-
-  `src/ledger/ledger.ts`, starting at `post`
 capabilities: [extra-charges, split-bills, deposits, check-out, direct-billing]
-code: [src/ledger/**]
 meets: [reliability/beta/data-kept]
 gaps:
   - id: corrections-of-corrections-untested
@@ -24,7 +21,6 @@ tradeoffs:
       The balance can never disagree with the lines, and there's nothing to
       keep in step when a line is added.
     cost: Opening a bill gets slower as lines are added to it.
-    revisit: a bill passes 1,000 lines
 ---
 
 Everything that changes what a guest owes goes through `post`: room nights,

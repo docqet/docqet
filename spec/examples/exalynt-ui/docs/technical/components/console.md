@@ -1,10 +1,8 @@
 ---
 name: Console
-summary: >-
+description: >-
   The console, where Exalynt's engineers set themselves up, claim and work
   their blocks, offer their time, write estimates, and see what they're paid.
-start: >-
-  `src/apps/console/`, starting at `Layout.tsx` and `navigation.ts`
 capabilities:
   - getting-set-up
   - claiming-blocks
@@ -17,7 +15,6 @@ capabilities:
   - payout-accounts
   - estimates
   - engineer-agreements
-code: [src/apps/console/**]
 gaps:
   - id: setup-reads-on-every-page
     text: >-

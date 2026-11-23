@@ -18,5 +18,4 @@ tradeoffs:
     cost: >-
       A guest who pays for their own extras pays for them before their bill
       moves.
-    revisit: a company asks to pay for rooms only
 ---

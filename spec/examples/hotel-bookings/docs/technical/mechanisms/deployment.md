@@ -3,10 +3,6 @@ name: Deployment
 summary: >-
   How a change gets from the main branch to the hotel's server, and back off
   it again.
-start: >-
-  `.github/workflows/deploy.yml`
-capabilities: [room-booking, cancellations, check-in, check-out]
-code: [.github/workflows/**, db/migrations/**]
 meets:
   - reliability/beta/undo-release
   - observability/alpha/see-errors

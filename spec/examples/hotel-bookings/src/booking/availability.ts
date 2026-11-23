@@ -6,7 +6,7 @@ export function overlaps(a: Stay, b: Stay): boolean {
   return a.checkIn < b.checkOut && b.checkIn < a.checkOut;
 }
 
-// docket:implements rule:booking/no-double-booking
+// docket:implements rule:booking/no-double-booking component:bookings
 export function assertRoomFree(roomId: string, stay: Stay, existing: Booking[]): void {
   const clash = existing.find(
     (booking) =>

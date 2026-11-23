@@ -69,7 +69,7 @@ Docket separates what the software is meant to do from what it does:
   can go from a rule to the code that enforces it and the tests that check it.
   Evidence can take many forms, and we're deliberately keeping it open. Today
   it's annotations: a `docket:implements` or `docket:verifies` comment that
-  says which rules, capabilities or systems a place in the repository is
+  says which rules, capabilities or mechanisms a place in the repository is
   about, and a `docket:gap` or `docket:tradeoff` comment that marks where a
   known gap or a deliberate choice shows in the code. Later it may include
   commits, pull requests, CI results and more.
@@ -77,11 +77,12 @@ Docket separates what the software is meant to do from what it does:
   nobody writes by hand: each rule's evidence, each feature's **maturity** (how
   much of it is stable), each persona's **readiness** (how ready the software
   is for them), and any problems in the docs themselves.
-- **The difference is the work.** Where intention has no evidence, or the
-  evidence contradicts it, someone has something to build, fix or decide.
-  Docket names the ways intention and reality differ, open decisions, gaps,
-  tradeoffs, missing evidence and problems, and shows each where it matters,
-  rather than hiding it or quietly resolving it. See
+- **The difference is the work.** What's declared is taken to hold, unless
+  it's declared that it doesn't, or the evidence contradicts it. Docket names
+  the ways intention and reality differ, open decisions, gaps, tradeoffs and
+  problems, and shows each where it matters, rather than hiding it or quietly
+  resolving it. Evidence is optional: it shows how we know something holds,
+  and none is never a to-do. See
   [where intention and reality differ](docs/domain/overview.md#where-intention-and-reality-differ).
 
 That makes it easy for anyone, person or agent, technical or not, to:
@@ -94,7 +95,8 @@ That makes it easy for anyone, person or agent, technical or not, to:
 - **Understand the domain**: what its concepts mean, and which rules must
   always hold.
 - **Check the evidence**: go from any capability or rule to the code that
-  implements it and the tests that verify it, and see where there's none.
+  implements it and the tests that verify it, and see what holds with
+  evidence and what holds on trust.
 
 Intention is written to be:
 
@@ -116,7 +118,7 @@ unconfirmed, and a person confirms each part before it counts as declared.
 
 [The overview of Docket's concepts](docs/domain/overview.md) shows how they
 fit together: domains, features, capabilities, rules, concepts, personas,
-systems and components, open decisions, gaps and tradeoffs, stability levels,
+mechanisms and components, open decisions, gaps and tradeoffs, stability levels,
 maturity and evidence. Each has [a doc of its own](docs/domain/concepts/) that
 defines it precisely, with an example of how it's written down.
 
@@ -167,7 +169,7 @@ down:
 
 | Judgment means…                            | Docket records                                                                                                                       |
 | ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------ |
-| **Evaluating tradeoffs**                   | Tradeoffs: what we chose instead of what, what it costs, and what would make us look again                                           |
+| **Evaluating tradeoffs**                   | Tradeoffs: what we chose instead of what, what it gains us, and what it costs                                                        |
 | **Amid uncertainty**                       | Known gaps, open decisions, drafts, and Prototype and Alpha levels, so what isn't known or done yet is said plainly                  |
 | **Deciding at the right moment**           | Open decisions, held where their answer will go until it's time to settle them                                                      |
 | **Deciding how much is enough**            | Each capability's stability level, and the stability checklist: what that level generally expects, and what would be overengineering |
@@ -193,7 +195,7 @@ falls short of it:
   TODOs, and shown on every capability that relies on that code.
 - **The standard each stability level expects**, grouped by qualities such as
   reliability and security, with each outcome not met, met with evidence from
-  a system that meets it, or met on trust.
+  a mechanism that meets it, or met on trust.
 
 What Docket shows about craft is still mostly what people declare. It makes
 that declaration specific, and puts it beside the code it's about.

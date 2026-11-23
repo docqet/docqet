@@ -27,8 +27,8 @@
     "gaps": 4,
     "problems": 0,
     "tradeoffs": 4,
-    "systems": 1,
-    "components": 1
+    "mechanisms": 0,
+    "components": 2
   },
   "domains": [
     {
@@ -156,12 +156,7 @@
         "closing-the-day"
       ],
       "readiness": 45,
-      "needs": [
-        "To get each day's takings into the accounting software without typing them in.",
-        "To invoice every company once a month, and see what each one owes.",
-        "To keep companies within the credit the hotel allows them."
-      ],
-      "body": "## Knows\n\nBookkeeping, and the hotel's accounting software, well. Less about how the front\ndesk works.\n\n## Context\n\nPart time, two or three days a week, at a desk in the back office. Month end is\ntheir busiest time.\n\n## Expects\n\nDays that are closed and stay closed, invoice numbers that run in order, and an\nexport their accounting software takes as it is.\n\n## Cares about\n\nBooks that balance. A day that changes after they've exported it means finding\nthe difference by hand."
+      "body": "## Needs\n\n- To get each day's takings into the accounting software without typing them in.\n- To invoice every company once a month, and see what each one owes.\n- To keep companies within the credit the hotel allows them.\n\n## Knows\n\nBookkeeping, and the hotel's accounting software, well. Less about how the front\ndesk works.\n\n## Context\n\nPart time, two or three days a week, at a desk in the back office. Month end is\ntheir busiest time.\n\n## Expects\n\nDays that are closed and stay closed, invoice numbers that run in order, and an\nexport their accounting software takes as it is.\n\n## Cares about\n\nBooks that balance. A day that changes after they've exported it means finding\nthe difference by hand."
     },
     {
       "id": "front-desk-clerk",
@@ -188,12 +183,7 @@
         "front-desk"
       ],
       "readiness": 54,
-      "needs": [
-        "To see everything a guest owes on one bill, so check-out is a single payment.",
-        "To put extras on a bill the moment they happen, so nothing is forgotten.",
-        "To let company guests leave without paying, knowing their company will be invoiced."
-      ],
-      "body": "## Knows\n\nWhat every extra costs, and which guests' companies pay for their stays. Not an\naccountant: they think in bills, not ledgers.\n\n## Context\n\nAt the desk, with the guest in front of them and often a queue behind. Check-out\nmornings are the busiest part of their day.\n\n## Expects\n\nA bill that reads like a receipt: each night, each extra, then the total.\nPayments by card at the desk.\n\n## Cares about\n\nA bill the guest doesn't argue with. A charge they can't explain, or one they\ncan't take off when it was a mistake, makes for a hard conversation."
+      "body": "## Needs\n\n- To see everything a guest owes on one bill, so check-out is a single payment.\n- To put extras on a bill the moment they happen, so nothing is forgotten.\n- To let company guests leave without paying, knowing their company will be\n  invoiced.\n\n## Knows\n\nWhat every extra costs, and which guests' companies pay for their stays. Not an\naccountant: they think in bills, not ledgers.\n\n## Context\n\nAt the desk, with the guest in front of them and often a queue behind. Check-out\nmornings are the busiest part of their day.\n\n## Expects\n\nA bill that reads like a receipt: each night, each extra, then the total.\nPayments by card at the desk.\n\n## Cares about\n\nA bill the guest doesn't argue with. A charge they can't explain, or one they\ncan't take off when it was a mistake, makes for a hard conversation."
     },
     {
       "id": "guest",
@@ -215,12 +205,7 @@
         "front-desk"
       ],
       "readiness": 35,
-      "needs": [
-        "To pay without queueing at the desk on the way out.",
-        "To leave without paying when their company is paying for the stay.",
-        "A bill they can understand, with nothing on it they didn't have."
-      ],
-      "body": "## Knows\n\nNothing about the hotel's systems. Pays for things online and by card all the\ntime.\n\n## Context\n\nOn their phone, often in a hurry: packing, catching a train, or already home.\n\n## Expects\n\nPaying by link to work like any other online payment, in a minute or two.\n\n## Cares about\n\nNot being charged twice, and not being chased for something they've paid."
+      "body": "## Needs\n\n- To pay without queueing at the desk on the way out.\n- To leave without paying when their company is paying for the stay.\n- A bill they can understand, with nothing on it they didn't have.\n\n## Knows\n\nNothing about the hotel's systems. Pays for things online and by card all the\ntime.\n\n## Context\n\nOn their phone, often in a hurry: packing, catching a train, or already home.\n\n## Expects\n\nPaying by link to work like any other online payment, in a minute or two.\n\n## Cares about\n\nNot being charged twice, and not being chased for something they've paid."
     },
     {
       "id": "manager",
@@ -242,12 +227,7 @@
         "closing-the-day"
       ],
       "readiness": 70,
-      "needs": [
-        "To see each day's takings, final and broken down, without waiting for the bookkeeper.",
-        "To be sure every night, every extra and the city's tax are charged, so the hotel isn't out of pocket.",
-        "To be covered when a guest who booked never arrives."
-      ],
-      "body": "## Knows\n\nThe hotel's numbers: occupancy, the average rate, last year's takings. Not the\ndetails of how the books are kept.\n\n## Context\n\nLooks at the numbers first thing each morning, on a laptop or their phone.\n\n## Expects\n\nTotals for rooms, food and drink, and tax, the way the owners ask for them.\n\n## Cares about\n\nNumbers that don't change once a day is closed. If yesterday's takings move,\nthey stop trusting all of them."
+      "body": "## Needs\n\n- To see each day's takings, final and broken down, without waiting for the\n  bookkeeper.\n- To be sure every night, every extra and the city's tax are charged, so the\n  hotel isn't out of pocket.\n- To be covered when a guest who booked never arrives.\n\n## Knows\n\nThe hotel's numbers: occupancy, the average rate, last year's takings. Not the\ndetails of how the books are kept.\n\n## Context\n\nLooks at the numbers first thing each morning, on a laptop or their phone.\n\n## Expects\n\nTotals for rooms, food and drink, and tax, the way the owners ask for them.\n\n## Cares about\n\nNumbers that don't change once a day is closed. If yesterday's takings move,\nthey stop trusting all of them."
     },
     {
       "id": "night-auditor",
@@ -264,11 +244,7 @@
         "closing-the-day"
       ],
       "readiness": 100,
-      "needs": [
-        "To know the day was closed and every guest charged for the night, without staying up to do it by hand.",
-        "To close the day themselves when the audit didn't run on its own."
-      ],
-      "body": "## Knows\n\nThe night audit's steps, from years of doing them on paper. Less at ease with\nsoftware that does them for them.\n\n## Context\n\nAt the front desk overnight, alone, with few guests around and no one to ask.\n\n## Expects\n\nTo see, at a glance, that tonight's audit has run, and what it charged.\n\n## Cares about\n\nNot handing over to the morning shift with yesterday still open."
+      "body": "## Needs\n\n- To know the day was closed and every guest charged for the night, without\n  staying up to do it by hand.\n- To close the day themselves when the audit didn't run on its own.\n\n## Knows\n\nThe night audit's steps, from years of doing them on paper. Less at ease with\nsoftware that does them for them.\n\n## Context\n\nAt the front desk overnight, alone, with few guests around and no one to ask.\n\n## Expects\n\nTo see, at a glance, that tonight's audit has run, and what it charged.\n\n## Cares about\n\nNot handing over to the morning shift with yesterday still open."
     }
   ],
   "capabilities": [
@@ -1174,13 +1150,6 @@
         "company-accounts/only-named-guests",
         "payments/overpayments-are-refunded"
       ],
-      "lifecycle": {
-        "states": [
-          "Open",
-          "Closed"
-        ],
-        "text": "A bill closes when its balance is zero, or when it moves to a company's account."
-      },
       "confusedWith": [
         {
           "concept": null,
@@ -1188,7 +1157,7 @@
           "text": "what a company is sent for a month of its staff's bills."
         }
       ],
-      "body": "A bill is made of [charges](charge.md) and [payments](payment.md). Its balance\nis what's been charged less what's been paid. A guest's bill can move to their\n[company's account](../../finance/concepts/company-account.md), which then owes it instead."
+      "body": "A bill is made of [charges](charge.md) and [payments](payment.md). Its balance\nis what's been charged less what's been paid. A guest's bill can move to their\n[company's account](../../finance/concepts/company-account.md), which then owes it instead.\n\n## Lifecycle\n\n1. Open\n2. Closed\n\nA bill closes when its balance is zero, or when it moves to a company's account."
     },
     {
       "id": "business-day",
@@ -1205,15 +1174,8 @@
         "night-audit/one-room-charge-per-night",
         "night-audit/closed-days-dont-change"
       ],
-      "lifecycle": {
-        "states": [
-          "Open",
-          "Closed"
-        ],
-        "text": null
-      },
       "confusedWith": [],
-      "body": "A business day isn't a calendar day. It runs from when one night audit closes\nthe day before, usually around 03:00, until the next audit closes it. A\nbreakfast at 02:00 is on the previous business day."
+      "body": "A business day isn't a calendar day. It runs from when one night audit closes\nthe day before, usually around 03:00, until the next audit closes it. A\nbreakfast at 02:00 is on the previous business day.\n\n## Lifecycle\n\n1. Open\n2. Closed"
     },
     {
       "id": "charge",
@@ -1238,7 +1200,6 @@
         "night-audit/one-room-charge-per-night",
         "night-audit/closed-days-dont-change"
       ],
-      "lifecycle": null,
       "confusedWith": [],
       "body": "Each charge is on one [bill](bill.md), and on the\n[business day](../../finance/concepts/business-day.md) it was added. A correction is a charge for the\nopposite amount, pointing at the charge it corrects."
     },
@@ -1258,7 +1219,6 @@
         "company-accounts/only-named-guests",
         "invoices/invoice-numbers-run-in-sequence"
       ],
-      "lifecycle": null,
       "confusedWith": [],
       "body": "A company account has a credit limit, and names the guests whose\n[bills](../../billing/concepts/bill.md) it pays. It's invoiced once a month for the bills moved to it."
     },
@@ -1279,15 +1239,8 @@
         "payments/card-numbers-are-never-kept",
         "payments/overpayments-are-refunded"
       ],
-      "lifecycle": {
-        "states": [
-          "Pending",
-          "Paid"
-        ],
-        "text": "A pending card payment can instead be Declined."
-      },
       "confusedWith": [],
-      "body": "A deposit is a payment taken before the guest arrives. A card payment is\nknown by the provider's reference, never by the card's number."
+      "body": "A deposit is a payment taken before the guest arrives. A card payment is\nknown by the provider's reference, never by the card's number.\n\n## Lifecycle\n\n1. Pending\n2. Paid\n\nA pending card payment can instead be Declined."
     },
     {
       "id": "booking",
@@ -1299,7 +1252,6 @@
         "check-out"
       ],
       "rules": [],
-      "lifecycle": null,
       "confusedWith": [
         {
           "concept": null,
@@ -1310,12 +1262,13 @@
       "body": "A booking puts one room charge per night on the guest's [bill](bill.md), at its\nagreed rate, whatever the rate is on the night."
     }
   ],
-  "systems": [
+  "mechanisms": [],
+  "components": [
     {
       "id": "ledger",
-      "file": "docs/technical/systems/ledger.md",
+      "file": "docs/technical/components/ledger.md",
       "name": "Ledger",
-      "summary": "Every amount a guest owes or pays, as lines on their bill that are only ever added, never changed.",
+      "description": "Every amount a guest owes or pays, as lines on their bill that are only ever added, never changed.",
       "capabilities": [
         "extra-charges",
         "split-bills",
@@ -1323,20 +1276,14 @@
         "check-out",
         "direct-billing"
       ],
-      "code": [
-        {
-          "glob": "src/ledger/**",
-          "files": 2
-        }
-      ],
       "meets": [
         "reliability/beta/data-kept"
       ],
       "gaps": [
-        "system:ledger#corrections-of-corrections-untested"
+        "component:ledger#corrections-of-corrections-untested"
       ],
       "tradeoffs": [
-        "system:ledger#balance-worked-out-on-read"
+        "component:ledger#balance-worked-out-on-read"
       ],
       "evidence": {
         "implements": [
@@ -1354,26 +1301,17 @@
           }
         ]
       },
-      "start": "`src/ledger/ledger.ts`, starting at `post`",
       "decisions": [],
       "body": "Everything that changes what a guest owes goes through `post`: room nights,\nextras, deposits, payments and corrections. A correction is a new line for\nthe opposite amount, pointing at the line it corrects with `corrects`.\n\nAmounts are whole cents, never fractions of a unit, so totals add up exactly.\nThey're converted at the edges, when reading input and showing amounts.\n\n`post` refuses a closed bill, so anything that closes a bill posts everything\nfirst, deposits included."
-    }
-  ],
-  "components": [
+    },
     {
       "id": "payments",
       "file": "docs/technical/components/payments.md",
       "name": "Payments",
-      "summary": "Taking card payments through the payment provider, for deposits and payment links.",
+      "description": "Taking card payments through the payment provider, for deposits and payment links.",
       "capabilities": [
         "deposits",
         "pay-by-link"
-      ],
-      "code": [
-        {
-          "glob": "src/payments/**",
-          "files": 3
-        }
       ],
       "meets": [],
       "gaps": [
@@ -1392,7 +1330,6 @@
         ],
         "verifies": []
       },
-      "start": "`src/payments/provider.ts`",
       "decisions": [],
       "body": "The guest types their card into the provider's form, which hands the app a\ntoken. `takePayment` sends the provider that token and the amount, and keeps\nthe reference it sends back. Card numbers never reach the app.\n\nThe integration tests run against the provider's sandbox\n(`test/integration/sandbox.ts`), which accepts any test token instantly. Real\npayments can take seconds."
     }
@@ -1415,7 +1352,7 @@
       "places": []
     },
     {
-      "id": "system:ledger#corrections-of-corrections-untested",
+      "id": "component:ledger#corrections-of-corrections-untested",
       "outcome": "maintainability/ga/others-can-change",
       "rule": null,
       "text": "Nothing tests correcting a line that is itself a correction, so a change to `correct` could stop a twice-corrected charge netting to zero without anything failing.",
@@ -1448,7 +1385,6 @@
       "text": "Guests pay in the hotel's currency, not their own.",
       "gain": "The bill, the payment and the hotel's books are all in one currency, with no exchange rates to keep.",
       "cost": "Their card provider converts it, at its own rate, so the amount on their statement can differ from the bill.",
-      "revisit": null,
       "places": []
     },
     {
@@ -1457,15 +1393,13 @@
       "text": "A bill moves to a company's account whole, not charge by charge.",
       "gain": "Clerks move a bill in one step at check-out, and a company's account only ever holds whole bills.",
       "cost": "A guest who pays for their own extras pays for them before their bill moves.",
-      "revisit": "a company asks to pay for rooms only",
       "places": []
     },
     {
-      "id": "system:ledger#balance-worked-out-on-read",
+      "id": "component:ledger#balance-worked-out-on-read",
       "text": "A bill's balance is added up from its lines every time it's asked for, not stored on the bill.",
       "gain": "The balance can never disagree with the lines, and there's nothing to keep in step when a line is added.",
       "cost": "Opening a bill gets slower as lines are added to it.",
-      "revisit": "a bill passes 1,000 lines",
       "places": [
         {
           "file": "src/ledger/ledger.ts",
@@ -1479,7 +1413,6 @@
       "text": "Guests type their card into the provider's hosted form, not one of ours.",
       "gain": "Card numbers never reach our servers, so the hotel stays out of most card-security rules.",
       "cost": "The payment page looks like the provider's, not the hotel's.",
-      "revisit": null,
       "places": []
     }
   ],

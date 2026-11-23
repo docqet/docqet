@@ -36,6 +36,12 @@ A rule belongs to the [domain](domain.md), not to a capability or a feature:
   its doc exists. Where a capability doesn't hold to it yet, that's a
   [gap](gap.md) on the capability, which names the rule, and the rule shows
   it.
+- **Following it claims it holds.** For each capability that follows it, a
+  rule is not held yet, when one of the capability's gaps names it; held
+  with evidence, when something verifies or implements it; or held on trust,
+  when nothing says either way. A gap wins over evidence. A rule written
+  before it's built is followed with a gap on each capability that doesn't
+  hold to it yet, and closing those gaps leaves the rule in place.
 
 ## In the spec
 

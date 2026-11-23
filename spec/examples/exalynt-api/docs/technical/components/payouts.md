@@ -1,13 +1,7 @@
 ---
 name: Payouts
-summary: How earnings become money sent, to people and to partnerships.
-start: >-
-  `internal/services/payouts.go`, and the webhook at
-  `internal/handlers/http/webhooks/stripe/thin.go`
+description: How earnings become money sent, to people and to partnerships.
 capabilities: [payouts, partner-payouts]
-code:
-  - internal/services/payouts.go
-  - internal/handlers/http/webhooks/stripe/thin.go
 gaps:
   - id: person-and-admin-lists-not-paged
     outcome: efficiency/beta/bounded
@@ -22,7 +16,6 @@ tradeoffs:
       into the next.
     cost: >-
       Every read asks the provider about each payee's account.
-    revisit: that's slow at real load
 ---
 
 **Never sent twice.**

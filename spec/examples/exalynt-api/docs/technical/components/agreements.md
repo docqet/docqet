@@ -1,33 +1,14 @@
 ---
 name: Agreements
-summary: >-
+description: >-
   Client, Engineer and Partner Agreements: rendered from versioned templates,
   offered to a party, accepted, and kept as the PDF made when accepted.
-start: >-
-  `internal/services/agreements.go` (`AgreementService`, `recordAcceptance`),
-  `internal/agreements` (templates, `definitions.go`, `pdf.go`),
-  `internal/models/term.go` (the terms catalog, `ChooseTerms`),
-  `internal/repositories/postgres/agreement.go`; offers at invitation in
-  `internal/services/invitations.go`, to an organization as it's created in
-  `internal/services/organizations.go`, and to a partnership as it's invited
-  in `internal/services/partnerships.go` (`OfferPartnerAgreement`). In the ui,
-  `src/shared/apiAgreements.ts` (`acceptFailure`) and the gates in
-  `src/apps/console/Layout.tsx`, `src/apps/portal/Layout.tsx` and
-  `src/apps/hub/Layout.tsx`
 capabilities:
   - agreements
   - client-agreements
   - engineer-agreements
   - partner-agreements
   - earnings
-code:
-  - internal/services/agreements.go
-  - internal/agreements/**
-  - internal/models/term.go
-  - internal/repositories/postgres/agreement.go
-  - internal/services/invitations.go
-  - internal/services/organizations.go
-  - internal/services/partnerships.go
 tradeoffs:
   - id: apps-hold-people-to-agreements
     text: >-
@@ -37,7 +18,6 @@ tradeoffs:
     cost: >-
       Someone using the API directly can still do what their role allows
       without an agreement in effect.
-    revisit: someone works through the API without an agreement
   - id: pdf-laid-out-in-go
     text: >-
       The PDF is laid out in Go with fpdf's Helvetica, not a browser or a
@@ -46,7 +26,6 @@ tradeoffs:
       A character outside Windows-1252 is "?" for good once accepted, so a
       name with characters outside Western European alphabets keeps them as
       "?" in its PDF.
-    revisit: a party's name needs one
   - id: no-flag-before-gates
     text: >-
       There's no flag in front of the console's or the portal's gate, like the
@@ -55,7 +34,6 @@ tradeoffs:
       If reading agreements fails, every engineer is kept out of the console,
       or every client out of the portal, until a fix or a rollback is
       deployed.
-    revisit: that happens
   - id: accepted-agreements-outlive-their-user
     text: >-
       Accepted agreements outlive their user: deleting a user clears `user_id`
@@ -63,7 +41,6 @@ tradeoffs:
       is the record of what was agreed.
     cost: >-
       A deleted person's name and email stay in those PDFs and rows.
-    revisit: someone asks for theirs to be deleted
 ---
 
 An offer is a row with its type, version and Commercial Terms. While it's

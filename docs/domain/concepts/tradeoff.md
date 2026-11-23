@@ -7,9 +7,8 @@ costs, and decided to live with.
 
 A booking holds one room, not several, so a family that needs two rooms makes
 two bookings. It's a decision, not something left to do. It says what we
-chose, what we hope to gain by it, what it costs, and, when we expect to look
-at it again, what would make us. Without the gain, there's nothing to weigh the
-cost against. A [gap](gap.md) we'll never close is a tradeoff instead.
+chose, what we hope to gain by it, and what it costs. Without the gain,
+there's nothing to weigh the cost against. A [gap](gap.md) we'll never close is a tradeoff instead.
 
 It's on the thing the choice was made about:
 
@@ -17,7 +16,7 @@ It's on the thing the choice was made about:
   room per booking.
 - **A [feature](feature.md)**: a non-goal, a capability we've decided never to
   build, such as taking bookings from online travel agencies.
-- **A [system](system.md) or [component](component.md)**: a technical choice,
+- **A [mechanism](mechanism.md) or [component](component.md)**: a technical choice,
   such as working out a bill's balance every time it's asked for.
 
 A tradeoff answers the question code can't: is this deliberate? Code that
@@ -25,19 +24,13 @@ looks wrong on purpose points at its tradeoff, so neither a person nor an
 agent "fixes" it. Neither a tradeoff nor a gap can excuse the security and
 privacy baseline.
 
-## Lifecycle
-
-Chosen → Revisited
-
-When what `revisit` names happens, someone looks at it again. A tradeoff we
-reverse is deleted, or replaced by the new one.
+A tradeoff we reverse is deleted, or replaced by the new one.
 
 ## In the spec
 
 Tradeoffs are listed in the frontmatter of the doc they're on, each with an
-`id`, `text` saying what we chose and not what, its `gain`, its `cost`, and
-optionally `revisit`, a concrete trigger. One we expect to keep forever leaves `revisit`
-off. On the [ledger](../../../spec/examples/hotel-billing/docs/technical/systems/ledger.md):
+`id`, `text` saying what we chose and not what, its `gain`, and its `cost`.
+On the [ledger](../../../spec/examples/hotel-billing/docs/technical/components/ledger.md):
 
 ```yaml
 tradeoffs:
@@ -49,13 +42,12 @@ tradeoffs:
       The balance can never disagree with the lines, and there's nothing to
       keep in step when a line is added.
     cost: Opening a bill gets slower as lines are added to it.
-    revisit: a bill passes 1,000 lines
 ```
 
 The code it explains points at it:
 
 ```ts
-// docket:tradeoff system:ledger#balance-worked-out-on-read
+// docket:tradeoff component:ledger#balance-worked-out-on-read
 export function balance(bill: Bill): number {
 ```
 
@@ -72,7 +64,6 @@ tradeoffs:
       come straight to the desk.
     cost: >-
       Clerks enter each agency booking by hand, as it arrives by email.
-    revisit: agency bookings pass a fifth of all bookings
 ```
 
 ## Not to be confused with

@@ -75,7 +75,6 @@ tradeoffs:
       When two people edit one estimate at once, the later save replaces the
       earlier one, without a warning.
     cost: The earlier person's changes are lost without them knowing.
-    revisit: two people are seen editing one estimate at a time
   - id: deleting-is-permanent
     text: Deleting an estimate is permanent.
     cost: Getting one back means restoring a backup.

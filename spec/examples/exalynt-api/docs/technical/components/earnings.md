@@ -1,14 +1,9 @@
 ---
 name: Earnings
-summary: >-
+description: >-
   What engineers, leads, and partnerships earn on fulfilled blocks, recorded
   as each is fulfilled.
-start: >-
-  `internal/services/earnings.go`, `internal/repositories/postgres/earning.go`
 capabilities: [earnings, partner-earnings, partner-clients, partner-home]
-code:
-  - internal/services/earnings.go
-  - internal/repositories/postgres/earning.go
 gaps:
   - id: person-earnings-not-paged
     outcome: efficiency/beta/bounded

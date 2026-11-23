@@ -7,15 +7,17 @@ summary: >-
 role: Exalynt Engineer
 title: Full-stack engineer
 image: https://randomuser.me/api/portraits/men/14.jpg
-needs:
-  - To read the terms that set what they earn, and accept their Engineer
-    Agreement, so they know how and when they'll be paid.
-  - To see what they have left to set up, and whether they're ready for client
-    work, so nothing is missed before a client depends on them.
-  - To add their bank account on the payments partner's form, knowing Exalynt's
-    admins never see its details.
-  - Once ready, to be told where to find their first block.
 ---
+
+## Needs
+
+- To read the terms that set what they earn, and accept their Engineer
+  Agreement, so they know how and when they'll be paid.
+- To see what they have left to set up, and whether they're ready for client
+  work, so nothing is missed before a client depends on them.
+- To add their bank account on the payments partner's form, knowing Exalynt's
+  admins never see its details.
+- Once ready, to be told where to find their first block.
 
 ## Knows
 

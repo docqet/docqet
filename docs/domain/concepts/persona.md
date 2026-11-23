@@ -33,9 +33,9 @@ about.
 ## In the spec
 
 A persona is a doc in `docs/product/personas/`, outside any domain. Its name
-and summary, its role and title, an optional picture, and a `needs` list are
-frontmatter. Without a picture, readers show their initials. Its body is for
-anything more about who they are, such as what they know, their context, the
+and summary, its role and title, and an optional picture are frontmatter.
+Without a picture, readers show their initials. Its body is for anything more
+about who they are, such as what they need, what they know, their context, the
 words and tools they expect, and what they care about, and can be left out.
 [`front-desk-clerk.md`](../../../spec/examples/hotel-bookings/docs/product/personas/front-desk-clerk.md),
 shortened:
@@ -48,10 +48,12 @@ summary: >-
 role: Front desk
 title: Front desk clerk
 image: https://randomuser.me/api/portraits/women/68.jpg
-needs:
-  - To tell a guest at once whether a room is free for their dates, and hold it
-    for them, without ever giving the same room to two guests.
 ---
+
+## Needs
+
+- To tell a guest at once whether a room is free for their dates, and hold it
+  for them, without ever giving the same room to two guests.
 
 ## Knows
 

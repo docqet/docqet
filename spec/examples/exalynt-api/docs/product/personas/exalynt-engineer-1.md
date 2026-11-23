@@ -6,15 +6,17 @@ summary: >-
 role: Exalynt Engineer
 title: Senior full-stack engineer
 image: https://randomuser.me/api/portraits/women/33.jpg
-needs:
-  - To set their availability once, and change a week when they need to, so
-    clients schedule only what they can do.
-  - To claim the blocks that fit their weeks, seeing what each will earn them
-    before they claim it.
-  - To start a block, post what they did, and mark it fulfilled in a few clicks,
-    so the app stays out of the way of the work.
-  - To see what each block earned and when it was paid, with numbers that match.
 ---
+
+## Needs
+
+- To set their availability once, and change a week when they need to, so
+  clients schedule only what they can do.
+- To claim the blocks that fit their weeks, seeing what each will earn them
+  before they claim it.
+- To start a block, post what they did, and mark it fulfilled in a few clicks,
+  so the app stays out of the way of the work.
+- To see what each block earned and when it was paid, with numbers that match.
 
 ## Knows
 

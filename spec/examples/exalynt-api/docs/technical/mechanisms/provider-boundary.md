@@ -4,38 +4,6 @@ summary: >-
   How the API reaches third-party services so that one can be swapped or
   stubbed without its callers noticing. Each service's own setup and behavior
   has a provider doc.
-start: >-
-  `internal/bootstrap`; the interfaces in `internal/payments`,
-  `internal/payouts`, `internal/identity`, `internal/email`, `internal/flags`,
-  `internal/storage`, `internal/cache`, and `internal/messaging`
-capabilities:
-  - organizations-and-members
-  - your-profile
-  - engineer-onboarding
-  - capacity-purchasing
-  - fulfillment
-  - conversation-spaces
-  - agreements
-  - client-agreements
-  - engineer-agreements
-  - partner-agreements
-  - billing
-  - payouts
-  - payout-accounts
-  - partner-payouts
-  - partner-payout-accounts
-  - partnerships
-  - client-invitations
-code:
-  - internal/bootstrap/**
-  - internal/payments/**
-  - internal/payouts/**
-  - internal/identity/**
-  - internal/email/**
-  - internal/flags/**
-  - internal/storage/**
-  - internal/cache/**
-  - internal/messaging/**
 ---
 
 Each type of provider is an interface in `internal/<type>`, with one

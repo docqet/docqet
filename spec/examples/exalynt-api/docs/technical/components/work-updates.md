@@ -1,19 +1,9 @@
 ---
 name: Work updates
-summary: >-
+description: >-
   What engineers write about a block's work as they do it, shown on its page
   with when it was started and fulfilled.
-start: >-
-  `services.WorkUpdateService` (`internal/services/work_updates.go`),
-  `internal/repositories/postgres/work_update.go`, migration
-  `00088_work_updates.sql`. Attachments are checked by `checkAttachments`
-  (`internal/services/attachments.go`), shared with [focuses](focuses.md)
 capabilities: [fulfillment]
-code:
-  - internal/services/work_updates.go
-  - internal/repositories/postgres/work_update.go
-  - internal/database/migrations/00088_work_updates.sql
-  - internal/services/attachments.go
 gaps:
   - id: orphaned-objects
     text: >-

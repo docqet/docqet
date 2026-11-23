@@ -5,44 +5,6 @@ summary: >-
   collector `OTEL_EXPORTER_OTLP_ENDPOINT` names, which in the cluster is the
   Grafana Alloy collector the exalynt/collector repo deploys, forwarding to
   Grafana Cloud. The README's Configuration section covers the settings.
-start: >-
-  `internal/telemetry`; each feature's counter is declared at the top of its
-  service, such as `estimateChanges` in `internal/services/estimates.go`
-capabilities:
-  - organizations-and-members
-  - roles
-  - access-tokens
-  - your-profile
-  - getting-set-up
-  - engineer-onboarding
-  - estimates
-  - capacity-purchasing
-  - client-home
-  - scheduling
-  - claiming-blocks
-  - staffing
-  - fulfillment
-  - teams
-  - availability
-  - engineers
-  - client-directory
-  - conversation-spaces
-  - agreements
-  - client-agreements
-  - engineer-agreements
-  - partner-agreements
-  - billing
-  - earnings
-  - payouts
-  - payout-accounts
-  - partner-earnings
-  - partner-payouts
-  - partner-payout-accounts
-  - partnerships
-  - client-invitations
-  - partner-clients
-  - partner-home
-code: [internal/telemetry/**]
 meets: [observability/alpha/see-errors]
 gaps:
   - id: log-retention-not-set

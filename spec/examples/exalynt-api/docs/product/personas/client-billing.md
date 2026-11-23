@@ -6,14 +6,16 @@ summary: >-
 role: Client Billing
 title: Controller
 image: https://randomuser.me/api/portraits/men/22.jpg
-needs:
-  - To keep the company's payment methods current, and choose the one charged by
-    default.
-  - To find every invoice, with its tax and payment status, and download it to
-    file.
-  - To be told at once when a payment fails, and pay the unpaid invoice, so the
-    blocks it bought aren't left waiting.
 ---
+
+## Needs
+
+- To keep the company's payment methods current, and choose the one charged by
+  default.
+- To find every invoice, with its tax and payment status, and download it to
+  file.
+- To be told at once when a payment fails, and pay the unpaid invoice, so the
+  blocks it bought aren't left waiting.
 
 ## Knows
 

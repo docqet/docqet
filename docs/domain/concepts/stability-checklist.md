@@ -20,10 +20,10 @@ project, whatever kind of software it is.
 
 Each outcome a capability's level expects is one of:
 
-- **Not met**: a gap names it, on the capability or on a system or component
+- **Not met**: a gap names it, on the capability or on a mechanism or component
   it relies on.
-- **Met, with evidence**: a [system](system.md) or [component](component.md)
-  it relies on says it meets it, and that system's [evidence](evidence.md) is
+- **Met, with evidence**: a [mechanism](mechanism.md) or [component](component.md)
+  it relies on says it meets it, and that mechanism's [evidence](evidence.md) is
   the proof. Hotel Bookings' deployment meets "a bad release can be undone" for
   every capability it lists.
 - **Met, on trust**: nothing names it. Declaring a level claims what it
@@ -51,9 +51,9 @@ or changes it. An outcome, under its quality and level, shortened:
                 kinds: [web-app, http-api, background-job]
 ```
 
-Its full ID is `reliability/beta/undo-release`. A system that meets it lists
+Its full ID is `reliability/beta/undo-release`. A mechanism that meets it lists
 it, as Hotel Bookings'
-[deployment](../../../spec/examples/hotel-bookings/docs/technical/systems/deployment.md)
+[deployment](../../../spec/examples/hotel-bookings/docs/technical/mechanisms/deployment.md)
 does:
 
 ```yaml

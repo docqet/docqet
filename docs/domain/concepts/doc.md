@@ -1,15 +1,16 @@
 # Doc
 
 One Markdown file describing one thing: a domain, feature, capability, rule,
-concept, persona, system or component.
+concept, persona, mechanism or component.
 
 ## Details
 
 Its frontmatter is its structure: its name and summary, or a concept's
 description, its [links](link.md), and every other part the spec names, such
-as a capability's level and gaps, a persona's needs or a rule's why. Its body is free Markdown
+as a capability's level and gaps, a persona's role or a rule's why. Its body is free Markdown
 for anything more worth saying, in whatever shape suits it, and it's optional.
-No fact is in both.
+No fact is in both. Readers show its frontmatter as what the doc is, and its
+body apart from it, as more about it, the same way for every type.
 
 Something goes in frontmatter when the spec defines it, or when a tool or
 reader needs to find, count, link, check or show it in a set place. Everything
@@ -21,7 +22,7 @@ A doc's **ID** is its path within its type's folder, so it can't drift from the
 file. Renaming the file renames the doc. What it identifies depends on the
 doc's type:
 
-- **Domains, features, capabilities, personas, systems and components**: one
+- **Domains, features, capabilities, personas, mechanisms and components**: one
   thing across every project. The same ID anywhere is a contribution to the
   same one.
 - **Rules and concepts**: one definition within a domain. The same ID in two
@@ -39,7 +40,7 @@ Each type has a folder, and the path under it is the ID:
 | rule | `docs/product/domains/<domain>/rules/` | `booking/no-double-booking` |
 | concept | `docs/product/domains/<domain>/concepts/` | `booking` |
 | persona | `docs/product/personas/` | `front-desk-clerk` |
-| system | `docs/technical/systems/` | `ledger` |
+| mechanism | `docs/technical/mechanisms/` | `deployment` |
 | component | `docs/technical/components/` | `bookings` |
 
 Every doc is shaped the same way: YAML frontmatter with its `name`,

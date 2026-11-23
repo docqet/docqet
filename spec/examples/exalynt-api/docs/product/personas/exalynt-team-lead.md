@@ -7,16 +7,18 @@ summary: >-
 role: Exalynt Team Lead
 title: Principal engineer
 image: https://randomuser.me/api/portraits/men/61.jpg
-needs:
-  - To see the whole team's availability, blocks and progress in one place, so
-    they can spot who's stuck or overloaded.
-  - To start a teammate's block, set its focus, or post an update on it, so a
-    block doesn't stall.
-  - To be told when someone joins or leaves the team, or can't be assigned
-    blocks any more.
-  - To see what they earn as lead apart from their own engineering earnings,
-    with the fulfilled blocks each share came from.
 ---
+
+## Needs
+
+- To see the whole team's availability, blocks and progress in one place, so
+  they can spot who's stuck or overloaded.
+- To start a teammate's block, set its focus, or post an update on it, so a
+  block doesn't stall.
+- To be told when someone joins or leaves the team, or can't be assigned blocks
+  any more.
+- To see what they earn as lead apart from their own engineering earnings, with
+  the fulfilled blocks each share came from.
 
 ## Knows
 

@@ -25,6 +25,9 @@ Guest stays from Hotel Bookings and a part in Billing from Hotel Billing.
   the platform is every project that names its ID. Adding a project to a
   platform, or moving one to another, changes only that project's
   `docket.yaml`.
+- **A [mechanism](mechanism.md) can apply across it**, to every capability
+  its projects serve, when one project runs something for all of them, such as
+  an API gateway's authentication.
 - **It has no stability level.** Its maturity is worked out from all its
   projects' parts of features, as if they were one project.
 
@@ -52,5 +55,5 @@ in its header.
 - [Domain](domain.md): a part of the business and its language. A platform's
   projects work in domains, and a domain can be on several platforms, meaning
   something different on each.
-- [System](system.md): how something overarching in the software works, as an
+- [Mechanism](mechanism.md): how something works across a whole project, as a
   technical doc says. A platform is a set of repositories, not a design.

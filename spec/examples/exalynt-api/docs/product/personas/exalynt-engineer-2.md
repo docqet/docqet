@@ -6,16 +6,18 @@ summary: >-
 role: Exalynt Engineer
 title: Associate engineer
 image: https://randomuser.me/api/portraits/men/76.jpg
-needs:
-  - To know what's expected of them in a block's week, and what it will earn
-    them, before they claim it.
-  - To be told why a block doesn't fit them, or why their earnings are on hold
-    and what to fix, rather than just being refused.
-  - To see where each of their blocks stands and what its next step is, so they
-    don't get it wrong in front of a client.
-  - To set up the bank account their payouts go to, and see whether it can be
-    paid.
 ---
+
+## Needs
+
+- To know what's expected of them in a block's week, and what it will earn them,
+  before they claim it.
+- To be told why a block doesn't fit them, or why their earnings are on hold and
+  what to fix, rather than just being refused.
+- To see where each of their blocks stands and what its next step is, so they
+  don't get it wrong in front of a client.
+- To set up the bank account their payouts go to, and see whether it can be
+  paid.
 
 ## Knows
 

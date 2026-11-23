@@ -13,7 +13,7 @@ Who would notice it decides where it's recorded:
   [capability](capability.md), in the domain's words.
 - **A technical gap** is something only someone working on the code would
   notice, such as nothing testing a correction of a correction in the ledger.
-  It's on the [system](system.md) or [component](component.md), in the code's
+  It's on the [mechanism](mechanism.md) or [component](component.md), in the code's
   words, and shows on every capability that relies on it. Technical debt is a
   technical gap.
 
@@ -25,7 +25,10 @@ written as two gaps.
   [stability checklist](stability-checklist.md) outcome, which then shows as
   not met, or a [rule](rule.md) the capability doesn't hold to yet, which the
   rule then shows. City tax is added for children, so it doesn't yet hold to
-  "children pay no city tax".
+  "children pay no city tax". When a gap is really about something that must
+  always hold, and no rule says so, write the rule and name it: the rule is
+  what we intend, and the gap is the part not done yet. Several gaps can name
+  one rule, each a part of it.
 - **It can't excuse the security and privacy baseline.** That holds at every
   level, and is never a known gap.
 
@@ -53,7 +56,7 @@ gaps:
       stay, and clerks correct it by hand for children.
 ```
 
-A technical gap on the [ledger](../../../spec/examples/hotel-billing/docs/technical/systems/ledger.md)
+A technical gap on the [ledger](../../../spec/examples/hotel-billing/docs/technical/components/ledger.md)
 names an outcome:
 
 ```yaml
@@ -64,11 +67,11 @@ gaps:
       Nothing tests correcting a line that is itself a correction, ...
 ```
 
-Its ID is `system:ledger#corrections-of-corrections-untested`, and the code it
+Its ID is `component:ledger#corrections-of-corrections-untested`, and the code it
 shows in points at it, in place of a bare TODO:
 
 ```ts
-// docket:gap system:ledger#corrections-of-corrections-untested
+// docket:gap component:ledger#corrections-of-corrections-untested
 export function correct(bill: Bill, line: Line, id: string, businessDay: string): void {
 ```
 

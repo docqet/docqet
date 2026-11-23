@@ -1,16 +1,9 @@
 ---
 name: Organizations
-summary: >-
+description: >-
   Client organizations, their members, invitations, payment customer, and
   logo.
-start: >-
-  `internal/services/organizations.go`, `internal/services/invitations.go`,
-  `internal/services/organization_logos.go`
 capabilities: [organizations-and-members, client-directory, billing]
-code:
-  - internal/services/organizations.go
-  - internal/services/invitations.go
-  - internal/services/organization_logos.go
 meets: [security/ga/sound]
 gaps:
   - id: shapes-shared-with-less-stable-capabilities
@@ -48,7 +41,6 @@ tradeoffs:
     cost: >-
       The last-manager check reads every member and organization role on each
       removal and role change.
-    revisit: an organization or the client list grows past those sizes
   - id: shared-invitation-routes
     text: >-
       `GET /invitations` and `POST /invitations/{id}/accept` stay shared, with
@@ -59,7 +51,6 @@ tradeoffs:
     cost: >-
       There are two ways to list and accept an organization's invitation, and
       onboarding reads both listings.
-    revisit: the other kinds' capabilities are stable too
 ---
 
 Who made each change is the `user_id` on its request's log line, and `user.id`
@@ -72,7 +63,7 @@ permissions, invitation acceptance, row-level security, logos, email, logs,
 and sign-up. It led to the daily invitation cap per person as well as per
 organization, treating a primary address Clerk marks unverified as none, and a
 sign-in redirect that can't name another host. What it accepted is the
-`member:manage` tradeoff in [authorization](../systems/authorization.md).
+`member:manage` tradeoff in [authorization](../mechanisms/authorization.md).
 
 **Invitations.** The daily invitation cap counts
 `organization_invitation_sends`, not invitations, which are deleted when

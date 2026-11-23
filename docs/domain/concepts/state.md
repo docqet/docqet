@@ -35,7 +35,7 @@ with each list cut down to its keys:
     "problems": 0
   },
   "domains": [], "features": [], "personas": [], "capabilities": [],
-  "rules": [], "concepts": [], "systems": [], "components": [],
+  "rules": [], "concepts": [], "mechanisms": [], "components": [],
   "gaps": [], "tradeoffs": [], "problems": [],
   "checklist": {}
 }

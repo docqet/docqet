@@ -1,14 +1,8 @@
 ---
 name: Availability
-summary: >-
+description: >-
   How much of a week each engineer offers, which Capacity adds up per team.
-start: >-
-  `internal/services/availability.go`,
-  `internal/repositories/postgres/availability.go`
 capabilities: [availability, scheduling, claiming-blocks, staffing]
-code:
-  - internal/services/availability.go
-  - internal/repositories/postgres/availability.go
 gaps:
   - id: not-load-tested
     outcome: efficiency/beta/realistic-volumes

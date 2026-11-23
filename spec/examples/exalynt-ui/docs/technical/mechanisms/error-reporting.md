@@ -3,20 +3,6 @@ name: Error reporting
 summary: >-
   How the apps report unexpected failures from the browser, so someone looking
   can see what went wrong.
-start: >-
-  `src/shared/telemetry.ts`, through `initTelemetry` and `reportError`
-capabilities:
-  - client-home
-  - getting-set-up
-  - billing
-  - organizations-and-members
-  - estimates
-  - your-profile
-  - partner-home
-  - partner-earnings
-  - partner-payouts
-  - partner-payout-accounts
-code: [src/shared/telemetry.ts]
 meets: [observability/alpha/see-errors]
 tradeoffs:
   - id: errors-only

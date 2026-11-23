@@ -1,11 +1,8 @@
 ---
 name: Hub
-summary: >-
+description: >-
   The Partner Hub, where a partnership's manager follows the clients it has
   brought in, invites more, and sees what it earns and how it's paid.
-start: >-
-  `src/apps/hub/`, starting at `Layout.tsx`,
-  `components/PartnershipProvider.tsx` and `navigation.ts`
 capabilities:
   - partner-home
   - partnerships
@@ -16,7 +13,6 @@ capabilities:
   - partner-payout-accounts
   - partner-agreements
   - getting-set-up
-code: [src/apps/hub/**]
 gaps:
   - id: welcome-three-calls
     text: >-

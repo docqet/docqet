@@ -4,11 +4,12 @@ summary: Cleans and readies the rooms between guests.
 role: Housekeeping
 title: Housekeeper
 image: https://randomuser.me/api/portraits/women/26.jpg
-needs:
-  - To know which rooms to clean first, so arriving guests don't wait for a
-    room.
-  - To tell the front desk a room is ready without walking back down to say so.
 ---
+
+## Needs
+
+- To know which rooms to clean first, so arriving guests don't wait for a room.
+- To tell the front desk a room is ready without walking back down to say so.
 
 ## Knows
 

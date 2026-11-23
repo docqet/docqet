@@ -6,15 +6,17 @@ summary: >-
 role: Client Admin
 title: Founder
 image: https://randomuser.me/api/portraits/men/45.jpg
-needs:
-  - To buy engineering capacity and book it into a week straight away, so work
-    starts without the wait of hiring.
-  - To see what's still needed before work can start, and what happens next.
-  - To know what each piece of the product will cost and how many weeks it
-    takes, from Exalynt's estimates, so they can plan within tight money.
-  - To see every week who's on each block, what it's about, and when it's
-    fulfilled, so they can tell what the money bought.
 ---
+
+## Needs
+
+- To buy engineering capacity and book it into a week straight away, so work
+  starts without the wait of hiring.
+- To see what's still needed before work can start, and what happens next.
+- To know what each piece of the product will cost and how many weeks it takes,
+  from Exalynt's estimates, so they can plan within tight money.
+- To see every week who's on each block, what it's about, and when it's
+  fulfilled, so they can tell what the money bought.
 
 ## Knows
 

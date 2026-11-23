@@ -1,14 +1,7 @@
 ---
 name: Estimates
-summary: An estimate and everything in it is one document, replaced whole.
-start: >-
-  `internal/services/estimates.go`, `internal/models/estimate.go`,
-  `internal/repositories/postgres/estimate.go`
+description: An estimate and everything in it is one document, replaced whole.
 capabilities: [estimates]
-code:
-  - internal/services/estimates.go
-  - internal/models/estimate.go
-  - internal/repositories/postgres/estimate.go
 gaps:
   - id: later-save-wins
     outcome: reliability/ga/holds-up
@@ -31,7 +24,6 @@ tradeoffs:
       estimates that's a few milliseconds, measured against the local stack on
       2026-10-23.
     cost: It scans.
-    revisit: search gets slow, with a trigram index
 ---
 
 `PUT /v1/estimates/{id}` replaces the estimate in one transaction: it updates

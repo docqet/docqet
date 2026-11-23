@@ -5,13 +5,14 @@ summary: >-
 role: Front desk
 title: Front desk clerk
 image: https://randomuser.me/api/portraits/women/68.jpg
-needs:
-  - To see everything a guest owes on one bill, so check-out is a single
-    payment.
-  - To put extras on a bill the moment they happen, so nothing is forgotten.
-  - To let company guests leave without paying, knowing their company will be
-    invoiced.
 ---
+
+## Needs
+
+- To see everything a guest owes on one bill, so check-out is a single payment.
+- To put extras on a bill the moment they happen, so nothing is forgotten.
+- To let company guests leave without paying, knowing their company will be
+  invoiced.
 
 ## Knows
 

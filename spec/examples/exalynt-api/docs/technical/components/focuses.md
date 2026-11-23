@@ -1,20 +1,9 @@
 ---
 name: Focuses
-summary: >-
+description: >-
   A block's focus: what its work is about, with images, videos, and files from
   its organization's objects.
-start: >-
-  `services.FocusService` (`internal/services/focuses.go`),
-  `internal/repositories/postgres/focus.go`, migrations
-  `00087_focuses_and_fulfillment.sql`, `00089_shared_focuses.sql` and
-  `00093_clients_change_focuses.sql`
 capabilities: [fulfillment]
-code:
-  - internal/services/focuses.go
-  - internal/repositories/postgres/focus.go
-  - internal/database/migrations/00087_focuses_and_fulfillment.sql
-  - internal/database/migrations/00089_shared_focuses.sql
-  - internal/database/migrations/00093_clients_change_focuses.sql
 ---
 
 A focus is its own row in `focuses`, with `focus_attachments`, and blocks point

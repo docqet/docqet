@@ -1,20 +1,11 @@
 ---
 name: Billing
-summary: >-
+description: >-
   How the API charges for capacity through a payment provider. Clients handle
   payment methods, billing details, and invoices on the provider's own pages.
   How a provider plugs in is in the [provider boundary
-  doc](../systems/provider-boundary.md).
-start: >-
-  `internal/services/billing.go`, `internal/services/invoices.go`,
-  `payments.Provider` (`internal/payments/provider.go`),
-  `internal/handlers/http/webhooks/stripe/stripe.go`
+  doc](../mechanisms/provider-boundary.md).
 capabilities: [billing, capacity-purchasing]
-code:
-  - internal/services/billing.go
-  - internal/services/invoices.go
-  - internal/payments/provider.go
-  - internal/handlers/http/webhooks/stripe/stripe.go
 meets: [reliability/beta/fails-clearly]
 tradeoffs:
   - id: provider-is-source-of-truth
@@ -34,7 +25,6 @@ tradeoffs:
     cost: >-
       A payments provider that can't work out tax has to call a tax service
       inside its own implementation.
-    revisit: two payments providers run at once and need one tax engine between them
 ---
 
 The API keeps only the organization's customer with the provider, and an

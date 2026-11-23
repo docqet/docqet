@@ -4,9 +4,11 @@ summary: Runs the hotel, and answers for its takings to the owners.
 role: Manager
 title: Hotel manager
 image: https://randomuser.me/api/portraits/men/52.jpg
-needs:
-  - To set what each room costs, night by night, so busy dates earn more.
 ---
+
+## Needs
+
+- To set what each room costs, night by night, so busy dates earn more.
 
 ## Knows
 

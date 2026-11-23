@@ -4,48 +4,6 @@ summary: >-
   The reference at `GET /docs/api`: the OpenAPI spec bundled into one
   document, rendered by Scalar, with each endpoint's stability and each
   group's maturity drawn on top by our own script.
-start: >-
-  `internal/handlers/http/docs.go` (the page), `docs_bundle.go` (bundling, and
-  every operation's level), `static/docs/api.yaml` and the files it
-  references, `static/docs/stability-marks.js` and `.css`
-capabilities:
-  - organizations-and-members
-  - roles
-  - access-tokens
-  - your-profile
-  - getting-set-up
-  - engineer-onboarding
-  - estimates
-  - capacity-purchasing
-  - client-home
-  - scheduling
-  - claiming-blocks
-  - staffing
-  - fulfillment
-  - teams
-  - availability
-  - engineers
-  - client-directory
-  - conversation-spaces
-  - agreements
-  - client-agreements
-  - engineer-agreements
-  - partner-agreements
-  - billing
-  - earnings
-  - payouts
-  - payout-accounts
-  - partner-earnings
-  - partner-payouts
-  - partner-payout-accounts
-  - partnerships
-  - client-invitations
-  - partner-clients
-  - partner-home
-code:
-  - internal/handlers/http/docs.go
-  - internal/handlers/http/docs_bundle.go
-  - static/docs/**
 meets: [compatibility/prototype/marked]
 gaps:
   - id: marks-depend-on-scalar-markup

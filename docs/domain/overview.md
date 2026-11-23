@@ -19,7 +19,7 @@ as the booking app and the billing service, are a
 **[platform](concepts/platform.md)**, and Docket shows one platform at a
 time. Each project works in one or more
 **[domains](concepts/domain.md)**: parts of the business, each with its own
-language, such as Guest stays or Billing. Every doc but a persona, a system or
+language, such as Guest stays or Billing. Every doc but a persona, a mechanism or
 a component is written in exactly one domain. Every project contributes what it
 knows to one picture of the whole product, and where two of them say different
 things, Docket shows the **[contradiction](concepts/contradiction.md)** rather
@@ -41,17 +41,20 @@ Docket can show, for each of them, what the software does for them and how
 ready it is for them.
 
 How the software is meant to be built is written down beside that, in the
-code's words: **[systems](concepts/system.md)**, which several features rely
-on, and **[components](concepts/component.md)**, each one area of the code.
-Each lists the capabilities that rely on it.
+code's words: **[mechanisms](concepts/mechanism.md)**, each how something
+works across the whole project, and **[components](concepts/component.md)**,
+each one area of the code. A component lists the capabilities that rely on it;
+a mechanism applies to every capability its project, or its whole platform,
+serves.
 
 Intention and reality differ in a few named ways:
 **[open decisions](concepts/open-decision.md)**, **[gaps](concepts/gap.md)**,
-**[tradeoffs](concepts/tradeoff.md)**, rules and capabilities with no
-**[evidence](concepts/evidence.md)**, and **[problems](concepts/problem.md)**.
+**[tradeoffs](concepts/tradeoff.md)** and **[problems](concepts/problem.md)**.
 Each is declared on the thing it's about, and shown everywhere it matters.
+Everything else declared is taken to hold: a gap is how we say part of it
+doesn't yet.
 
-Anything in the repository can point at a rule, capability, system or
+Anything in the repository can point at a rule, capability, mechanism or
 component with an **[annotation](concepts/annotation.md)**, as evidence that it
 verifies or implements it, or mark where a gap or tradeoff shows in the code.
 The **[indexer](concepts/indexer.md)** reads all of it, and works out each
@@ -73,7 +76,7 @@ flowchart TB
   end
 
   subgraph technical ["Technical: how it's meant to be built, in the code's words"]
-    system["System<br/>several features rely on it"]
+    mechanism["Mechanism<br/>how something works across the project"]
     component["Component<br/>one area of the code"]
   end
 
@@ -106,8 +109,9 @@ flowchart TB
   capability -- "uses" --> concept
   rule -- "refers to" --> concept
 
-  system & component -- "relied on by" --> capability
-  system & component -- "meets" --> outcome
+  component -- "relied on by" --> capability
+  mechanism -- "works across" --> project
+  mechanism & component -- "meets" --> outcome
 
   capability -- "is at, per domain" --> level
   level -- "expects" --> outcome
@@ -165,14 +169,14 @@ vendor is behind it.
   built from code in several places, and one piece of code can serve several
   capabilities.
 
-A capability's `code` says where its code lives. How it's built, and what we
+A capability names no code. How it's built, and what we
 intend about that, is in [technical docs](#how-its-built), which link to the
 capabilities they serve and never the other way.
 
 ## How it's built
 
 How the software is built, written for the engineer or agent about to change
-it, in [systems](concepts/system.md) and [components](concepts/component.md).
+it, in [mechanisms](concepts/mechanism.md) and [components](concepts/component.md).
 Product docs say what the software does, in the domain's words, and never name
 its implementation. Technical docs say how it's built, in the code's words,
 and what we intend about that: the choices we made on purpose, what isn't done
@@ -183,13 +187,15 @@ They hold only what a competent reader couldn't learn from the code in a few
 minutes. Most code needs none. A list of endpoints, tables or functions is
 left out, since the code already says it.
 
-- **They link to the capabilities that rely on them**, never the other way, so
-  product docs stay the same whatever the implementation.
+- **They link to the capabilities they serve**, never the other way, so
+  product docs stay the same whatever the implementation. A component lists
+  them; a mechanism applies to every capability its project, or its platform,
+  serves.
 - **They have no stability level.** One can serve capabilities at different
   levels, so a level always names its capability.
 - **They're in no domain.** They're written in the code's words, not a
   domain's.
-- **They're one across every project by ID**, as features are. A system that
+- **They're one across every project by ID**, as features are. A mechanism that
   spans repositories has its whole picture in the one that owns it.
 
 ## Where intention and reality differ
@@ -202,12 +208,11 @@ can be shown the same way and nothing is hidden:
 | **[Open decision](concepts/open-decision.md)** | What's intended isn't settled yet | Declared |
 | **[Gap](concepts/gap.md)** | The software doesn't do what's intended, or isn't built as intended | Declared |
 | **[Tradeoff](concepts/tradeoff.md)** | We chose this on purpose, and accept what it costs | Declared |
-| **No [evidence](concepts/evidence.md)** | A rule or capability nothing verifies or implements | Derived |
 | **[Problem](concepts/problem.md)** | The docs are wrong or contradict each other | Derived |
 
 Each declared one is written on the thing it's about, once, and shown on
 everything it affects. When one seems to belong to two things, it's about
-something they share, such as a rule they follow or a system they rely on.
+something they share, such as a rule they follow or a mechanism they rely on.
 Nothing is declared on a project or a persona: theirs are worked out.
 
 | Declared on | Open decisions | Gaps | Tradeoffs |
@@ -215,10 +220,27 @@ Nothing is declared on a project or a persona: theirs are worked out.
 | Domain | Ones whose answer becomes a rule or concept | — | — |
 | Feature | Ones whose answer adds a capability or rules one out | — | Non-goals: capabilities we've decided never to build |
 | Capability | Ones whose answer changes what it does | What people using it would notice | Limits it has by choice |
-| System or component | Ones whose answer becomes a tradeoff | What only someone working on the code would notice | Technical choices |
+| Mechanism or component | Ones whose answer becomes a tradeoff | What only someone working on the code would notice | Technical choices |
 
 A rule holds none of them. A rule is decided once its doc exists, and a gap
 that says a capability doesn't hold to a rule yet is the capability's.
+
+### What's left, and what holds
+
+What's left is the open decisions and the gaps, and nothing else. Everything
+declared, such as what a capability does, each rule it follows, and each
+checklist outcome its level expects, is a claim, and each claim is in one of
+three standings:
+
+| Standing | When |
+| --- | --- |
+| **Not held** | A gap names it, for all of it or a part |
+| **Held, with evidence** | Something in the repository points at it as [evidence](concepts/evidence.md) |
+| **Held, on trust** | Nothing names it, which is the usual case |
+
+A gap wins over evidence. Evidence is always optional: it shows how we know
+something holds, and its absence is never something left to do. A draft
+capability claims nothing yet.
 
 ## Feature, capability or neither?
 
@@ -230,7 +252,7 @@ Ask what value the work adds:
 | Produces a new result of value toward a job the software already does | A new capability of that feature, a draft until it's started           |
 | Adds another way to reach a result a capability already produces      | Part of that capability                                                |
 | Makes a capability better at what it does                             | A change to that capability, often closing one of its gaps             |
-| Only changes how something is built                                   | Neither, though it may close a system's or component's technical gap   |
+| Only changes how something is built                                   | Neither, though it may close a mechanism's or component's technical gap   |
 
 A rough check: the reason someone uses part of the software is a feature.
 What they get done while they're there is a capability. The parts of the
@@ -268,8 +290,8 @@ Some things are never features or capabilities:
 
 **How it's built**
 
-- [System](concepts/system.md): something overarching that several features
-  rely on.
+- [Mechanism](concepts/mechanism.md): how something works across a whole
+  project.
 - [Component](concepts/component.md): one area of the code.
 
 **Where intention and reality differ**

@@ -6,7 +6,7 @@ isn't lost or quietly decided in code.
 ## Details
 
 It goes on the doc it's about: a [domain](domain.md), [feature](feature.md),
-[capability](capability.md), [system](system.md) or
+[capability](capability.md), [mechanism](mechanism.md) or
 [component](component.md). Does an early arrival's stay start that day is
 about Guest stays; who goes first on the waitlist is about the waitlist.
 Questions that building something is meant to answer, such as a prototype's,

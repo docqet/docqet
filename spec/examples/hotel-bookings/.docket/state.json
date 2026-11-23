@@ -27,7 +27,7 @@
     "gaps": 4,
     "problems": 0,
     "tradeoffs": 4,
-    "systems": 1,
+    "mechanisms": 1,
     "components": 1
   },
   "domains": [
@@ -166,12 +166,7 @@
         "housekeeping"
       ],
       "readiness": 59,
-      "needs": [
-        "To tell a guest at once whether a room is free for their dates, and hold it for them, without ever giving the same room to two guests.",
-        "To check guests in and out quickly, so nobody waits at the desk.",
-        "To know which rooms are ready before a guest arrives, without phoning housekeeping."
-      ],
-      "body": "## Knows\n\nEvery room in the hotel, the regulars, and the cancellation policy by heart.\nComfortable with a computer, but has learned the system on the job, not from a\nmanual.\n\n## Context\n\nAt the desk all shift, on a shared desktop, with a guest or the phone waiting\nmost of the time. Interrupted constantly, so anything they start may be finished\nminutes later.\n\n## Expects\n\nThe paper diary's view of the hotel: rooms down the side, nights across the top.\nTalks about stays, rooms and arrivals, not reservations or inventory.\n\n## Cares about\n\nNever having to tell a guest standing in front of them that their room was given\naway. They'll go back to the paper diary the first time the app gets that wrong."
+      "body": "## Needs\n\n- To tell a guest at once whether a room is free for their dates, and hold it\n  for them, without ever giving the same room to two guests.\n- To check guests in and out quickly, so nobody waits at the desk.\n- To know which rooms are ready before a guest arrives, without phoning\n  housekeeping.\n\n## Knows\n\nEvery room in the hotel, the regulars, and the cancellation policy by heart.\nComfortable with a computer, but has learned the system on the job, not from a\nmanual.\n\n## Context\n\nAt the desk all shift, on a shared desktop, with a guest or the phone waiting\nmost of the time. Interrupted constantly, so anything they start may be finished\nminutes later.\n\n## Expects\n\nThe paper diary's view of the hotel: rooms down the side, nights across the top.\nTalks about stays, rooms and arrivals, not reservations or inventory.\n\n## Cares about\n\nNever having to tell a guest standing in front of them that their room was given\naway. They'll go back to the paper diary the first time the app gets that wrong."
     },
     {
       "id": "housekeeper",
@@ -189,11 +184,7 @@
         "housekeeping"
       ],
       "readiness": 15,
-      "needs": [
-        "To know which rooms to clean first, so arriving guests don't wait for a room.",
-        "To tell the front desk a room is ready without walking back down to say so."
-      ],
-      "body": "## Knows\n\nThe building, floor by floor, and how long each kind of room takes. Uses a phone\nevery day, but rarely for work.\n\n## Context\n\nOn their feet, moving from room to room with a trolley, a phone in their pocket.\nGloves on much of the time, so anything they do has to take a tap or two.\n\n## Expects\n\nA list of rooms, in the order they'll do them. Talks about rooms being clean,\ndirty or ready.\n\n## Cares about\n\nNot being rushed by the front desk for a room they didn't know was urgent."
+      "body": "## Needs\n\n- To know which rooms to clean first, so arriving guests don't wait for a room.\n- To tell the front desk a room is ready without walking back down to say so.\n\n## Knows\n\nThe building, floor by floor, and how long each kind of room takes. Uses a phone\nevery day, but rarely for work.\n\n## Context\n\nOn their feet, moving from room to room with a trolley, a phone in their pocket.\nGloves on much of the time, so anything they do has to take a tap or two.\n\n## Expects\n\nA list of rooms, in the order they'll do them. Talks about rooms being clean,\ndirty or ready.\n\n## Cares about\n\nNot being rushed by the front desk for a room they didn't know was urgent."
     },
     {
       "id": "manager",
@@ -208,10 +199,7 @@
       ],
       "features": [],
       "readiness": 15,
-      "needs": [
-        "To set what each room costs, night by night, so busy dates earn more."
-      ],
-      "body": "## Knows\n\nThe local market and the hotel's busy seasons. Reads a spreadsheet well, and\nexpects software to do the arithmetic for them.\n\n## Context\n\nAt a desk in the back office, a few times a week, in between everything else\nrunning a hotel brings.\n\n## Expects\n\nA calendar of rates, like the one they keep in a spreadsheet today.\n\n## Cares about\n\nRates they can change in a minute when a big event is announced, and being sure\nthe front desk is quoting them."
+      "body": "## Needs\n\n- To set what each room costs, night by night, so busy dates earn more.\n\n## Knows\n\nThe local market and the hotel's busy seasons. Reads a spreadsheet well, and\nexpects software to do the arithmetic for them.\n\n## Context\n\nAt a desk in the back office, a few times a week, in between everything else\nrunning a hotel brings.\n\n## Expects\n\nA calendar of rates, like the one they keep in a spreadsheet today.\n\n## Cares about\n\nRates they can change in a minute when a big event is announced, and being sure\nthe front desk is quoting them."
     }
   ],
   "capabilities": [
@@ -709,16 +697,8 @@
         "cancellations/free-cancellation-window",
         "cancellations/late-cancellation-fee"
       ],
-      "lifecycle": {
-        "states": [
-          "Confirmed",
-          "Checked in",
-          "Checked out"
-        ],
-        "text": "A confirmed booking can instead be Cancelled, any time before check-in."
-      },
       "confusedWith": [],
-      "body": "A booking is for one [room](room.md). Its nights run from the check-in date up\nto, but not including, the check-out date."
+      "body": "A booking is for one [room](room.md). Its nights run from the check-in date up\nto, but not including, the check-out date.\n\n## Lifecycle\n\n1. Confirmed\n2. Checked in\n3. Checked out\n\nA confirmed booking can instead be Cancelled, any time before check-in."
     },
     {
       "id": "room",
@@ -736,42 +716,36 @@
         "booking/no-double-booking",
         "booking/same-day-turnover"
       ],
-      "lifecycle": null,
       "confusedWith": [],
       "body": "Each room has a type, such as double or twin, which sets its rate. A room is\n[booked](booking.md) a night at a time."
     }
   ],
-  "systems": [
+  "mechanisms": [
     {
       "id": "deployment",
-      "file": "docs/technical/systems/deployment.md",
+      "file": "docs/technical/mechanisms/deployment.md",
       "name": "Deployment",
       "summary": "How a change gets from the main branch to the hotel's server, and back off it again.",
+      "applies": "project",
       "capabilities": [
         "room-booking",
         "cancellations",
         "check-in",
-        "check-out"
-      ],
-      "code": [
-        {
-          "glob": ".github/workflows/**",
-          "files": 1
-        },
-        {
-          "glob": "db/migrations/**",
-          "files": 1
-        }
+        "check-out",
+        "cleaning-schedule",
+        "group-bookings",
+        "rate-calendar",
+        "room-status"
       ],
       "meets": [
         "reliability/beta/undo-release",
         "observability/alpha/see-errors"
       ],
       "gaps": [
-        "system:deployment#migrations-only-go-forward"
+        "mechanism:deployment#migrations-only-go-forward"
       ],
       "tradeoffs": [
-        "system:deployment#migrations-before-start"
+        "mechanism:deployment#migrations-before-start"
       ],
       "evidence": {
         "implements": [
@@ -789,7 +763,6 @@
           }
         ]
       },
-      "start": "`.github/workflows/deploy.yml`",
       "decisions": [
         {
           "topic": "Second instance",
@@ -807,21 +780,11 @@
       "id": "bookings",
       "file": "docs/technical/components/bookings.md",
       "name": "Bookings",
-      "summary": "Where a room is held for a stay, and where no double-booking is enforced.",
+      "description": "Where a room is held for a stay, and where no double-booking is enforced.",
       "capabilities": [
         "room-booking",
         "group-bookings",
         "check-in"
-      ],
-      "code": [
-        {
-          "glob": "src/booking/**",
-          "files": 5
-        },
-        {
-          "glob": "db/migrations/001_bookings.sql",
-          "files": 1
-        }
       ],
       "meets": [],
       "gaps": [
@@ -833,6 +796,16 @@
       "evidence": {
         "implements": [
           {
+            "file": "db/migrations/001_bookings.sql",
+            "line": 10,
+            "text": "EXCLUDE USING gist (room_id WITH =, nights WITH &&) WHERE (status <> 'cancelled')"
+          },
+          {
+            "file": "src/booking/availability.ts",
+            "line": 9,
+            "text": "export function assertRoomFree(roomId: string, stay: Stay, existing: Booking[]): void {"
+          },
+          {
             "file": "src/booking/repository.ts",
             "line": 6,
             "text": "export async function saveBooking(db: Pool, booking: Booking): Promise<void> {"
@@ -840,7 +813,6 @@
         ],
         "verifies": []
       },
-      "start": "`src/booking/`, starting at `assertRoomFree` and `saveBooking`",
       "decisions": [],
       "body": "The app checks the room is free (`assertRoomFree`) so it can tell the clerk\nwhy it can't be booked. The bookings table's exclusion constraint is what\nactually guarantees it, since two clerks can pass the app's check at the same\nmoment.\n\nA stay is a half-open date range: the check-out date isn't a night of the\nstay. `daterange` in Postgres is half-open by default, and `overlaps` in the\napp agrees with it."
     }
@@ -863,7 +835,7 @@
       "places": []
     },
     {
-      "id": "system:deployment#migrations-only-go-forward",
+      "id": "mechanism:deployment#migrations-only-go-forward",
       "outcome": "reliability/ga/recovery",
       "rule": null,
       "text": "Migrations have no down step, so undoing a release that changed the schema means restoring the database from the night before.",
@@ -890,7 +862,6 @@
       "text": "A booking holds one room, not several.",
       "gain": "Booking, changing and cancelling stay simple: each booking is one room for one stay.",
       "cost": "A family that needs two rooms makes two bookings. Group bookings is where several rooms under one name is being explored.",
-      "revisit": null,
       "places": []
     },
     {
@@ -899,15 +870,13 @@
       "text": "Bookings are taken at the front desk, not from online travel agencies.",
       "gain": "No agency integrations to build or keep working, while most bookings come straight to the desk.",
       "cost": "Clerks enter each agency booking by hand, as it arrives by email.",
-      "revisit": "agency bookings pass a fifth of all bookings",
       "places": []
     },
     {
-      "id": "system:deployment#migrations-before-start",
+      "id": "mechanism:deployment#migrations-before-start",
       "text": "Migrations run before the new image starts, while the old one is still serving, rather than stopping the app for each release.",
       "gain": "Releases don't take the front desk offline.",
       "cost": "The running code has to work with the new schema for a minute, so a column is added a release before it's used, and removed a release after the code stops reading it.",
-      "revisit": null,
       "places": []
     },
     {
@@ -915,7 +884,6 @@
       "text": "The database refuses overlapping bookings with an exclusion constraint, rather than the app locking the room while it checks.",
       "gain": "No two bookings can overlap, however they arrive at once, without the app having to get locking right.",
       "cost": "Bookings need Postgres with `btree_gist`, and the check in the app is only there to give clerks a clear message first.",
-      "revisit": null,
       "places": [
         {
           "file": "db/migrations/001_bookings.sql",

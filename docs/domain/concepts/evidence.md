@@ -1,7 +1,7 @@
 # Evidence
 
 Places in the repository that say they verify or implement a rule, a
-capability, a system or a component, so you can go from it to what's about
+capability, a mechanism or a component, so you can go from it to what's about
 it.
 
 ## Details
@@ -9,11 +9,12 @@ it.
 There are two kinds:
 
 - **Verifies**: this place checks that the rule holds, that the capability
-  works, or that the system does what it says.
+  works, or that the mechanism does what it says.
 - **Implements**: this place makes it so.
 
-It's optional: a rule or capability with none is still one, and nothing at any
-level requires any, though Docket points out what has none. There's no limit
+It's optional: a rule or capability with none still holds, on trust, unless
+a [gap](gap.md) says it doesn't, and nothing at any level requires any.
+Missing evidence is never something left to do. There's no limit
 to how much there is. No double-booking is verified in four places and
 implemented in two, one of them a database constraint. Docket doesn't care
 whether a place is a test, code, a workflow or anything else, what language
@@ -22,7 +23,7 @@ it's in, or whether anything has run.
 - **A place becomes evidence with an [annotation](annotation.md).** Nobody
   writes evidence down: the indexer finds it.
 - **A rule's evidence is about every capability that follows it.**
-- **A system's or component's evidence is also the evidence for the
+- **A mechanism's or component's evidence is also the evidence for the
   [checklist outcomes](stability-checklist.md) it says it meets.**
 
 ## In the spec
@@ -56,8 +57,8 @@ language. No double-booking's evidence, in Hotel Bookings'
 }
 ```
 
-A rule or capability with none has both lists empty, and readers show a
-warning where the evidence would be.
+A rule or capability with none has both lists empty, and readers say it
+holds on trust, with no warning.
 
 ## Not to be confused with
 

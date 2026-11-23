@@ -6,15 +6,6 @@ description: >-
   Engineer Agreement for someone who works in the console, which covers
   leading a team too, and a Partner Agreement for a
   [partnership](../../partnerships/concepts/partnership.md).
-lifecycle:
-  states:
-    - Offered
-    - Accepted
-    - In effect
-    - Superseded
-  text: >-
-    An agreement is offered to a party, who accepts it. The latest accepted
-    is in effect, until a later one is accepted and supersedes it.
 confused-with:
   - concept: partnership@partnerships
     text: the partner's own record. Its terms are held in its Partner Agreement.
@@ -32,3 +23,13 @@ confused-with:
 A shared list of definitions gives the meaning of the words every agreement uses.
 A [payout share](../../pay/concepts/payout-share.md) comes from the Commercial Terms of the agreement
 in effect.
+
+## Lifecycle
+
+1. Offered
+2. Accepted
+3. In effect
+4. Superseded
+
+An agreement is offered to a party, who accepts it. The latest accepted is in
+effect, until a later one is accepted and supersedes it.

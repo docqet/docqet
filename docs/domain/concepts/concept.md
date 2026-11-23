@@ -18,9 +18,10 @@ own domain's, else the only one with that ID, unless it names a domain as
 ## In the spec
 
 A concept is a doc in its domain's `concepts/` folder. Its frontmatter has
-its name and `description`, which defines it, its `lifecycle`, as `states` in
-order and optional `text`, and `confused-with`, what it's easily mistaken for. Its details, what
-it's made of and how it relates to other concepts, are its body.
+only its name, its `description`, which defines it, and `confused-with`, what
+it's easily mistaken for. Everything else is its body, in whatever shape suits
+it: what it's made of, how it relates to other concepts, and the states it
+moves through.
 [`booking.md`](../../../spec/examples/hotel-bookings/docs/product/domains/guest-stays/concepts/booking.md)
 in Guest stays:
 
@@ -30,16 +31,18 @@ name: Booking
 description: >-
   A guest's hold on one room for a stay, from a check-in date to a check-out
   date.
-lifecycle:
-  states:
-    - Confirmed
-    - Checked in
-    - Checked out
-  text: A confirmed booking can instead be Cancelled, any time before check-in.
 ---
 
 A booking is for one [room](room.md). Its nights run from the check-in date up
 to, but not including, the check-out date.
+
+## Lifecycle
+
+1. Confirmed
+2. Checked in
+3. Checked out
+
+A confirmed booking can instead be Cancelled, any time before check-in.
 ```
 
 Each item in `confused-with` has `text` saying how they differ, and either

@@ -69,7 +69,7 @@ The capability is Docket's unit of dependability:
   capabilities can list the same ones.
 - **It holds the product's known gaps**, and most of its tradeoffs and
   [open decisions](open-decision.md). The technical gaps of the
-  [systems](system.md) and [components](component.md) it relies on show on it
+  [mechanisms](mechanism.md) and [components](component.md) it relies on show on it
   too.
 - **It can be declared before it's started**, as a **draft**: what we intend
   the software to do, with no work done yet. The waitlist is a draft in
@@ -87,7 +87,8 @@ when someone decides to promote or demote it.
 
 A capability is a doc in its domain's `capabilities/` folder. Its name and
 summary, its level and its links are frontmatter. It names no code: the
-systems and components that list it say where it's built. Questions building
+mechanisms that apply to it and the components that list it say where it's
+built. Questions building
 it should answer are open decisions. Its body is for anything more about what
 it does, such as what else it includes or how we'll know it works, and can be
 left out.

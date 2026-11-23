@@ -126,7 +126,6 @@ tradeoffs:
     cost: >-
       There's no rule for what a team-limited view of people shows, as only
       the admin view matters for now.
-    revisit: someone other than an administrator needs the list
 ---
 
 ## Includes

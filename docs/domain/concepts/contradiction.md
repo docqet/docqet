@@ -12,11 +12,11 @@ can be fixed.
 
 What should agree:
 
-- **A domain's, feature's, capability's, persona's, system's or component's
+- **A domain's, feature's, capability's, persona's, mechanism's or component's
   name and summary**, in every project that declares it. What else each
   contribution says is its own: its body, and its frontmatter fields that
-  aren't links, such as `decisions` or a persona's
-  `needs`. Those are shown side by side, labelled with their project and
+  aren't links, such as `decisions` or a rule's
+  `why`. Those are shown side by side, labelled with their project and
   domain.
 - **Which feature a capability is in.**
 - **A rule or concept within one domain**, when more than one project
