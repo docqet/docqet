@@ -216,7 +216,7 @@ can be shown the same way and nothing is hidden:
 | Shape | What it means | Declared or derived |
 | --- | --- | --- |
 | **[Open decision](concepts/open-decision.md)** | What's intended isn't settled yet | Declared |
-| **[Gap](concepts/gap.md)** | The software doesn't do what's intended, or isn't built as intended | Declared |
+| **[Gap](concepts/gap.md)** | The software falls short of what's intended, in a way that needs work nobody has done yet | Declared |
 | **[Tradeoff](concepts/tradeoff.md)** | We chose this on purpose, with its benefit and drawback | Declared |
 | **[Problem](concepts/problem.md)** | The docs are wrong or contradict each other | Derived |
 

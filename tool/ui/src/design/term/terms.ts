@@ -98,13 +98,13 @@ export const TERMS: Record<TermId, TermEntry> = {
   gap: {
     name: "Gap",
     means:
-      "Something the software doesn't do yet, or doesn't do as intended, written down rather than hidden. We mean to close it, and when and how is up to us.",
-    more: "A product gap is one someone using the software would notice; a technical gap, one only someone working on the code would. A gap we'll never close is a tradeoff instead.",
+      "A known shortfall that needs work nobody has done yet, such as building, deciding, designing or testing, written down so people see it before they depend on it. We mean to close it, and when and how is up to us.",
+    more: "A bug isn't one: fixing the code closes it, so it goes in the issue tracker. Nor is what a capability's level already says, or relying on something less stable. A product gap is one someone using the software would notice; a technical gap, one only someone working on the code would. One we'll never close is a tradeoff instead.",
   },
   "product-gap": {
     name: "Product gap",
     means:
-      "Something the software doesn't do yet, or doesn't do as intended, that someone using it would notice. It's written down rather than hidden, and we mean to close it.",
+      "A gap someone using the software would notice: something it doesn't do yet, or does short of what's intended, that needs work nobody has done yet. It's written down rather than hidden, and we mean to close it.",
     more: "Such as a room calendar that can't be used from the keyboard. Something only someone working on the code would notice is a technical gap.",
   },
   "technical-gap": {

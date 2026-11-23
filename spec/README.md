@@ -608,6 +608,14 @@ a few words what falls short, such as `Calendar needs a mouse`, a
 `description` of a sentence or two, and optionally the `outcome` or `rule` it
 falls short of, its `impact`, and `when` it bites. It doesn't say when or how it'll be closed:
 Docket lists it so people know about it, and deciding that is up to them.
+A gap is what falls short in the thing itself, never what a level already
+says: relying on a capability at a lower level isn't one, and nor is being
+behind a flag, opt-in, not yet in production or still changing at Prototype
+or Alpha. Either becomes a gap only where the level says otherwise. A bug,
+where the software is meant to do something and simply doesn't, usually isn't
+one either: fixing the code closes it, so it belongs in the issue tracker. A
+known bug is a gap only when it won't be fixed soon and changes what people
+can rely on.
 
 ```yaml
 gaps:
@@ -625,7 +633,9 @@ gaps:
   it, or depends on what it produces. It's judged for that software, in two
   steps: what it takes from those it would affect, then what share of them it
   would affect if it bit. It's rated by the consequence, never by how likely
-  it is. Readers order gaps by [risk](#risk)
+  it is, and never by the capability's level: it's rated as if people relied
+  on the capability, since [risk](#risk) weighs it by its level, so it isn't
+  re-rated when the capability is promoted. Readers order gaps by [risk](#risk)
   from it, and show a gap without one as not rated, after the rest. It's one
   of four, from least to most, each taking more than the one before:
 
@@ -977,7 +987,8 @@ more it costs. Acceptable and tolerable gaps don't lower it.
 
 Something with no started capabilities has no readiness. It falls in a quarter
 of its own, so it's never mistaken for maturity, and readers draw it as a
-ring in the text's color, not a level's:
+straight bar in the text's color, never a ring, which is maturity's, nor in a
+level's color:
 
 | Readiness     | From | What it recommends                                                                   |
 | ------------- | ---- | ------------------------------------------------------------------------------------ |

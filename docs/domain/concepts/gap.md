@@ -1,8 +1,10 @@
 # Gap
 
-Something the software doesn't do yet, or doesn't do as intended, that we've
-chosen to write down rather than hide. We intend to close it, and when and
-how is up to us: Docket lists it so we know about it.
+A known shortfall in what the software does, or in how it's built, that needs
+work nobody has done yet: building, deciding, designing or testing. It's
+written down rather than hidden, so people see it before they depend on what
+it's in. We intend to close it, and when and how is up to us: Docket lists it
+so we know about it.
 
 ## Details
 
@@ -41,6 +43,18 @@ A capability that's missing altogether isn't a gap: it's a draft capability.
 Relying on a capability at a lower level isn't a gap either, such as
 referrals relying on Partnerships at Alpha: that capability's level already
 says how much can be counted on, so a gap saying so would count it twice.
+
+A gap is never just what its own level already says. Being behind a flag,
+open only to those who opt in, not yet in production, or still changing is
+what Prototype and Alpha mean, so none of it is a gap. It becomes one when
+the level says otherwise, such as a Beta capability that still isn't
+available to the people it serves.
+
+A bug usually isn't a gap. When the software is meant to do something and
+simply doesn't, fixing the code closes it, so it belongs in the issue
+tracker. A gap is a shortfall that needs work nobody has done yet: building,
+deciding, designing or testing. A known bug becomes a gap only when it won't
+be fixed soon and changes what people can rely on.
 
 ## Lifecycle
 
@@ -96,6 +110,8 @@ export function correct(bill: Bill, line: Line, id: string, businessDay: string)
 - [Open decision](open-decision.md): what's intended isn't settled yet.
 - A draft [capability](capability.md): a whole result of value not started
   yet.
+- A bug: the software meant to do something and doesn't, closed by fixing
+  the code, in the issue tracker. A gap needs work nobody has done yet.
 - A task: Docket doesn't say when or how a gap is closed. Planning that is a
   task tracker's job. [Risk](risk.md) says what's at stake, not what to do
   first.

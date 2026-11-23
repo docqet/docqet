@@ -50,6 +50,16 @@ one doc, so check its other files before choosing a key.
   part of one, depends on a capability at a lower level, that capability's
   level already says how much can be counted on, so don't write a gap saying
   so. A gap is what falls short in the thing itself.
+- **A gap is never just what its own level already says.** Being behind a
+  flag, opt-in, not yet in production, or still changing is what Prototype
+  and Alpha mean, so don't write it as a gap. It's a gap only once the level
+  says otherwise, such as a Beta capability still not available to the people
+  it serves.
+- **A bug usually isn't a gap.** When the software is meant to do something
+  and simply doesn't, fixing the code closes it, so it goes in the issue
+  tracker. A gap needs work nobody has done yet: building, deciding,
+  designing or testing. Write a known bug as a gap only when it won't be fixed
+  soon and changes what people can rely on.
 - **Mark where it shows in the code** with `docket:gap <gap ID>` when there's
   a clear place, instead of a bare TODO.
 - **Closing a gap** removes it, its `docket:gap` annotations, and its key from
@@ -64,7 +74,9 @@ personas stand for, and whoever runs it, builds on it, or depends on what it
 produces. Rate it in two steps, using judgement about this software's
 circumstances: what it takes from those it would affect, then what share of
 them it would affect if it bit. Rate the consequence, never how likely it is
-to bite.
+to bite, and never lower it because the capability is early: rate it as if
+people relied on the capability, since risk weighs it by its level already,
+and nobody re-rates it when it's promoted.
 
 First, what it takes. Ask in order, and stop at the first yes:
 

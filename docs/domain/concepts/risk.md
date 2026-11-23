@@ -113,8 +113,10 @@ needs a mouse blocks a public booking site's guests who can't use one, and is
 `inconvenient` or less in an office tool whose staff all can. Where in the
 code a gap is doesn't change it, so a gap in a background job, a library or a
 deploy script is rated the same way as one on a screen. It's never set by how
-likely the gap is to bite. Each step takes more from them than the one
-before:
+likely the gap is to bite, or by the capability's level: rate it as if people
+relied on the capability, whatever its level, since risk weighs it by that
+level already. So the same gap's risk grows as its capability is promoted,
+and nobody re-rates it. Each step takes more from them than the one before:
 
 | Impact         | What's lost                   | The test                                                                                                                                                                                                              |
 | -------------- | ----------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
