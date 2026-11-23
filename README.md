@@ -78,9 +78,9 @@ Docket separates what the software is meant to do from what it does:
   declared impact, scored by the stability of what it's on and whether it
   breaks that level's promise), each feature's **maturity** (how far along
   it is), the **readiness** of each capability, feature,
-  domain and persona (whether it's ready enough to use, at Beta or GA with
-  nothing unacceptable open, and if not, what's left), and any problems in the
-  docs themselves.
+  domain and persona (a recommendation of how ready people can rely on it
+  being: maturity, held back by unacceptable gaps, with what's left), and any
+  problems in the docs themselves.
 - **The difference is the work.** What's declared is taken to hold, unless
   it's declared that it doesn't, or the evidence contradicts it. Docket names
   the ways intention and reality differ, open decisions, gaps, tradeoffs and
@@ -238,8 +238,8 @@ decisions, and the evidence behind them, visible to everyone.
   built. Lists of endpoints, tables or services, and diagrams drawn from the
   code, stay in the code. Runbooks belong wherever a team keeps them.
 - **A score to maximize.** Maturity is an indication, not a target. Starting
-  new work lowers it, and 100% isn't the goal. Readiness says what's left
-  before people can use something, and being ready isn't being finished.
+  new work lowers it, and 100% isn't the goal. Readiness is a recommendation
+  for people to judge, and comes with what's left.
 - **A place to change intention outside the repository.** Intention is only
   ever changed in a repository, so it's reviewed with the code. Servers and
   other tools read it and show it, never edit it.

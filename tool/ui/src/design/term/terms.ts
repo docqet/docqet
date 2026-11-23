@@ -143,8 +143,8 @@ export const TERMS: Record<TermId, TermEntry> = {
   readiness: {
     name: "Readiness",
     means:
-      "Whether people can use it yet. A capability is ready when it's at Beta or GA, settled enough for real use, and no gap's risk on it is unacceptable; anything else is how many of its started capabilities are ready, and Ready when all of them are.",
-    more: "Reservations, with room booking at GA, deposits at Beta and waitlists at Alpha, is 2 of 3 ready: waitlists still need to reach Beta. A draft doesn't count either way.",
+      "How ready people can rely on it being, as a recommendation for you to judge: the weighted maturity of its capabilities, except that one with an unacceptable gap counts for nothing until it's closed. It comes with what's left.",
+    more: "Hotel Billing's manager has city tax at Alpha, deposits at Beta held back by an unacceptable gap, daily takings at Beta and night audit at GA: 56%, Mostly ready. Closing the gap on deposits would make it 70%. Drafts don't count.",
   },
   "stability-checklist": {
     name: "Stability checklist",

@@ -26,8 +26,8 @@ about.
   the software, such as the role it gives them, and its title is the job they
   hold. Either can be missing: a hotel guest has no title. The persona itself
   says who someone is and what they need, not what they're allowed to do.
-- **It has no stability level.** It has a [readiness](readiness.md): whether
-  what they need is ready for them to use, and if not, what's left.
+- **It has no stability level.** It has a [readiness](readiness.md): how ready
+  they can rely on what they need being, with what's left.
 
 ## In the spec
 

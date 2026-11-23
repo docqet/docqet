@@ -7,7 +7,7 @@ import { StabilityMark } from "../design/stability/StabilityMark";
 import { TERMS, type TermId } from "../design/term/terms";
 import { sectionHref, type Route } from "../routes";
 import { Empty, PageHeader, Section, Tabs, View, currentTab, type TabDef } from "../shell/layout";
-import type { ChecklistExample, ChecklistKind, ChecklistLevel, DocketState } from "../state";
+import { READINESS_BANDS, type ChecklistExample, type ChecklistKind, type ChecklistLevel, type DocketState } from "../state";
 import "./doc.css";
 
 /*
@@ -205,9 +205,27 @@ function Levels() {
       <Section id="readiness" title="Readiness" term="readiness" note={TERMS.readiness.means}>
         <p className="dp-note">{TERMS.readiness.more}</p>
         <p className="dp-note">
-          A capability not ready yet still needs to reach Beta, where it's below, and to close each gap whose risk on it is
-          unacceptable. A draft is not started: it's listed apart, and never makes anything less ready. Readiness doesn't depend on maturity.
+          It's a recommendation, and you're the judge. A capability with something left still needs to reach Beta, where it's below, and to
+          close each gap whose risk on it is unacceptable; every page lists what's left. A draft is not started, and never counts.
         </p>
+        <table className="view-table dp-narrow-table">
+          <thead>
+            <tr>
+              <th>Readiness</th>
+              <th className="num">From</th>
+              <th>What it recommends</th>
+            </tr>
+          </thead>
+          <tbody>
+            {READINESS_BANDS.map((b) => (
+              <tr key={b.name}>
+                <td>{b.name}</td>
+                <td className="num">{b.from}%</td>
+                <td>{b.says}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </Section>
     </>
   );

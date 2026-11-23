@@ -8,7 +8,7 @@ import { GapsCell, Num } from "./indexParts";
 
 /*
  * Who the software serves, and how ready it is for each of them: a row per
- * persona, least ready first, by how much of what serves them is ready, with
+ * persona, least ready first, by their readiness, with
  * how many capabilities serve them and the product gaps in those, the worst
  * one's impact beside them. Those with nothing started come first of all. Technical gaps are left out: they're what
  * only someone working on the code would notice.

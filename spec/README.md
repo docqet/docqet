@@ -946,65 +946,60 @@ capability's level in short needs every project that builds part of it.
 
 ## Readiness
 
-Readers work out whether the software is **ready**: ready enough for people to
-use it, and if not, what it still needs. It answers that well enough to act
-on, not precisely. Nothing is written for it, and it isn't in `state.json`:
-it depends on [risk](#risk) and on a capability's level in short, and both
-need projects put together.
+Readers work out how ready people can rely on the software being: a
+percentage, with what it still needs. It's a recommendation, and people
+judge. Nothing is written for it, and it isn't in `state.json`: it depends on
+[risk](#risk) and on each capability's level in short, and both need projects
+put together.
 
-A **capability is ready** when:
+Readiness is worked out as a feature's [maturity](#how-maturity-is-worked-out)
+is, with the same scores and weights, and each capability counted once, at
+its level in short, drafts left out. The one difference: **a capability with
+a gap that's `unacceptable` on it scores 0**, scored on that capability, until
+the gap is closed. It keeps its weight, so the more people depend on it, the
+more it costs. Acceptable and tolerable gaps don't lower it.
 
-1. **Its level in short is Beta or GA.** Beta is the first level settled
-   enough for real use, and the lowest level across the domains that build
-   it is the one people can count on everywhere.
-2. **No gap is `unacceptable` on it**: no gap's risk, scored on that
-   capability, falls in the `unacceptable` third.
+| Readiness of                | Counts                                 |
+| --------------------------- | -------------------------------------- |
+| A capability                | Itself                                 |
+| A feature                   | Its capabilities                       |
+| A domain                    | Every capability with a part in it     |
+| A project, or several shown | Every capability showing               |
+| A persona                   | Every capability that lists them       |
+| A feature, for a persona    | The capabilities in it that serve them |
 
-A capability that's started but not ready is **not ready yet**, and **what it
-needs** is to reach Beta, when it's below, and to close each gap that's
-unacceptable on it. A draft is **not started**: it's neither.
+Something with no started capabilities has no readiness. It falls in a quarter
+of its own, so it's never mistaken for maturity, and readers draw it as a
+ring in the text's color, not a level's:
 
-Everything else's readiness is how many of its started capabilities are
-ready, such as `2 of 4 ready`. It's **Ready** when all of them are, and **Not
-ready yet** otherwise, with what each capability that isn't still needs.
-Drafts are listed as not started and never count, so writing one down never
-makes anything less ready. Something with no started capabilities has no
-readiness.
+| Readiness     | From | What it recommends                                                                   |
+| ------------- | ---- | ------------------------------------------------------------------------------------ |
+| Not ready yet | 0%   | Most of what they need is still being explored, or held back by what's unacceptable. |
+| Partly ready  | 25%  | Some of it can be used, but much of what they need is still taking shape.            |
+| Mostly ready  | 50%  | Enough is settled for them to rely on day to day.                                    |
+| Ready         | 75%  | What they need is mostly stable, with nothing unacceptable left open.                |
 
-| Readiness of                | Counts                                                          |
-| --------------------------- | --------------------------------------------------------------- |
-| A feature                   | Its capabilities                                                |
-| A domain                    | Every capability with a part in it                              |
-| A project, or several shown | Every capability showing                                        |
-| A persona                   | Every capability that lists them                                |
-| A feature, for a persona    | The capabilities in it that serve them                          |
-
-A capability always counts whole, at its level in short, even where only
-part of it is in the domain or project counted, since people use the whole
-of it.
+Readers show **what it still needs** with it: each started capability below
+Beta, the first level settled enough for real use, needs to reach Beta, and
+each gap that's unacceptable on one needs closing. A capability at Beta or GA
+with neither has nothing left. Drafts are listed as not started.
 
 In Hotel Billing, the manager has city tax at Alpha, deposits at Beta, and
 daily takings at Beta and night audit at GA, with no gaps. Deposits relies on
 the ledger, whose untested corrections are `damaging` and score 72 there,
-`unacceptable`. So the manager is `2 of 4 ready`, and what's left is:
+`unacceptable`, so deposits scores 0: (35 × 3 + 0 × 4 + 60 × 4 + 100 × 6) ÷
+(3 + 4 + 4 + 6) = 945 ÷ 17 ≈ 56%, Mostly ready. What's left:
 
 ```text
 city tax   reach Beta, now Alpha
-deposits   close component:ledger#corrections-of-corrections-untested (72)
+deposits   close component:ledger#corrections-of-corrections-untested
 ```
 
-The night auditor has only night audit, so they're Ready.
+The night auditor has only night audit, at GA, so they're 100%, Ready.
 
-In Hotel Bookings, the front desk clerk is `0 of 6 ready`. Room booking,
-check-in and check-out are at Beta or GA, but every one of them waits on the
-deployment's migrations only going forward, `damaging`, which scores 72 on
-Beta and 100 on GA. Room booking also waits on its calendar needing a mouse.
-Cancellations, group bookings and room status need to reach Beta first, and
-the waitlist isn't started.
-
-A count says how much of it is ready, not whether what's missing matters to
-someone. That's for people to judge: a persona who can do without the one
-capability that isn't ready can start using the rest.
+Starting new work lowers readiness a little, since a Prototype weighs least:
+five GA capabilities and a new Prototype are 95%. A gap nobody wrote leaves a
+capability counting in full, and readiness is as good as what's written down.
 
 ## Risk
 

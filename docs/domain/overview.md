@@ -63,10 +63,10 @@ and project's **[maturity](concepts/maturity.md)**, how far along it is, and
 score gaps by **[risk](concepts/risk.md)**, from the impact each declares,
 the level of each capability it's on, and whether it breaks that level's
 promise. From levels and risk they work out
-**[readiness](concepts/readiness.md)**: whether
-each capability is ready for people to use, at Beta or GA with no
-unacceptable gap, and for each feature, domain, project and persona, how many
-of theirs are, and what the rest still need.
+**[readiness](concepts/readiness.md)**: how ready people can rely on each
+capability, feature, domain, project and persona being, as a recommendation,
+with what's left. It's maturity, except that a capability with an
+unacceptable gap counts for nothing until it's closed.
 
 ```mermaid
 flowchart TB
@@ -139,8 +139,8 @@ flowchart TB
   gap & tradeoff -. "impact" .-> risk
   level -. "weight and promise" .-> risk
   level -. "of capabilities" .-> maturity
-  level -. "Beta or GA" .-> readiness
-  risk -. "nothing unacceptable" .-> readiness
+  maturity -. "held back by" .-> readiness
+  risk -. "unacceptable gaps" .-> readiness
   project -. "its docs" .-> problem
 
   classDef derivedNode stroke-dasharray: 4 3
@@ -323,8 +323,8 @@ Some things are never features or capabilities:
 - [Maturity](concepts/maturity.md): how far along a feature, domain or project
   is.
 - [Band](concepts/band.md): the quarter of the maturity scale something is in.
-- [Readiness](concepts/readiness.md): whether the software is ready enough to
-  use, and if not, what it still needs.
+- [Readiness](concepts/readiness.md): how ready people can rely on the
+  software being, as a recommendation, with what it still needs.
 
 **Evidence**
 

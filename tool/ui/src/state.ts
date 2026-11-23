@@ -1,4 +1,4 @@
-import { featureMaturity, maturityBand, projectMaturity } from "./design/maturity/maturity";
+import { MATURITY_LEVELS, featureMaturity, maturityBand, projectMaturity } from "./design/maturity/maturity";
 import { STABILITY_LEVEL_IDS, type StabilityLevelId } from "./design/stability/stability";
 
 /*
@@ -1236,12 +1236,13 @@ export function riskOf(state: DocketState, item: Gap | Tradeoff): Risk {
 /* ——— Readiness ——— */
 
 /*
- * Whether people can use it yet: good enough, not precise, and apart from
- * maturity. A capability is ready when its level in short is Beta or GA,
+ * How ready people can rely on it being: a recommendation, not a verdict.
+ * A capability has nothing left when its level in short is Beta or GA,
  * settled enough for real use, and no gap scores unacceptable on it, its own
  * or one on what it's built on. Only gaps count, not tradeoffs. One that's
- * started and not ready yet still needs to reach Beta, where it's below, and
- * to close each of those gaps. A draft is not started: neither ready nor not.
+ * started with something left still needs to reach Beta, where it's below,
+ * and to close each of those gaps, and counts for nothing in readiness until
+ * they're closed. A draft is not started, and never counts.
  */
 export type NotReady = { capability: Capability; belowBeta: boolean; gaps: Gap[] };
 
@@ -1259,34 +1260,53 @@ export function needsOf(state: DocketState, capability: Capability): NotReady {
 
 /*
  * The readiness of some capabilities, as of a feature, domain, persona or
- * project: those ready, those not ready yet with what each still needs, and
- * the drafts, not started, which never count. It's Ready when every started
- * one is, and has none with nothing started.
+ * project: a recommendation, 0 to 100, for people to judge by. It's their
+ * weighted maturity, each at its level in short, except that one with a gap
+ * that's unacceptable on it counts for nothing until that's closed. With it,
+ * those with nothing left, those that still need something and what, and the
+ * drafts, not started, which never count. Nothing started, it's null.
  */
-export type Readiness = { ready: Capability[]; notReady: NotReady[]; notStarted: Capability[] };
+export type Readiness = { percent: number | null; ready: Capability[]; notReady: NotReady[]; notStarted: Capability[] };
 
 export function readinessOf(state: DocketState, capabilities: Capability[]): Readiness {
-  const readiness: Readiness = { ready: [], notReady: [], notStarted: [] };
+  const readiness: Readiness = { percent: null, ready: [], notReady: [], notStarted: [] };
+  let total = 0;
+  let weights = 0;
   for (const c of capabilities) {
     if (c.stability === null) {
       readiness.notStarted.push(c);
       continue;
     }
     const needs = needsOf(state, c);
+    const { score, weight } = MATURITY_LEVELS[c.stability];
+    total += needs.gaps.length ? 0 : score * weight;
+    weights += weight;
     if (!needs.belowBeta && !needs.gaps.length) readiness.ready.push(c);
     else readiness.notReady.push(needs);
   }
+  readiness.percent = weights ? Math.round(total / weights) : null;
   return readiness;
 }
 
 /* How many it's worked out from: the started ones. */
 export const startedOf = (r: Readiness) => r.ready.length + r.notReady.length;
 
-/* Ready, not ready yet, or null with nothing started. */
-export const isReady = (r: Readiness): boolean | null => (startedOf(r) ? !r.notReady.length : null);
+/* Readiness's quarters, named for what they recommend, from the lowest. */
+export const READINESS_BANDS = [
+  { from: 0, name: "Not ready yet", says: "Most of what they need is still being explored, or held back by what's unacceptable." },
+  { from: 25, name: "Partly ready", says: "Some of it can be used, but much of what they need is still taking shape." },
+  { from: 50, name: "Mostly ready", says: "Enough is settled for them to rely on day to day." },
+  { from: 75, name: "Ready", says: "What they need is mostly stable, with nothing unacceptable left open." },
+] as const;
 
-/* How much of it is ready, 0 to 1, for putting the least ready first; null with nothing started. */
-export const readyShare = (r: Readiness) => (startedOf(r) ? r.ready.length / startedOf(r) : null);
+/* The quarter a readiness falls in, or null with nothing started. */
+export const readinessBand = (r: Readiness) => (r.percent === null ? null : [...READINESS_BANDS].reverse().find((b) => r.percent! >= b.from)!);
+
+/* In the Ready quarter, below it, or null with nothing started. */
+export const isReady = (r: Readiness): boolean | null => (r.percent === null ? null : r.percent >= 75);
+
+/* Readiness from 0 to 1, for putting the least ready first; null with nothing started. */
+export const readyShare = (r: Readiness) => (r.percent === null ? null : r.percent / 100);
 
 /*
  * What's at stake across some gaps or tradeoffs, as in a capability, feature,

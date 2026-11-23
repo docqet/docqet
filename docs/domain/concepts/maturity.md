@@ -3,8 +3,8 @@
 How far along a feature, a domain or a project is: how much of the work under
 way is stable and supported. It's a percentage, derived from capabilities'
 [stability levels](stability-level.md), and nobody writes it down. It's for
-seeing where the work is heading. Whether people can use it yet is
-[readiness](readiness.md).
+seeing where the work is heading. How ready people can rely on it being,
+with gaps taken into account, is [readiness](readiness.md).
 
 ## Details
 
@@ -58,6 +58,6 @@ and check-out at GA in Guest stays but Alpha in Billing, so Alpha in short:
 
 - [Stability level](stability-level.md): how much you can depend on one
   capability. Maturity is about the whole.
-- [Readiness](readiness.md): whether people can use it yet, and what's
-  left. Maturity can be high while one capability someone needs isn't ready,
-  and readiness doesn't depend on it.
+- [Readiness](readiness.md): the same calculation, except that a capability
+  with an unacceptable gap counts for nothing, with what's left. A persona
+  has a readiness, never a maturity.

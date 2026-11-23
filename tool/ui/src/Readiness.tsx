@@ -8,23 +8,23 @@ import { STABILITY } from "./design/stability/stability";
 import { CapabilityStability } from "./design/catalog/CapabilityLabel";
 import { Tip } from "./design/Tip";
 import { docHref } from "./routes";
-import { isReady, startedOf, type NotReady, type Readiness } from "./state";
+import { isReady, readinessBand, startedOf, type NotReady, type Readiness } from "./state";
 
 /*
- * Readiness: whether people can use it yet, and if not, what it still needs.
- * Maturity says how far along the work is; readiness doesn't depend on it.
- * It's never in a level's color, since it isn't a level: Ready is in --ok,
- * with a check, and anything less in the text's own color, with a small ring
- * filled as far as how many of its started capabilities are ready.
+ * Readiness: how ready people can rely on it being, as a recommendation for
+ * them to judge, and what it still needs. It's the weighted maturity of its
+ * capabilities, with those held back by an unacceptable gap counting for
+ * nothing. It's never in a level's color, since it isn't a level: a small
+ * ring filled as far as its percentage, in --ok in the Ready quarter, and in
+ * the text's own color below it.
  */
 
 const plural = (n: number, one: string, many: string) => `${n} ${n === 1 ? one : many}`;
 
-/* Readiness in a few words: "Ready", "5 of 6 ready", or null with nothing started. */
+/* Readiness in a few words: "Mostly ready · 59%", or null with nothing started. */
 export function readinessLabel(r: Readiness): string | null {
-  const started = startedOf(r);
-  if (!started) return null;
-  return r.notReady.length ? `${r.ready.length} of ${started} ready` : "Ready";
+  const band = readinessBand(r);
+  return band ? `${band.name} · ${r.percent}%` : null;
 }
 
 /* What a not-ready capability still needs, in a line: "Reach Beta (now Alpha) · close 2 unacceptable gaps". */
@@ -58,9 +58,9 @@ function ShareRing({ share, size = 14 }: { share: number; size?: number }) {
 }
 
 /*
- * How ready something is, beside its name or in a row: Ready, with a check,
- * or "5 of 6 ready", with its ring; large, as at the top of a page, Not
- * ready yet first. Its popover (hover, focus, or tap) breaks it down. With
+ * How ready something is, beside its name or in a row: its quarter and
+ * percentage, "Mostly ready · 59%", with its ring; large, as at the top of a
+ * page, the quarter in bold. Its popover (hover, focus, or tap) breaks it down. With
  * nothing started, it says so. `of` says whose it is in the popover:
  * "Readiness for Maria". Inside something clickable, `inButton` opens the
  * popover on hover only, so a tap still reaches what it's in.
@@ -68,7 +68,7 @@ function ShareRing({ share, size = 14 }: { share: number; size?: number }) {
 export function ReadinessMark({ readiness, of, large = false, inButton = false }: { readiness: Readiness; of: string; large?: boolean; inButton?: boolean }) {
   const started = startedOf(readiness);
   const ready = isReady(readiness);
-  if (!started)
+  if (!started || readiness.percent === null)
     return (
       <Tip title={readiness.notStarted.length ? "Only drafts so far, and drafts don't count." : "No capabilities yet."}>
         <span className="readiness faint">Nothing started</span>
@@ -81,14 +81,14 @@ export function ReadinessMark({ readiness, of, large = false, inButton = false }
         className={`readiness${large ? " large" : ""}`}
         data-ready={ready || undefined}
         role="img"
-        aria-label={`${of}: ${ready ? "ready" : `not ready yet, ${label}`}`}
+        aria-label={`${of}: ${label}`}
         tabIndex={inButton ? undefined : 0}
       >
-        {ready ? <CheckCircleRoundedIcon className="readiness-check" /> : <ShareRing share={readiness.ready.length / started} size={large ? 16 : 14} />}
+        <ShareRing share={(readiness.percent ?? 0) / 100} size={large ? 16 : 14} />
         {large ? (
           <>
-            <strong>{ready ? "Ready" : "Not ready yet"}</strong>
-            <span className="readiness-count">{ready ? `all ${plural(started, "capability", "capabilities")}` : label}</span>
+            <strong>{readinessBand(readiness)!.name}</strong>
+            <span className="readiness-count">{readiness.percent}%</span>
           </>
         ) : (
           <span>{label}</span>
@@ -102,9 +102,9 @@ export function ReadinessMark({ readiness, of, large = false, inButton = false }
 const SHOWN = 5;
 
 /*
- * Readiness for its popover: whether it's ready, how many of its started
- * capabilities are, what the ones not ready yet still need, the drafts, and
- * what readiness is.
+ * Readiness for its popover: its quarter and percentage, what that
+ * recommends, what it's worked out from, what each capability with something
+ * left still needs, the drafts, and what readiness is.
  */
 function ReadinessDetails({ readiness, of }: { readiness: Readiness; of: string }) {
   const started = startedOf(readiness);
@@ -115,14 +115,13 @@ function ReadinessDetails({ readiness, of }: { readiness: Readiness; of: string 
       <DetailsEyebrow>{of}</DetailsEyebrow>
       <Box sx={{ mt: 1, display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: 1 }}>
         <Box className="readiness-details-name" data-ready={ready || undefined} sx={{ fontSize: "1.12em", fontWeight: 700 }}>
-          {ready ? "Ready" : "Not ready yet"}
+          {readinessBand(readiness)!.name}
         </Box>
-        <Box sx={{ color: "text.secondary", fontVariantNumeric: "tabular-nums" }}>
-          {readiness.ready.length} of {started} ready
-        </Box>
+        <Box sx={{ color: "text.secondary", fontVariantNumeric: "tabular-nums" }}>{readiness.percent}%</Box>
       </Box>
+      <Box sx={{ mt: 0.75, color: "text.secondary" }}>{readinessBand(readiness)!.says}</Box>
       <Box sx={{ mt: 0.75, color: "text.secondary" }}>
-        {plural(started, "capability", "capabilities")} started
+        From {plural(started, "started capability", "started capabilities")}, {readiness.ready.length} with nothing left
         {readiness.notStarted.length ? `, and ${plural(readiness.notStarted.length, "draft", "drafts")} not started` : ""}
       </Box>
       {readiness.notReady.length ? (
@@ -149,8 +148,8 @@ function ReadinessDetails({ readiness, of }: { readiness: Readiness; of: string 
         </Box>
       ) : null}
       <Box sx={[section, { fontSize: "0.92em", color: "text.secondary" }]}>
-        A capability is ready when it&rsquo;s at Beta or GA, settled enough for real use, and no gap&rsquo;s risk on it is unacceptable.
-        Drafts don&rsquo;t count either way.
+        A recommendation, for you to judge: the weighted maturity of its capabilities, where one with an unacceptable gap counts for
+        nothing until it&rsquo;s closed. Drafts don&rsquo;t count. A capability has nothing left at Beta or GA with no unacceptable gap.
       </Box>
     </DetailsCard>
   );
@@ -164,7 +163,7 @@ function ReadinessDetails({ readiness, of }: { readiness: Readiness; of: string 
  * `limit`, the rest are folded.
  */
 export function StillNeeds({ readiness, readyText, limit = 8 }: { readiness: Readiness; readyText: string; limit?: number }) {
-  const ready = isReady(readiness);
+  const ready = readiness.percent === null ? null : !readiness.notReady.length;
   const row = (n: NotReady) => (
     <li key={n.capability.id}>
       <span className="needs-capability">

@@ -83,14 +83,16 @@ neither from the other:
   short: a feature from its capabilities, and a project, or everything
   showing, from its features. A domain comes from its parts of features. It
   shows on features, domains, projects and the map, never on personas.
-- **Readiness** is whether people can use it yet. A capability is ready when
-  it's at Beta or GA and no gap's risk on it is unacceptable. Anything else is
-  how many of its started capabilities are ready, "2 of 3 ready", and Ready
-  when all are. Drafts are listed apart, as not started, and never count. It
-  shows on personas, on a feature for a persona, on the overview, and on
-  feature and domain pages, each of those with what it still needs: each
-  capability not ready yet, with whether it must reach Beta and the
-  unacceptable gaps to close, linking to each.
+- **Readiness** is how ready people can rely on it being, as a
+  recommendation: the same weighted average as maturity, each capability at
+  its level in short, except that one with a gap that's unacceptable on it
+  scores 0 until that's closed. It's a percentage in one of four quarters, Not
+  ready yet, Partly ready, Mostly ready and Ready, drawn as a ring in the
+  text's color, or `--ok` once Ready. Drafts are listed apart, as not
+  started, and never count. It shows on personas, on a feature for a persona,
+  on the overview, and on capability, feature and domain pages, each with
+  what it still needs: each capability below Beta, or with an unacceptable
+  gap, and what to do about it, linking to each.
 
 ### How things are shown
 

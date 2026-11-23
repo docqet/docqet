@@ -65,7 +65,8 @@ be fake, scores 48, below a blocking gap on GA at 76.
 
 A risk's **verdict** says whether it's OK to leave the gap open at the level
 it's at, by the third its score falls in. A capability with a gap that's
-`unacceptable` on it isn't [ready](readiness.md):
+`unacceptable` on it counts for nothing in [readiness](readiness.md) until
+it's closed:
 
 | Verdict        | Score     | What it means                                    |
 | -------------- | --------- | ------------------------------------------------ |
@@ -180,7 +181,7 @@ written for it in [state](state.md). The spec has
 
 - [Stability level](stability-level.md): how much you can depend on a
   capability. Risk orders what's left before you can.
-- [Readiness](readiness.md): whether the software is ready to use. It counts
-  only the gaps that are `unacceptable`.
+- [Readiness](readiness.md): how ready people can rely on the software
+  being. It counts only the gaps that are `unacceptable`.
 - A priority: Docket doesn't say when a gap is closed. Risk says what's at
   stake; deciding what to do first is up to the people doing it.

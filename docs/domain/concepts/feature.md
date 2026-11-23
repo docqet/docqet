@@ -25,8 +25,8 @@ next guest".
 - **It can span domains.** Each [domain](domain.md) that does part of the job
   writes its own doc of the feature, and contributes its part.
 - **It has no stability level.** It has a [maturity](maturity.md), how far
-  along it is, and a [readiness](readiness.md), whether people can use it
-  yet, both worked out from its capabilities.
+  along it is, and a [readiness](readiness.md), how ready people can rely on
+  it being, both worked out from its capabilities.
 
 Whether some work is a feature, a capability or neither is set out in the
 [overview](../overview.md#feature-capability-or-neither).

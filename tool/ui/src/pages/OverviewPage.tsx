@@ -100,7 +100,7 @@ export default function OverviewPage({ state }: { state: DocketState; route: Rou
               value={readinessLabel(readiness) ?? <span className="ov-faint">Nothing started</span>}
               note={
                 startedOf(readiness)
-                  ? `Of ${plural(startedOf(readiness), "started capability", "started capabilities")}${readiness.notStarted.length ? `, ${readiness.notStarted.length} not started` : ""}`
+                  ? `A recommendation, from ${plural(startedOf(readiness), "started capability", "started capabilities")}${readiness.notStarted.length ? `, ${readiness.notStarted.length} not started` : ""}`
                   : "Drafts don't count"
               }
             />

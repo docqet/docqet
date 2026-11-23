@@ -429,7 +429,7 @@ function Avatars({ personas }: { personas: Persona[] }) {
 function ReadinessStat({ readiness, tab }: { readiness: Readiness; tab: string }) {
   const ready = isReady(readiness);
   const note = [
-    ...(readiness.notReady.length ? [`${readiness.notReady.length} not ready yet`] : []),
+    ...(readiness.notReady.length ? [`${readiness.notReady.length} with something left`] : []),
     ...(readiness.notStarted.length ? [`${readiness.notStarted.length} not started`] : []),
   ].join(" · ");
   return (
@@ -437,7 +437,7 @@ function ReadinessStat({ readiness, tab }: { readiness: Readiness; tab: string }
       label="Readiness"
       term="readiness"
       value={readinessLabel(readiness) ?? "Nothing started"}
-      note={note || (ready ? "Every started capability" : "Drafts don't count")}
+      note={note || (readiness.percent === null ? "Drafts don't count" : "Nothing left on any capability")}
       tone={ready ? "ok" : undefined}
       href={`${tabHref(tab)}#still-needs`}
     />
@@ -447,7 +447,7 @@ function ReadinessStat({ readiness, tab }: { readiness: Readiness; tab: string }
 /* What it still needs before people can use it, as a section of its first tab. */
 function StillNeedsSection({ readiness, readyText }: { readiness: Readiness; readyText: string }) {
   return (
-    <Section id="still-needs" title="What it still needs" term="readiness" note="Before people can use it: each capability not ready yet, and what would make it ready.">
+    <Section id="still-needs" title="What it still needs" term="readiness" note="What would make it more ready: each capability with something left, and what.">
       <StillNeeds readiness={readiness} readyText={readyText} />
     </Section>
   );
@@ -848,6 +848,7 @@ function CapabilityPage({ capability, route, ...go }: PageProps & { capability: 
   const ruleCount = (s: "gap" | "evidence" | "trust") => rules.filter((r) => ruleStanding(capability, r) === s).length;
   const needs = level ? needsOf(state, capability) : null;
   const ready = needs ? !needs.belowBeta && !needs.gaps.length : null;
+  const readiness = readinessOf(state, [capability]);
 
   const tabs: TabDef[] = [
     { id: "overview", label: "Overview" },
@@ -888,9 +889,9 @@ function CapabilityPage({ capability, route, ...go }: PageProps & { capability: 
             <Stat
               label="Readiness"
               term="readiness"
-              value={ready === null ? "Not started" : ready ? "Ready" : "Not ready yet"}
-              note={!needs ? "A draft is neither ready nor not" : ready ? "At Beta or above, with no unacceptable gap" : needsLine(needs)}
-              tone={ready ? "ok" : undefined}
+              value={readinessLabel(readiness) ?? "Not started"}
+              note={!needs ? "A draft doesn't count" : ready ? "Nothing left: at Beta or above, with no unacceptable gap" : needsLine(needs)}
+              tone={isReady(readiness) ? "ok" : undefined}
               href={needs?.gaps.length ? tabHref("left") : undefined}
             />
             <LeftStat left={left} of={capability.name} />
