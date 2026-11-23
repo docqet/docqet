@@ -88,6 +88,11 @@
   padding-left: 0;
 }
 
+/* The impact badge keeps to its name's width, not its column's. */
+.gr-flat .gr-row > :first-child {
+  justify-self: start;
+}
+
 .gr-row:hover {
   background: color-mix(in srgb, var(--text) 2.5%, transparent);
 }
