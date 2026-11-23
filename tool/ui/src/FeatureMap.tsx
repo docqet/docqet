@@ -26,6 +26,7 @@ import {
   type Domain,
   type Pick,
 } from "./state";
+import { Tip } from "./design/Tip";
 
 /* A domain's mark, wherever one is named. */
 export function DomainIcon({ size = 14 }: { size?: number }) {
@@ -106,16 +107,20 @@ export function mapItems(
           </>
         ) : null}
         {elsewhere.length ? (
-          <span className="card-elsewhere" title="This feature spans domains: each has its part">
-            <DomainIcon size={13} />
-            Also in {elsewhere.map((p) => domainName(state, p.domain)).join(", ")}
-          </span>
+          <Tip title="This feature spans domains: each has its part">
+            <span className="card-elsewhere">
+              <DomainIcon size={13} />
+              Also in {elsewhere.map((p) => domainName(state, p.domain)).join(", ")}
+            </span>
+          </Tip>
         ) : null}
         {problems.length ? (
-          <span className="card-contradiction" title={problems.join("\n")}>
-            <ContradictionHint messages={problems} />
-            {problems.length === 1 ? "Contradiction" : `${problems.length} contradictions`}
-          </span>
+          <Tip title={problems.join("\n")}>
+            <span className="card-contradiction">
+              <ContradictionHint messages={problems} tip={false} />
+              {problems.length === 1 ? "Contradiction" : `${problems.length} contradictions`}
+            </span>
+          </Tip>
         ) : null}
       </span>
     );
@@ -211,15 +216,17 @@ export function mapGroups(state: DocketState, onOpen: (pick: Pick) => void): Can
       onOpen: () => onOpen({ kind: "domain", id: domain.id }),
       label: (
         <>
-          <span className="area-text" title="Domain">
-            <DomainIcon size={15} />
-            <span className="area-name">{domain.name}</span>
-            {state.projects.length > 1 ? (
-              <span className="area-projects">
-                {[...new Set(domain.from.map((f) => f.project))].map((id) => projectName(state, id)).join(" + ")}
-              </span>
-            ) : null}
-          </span>
+          <Tip title="Domain">
+            <span className="area-text">
+              <DomainIcon size={15} />
+              <span className="area-name">{domain.name}</span>
+              {state.projects.length > 1 ? (
+                <span className="area-projects">
+                  {[...new Set(domain.from.map((f) => f.project))].map((id) => projectName(state, id)).join(" + ")}
+                </span>
+              ) : null}
+            </span>
+          </Tip>
           {domain.maturity !== null ? (
             <span className="area-maturity" data-no-pan>
               <MaturityRing

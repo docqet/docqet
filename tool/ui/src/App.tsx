@@ -1,10 +1,10 @@
+import { GapIcon } from "./design/left/LeftMark";
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode, type Ref } from "react";
 import Box from "@mui/material/Box";
 import BoltOutlinedIcon from "@mui/icons-material/BoltOutlined";
 import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import FilterListRoundedIcon from "@mui/icons-material/FilterListRounded";
-import IncompleteCircleRoundedIcon from "@mui/icons-material/IncompleteCircleRounded";
 import WidgetsOutlinedIcon from "@mui/icons-material/WidgetsOutlined";
 import Canvas, { type CanvasHandle } from "./Canvas";
 import { ConceptIcon, ConceptsPanel } from "./Concepts";
@@ -45,6 +45,7 @@ import {
   type StateFile,
   type Target,
 } from "./state";
+import { Tip } from "./design/Tip";
 
 /* The platform and projects named in the page's address, as `?platform=<id>&project=<id>,<id>`. */
 const showingInUrl = () => {
@@ -575,10 +576,12 @@ function FilterBar({
       <span className="filter-bar-label">Showing only</span>
       {filters.map((f) => (
         <span key={`${f.kind}:${f.id}`} className="filter-chip">
-          <button type="button" className="filter-chip-name" title={`${PICK_KINDS[f.kind]}: open it`} onClick={() => onOpen(f)}>
-            {kindIcon(f.kind)}
-            {pickName(state, f)}
-          </button>
+          <Tip title={`${PICK_KINDS[f.kind]}: open it`}>
+            <button type="button" className="filter-chip-name" onClick={() => onOpen(f)}>
+              {kindIcon(f.kind)}
+              {pickName(state, f)}
+            </button>
+          </Tip>
           <button
             type="button"
             className="filter-chip-remove"
@@ -601,13 +604,10 @@ function FilterBar({
 /* How many gaps there are, in the header: it opens the page with every gap, open decision and tradeoff. */
 function GapsLink({ state }: { state: DocketState }) {
   return (
-    <a
-      className="stat stat-button"
-      href={pageHref({ kind: "gaps", id: "" })}
-      title="Where the software differs from what's intended: product and technical gaps, open decisions and tradeoffs"
-    >
+    <Tip title="Where the software differs from what's intended: product and technical gaps, open decisions and tradeoffs">
+    <a className="stat stat-button" href={pageHref({ kind: "gaps", id: "" })}>
       <span className="stat-icon" aria-hidden>
-        <IncompleteCircleRoundedIcon sx={{ fontSize: 17, color: "text.secondary" }} />
+        <GapIcon sx={{ fontSize: 17, color: "text.secondary" }} />
       </span>
       <span className="stat-n">{state.gaps.length}</span>
       <span className="stat-label">
@@ -615,6 +615,7 @@ function GapsLink({ state }: { state: DocketState }) {
       </span>
       <ChevronRightRoundedIcon className="stat-chevron" aria-hidden sx={{ fontSize: 16 }} />
     </a>
+    </Tip>
   );
 }
 
@@ -635,14 +636,16 @@ function StatButton({
   onClick: () => void;
 }) {
   return (
-    <button type="button" className="stat stat-button" aria-pressed={pressed} title={title} onClick={onClick}>
-      <span className="stat-icon" aria-hidden>
-        {kindIcon(kind, 18)}
-      </span>
-      <span className="stat-n">{n}</span>
-      <span className="stat-label">{label}</span>
-      <ChevronRightRoundedIcon className="stat-chevron" aria-hidden sx={{ fontSize: 16 }} />
-    </button>
+    <Tip title={title}>
+      <button type="button" className="stat stat-button" aria-pressed={pressed} onClick={onClick}>
+        <span className="stat-icon" aria-hidden>
+          {kindIcon(kind, 18)}
+        </span>
+        <span className="stat-n">{n}</span>
+        <span className="stat-label">{label}</span>
+        <ChevronRightRoundedIcon className="stat-chevron" aria-hidden sx={{ fontSize: 16 }} />
+      </button>
+    </Tip>
   );
 }
 

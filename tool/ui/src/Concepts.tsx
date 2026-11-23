@@ -10,11 +10,9 @@ import RuleRoundedIcon from "@mui/icons-material/RuleRounded";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 import WidgetsOutlinedIcon from "@mui/icons-material/WidgetsOutlined";
 import Box from "@mui/material/Box";
-import ReactMarkdown, { type Components } from "react-markdown";
-import rehypeHighlight from "rehype-highlight";
-import remarkGfm from "remark-gfm";
 import { DetailsCard, DetailsEyebrow, DetailsPopover } from "./design/DetailsPopover";
-import { Body, Facets, facets } from "./Fields";
+import { Facets, facets } from "./Fields";
+import { Excerpt, MoreAboutFold, follow } from "./design/markdown/Markdown";
 import { CapabilityStability } from "./design/catalog/CapabilityLabel";
 import {
   byFeature,
@@ -24,7 +22,6 @@ import {
   find,
   bareId,
   domainName,
-  featureTarget,
   targetOf,
   pageHref,
   type Concept,
@@ -32,6 +29,7 @@ import {
   type Pick,
   type Target,
 } from "./state";
+import { Tip } from "./design/Tip";
 
 const plural = (n: number, one: string, many: string) => `${n} ${n === 1 ? one : many}`;
 
@@ -63,10 +61,12 @@ export function PanelHeader({
   return (
     <header className="concepts-header">
       {back ? (
-        <button type="button" className="panel-back" onClick={onBack} title={`Back to ${back}`}>
-          <ArrowBackRoundedIcon sx={{ fontSize: 17, flex: "none" }} />
-          <span>{back}</span>
-        </button>
+        <Tip title={`Back to ${back}`}>
+          <button type="button" className="panel-back" onClick={onBack}>
+            <ArrowBackRoundedIcon sx={{ fontSize: 17, flex: "none" }} />
+            <span>{back}</span>
+          </button>
+        </Tip>
       ) : (
         <>
           {icon}
@@ -87,10 +87,12 @@ export function PanelHeader({
  */
 export function PageLink({ pick, children = "Details" }: { pick: Pick; children?: ReactNode }) {
   return (
-    <a className="filter-toggle page-link" href={pageHref(pick)} target="_blank" rel="noopener" title="Open everything about it in a new tab">
-      <OpenInNewRoundedIcon sx={{ fontSize: 14 }} />
-      {children}
-    </a>
+    <Tip title="Open everything about it in a new tab">
+      <a className="filter-toggle page-link" href={pageHref(pick)} target="_blank" rel="noopener">
+        <OpenInNewRoundedIcon sx={{ fontSize: 14 }} />
+        {children}
+      </a>
+    </Tip>
   );
 }
 
@@ -155,114 +157,6 @@ function ConceptSummary({ concept }: { concept: Concept }) {
       {concept.summary ? <Box sx={{ mt: 0.75 }}>{concept.summary}</Box> : null}
       <Box sx={{ mt: 1, fontSize: 12, color: "text.secondary" }}>Click to see everything it's related to.</Box>
     </DetailsCard>
-  );
-}
-
-/* A path relative to a doc's file, as the repository has it: "room.md" from "a/b/booking.md" is "a/b/room.md". */
-function resolve(from: string, href: string): string {
-  const parts = from.split("/").slice(0, -1);
-  for (const part of href.split("#")[0].split("/")) {
-    if (part === "..") parts.pop();
-    else if (part && part !== ".") parts.push(part);
-  }
-  return parts.join("/");
-}
-
-type Link = { concept: string } | { target: Target; pick: Pick } | { href: string } | null;
-
-/*
- * Where a link in a doc's body goes: another concept, a capability or rule
- * on the canvas, a web page, or nowhere this page can show. Links stay in the
- * doc's own project, whose repository its paths are relative to.
- */
-function follow(state: DocketState, from: { file: string; project: string }, href: string): Link {
-  if (/^[a-z]+:/i.test(href)) return { href };
-  const file = resolve(from.file, href);
-  const at = (d: { file: string; project: string }) => d.file === file && d.project === from.project;
-  const concept = state.concepts.find(at);
-  if (concept) return { concept: concept.id };
-  const capability = state.capabilities.find(at);
-  if (capability) return { target: capabilityTarget(state, capability.id), pick: { kind: "capability", id: capability.id } };
-  const feature = state.features.find(at);
-  if (feature) return { target: featureTarget(state, feature.id), pick: { kind: "feature", id: feature.id } };
-  const rule = state.rules.find(at);
-  if (rule?.capabilities.length)
-    return { target: capabilityTarget(state, rule.capabilities[0]), pick: { kind: "capability", id: rule.capabilities[0] } };
-  return null;
-}
-
-/*
- * Markdown, from a doc's body or a text value in its frontmatter
- * (GitHub-flavored: tables, task lists, nested lists, fenced code with
- * highlighting, images). Nothing about it is assumed: it can be a word or
- * pages, with headings or none. Links resolve from `concept`, the doc it's
- * from: one to another doc opens it in Docket, one with a scheme opens in a
- * new tab, and one Docket can't place shows as its text. With `onPick`, as on
- * a detail page, a link to a capability or feature opens it rather than
- * showing it on the map. Its headings sit under the heading of whatever shows
- * it, so they keep their order but start a few levels down.
- */
-export function Markdown({
-  state,
-  concept,
-  text,
-  className,
-  onConcept,
-  onShow,
-  onPick,
-}: {
-  state: DocketState;
-  concept: { file: string; project: string };
-  text: string;
-  className?: string;
-  onConcept: (id: string) => void;
-  onShow: (target: Target) => void;
-  onPick?: (pick: Pick) => void;
-}) {
-  const components: Components = {
-    h1: ({ children }) => <h3 className="md-h1">{children}</h3>,
-    h2: ({ children }) => <h4 className="md-h2">{children}</h4>,
-    h3: ({ children }) => <h5 className="md-h3">{children}</h5>,
-    h4: ({ children }) => <h6 className="md-h4">{children}</h6>,
-    h5: ({ children }) => <h6 className="md-h4">{children}</h6>,
-    h6: ({ children }) => <h6 className="md-h4">{children}</h6>,
-    img: ({ src, alt }) => <img src={typeof src === "string" ? src : undefined} alt={alt ?? ""} loading="lazy" />,
-    table: ({ children }) => (
-      <div className="markdown-table">
-        <table>{children}</table>
-      </div>
-    ),
-    a: ({ href, children }) => {
-      const to = href ? follow(state, concept, href) : null;
-      if (!to) return <>{children}</>;
-      if ("href" in to)
-        return (
-          <a href={to.href} target="_blank" rel="noreferrer">
-            {children}
-          </a>
-        );
-      return (
-        <button type="button" className="link" onClick={() => ("concept" in to ? onConcept(to.concept) : onPick ? onPick(to.pick) : onShow(to.target))}>
-          {children}
-        </button>
-      );
-    },
-  };
-  return (
-    <div className={className ? `markdown ${className}` : "markdown"}>
-      <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[[rehypeHighlight, { detect: false }]]} components={components}>
-        {text.trim()}
-      </ReactMarkdown>
-    </div>
-  );
-}
-
-/* A sentence or two of Markdown, such as a gap's text, inline: code, bold and italics, with no paragraph around it. Links show as their text. */
-export function InlineMarkdown({ text }: { text: string }) {
-  return (
-    <ReactMarkdown remarkPlugins={[remarkGfm]} components={{ p: ({ children }) => <>{children}</>, a: ({ children }) => <>{children}</> }}>
-      {text.trim()}
-    </ReactMarkdown>
   );
 }
 
@@ -465,7 +359,7 @@ function ConceptView({
       {concept.from.map((f, i) => (
         <div key={i} className="concept-says">
           <Facets items={facets("concept", f, { state, onConcept: onSelect, onShow })} stacked />
-          <Body from={f} go={{ state, onConcept: onSelect, onShow }} limit={360} />
+          <MoreAboutFold from={f} go={{ state, onConcept: onSelect, onShow }} />
         </div>
       ))}
       <p className="concept-file">
@@ -520,7 +414,7 @@ function ConceptView({
                   <RuleRoundedIcon sx={{ fontSize: 15, color: "text.secondary", alignSelf: "flex-start", mt: "2px" }} />
                   <span className="concept-row-text">
                     <span className="concept-row-name">{r.name}</span>
-                    {r.body ? <span className="concept-row-summary">{r.body}</span> : null}
+                    <Excerpt text={r.why} className="concept-row-summary" />
                   </span>
                 </button>
               </li>

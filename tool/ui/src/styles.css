@@ -1484,8 +1484,7 @@ kbd {
 .left-item-text code,
 .gap-affect code,
 .tradeoff-choice code,
-.tradeoff-side code,
-.tradeoff-foot code {
+.tradeoff-side code {
   padding: 1px 5px;
   font-size: 0.86em;
   background: color-mix(in srgb, var(--text) 6%, transparent);
@@ -1555,6 +1554,14 @@ kbd {
 
 .markdown a {
   color: var(--concept);
+}
+
+/* Markdown as text alone, cut to a few lines (the component sets how many). */
+.markdown-excerpt {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  overflow-wrap: anywhere;
 }
 
 /* Code highlighting, in the theme's colors. */
@@ -1882,7 +1889,7 @@ kbd {
   color: var(--faint);
 }
 
-/* Where evidence would be, when there's none of a kind. */
+/* A warning beside a rule, such as a gap saying a capability doesn't hold to it yet. Missing evidence never gets one: evidence is optional. */
 .explore-evidence-warning {
   display: inline-flex;
   align-items: center;
@@ -2348,6 +2355,17 @@ kbd {
   font-size: 13.5px;
 }
 
+.explore-rule-names .sc-standing,
+.page-rule-name .sc-standing {
+  flex: none;
+}
+
+/* Beside a rule's name in the side panel, when a gap says the capability doesn't hold to it yet. */
+.explore-rule-standing {
+  color: var(--warning);
+  font-size: 12px;
+}
+
 a.filter-toggle {
   text-decoration: none;
 }
@@ -2734,6 +2752,85 @@ a.filter-toggle {
   font-size: 14.5px;
 }
 
+/* A gap's kind, labelled before what it says. */
+.gap-kind-tag {
+  display: inline-block;
+  margin-right: 7px;
+  padding: 0 6px;
+  font-size: 10.5px;
+  font-weight: 650;
+  line-height: 17px;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  vertical-align: 1px;
+  color: var(--warning);
+  background: color-mix(in srgb, var(--warning) 13%, transparent);
+  border-radius: 4px;
+}
+
+.gap-kind-tag[data-kind="technical-gap"] {
+  color: var(--muted);
+  background: color-mix(in srgb, var(--text) 8%, transparent);
+}
+
+/* Over a list of gaps: its label, then how many of each kind, which narrow it to one. */
+.explore-gaps-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px 10px;
+  margin-bottom: 6px;
+}
+
+.explore-gaps-head .left-counts {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.gap-filter {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.gap-filter-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 9px;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+  cursor: pointer;
+  background: none;
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  line-height: 18px;
+  transition: color 120ms, border-color 120ms, background-color 120ms;
+}
+
+/* The mark as a box its own size, so it centers on the words rather than sitting on their baseline. */
+.gap-filter-toggle > .left-mark {
+  line-height: 0;
+}
+
+.gap-filter-toggle > .left-mark svg {
+  display: block;
+}
+
+.gap-filter-toggle:hover {
+  color: var(--text);
+  border-color: var(--warning);
+}
+
+.gap-filter-toggle[aria-pressed="true"] {
+  color: var(--text);
+  background: color-mix(in srgb, var(--warning) 14%, transparent);
+  border-color: var(--warning);
+}
+
 /* How many of each kind, each with its mark. */
 .left-counts {
   display: inline-flex;
@@ -2822,19 +2919,6 @@ a.filter-toggle {
   --side-border: color-mix(in srgb, var(--warning) 22%, transparent);
 }
 
-.tradeoff-foot {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 12.5px;
-  color: var(--muted);
-}
-
-.tradeoff-foot svg {
-  flex-shrink: 0;
-  color: var(--faint);
-}
-
 .page-block-aside {
   margin-left: auto;
   font-size: 13px;
@@ -2859,18 +2943,6 @@ a.filter-toggle {
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--faint);
-}
-
-.page-code li {
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 3px 0;
-  font-size: 13px;
-}
-
-.page-code code {
-  overflow-wrap: anywhere;
 }
 
 /* Several sources, a column each, to compare. */
@@ -3434,7 +3506,7 @@ button.page-table-row:hover .page-table-name strong {
   color: var(--faint);
 }
 
-/* What meets an outcome, under it: the systems and components that say so. */
+/* What meets an outcome, under it: the mechanisms and components that say so. */
 .sc-met-by {
   margin-top: 6px;
   font-size: 12.5px;
@@ -3528,7 +3600,7 @@ button.page-table-row:hover .page-table-name strong {
   }
 }
 
-/* ——— Gaps and tradeoffs, and systems' and components' pages ——— */
+/* ——— Gaps and tradeoffs, and mechanisms' and components' pages ——— */
 
 /* Which gaps, tradeoffs and decisions the gaps page shows: everything, product gaps, or technical gaps. */
 .page-show {
@@ -3572,7 +3644,7 @@ button.page-table-row:hover .page-table-name strong {
   font-weight: 550;
 }
 
-/* What implements and what verifies a system or component, side by side. */
+/* What implements and what verifies a mechanism or component, side by side. */
 .page-evidence-pair {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -3693,40 +3765,6 @@ button.page-table-row:hover .page-table-name strong {
   text-align: left;
 }
 
-/* A concept's states in order, wrapping onto as many lines as they need. */
-.lifecycle {
-  display: grid;
-  gap: 10px;
-  min-width: 0;
-}
-
-.lifecycle-states {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 6px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.lifecycle-states > li {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  min-width: 0;
-}
-
-.lifecycle-state {
-  padding: 3px 10px;
-  font-size: 13px;
-  line-height: 1.4;
-  background: color-mix(in srgb, var(--concept) 10%, transparent);
-  border: 1px solid color-mix(in srgb, var(--concept) 25%, transparent);
-  border-radius: 999px;
-  overflow-wrap: anywhere;
-}
-
 /* A doc's body: free Markdown, cut short with a fade when it's long, until asked for in full. */
 .doc-body {
   min-width: 0;
@@ -3787,22 +3825,25 @@ button.page-table-row:hover .page-table-name strong {
   line-height: 1.6;
 }
 
-/* A rule's why, opened from its row. */
-.page-rule-more {
+/* A rule's why, in its row, labelled, as part of what it is. */
+.page-rule-why {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
   min-width: 0;
   margin-top: 4px;
 }
 
-.page-rule-more > summary {
-  width: fit-content;
-  font-size: 12.5px;
-  font-weight: 600;
-  color: var(--accent);
-  cursor: pointer;
+.page-rule-why .markdown {
+  margin-top: 0;
 }
 
-.page-rule-more > .markdown,
-.page-rule-more > .doc-body {
+/* More about a rule, folded in its row. */
+.rule-table .explore-more {
+  margin-top: 6px;
+}
+
+.rule-table .explore-more .doc-body {
   margin-top: 6px;
 }
 

@@ -1,6 +1,5 @@
-import { useLayoutEffect, useRef, useState, type ReactNode } from "react";
-import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
-import { Markdown } from "./Concepts";
+import { type ReactNode } from "react";
+import { Markdown, type Go } from "./design/markdown/Markdown";
 import { LeftItem, LeftList } from "./design/left/LeftMark";
 import {
   conceptLinked,
@@ -13,42 +12,19 @@ import {
   type Contribution,
   type Decision,
   type DocketState,
-  type Pick,
-  type Target,
 } from "./state";
 
 /*
  * What a doc says, as the spec splits it: its frontmatter fields, which have a
- * set meaning and so a set place, and its body, free Markdown that's shown as
- * written, whatever it holds and however long it is.
+ * set meaning and so a set place, here; and its body, free Markdown that's
+ * shown apart from them, as more about it (see design/markdown).
  */
 
-/* Where links in Markdown go, as the Markdown component takes them. */
-export type Go = {
-  state: DocketState;
-  onConcept: (id: string) => void;
-  onShow?: (target: Target) => void;
-  onPick?: (pick: Pick) => void;
-};
-
-const noShow = () => {};
+export type { Go } from "./design/markdown/Markdown";
 
 /* A text value from frontmatter, as Markdown, with links resolved from the doc it's in. */
 export function Text({ from, text, go }: { from: Contribution; text: string; go: Go }) {
-  return <Markdown state={go.state} concept={from} text={text} className="markdown-field" onConcept={go.onConcept} onShow={go.onShow ?? noShow} onPick={go.onPick} />;
-}
-
-/* A list of sentences from frontmatter, each one Markdown. */
-export function Sentences({ from, items, go }: { from: Contribution; items: string[]; go: Go }) {
-  return (
-    <ul className="field-list">
-      {items.map((item, i) => (
-        <li key={i}>
-          <Text from={from} text={item} go={go} />
-        </li>
-      ))}
-    </ul>
-  );
+  return <Markdown text={text} from={from} go={go} className="markdown-field" />;
 }
 
 /* Open decisions, each its question under its topic. */
@@ -68,43 +44,19 @@ export function DecisionList({ from, decisions, go }: { from: Contribution; deci
 /* A labelled field: what it is, then what it says. `wide` takes a whole row where fields sit side by side. */
 export type Facet = { label: string; node: ReactNode; wide?: boolean };
 
-/* A persona's needs, which the side panel shows on their own. */
-export function needsFacet(f: Contribution, go: Go): Facet[] {
-  return f.needs?.length ? [{ label: "Needs", node: <Sentences from={f} items={f.needs} go={go} />, wide: true }] : [];
-}
-
 /*
- * The fields a contribution has, by its type, labelled, in the spec's order.
- * Open decisions aren't among them: they're shown with what's left.
+ * The fields a contribution has, by its type, labelled, in the spec's order:
+ * part of what it is, so they show with its name and summary, never with its
+ * body. Open decisions aren't among them: they're shown with what's left.
  */
 export function facets(kind: string, f: Contribution, go: Go): Facet[] {
   const out: Facet[] = [];
   const text = (label: string, value: string | null | undefined, wide = false) => {
     if (value?.trim()) out.push({ label, node: <Text from={f} text={value} go={go} />, wide });
   };
-  if (kind === "persona") {
-    out.push(...needsFacet(f, go));
-  } else if (kind === "rule") {
+  if (kind === "rule") {
     text("Why", f.why);
   } else if (kind === "concept") {
-    if (f.lifecycle?.states.length)
-      out.push({
-        label: "Lifecycle",
-        wide: true,
-        node: (
-          <div className="lifecycle">
-            <ol className="lifecycle-states">
-              {f.lifecycle.states.map((s, i) => (
-                <li key={i}>
-                  {i ? <ArrowForwardRoundedIcon sx={{ fontSize: 14, color: "text.disabled", flex: "none" }} /> : null}
-                  <span className="lifecycle-state">{s}</span>
-                </li>
-              ))}
-            </ol>
-            {f.lifecycle.text ? <Text from={f} text={f.lifecycle.text} go={go} /> : null}
-          </div>
-        ),
-      });
     if (f.confusedWith?.length)
       out.push({
         label: "Not to be confused with",
@@ -129,8 +81,6 @@ export function facets(kind: string, f: Contribution, go: Go): Facet[] {
           </ul>
         ),
       });
-  } else if (kind === "system" || kind === "component") {
-    text("Start reading at", f.start, true);
   }
   return out;
 }
@@ -150,44 +100,6 @@ export function Facets({ items, stacked = false }: { items: Facet[]; stacked?: b
   );
 }
 
-/*
- * A doc's body, as written. It can hold anything Markdown can, so a long one
- * is shown up to `limit` pixels high, fading out, with a button to show it
- * all; a short one is shown whole, with no button.
- */
-export function Body({ from, go, limit = 520 }: { from: Contribution; go: Go; limit?: number }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const [long, setLong] = useState(false);
-  const [open, setOpen] = useState(false);
-  useLayoutEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    /* A little over the limit isn't worth a button: show it all. */
-    const measure = () => setLong(el.scrollHeight > limit + 120);
-    measure();
-    const observer = new ResizeObserver(measure);
-    observer.observe(el.firstElementChild ?? el);
-    return () => observer.disconnect();
-  }, [limit, from.body]);
-  if (!from.body.trim()) return null;
-  const clamped = long && !open;
-  return (
-    <div className="doc-body">
-      <div ref={ref} className="doc-body-text" data-clamped={clamped || undefined} style={clamped ? { maxHeight: limit } : undefined}>
-        <Markdown state={go.state} concept={from} text={from.body} onConcept={go.onConcept} onShow={go.onShow ?? noShow} onPick={go.onPick} />
-      </div>
-      {long ? (
-        <button type="button" className="doc-body-toggle" aria-expanded={open} onClick={() => setOpen(!open)}>
-          {open ? "Show less" : "Show all"}
-        </button>
-      ) : null}
-    </div>
-  );
-}
-
-/* Whether a contribution says anything beyond its name and summary, by its type. */
-export const saysMore = (kind: string, f: Contribution, go: Go) => facets(kind, f, go).length > 0 || f.body.trim() !== "";
-
 /* ——— Decisions that are closed, and what they became ——— */
 
 const KIND_WORDS: Record<BecameKind, string> = {
@@ -197,7 +109,7 @@ const KIND_WORDS: Record<BecameKind, string> = {
   rule: "Rule",
   concept: "Concept",
   persona: "Persona",
-  system: "System",
+  mechanism: "Mechanism",
   component: "Component",
   gap: "Gap",
   tradeoff: "Tradeoff",
@@ -213,7 +125,7 @@ function placeOf(state: DocketState, b: Became): { href: string | null; name: st
   if (b.kind === "gap" || b.kind === "tradeoff") {
     const item = (b.kind === "gap" ? state.gaps : state.tradeoffs).find((i) => i.id === b.id);
     const on = subjectOf({ id: b.id });
-    const kind = on.type as "capability" | "feature" | "system" | "component";
+    const kind = on.type as "capability" | "feature" | "mechanism" | "component";
     return { href: pageHref({ kind, id: on.id }), name: item?.text ?? b.ref };
   }
   if (b.kind === "rule") {
@@ -226,7 +138,7 @@ function placeOf(state: DocketState, b: Became): { href: string | null; name: st
     capability: state.capabilities,
     concept: state.concepts,
     persona: state.personas,
-    system: state.systems,
+    mechanism: state.mechanisms,
     component: state.components,
   };
   const doc = find(lists[b.kind] ?? [], b.id);

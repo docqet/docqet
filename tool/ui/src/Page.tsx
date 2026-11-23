@@ -2,19 +2,20 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded";
 import CodeRoundedIcon from "@mui/icons-material/CodeRounded";
 import FactCheckOutlinedIcon from "@mui/icons-material/FactCheckOutlined";
-import IncompleteCircleRoundedIcon from "@mui/icons-material/IncompleteCircleRounded";
 import RuleRoundedIcon from "@mui/icons-material/RuleRounded";
 import WarningAmberRoundedIcon from "@mui/icons-material/WarningAmberRounded";
 import Box from "@mui/material/Box";
 import type { Theme } from "@mui/material/styles";
 import { StabilityChecklist } from "./Checklist";
 import { ConceptChips, ConceptIcon, related } from "./Concepts";
-import { Body, CameFrom, DecisionList, Decided, Facets, Text, facets, saysMore } from "./Fields";
+import { CameFrom, DecisionList, Decided, Facets, Text, facets } from "./Fields";
+import { Body, MORE_ABOUT, MoreAboutFold } from "./design/markdown/Markdown";
 import { RingGlyph } from "./design/maturity/RingGlyph";
 import { MATURITY_BANDS, maturityBand } from "./design/maturity/maturity";
 import { STABILITY, STABILITY_LEVEL_IDS, levelColor } from "./design/stability/stability";
-import { LeftLabel, LeftList } from "./design/left/LeftMark";
+import { GapIcon, LeftLabel, LeftList } from "./design/left/LeftMark";
 import { CapabilityStability } from "./design/catalog/CapabilityLabel";
+import { StandingMark } from "./design/standing/StandingMark";
 import {
   CapabilityTrail,
   DomainCrumbs,
@@ -25,6 +26,7 @@ import {
   LeftRollup,
   NAMES,
   PersonaRows,
+  RULE_STANDING_LABELS,
   Places,
   Row,
   Tradeoffs,
@@ -83,7 +85,11 @@ import {
   type Persona,
   type Pick,
   type Rule,
+  type RuleStanding,
+  hasEvidence,
+  ruleStanding,
 } from "./state";
+import { Tip } from "./design/Tip";
 
 /*
  * Everything about one doc, on a page of its own, laid out to answer at a
@@ -98,8 +104,8 @@ export default function DetailPage({ state, page, onGo }: { state: DocketState; 
   const doc: Doc | undefined =
     page.kind === "gaps"
       ? undefined
-      : page.kind === "system" || page.kind === "component"
-        ? find(page.kind === "system" ? state.systems : state.components, page.id)
+      : page.kind === "mechanism" || page.kind === "component"
+        ? find(page.kind === "mechanism" ? state.mechanisms : state.components, page.id)
         : find(pickList(state, page.kind), page.id);
   const scroller = useRef<HTMLDivElement>(null);
 
@@ -124,23 +130,27 @@ export default function DetailPage({ state, page, onGo }: { state: DocketState; 
   };
 
   /* Back on the map, what this page is about opens in the side panel, in view, when it's on the map at all. */
-  const onMap = doc && page.kind !== "gaps" && page.kind !== "system" && page.kind !== "component" ? (page as Pick) : undefined;
+  const onMap = doc && page.kind !== "gaps" && page.kind !== "mechanism" && page.kind !== "component" ? (page as Pick) : undefined;
   const back = mapHref(onMap);
 
   return (
     <div className="page" ref={scroller}>
       <header className="page-top">
-        <a className="page-brand" href={back} title="The map">
-          <Logo />
-        </a>
-        <a className="page-back" href={back} title={onMap ? `Back to the map, with ${doc!.name} open` : "Back to the map"}>
-          <ArrowBackRoundedIcon sx={{ fontSize: 16 }} />
-          Map
-        </a>
+        <Tip title="The map">
+          <a className="page-brand" href={back} aria-label="The map">
+            <Logo />
+          </a>
+        </Tip>
+        <Tip title={onMap ? `Back to the map, with ${doc!.name} open` : "Back to the map"}>
+          <a className="page-back" href={back}>
+            <ArrowBackRoundedIcon sx={{ fontSize: 16 }} />
+            Map
+          </a>
+        </Tip>
         <span className="divider" aria-hidden />
         <span className="page-projects">{state.projects.map((p) => p.name).join(", ")}</span>
         <a className="filter-toggle" href={pageHref({ kind: "gaps", id: "" })} aria-current={page.kind === "gaps" ? "page" : undefined}>
-          <IncompleteCircleRoundedIcon sx={{ fontSize: 14 }} />
+          <GapIcon sx={{ fontSize: 14 }} />
           Gaps and tradeoffs
         </a>
       </header>
@@ -161,7 +171,7 @@ export default function DetailPage({ state, page, onGo }: { state: DocketState; 
         <DomainPage domain={doc as Domain} {...links} />
       ) : page.kind === "persona" ? (
         <PersonaPage persona={doc as Persona} {...links} />
-      ) : page.kind === "system" || page.kind === "component" ? (
+      ) : page.kind === "mechanism" || page.kind === "component" ? (
         <TechnicalPage doc={doc as TechnicalDoc} {...links} />
       ) : (
         <ConceptPage concept={doc as Concept} {...links} />
@@ -305,50 +315,76 @@ function Card({ title, count, children }: { title?: ReactNode; count?: number; c
 
 /* ——— What it is ——— */
 
+/* Above what a source says, where several define it: the domain, where they differ, and the project it's from. */
+function SourceFrom({ state, doc, from }: { state: DocketState; doc: Doc; from: Contribution }) {
+  return (
+    <div className="page-source-from">
+      {doc.from.some((o) => o.domain !== from.domain) ? (
+        <span className="explore-crumb">
+          <DomainIcon size={14} />
+          {domainName(state, from.domain)}
+        </span>
+      ) : null}
+      <span className="explore-crumb">
+        <ProjectIcon size={14} />
+        {projectName(state, from.project)}
+      </span>
+    </div>
+  );
+}
+
 /*
- * What a doc says beyond its name and summary, under `title`: its fields, by
- * its type, as cards side by side, then its body, as written. Where several
- * sources define it, each gets a column, headed by where it's from, so they
- * can be compared. Nothing shows when no source says more.
+ * What a doc is, beyond its name and summary, then more about it, as two
+ * sections, the same on every detail page. Under `title`, its fields, by its
+ * type, as cards side by side: what it is. Then, under "More about it", its
+ * body, as written: anything more its authors wrote, apart from what it is.
+ * Where several sources define it, each gets a column in each, headed by
+ * where it's from, so they can be compared. Either shows nothing when no
+ * source has any.
  */
 function About({ kind, doc, title, aside, ...go }: Go & { kind: string; doc: Doc; title: ReactNode; aside?: ReactNode }) {
   const { state } = go;
   const several = doc.from.length > 1;
-  const shown = doc.from.filter((f) => saysMore(kind, f, go) || (several && f.summary));
-  if (!shown.length) return null;
-  const says = (f: Contribution) => (
-    <>
-      <Facets items={facets(kind, f, go)} />
-      <Body from={f} go={go} />
-    </>
-  );
+  const fielded = doc.from.filter((f) => facets(kind, f, go).length || (several && f.summary));
+  const written = doc.from.filter((f) => f.body.trim());
   return (
-    <Block title={title} aside={aside}>
-      {several ? (
-        <div className="page-sources">
-          {shown.map((f, i) => (
-            <div key={i} className="page-source">
-              <div className="page-source-from">
-                {doc.from.some((o) => o.domain !== f.domain) ? (
-                  <span className="explore-crumb">
-                    <DomainIcon size={14} />
-                    {domainName(state, f.domain)}
-                  </span>
-                ) : null}
-                <span className="explore-crumb">
-                  <ProjectIcon size={14} />
-                  {projectName(state, f.project)}
-                </span>
-              </div>
-              {f.summary ? <p className="page-source-summary">{f.summary}</p> : null}
-              {says(f)}
+    <>
+      {fielded.length ? (
+        <Block title={title} aside={aside}>
+          {several ? (
+            <div className="page-sources">
+              {fielded.map((f, i) => (
+                <div key={i} className="page-source">
+                  <SourceFrom state={state} doc={doc} from={f} />
+                  {f.summary ? <p className="page-source-summary">{f.summary}</p> : null}
+                  <Facets items={facets(kind, f, go)} />
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
-      ) : (
-        <div className="page-about">{says(shown[0])}</div>
-      )}
-    </Block>
+          ) : (
+            <Facets items={facets(kind, fielded[0], go)} />
+          )}
+        </Block>
+      ) : null}
+      {written.length ? (
+        <Block title={MORE_ABOUT} aside={fielded.length ? undefined : aside}>
+          {several ? (
+            <div className="page-sources">
+              {written.map((f, i) => (
+                <div key={i} className="page-source">
+                  <SourceFrom state={state} doc={doc} from={f} />
+                  <Body from={f} go={go} />
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="page-about">
+              <Body from={written[0]} go={go} />
+            </div>
+          )}
+        </Block>
+      ) : null}
+    </>
   );
 }
 
@@ -411,33 +447,37 @@ function LeftTile({ state, capabilities, technical = true }: { state: DocketStat
     <Tile
       label="What's left"
       value={n ? plural(n, "open item", "open items") : "Nothing open"}
-      note={n ? `in ${plural(open, "capability", "capabilities")}` : "No open decisions, gaps, or rules without evidence"}
+      note={n ? `in ${plural(open, "capability", "capabilities")}` : "No open decisions or gaps"}
       tone={n ? "warn" : "ok"}
     />
   );
 }
 
-/* How many of some rules something verifies, as a tile. */
-function RulesTile({ rules }: { rules: Rule[] }) {
-  const verified = rules.filter((r) => r.evidence.verifies.length).length;
-  const implemented = rules.filter((r) => r.evidence.implements.length).length;
-  return (
-    <Tile
-      label="Rules verified"
-      value={rules.length ? `${verified} of ${rules.length}` : "No rules"}
-      note={rules.length ? `${implemented} of ${rules.length} implemented` : "None written down yet"}
-      tone={rules.length && (verified < rules.length || implemented < rules.length) ? "warn" : undefined}
-    />
-  );
+/*
+ * How some rules stand, as a tile: how many hold with evidence, how many on
+ * trust, and how many a gap on one of `capabilities` says aren't held yet.
+ */
+function RulesTile({ rules, capabilities }: { rules: Rule[]; capabilities: Capability[] }) {
+  const standing = (r: Rule): RuleStanding => (capabilities.some((c) => ruleStanding(c, r) === "gap") ? "gap" : hasEvidence(r.evidence) ? "evidence" : "trust");
+  const count = (s: RuleStanding) => rules.filter((r) => standing(r) === s).length;
+  const notHeld = count("gap");
+  const note = [
+    ...(count("evidence") ? [`${count("evidence")} with evidence`] : []),
+    ...(count("trust") ? [`${count("trust")} on trust`] : []),
+    ...(notHeld ? [`${notHeld} not held yet`] : []),
+  ].join(" · ");
+  return <Tile label="Rules" value={rules.length || "No rules"} note={rules.length ? note : "None written down yet"} tone={notHeld ? "warn" : undefined} />;
 }
 
 function Avatars({ personas }: { personas: Persona[] }) {
   return (
     <span className="page-avatars">
       {personas.map((p) => (
-        <span key={p.id} title={personaNameAndRole(p).name}>
-          <PersonaAvatar persona={p} size={26} />
-        </span>
+        <Tip key={p.id} title={personaNameAndRole(p).name}>
+          <span>
+            <PersonaAvatar persona={p} size={26} />
+          </span>
+        </Tip>
       ))}
     </span>
   );
@@ -447,7 +487,7 @@ function Avatars({ personas }: { personas: Persona[] }) {
 
 /*
  * Capabilities as a table: what each does, its level (in `domain`, when
- * given), how many of its rules something verifies, what's left, and who it
+ * given), how many of its rules have evidence, what's left, and who it
  * serves. Each row opens its page.
  */
 function CapabilityTable({ state, capabilities, domain, onOpen }: Go & { capabilities: Capability[]; domain?: string }) {
@@ -457,14 +497,14 @@ function CapabilityTable({ state, capabilities, domain, onOpen }: Go & { capabil
       <div className="page-table-row page-table-head" role="row">
         <span role="columnheader">Capability</span>
         <span role="columnheader">Level</span>
-        <span role="columnheader">Rules verified</span>
+        <span role="columnheader">Rules with evidence</span>
         <span role="columnheader">What's left</span>
         <span role="columnheader">Serves</span>
       </div>
       {capabilities.map((c) => {
         const level = (domain && c.levels.find((l) => l.domain === domain)?.level) || c.stability;
         const rules = c.rules.flatMap((id) => find(state.rules, id) ?? []);
-        const verified = rules.filter((r) => r.evidence.verifies.length).length;
+        const withEvidence = rules.filter((r) => hasEvidence(r.evidence)).length;
         const left = leftIn(state, c);
         const n = leftCount(left);
         return (
@@ -476,12 +516,12 @@ function CapabilityTable({ state, capabilities, domain, onOpen }: Go & { capabil
             <span role="cell">
               <LevelName level={level} name={c.name} />
             </span>
-            <span role="cell" data-tone={rules.length && verified < rules.length ? "warn" : undefined}>
-              {rules.length ? `${verified} of ${rules.length}` : <span className="faint">No rules</span>}
-            </span>
-            <span role="cell" data-tone={n ? "warn" : undefined} title={n ? leftLine(left) : undefined}>
-              {n ? plural(n, "open item", "open items") : <span className="faint">Nothing open</span>}
-            </span>
+            <span role="cell">{rules.length ? `${withEvidence} of ${rules.length}` : <span className="faint">No rules</span>}</span>
+            <Tip title={n ? leftLine(left) : undefined}>
+              <span role="cell" data-tone={n ? "warn" : undefined}>
+                {n ? plural(n, "open item", "open items") : <span className="faint">Nothing open</span>}
+              </span>
+            </Tip>
             <span role="cell">
               <Avatars personas={c.personas.flatMap((id) => find(state.personas, id) ?? [])} />
             </span>
@@ -493,26 +533,39 @@ function CapabilityTable({ state, capabilities, domain, onOpen }: Go & { capabil
 }
 
 const VERBS = [
-  { verb: "verifies", none: "Nothing verifies it", icon: <FactCheckOutlinedIcon sx={{ fontSize: 14 }} /> },
-  { verb: "implements", none: "Nothing implements it", icon: <CodeRoundedIcon sx={{ fontSize: 14 }} /> },
+  { verb: "verifies", icon: <FactCheckOutlinedIcon sx={{ fontSize: 14 }} /> },
+  { verb: "implements", icon: <CodeRoundedIcon sx={{ fontSize: 14 }} /> },
 ] as const;
 
 /*
  * Rules as a table: what each says, beside every place that verifies it and
- * every place that implements it, with a warning where there's none. With
- * `followers`, each says which capabilities follow it. `own`, when given,
- * is a first row for a capability's evidence of its own.
+ * every place that implements it. Evidence is optional, so where there's
+ * none it says so plainly, with no warning. With `capability`, each rule's
+ * mark is whether that capability holds to it. With `followers`, each says
+ * which capabilities follow it. `own`, when given, is a first row for a
+ * capability's evidence of its own.
  */
-function RuleTable({ state, rules, own, followers = false, onOpen, onConcept, onPick }: Go & { rules: Rule[]; own?: Evidence; followers?: boolean }) {
+function RuleTable({
+  state,
+  rules,
+  own,
+  capability,
+  followers = false,
+  onOpen,
+  onConcept,
+  onPick,
+}: Go & { rules: Rule[]; own?: Evidence; capability?: Capability; followers?: boolean }) {
   const several = state.projects.length > 1;
-  const places = (evidence: Evidence, verb: "verifies" | "implements", none: string, icon: ReactNode) =>
+  const places = (evidence: Evidence, verb: "verifies" | "implements", icon: ReactNode) =>
     evidence[verb].length ? (
       <ul className="page-places">
         {evidence[verb].map((e) => (
           <li key={`${e.project}:${e.file}:${e.line}`}>
             <span className="page-place-icon">{icon}</span>
             <span className="page-place">
-              <code title={e.text}>{e.text}</code>
+              <Tip title={e.text}>
+                <code>{e.text}</code>
+              </Tip>
               <span className="page-place-where">
                 {e.file}:{e.line}
                 {several && e.project ? ` · ${projectName(state, e.project)}` : ""}
@@ -522,10 +575,7 @@ function RuleTable({ state, rules, own, followers = false, onOpen, onConcept, on
         ))}
       </ul>
     ) : (
-      <span className="explore-evidence-warning">
-        <WarningAmberRoundedIcon sx={{ fontSize: 13 }} />
-        {none}
-      </span>
+      <span className="faint">None</span>
     );
   const row = (key: string, name: ReactNode, summary: ReactNode, evidence: Evidence) => (
     <div key={key} className="page-table-row" role="row">
@@ -533,10 +583,10 @@ function RuleTable({ state, rules, own, followers = false, onOpen, onConcept, on
         {name}
         {summary}
       </span>
-      {VERBS.map(({ verb, none, icon }) => (
+      {VERBS.map(({ verb, icon }) => (
         <span key={verb} role="cell" className="page-evidence-cell">
           <span className="page-cell-label">{verb === "verifies" ? "Verified by" : "Implemented by"}</span>
-          {places(evidence, verb, none, icon)}
+          {places(evidence, verb, icon)}
         </span>
       ))}
     </div>
@@ -559,22 +609,27 @@ function RuleTable({ state, rules, own, followers = false, onOpen, onConcept, on
         return row(
           r.id,
           <strong className="page-rule-name">
-            <RuleRoundedIcon sx={{ fontSize: 15, color: "text.secondary", flex: "none", mt: "2px" }} />
+            {capability ? (
+              <StandingMark standing={ruleStanding(capability, r)} label={RULE_STANDING_LABELS[ruleStanding(capability, r)]} />
+            ) : (
+              <RuleRoundedIcon sx={{ fontSize: 15, color: "text.secondary", flex: "none", mt: "2px" }} />
+            )}
             {r.name}
           </strong>,
           <>
-            {r.from.map((f, i) => (
-              <Body key={i} from={f} go={{ state, onConcept, onPick }} limit={320} />
-            ))}
-            <CameFrom kind="rule" id={r.id} go={{ state, onConcept, onPick }} inline />
+            {/* What it is, its why, then more about it, folded, as everywhere a doc shows. */}
             {r.from.map((f, i) =>
               f.why?.trim() ? (
-                <details key={i} className="page-rule-more">
-                  <summary>Why</summary>
+                <div key={i} className="page-rule-why">
+                  <span className="page-label">Why</span>
                   <Text from={f} text={f.why} go={{ state, onConcept, onPick }} />
-                </details>
+                </div>
               ) : null,
             )}
+            {r.from.map((f, i) => (
+              <MoreAboutFold key={i} from={f} go={{ state, onConcept, onPick }} limit={320} />
+            ))}
+            <CameFrom kind="rule" id={r.id} go={{ state, onConcept, onPick }} inline />
             {notYet.length ? (
               <span className="explore-evidence-warning">
                 <WarningAmberRoundedIcon sx={{ fontSize: 13 }} />
@@ -641,7 +696,7 @@ function CapabilityPage({ capability, ...go }: Go & { capability: Capability }) 
               }
             />
             <LeftTile state={state} capabilities={[capability]} />
-            <RulesTile rules={rules} />
+            <RulesTile rules={rules} capabilities={[capability]} />
             {counts ? (
               <Tile
                 label="Checklist"
@@ -658,8 +713,12 @@ function CapabilityPage({ capability, ...go }: Go & { capability: Capability }) 
         main={
           <>
             <About {...go} kind="capability" doc={capability} title="What it does" />
-            <Block title="Rules and evidence" count={rules.length}>
-              <RuleTable {...go} rules={rules} own={capability.evidence} />
+            <Block
+              title="Rules and evidence"
+              count={rules.length}
+              note="Following a rule claims it holds. Evidence is optional: a rule with none holds on trust, unless a gap says it isn't held yet."
+            >
+              <RuleTable {...go} rules={rules} own={capability.evidence} capability={capability} />
             </Block>
             {capability.tradeoffs.length ? (
               <Block title={<LeftLabel kind="tradeoff" size={18} />} count={capability.tradeoffs.length} note="Chosen on purpose: what each gains us, and what we accept in return.">
@@ -730,7 +789,7 @@ function FeaturePage({ feature, ...go }: Go & { feature: Feature }) {
             <Tile label="Maturity" value={<MaturityValue value={feature.maturity} />} note="From its capabilities' levels" />
             <Tile label="Capabilities" value={capabilities.length} note={<LevelBar capabilities={capabilities} />} />
             <LeftTile state={state} capabilities={capabilities} />
-            <RulesTile rules={rules} />
+            <RulesTile rules={rules} capabilities={capabilities} />
             {personas.length ? <Tile label="Serves" value={<Avatars personas={personas} />} note={plural(personas.length, "persona", "personas")} /> : null}
           </>
         }
@@ -817,7 +876,7 @@ function DomainPage({ domain, ...go }: Go & { domain: Domain }) {
             <Tile label="Features" value={features.length} note={loose.length ? `and ${plural(loose.length, "capability", "capabilities")} in none` : undefined} />
             <Tile label="Capabilities" value={capabilities.length} note={<LevelBar capabilities={capabilities} />} />
             <LeftTile state={state} capabilities={capabilities} />
-            <RulesTile rules={rules} />
+            <RulesTile rules={rules} capabilities={capabilities} />
           </>
         }
       />
@@ -1062,7 +1121,7 @@ function ConceptPage({ concept, ...go }: Go & { concept: Concept }) {
   );
 }
 
-/* Every system and component some capabilities are built on, each once. */
+/* Every mechanism and component some capabilities are built on, each once. */
 const builtOnAll = (state: DocketState, capabilities: Capability[]) => [...new Set(capabilities.flatMap((c) => builtOn(state, c)))];
 
 /* A doc's open decisions, from each of its sources, as a list. */
@@ -1113,9 +1172,10 @@ function CapabilityList({ capabilities, onOpen }: { capabilities: Capability[]; 
 }
 
 /*
- * A system or component: how it's built, in the code's words, and where that
- * falls short of what we intend. Its technical gaps; its tradeoffs, with what they cost; the checklist outcomes it meets
- * for the capabilities it serves, and the evidence for it; and, beside them,
+ * A mechanism or component: how it's built, in the code's words, and where that
+ * falls short of what we intend. Its technical gaps; its tradeoffs, with what they cost; where it is in the code,
+ * from the annotations that implement or verify it; the checklist outcomes it meets for the capabilities it serves;
+ * and, beside them,
  * its open decisions and the capabilities that rely on it.
  */
 function TechnicalPage({ doc, ...go }: Go & { doc: TechnicalDoc }) {
@@ -1164,11 +1224,25 @@ function TechnicalPage({ doc, ...go }: Go & { doc: TechnicalDoc }) {
                 </Card>
               </Block>
             ) : null}
+            <Block title="In the code" count={places || undefined} note="Where the code says it implements or verifies it, from its annotations.">
+              <Card>
+                <div className="page-evidence-pair">
+                  <div>
+                    <span className="page-label">Implemented by</span>
+                    {doc.evidence.implements.length ? <Places state={state} places={doc.evidence.implements} label="" detailed /> : <span className="faint">None</span>}
+                  </div>
+                  <div>
+                    <span className="page-label">Verified by</span>
+                    {doc.evidence.verifies.length ? <Places state={state} places={doc.evidence.verifies} label="" detailed /> : <span className="faint">None</span>}
+                  </div>
+                </div>
+              </Card>
+            </Block>
             <Block title="Outcomes it meets" count={outcomes.length}>
               {outcomes.length ? (
                 <Card>
                   <p className="faint page-note">
-                    For each capability it serves, these count as met with evidence on its checklist, unless a gap names one.
+                    For each capability it serves, these count as met on its checklist, with the places in the code as evidence, unless a gap names one.
                   </p>
                   <ul className="explore-left-list">
                     {outcomes.map(({ outcome, quality }) => (
@@ -1182,16 +1256,6 @@ function TechnicalPage({ doc, ...go }: Go & { doc: TechnicalDoc }) {
                       </li>
                     ))}
                   </ul>
-                  <div className="page-evidence-pair">
-                    <div>
-                      <span className="page-label">Implemented by</span>
-                      {doc.evidence.implements.length ? <Places state={state} places={doc.evidence.implements} label="" detailed /> : <EvidenceNone>Nothing implements it</EvidenceNone>}
-                    </div>
-                    <div>
-                      <span className="page-label">Verified by</span>
-                      {doc.evidence.verifies.length ? <Places state={state} places={doc.evidence.verifies} label="" detailed /> : <EvidenceNone>Nothing verifies it</EvidenceNone>}
-                    </div>
-                  </div>
                 </Card>
               ) : (
                 <p className="concepts-empty">It doesn't say it meets any checklist outcome.</p>
@@ -1206,21 +1270,9 @@ function TechnicalPage({ doc, ...go }: Go & { doc: TechnicalDoc }) {
             </Card>
             <DecidedCard {...go} doc={doc} />
             <CameFromCard {...go} kind={doc.kind} id={doc.id} />
-            <Card title="Capabilities that rely on it" count={capabilities.length}>
-              {capabilities.length ? <CapabilityList capabilities={capabilities} onOpen={onOpen} /> : <p className="concepts-empty">It doesn't list any.</p>}
+            <Card title={doc.kind === "component" ? "Capabilities that rely on it" : doc.applies === "platform" ? "Applies across the platform" : "Applies to"} count={capabilities.length}>
+              {capabilities.length ? <CapabilityList capabilities={capabilities} onOpen={onOpen} /> : <p className="concepts-empty">{doc.kind === "mechanism" ? doc.applies === "platform" ? "Its platform serves none yet." : "Its project serves none yet." : "It doesn't list any."}</p>}
             </Card>
-            {doc.code.length ? (
-              <Card title="Code" count={doc.code.length}>
-                <ul className="page-code">
-                  {doc.code.map((c) => (
-                    <li key={c.glob}>
-                      <code>{c.glob}</code>
-                      <span className="faint">{plural(c.files, "file", "files")}</span>
-                    </li>
-                  ))}
-                </ul>
-              </Card>
-            ) : null}
           </>
         }
       />
@@ -1228,18 +1280,9 @@ function TechnicalPage({ doc, ...go }: Go & { doc: TechnicalDoc }) {
   );
 }
 
-function EvidenceNone({ children }: { children: ReactNode }) {
-  return (
-    <span className="explore-evidence-warning">
-      <WarningAmberRoundedIcon sx={{ fontSize: 13 }} />
-      {children}
-    </span>
-  );
-}
-
-/* What a gap, tradeoff or open decision is on, as a link to its page: a capability with its level, a feature, a domain, a system or a component. */
+/* What a gap, tradeoff or open decision is on, as a link to its page: a capability with its level, a feature, a domain, a mechanism or a component. */
 function SubjectLink({ state, type, id, onPick }: { state: DocketState; type: string; id: string; onPick: Go["onPick"] }) {
-  if (type === "system" || type === "component") {
+  if (type === "mechanism" || type === "component") {
     const doc = technicalDoc(state, `${type}:${id}`);
     return doc ? <TechnicalLink doc={doc} /> : <span>{id}</span>;
   }
@@ -1268,7 +1311,7 @@ type Show = "all" | "product" | "technical";
 function GapsPage(go: Go) {
   const { state, onPick } = go;
   const [show, setShow] = useState<Show>("all");
-  const technicalType = (type: string) => type === "system" || type === "component";
+  const technicalType = (type: string) => type === "mechanism" || type === "component";
   const shown = (type: string) => show === "all" || (show === "technical") === technicalType(type);
 
   const gaps = state.gaps.filter((g) => shown(subjectOf(g).type));
@@ -1278,7 +1321,7 @@ function GapsPage(go: Go) {
     ...state.domains.map((doc) => ({ type: "domain", doc })),
     ...state.features.map((doc) => ({ type: "feature", doc })),
     ...state.capabilities.map((doc) => ({ type: "capability", doc })),
-    ...state.systems.map((doc) => ({ type: "system", doc })),
+    ...state.mechanisms.map((doc) => ({ type: "mechanism", doc })),
     ...state.components.map((doc) => ({ type: "component", doc })),
   ].filter(({ type, doc }) => shown(type) && openDecisions(doc).length);
   const decisions = decided.reduce((n, { doc }) => n + openDecisions(doc).length, 0);
@@ -1287,7 +1330,7 @@ function GapsPage(go: Go) {
     ...state.domains.map((doc) => ({ type: "domain", doc })),
     ...state.features.map((doc) => ({ type: "feature", doc })),
     ...state.capabilities.map((doc) => ({ type: "capability", doc })),
-    ...state.systems.map((doc) => ({ type: "system", doc })),
+    ...state.mechanisms.map((doc) => ({ type: "mechanism", doc })),
     ...state.components.map((doc) => ({ type: "component", doc })),
   ].filter(({ type, doc }) => shown(type) && closedDecisions(doc).length);
   const closed = closedOn.reduce((n, { doc }) => n + closedDecisions(doc).length, 0);
@@ -1299,7 +1342,7 @@ function GapsPage(go: Go) {
     }));
   const gapGroups = bySubject(gaps);
   const tradeoffGroups = bySubject(tradeoffs);
-  const technicalDocs = [...state.systems, ...state.components];
+  const technicalDocs = [...state.mechanisms, ...state.components];
 
   return (
     <>
@@ -1308,7 +1351,7 @@ function GapsPage(go: Go) {
           <div className="page-hero-head">
             <div className="page-hero-text">
               <div className="explore-kind">
-                <IncompleteCircleRoundedIcon sx={{ fontSize: 17 }} />
+                <GapIcon sx={{ fontSize: 17 }} />
                 Across {state.projects.length === 1 ? state.projects[0].name : plural(state.projects.length, "project", "projects")}
               </div>
               <h1>Gaps and tradeoffs</h1>
@@ -1348,7 +1391,6 @@ function GapsPage(go: Go) {
                     <div key={`${g.type}:${g.id}`} className="page-subject-group">
                       <div className="page-subject">
                         <SubjectLink state={state} type={g.type} id={g.id} onPick={onPick} />
-                        {technicalType(g.type) ? <span className="explore-tag">Technical</span> : null}
                       </div>
                       <LeftList detailed>
                         {g.items.map((gap) => (

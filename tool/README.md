@@ -44,37 +44,48 @@ With more than one project on a platform, the UI shows them all on one map:
   one project's, and its popover lists each project's.
 
 The side panel summarizes a doc: what it is, how far along it is, what's
-left, and who it serves. What it says beyond its summary is folded under
-*More about it*; its tradeoffs, the rules it follows, and what's left that
-only someone working on the code acts on (*Technical gaps* and *Rules without
-evidence*) are folded until opened, each with how many it holds. Its
+left, and who it serves. Its tradeoffs and the rules it follows are folded
+until opened, each with how many it holds. Each rule it follows has the same
+mark as on the checklist: held with evidence, held on trust, or not held yet,
+when one of the capability's gaps names it. Its
 **Details** link opens everything about it, such as what it's built on, each
 rule's evidence, the stability checklist and the code, in a new tab, at an
 address like `?capability=deposits` that keeps the projects showing.
 
+Every doc shows what it is apart from its body, the same way everywhere.
+First what it is, from its frontmatter: its name, summary, level, and fields
+such as a rule's why or what a concept is confused with. Then its body, the Markdown
+its authors wrote, under *More about it*: folded in the side panel, the
+concepts panel and a rule's row, and a section of its own on a detail page.
+A doc with no body shows nothing there.
+
 Where the software differs from what's intended shows where it's declared,
 and wherever it matters. Each kind looks the same everywhere, on the map, in
 the side panel, on a detail page and on the checklist: one mark and one color
-per kind (gaps, product or technical, open decisions, rules without evidence,
-tradeoffs), and each item a row with its mark, which a detail page adds more
-under.
+per kind (gaps, open decisions, tradeoffs), and each
+item a row with its mark, which a detail page adds more under. A gap's mark is
+an open circle with a dotted edge, the same for product and technical gaps,
+and each gap is labelled *Product* or *Technical*.
 
-- **What's left** on a capability lists its open decisions, its product
-  gaps, the technical gaps of the systems and components it's built on, and
-  its rules without evidence. A feature's or domain's
+- **What's left** on a capability lists its open decisions and its gaps,
+  and nothing else: missing evidence is never something left to do. Its gaps
+  are one list: its product gaps, then
+  the technical gaps of the mechanisms and components it's built on. Over the
+  list, how many there are of each kind; with both, each count shows only
+  that kind, and pressing it again shows all. A feature's or domain's
   adds its own open decisions; a persona's leaves technical gaps out.
 - **Tradeoffs** show on their capability, and on a feature as what it's
   decided not to build: in the side panel, what was chosen; on the detail
   page, each with what it gains, what it costs, and the code it explains.
 - **Drafts** show as the word Draft, with no mark, and count toward no
   maturity or readiness.
-- **The checklist** marks each outcome not met, met with evidence (a system
+- **The checklist** marks each outcome not met, met with evidence (a mechanism
   or component the capability is built on meets it), or met on its level's
   word.
-- **A system's or component's page**, at `?system=ledger` or
+- **A mechanism's or component's page**, at `?mechanism=deployment` or
   `?component=bookings`, has how it's built, its technical gaps, tradeoffs,
-  open decisions, the outcomes it meets and their evidence, and what relies on
-  it.
+  where it is in the code, the outcomes it meets, open decisions, and what it
+  applies to or what relies on it.
 - **Gaps and tradeoffs**, at `?view=gaps` and from the header, has every gap
   and tradeoff by what it's on, every open decision by where it is, for
   everything, product gaps, or technical gaps.

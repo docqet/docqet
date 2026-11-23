@@ -1,16 +1,13 @@
 import { useState, type ReactNode } from "react";
-import CheckRoundedIcon from "@mui/icons-material/CheckRounded";
-import IncompleteCircleRoundedIcon from "@mui/icons-material/IncompleteCircleRounded";
 import LayersOutlinedIcon from "@mui/icons-material/LayersOutlined";
 import LightbulbOutlinedIcon from "@mui/icons-material/LightbulbOutlined";
-import RadioButtonUncheckedRoundedIcon from "@mui/icons-material/RadioButtonUncheckedRounded";
-import TaskAltRoundedIcon from "@mui/icons-material/TaskAltRounded";
 import WarningAmberRoundedIcon from "@mui/icons-material/WarningAmberRounded";
 import Switch from "@mui/material/Switch";
 import { DetailsCard, DetailsEyebrow, DetailsPopover } from "./design/DetailsPopover";
 import { STABILITY, STABILITY_LEVEL_IDS } from "./design/stability/stability";
 import { StabilityMark } from "./design/stability/StabilityMark";
 import { LEFT_KINDS, LeftLabel, gapKind } from "./design/left/LeftMark";
+import { StandingMark, type Standing } from "./design/standing/StandingMark";
 import { TechnicalLink, levelName, plural } from "./Explore";
 import {
   appliesAt,
@@ -34,7 +31,7 @@ import {
  *
  * On a capability's page it opens at the capability's level. Each outcome
  * that level expects is not met where a gap names it, on the capability or on
- * what it's built on; met with evidence where a system or component it's
+ * what it's built on; met with evidence where a mechanism or component it's
  * built on says it meets it; and otherwise met on the level's word. Other
  * levels show what came before and what's next. A draft claims none.
  */
@@ -72,8 +69,6 @@ function countsAt(checklist: Checklist, level: Level) {
   };
 }
 
-/* An outcome's standing for this capability, as outcomeStanding works it out. */
-type Standing = "gap" | "evidence" | "trust" | "not-expected";
 const isMet = (s: Standing) => s === "evidence" || s === "trust";
 
 export function StabilityChecklist({ state, checklist, capability }: { state: DocketState; checklist: Checklist; capability: Capability }) {
@@ -250,19 +245,7 @@ const STANDING_LABELS: Record<Standing, string> = {
 
 /* Whether an outcome is met for this capability, with evidence or on trust, named by a gap, or not expected at its level. */
 function StandingIcon({ standing }: { standing: Standing }) {
-  return (
-    <span className="sc-standing" data-standing={standing} aria-label={STANDING_LABELS[standing]} title={STANDING_LABELS[standing]}>
-      {standing === "evidence" ? (
-        <TaskAltRoundedIcon sx={{ fontSize: 16 }} />
-      ) : standing === "trust" ? (
-        <CheckRoundedIcon sx={{ fontSize: 16 }} />
-      ) : standing === "gap" ? (
-        <IncompleteCircleRoundedIcon sx={{ fontSize: 15 }} />
-      ) : (
-        <RadioButtonUncheckedRoundedIcon sx={{ fontSize: 14 }} />
-      )}
-    </span>
-  );
+  return <StandingMark standing={standing} label={STANDING_LABELS[standing]} />;
 }
 
 /* A quality's name, which opens what it's about and how much each level asks of it, so the levels mean the same to everyone. */

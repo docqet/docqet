@@ -3,15 +3,18 @@ import Box from "@mui/material/Box";
 import RuleRoundedIcon from "@mui/icons-material/RuleRounded";
 import WarningAmberRoundedIcon from "@mui/icons-material/WarningAmberRounded";
 import { LeftMark } from "./design/left/LeftMark";
+import { Tip } from "./design/Tip";
 
-/* A warning after a name, for something with a contradiction; what it is shows on hover. */
-export function ContradictionHint({ messages }: { messages: string[] }) {
+/*
+ * A warning after a name, for something with a contradiction; what it is shows
+ * on hover. `tip={false}` where what it's in already shows it on hover.
+ */
+export function ContradictionHint({ messages, tip = true }: { messages: string[]; tip?: boolean }) {
   if (!messages.length) return null;
   return (
-    <WarningAmberRoundedIcon
-      aria-label={messages.join(" ")}
-      sx={{ flex: "none", fontSize: 15, color: "var(--warning)" }}
-    />
+    <Tip title={tip ? messages.join("\n") : undefined}>
+      <WarningAmberRoundedIcon aria-label={messages.join(" ")} sx={{ flex: "none", fontSize: 15, color: "var(--warning)" }} />
+    </Tip>
   );
 }
 

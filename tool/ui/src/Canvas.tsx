@@ -12,6 +12,7 @@ import {
   type RefObject,
 } from "react";
 import { Grip } from "./design/Grip";
+import { Tip } from "./design/Tip";
 
 const MIN_ZOOM = 0.3;
 const MAX_ZOOM = 1.6;
@@ -576,9 +577,11 @@ export default function Canvas({
         <button type="button" onClick={() => zoomMiddle((z) => z / 1.2)} aria-label="Zoom out">
           −
         </button>
-        <button type="button" className="zoom-level" onClick={() => zoomMiddle(() => 1)} title="Back to 100%">
-          {Math.round(view.zoom * 100)}%
-        </button>
+        <Tip title="Back to 100%">
+          <button type="button" className="zoom-level" onClick={() => zoomMiddle(() => 1)}>
+            {Math.round(view.zoom * 100)}%
+          </button>
+        </Tip>
         <button type="button" onClick={() => zoomMiddle((z) => z * 1.2)} aria-label="Zoom in">
           +
         </button>
@@ -586,14 +589,11 @@ export default function Canvas({
         <button type="button" className="text-button" onClick={fitAll}>
           Fit
         </button>
-        <button
-          type="button"
-          className="text-button"
-          onClick={tidyUp}
-          title="Put every card back in its tidy place"
-        >
-          Tidy
-        </button>
+        <Tip title="Put every card back in its tidy place">
+          <button type="button" className="text-button" onClick={tidyUp}>
+            Tidy
+          </button>
+        </Tip>
       </div>
     </div>
   );

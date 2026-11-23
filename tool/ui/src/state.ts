@@ -14,7 +14,7 @@ export type CapabilityLevel = Level | null;
 
 /* What a closed decision became, as named, and the doc, gap or tradeoff it means here, or null where nothing showing has it. */
 export type Became = { ref: string; kind: BecameKind; id: string | null };
-export type BecameKind = "domain" | "feature" | "capability" | "rule" | "concept" | "persona" | "system" | "component" | "gap" | "tradeoff";
+export type BecameKind = "domain" | "feature" | "capability" | "rule" | "concept" | "persona" | "mechanism" | "component" | "gap" | "tradeoff";
 
 /*
  * A decision: a question, and a few words on what it's about. While it's
@@ -32,30 +32,23 @@ export type Decision = {
   resolved?: Became[];
 };
 
-/* The states a concept goes through, in order, and what the list doesn't show. */
-export type Lifecycle = { states: string[]; text: string | null };
-
 /* What a concept is easily mistaken for: another concept, as linked, or a word that isn't one, and how they differ. */
 export type Confusion = { concept: string | null; term: string | null; text: string };
 
 /*
  * The frontmatter fields that say something rather than link, so each is its
  * contribution's own, as its body is. Each type has some: open decisions on a
- * domain, feature, capability, system or component; a persona's needs; a
- * rule's why; a concept's
- * lifecycle and what it's confused with; a system's or component's start.
+ * domain, feature, capability, mechanism or component; a rule's why; what a
+ * concept is confused with. A persona has none: what it needs is in its body.
  * Text values are Markdown.
  */
 export type Fields = {
   decisions?: Decision[];
-  needs?: string[];
   why?: string | null;
-  lifecycle?: Lifecycle | null;
   confusedWith?: Confusion[];
-  start?: string | null;
 };
 
-const FIELD_KEYS = ["decisions", "needs", "why", "lifecycle", "confusedWith", "start"] as const;
+const FIELD_KEYS = ["decisions", "why", "confusedWith"] as const;
 
 /* Every text a contribution's fields hold, for search. */
 export function fieldsText(f: Fields): string {
@@ -64,7 +57,6 @@ export function fieldsText(f: Fields): string {
     const value = f[key];
     if (typeof value === "string") parts.push(value);
     else if (Array.isArray(value)) for (const v of value) parts.push(typeof v === "string" ? v : Object.values(v).filter(Boolean).join(" "));
-    else if (value) parts.push([...value.states, value.text ?? ""].join(" "));
   }
   return parts.join(" ");
 }
@@ -103,8 +95,6 @@ export type Doc = Fields & {
   body: string;
   from: Contribution[];
 };
-
-export type CodeGlob = { glob: string; files: number };
 
 /* A part of the business, with a language of its own. Features and capabilities span domains; each has a part in it. */
 export type Domain = Doc & {
@@ -146,23 +136,28 @@ export type Capability = Doc & {
   /* Its product gaps and tradeoffs, as it declares them. */
   gaps: string[];
   tradeoffs: string[];
-  /* The systems and components that list it, as `system:<id>` or `component:<id>`, worked out from their `capabilities`. */
+  /* The mechanisms that apply to it and the components that list it, as `mechanism:<id>` or `component:<id>`, worked out from their `capabilities`. */
   builtBy: string[];
   evidence: Evidence;
 };
 
 /*
- * How part of the software is built, in the code's words: a system several
- * features rely on, or a component, one area as the code names it. Neither has
- * a level or a domain; each lists the capabilities that rely on it, and holds
- * the technical gaps, tradeoffs and open decisions about it. Projects that
- * declare the same one contribute to it, as with features.
+ * How part of the software is built, in the code's words: a mechanism, how
+ * something works across a whole project, or a component, one area as the code
+ * names it. Neither has a level or a domain; each holds the technical gaps,
+ * tradeoffs and open decisions about it. A component lists the capabilities
+ * that rely on it; a mechanism applies to every capability its project serves,
+ * which the indexer writes as its `capabilities`, or, applying to its
+ * platform, to every capability any project on the platform serves, which
+ * combining adds. Projects that declare the same one contribute to it, as with
+ * features.
  */
-export type TechnicalKind = "system" | "component";
+export type TechnicalKind = "mechanism" | "component";
 export type TechnicalDoc = Doc & {
   kind: TechnicalKind;
+  /* What a mechanism applies to: its project's capabilities, or its platform's. A component's is always "project", and means nothing. */
+  applies: "project" | "platform";
   capabilities: string[];
-  code: CodeGlob[];
   /* The checklist outcomes it meets for the capabilities it serves, as `<quality>/<level>/<id>`. */
   meets: string[];
   gaps: string[];
@@ -218,7 +213,7 @@ export type Persona = Doc & {
 
 /*
  * A known gap: something we intend to close, when and how we choose. On a
- * capability, it's what someone using the product would notice; on a system
+ * capability, it's what someone using the product would notice; on a mechanism
  * or component, what only someone working on the code would. Its ID is `<type>:<id>#<key>`, and the
  * part before `#` is what it's on.
  */
@@ -237,7 +232,7 @@ export type Gap = {
   places: EvidencePlace[];
 };
 
-/* A tradeoff: what we chose, what it costs, and when to look at it again. On a capability, feature, system or component; its ID is as a gap's. */
+/* A tradeoff: what we chose, what it gains us, and what it costs. On a capability, feature, mechanism or component; its ID is as a gap's. */
 export type Tradeoff = {
   id: string;
   project?: string;
@@ -246,7 +241,6 @@ export type Tradeoff = {
   /* What we hope to get by choosing it. Missing from state written before it, and optional in the docs. */
   gain?: string | null;
   cost: string;
-  revisit: string | null;
   /* The code it explains, from `docket:tradeoff` annotations. */
   places: EvidencePlace[];
 };
@@ -302,7 +296,7 @@ export type DocketState = {
   rules: Rule[];
   concepts: Concept[];
   personas: Persona[];
-  systems: TechnicalDoc[];
+  mechanisms: TechnicalDoc[];
   components: TechnicalDoc[];
   gaps: Gap[];
   tradeoffs: Tradeoff[];
@@ -346,8 +340,10 @@ export type StateFile = {
   /* Personas aren't in a domain, so these have no `domain`. Missing from state written before personas. */
   personas?: Omit<Raw<Persona>, "domain">[];
   /* Technical docs aren't in a domain either. Missing from state written before them, as is `tradeoffs`. */
-  systems?: Omit<Raw<TechnicalDoc>, "domain" | "kind">[];
-  components?: Omit<Raw<TechnicalDoc>, "domain" | "kind">[];
+  /* `applies` is missing from state written before it, meaning "project". */
+  mechanisms?: (Omit<Raw<TechnicalDoc>, "domain" | "kind" | "applies"> & { applies?: "project" | "platform" })[];
+  /* A component's `description` is what readers show under its name, as a mechanism's `summary` is. */
+  components?: (Omit<Raw<TechnicalDoc>, "domain" | "kind" | "summary" | "applies"> & { description?: string })[];
   gaps: Gap[];
   tradeoffs?: Tradeoff[];
   problems: Problem[];
@@ -426,7 +422,7 @@ export function combine(files: StateFile[]): DocketState {
     rules: [],
     concepts: [],
     personas: [],
-    systems: [],
+    mechanisms: [],
     components: [],
     gaps: [],
     tradeoffs: [],
@@ -441,6 +437,9 @@ export function combine(files: StateFile[]): DocketState {
     listings.set(child, [...(listings.get(child) ?? []), { parent, project }]);
   /* Which capabilities each domain lists in each feature. */
   const featureLists = new Map<string, { domain: string; capabilities: string[] }[]>();
+  /* What each platform's projects serve, and the mechanisms that apply across one, to put together once every project is in. */
+  const platformServes = new Map<string, string[]>();
+  const acrossPlatform: { doc: TechnicalDoc; platform: string }[] = [];
 
   /* Add one project's contribution to the doc with this ID, making it if it's the first. */
   function contribute<T extends Doc>(list: T[], id: string, project: string, raw: Omit<Raw<Doc>, "domain"> & { domain: string }, make: (base: Doc) => T): T {
@@ -466,7 +465,13 @@ export function combine(files: StateFile[]): DocketState {
 
   for (const file of files) {
     const project = file.project.id;
+    const platform = projectOf(file).platform.id;
     state.projects.push(projectOf(file));
+    /* What a project serves, as a mechanism's `capabilities` are worked out: what it declares, other than drafts, and what its components list. */
+    const serves = platformServes.get(platform) ?? [];
+    union(serves, file.capabilities.filter((c) => c.stability !== "draft").map((c) => c.id));
+    for (const c of file.components ?? []) union(serves, c.capabilities);
+    platformServes.set(platform, serves);
     for (const d of file.domains) contribute(state.domains, d.id, project, { ...d, domain: d.id }, newDomain);
     /* A gap's or tradeoff's ID is its project's, as the docs' lists below name them. */
     const own = (ids: string[] | undefined) => (ids ?? []).map((id) => `${id}@${project}`);
@@ -525,21 +530,28 @@ export function combine(files: StateFile[]): DocketState {
         readiness: null,
       }));
     }
-    /* Systems and components are in no domain; their contributions are told apart by project, as a persona's are. */
-    for (const kind of ["system", "component"] as const) {
-      for (const e of (kind === "system" ? file.systems : file.components) ?? []) {
-        const doc = contribute(kind === "system" ? state.systems : state.components, e.id, project, { ...e, domain: "" }, (base) => ({
+    /* Mechanisms and components are in no domain; their contributions are told apart by project, as a persona's are. */
+    for (const kind of ["mechanism", "component"] as const) {
+      const entries =
+        kind === "mechanism"
+          ? (file.mechanisms ?? []).map((e) => ({ ...e, applies: e.applies ?? ("project" as const) }))
+          : (file.components ?? []).map(({ description, ...e }) => ({ ...e, summary: description, applies: "project" as const }));
+      for (const e of entries) {
+        const doc = contribute(kind === "mechanism" ? state.mechanisms : state.components, e.id, project, { ...e, domain: "" }, (base) => ({
           ...base,
           kind,
+          applies: "project" as const,
           capabilities: [],
-          code: [],
           meets: [],
           gaps: [],
           tradeoffs: [],
           evidence: { implements: [], verifies: [] },
         }));
         union(doc.capabilities, e.capabilities);
-        doc.code.push(...e.code.filter((g) => !doc.code.some((x) => x.glob === g.glob)));
+        if (e.applies === "platform") {
+          doc.applies = "platform";
+          acrossPlatform.push({ doc, platform });
+        }
         union(doc.meets, e.meets);
         union(doc.gaps, own(e.gaps));
         union(doc.tradeoffs, own(e.tradeoffs));
@@ -591,13 +603,16 @@ export function combine(files: StateFile[]): DocketState {
     union(p.from.concepts, p.concepts.flatMap((l) => resolve(state.concepts, l)));
   }
 
+  /* A mechanism that applies across its platform applies to what every project on it serves, which no one project's indexer can see. */
+  for (const { doc, platform } of acrossPlatform) union(doc.capabilities, platformServes.get(platform) ?? []);
+
   /* Reverse links, worked out again across everything. */
   for (const c of state.capabilities) {
     for (const id of c.rules) union(find(state.rules, id)?.capabilities ?? [], [c.id]);
     for (const id of c.concepts) union(find(state.concepts, id)?.capabilities ?? [], [c.id]);
   }
   for (const r of state.rules) for (const id of r.concepts) union(find(state.concepts, id)?.rules ?? [], [r.id]);
-  for (const e of [...state.systems, ...state.components]) {
+  for (const e of [...state.mechanisms, ...state.components]) {
     for (const id of e.capabilities) union(find(state.capabilities, id)?.builtBy ?? [], [`${e.kind}:${e.id}`]);
   }
   /* A gap's rule means its own domain's, else the only one with that ID, as a capability's link to one does. */
@@ -616,7 +631,7 @@ export function combine(files: StateFile[]): DocketState {
    */
   const lists: Record<string, { id: string }[]> = {
     domain: state.domains, feature: state.features, capability: state.capabilities, persona: state.personas,
-    rule: state.rules, concept: state.concepts, system: state.systems, component: state.components,
+    rule: state.rules, concept: state.concepts, mechanism: state.mechanisms, component: state.components,
   };
   const becameOf = (ref: string, f: Contribution): Became => {
     if (ref.includes("#")) {
@@ -638,7 +653,7 @@ export function combine(files: StateFile[]): DocketState {
     }
     return { ref, kind, id: find(list, id)?.id ?? null };
   };
-  for (const doc of [...state.domains, ...state.features, ...state.capabilities, ...state.systems, ...state.components])
+  for (const doc of [...state.domains, ...state.features, ...state.capabilities, ...state.mechanisms, ...state.components])
     for (const f of doc.from) for (const d of f.decisions ?? []) d.resolved = d.became.map((ref) => becameOf(ref, f));
 
   /* Which feature each capability is in: the first listing, with a contradiction when projects list it in different ones. */
@@ -712,7 +727,7 @@ export function combine(files: StateFile[]): DocketState {
   differing("rule", state.rules);
   differing("concept", state.concepts);
   differing("persona", state.personas);
-  differing("system", state.systems);
+  differing("mechanism", state.mechanisms);
   differing("component", state.components);
   return state;
 }
@@ -939,7 +954,7 @@ export const openDecisions = (doc: Doc): Decision[] => doc.from.flatMap((f) => (
 export const closedDecisions = (doc: Doc): Decision[] => doc.from.flatMap((f) => (f.decisions ?? []).filter((d) => d.status === "closed"));
 
 /* A doc that holds decisions, with its kind, as a decision's way back to where it was made. */
-export type DecisionHolder = { kind: "domain" | "feature" | "capability" | "system" | "component"; doc: Doc };
+export type DecisionHolder = { kind: "domain" | "feature" | "capability" | "mechanism" | "component"; doc: Doc };
 
 /* The closed decisions that became this doc, gap or tradeoff, by its ID here, with where each was made. */
 export function decidedBy(state: DocketState, kind: BecameKind, id: string): { on: DecisionHolder; from: Contribution; decision: Decision }[] {
@@ -947,7 +962,7 @@ export function decidedBy(state: DocketState, kind: BecameKind, id: string): { o
     ...state.domains.map((doc) => ({ kind: "domain" as const, doc })),
     ...state.features.map((doc) => ({ kind: "feature" as const, doc })),
     ...state.capabilities.map((doc) => ({ kind: "capability" as const, doc })),
-    ...state.systems.map((doc) => ({ kind: "system" as const, doc })),
+    ...state.mechanisms.map((doc) => ({ kind: "mechanism" as const, doc })),
     ...state.components.map((doc) => ({ kind: "component" as const, doc })),
   ];
   return holders.flatMap((on) =>
@@ -967,31 +982,42 @@ export function conceptLinked(state: DocketState, link: string, domain: string):
   return same.find((c) => c.domain === domain) ?? (same.length === 1 ? same[0] : undefined);
 }
 
-/* A rule a capability follows that nothing verifies or implements yet, and which of those it lacks. */
-export type RuleWanting = { rule: Rule; missing: ("verifies" | "implements")[] };
+/*
+ * Whether a capability holds to a rule it follows: not yet, when one of its
+ * gaps names the rule; with evidence, when something verifies or implements
+ * the rule; or on trust, when nothing says either way. Following a rule
+ * claims it holds, so on trust is the usual standing, not a warning. A gap
+ * wins over evidence, since a rule's evidence is about every capability that
+ * follows it.
+ */
+export type RuleStanding = "gap" | "evidence" | "trust";
+export const ruleStanding = (capability: Capability, rule: Rule): RuleStanding =>
+  rule.gaps.some((id) => capability.gaps.includes(id)) ? "gap" : hasEvidence(rule.evidence) ? "evidence" : "trust";
 
-/* A technical gap under a capability: the gap, and the system or component it's on. */
+export const hasEvidence = (evidence: Evidence) => evidence.verifies.length > 0 || evidence.implements.length > 0;
+
+/* A technical gap under a capability: the gap, and the mechanism or component it's on. */
 export type TechnicalGap = { gap: Gap; on: TechnicalDoc };
 
 /*
  * What's still open about a capability: decisions nobody has made, its known
- * gaps, the technical gaps of what it's built on, and the rules it follows
- * with no evidence of a kind, which the spec calls a prompt, not a problem.
- * Tradeoffs aren't open: they're decided.
+ * gaps, and the technical gaps of what it's built on. Evidence isn't among
+ * them: what's declared holds unless a gap says otherwise. Tradeoffs aren't
+ * open either: they're decided.
  */
-export type Left = { decisions: Decision[]; gaps: Gap[]; technical: TechnicalGap[]; rules: RuleWanting[] };
+export type Left = { decisions: Decision[]; gaps: Gap[]; technical: TechnicalGap[] };
 
 /* Gaps or tradeoffs by ID, in the order given. */
 export const gapsById = (state: DocketState, ids: string[]) => ids.flatMap((id) => state.gaps.find((g) => g.id === id) ?? []);
 export const tradeoffsById = (state: DocketState, ids: string[]) => ids.flatMap((id) => state.tradeoffs.find((t) => t.id === id) ?? []);
 
-/* A system or component by its `system:<id>` or `component:<id>` reference. */
+/* A mechanism or component by its `mechanism:<id>` or `component:<id>` reference. */
 export function technicalDoc(state: DocketState, ref: string): TechnicalDoc | undefined {
   const [kind, id] = [ref.slice(0, ref.indexOf(":")), ref.slice(ref.indexOf(":") + 1)];
-  return find(kind === "system" ? state.systems : kind === "component" ? state.components : [], id);
+  return find(kind === "mechanism" ? state.mechanisms : kind === "component" ? state.components : [], id);
 }
 
-/* What a capability is built on: the systems and components that list it. */
+/* What a capability is built on: the mechanisms and components that list it. */
 export const builtOn = (state: DocketState, capability: Capability) => capability.builtBy.flatMap((ref) => technicalDoc(state, ref) ?? []);
 
 /* With `technical` false, as for a persona, only what someone using the product would notice. */
@@ -1000,22 +1026,16 @@ export function leftIn(state: DocketState, capability: Capability, technical = t
     decisions: openDecisions(capability),
     gaps: gapsById(state, capability.gaps),
     technical: technical ? builtOn(state, capability).flatMap((on) => gapsById(state, on.gaps).map((gap) => ({ gap, on }))) : [],
-    rules: capability.rules.flatMap((id) => {
-      const rule = find(state.rules, id);
-      if (!rule) return [];
-      const missing = (["verifies", "implements"] as const).filter((verb) => !rule.evidence[verb].length);
-      return missing.length ? [{ rule, missing }] : [];
-    }),
   };
 }
 
-export const leftCount = (left: Left) => left.decisions.length + left.gaps.length + left.technical.length + left.rules.length;
+export const leftCount = (left: Left) => left.decisions.length + left.gaps.length + left.technical.length;
 
 /*
  * Where a checklist outcome stands for a capability:
  *
  * - gap: a gap on it, or on what it's built on, names the outcome
- * - evidence: a system or component it's built on says it meets it
+ * - evidence: a mechanism or component it's built on says it meets it
  * - trust: nothing names it, so it counts as met on its level's word
  * - not-expected: its level doesn't expect it
  */
@@ -1031,10 +1051,10 @@ export function outcomeStanding(state: DocketState, capability: Capability, outc
 
 /* ——— Detail pages ——— */
 
-/* What a detail page can show: a doc of the product, a system or component, or every gap and tradeoff at once. */
+/* What a detail page can show: a doc of the product, a mechanism or component, or every gap and tradeoff at once. */
 export type PageAt = Pick | { kind: TechnicalKind; id: string } | { kind: "gaps"; id: "" };
 
-const PAGE_KINDS: Exclude<PageAt["kind"], "gaps">[] = ["domain", "feature", "capability", "concept", "persona", "system", "component"];
+const PAGE_KINDS: Exclude<PageAt["kind"], "gaps">[] = ["domain", "feature", "capability", "concept", "persona", "mechanism", "component"];
 
 /* The platform and projects showing, as the address has them, carried over to the pages it links to. */
 function showingParams(): URLSearchParams {
