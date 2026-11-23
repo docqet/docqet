@@ -1,0 +1,95 @@
+---
+name: Spaces
+summary: >-
+  Our records of each organization's conversation space and who we put in it,
+  kept in step with the messaging provider as memberships change, and blocks'
+  conversations there. The provider is behind messaging: Google Chat or
+  Stream.
+start: >-
+  `services.SpaceService` (`internal/services/spaces.go`, and
+  `conversations.go` for blocks' conversations) and the `services.Spaces` hook
+  it implements; `messaging.Provider`; migrations `00086_spaces.sql` and
+  `00090_block_conversations.sql`
+capabilities: [conversation-spaces]
+code:
+  - internal/services/spaces.go
+  - internal/services/conversations.go
+  - internal/database/migrations/00086_spaces.sql
+  - internal/database/migrations/00090_block_conversations.sql
+gaps:
+  - id: no-retries-or-synchronization
+    outcome: reliability/ga/holds-up
+    text: >-
+      A failed provider call is only on the span, and nothing compares our
+      records with the provider's members. The only repair is
+      `StartBlockConversation`, which puts everyone `belonging` to the space in
+      it first; nothing takes out someone a failed removal left in.
+  - id: sync-users-has-no-hook
+    text: >-
+      `api sync users` has no hook, so a ban or deletion it applies doesn't
+      take the user out of the provider's spaces.
+  - id: hooks-run-however-flagged
+    text: >-
+      The hooks run inside sign-up, accepting and removing members, however
+      conversations are flagged: `CreateReferred` records a space in its
+      transaction, and `CreateSpace`, `AddMembers` and `RemoveMembers` call the
+      provider synchronously after the change commits, up to its timeout each.
+      The `conversations` flag only hides them in the UI. With `noop` in
+      production they cost nothing.
+  - id: space-id-nullable
+    text: >-
+      `organizations.space_id` is nullable, as code deployed before spaces
+      creates organizations without one while it rolls out.
+---
+
+For spaces and memberships our row comes first and the provider follows. Its
+`provider` and `provider_id` stay null until the provider has the thing, and a
+record naming another provider counts as not made yet.
+
+- **A space** is recorded in `OrganizationService.CreateReferred`'s
+  transaction, with the organization.
+- **A block's conversation** is the other way round: `StartBlockConversation`
+  has the provider start it within the request, making the space with the
+  provider first if it isn't yet, and records it only once that worked, with
+  no transaction around the call. A failure records nothing and is the
+  caller's error (502), so they can try again.
+- **The membership changes with the provider** run after the change commits.
+  The services whose changes affect who belongs call one `Spaces` method each:
+  - `OrganizationService`: creating an organization, removing a member.
+  - `InvitationService`: accepting an invitation to an organization or the
+    platform.
+  - `TeamService`: assigning and unassigning a client, putting someone on a
+    team, taking them off, deleting a team.
+  - `RoleService`: taking a platform role away.
+  - `UserService`: banning a user, deleting a user.
+
+  Each service gets the hook through `SpacesWith`, wired in `serve`.
+- **Every method is the happy path for one change.** It skips what's already
+  done, records failures on the request's span, and never fails the change.
+- **Whatever a change unlinks is read before it**, such as a team's clients
+  before the team is deleted.
+
+`spaces` and `space_memberships` are api_platform's only: no grant opens them
+to the organization or partner roles. A block's conversations are for its
+client too, so `SpaceService` checks `capacity:read` reaches the block's
+organization itself and then reads and writes across organizations, since it
+needs the space.
+
+**Without the hook.** A hook that isn't wired is skipped silently: tests and
+the CLIs build services without one. An organization created straight through
+the repository, as test fixtures are, has no space, so starting a conversation
+on its blocks is refused; the acceptance tests make Acme's and Globex's spaces
+themselves. Deleting a user without the hook still deletes their memberships
+by cascade, but leaves them in the provider's spaces.
+
+**Two at once.** Two people starting a conversation on the same subject at
+once both reach the provider before the unique index refuses the second, which
+leaves its thread with the provider and no record of it.
+
+**The noop provider** takes any space or conversation it's asked about as
+existing, since it forgets everything on restart, so records it made earlier
+still work locally.
+
+**Deleting an organization** leaves its space behind, since a space stands on
+its own. Acceptance tests and the seeders' reset leave such spaces in the
+local database.

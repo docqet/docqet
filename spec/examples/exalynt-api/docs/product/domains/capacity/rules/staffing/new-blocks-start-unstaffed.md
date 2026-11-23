@@ -1,0 +1,5 @@
+---
+name: New blocks start unstaffed
+---
+
+A newly bought block has no engineer on it.

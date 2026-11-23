@@ -1,0 +1,35 @@
+---
+name: Client coupons
+summary: >-
+  Exalynt's admins give one client a coupon: a name, and a percentage or
+  amount off each block they buy, either forever or on their next purchase.
+stability: prototype
+personas: [exalynt-admin]
+concepts: [organization]
+gaps:
+  - id: placeholder-coupons
+    text: >-
+      Coupons are placeholder data, held in memory until a reload, so a real
+      client starts with none.
+  - id: coupons-never-applied
+    text: >-
+      Nothing else knows of coupons, so a client can't use one and still pays
+      in full, and a coupon added here never shows as used.
+  - id: separate-from-revenue-calculator-coupons
+    text: >-
+      The revenue calculator's coupons are the same shape, but the two don't
+      meet.
+  - id: no-record-of-who-changed-a-coupon
+    outcome: security/ga/traceable
+    text: >-
+      It doesn't record who added or ended a coupon.
+decisions:
+  - question: >-
+      Is a coupon for one client, taken off each block's price, forever or
+      once, the shape Exalynt needs?
+---
+
+## Includes
+
+- Admins end a coupon, and see a client's coupons, active, used up, and ended.
+- Admins see where each coupon was used, and what it took off.
