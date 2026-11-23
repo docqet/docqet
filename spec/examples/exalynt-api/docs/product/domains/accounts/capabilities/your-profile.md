@@ -38,7 +38,7 @@ gaps:
     when: Someone's name is left blank in the sign-in provider.
   - id: stuck-without-a-primary-address
     name: Stuck without a primary address
-    impact: blocking
+    impact: inconvenient
     description: >-
       Someone new without a primary address, which sign-up should prevent, is
       stuck with no way to add one: Exalynt has to fix them with the sign-in
@@ -51,14 +51,6 @@ gaps:
       A name or primary address reaches Exalynt only when the sign-in provider
       sends it, or through a sync, so others can see the old one until it
       arrives, and a retried older update can bring an old one back.
-  - id: success-reported-as-failure
-    name: Success reported as failure
-    outcome: usability/beta/clear-results
-    impact: inconvenient
-    description: >-
-      If an action succeeds but reading the result fails, the app says it
-      failed.
-    when: An action succeeds but reading its result fails.
   - id: no-new-confirmation-code
     name: Can't resend a confirmation code
     impact: inconvenient
@@ -75,7 +67,7 @@ gaps:
     when: The sign-in provider fails to load, even briefly.
   - id: turned-off-provider-accounts-hidden
     name: Accounts from turned-off providers hidden
-    impact: blocking
+    impact: inconvenient
     description: >-
       An account from a provider later turned off isn't listed, so it can't
       be disconnected.
@@ -104,7 +96,7 @@ gaps:
   - id: focus-lost-after-row-actions
     name: Focus lost after device and address actions
     outcome: usability/beta/everyone
-    impact: inconvenient
+    impact: negligible
     description: >-
       Signing a device out or making an address primary leaves keyboard focus
       nowhere useful, as what did it goes with its row.

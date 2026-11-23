@@ -39,7 +39,7 @@ gaps:
   - id: screen-readers-unverified
     name: Screen readers not verified
     outcome: usability/beta/everyone
-    impact: blocking
+    impact: negligible
     description: Real screen readers haven't been verified.
     when: Someone uses the page with a screen reader.
 tradeoffs:

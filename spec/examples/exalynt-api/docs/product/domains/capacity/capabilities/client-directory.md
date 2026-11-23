@@ -66,7 +66,7 @@ gaps:
       does, such as its name or logo, not when the client does something.
   - id: agreements-are-placeholders
     name: Agreements are placeholders
-    impact: blocking
+    impact: inconvenient
     description: >-
       A client's agreements are still placeholders. Its coupons are a separate
       capability, Client coupons.

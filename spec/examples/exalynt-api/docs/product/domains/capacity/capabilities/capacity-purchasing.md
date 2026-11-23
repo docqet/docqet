@@ -19,12 +19,6 @@ rules:
   - rule:retrying-a-purchase-never-charges-twice
 concepts: [concept:capacity-block, concept:capacity-unit, concept:invoice@billing]
 gaps:
-  - id: block-list-filters-reset
-    name: Block list filters reset on return
-    impact: inconvenient
-    description: >-
-      The filters and sort on the list of blocks are cleared on coming back
-      from a block.
   - id: no-failed-payment-email
     name: No email about failed payments
     impact: inconvenient

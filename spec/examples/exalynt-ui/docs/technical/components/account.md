@@ -14,14 +14,14 @@ gaps:
   - id: sync-no-end-to-end-test
     name: User sync has no end-to-end test
     outcome: functionality/beta/stays-correct
-    impact: blocking
+    impact: inconvenient
     description: >-
       `POST /users/me/sync` has no end-to-end test, as the API's end-to-end
       server runs without Clerk. Acceptance and unit tests cover it instead.
     when: A change breaks syncing in a way only a real Clerk would show.
   - id: name-by-webhook-only
     name: Name changes reach the API only by webhook
-    impact: damaging
+    impact: inconvenient
     description: >-
       A name or primary address reaches the API only by Clerk's webhook, or
       by `api sync users`, so others see the old one until it arrives, and a

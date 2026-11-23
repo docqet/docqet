@@ -104,18 +104,11 @@ gaps:
       permission granted by hand.
   - id: attribution-needs-an-accepted-invitation
     name: Attribution needs an accepted invitation
-    impact: blocking
+    impact: inconvenient
     description: >-
       A client can only be attributed to a partnership whose invitation has
       been accepted.
     when: A client comes in before its partnership's invitation is accepted.
-  - id: admins-see-the-managers-readiness
-    name: Admins see the manager's readiness, not the partnership's
-    impact: inconvenient
-    description: >-
-      An admin looking at a partnership sees whether its manager's own payout
-      account can be paid, not the partnership's.
-    when: A manager's own payout account differs from the partnership's.
 decisions:
   - topic: Referral codes over time
     question: >-

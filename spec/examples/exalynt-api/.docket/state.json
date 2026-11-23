@@ -22,7 +22,7 @@
       "ga": 1
     },
     "rules": 368,
-    "gaps": 303,
+    "gaps": 275,
     "problems": 4,
     "tradeoffs": 62,
     "mechanisms": 6,
@@ -333,8 +333,7 @@
         "capability:access-tokens#bans-not-always-recorded",
         "capability:access-tokens#real-ban-delivery-unseen",
         "capability:access-tokens#partners-and-screen-readers-unchecked",
-        "capability:access-tokens#limiting-unchecked-with-screen-reader",
-        "capability:access-tokens#revoke-clipped-on-phones"
+        "capability:access-tokens#limiting-unchecked-with-screen-reader"
       ],
       "decisions": [],
       "body": "## Includes\n\n- Everyone lists and revokes their personal access tokens.\n- Everyone sees where each of their tokens works.",
@@ -422,7 +421,6 @@
         "capability:getting-set-up#unreadable-list-hidden",
         "capability:getting-set-up#list-unreachable-by-keyboard",
         "capability:getting-set-up#shown-to-everyone-in-the-console",
-        "capability:getting-set-up#console-overview-placeholder",
         "capability:getting-set-up#engineer-steps-read-on-every-page",
         "capability:getting-set-up#team-placement-shows-late",
         "capability:getting-set-up#readiness-not-acceptance-tested",
@@ -609,8 +607,6 @@
         "capability:organizations-and-members#team-assignment-by-load-only",
         "capability:organizations-and-members#sign-up-shows-the-team",
         "capability:organizations-and-members#no-alert-on-failures",
-        "capability:organizations-and-members#success-not-agreed",
-        "capability:organizations-and-members#no-availability-target",
         "capability:organizations-and-members#no-speed-target",
         "capability:organizations-and-members#retention-not-decided",
         "capability:organizations-and-members#no-privacy-notice",
@@ -745,7 +741,6 @@
         "capability:your-profile#blank-names-allowed-outside-the-app",
         "capability:your-profile#stuck-without-a-primary-address",
         "capability:your-profile#changes-arrive-late",
-        "capability:your-profile#success-reported-as-failure",
         "capability:your-profile#no-new-confirmation-code",
         "capability:your-profile#provider-outage-signs-out",
         "capability:your-profile#turned-off-provider-accounts-hidden",
@@ -799,10 +794,7 @@
         "capability:agreements#only-the-apps-hold-people-to-an-agreement",
         "capability:agreements#new-versions-not-offered",
         "capability:agreements#read-in-full-only-to-accept",
-        "capability:agreements#generated-pdf-file-name",
         "capability:agreements#names-outside-western-european-alphabets",
-        "capability:agreements#placeholder-client-agreement-records",
-        "capability:agreements#placeholder-documents-local-only",
         "capability:agreements#no-preview-before-sending",
         "capability:agreements#shared-definitions-changed-in-place"
       ],
@@ -861,7 +853,6 @@
       "gaps": [
         "capability:client-agreements#only-the-portal-holds-to-the-agreement",
         "capability:client-agreements#new-versions-not-offered",
-        "capability:client-agreements#generated-pdf-file-name",
         "capability:client-agreements#names-outside-western-european-alphabets",
         "capability:client-agreements#shared-definitions-changed-in-place"
       ],
@@ -921,7 +912,6 @@
         "capability:engineer-agreements#only-the-console-holds-to-the-agreement",
         "capability:engineer-agreements#new-versions-not-offered",
         "capability:engineer-agreements#earlier-engineers-kept-out",
-        "capability:engineer-agreements#generated-pdf-file-name",
         "capability:engineer-agreements#names-outside-western-european-alphabets",
         "capability:engineer-agreements#shared-definitions-changed-in-place"
       ],
@@ -979,7 +969,6 @@
         "capability:partner-agreements#only-the-partner-hub-holds-to-the-agreement",
         "capability:partner-agreements#no-new-terms",
         "capability:partner-agreements#unnamed-partnership-in-the-document",
-        "capability:partner-agreements#generated-pdf-file-name",
         "capability:partner-agreements#names-outside-western-european-alphabets"
       ],
       "decisions": [],
@@ -1040,7 +1029,6 @@
         "capability:billing#needs-a-provider-with-hosted-pages",
         "capability:billing#default-payment-method-read-on-return-only",
         "capability:billing#failed-load-says-to-reload",
-        "capability:billing#tested-only-through-the-api",
         "capability:billing#old-payment-method-records-remain"
       ],
       "decisions": [],
@@ -1069,7 +1057,6 @@
         "concept:organization@accounts"
       ],
       "gaps": [
-        "capability:client-coupons#placeholder-coupons",
         "capability:client-coupons#coupons-never-applied",
         "capability:client-coupons#separate-from-revenue-calculator-coupons",
         "capability:client-coupons#no-record-of-who-changed-a-coupon"
@@ -1172,7 +1159,6 @@
         "concept:invoice@billing"
       ],
       "gaps": [
-        "capability:capacity-purchasing#block-list-filters-reset",
         "capability:capacity-purchasing#no-failed-payment-email",
         "capability:capacity-purchasing#retry-protection-expires",
         "capability:capacity-purchasing#retry-repeats-provider-error",
@@ -1440,8 +1426,6 @@
         "concept:conversation"
       ],
       "gaps": [
-        "capability:conversation-spaces#behind-a-feature-flag",
-        "capability:conversation-spaces#not-connected-in-production",
         "capability:conversation-spaces#google-chat-opens-the-whole-space",
         "capability:conversation-spaces#where-clients-see-conversations",
         "capability:conversation-spaces#counts-read-on-opening",
@@ -1449,11 +1433,8 @@
         "capability:conversation-spaces#switching-providers-leaves-conversations",
         "capability:conversation-spaces#stream-names-changeable-outside",
         "capability:conversation-spaces#stream-messages-final",
-        "capability:conversation-spaces#stream-organization-missing-for-removed",
-        "capability:conversation-spaces#stream-earlier-count-off",
         "capability:conversation-spaces#nothing-retried",
         "capability:conversation-spaces#older-organizations-not-with-provider",
-        "capability:conversation-spaces#accepted-invitations-show-invited",
         "capability:conversation-spaces#returning-people-not-put-back",
         "capability:conversation-spaces#reply-limit"
       ],
@@ -1563,7 +1544,6 @@
         "capability:engineers#moved-engineers-stay-on-blocks",
         "capability:engineers#reads-everything",
         "capability:engineers#role-shown-only-to-role-managers",
-        "capability:engineers#team-change-offered-then-refused",
         "capability:engineers#role-and-applications-api-only",
         "capability:engineers#no-agreement-preview",
         "capability:engineers#agreements-not-listed",
@@ -1624,7 +1604,6 @@
         "capability:estimates#tried-paces-not-saved",
         "capability:estimates#pdf-leaves-out-planned-pace",
         "capability:estimates#pdf-not-kept",
-        "capability:estimates#pdf-layout-breaks",
         "capability:estimates#no-retry-after-failed-load",
         "capability:estimates#tested-only-through-the-api"
       ],
@@ -1732,7 +1711,6 @@
         "capability:fulfillment#starter-not-named",
         "capability:fulfillment#no-focus-notifications",
         "capability:fulfillment#no-update-notifications",
-        "capability:fulfillment#svg-images-blank",
         "capability:fulfillment#no-focus-only-updates",
         "capability:fulfillment#unused-focus-not-editable",
         "capability:fulfillment#focus-search-titles-only",
@@ -1882,7 +1860,6 @@
         "capability:scheduling#no-moving-in-the-admin-app",
         "capability:scheduling#moving-takes-the-engineer-off",
         "capability:scheduling#room-counts-the-whole-team",
-        "capability:scheduling#shared-team-room-understated",
         "capability:scheduling#team-changes-can-overbook",
         "capability:scheduling#unscheduled-by-reduction-untold",
         "capability:scheduling#far-weeks-bookable-outside-portal",
@@ -1965,7 +1942,6 @@
         "concept:team"
       ],
       "gaps": [
-        "capability:staffing#placeholder-staffing-view",
         "capability:staffing#no-releasing",
         "capability:staffing#no-urgent-or-overdue-blocks",
         "capability:staffing#no-team-lead-staffing",
@@ -2141,7 +2117,6 @@
         "concept:partnership"
       ],
       "gaps": [
-        "capability:client-invitations#different-address-stays-sent",
         "capability:client-invitations#existing-clients-spotted-by-name-only",
         "capability:client-invitations#email-law-not-reviewed"
       ],
@@ -2333,8 +2308,7 @@
         "capability:partnerships#newest-invitation-only",
         "capability:partnerships#accepting-happens-in-steps",
         "capability:partnerships#partner-permission-granted-by-hand",
-        "capability:partnerships#attribution-needs-an-accepted-invitation",
-        "capability:partnerships#admins-see-the-managers-readiness"
+        "capability:partnerships#attribution-needs-an-accepted-invitation"
       ],
       "decisions": [
         {
@@ -2610,7 +2584,6 @@
       ],
       "gaps": [
         "capability:partner-payout-accounts#status-changes-show-on-next-load",
-        "capability:partner-payout-accounts#requirements-read-as-field-names",
         "capability:partner-payout-accounts#admins-cant-see-partnership-readiness"
       ],
       "decisions": [],
@@ -2744,7 +2717,6 @@
       "gaps": [
         "capability:payout-accounts#one-account-one-country",
         "capability:payout-accounts#status-changes-show-on-next-load",
-        "capability:payout-accounts#requirements-read-as-field-names",
         "capability:payout-accounts#no-payouts-to-mexico",
         "capability:payout-accounts#form-asks-for-business-details",
         "capability:payout-accounts#changes-made-in-the-partners-dashboard",
@@ -12676,17 +12648,6 @@
       "places": []
     },
     {
-      "id": "capability:access-tokens#revoke-clipped-on-phones",
-      "domain": "accounts",
-      "outcome": null,
-      "rule": null,
-      "impact": "negligible",
-      "when": null,
-      "name": "Revoking clipped at phone width",
-      "description": "At phone width, revoking is slightly clipped until the list is scrolled sideways.",
-      "places": []
-    },
-    {
       "id": "capability:getting-set-up#missing-for-some-client-roles",
       "domain": "accounts",
       "outcome": null,
@@ -12724,7 +12685,7 @@
       "domain": "accounts",
       "outcome": "usability/beta/everyone",
       "rule": null,
-      "impact": "inconvenient",
+      "impact": "negligible",
       "when": null,
       "name": "List contents unreachable by keyboard",
       "description": "For clients and engineers, the keyboard can open the list but can't reach what's in it. The same places are in the app's navigation.",
@@ -12739,17 +12700,6 @@
       "when": null,
       "name": "Shown to everyone in the console",
       "description": "Everyone opening the console has it, so someone already working, or an admin, has it too until they've done all four steps and, if their role can claim blocks, are on one.",
-      "places": []
-    },
-    {
-      "id": "capability:getting-set-up#console-overview-placeholder",
-      "domain": "accounts",
-      "outcome": null,
-      "rule": null,
-      "impact": "inconvenient",
-      "when": null,
-      "name": "Console overview is placeholder data",
-      "description": "The console's overview behind it is still placeholder data, even for someone new.",
       "places": []
     },
     {
@@ -12907,28 +12857,6 @@
       "places": []
     },
     {
-      "id": "capability:organizations-and-members#success-not-agreed",
-      "domain": "accounts",
-      "outcome": "utility/beta/success-agreed",
-      "rule": null,
-      "impact": "inconvenient",
-      "when": null,
-      "name": "Success measures not agreed",
-      "description": "What success looks like hasn't been agreed with the client, so nothing yet shows it's met in real use.",
-      "places": []
-    },
-    {
-      "id": "capability:organizations-and-members#no-availability-target",
-      "domain": "accounts",
-      "outcome": "reliability/ga/availability",
-      "rule": null,
-      "impact": "inconvenient",
-      "when": null,
-      "name": "No availability target",
-      "description": "No availability target has been agreed.",
-      "places": []
-    },
-    {
       "id": "capability:organizations-and-members#no-speed-target",
       "domain": "accounts",
       "outcome": "efficiency/ga/speed-targets",
@@ -13021,7 +12949,7 @@
       "domain": "accounts",
       "outcome": null,
       "rule": null,
-      "impact": "blocking",
+      "impact": "inconvenient",
       "when": "A role with a permission given several scopes is saved in the app.",
       "name": "Only one scope per permission",
       "description": "A permission can be given only one scope when editing a role, though several are allowed. Saving a role's permissions keeps only the widest, so own and team becomes team, and someone on no team loses their own reach.",
@@ -13076,7 +13004,7 @@
       "domain": "accounts",
       "outcome": null,
       "rule": null,
-      "impact": "blocking",
+      "impact": "inconvenient",
       "when": "Someone gets through sign-up without a primary address.",
       "name": "Stuck without a primary address",
       "description": "Someone new without a primary address, which sign-up should prevent, is stuck with no way to add one: Exalynt has to fix them with the sign-in provider.",
@@ -13091,17 +13019,6 @@
       "when": null,
       "name": "Name and address changes arrive late",
       "description": "A name or primary address reaches Exalynt only when the sign-in provider sends it, or through a sync, so others can see the old one until it arrives, and a retried older update can bring an old one back.",
-      "places": []
-    },
-    {
-      "id": "capability:your-profile#success-reported-as-failure",
-      "domain": "accounts",
-      "outcome": "usability/beta/clear-results",
-      "rule": null,
-      "impact": "inconvenient",
-      "when": "An action succeeds but reading its result fails.",
-      "name": "Success reported as failure",
-      "description": "If an action succeeds but reading the result fails, the app says it failed.",
       "places": []
     },
     {
@@ -13131,7 +13048,7 @@
       "domain": "accounts",
       "outcome": null,
       "rule": null,
-      "impact": "blocking",
+      "impact": "inconvenient",
       "when": "A sign-in provider is turned off after someone connected an account from it.",
       "name": "Accounts from turned-off providers hidden",
       "description": "An account from a provider later turned off isn't listed, so it can't be disconnected.",
@@ -13175,7 +13092,7 @@
       "domain": "accounts",
       "outcome": "usability/beta/everyone",
       "rule": null,
-      "impact": "inconvenient",
+      "impact": "negligible",
       "when": null,
       "name": "Focus lost after device and address actions",
       "description": "Signing a device out or making an address primary leaves keyboard focus nowhere useful, as what did it goes with its row.",
@@ -13237,17 +13154,6 @@
       "places": []
     },
     {
-      "id": "capability:agreements#generated-pdf-file-name",
-      "domain": "agreements",
-      "outcome": null,
-      "rule": null,
-      "impact": "negligible",
-      "when": null,
-      "name": "Downloaded PDFs get a generated file name",
-      "description": "A PDF downloaded from the browser's viewer gets a generated file name, not the agreement's.",
-      "places": []
-    },
-    {
       "id": "capability:agreements#names-outside-western-european-alphabets",
       "domain": "agreements",
       "outcome": "usability/beta/everyone",
@@ -13256,28 +13162,6 @@
       "when": null,
       "name": "Names outside Western alphabets lost in PDFs",
       "description": "A name with characters outside Western European alphabets shows them as \"?\" in the PDF, and the PDF keeps them that way once accepted.",
-      "places": []
-    },
-    {
-      "id": "capability:agreements#placeholder-client-agreement-records",
-      "domain": "agreements",
-      "outcome": null,
-      "rule": null,
-      "impact": "blocking",
-      "when": null,
-      "name": "Client agreement records are placeholders",
-      "description": "Admins see only placeholder records of what clients have accepted, over placeholder clients. Nothing sends or accepts a client's agreement from there, and the real Client Agreements Exalynt keeps aren't shown.",
-      "places": []
-    },
-    {
-      "id": "capability:agreements#placeholder-documents-local-only",
-      "domain": "agreements",
-      "outcome": null,
-      "rule": null,
-      "impact": "blocking",
-      "when": null,
-      "name": "Placeholder documents open only locally",
-      "description": "Those placeholder records open their documents only in local development. They have to read the real agreements before this part leaves Prototype.",
       "places": []
     },
     {
@@ -13325,17 +13209,6 @@
       "places": []
     },
     {
-      "id": "capability:client-agreements#generated-pdf-file-name",
-      "domain": "agreements",
-      "outcome": null,
-      "rule": null,
-      "impact": "negligible",
-      "when": null,
-      "name": "Downloaded PDFs get a generated file name",
-      "description": "A PDF downloaded from the browser's viewer gets a generated file name, not the agreement's.",
-      "places": []
-    },
-    {
       "id": "capability:client-agreements#names-outside-western-european-alphabets",
       "domain": "agreements",
       "outcome": "usability/beta/everyone",
@@ -13373,7 +13246,7 @@
       "domain": "agreements",
       "outcome": null,
       "rule": null,
-      "impact": "blocking",
+      "impact": "inconvenient",
       "when": "A new version of the Engineer Agreement is published.",
       "name": "New versions not offered to engineers",
       "description": "A new version of the Engineer Agreement isn't offered to an engineer who accepted an earlier one.",
@@ -13388,17 +13261,6 @@
       "when": null,
       "name": "Existing engineers kept out until sent one",
       "description": "Engineers and admins already at Exalynt when agreements began are kept out of the console until an admin sends each of them an Engineer Agreement.",
-      "places": []
-    },
-    {
-      "id": "capability:engineer-agreements#generated-pdf-file-name",
-      "domain": "agreements",
-      "outcome": null,
-      "rule": null,
-      "impact": "negligible",
-      "when": null,
-      "name": "Downloaded PDFs get a generated file name",
-      "description": "A PDF downloaded from the browser's viewer gets a generated file name, not the agreement's.",
       "places": []
     },
     {
@@ -13457,17 +13319,6 @@
       "places": []
     },
     {
-      "id": "capability:partner-agreements#generated-pdf-file-name",
-      "domain": "agreements",
-      "outcome": null,
-      "rule": null,
-      "impact": "negligible",
-      "when": null,
-      "name": "Downloaded PDFs get a generated file name",
-      "description": "A PDF downloaded from the browser's viewer gets a generated file name, not the agreement's.",
-      "places": []
-    },
-    {
       "id": "capability:partner-agreements#names-outside-western-european-alphabets",
       "domain": "agreements",
       "outcome": "usability/beta/everyone",
@@ -13483,7 +13334,7 @@
       "domain": "billing",
       "outcome": null,
       "rule": null,
-      "impact": "blocking",
+      "impact": "inconvenient",
       "when": null,
       "name": "Operations and infrastructure charges not shown",
       "description": "Clients can't see operations fees or infrastructure pass-through charges, each shown separately from capacity.",
@@ -13516,7 +13367,7 @@
       "domain": "billing",
       "outcome": null,
       "rule": null,
-      "impact": "blocking",
+      "impact": "inconvenient",
       "when": null,
       "name": "Capacity invoices only, in US dollars",
       "description": "Every invoice is for capacity, in US dollars. There are no invoices for the operations fee or infrastructure yet.",
@@ -13571,7 +13422,7 @@
       "domain": "billing",
       "outcome": null,
       "rule": null,
-      "impact": "blocking",
+      "impact": "negligible",
       "when": "Someone is given a custom role that reads invoices but can't pay them.",
       "name": "Invoice readers can't list invoices",
       "description": "Someone who can read invoices but not pay them, which only a custom role can be, can't list invoices, since the list is on the payment provider's pages.",
@@ -13615,7 +13466,7 @@
       "domain": "billing",
       "outcome": null,
       "rule": null,
-      "impact": "inconvenient",
+      "impact": "negligible",
       "when": "The default payment method is changed while another page is left open.",
       "name": "Default payment method refreshed only on return",
       "description": "The default payment method shown is read again on coming back from the payment provider, but not somewhere else that was left open.",
@@ -13633,17 +13484,6 @@
       "places": []
     },
     {
-      "id": "capability:billing#tested-only-through-the-api",
-      "domain": "billing",
-      "outcome": "functionality/beta/stays-correct",
-      "rule": null,
-      "impact": "damaging",
-      "when": "A change breaks paying in the portal, or with the real payment provider.",
-      "name": "Only API tests, without a real provider",
-      "description": "The workflow is tested end to end only through the API, and without a real payment provider.",
-      "places": []
-    },
-    {
       "id": "capability:billing#old-payment-method-records-remain",
       "domain": "billing",
       "outcome": null,
@@ -13652,17 +13492,6 @@
       "when": null,
       "name": "Old payment method records not removed",
       "description": "Exalynt's old records of payment methods are no longer used, and are still to be removed.",
-      "places": []
-    },
-    {
-      "id": "capability:client-coupons#placeholder-coupons",
-      "domain": "billing",
-      "outcome": null,
-      "rule": null,
-      "impact": "blocking",
-      "when": null,
-      "name": "Coupons are placeholder data",
-      "description": "Coupons are placeholder data, held in memory until a reload, so a real client starts with none.",
       "places": []
     },
     {
@@ -13780,7 +13609,7 @@
       "domain": "capacity",
       "outcome": "usability/beta/everyone",
       "rule": null,
-      "impact": "blocking",
+      "impact": "negligible",
       "when": "Someone sets availability with a screen reader.",
       "name": "Screen readers not reviewed",
       "description": "Real screen readers haven't been reviewed.",
@@ -13795,17 +13624,6 @@
       "when": "Team-wide access resolves wider than intended, letting someone see or set availability that isn't theirs.",
       "name": "Deployment and team access not reviewed",
       "description": "The deployment setup, and how team-wide access resolves beyond the checks on leads, haven't been reviewed.",
-      "places": []
-    },
-    {
-      "id": "capability:capacity-purchasing#block-list-filters-reset",
-      "domain": "capacity",
-      "outcome": null,
-      "rule": null,
-      "impact": "inconvenient",
-      "when": null,
-      "name": "Block list filters reset on return",
-      "description": "The filters and sort on the list of blocks are cleared on coming back from a block.",
       "places": []
     },
     {
@@ -13989,7 +13807,7 @@
       "domain": "capacity",
       "outcome": null,
       "rule": null,
-      "impact": "blocking",
+      "impact": "inconvenient",
       "when": null,
       "name": "Agreements are placeholders",
       "description": "A client's agreements are still placeholders. Its coupons are a separate capability, Client coupons.",
@@ -14044,32 +13862,10 @@
       "domain": "capacity",
       "outcome": "usability/beta/everyone",
       "rule": null,
-      "impact": "blocking",
+      "impact": "negligible",
       "when": "Someone uses the page with a screen reader.",
       "name": "Screen readers not verified",
       "description": "Real screen readers haven't been verified.",
-      "places": []
-    },
-    {
-      "id": "capability:conversation-spaces#behind-a-feature-flag",
-      "domain": "capacity",
-      "outcome": null,
-      "rule": null,
-      "impact": "blocking",
-      "when": null,
-      "name": "Conversations behind a feature flag",
-      "description": "A block's conversations show on its page only while the `conversations` feature flag is on: on in development, off in production. Who belongs in each space is still kept in step with the messaging provider either way.",
-      "places": []
-    },
-    {
-      "id": "capability:conversation-spaces#not-connected-in-production",
-      "domain": "capacity",
-      "outcome": null,
-      "rule": null,
-      "impact": "blocking",
-      "when": null,
-      "name": "No messaging provider in production",
-      "description": "Neither Google Chat nor Stream is connected in production yet, so nobody is really put in a space there, and a conversation can be started but not opened: it says it isn't connected.",
       "places": []
     },
     {
@@ -14150,28 +13946,6 @@
       "places": []
     },
     {
-      "id": "capability:conversation-spaces#stream-organization-missing-for-removed",
-      "domain": "capacity",
-      "outcome": null,
-      "rule": null,
-      "impact": "negligible",
-      "when": "Someone who wrote in a conversation is taken out of the space.",
-      "name": "Removed people show no organization in Stream",
-      "description": "With Stream, each message shows the organization its writer is with, except for someone taken out of the client's space since, who shows with none.",
-      "places": []
-    },
-    {
-      "id": "capability:conversation-spaces#stream-earlier-count-off",
-      "domain": "capacity",
-      "outcome": null,
-      "rule": null,
-      "impact": "negligible",
-      "when": "Messages are deleted in Stream.",
-      "name": "Stream's earlier-message count can be off",
-      "description": "With Stream, a conversation opens with its latest messages, and says how many came before. That count can be off by messages deleted in Stream.",
-      "places": []
-    },
-    {
       "id": "capability:conversation-spaces#nothing-retried",
       "domain": "capacity",
       "outcome": null,
@@ -14191,17 +13965,6 @@
       "when": null,
       "name": "Older organizations' spaces missing at the provider",
       "description": "Organizations from before conversation spaces have their space, but the messaging provider doesn't have it, with everyone who belongs in it, until someone joins it or a conversation is started in it.",
-      "places": []
-    },
-    {
-      "id": "capability:conversation-spaces#accepted-invitations-show-invited",
-      "domain": "capacity",
-      "outcome": null,
-      "rule": null,
-      "impact": "negligible",
-      "when": null,
-      "name": "Accepted invitations still show as invited",
-      "description": "Someone who accepts the messaging provider's invitation still shows as invited.",
       "places": []
     },
     {
@@ -14290,17 +14053,6 @@
       "when": null,
       "name": "Role shown only to role managers",
       "description": "Someone's role is named only to those who can manage roles.",
-      "places": []
-    },
-    {
-      "id": "capability:engineers#team-change-offered-then-refused",
-      "domain": "capacity",
-      "outcome": null,
-      "rule": null,
-      "impact": "inconvenient",
-      "when": "Someone who can't manage teams tries to change someone's team.",
-      "name": "Team change offered, then refused",
-      "description": "Changing someone's team is offered to those who can't manage teams, and is refused when tried.",
       "places": []
     },
     {
@@ -14396,7 +14148,7 @@
       "domain": "capacity",
       "outcome": null,
       "rule": null,
-      "impact": "blocking",
+      "impact": "inconvenient",
       "when": "Exalynt starts offering operations with its estimates.",
       "name": "Operations left off estimates",
       "description": "Operations aren't shown for now: there's no way to include them when writing an estimate, and nothing on the client's estimate or its PDF. Exalynt still keeps whether an estimate includes them, and its fee.",
@@ -14433,17 +14185,6 @@
       "when": "Someone needs the estimate as it was sent, after it's been changed.",
       "name": "PDFs not kept as sent",
       "description": "The PDF is built on the reader's device, so it isn't stored or kept as sent.",
-      "places": []
-    },
-    {
-      "id": "capability:estimates#pdf-layout-breaks",
-      "domain": "capacity",
-      "outcome": null,
-      "rule": null,
-      "impact": "negligible",
-      "when": "A title has no spaces, or the estimate has a web address in it.",
-      "name": "PDF layout breaks on long titles and links",
-      "description": "In the PDF, a title with no spaces runs off the page and into the footer, and web addresses get hyphenated.",
       "places": []
     },
     {
@@ -14579,17 +14320,6 @@
       "places": []
     },
     {
-      "id": "capability:fulfillment#svg-images-blank",
-      "domain": "capacity",
-      "outcome": null,
-      "rule": null,
-      "impact": "inconvenient",
-      "when": "Someone attaches an SVG as an image.",
-      "name": "SVG images show blank",
-      "description": "An SVG attached to an update or a focus as an image shows blank, though it still downloads.",
-      "places": []
-    },
-    {
       "id": "capability:fulfillment#no-focus-only-updates",
       "domain": "capacity",
       "outcome": null,
@@ -14722,17 +14452,6 @@
       "places": []
     },
     {
-      "id": "capability:scheduling#shared-team-room-understated",
-      "domain": "capacity",
-      "outcome": null,
-      "rule": null,
-      "impact": "inconvenient",
-      "when": "A client with several teams shares one of them with another client.",
-      "name": "Room understated for shared teams",
-      "description": "For a client with several teams, an unstaffed block of a client sharing just one of them is counted in full, which understates its room.",
-      "places": []
-    },
-    {
       "id": "capability:scheduling#team-changes-can-overbook",
       "domain": "capacity",
       "outcome": null,
@@ -14759,7 +14478,7 @@
       "domain": "capacity",
       "outcome": null,
       "rule": null,
-      "impact": "inconvenient",
+      "impact": "negligible",
       "when": "Someone books a week more than about a year ahead outside the portal.",
       "name": "Far weeks bookable outside the portal",
       "description": "A far future week can be booked outside the portal, which offers about a year.",
@@ -14796,17 +14515,6 @@
       "when": "Another client takes a week's room while the page is open.",
       "name": "A week's room read once",
       "description": "A week's room is read once, so another client taking it shows only when scheduling into that week is refused.",
-      "places": []
-    },
-    {
-      "id": "capability:staffing#placeholder-staffing-view",
-      "domain": "capacity",
-      "outcome": null,
-      "rule": null,
-      "impact": "inconvenient",
-      "when": null,
-      "name": "Staffing view runs on placeholder data",
-      "description": "The admin's week-by-week view of every team's capacity runs on placeholder data, with its own placeholder teams, so its preference for a client's teams isn't real yet. Assigning there changes nothing, and an admin has no real way to staff a block in the admin app yet.",
       "places": []
     },
     {
@@ -15089,7 +14797,7 @@
       "domain": "capacity",
       "outcome": null,
       "rule": null,
-      "impact": "inconvenient",
+      "impact": "damaging",
       "when": "Someone is invited to the team they already lead.",
       "name": "Leads lose the lead on accepting",
       "description": "Someone who already leads the team they're invited to stops leading it when they accept.",
@@ -15104,17 +14812,6 @@
       "when": "A change breaks the apps' side of the workflow.",
       "name": "Tested end to end only through the API",
       "description": "The workflow is tested end to end only through the API. The apps' own tests cover reading every page of teams, the order people show in, and finding an engineer's team.",
-      "places": []
-    },
-    {
-      "id": "capability:client-invitations#different-address-stays-sent",
-      "domain": "partnerships",
-      "outcome": null,
-      "rule": null,
-      "impact": "negligible",
-      "when": "Someone signs up with a different address from the one invited.",
-      "name": "Different sign-up address leaves invitation sent",
-      "description": "An invitation stays marked as sent when the person signs up with a different address from the one invited, though the link still attributes them.",
       "places": []
     },
     {
@@ -15309,21 +15006,10 @@
       "domain": "partnerships",
       "outcome": null,
       "rule": null,
-      "impact": "blocking",
+      "impact": "inconvenient",
       "when": "A client comes in before its partnership's invitation is accepted.",
       "name": "Attribution needs an accepted invitation",
       "description": "A client can only be attributed to a partnership whose invitation has been accepted.",
-      "places": []
-    },
-    {
-      "id": "capability:partnerships#admins-see-the-managers-readiness",
-      "domain": "partnerships",
-      "outcome": null,
-      "rule": null,
-      "impact": "inconvenient",
-      "when": "A manager's own payout account differs from the partnership's.",
-      "name": "Admins see the manager's readiness, not the partnership's",
-      "description": "An admin looking at a partnership sees whether its manager's own payout account can be paid, not the partnership's.",
       "places": []
     },
     {
@@ -15426,22 +15112,11 @@
       "places": []
     },
     {
-      "id": "capability:partner-payout-accounts#requirements-read-as-field-names",
-      "domain": "pay",
-      "outcome": null,
-      "rule": null,
-      "impact": "inconvenient",
-      "when": null,
-      "name": "Requirements can read as field names",
-      "description": "A requirement can read as the payments partner's field name rather than words.",
-      "places": []
-    },
-    {
       "id": "capability:partner-payout-accounts#admins-cant-see-partnership-readiness",
       "domain": "pay",
       "outcome": null,
       "rule": null,
-      "impact": "blocking",
+      "impact": "inconvenient",
       "when": null,
       "name": "Admins can't see partnership payout readiness",
       "description": "An admin can't see whether a partnership can be paid.",
@@ -15463,7 +15138,7 @@
       "domain": "pay",
       "outcome": null,
       "rule": null,
-      "impact": "blocking",
+      "impact": "negligible",
       "when": "Someone wants a second account, or to be paid in another country.",
       "name": "One account, its country fixed once chosen",
       "description": "There's one account per person or partnership, and its country is fixed once it's chosen, as the payments partner's form holds one and verifies them for one country.",
@@ -15478,17 +15153,6 @@
       "when": null,
       "name": "Status changes show only on next load",
       "description": "A change of status shows when the account is next loaded.",
-      "places": []
-    },
-    {
-      "id": "capability:payout-accounts#requirements-read-as-field-names",
-      "domain": "pay",
-      "outcome": null,
-      "rule": null,
-      "impact": "inconvenient",
-      "when": null,
-      "name": "Requirements can read as field names",
-      "description": "A requirement can read as the payments partner's field name rather than words.",
       "places": []
     },
     {
@@ -15562,7 +15226,7 @@
       "domain": "pay",
       "outcome": null,
       "rule": "rule:who-sees-payout-status",
-      "impact": "blocking",
+      "impact": "inconvenient",
       "when": null,
       "name": "Leads can't see their team's payout status",
       "description": "A lead can't see the payout status of their team's blocks.",
@@ -15867,7 +15531,7 @@
       "id": "component:work-updates#orphaned-objects",
       "outcome": null,
       "rule": null,
-      "impact": "inconvenient",
+      "impact": "negligible",
       "when": null,
       "name": "Unused uploaded objects never cleaned up",
       "description": "An object uploaded for an update that then fails to post, or taken off an update by an edit or delete, stays in the client's organization. Focuses do the same.",

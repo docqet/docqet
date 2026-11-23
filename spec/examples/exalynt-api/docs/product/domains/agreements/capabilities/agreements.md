@@ -44,12 +44,6 @@ gaps:
       An agreement is only read in full to accept it: nobody else can read
       one that's waiting, so an admin can't read an Engineer Agreement they've
       sent until it's accepted.
-  - id: generated-pdf-file-name
-    name: Downloaded PDFs get a generated file name
-    impact: negligible
-    description: >-
-      A PDF downloaded from the browser's viewer gets a generated file name,
-      not the agreement's.
   - id: names-outside-western-european-alphabets
     name: Names outside Western alphabets lost in PDFs
     outcome: usability/beta/everyone
@@ -57,20 +51,6 @@ gaps:
     description: >-
       A name with characters outside Western European alphabets shows them as
       "?" in the PDF, and the PDF keeps them that way once accepted.
-  - id: placeholder-client-agreement-records
-    name: Client agreement records are placeholders
-    impact: blocking
-    description: >-
-      Admins see only placeholder records of what clients have accepted, over
-      placeholder clients. Nothing sends or accepts a client's agreement from
-      there, and the real Client Agreements Exalynt keeps aren't shown.
-  - id: placeholder-documents-local-only
-    name: Placeholder documents open only locally
-    impact: blocking
-    description: >-
-      Those placeholder records open their documents only in local
-      development. They have to read the real agreements before this part
-      leaves Prototype.
   - id: no-preview-before-sending
     name: No preview before sending an Engineer Agreement
     impact: inconvenient

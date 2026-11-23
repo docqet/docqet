@@ -34,7 +34,7 @@ gaps:
       the admin app isn't gated.
   - id: new-versions-not-offered
     name: New versions not offered to engineers
-    impact: blocking
+    impact: inconvenient
     description: >-
       A new version of the Engineer Agreement isn't offered to an engineer
       who accepted an earlier one.
@@ -46,12 +46,6 @@ gaps:
       Engineers and admins already at Exalynt when agreements began are kept
       out of the console until an admin sends each of them an Engineer
       Agreement.
-  - id: generated-pdf-file-name
-    name: Downloaded PDFs get a generated file name
-    impact: negligible
-    description: >-
-      A PDF downloaded from the browser's viewer gets a generated file name,
-      not the agreement's.
   - id: names-outside-western-european-alphabets
     name: Names outside Western alphabets lost in PDFs
     outcome: usability/beta/everyone

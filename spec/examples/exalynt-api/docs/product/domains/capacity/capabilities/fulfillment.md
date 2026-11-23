@@ -122,13 +122,6 @@ gaps:
     description: >-
       Nobody is told when an update is posted, and a block's page shows
       someone else's new updates only when it's opened again.
-  - id: svg-images-blank
-    name: SVG images show blank
-    impact: inconvenient
-    description: >-
-      An SVG attached to an update or a focus as an image shows blank, though
-      it still downloads.
-    when: Someone attaches an SVG as an image.
   - id: no-focus-only-updates
     name: No updates about a focus alone
     impact: inconvenient

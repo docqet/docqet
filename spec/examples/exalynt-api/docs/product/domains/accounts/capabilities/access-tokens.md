@@ -137,12 +137,6 @@ gaps:
       their accessibility tree. It only saw limiting disabled for admins,
       engineers, and team leads, as they belong to no organization.
     when: Limiting a token doesn't work with a screen reader.
-  - id: revoke-clipped-on-phones
-    name: Revoking clipped at phone width
-    impact: negligible
-    description: >-
-      At phone width, revoking is slightly clipped until the list is scrolled
-      sideways.
 tradeoffs:
   - id: no-scopes
     name: Tokens have no scopes

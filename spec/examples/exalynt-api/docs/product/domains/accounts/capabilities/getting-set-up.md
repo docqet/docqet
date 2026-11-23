@@ -42,7 +42,7 @@ gaps:
   - id: list-unreachable-by-keyboard
     name: List contents unreachable by keyboard
     outcome: usability/beta/everyone
-    impact: inconvenient
+    impact: negligible
     description: >-
       For clients and engineers, the keyboard can open the list but can't
       reach what's in it. The same places are in the app's navigation.
@@ -53,12 +53,6 @@ gaps:
       Everyone opening the console has it, so someone already working, or an
       admin, has it too until they've done all four steps and, if their role
       can claim blocks, are on one.
-  - id: console-overview-placeholder
-    name: Console overview is placeholder data
-    impact: inconvenient
-    description: >-
-      The console's overview behind it is still placeholder data, even for
-      someone new.
   - id: engineer-steps-read-on-every-page
     name: Engineer steps reread on every page
     impact: negligible

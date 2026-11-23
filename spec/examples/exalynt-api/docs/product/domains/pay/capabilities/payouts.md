@@ -77,7 +77,7 @@ gaps:
   - id: leads-cant-see-team-payout-status
     name: Leads can't see their team's payout status
     rule: rule:who-sees-payout-status
-    impact: blocking
+    impact: inconvenient
     description: >-
       A lead can't see the payout status of their team's blocks.
   - id: paid-means-reached-the-balance

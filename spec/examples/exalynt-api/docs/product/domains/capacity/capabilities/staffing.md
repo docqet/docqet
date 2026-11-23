@@ -36,14 +36,6 @@ concepts:
   - concept:effective-availability
   - concept:team
 gaps:
-  - id: placeholder-staffing-view
-    name: Staffing view runs on placeholder data
-    impact: inconvenient
-    description: >-
-      The admin's week-by-week view of every team's capacity runs on
-      placeholder data, with its own placeholder teams, so its preference for
-      a client's teams isn't real yet. Assigning there changes nothing, and an
-      admin has no real way to staff a block in the admin app yet.
   - id: no-releasing
     name: Engineers can't release blocks
     impact: inconvenient

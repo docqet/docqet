@@ -165,7 +165,7 @@ gaps:
       giving it a team each need their own permission.
   - id: leads-lose-lead-on-accepting
     name: Leads lose the lead on accepting
-    impact: inconvenient
+    impact: damaging
     description: >-
       Someone who already leads the team they're invited to stops leading it
       when they accept.

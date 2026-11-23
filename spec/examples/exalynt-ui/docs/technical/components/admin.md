@@ -55,13 +55,6 @@ gaps:
       doesn't load, and with a team or own scope it shows only what that
       reaches.
     when: Someone without global reads is given the Engineers pages.
-  - id: team-picker-ignores-permission
-    name: Team picker shown without team:manage
-    impact: inconvenient
-    description: >-
-      The team picker on the Engineers pages shows without `team:manage`, so
-      the change is only refused by the API, and toasted.
-    when: Someone without `team:manage` opens the Engineers pages.
   - id: terms-catalog-copied
     name: Commercial Terms catalog copied into the UI
     impact: blocking
@@ -70,15 +63,6 @@ gaps:
       sending an engineer new terms, come from the UI's own copy of the
       catalog (`src/shared/terms.ts`), not the API's.
     when: The API's catalog of Commercial Terms changes.
-  - id: agreement-pdf-from-preview
-    name: Client agreement PDFs opened from the preview
-    impact: blocking
-    description: >-
-      A client's accepted agreements open their PDF from the API's agreement
-      preview, filled in from the placeholder record each time, so they open
-      only where `AGREEMENT_PREVIEW_ENABLED` is on (Compose, never
-      production). They have to read the API's own agreement endpoints, as an
-      engineer's page does.
   - id: readiness-per-person
     name: Readiness read one person at a time
     impact: inconvenient
@@ -88,19 +72,6 @@ gaps:
       paid asks the payout provider, so the Engineers list can't show it.
       The list has no Agreement column either, as that would take a request
       per engineer.
-  - id: partner-page-reads-manager-account
-    name: Partner page shows the manager's payout account
-    impact: inconvenient
-    description: >-
-      A partner's page reads its manager's own payout account, not the
-      partnership's.
-  - id: scheduling-placeholder-teams
-    name: Scheduling uses placeholder teams
-    impact: negligible
-    description: >-
-      Scheduling shows its own placeholder teams (`data/teams.ts`), which
-      don't match the API's teams on the Teams page, so its preference for a
-      client's teams isn't real.
   - id: creator-role-guarded-by-page
     name: Creator role guarded only by the Roles page
     impact: inconvenient
@@ -120,7 +91,7 @@ gaps:
   - id: roles-pages-untested
     name: Roles pages have no tests of their own
     outcome: functionality/beta/stays-correct
-    impact: damaging
+    impact: inconvenient
     description: >-
       Roles is tested end to end only by the API's tests. The pages have no
       automated tests of their own.

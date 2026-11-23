@@ -22,7 +22,7 @@
       "ga": 0
     },
     "rules": 0,
-    "gaps": 45,
+    "gaps": 41,
     "problems": 90,
     "tradeoffs": 5,
     "mechanisms": 2,
@@ -202,12 +202,8 @@
         "component:admin#whole-lists-paged-in-browser",
         "component:admin#roster-reads-everything",
         "component:admin#roster-assumes-global-reads",
-        "component:admin#team-picker-ignores-permission",
         "component:admin#terms-catalog-copied",
-        "component:admin#agreement-pdf-from-preview",
         "component:admin#readiness-per-person",
-        "component:admin#partner-page-reads-manager-account",
-        "component:admin#scheduling-placeholder-teams",
         "component:admin#creator-role-guarded-by-page",
         "component:admin#one-scope-per-permission",
         "component:admin#roles-pages-untested"
@@ -361,7 +357,7 @@
       "id": "component:account#sync-no-end-to-end-test",
       "outcome": "functionality/beta/stays-correct",
       "rule": null,
-      "impact": "blocking",
+      "impact": "inconvenient",
       "when": "A change breaks syncing in a way only a real Clerk would show.",
       "name": "User sync has no end-to-end test",
       "description": "`POST /users/me/sync` has no end-to-end test, as the API's end-to-end server runs without Clerk. Acceptance and unit tests cover it instead.",
@@ -371,7 +367,7 @@
       "id": "component:account#name-by-webhook-only",
       "outcome": null,
       "rule": null,
-      "impact": "damaging",
+      "impact": "inconvenient",
       "when": "Clerk retries an older webhook after a newer one has arrived.",
       "name": "Name changes reach the API only by webhook",
       "description": "A name or primary address reaches the API only by Clerk's webhook, or by `api sync users`, so others see the old one until it arrives, and a retried older webhook can bring an old one back.",
@@ -468,16 +464,6 @@
       "places": []
     },
     {
-      "id": "component:admin#team-picker-ignores-permission",
-      "outcome": null,
-      "rule": null,
-      "impact": "inconvenient",
-      "when": "Someone without `team:manage` opens the Engineers pages.",
-      "name": "Team picker shown without team:manage",
-      "description": "The team picker on the Engineers pages shows without `team:manage`, so the change is only refused by the API, and toasted.",
-      "places": []
-    },
-    {
       "id": "component:admin#terms-catalog-copied",
       "outcome": null,
       "rule": null,
@@ -488,16 +474,6 @@
       "places": []
     },
     {
-      "id": "component:admin#agreement-pdf-from-preview",
-      "outcome": null,
-      "rule": null,
-      "impact": "blocking",
-      "when": null,
-      "name": "Client agreement PDFs opened from the preview",
-      "description": "A client's accepted agreements open their PDF from the API's agreement preview, filled in from the placeholder record each time, so they open only where `AGREEMENT_PREVIEW_ENABLED` is on (Compose, never production). They have to read the API's own agreement endpoints, as an engineer's page does.",
-      "places": []
-    },
-    {
       "id": "component:admin#readiness-per-person",
       "outcome": null,
       "rule": null,
@@ -505,26 +481,6 @@
       "when": null,
       "name": "Readiness read one person at a time",
       "description": "Whether someone is ready for client work is read for one person at a time (`engineers/useReadiness.ts`), since asking whether they can be paid asks the payout provider, so the Engineers list can't show it. The list has no Agreement column either, as that would take a request per engineer.",
-      "places": []
-    },
-    {
-      "id": "component:admin#partner-page-reads-manager-account",
-      "outcome": null,
-      "rule": null,
-      "impact": "inconvenient",
-      "when": null,
-      "name": "Partner page shows the manager's payout account",
-      "description": "A partner's page reads its manager's own payout account, not the partnership's.",
-      "places": []
-    },
-    {
-      "id": "component:admin#scheduling-placeholder-teams",
-      "outcome": null,
-      "rule": null,
-      "impact": "negligible",
-      "when": null,
-      "name": "Scheduling uses placeholder teams",
-      "description": "Scheduling shows its own placeholder teams (`data/teams.ts`), which don't match the API's teams on the Teams page, so its preference for a client's teams isn't real.",
       "places": []
     },
     {
@@ -551,7 +507,7 @@
       "id": "component:admin#roles-pages-untested",
       "outcome": "functionality/beta/stays-correct",
       "rule": null,
-      "impact": "damaging",
+      "impact": "inconvenient",
       "when": "A change breaks what the Roles pages save.",
       "name": "Roles pages have no tests of their own",
       "description": "Roles is tested end to end only by the API's tests. The pages have no automated tests of their own.",
@@ -771,7 +727,7 @@
       "id": "component:portal#billing-screens-untested",
       "outcome": "functionality/beta/stays-correct",
       "rule": null,
-      "impact": "blocking",
+      "impact": "inconvenient",
       "when": "A change breaks Billing, or the real payment provider behaves unlike the tests.",
       "name": "Billing untested against a real provider",
       "description": "Billing and payment methods are tested end to end only by the API's feature tests, which run without a real payment provider.",

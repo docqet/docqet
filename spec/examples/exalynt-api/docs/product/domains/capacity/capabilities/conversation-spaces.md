@@ -31,20 +31,6 @@ rules:
   - rule:a-blocks-conversations-are-for-its-client-and-the-teams-supporting-it
 concepts: [concept:space, concept:space-membership, concept:conversation]
 gaps:
-  - id: behind-a-feature-flag
-    name: Conversations behind a feature flag
-    impact: blocking
-    description: >-
-      A block's conversations show on its page only while the `conversations`
-      feature flag is on: on in development, off in production. Who belongs in
-      each space is still kept in step with the messaging provider either way.
-  - id: not-connected-in-production
-    name: No messaging provider in production
-    impact: blocking
-    description: >-
-      Neither Google Chat nor Stream is connected in production yet, so nobody
-      is really put in a space there, and a conversation can be started but
-      not opened: it says it isn't connected.
   - id: google-chat-opens-the-whole-space
     name: Google Chat opens the whole space
     impact: inconvenient
@@ -90,21 +76,6 @@ gaps:
     impact: damaging
     description: With Stream, nobody can edit or delete a message once it's sent.
     when: Someone sends a message they need to take back.
-  - id: stream-organization-missing-for-removed
-    name: Removed people show no organization in Stream
-    impact: negligible
-    description: >-
-      With Stream, each message shows the organization its writer is with,
-      except for someone taken out of the client's space since, who shows
-      with none.
-    when: Someone who wrote in a conversation is taken out of the space.
-  - id: stream-earlier-count-off
-    name: Stream's earlier-message count can be off
-    impact: negligible
-    description: >-
-      With Stream, a conversation opens with its latest messages, and says how
-      many came before. That count can be off by messages deleted in Stream.
-    when: Messages are deleted in Stream.
   - id: nothing-retried
     name: Space membership changes never retried
     impact: damaging
@@ -127,12 +98,6 @@ gaps:
       Organizations from before conversation spaces have their space, but the
       messaging provider doesn't have it, with everyone who belongs in it,
       until someone joins it or a conversation is started in it.
-  - id: accepted-invitations-show-invited
-    name: Accepted invitations still show as invited
-    impact: negligible
-    description: >-
-      Someone who accepts the messaging provider's invitation still shows as
-      invited.
   - id: returning-people-not-put-back
     name: Returning people not put back in spaces
     impact: inconvenient

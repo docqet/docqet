@@ -41,12 +41,6 @@ gaps:
       that accepted an earlier one, and nothing sends a client new terms (it
       has none).
     when: A new version of the Client Agreement is published.
-  - id: generated-pdf-file-name
-    name: Downloaded PDFs get a generated file name
-    impact: negligible
-    description: >-
-      A PDF downloaded from the browser's viewer gets a generated file name,
-      not the agreement's.
   - id: names-outside-western-european-alphabets
     name: Names outside Western alphabets lost in PDFs
     outcome: usability/beta/everyone

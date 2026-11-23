@@ -110,13 +110,6 @@ gaps:
     name: Role shown only to role managers
     impact: inconvenient
     description: Someone's role is named only to those who can manage roles.
-  - id: team-change-offered-then-refused
-    name: Team change offered, then refused
-    impact: inconvenient
-    description: >-
-      Changing someone's team is offered to those who can't manage teams, and
-      is refused when tried.
-    when: Someone who can't manage teams tries to change someone's team.
   - id: role-and-applications-api-only
     name: Role and applications changeable only by API
     impact: inconvenient

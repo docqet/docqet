@@ -18,7 +18,7 @@ concepts: [concept:payout, concept:partnership@partnerships]
 gaps:
   - id: one-account-one-country
     name: One account, its country fixed once chosen
-    impact: blocking
+    impact: negligible
     description: >-
       There's one account per person or partnership, and its country is fixed
       once it's chosen, as the payments partner's form holds one and verifies
@@ -29,12 +29,6 @@ gaps:
     impact: negligible
     description: >-
       A change of status shows when the account is next loaded.
-  - id: requirements-read-as-field-names
-    name: Requirements can read as field names
-    impact: inconvenient
-    description: >-
-      A requirement can read as the payments partner's field name rather than
-      words.
   - id: no-payouts-to-mexico
     name: No payouts to Mexico
     impact: blocking

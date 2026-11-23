@@ -8,12 +8,6 @@ stability: prototype
 personas: [persona:exalynt-admin]
 concepts: [concept:organization@accounts]
 gaps:
-  - id: placeholder-coupons
-    name: Coupons are placeholder data
-    impact: blocking
-    description: >-
-      Coupons are placeholder data, held in memory until a reload, so a real
-      client starts with none.
   - id: coupons-never-applied
     name: Coupons never applied to payments
     impact: blocking

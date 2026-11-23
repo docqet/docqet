@@ -61,7 +61,7 @@ gaps:
       organization roles.
   - id: one-scope-per-permission
     name: Only one scope per permission
-    impact: blocking
+    impact: inconvenient
     description: >-
       A permission can be given only one scope when editing a role, though
       several are allowed. Saving a role's permissions keeps only the widest,

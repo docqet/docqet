@@ -54,7 +54,7 @@ gaps:
     when: Exalynt changes its operations fee.
   - id: operations-not-shown
     name: Operations left off estimates
-    impact: blocking
+    impact: inconvenient
     description: >-
       Operations aren't shown for now: there's no way to include them when
       writing an estimate, and nothing on the client's estimate or its PDF.
@@ -77,13 +77,6 @@ gaps:
       The PDF is built on the reader's device, so it isn't stored or kept as
       sent.
     when: Someone needs the estimate as it was sent, after it's been changed.
-  - id: pdf-layout-breaks
-    name: PDF layout breaks on long titles and links
-    impact: negligible
-    description: >-
-      In the PDF, a title with no spaces runs off the page and into the
-      footer, and web addresses get hyphenated.
-    when: A title has no spaces, or the estimate has a web address in it.
   - id: no-retry-after-failed-load
     name: No retry after a failed load
     outcome: usability/beta/recover

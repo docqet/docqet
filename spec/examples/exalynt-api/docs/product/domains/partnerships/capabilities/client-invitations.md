@@ -36,14 +36,6 @@ rules:
   - rule:introductions-dont-affect-engineer-assignment
 concepts: [concept:partnership]
 gaps:
-  - id: different-address-stays-sent
-    name: Different sign-up address leaves invitation sent
-    impact: negligible
-    description: >-
-      An invitation stays marked as sent when the person signs up with a
-      different address from the one invited, though the link still
-      attributes them.
-    when: Someone signs up with a different address from the one invited.
   - id: existing-clients-spotted-by-name-only
     name: Existing clients spotted by name only
     impact: damaging

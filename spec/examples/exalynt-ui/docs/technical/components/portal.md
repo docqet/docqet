@@ -75,7 +75,7 @@ gaps:
   - id: billing-screens-untested
     name: Billing untested against a real provider
     outcome: functionality/beta/stays-correct
-    impact: blocking
+    impact: inconvenient
     description: >-
       Billing and payment methods are tested end to end only by the API's
       feature tests, which run without a real payment provider.

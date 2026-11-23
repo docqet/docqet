@@ -116,18 +116,6 @@ gaps:
       Exalynt doesn't alert itself when sign-up, inviting or joining start
       failing: someone notices first.
     when: Sign-up, inviting or joining start failing.
-  - id: success-not-agreed
-    name: Success measures not agreed
-    outcome: utility/beta/success-agreed
-    impact: inconvenient
-    description: >-
-      What success looks like hasn't been agreed with the client, so nothing
-      yet shows it's met in real use.
-  - id: no-availability-target
-    name: No availability target
-    outcome: reliability/ga/availability
-    impact: inconvenient
-    description: No availability target has been agreed.
   - id: no-speed-target
     name: No response-time target or peak load test
     outcome: efficiency/ga/speed-targets

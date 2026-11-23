@@ -54,15 +54,9 @@ gaps:
     impact: negligible
     description: >-
       A change of status shows when the page is next loaded.
-  - id: requirements-read-as-field-names
-    name: Requirements can read as field names
-    impact: inconvenient
-    description: >-
-      A requirement can read as the payments partner's field name rather than
-      words.
   - id: admins-cant-see-partnership-readiness
     name: Admins can't see partnership payout readiness
-    impact: blocking
+    impact: inconvenient
     description: >-
       An admin can't see whether a partnership can be paid.
 tradeoffs:

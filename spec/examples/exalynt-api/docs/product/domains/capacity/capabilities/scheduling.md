@@ -84,13 +84,6 @@ gaps:
     when: >-
       No single eligible engineer can fit a block into a week the team has room
       in.
-  - id: shared-team-room-understated
-    name: Room understated for shared teams
-    impact: inconvenient
-    description: >-
-      For a client with several teams, an unstaffed block of a client sharing
-      just one of them is counted in full, which understates its room.
-    when: A client with several teams shares one of them with another client.
   - id: team-changes-can-overbook
     name: Team changes can overbook a week
     rule: rule:weeks-are-never-overbooked
@@ -110,7 +103,7 @@ gaps:
     when: An engineer's reduction unschedules a client's block.
   - id: far-weeks-bookable-outside-portal
     name: Far weeks bookable outside the portal
-    impact: inconvenient
+    impact: negligible
     description: >-
       A far future week can be booked outside the portal, which offers about
       a year.

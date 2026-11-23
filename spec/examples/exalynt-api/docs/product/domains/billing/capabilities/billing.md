@@ -30,7 +30,7 @@ concepts: [concept:invoice, concept:capacity-block@capacity]
 gaps:
   - id: no-fees-or-infrastructure-charges
     name: Operations and infrastructure charges not shown
-    impact: blocking
+    impact: inconvenient
     description: >-
       Clients can't see operations fees or infrastructure pass-through
       charges, each shown separately from capacity.
@@ -51,7 +51,7 @@ gaps:
     when: A purchase is charged but recording it fails.
   - id: capacity-invoices-in-us-dollars-only
     name: Capacity invoices only, in US dollars
-    impact: blocking
+    impact: inconvenient
     description: >-
       Every invoice is for capacity, in US dollars. There are no invoices for
       the operations fee or infrastructure yet.
@@ -91,7 +91,7 @@ gaps:
     when: The payment provider has no email address for the customer.
   - id: invoice-readers-cant-list-invoices
     name: Invoice readers can't list invoices
-    impact: blocking
+    impact: negligible
     description: >-
       Someone who can read invoices but not pay them, which only a custom
       role can be, can't list invoices, since the list is on the payment
@@ -123,7 +123,7 @@ gaps:
       Exalynt moves to a payment provider without hosted payment method pages.
   - id: default-payment-method-read-on-return-only
     name: Default payment method refreshed only on return
-    impact: inconvenient
+    impact: negligible
     description: >-
       The default payment method shown is read again on coming back from the
       payment provider, but not somewhere else that was left open.
@@ -134,15 +134,6 @@ gaps:
     impact: inconvenient
     description: >-
       A failed load says to reload, with no way to retry in place.
-  - id: tested-only-through-the-api
-    name: Only API tests, without a real provider
-    outcome: functionality/beta/stays-correct
-    impact: damaging
-    description: >-
-      The workflow is tested end to end only through the API, and without a
-      real payment provider.
-    when: >-
-      A change breaks paying in the portal, or with the real payment provider.
   - id: old-payment-method-records-remain
     name: Old payment method records not removed
     impact: negligible

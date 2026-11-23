@@ -79,7 +79,7 @@ gaps:
   - id: screen-readers-unreviewed
     name: Screen readers not reviewed
     outcome: usability/beta/everyone
-    impact: blocking
+    impact: negligible
     description: Real screen readers haven't been reviewed.
     when: Someone sets availability with a screen reader.
   - id: deployment-and-team-access-unreviewed
