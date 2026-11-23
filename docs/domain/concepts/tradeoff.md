@@ -34,8 +34,7 @@ looks wrong on purpose points at its tradeoff, so neither a person nor an
 agent "fixes" it. When the choice means falling short of a
 [stability checklist](stability-checklist.md) outcome, the tradeoff names it,
 and the checklist shows that outcome as not met by choice, so it's neither
-claimed nor taken for a gap. Neither a tradeoff nor a gap can excuse the
-security and privacy baseline.
+claimed nor taken for a gap.
 
 A tradeoff we reverse is deleted, or replaced by the new one.
 

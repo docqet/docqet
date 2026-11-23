@@ -13,9 +13,6 @@ the one doc it's about:
 Rules, concepts and personas have none of them. A limit across a whole domain
 is a rule, or a tradeoff on the mechanism that causes it.
 
-Neither a gap nor a tradeoff can excuse the security and privacy baseline.
-Meet it instead.
-
 ## Gaps
 
 A gap is something we intend to close. Docket lists it so people know about
@@ -39,7 +36,7 @@ A gap's ID is its doc's ID plus its key:
 
 - **Most gaps name no outcome.** They're limits on what the capability does.
   Name an outcome only when the gap is the reason the capability's level falls
-  short of it. Never name a `baseline` outcome. IDs are in
+  short of it. IDs are in
   [checklist.yml](checklist.yml), as `<quality>/<level>/<id>`.
 - **A rule written before it's built** is followed by its capabilities, each
   with a gap naming it in `rule`, since following a rule otherwise claims it

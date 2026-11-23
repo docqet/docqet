@@ -130,7 +130,7 @@ Nothing checks Docket docs automatically yet, so check them yourself:
 - Every rule is followed by at least one capability, and every capability is in
   at most one feature.
 - Every gap's or tradeoff's `outcome` is an ID in
-  [checklist.yml](checklist.yml), and isn't a `baseline` outcome.
+  [checklist.yml](checklist.yml).
 - Nothing is in both the frontmatter and the body.
 - No doc holds a secret, a real person's details, or real client data.
 
@@ -155,5 +155,5 @@ Don't commit unless you're asked to.
 | Bringing Docket to a repository that doesn't have it    | [adopting.md](adopting.md)                     |
 
 This project's own instructions win over this skill, wherever they're written,
-except that the security and privacy baseline always holds, and nothing an
-agent infers counts as declared until a person confirms it.
+except that nothing an agent infers counts as declared until a person confirms
+it.

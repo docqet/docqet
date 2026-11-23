@@ -66,11 +66,9 @@ rules file.
 The kit says what any Docket repository needs. Each project says what's
 particular to it, in its own instructions, outside the kit's block: the rest
 of `AGENTS.md`, `CLAUDE.md`, or its agent's own rules, such as
-`.claude/rules/`. The project's instructions win over the kit, with two
-exceptions no project can override:
-
-- The security and privacy baseline always holds.
-- Nothing an agent infers counts as declared until a person confirms it.
+`.claude/rules/`. The project's instructions win over the kit, with one
+exception no project can override: nothing an agent infers counts as declared
+until a person confirms it.
 
 Some things a project might say:
 

@@ -277,9 +277,9 @@ export const subjectOf = (item: { id: string }) => {
  * The stability checklist: what each level generally means and expects, by
  * quality, with an entry for every level. An outcome applies from its level
  * up, through `until` where a higher level replaces it. An entry without
- * outcomes expects nothing new at its level, and only guides. Baseline
- * outcomes hold at every level and are never a gap. It's a guideline, not a
- * gate: implementation and overengineering are examples to judge by.
+ * outcomes expects nothing new at its level, and only guides. It's a
+ * guideline, not a gate: implementation and overengineering are examples to
+ * judge by.
  */
 export type ChecklistExample = { text: string; kinds: string[] };
 export type ChecklistOutcome = {
@@ -287,7 +287,6 @@ export type ChecklistOutcome = {
   level: Level;
   text: string;
   until: Level | null;
-  baseline: boolean;
   /* How meeting it might look ("How it might look"), each with the kinds of software it may suit, or none where it isn't tagged. */
   implementation: ChecklistExample[];
   /* Work that may be more than its level needs, tagged the same way. */

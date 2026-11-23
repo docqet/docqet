@@ -62,16 +62,6 @@ such as `reliability/beta/data-kept`.
   Don't build ahead of the level without a concrete reason, such as the
   user's request, the project's own rules, or a security need.
 
-### The security and privacy baseline
-
-The `baseline` outcomes hold at every level, and are never a gap or a
-tradeoff. In short: secrets stay out of code, version control, sample data,
-logs and output; real data comes only through the real systems, never copied
-into code or fixtures; only those allowed can reach real systems or data, and
-one tenant or account never sees or changes another's; personal data is
-collected only where needed; and untrusted input can't run as code or
-commands. If work can't meet it, stop and say so.
-
 ## Promoting a capability
 
 Only when a person tells you to. Then:

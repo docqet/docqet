@@ -245,8 +245,8 @@ function ChecklistReference({ state }: { state: DocketState }) {
     <>
       <p className="dp-note">
         <strong>A guideline, not a gate.</strong> It gives each level the same meaning for everyone, and doesn't replace engineering judgment. An outcome
-        applies from its level up, and one that applies is met, not applicable, or written down as a gap or tradeoff. The security and privacy baseline is the
-        exception: it holds at every level, and is never a gap. Each capability's page shows where it stands against its own level.
+        applies from its level up, and one that applies is met, not applicable, or written down as a gap or tradeoff. Each capability's page shows where it
+        stands against its own level.
       </p>
       <nav className="dp-index" aria-label="Qualities">
         {checklist.qualities.map((q) => (
@@ -282,9 +282,7 @@ function QualityLevel({ level, kinds }: { level: ChecklistLevel; kinds: Checklis
         <ul className="dp-outcomes">
           {level.outcomes.map((o) => (
             <li key={o.id}>
-              {o.baseline ? (
-                <span className="dp-outcome-label">Required at every level</span>
-              ) : o.until && o.until !== o.level ? (
+              {o.until && o.until !== o.level ? (
                 <span className="dp-outcome-label">
                   From {STABILITY[o.level].name} through {STABILITY[o.until].name}
                 </span>

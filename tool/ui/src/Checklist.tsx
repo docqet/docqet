@@ -46,15 +46,15 @@ const BUILDS_ON_INFO = "Outcomes expected at lower levels. They still apply at t
 
 /*
  * A quality's outcomes at `level`: those expected at it, and those from lower
- * levels it builds on. Baseline outcomes, and those a later level replaces
- * (`until`), are listed as expected while they apply, with their guidance,
- * since they're easy to miss otherwise.
+ * levels it builds on. Those a later level replaces (`until`) are listed as
+ * expected while they apply, with their guidance, since they're easy to miss
+ * otherwise.
  */
 function outcomesAt(quality: ChecklistQuality, level: Level) {
   const included = outcomesOf(quality).filter((o) => appliesAt(o, level));
   return {
-    expected: included.filter((o) => o.level === level || o.baseline || o.until),
-    buildsOn: included.filter((o) => o.level !== level && !o.baseline && !o.until),
+    expected: included.filter((o) => o.level === level || o.until),
+    buildsOn: included.filter((o) => o.level !== level && !o.until),
   };
 }
 
@@ -92,7 +92,7 @@ export function StabilityChecklist({ state, checklist, capability }: { state: Do
       <aside className="sc-note">
         <strong>A guideline, not a gate.</strong> It gives a level the same meaning for everyone, and doesn't replace engineering judgment: what an outcome takes,
         and whether it applies at all, depends on the software, who uses it and the circumstances. An outcome that applies is met, not applicable, or written
-        down as a gap, GA included. The security and privacy baseline is the exception: it holds at every level, and is never a gap.
+        down as a gap, GA included.
       </aside>
 
       <p className="sc-pick-label" id="sc-level">
@@ -184,9 +184,7 @@ export function StabilityChecklist({ state, checklist, capability }: { state: Do
                     <li key={o.id} className="sc-outcome" data-standing={standing(o)}>
                       <StandingIcon standing={standing(o)} />
                       <div>
-                        {o.baseline ? (
-                          <p className="sc-outcome-label">Required at every level</p>
-                        ) : o.until && o.until !== o.level ? (
+                        {o.until && o.until !== o.level ? (
                           <p className="sc-outcome-label">
                             From {STABILITY[o.level].name} through {STABILITY[o.until].name}
                           </p>

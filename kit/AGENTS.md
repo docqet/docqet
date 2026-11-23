@@ -29,6 +29,5 @@ first change to code, tests or docs here.
   anything waiting on someone: intention you inferred that a person has to
   confirm, open decisions you raised, and gaps you added with their impact.
 - **This project's own instructions win** over this section and the skill,
-  wherever they're written, with two exceptions. The security and privacy
-  baseline always holds. Nothing an agent infers counts as declared until a
-  person confirms it.
+  wherever they're written, with one exception: nothing an agent infers counts
+  as declared until a person confirms it.

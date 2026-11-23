@@ -619,8 +619,7 @@ gaps:
 
 - **`outcome`** names the [stability checklist](#stability-checklist) outcome
   it falls short of, as `<quality>/<level>/<id>`. Most gaps are limits on what
-  the capability does and match none. A gap can't name a baseline outcome,
-  since the security and privacy baseline is never a known gap.
+  the capability does and match none.
 - **`rule`** names a rule the capability follows but doesn't hold to yet.
   Readers show it on the rule too. A rule written before it's built is
   followed with one of these on each capability that doesn't hold to it yet,
@@ -650,8 +649,7 @@ it, since a choice whose reason isn't written down can't be weighed against
 its drawback. Its `impact` and `when` rate its drawback, as a gap's do. Optionally, its `outcome` names the
 [stability checklist](#stability-checklist) outcome it falls short of on
 purpose, as a gap's does, so the checklist shows it as not met by choice
-rather than met. It can't name a baseline outcome, since nothing excuses the
-security and privacy baseline:
+rather than met:
 
 ```yaml
 tradeoffs:
@@ -666,8 +664,7 @@ tradeoffs:
     drawback: Clerks enter each agency booking by hand, as it arrives by email.
 ```
 
-A gap we decide never to close becomes a tradeoff, with its drawback. Neither a
-gap nor a tradeoff can excuse the security and privacy baseline.
+A gap we decide never to close becomes a tradeoff, with its drawback.
 
 ## Stability levels
 
@@ -713,9 +710,6 @@ It's a guideline, not a gate:
 - **It applies differently to every project.** What an outcome takes, and
   whether it applies at all, depends on the software, who uses it, and the
   circumstances.
-
-The one exception is the security and privacy baseline, which holds at every
-level and is never a known gap.
 
 It has ten qualities, each a question someone asks before depending on the
 work. Lower levels ask for little, enough to learn whether the work is worth
@@ -786,8 +780,6 @@ How outcomes combine:
   `until` names the last level an outcome applies to.
   `compatibility/prototype/opt-in`, which keeps it to those who chose to try
   it, applies through Alpha, and Beta's normal release replaces it.
-- **`baseline` outcomes,** Security's at Prototype, are the security and
-  privacy baseline. They hold at every level, and are never a known gap.
 
 ## Features and maturity
 
@@ -1276,8 +1268,8 @@ and showing several projects together means reading each one's state.json.
   its `level`, `summary` as `null` where it has none, and its `outcomes`,
   `implementation` and `overengineering`, each a list, empty where it has
   none. Each outcome has its full `<quality>/<level>/<id>` ID, its `level`,
-  `text`, `until` as `null` where it has none, `baseline` as `true` or
-  `false`, and its own `implementation` and `overengineering`. Every example
+  `text`, `until` as `null` where it has none, and its own `implementation`
+  and `overengineering`. Every example
   in either is its `text` and `kinds`, with `kinds` empty where it isn't
   tagged.
 
@@ -1293,7 +1285,6 @@ and showing several projects together means reading each one's state.json.
 | `contradiction`       | Contributions that should agree don't, as Domains describes.                                                     |
 | `ambiguous-link`      | A link could mean the rule or concept of two or more domains.                                                    |
 | `unknown-outcome`     | A gap's or tradeoff's `outcome`, or an entry in `meets`, isn't a checklist outcome.                              |
-| `baseline-outcome`    | A gap's or tradeoff's `outcome` is a baseline outcome, which nothing excuses.                                    |
 | `became-other-side`   | A decision's `became` or `gaps` names a technical doc, or its gap or tradeoff, from a product doc, or the other way round. |
 
 `in-two-features` is a contradiction too, when the listings

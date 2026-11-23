@@ -36,8 +36,6 @@ written as two gaps.
 - **It can be riding on an [open decision](open-decision.md)**: what it
   costs depends on how a question is answered. The decision names it, and
   shows what's at stake.
-- **It can't excuse the security and privacy baseline.** That holds at every
-  level, and is never a known gap.
 
 A capability that's missing altogether isn't a gap: it's a draft capability.
 

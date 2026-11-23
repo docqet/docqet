@@ -60,7 +60,6 @@ const TYPES: Record<string, { name: string; note: string }> = {
   "broken-link": { name: "Broken links", note: "A relative link in a doc's body or a text value doesn't resolve." },
   "unlinked-rule": { name: "Rules nothing follows", note: "No capability follows the rule." },
   "unknown-outcome": { name: "Unknown outcomes", note: "A gap's or tradeoff's outcome, or one a mechanism or component says it meets, isn't in the checklist." },
-  "baseline-outcome": { name: "Excused baseline outcomes", note: "A gap or tradeoff names a baseline outcome, which nothing excuses." },
   "became-other-side": {
     name: "Decisions across the line",
     note: "A product doc's decision names a technical doc, gap or tradeoff, or the other way round.",

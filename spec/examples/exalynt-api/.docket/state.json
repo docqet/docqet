@@ -16849,7 +16849,6 @@
                 "level": "prototype",
                 "text": "Those judging the idea can try it, or watch it run, enough to tell whether it's worth doing and whether this is the way to do it.",
                 "until": null,
-                "baseline": false,
                 "implementation": [
                   {
                     "text": "The question it's meant to answer written down before it's built, and the answer once it's judged.",
@@ -16955,7 +16954,6 @@
                 "level": "alpha",
                 "text": "It works end to end on the real system.",
                 "until": null,
-                "baseline": false,
                 "implementation": [
                   {
                     "text": "Wired to real storage and services, with sample data where real data isn't needed.",
@@ -16978,7 +16976,6 @@
                 "level": "alpha",
                 "text": "It's used for real.",
                 "until": null,
-                "baseline": false,
                 "implementation": [
                   {
                     "text": "A few people, teams, or systems using it for real work, or a job running on a real schedule.",
@@ -17020,7 +17017,6 @@
                 "level": "alpha",
                 "text": "What's learned from using it shapes what comes next.",
                 "until": null,
-                "baseline": false,
                 "implementation": [
                   {
                     "text": "Notes on what worked and what didn't, feeding the next round of changes.",
@@ -17047,7 +17043,6 @@
                 "level": "beta",
                 "text": "The need and the solution are confirmed, so what changes from here is refinement.",
                 "until": null,
-                "baseline": false,
                 "implementation": [
                   {
                     "text": "Feedback is about details, not direction.",
@@ -17068,7 +17063,6 @@
                 "level": "beta",
                 "text": "What success looks like is agreed.",
                 "until": null,
-                "baseline": false,
                 "implementation": [
                   {
                     "text": "Success measures agreed with whoever asked for it, such as adoption, time saved, error rates, or jobs completed.",
@@ -17112,7 +17106,6 @@
                 "level": "ga",
                 "text": "It's shown to deliver what it's for in real use.",
                 "until": null,
-                "baseline": false,
                 "implementation": [
                   {
                     "text": "When it's too early to show, such as for a yearly workflow, a known gap with the date it will be shown by.",
@@ -17209,7 +17202,6 @@
                 "level": "alpha",
                 "text": "Those trying it can use its main path without help from whoever built it.",
                 "until": null,
-                "baseline": false,
                 "implementation": [
                   {
                     "text": "A short note for those trying it, covering what it does, how to reach it, and what's missing.",
@@ -17288,7 +17280,6 @@
                 "level": "beta",
                 "text": "Its users can learn and use it on their own.",
                 "until": null,
-                "baseline": false,
                 "implementation": [
                   {
                     "text": "In-app help, or a guide to the main tasks.",
@@ -17360,7 +17351,6 @@
                 "level": "beta",
                 "text": "Its users can tell what happened after everything they do, and what to do next.",
                 "until": null,
-                "baseline": false,
                 "implementation": [
                   {
                     "text": "Loading, empty, and error states handled on purpose.",
@@ -17429,7 +17419,6 @@
                 "level": "beta",
                 "text": "Its users can recover from mistakes.",
                 "until": null,
-                "baseline": false,
                 "implementation": [
                   {
                     "text": "Confirmation, undo, or a dry run before anything destructive.",
@@ -17461,7 +17450,6 @@
                 "level": "beta",
                 "text": "It works for everyone it's meant for.",
                 "until": null,
-                "baseline": false,
                 "implementation": [
                   {
                     "text": "Keyboard access, labels, and contrast.",
@@ -17523,7 +17511,6 @@
                 "level": "ga",
                 "text": "Everything it does can be learned without asking anyone.",
                 "until": null,
-                "baseline": false,
                 "implementation": [
                   {
                     "text": "Complete docs, updated with each release.",
@@ -17588,7 +17575,6 @@
                 "level": "ga",
                 "text": "It behaves consistently across its whole interface.",
                 "until": null,
-                "baseline": false,
                 "implementation": [
                   {
                     "text": "A shared design system, so screens look and behave the same way.",
@@ -17652,7 +17638,6 @@
                 "level": "ga",
                 "text": "All of it works for everyone it's meant for.",
                 "until": null,
-                "baseline": false,
                 "implementation": [
                   {
                     "text": "Meets WCAG 2.2 AA, or the standard the project has adopted.",
@@ -17732,7 +17717,7 @@
             ],
             "overengineering": [
               {
-                "text": "Automated tests, unless they're the quickest way to try the idea, or the security baseline needs one, such as a test that tenants stay apart.",
+                "text": "Automated tests, unless they're the quickest way to try the idea.",
                 "kinds": []
               },
               {
@@ -17756,7 +17741,6 @@
                 "level": "alpha",
                 "text": "The main path is known to work after every change.",
                 "until": null,
-                "baseline": false,
                 "implementation": [
                   {
                     "text": "End-to-end tests of the main path's happy path, through the public interface, with real dependencies.",
@@ -17861,7 +17845,6 @@
                 "level": "alpha",
                 "text": "Errors are visible, never silent.",
                 "until": null,
-                "baseline": false,
                 "implementation": [
                   {
                     "text": "Input validated where it enters.",
@@ -17922,7 +17905,6 @@
                 "level": "beta",
                 "text": "Unusual input and error paths are handled correctly.",
                 "until": null,
-                "baseline": false,
                 "implementation": [
                   {
                     "text": "Data validated before it's written.",
@@ -18000,7 +17982,6 @@
                 "level": "beta",
                 "text": "How it handles unusual input and errors is known to keep working as it changes.",
                 "until": null,
-                "baseline": false,
                 "implementation": [
                   {
                     "text": "Unit tests for logic, edge cases, and failure paths.",
@@ -18082,7 +18063,6 @@
                 "level": "ga",
                 "text": "Every critical workflow is known to work after every change.",
                 "until": null,
-                "baseline": false,
                 "implementation": [
                   {
                     "text": "The critical workflows agreed with the client, usually those whose failure would stop their work, lose data, or cost money.",
@@ -18134,7 +18114,6 @@
                 "level": "ga",
                 "text": "A fixed bug stays fixed.",
                 "until": null,
-                "baseline": false,
                 "implementation": [
                   {
                     "text": "A regression test with each bug fix.",
@@ -18287,7 +18266,6 @@
                 "level": "beta",
                 "text": "Data that people or systems put in is kept across changes.",
                 "until": null,
-                "baseline": false,
                 "implementation": [
                   {
                     "text": "Versioned migrations run by the release, never by hand.",
@@ -18370,7 +18348,6 @@
                 "level": "beta",
                 "text": "A bad release can be undone.",
                 "until": null,
-                "baseline": false,
                 "implementation": [
                   {
                     "text": "A rollback to the previous release.",
@@ -18468,7 +18445,6 @@
                 "level": "beta",
                 "text": "When something it depends on is slow or down, it fails clearly or degrades gracefully instead of hanging.",
                 "until": null,
-                "baseline": false,
                 "implementation": [
                   {
                     "text": "Timeouts on every call to a dependency, with retries only where they're safe.",
@@ -18557,7 +18533,6 @@
                 "level": "ga",
                 "text": "It holds up under overlapping runs, partial failures, and retries.",
                 "until": null,
-                "baseline": false,
                 "implementation": [
                   {
                     "text": "Operations safe to repeat, such as with idempotency keys or upserts.",
@@ -18633,7 +18608,6 @@
                 "level": "ga",
                 "text": "It meets its availability target.",
                 "until": null,
-                "baseline": false,
                 "implementation": [
                   {
                     "text": "An agreed availability target, such as 99.9%, that's measured.",
@@ -18703,7 +18677,6 @@
                 "level": "ga",
                 "text": "Recovering from a bad release or a loss of data is known to work.",
                 "until": null,
-                "baseline": false,
                 "implementation": [
                   {
                     "text": "A rollback that's been practiced, including upgrading, downgrading, and upgrading again.",
@@ -18916,7 +18889,6 @@
                 "level": "beta",
                 "text": "It works at realistic volumes.",
                 "until": null,
-                "baseline": false,
                 "implementation": [
                   {
                     "text": "Tried with realistic amounts of data and use.",
@@ -18984,7 +18956,6 @@
                 "level": "beta",
                 "text": "The work it does is bounded.",
                 "until": null,
-                "baseline": false,
                 "implementation": [
                   {
                     "text": "No query or call for each item in a list, and indexes where queries need them.",
@@ -19044,7 +19015,6 @@
                 "level": "ga",
                 "text": "It meets agreed speed targets at peak load, with headroom.",
                 "until": null,
-                "baseline": false,
                 "implementation": [
                   {
                     "text": "Measured targets for response time, throughput, or how long a job takes.",
@@ -19121,7 +19091,6 @@
                 "level": "ga",
                 "text": "What it costs to run is known and acceptable.",
                 "until": null,
-                "baseline": false,
                 "implementation": [
                   {
                     "text": "What it costs per unit of work is known.",
@@ -19169,7 +19138,6 @@
                 "level": "ga",
                 "text": "Its limits are known.",
                 "until": null,
-                "baseline": false,
                 "implementation": [
                   {
                     "text": "The rate limits and quotas of what it depends on fit peak use.",
@@ -19210,26 +19178,25 @@
         "id": "security",
         "name": "Security",
         "question": "Is it protected, and does it follow the rules?",
-        "why": "Systems and data are protected the same way at every level, and it follows the rules that apply to it.",
+        "why": "Systems and data are kept safe as more people come to rely on it, and it follows the rules that apply to it.",
         "levels": [
           {
             "level": "prototype",
-            "summary": "The baseline, which holds at every level: secrets and real data stay safe.",
+            "summary": "Trying it out puts nothing real at risk.",
             "outcomes": [
               {
                 "id": "security/prototype/secrets",
                 "level": "prototype",
-                "text": "Secrets stay out of code, version control, sample data, logs, and output.",
+                "text": "Secrets stay out of code, version control, and anything it ships.",
                 "until": null,
-                "baseline": true,
                 "implementation": [
                   {
-                    "text": "Secrets in the environment or a secret store where it runs, with separate credentials for each environment and providers' test keys everywhere but production.",
-                    "kinds": [
-                      "web-app",
-                      "http-api",
-                      "background-job"
-                    ]
+                    "text": "Secrets in the environment, or a local file version control ignores, never in the code.",
+                    "kinds": []
+                  },
+                  {
+                    "text": "Providers' test keys or sandboxes while it's tried out.",
+                    "kinds": []
                   },
                   {
                     "text": "Nothing secret built into what's shipped to people's devices or published, build-time settings included.",
@@ -19250,36 +19217,9 @@
                     ]
                   },
                   {
-                    "text": "Each person's own token, kept in the OS keychain or a file only they can read, never in committed config, and redacted from debug output and errors.",
-                    "kinds": [
-                      "mobile-app",
-                      "desktop-app",
-                      "cli"
-                    ]
-                  },
-                  {
-                    "text": "Tokens read from a prompt, a file, or an environment variable, never a command-line flag, so they stay out of shell history and logs. In CI, from the CI's secret store.",
+                    "text": "A token read only from an environment variable or a prompt, never a command-line flag, so the tool stores nothing and it stays out of shell history.",
                     "kinds": [
                       "cli"
-                    ]
-                  },
-                  {
-                    "text": "Authorization headers, API keys, and tokens left out of request logs and error reports, for calls it receives and calls it makes.",
-                    "kinds": []
-                  },
-                  {
-                    "text": "API keys it issues stored hashed, and shown once.",
-                    "kinds": [
-                      "http-api"
-                    ]
-                  },
-                  {
-                    "text": "Signing keys, store credentials, and publish tokens kept in CI's secret store, never in the repository or the project's `.npmrc`.",
-                    "kinds": [
-                      "mobile-app",
-                      "desktop-app",
-                      "cli",
-                      "library"
                     ]
                   },
                   {
@@ -19290,17 +19230,15 @@
                     ]
                   },
                   {
-                    "text": "At first, the token read only from an environment variable, so the tool stores nothing and needs no sign-in.",
-                    "kinds": [
-                      "cli"
-                    ]
-                  },
-                  {
                     "text": "Generated or scaffolded files refer to secrets by name, never contain their values.",
                     "kinds": []
                   }
                 ],
                 "overengineering": [
+                  {
+                    "text": "A secret store, scheduled rotation, or separate credentials for each environment, while it's tried out with test keys.",
+                    "kinds": []
+                  },
                   {
                     "text": "Keychain integration on every OS, when a file only the person can read keeps the token safe.",
                     "kinds": [
@@ -19313,9 +19251,8 @@
               {
                 "id": "security/prototype/real-data",
                 "level": "prototype",
-                "text": "Real data comes only through the real systems, never copied into code or fixtures.",
+                "text": "It uses made-up data. Real data isn't copied into it, and isn't left open through it.",
                 "until": null,
-                "baseline": true,
                 "implementation": [
                   {
                     "text": "Sample data that's made up, not exported from production.",
@@ -19344,16 +19281,36 @@
                   {
                     "text": "Real data kept out of notebooks, spreadsheets, chat, and local copies outside the systems approved for it.",
                     "kinds": []
+                  },
+                  {
+                    "text": "Where it has to use a real credential or reach a real system, it runs locally, on a private preview, or behind a shared password, never on an open address.",
+                    "kinds": []
                   }
                 ],
-                "overengineering": []
-              },
+                "overengineering": [
+                  {
+                    "text": "Sign-in, tenant separation, roles, or input validation for work that holds only made-up data and reaches no real system.",
+                    "kinds": []
+                  },
+                  {
+                    "text": "Dependency audits, license checks, or security reviews while it's tried out.",
+                    "kinds": []
+                  }
+                ]
+              }
+            ],
+            "implementation": [],
+            "overengineering": []
+          },
+          {
+            "level": "alpha",
+            "summary": "Real people and their data are safe with it.",
+            "outcomes": [
               {
-                "id": "security/prototype/access",
-                "level": "prototype",
+                "id": "security/alpha/access",
+                "level": "alpha",
                 "text": "Only those allowed can reach real systems or data, and one tenant or account never sees or changes another's.",
                 "until": null,
-                "baseline": true,
                 "implementation": [
                   {
                     "text": "Every read and write scoped to the tenant or account making it.",
@@ -19361,10 +19318,6 @@
                   },
                   {
                     "text": "A test, run on every change, that one tenant can't read or change another's records, even by guessing an ID.",
-                    "kinds": []
-                  },
-                  {
-                    "text": "Work that uses real credentials isn't open to anyone who finds it, such as by running locally, on a private preview, or behind a shared password, even when its own data is made up.",
                     "kinds": []
                   },
                   {
@@ -19463,6 +19416,41 @@
                     ]
                   },
                   {
+                    "text": "Separate credentials for each environment, with providers' test keys everywhere but production.",
+                    "kinds": [
+                      "web-app",
+                      "http-api",
+                      "background-job"
+                    ]
+                  },
+                  {
+                    "text": "Each person's own token, kept in the OS keychain or a file only they can read, never in committed config, and redacted from debug output and errors.",
+                    "kinds": [
+                      "mobile-app",
+                      "desktop-app",
+                      "cli"
+                    ]
+                  },
+                  {
+                    "text": "Authorization headers, API keys, and tokens left out of request logs and error reports, for calls it receives and calls it makes.",
+                    "kinds": []
+                  },
+                  {
+                    "text": "API keys it issues stored hashed, and shown once.",
+                    "kinds": [
+                      "http-api"
+                    ]
+                  },
+                  {
+                    "text": "Signing keys, store credentials, and publish tokens kept in CI's secret store, never in the repository or the project's `.npmrc`.",
+                    "kinds": [
+                      "mobile-app",
+                      "desktop-app",
+                      "cli",
+                      "library"
+                    ]
+                  },
+                  {
                     "text": "Established libraries for authentication and cryptography, never hand-rolled ones.",
                     "kinds": []
                   }
@@ -19502,69 +19490,10 @@
                 ]
               },
               {
-                "id": "security/prototype/personal-data",
-                "level": "prototype",
-                "text": "Personal data is collected only where it's needed.",
-                "until": null,
-                "baseline": true,
-                "implementation": [
-                  {
-                    "text": "Only the fields the work needs, with nothing kept just in case.",
-                    "kinds": []
-                  },
-                  {
-                    "text": "Functions and APIs take only what they need, such as a postal code instead of a whole customer record.",
-                    "kinds": []
-                  },
-                  {
-                    "text": "Personal data kept out of logs, error reports, crash reports, and analytics.",
-                    "kinds": []
-                  },
-                  {
-                    "text": "Error messages and debug output name what's wrong without repeating the personal data passed in.",
-                    "kinds": []
-                  },
-                  {
-                    "text": "Emails, texts, notifications, and webhooks carry no more personal data than they need.",
-                    "kinds": []
-                  },
-                  {
-                    "text": "Third-party services sent only what they need to do their part.",
-                    "kinds": []
-                  },
-                  {
-                    "text": "Copies it makes, such as reporting tables or exports, carry only the fields their readers need.",
-                    "kinds": [
-                      "background-job"
-                    ]
-                  },
-                  {
-                    "text": "Location and other metadata removed from photos and files, unless the work needs them.",
-                    "kinds": [
-                      "web-app",
-                      "mobile-app",
-                      "desktop-app"
-                    ]
-                  },
-                  {
-                    "text": "Device permissions, such as the camera or location, asked for only when a feature needs them.",
-                    "kinds": [
-                      "mobile-app"
-                    ]
-                  },
-                  {
-                    "text": "The legal duties that come with it, such as consent, or an agreement with a provider that processes it, in place before the first real personal data arrives.",
-                    "kinds": []
-                  }
-                ],
-                "overengineering": []
-              },
-              {
-                "id": "security/prototype/untrusted-input",
-                "level": "prototype",
+                "id": "security/alpha/untrusted-input",
+                "level": "alpha",
                 "text": "Untrusted input can't run as code or commands.",
                 "until": null,
-                "baseline": true,
                 "implementation": [
                   {
                     "text": "Parameterized queries, escaped output, and no shell commands built from input.",
@@ -19660,21 +19589,12 @@
                     ]
                   }
                 ]
-              }
-            ],
-            "implementation": [],
-            "overengineering": []
-          },
-          {
-            "level": "alpha",
-            "summary": "What it depends on is safe to depend on.",
-            "outcomes": [
+              },
               {
                 "id": "security/alpha/stable-dependencies",
                 "level": "alpha",
                 "text": "It depends on nothing less stable than itself.",
                 "until": null,
-                "baseline": false,
                 "implementation": [
                   {
                     "text": "Nothing it relies on is at an earlier stability level, such as a prototype service, or a third party's preview API.",
@@ -19694,61 +19614,6 @@
                   }
                 ],
                 "overengineering": []
-              },
-              {
-                "id": "security/alpha/maintained-dependencies",
-                "level": "alpha",
-                "text": "Its dependencies are maintained, and licensed for how it's used.",
-                "until": null,
-                "baseline": false,
-                "implementation": [
-                  {
-                    "text": "Licenses checked when a dependency is added, against how it's distributed, such as copyleft code in an app-store app.",
-                    "kinds": []
-                  },
-                  {
-                    "text": "Dependency versions pinned, such as with a lock file.",
-                    "kinds": [
-                      "web-app",
-                      "http-api",
-                      "background-job",
-                      "mobile-app",
-                      "desktop-app"
-                    ]
-                  },
-                  {
-                    "text": "A lock file published with it, such as `npm-shrinkwrap.json`, or a bundled build, so people install the versions that were tested.",
-                    "kinds": [
-                      "cli"
-                    ]
-                  },
-                  {
-                    "text": "A lock file for its own tests, with runtime dependencies as ranges so the software using it can resolve them, and as few of them as it can manage.",
-                    "kinds": [
-                      "library"
-                    ]
-                  },
-                  {
-                    "text": "A supported Electron release, since older ones stop getting security fixes.",
-                    "kinds": [
-                      "desktop-app"
-                    ]
-                  }
-                ],
-                "overengineering": [
-                  {
-                    "text": "Security reviews, compliance audits.",
-                    "kinds": []
-                  },
-                  {
-                    "text": "Certifications, such as SOC 2, that no client or law requires yet.",
-                    "kinds": []
-                  },
-                  {
-                    "text": "Rewriting a well-maintained dependency in-house just to have fewer dependencies.",
-                    "kinds": []
-                  }
-                ]
               }
             ],
             "implementation": [],
@@ -19756,14 +19621,13 @@
           },
           {
             "level": "beta",
-            "summary": "Protected against misuse, as far as it's exposed.",
+            "summary": "Protected against misuse, and follows the rules that apply.",
             "outcomes": [
               {
                 "id": "security/beta/misuse",
                 "level": "beta",
                 "text": "It's protected against misuse at the level it's exposed.",
                 "until": null,
-                "baseline": false,
                 "implementation": [
                   {
                     "text": "Rate limits and input size limits.",
@@ -19900,7 +19764,6 @@
                 "level": "beta",
                 "text": "The legal and regulatory duties that apply to it are known and met.",
                 "until": null,
-                "baseline": false,
                 "implementation": [
                   {
                     "text": "Privacy duties met, such as exporting or deleting someone's personal data on request, with a deletion at the source reaching the copies it made.",
@@ -19959,6 +19822,113 @@
                     "kinds": []
                   }
                 ]
+              },
+              {
+                "id": "security/beta/personal-data",
+                "level": "beta",
+                "text": "Personal data is collected only where it's needed.",
+                "until": null,
+                "implementation": [
+                  {
+                    "text": "Only the fields the work needs, with nothing kept just in case.",
+                    "kinds": []
+                  },
+                  {
+                    "text": "Functions and APIs take only what they need, such as a postal code instead of a whole customer record.",
+                    "kinds": []
+                  },
+                  {
+                    "text": "Personal data kept out of logs, error reports, crash reports, and analytics.",
+                    "kinds": []
+                  },
+                  {
+                    "text": "Error messages and debug output name what's wrong without repeating the personal data passed in.",
+                    "kinds": []
+                  },
+                  {
+                    "text": "Emails, texts, notifications, and webhooks carry no more personal data than they need.",
+                    "kinds": []
+                  },
+                  {
+                    "text": "Third-party services sent only what they need to do their part.",
+                    "kinds": []
+                  },
+                  {
+                    "text": "Copies it makes, such as reporting tables or exports, carry only the fields their readers need.",
+                    "kinds": [
+                      "background-job"
+                    ]
+                  },
+                  {
+                    "text": "Location and other metadata removed from photos and files, unless the work needs them.",
+                    "kinds": [
+                      "web-app",
+                      "mobile-app",
+                      "desktop-app"
+                    ]
+                  },
+                  {
+                    "text": "Device permissions, such as the camera or location, asked for only when a feature needs them.",
+                    "kinds": [
+                      "mobile-app"
+                    ]
+                  },
+                  {
+                    "text": "The legal duties that come with it, such as consent, or an agreement with a provider that processes it, in place before the first real personal data arrives.",
+                    "kinds": []
+                  }
+                ],
+                "overengineering": []
+              },
+              {
+                "id": "security/beta/maintained-dependencies",
+                "level": "beta",
+                "text": "Its dependencies are maintained, and licensed for how it's used.",
+                "until": null,
+                "implementation": [
+                  {
+                    "text": "Licenses checked when a dependency is added, against how it's distributed, such as copyleft code in an app-store app.",
+                    "kinds": []
+                  },
+                  {
+                    "text": "Dependency versions pinned, such as with a lock file.",
+                    "kinds": [
+                      "web-app",
+                      "http-api",
+                      "background-job",
+                      "mobile-app",
+                      "desktop-app"
+                    ]
+                  },
+                  {
+                    "text": "A lock file published with it, such as `npm-shrinkwrap.json`, or a bundled build, so people install the versions that were tested.",
+                    "kinds": [
+                      "cli"
+                    ]
+                  },
+                  {
+                    "text": "A lock file for its own tests, with runtime dependencies as ranges so the software using it can resolve them, and as few of them as it can manage.",
+                    "kinds": [
+                      "library"
+                    ]
+                  },
+                  {
+                    "text": "A supported Electron release, since older ones stop getting security fixes.",
+                    "kinds": [
+                      "desktop-app"
+                    ]
+                  }
+                ],
+                "overengineering": [
+                  {
+                    "text": "Security reviews, compliance audits.",
+                    "kinds": []
+                  },
+                  {
+                    "text": "Rewriting a well-maintained dependency in-house just to have fewer dependencies.",
+                    "kinds": []
+                  }
+                ]
               }
             ],
             "implementation": [],
@@ -19973,7 +19943,6 @@
                 "level": "ga",
                 "text": "Its handling of credentials, payments, personal data, and permissions is known to be sound.",
                 "until": null,
-                "baseline": false,
                 "implementation": [
                   {
                     "text": "A security review of sign-in and permission checks.",
@@ -20062,7 +20031,6 @@
                 "level": "ga",
                 "text": "Each part has only the access it needs.",
                 "until": null,
-                "baseline": false,
                 "implementation": [
                   {
                     "text": "Where a service offers no narrower token, a separate revocable token for each pipeline, with the missing scopes written down as a gap in that service.",
@@ -20118,7 +20086,6 @@
                 "level": "ga",
                 "text": "Sensitive actions can be traced to who did them.",
                 "until": null,
-                "baseline": false,
                 "implementation": [
                   {
                     "text": "The sensitive actions agreed, such as changing permissions, exporting data, or moving money.",
@@ -20201,7 +20168,6 @@
                 "level": "prototype",
                 "text": "It reaches only those who chose to try it, and from Alpha, the people the client has agreed it can reach.",
                 "until": "alpha",
-                "baseline": false,
                 "implementation": [
                   {
                     "text": "Behind a feature flag that's off by default.",
@@ -20331,7 +20297,6 @@
                 "level": "prototype",
                 "text": "It's marked with its stability level wherever it's used.",
                 "until": "beta",
-                "baseline": false,
                 "implementation": [
                   {
                     "text": "The stability mark on what it adds.",
@@ -20390,7 +20355,6 @@
                 "level": "prototype",
                 "text": "It can be removed without affecting anything people rely on.",
                 "until": "alpha",
-                "baseline": false,
                 "implementation": [
                   {
                     "text": "Kept to its own code, data, and settings, so taking it out touches nothing else.",
@@ -20483,7 +20447,6 @@
                 "level": "alpha",
                 "text": "Its interfaces follow the common standards for what it does, so others can work with it without surprises.",
                 "until": null,
-                "baseline": false,
                 "implementation": [
                   {
                     "text": "Standard formats, such as UTF-8 text and RFC 3339 timestamps with a time zone.",
@@ -20560,7 +20523,6 @@
                 "level": "alpha",
                 "text": "Those trying it are told about breaking changes, which can still be made freely.",
                 "until": "alpha",
-                "baseline": false,
                 "implementation": [
                   {
                     "text": "A message to those trying it, or a note in its changelog.",
@@ -20623,7 +20585,6 @@
                 "level": "beta",
                 "text": "It's available to everyone it's meant for, without opting in, on the platforms and environments it supports.",
                 "until": null,
-                "baseline": false,
                 "implementation": [
                   {
                     "text": "The project's normal release pipeline, with no opting in.",
@@ -20704,7 +20665,6 @@
                 "level": "beta",
                 "text": "Those depending on it hear about changes.",
                 "until": null,
-                "baseline": false,
                 "implementation": [
                   {
                     "text": "Release notes or a changelog.",
@@ -20735,7 +20695,6 @@
                 "level": "beta",
                 "text": "Breaking changes are rare, and announced ahead of time where possible.",
                 "until": "beta",
-                "baseline": false,
                 "implementation": [
                   {
                     "text": "Versioning, so a breaking change is visible.",
@@ -20837,7 +20796,6 @@
                 "level": "ga",
                 "text": "Its interface is stable: a breaking change comes as a new version, and the old one keeps working for a set time.",
                 "until": null,
-                "baseline": false,
                 "implementation": [
                   {
                     "text": "Semantic versioning, with deprecation warnings before removal.",
@@ -20985,7 +20943,6 @@
                 "level": "ga",
                 "text": "It's known to work on every platform it supports.",
                 "until": null,
-                "baseline": false,
                 "implementation": [
                   {
                     "text": "Upgrading from every supported version is tested.",
@@ -21116,7 +21073,6 @@
                 "level": "alpha",
                 "text": "When an error happens, someone looking can see what happened.",
                 "until": null,
-                "baseline": false,
                 "implementation": [
                   {
                     "text": "Error logs that include the operation, the IDs of what it was working on, and a request or run ID.",
@@ -21222,7 +21178,6 @@
                 "level": "beta",
                 "text": "Whoever runs it can tell it's healthy.",
                 "until": null,
-                "baseline": false,
                 "implementation": [
                   {
                     "text": "A health endpoint, with an uptime check.",
@@ -21326,7 +21281,6 @@
                 "level": "beta",
                 "text": "Whoever runs it hears about errors, and failed or missed runs, without searching for them.",
                 "until": null,
-                "baseline": false,
                 "implementation": [
                   {
                     "text": "An error tracker that notifies people.",
@@ -21396,7 +21350,6 @@
                 "level": "ga",
                 "text": "Whoever runs it finds out about failures that matter to its users before they're reported.",
                 "until": null,
-                "baseline": false,
                 "implementation": [
                   {
                     "text": "Automated alerts on error rate, latency, and availability against agreed targets.",
@@ -21536,7 +21489,6 @@
                 "level": "ga",
                 "text": "Whoever runs it knows what to do about each failure.",
                 "until": null,
-                "baseline": false,
                 "implementation": [
                   {
                     "text": "Each alert links to a runbook.",
@@ -21657,7 +21609,6 @@
                 "level": "alpha",
                 "text": "It's built the way the rest of the project is, so anyone who knows the project can follow it.",
                 "until": null,
-                "baseline": false,
                 "implementation": [
                   {
                     "text": "The language's linter, formatter, and type checker, run on every change.",
@@ -21756,7 +21707,6 @@
                 "level": "beta",
                 "text": "Its structure matches the shape it settled on, with clear boundaries, so what a change affects is easy to see.",
                 "until": null,
-                "baseline": false,
                 "implementation": [
                   {
                     "text": "Boundaries and dependencies that follow its shape, such as domain logic that doesn't depend on its transport or storage.",
@@ -21806,7 +21756,6 @@
                 "level": "beta",
                 "text": "Earlier shortcuts are removed or tracked.",
                 "until": null,
-                "baseline": false,
                 "implementation": [
                   {
                     "text": "Code that survived from the prototype or alpha refactored or replaced.",
@@ -21824,7 +21773,6 @@
                 "level": "beta",
                 "text": "Every piece of complexity has a reason it needs now.",
                 "until": null,
-                "baseline": false,
                 "implementation": [
                   {
                     "text": "Real duplication combined once there's a second real use.",
@@ -21877,7 +21825,6 @@
                 "level": "ga",
                 "text": "Another engineer can change it confidently without the author, and tell what a change will affect.",
                 "until": null,
-                "baseline": false,
                 "implementation": [
                   {
                     "text": "Names and structure that explain themselves, with comments only where the reason isn't obvious.",
@@ -21899,7 +21846,6 @@
                 "level": "ga",
                 "text": "There's no dead code, untracked TODOs, or unexplained complexity.",
                 "until": null,
-                "baseline": false,
                 "implementation": [
                   {
                     "text": "Dead code, and flags left over from earlier levels, removed.",
@@ -21966,7 +21912,6 @@
                 "level": "alpha",
                 "text": "It has an owner who decides its direction.",
                 "until": null,
-                "baseline": false,
                 "implementation": [
                   {
                     "text": "A named person or team.",
@@ -21985,7 +21930,6 @@
                 "level": "alpha",
                 "text": "Problems can be reported, and aren't lost.",
                 "until": null,
-                "baseline": false,
                 "implementation": [
                   {
                     "text": "Bugs recorded in the team's tracker.",
@@ -22030,7 +21974,6 @@
                 "level": "beta",
                 "text": "Known problems are fixed as they're found.",
                 "until": null,
-                "baseline": false,
                 "implementation": [
                   {
                     "text": "Bugs triaged regularly.",
@@ -22049,7 +21992,6 @@
                 "level": "beta",
                 "text": "Known problems are visible to those depending on it.",
                 "until": null,
-                "baseline": false,
                 "implementation": [
                   {
                     "text": "Known issues listed in the docs, the release notes, or its known gaps.",
@@ -22071,7 +22013,6 @@
                 "level": "ga",
                 "text": "The owner is responsible for it long term.",
                 "until": null,
-                "baseline": false,
                 "implementation": [
                   {
                     "text": "On-call, or someone to reach outside working hours, if it's critical enough.",
@@ -22131,7 +22072,6 @@
                 "level": "ga",
                 "text": "Those depending on it know where to get help, and what response to expect.",
                 "until": null,
-                "baseline": false,
                 "implementation": [
                   {
                     "text": "A support channel, with expected response times.",
@@ -22192,7 +22132,6 @@
                 "level": "ga",
                 "text": "Someone other than the author can change and operate it.",
                 "until": null,
-                "baseline": false,
                 "implementation": [
                   {
                     "text": "More than one engineer able to work on it.",

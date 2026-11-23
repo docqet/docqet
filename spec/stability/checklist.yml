@@ -15,9 +15,6 @@
 #   whether it applies at all, depends on the software, who uses it, and the
 #   circumstances.
 #
-# The one exception is the security and privacy baseline: it holds at every
-# level, and is never a known gap.
-#
 # How it's laid out:
 #
 # - Each quality is a `question` someone asks before depending on the work,
@@ -42,7 +39,6 @@
 #   level.
 # - A level includes every outcome the levels below it expect, unless `until`
 #   names the last level an outcome applies to.
-# - `baseline` outcomes are the security and privacy baseline.
 # - An outcome's ID is `<quality>/<level>/<id>`, such as
 #   `reliability/beta/data-kept`. A gap names the outcome it falls short of by
 #   that ID.
@@ -507,9 +503,7 @@ qualities:
               A handful of output rows checked against the source by hand.
             kinds: [background-job]
         overengineering:
-          - Automated tests, unless they're the quickest way to try the idea, or
-            the security baseline needs one, such as a test that tenants stay
-            apart.
+          - Automated tests, unless they're the quickest way to try the idea.
           - Handling edge cases or bad input, unless they're the question.
           - text: >-
               Contract tests, or an API description checked on every change,
@@ -1235,25 +1229,19 @@ qualities:
     name: Security
     question: Is it protected, and does it follow the rules?
     why: >-
-      Systems and data are protected the same way at every level, and it follows
-      the rules that apply to it.
+      Systems and data are kept safe as more people come to rely on it, and it
+      follows the rules that apply to it.
     levels:
       prototype:
-        summary: >-
-          The baseline, which holds at every level: secrets and real data stay
-          safe.
+        summary: Trying it out puts nothing real at risk.
         outcomes:
           - id: secrets
             text: >-
-              Secrets stay out of code, version control, sample data, logs, and
-              output.
-            baseline: true
+              Secrets stay out of code, version control, and anything it ships.
             implementation:
-              - text: >-
-                  Secrets in the environment or a secret store where it runs,
-                  with separate credentials for each environment and providers'
-                  test keys everywhere but production.
-                kinds: [web-app, http-api, background-job]
+              - Secrets in the environment, or a local file version control
+                ignores, never in the code.
+              - Providers' test keys or sandboxes while it's tried out.
               - text: >-
                   Nothing secret built into what's shipped to people's devices
                   or published, build-time settings included.
@@ -1263,45 +1251,27 @@ qualities:
                   as public and restricted to the app and the APIs it calls.
                 kinds: [web-app, mobile-app, desktop-app]
               - text: >-
-                  Each person's own token, kept in the OS keychain or a file
-                  only they can read, never in committed config, and redacted
-                  from debug output and errors.
-                kinds: [mobile-app, desktop-app, cli]
-              - text: >-
-                  Tokens read from a prompt, a file, or an environment variable,
-                  never a command-line flag, so they stay out of shell history
-                  and logs. In CI, from the CI's secret store.
+                  A token read only from an environment variable or a prompt,
+                  never a command-line flag, so the tool stores nothing and it
+                  stays out of shell history.
                 kinds: [cli]
-              - Authorization headers, API keys, and tokens left out of request
-                logs and error reports, for calls it receives and calls it
-                makes.
-              - text: API keys it issues stored hashed, and shown once.
-                kinds: [http-api]
-              - text: >-
-                  Signing keys, store credentials, and publish tokens kept in
-                  CI's secret store, never in the repository or the project's
-                  `.npmrc`.
-                kinds: [mobile-app, desktop-app, cli, library]
               - text: >-
                   Only the files meant to be published go into the package, such
                   as with a files allowlist, so no `.env` or `.npmrc` ships.
                 kinds: [library, cli]
-              - text: >-
-                  At first, the token read only from an environment variable, so
-                  the tool stores nothing and needs no sign-in.
-                kinds: [cli]
               - Generated or scaffolded files refer to secrets by name, never
                 contain their values.
             overengineering:
+              - A secret store, scheduled rotation, or separate credentials for
+                each environment, while it's tried out with test keys.
               - text: >-
                   Keychain integration on every OS, when a file only the person
                   can read keeps the token safe.
                 kinds: [cli, desktop-app]
           - id: real-data
             text: >-
-              Real data comes only through the real systems, never copied into
-              code or fixtures.
-            baseline: true
+              It uses made-up data. Real data isn't copied into it, and isn't
+              left open through it.
             implementation:
               - Sample data that's made up, not exported from production.
               - Made-up names, phone numbers, and email addresses that can't
@@ -1316,18 +1286,25 @@ qualities:
                 codes, used as is. A client's own records aren't.
               - Real data kept out of notebooks, spreadsheets, chat, and local
                 copies outside the systems approved for it.
+              - Where it has to use a real credential or reach a real system, it
+                runs locally, on a private preview, or behind a shared password,
+                never on an open address.
+            overengineering:
+              - Sign-in, tenant separation, roles, or input validation for work
+                that holds only made-up data and reaches no real system.
+              - Dependency audits, license checks, or security reviews while
+                it's tried out.
+      alpha:
+        summary: Real people and their data are safe with it.
+        outcomes:
           - id: access
             text: >-
               Only those allowed can reach real systems or data, and one tenant
               or account never sees or changes another's.
-            baseline: true
             implementation:
               - Every read and write scoped to the tenant or account making it.
               - A test, run on every change, that one tenant can't read or
                 change another's records, even by guessing an ID.
-              - Work that uses real credentials isn't open to anyone who finds
-                it, such as by running locally, on a private preview, or behind
-                a shared password, even when its own data is made up.
               - Real data encrypted in transit, and at rest where it's stored,
                 such as with HTTPS and a managed database's default encryption.
               - text: >-
@@ -1391,6 +1368,25 @@ qualities:
                   A leaked API key stopped by disabling its record, until
                   callers can rotate their own.
                 kinds: [http-api]
+              - text: >-
+                  Separate credentials for each environment, with providers'
+                  test keys everywhere but production.
+                kinds: [web-app, http-api, background-job]
+              - text: >-
+                  Each person's own token, kept in the OS keychain or a file
+                  only they can read, never in committed config, and redacted
+                  from debug output and errors.
+                kinds: [mobile-app, desktop-app, cli]
+              - Authorization headers, API keys, and tokens left out of request
+                logs and error reports, for calls it receives and calls it
+                makes.
+              - text: API keys it issues stored hashed, and shown once.
+                kinds: [http-api]
+              - text: >-
+                  Signing keys, store credentials, and publish tokens kept in
+                  CI's secret store, never in the repository or the project's
+                  `.npmrc`.
+                kinds: [mobile-app, desktop-app, cli, library]
               - Established libraries for authentication and cryptography, never
                 hand-rolled ones.
             overengineering:
@@ -1413,38 +1409,8 @@ qualities:
                   Key scopes, scheduled rotation, or self-serve key management
                   before anyone relies on it.
                 kinds: [http-api]
-          - id: personal-data
-            text: Personal data is collected only where it's needed.
-            baseline: true
-            implementation:
-              - Only the fields the work needs, with nothing kept just in case.
-              - Functions and APIs take only what they need, such as a postal
-                code instead of a whole customer record.
-              - Personal data kept out of logs, error reports, crash reports,
-                and analytics.
-              - Error messages and debug output name what's wrong without
-                repeating the personal data passed in.
-              - Emails, texts, notifications, and webhooks carry no more
-                personal data than they need.
-              - Third-party services sent only what they need to do their part.
-              - text: >-
-                  Copies it makes, such as reporting tables or exports, carry
-                  only the fields their readers need.
-                kinds: [background-job]
-              - text: >-
-                  Location and other metadata removed from photos and files,
-                  unless the work needs them.
-                kinds: [web-app, mobile-app, desktop-app]
-              - text: >-
-                  Device permissions, such as the camera or location, asked for
-                  only when a feature needs them.
-                kinds: [mobile-app]
-              - The legal duties that come with it, such as consent, or an
-                agreement with a provider that processes it, in place before the
-                first real personal data arrives.
           - id: untrusted-input
             text: Untrusted input can't run as code or commands.
-            baseline: true
             implementation:
               - Parameterized queries, escaped output, and no shell commands
                 built from input.
@@ -1501,9 +1467,6 @@ qualities:
                   A self-update mechanism of its own, when a package manager
                   installs and updates it.
                 kinds: [cli]
-      alpha:
-        summary: What it depends on is safe to depend on.
-        outcomes:
           - id: stable-dependencies
             text: It depends on nothing less stable than itself.
             implementation:
@@ -1516,36 +1479,8 @@ qualities:
                 maintained and how it changes, not by its version number.
               - Endpoints or services still being built alongside it counted as
                 early, and written down as a known gap until they settle.
-          - id: maintained-dependencies
-            text: >-
-              Its dependencies are maintained, and licensed for how it's used.
-            implementation:
-              - Licenses checked when a dependency is added, against how it's
-                distributed, such as copyleft code in an app-store app.
-              - text: Dependency versions pinned, such as with a lock file.
-                kinds: [web-app, http-api, background-job, mobile-app, desktop-app]
-              - text: >-
-                  A lock file published with it, such as `npm-shrinkwrap.json`,
-                  or a bundled build, so people install the versions that were
-                  tested.
-                kinds: [cli]
-              - text: >-
-                  A lock file for its own tests, with runtime dependencies as
-                  ranges so the software using it can resolve them, and as few
-                  of them as it can manage.
-                kinds: [library]
-              - text: >-
-                  A supported Electron release, since older ones stop getting
-                  security fixes.
-                kinds: [desktop-app]
-            overengineering:
-              - Security reviews, compliance audits.
-              - Certifications, such as SOC 2, that no client or law requires
-                yet.
-              - Rewriting a well-maintained dependency in-house just to have
-                fewer dependencies.
       beta:
-        summary: Protected against misuse, as far as it's exposed.
+        summary: Protected against misuse, and follows the rules that apply.
         outcomes:
           - id: misuse
             text: It's protected against misuse at the level it's exposed.
@@ -1621,7 +1556,8 @@ qualities:
                 kinds: [cli]
           - id: duties
             text: >-
-              The legal and regulatory duties that apply to it are known and met.
+              The legal and regulatory duties that apply to it are known and
+              met.
             implementation:
               - Privacy duties met, such as exporting or deleting someone's
                 personal data on request, with a deletion at the source reaching
@@ -1655,6 +1591,60 @@ qualities:
                 law requires one.
               - Column-level encryption or tokenized personal data that no duty
                 or reader calls for.
+          - id: personal-data
+            text: Personal data is collected only where it's needed.
+            implementation:
+              - Only the fields the work needs, with nothing kept just in case.
+              - Functions and APIs take only what they need, such as a postal
+                code instead of a whole customer record.
+              - Personal data kept out of logs, error reports, crash reports,
+                and analytics.
+              - Error messages and debug output name what's wrong without
+                repeating the personal data passed in.
+              - Emails, texts, notifications, and webhooks carry no more
+                personal data than they need.
+              - Third-party services sent only what they need to do their part.
+              - text: >-
+                  Copies it makes, such as reporting tables or exports, carry
+                  only the fields their readers need.
+                kinds: [background-job]
+              - text: >-
+                  Location and other metadata removed from photos and files,
+                  unless the work needs them.
+                kinds: [web-app, mobile-app, desktop-app]
+              - text: >-
+                  Device permissions, such as the camera or location, asked for
+                  only when a feature needs them.
+                kinds: [mobile-app]
+              - The legal duties that come with it, such as consent, or an
+                agreement with a provider that processes it, in place before the
+                first real personal data arrives.
+          - id: maintained-dependencies
+            text: >-
+              Its dependencies are maintained, and licensed for how it's used.
+            implementation:
+              - Licenses checked when a dependency is added, against how it's
+                distributed, such as copyleft code in an app-store app.
+              - text: Dependency versions pinned, such as with a lock file.
+                kinds: [web-app, http-api, background-job, mobile-app, desktop-app]
+              - text: >-
+                  A lock file published with it, such as `npm-shrinkwrap.json`,
+                  or a bundled build, so people install the versions that were
+                  tested.
+                kinds: [cli]
+              - text: >-
+                  A lock file for its own tests, with runtime dependencies as
+                  ranges so the software using it can resolve them, and as few
+                  of them as it can manage.
+                kinds: [library]
+              - text: >-
+                  A supported Electron release, since older ones stop getting
+                  security fixes.
+                kinds: [desktop-app]
+            overengineering:
+              - Security reviews, compliance audits.
+              - Rewriting a well-maintained dependency in-house just to have
+                fewer dependencies.
       ga:
         summary: Its sensitive parts are reviewed, and actions can be traced.
         outcomes:
@@ -1726,7 +1716,8 @@ qualities:
                   deploy-only token in CI.
                 kinds: [cli]
               - text: >-
-                  A publish token that can publish only this package, kept in CI.
+                  A publish token that can publish only this package, kept in
+                  CI.
                 kinds: [library, cli]
               - text: Only the device permissions it uses.
                 kinds: [mobile-app, desktop-app]

@@ -14,8 +14,7 @@ software, and examples of what may be overengineering at that level.
 
 It's a guideline, not a gate. It doesn't replace engineering judgment, and it
 applies differently to every project: an outcome that applies is usually met,
-not applicable, a known [gap](gap.md), or a [tradeoff](tradeoff.md). Its security and privacy baseline
-holds at every level and is never a known gap. It's the same for every
+not applicable, a known [gap](gap.md), or a [tradeoff](tradeoff.md). It's the same for every
 project, whatever kind of software it is.
 
 Each outcome a capability's level expects is one of:
