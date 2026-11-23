@@ -831,6 +831,7 @@ A feature's doc lists its capabilities, in the order to show them:
 
 ```yaml
 ---
+id: reservations
 name: Reservations
 description: Taking bookings and handling changes to them, before the guest arrives.
 capabilities:
@@ -838,7 +839,6 @@ capabilities:
   - capability:cancellations
   - capability:group-bookings
 ---
-id: reservations
 ```
 
 - **A capability is in at most one feature.** One in none is allowed, and
@@ -1188,9 +1188,9 @@ anything more worth saying about it in its body:
 
 ```yaml
 ---
+id: guest-stays
 name: Guest stays
 description: Looking after guests from their booking to their check-out.
-id: guest-stays
 ---
 ```
 
