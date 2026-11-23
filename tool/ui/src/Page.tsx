@@ -14,6 +14,7 @@ import { RingGlyph } from "./design/maturity/RingGlyph";
 import { MATURITY_BANDS, maturityBand } from "./design/maturity/maturity";
 import { STABILITY, STABILITY_LEVEL_IDS, levelColor } from "./design/stability/stability";
 import { GapIcon, LeftLabel, LeftList } from "./design/left/LeftMark";
+import { Term } from "./design/term/Term";
 import { CapabilityStability } from "./design/catalog/CapabilityLabel";
 import { StandingMark } from "./design/standing/StandingMark";
 import {
@@ -233,7 +234,7 @@ function Hero({
           <div className="page-hero-text">
             <div className="explore-kind">
               {KIND_NAMES[kind].icon}
-              {KIND_NAMES[kind].one}
+              <Term id={kind}>{KIND_NAMES[kind].one}</Term>
             </div>
             <h1>{name}</h1>
             {role ? <div className="page-role">{role}</div> : null}
@@ -466,7 +467,7 @@ function RulesTile({ rules, capabilities }: { rules: Rule[]; capabilities: Capab
     ...(count("trust") ? [`${count("trust")} on trust`] : []),
     ...(notHeld ? [`${notHeld} not held yet`] : []),
   ].join(" · ");
-  return <Tile label="Rules" value={rules.length || "No rules"} note={rules.length ? note : "None written down yet"} tone={notHeld ? "warn" : undefined} />;
+  return <Tile label={<Term id="rule">Rules</Term>} value={rules.length || "No rules"} note={rules.length ? note : "None written down yet"} tone={notHeld ? "warn" : undefined} />;
 }
 
 function Avatars({ personas }: { personas: Persona[] }) {
@@ -714,7 +715,7 @@ function CapabilityPage({ capability, ...go }: Go & { capability: Capability }) 
           <>
             <About {...go} kind="capability" doc={capability} title="What it does" />
             <Block
-              title="Rules and evidence"
+              title={<><Term id="rule">Rules</Term> and <Term id="evidence">evidence</Term></>}
               count={rules.length}
               note="Following a rule claims it holds. Evidence is optional: a rule with none holds on trust, unless a gap says it isn't held yet."
             >
@@ -728,7 +729,7 @@ function CapabilityPage({ capability, ...go }: Go & { capability: Capability }) 
               </Block>
             ) : null}
             {state.checklist ? (
-              <Block title="Stability checklist" id="checklist">
+              <Block title={<Term id="stability-checklist">Stability checklist</Term>} id="checklist">
                 <StabilityChecklist key={capability.id} state={state} checklist={state.checklist} capability={capability} />
               </Block>
             ) : null}
@@ -760,7 +761,7 @@ function CapabilityPage({ capability, ...go }: Go & { capability: Capability }) 
               </Card>
             ) : null}
             {concepts.length ? (
-              <Card title="Concepts it uses" count={concepts.length}>
+              <Card title={<><Term id="concept">Concepts</Term> it uses</>} count={concepts.length}>
                 <ConceptChips concepts={concepts} onOpen={onConcept} scopeOf={(c) => domainName(state, c.domain)} />
               </Card>
             ) : null}
@@ -787,7 +788,7 @@ function FeaturePage({ feature, ...go }: Go & { feature: Feature }) {
         tiles={
           <>
             <Tile label="Maturity" value={<MaturityValue value={feature.maturity} />} note="From its capabilities' levels" />
-            <Tile label="Capabilities" value={capabilities.length} note={<LevelBar capabilities={capabilities} />} />
+            <Tile label={<Term id="capability">Capabilities</Term>} value={capabilities.length} note={<LevelBar capabilities={capabilities} />} />
             <LeftTile state={state} capabilities={capabilities} />
             <RulesTile rules={rules} capabilities={capabilities} />
             {personas.length ? <Tile label="Serves" value={<Avatars personas={personas} />} note={plural(personas.length, "persona", "personas")} /> : null}
@@ -810,7 +811,7 @@ function FeaturePage({ feature, ...go }: Go & { feature: Feature }) {
                 </Block>
               ))
             ) : (
-              <Block title="Capabilities">
+              <Block title={<Term id="capability">Capabilities</Term>}>
                 <p className="concepts-empty">A job the software doesn't do yet.</p>
               </Block>
             )}
@@ -822,7 +823,7 @@ function FeaturePage({ feature, ...go }: Go & { feature: Feature }) {
               </Block>
             ) : null}
             {rules.length ? (
-              <Block title="Rules and evidence" count={rules.length}>
+              <Block title={<><Term id="rule">Rules</Term> and <Term id="evidence">evidence</Term></>} count={rules.length}>
                 <RuleTable {...go} rules={rules} followers />
               </Block>
             ) : null}
@@ -846,7 +847,7 @@ function FeaturePage({ feature, ...go }: Go & { feature: Feature }) {
               </Card>
             ) : null}
             {concepts.length ? (
-              <Card title="Concepts its capabilities use" count={concepts.length}>
+              <Card title={<><Term id="concept">Concepts</Term> its capabilities use</>} count={concepts.length}>
                 <ConceptChips concepts={concepts} onOpen={onConcept} scopeOf={(c) => domainName(state, c.domain)} />
               </Card>
             ) : null}
@@ -873,8 +874,8 @@ function DomainPage({ domain, ...go }: Go & { domain: Domain }) {
         tiles={
           <>
             <Tile label="Maturity" value={<MaturityValue value={domain.maturity} />} note="From its parts of features" />
-            <Tile label="Features" value={features.length} note={loose.length ? `and ${plural(loose.length, "capability", "capabilities")} in none` : undefined} />
-            <Tile label="Capabilities" value={capabilities.length} note={<LevelBar capabilities={capabilities} />} />
+            <Tile label={<Term id="feature">Features</Term>} value={features.length} note={loose.length ? `and ${plural(loose.length, "capability", "capabilities")} in none` : undefined} />
+            <Tile label={<Term id="capability">Capabilities</Term>} value={capabilities.length} note={<LevelBar capabilities={capabilities} />} />
             <LeftTile state={state} capabilities={capabilities} />
             <RulesTile rules={rules} capabilities={capabilities} />
           </>
@@ -884,7 +885,7 @@ function DomainPage({ domain, ...go }: Go & { domain: Domain }) {
         main={
           <>
             <About {...go} kind="domain" doc={domain} title="About it" />
-            <Block title="Features" count={features.length}>
+            <Block title={<Term id="feature">Features</Term>} count={features.length}>
               {features.length ? (
                 <div className="page-feature-grid">
                   {features.map((f) => {
@@ -920,12 +921,12 @@ function DomainPage({ domain, ...go }: Go & { domain: Domain }) {
               )}
             </Block>
             {loose.length ? (
-              <Block title="Capabilities in no feature" count={loose.length}>
+              <Block title={<><Term id="capability">Capabilities</Term> in no <Term id="feature">feature</Term></>} count={loose.length}>
                 <CapabilityTable {...go} capabilities={loose} domain={domain.id} />
               </Block>
             ) : null}
             {rules.length ? (
-              <Block title="Rules and evidence" count={rules.length}>
+              <Block title={<><Term id="rule">Rules</Term> and <Term id="evidence">evidence</Term></>} count={rules.length}>
                 <RuleTable {...go} rules={rules} followers />
               </Block>
             ) : null}
@@ -938,7 +939,7 @@ function DomainPage({ domain, ...go }: Go & { domain: Domain }) {
             </Card>
             <DecidedCard {...go} doc={domain} />
             {concepts.length ? (
-              <Card title="Glossary" count={concepts.length}>
+              <Card title={<Term id="concept">Glossary</Term>} count={concepts.length}>
                 <ul>
                   {concepts.map((c) => (
                     <li key={c.id}>
@@ -973,12 +974,12 @@ function PersonaPage({ persona, ...go }: Go & { persona: Persona }) {
         tiles={
           <>
             <Tile
-              label="Readiness"
+              label={<Term id="readiness">Readiness</Term>}
               value={persona.readiness !== null ? <ReadinessMeter value={persona.readiness} basis={readinessBasis(state, persona)} large /> : "None yet"}
               note="From the levels of what serves them"
             />
-            <Tile label="Features" value={features.length} note="that serve them" />
-            <Tile label="Capabilities" value={capabilities.length} note={<LevelBar capabilities={capabilities} />} />
+            <Tile label={<Term id="feature">Features</Term>} value={features.length} note="that serve them" />
+            <Tile label={<Term id="capability">Capabilities</Term>} value={capabilities.length} note={<LevelBar capabilities={capabilities} />} />
             <LeftTile state={state} capabilities={capabilities} technical={false} />
           </>
         }
@@ -1010,7 +1011,7 @@ function PersonaPage({ persona, ...go }: Go & { persona: Persona }) {
               </Block>
             ) : null}
             {loose.length ? (
-              <Block title="Capabilities in no feature" count={loose.length}>
+              <Block title={<><Term id="capability">Capabilities</Term> in no <Term id="feature">feature</Term></>} count={loose.length}>
                 <CapabilityTable {...go} capabilities={loose} />
               </Block>
             ) : null}
@@ -1061,7 +1062,7 @@ function ConceptPage({ concept, ...go }: Go & { concept: Concept }) {
         main={
           <>
             <About {...go} kind="concept" doc={concept} title="What it means" aside={<code className="faint">{concept.file}</code>} />
-            <Block title="Rules that refer to it" count={rules.length}>
+            <Block title={<><Term id="rule">Rules</Term> that refer to it</>} count={rules.length}>
               <RuleTable {...go} rules={rules} followers />
             </Block>
           </>
@@ -1110,7 +1111,7 @@ function ConceptPage({ concept, ...go }: Go & { concept: Concept }) {
               </Card>
             ) : null}
             {others.length ? (
-              <Card title="Related concepts" count={others.length}>
+              <Card title={<>Related <Term id="concept">concepts</Term></>} count={others.length}>
                 <ConceptChips concepts={others} onOpen={onConcept} />
               </Card>
             ) : null}
@@ -1384,7 +1385,7 @@ function GapsPage(go: Go) {
                 </button>
               ))}
             </div>
-            <Block title={<LeftLabel kind="product-gap" size={18}>Gaps</LeftLabel>} count={gaps.length} note={gaps.length ? "Shortfalls we know about and mean to close. Written down so nobody is surprised, each with what it affects." : undefined}>
+            <Block title={<LeftLabel kind="product-gap" term="gap" size={18}>Gaps</LeftLabel>} count={gaps.length} note={gaps.length ? "Shortfalls we know about and mean to close. Written down so nobody is surprised, each with what it affects." : undefined}>
               {gapGroups.length ? (
                 <Card>
                   {gapGroups.map((g) => (

@@ -1,6 +1,7 @@
 import { type ReactNode } from "react";
 import { Markdown, type Go } from "./design/markdown/Markdown";
 import { LeftItem, LeftList } from "./design/left/LeftMark";
+import { Term } from "./design/term/Term";
 import {
   conceptLinked,
   decidedBy,
@@ -155,7 +156,7 @@ export function BecameLinks({ state, decision }: { state: DocketState; decision:
         const { href, name } = placeOf(state, b);
         return (
           <li key={i}>
-            <span className="explore-tag">{b.id ? KIND_WORDS[b.kind] : "Not found"}</span>
+            <span className="explore-tag">{b.id ? <Term id={b.kind}>{KIND_WORDS[b.kind]}</Term> : "Not found"}</span>
             {href ? <a href={href}>{name}</a> : <code>{name}</code>}
           </li>
         );
@@ -219,7 +220,7 @@ export function CameFrom({ kind, id, go, inline = false }: { kind: BecameKind; i
       {from.map(({ on, from: f, decision }, i) => (
         <li key={i}>
           <span className="came-from-on">
-            {KIND_WORDS[on.kind]} <a href={pageHref({ kind: on.kind, id: on.doc.id })}>{on.doc.name}</a>
+            <Term id={on.kind}>{KIND_WORDS[on.kind]}</Term> <a href={pageHref({ kind: on.kind, id: on.doc.id })}>{on.doc.name}</a>
           </span>
           {decision.topic ? <span className="decision-topic">{decision.topic}</span> : null}
           <div className="decided-question">

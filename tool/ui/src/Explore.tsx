@@ -21,6 +21,7 @@ import { CapabilityStability } from "./design/catalog/CapabilityLabel";
 import { StandingMark } from "./design/standing/StandingMark";
 import { GapFilter, GapKindTag, LeftCounts, LeftItem, LeftLabel, LeftList, gapKind, type GapShow, type LeftKind } from "./design/left/LeftMark";
 import { ConceptChips, PageLink, PanelHeader } from "./Concepts";
+import { Term } from "./design/term/Term";
 import { InlineMarkdown, MoreAboutFold } from "./design/markdown/Markdown";
 import { CameFrom, Decided, DecisionList, Facets, facets } from "./Fields";
 import { DomainIcon } from "./FeatureMap";
@@ -133,7 +134,7 @@ export function ExplorePanel({
     <aside className="panel concepts" data-no-pan aria-label={names.many}>
       <PanelHeader
         icon={names.icon}
-        title={names.many}
+        title={<Term id={kind}>{names.many}</Term>}
         back={one ? (backLabel ?? `All ${names.many.toLowerCase()}`) : null}
         onBack={onBack}
         onClose={onClose}
@@ -308,7 +309,7 @@ export function Head({
       <header className="explore-hero">
         <div className="explore-kind">
           {NAMES[kind].icon}
-          {NAMES[kind].one}
+          <Term id={kind}>{NAMES[kind].one}</Term>
         </div>
         <div className="explore-name-row" data-picture={picture ? true : undefined}>
           {picture ? (
@@ -352,7 +353,7 @@ export function Head({
               <div className="explore-source-head">
                 {byProject ? null : (
                   <span className="explore-source-from">
-                    <span className="explore-source-label">Domain</span>
+                    <span className="explore-source-label"><Term id="domain" /></span>
                     <span className="explore-source-name">
                       <DomainIcon size={14} />
                       {domainName(state, f.domain)}
@@ -360,7 +361,7 @@ export function Head({
                   </span>
                 )}
                 <span className="explore-source-from">
-                  <span className="explore-source-label">Project</span>
+                  <span className="explore-source-label"><Term id="project" /></span>
                   <span className="explore-source-name">
                     <ProjectIcon size={14} />
                     {projectName(state, f.project)}
@@ -531,18 +532,18 @@ function DomainView({ state, domain, onOpen, onConcept, onShow, isFiltering, onF
       <LeftRollup state={state} own={domain} capabilities={domainCapabilities(state, domain)} onOpen={onOpen} onConcept={onConcept} onShow={onShow} />
       <DecidedFold state={state} doc={domain} onConcept={onConcept} onShow={onShow} />
       <section>
-        <Heading count={features.length}>Features</Heading>
+        <Heading count={features.length}><Term id="feature">Features</Term></Heading>
         <DomainFeatures state={state} domain={domain} features={features} onOpen={onOpen} />
       </section>
       {loose.length ? (
         <section>
-          <Heading count={loose.length}>Capabilities in no feature</Heading>
+          <Heading count={loose.length}><Term id="capability">Capabilities</Term> in no <Term id="feature">feature</Term></Heading>
           <CapabilityRows capabilities={loose} domain={domain.id} onOpen={onOpen} />
         </section>
       ) : null}
       {concepts.length ? (
         <section>
-          <Heading count={concepts.length}>Concepts</Heading>
+          <Heading count={concepts.length}><Term id="concept">Concepts</Term></Heading>
           <ConceptChips concepts={concepts} onOpen={onConcept} />
         </section>
       ) : null}
@@ -620,7 +621,7 @@ function FeatureParts({ state, feature, onOpen }: { state: DocketState; feature:
               {part.maturity !== null ? <RingGlyph progress={part.maturity} size={18} /> : null}
             </h3>
           ) : (
-            <Heading count={part.capabilities.length}>Capabilities</Heading>
+            <Heading count={part.capabilities.length}><Term id="capability">Capabilities</Term></Heading>
           )}
           <CapabilityRows
             capabilities={part.capabilities.flatMap((id) => find(state.capabilities, id) ?? [])}
@@ -668,7 +669,7 @@ function FeatureView({ state, feature, onOpen, onConcept, onShow, isFiltering, o
       <Tradeoffs state={state} ids={feature.tradeoffs} title="Decided not to build" />
       {concepts.length ? (
         <section>
-          <Heading count={concepts.length}>Concepts its capabilities use</Heading>
+          <Heading count={concepts.length}><Term id="concept">Concepts</Term> its capabilities use</Heading>
           <ConceptChips concepts={concepts} onOpen={onConcept} scopeOf={(c) => domainName(state, c.domain)} />
         </section>
       ) : null}
@@ -712,7 +713,7 @@ function CapabilityView({ state, capability, onOpen, onConcept, onShow, isFilter
         onShow={onShow}
         onConcept={onConcept}
       />
-      <Fold title="Rules it follows" count={rules.length}>
+      <Fold title={<><Term id="rule" hoverOnly>Rules</Term> it follows</>} count={rules.length}>
         {rules.length ? <RuleNames capability={capability} rules={rules} /> : <p className="concepts-empty">None written down yet.</p>}
       </Fold>
       {personas.length ? (
@@ -732,7 +733,7 @@ function CapabilityView({ state, capability, onOpen, onConcept, onShow, isFilter
       <Tradeoffs state={state} ids={capability.tradeoffs} />
       {concepts.length ? (
         <section>
-          <Heading count={concepts.length}>Concepts it uses</Heading>
+          <Heading count={concepts.length}><Term id="concept">Concepts</Term> it uses</Heading>
           <ConceptChips concepts={concepts} onOpen={onConcept} scopeOf={(c) => domainName(state, c.domain)} />
         </section>
       ) : null}
@@ -1024,7 +1025,7 @@ export function Tradeoffs({
     </LeftList>
   );
   if (bare) return items;
-  const heading = <LeftLabel kind="tradeoff">{title}</LeftLabel>;
+  const heading = <LeftLabel kind="tradeoff" hoverOnly={!detailed}>{title}</LeftLabel>;
   if (!detailed)
     return (
       <Fold title={heading} count={list.length}>
@@ -1311,7 +1312,7 @@ function PersonaFeatures({ state, persona, onOpen }: { state: DocketState; perso
   return (
     <>
       <section>
-        <Heading count={features.length}>Features that serve them</Heading>
+        <Heading count={features.length}><Term id="feature">Features</Term> that serve them</Heading>
         {features.length ? (
           features.map((f) => {
             const readiness = personaReadinessIn(state, persona, f);
@@ -1338,7 +1339,7 @@ function PersonaFeatures({ state, persona, onOpen }: { state: DocketState; perso
       </section>
       {loose.length ? (
         <section>
-          <Heading count={loose.length}>Capabilities in no feature</Heading>
+          <Heading count={loose.length}><Term id="capability">Capabilities</Term> in no <Term id="feature">feature</Term></Heading>
           <CapabilityRows capabilities={loose} onOpen={onOpen} />
         </section>
       ) : null}

@@ -30,6 +30,7 @@ import {
   type Target,
 } from "./state";
 import { Tip } from "./design/Tip";
+import { Term } from "./design/term/Term";
 
 const plural = (n: number, one: string, many: string) => `${n} ${n === 1 ? one : many}`;
 
@@ -50,7 +51,7 @@ export function PanelHeader({
   extra,
 }: {
   icon: ReactNode;
-  title: string;
+  title: ReactNode;
   /* Where back goes, or null when there's nowhere to go back to. */
   back: string | null;
   onBack: () => void;
@@ -225,7 +226,7 @@ export function ConceptsPanel({
     <aside className="panel concepts" data-no-pan aria-label="Concepts">
       <PanelHeader
         icon={<ConceptIcon size={18} />}
-        title="Concepts"
+        title={<Term id="concept">Concepts</Term>}
         back={concept ? (backLabel ?? "All concepts") : null}
         onBack={() => onSelect(null)}
         onClose={onClose}

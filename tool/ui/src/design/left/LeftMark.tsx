@@ -3,6 +3,8 @@ import BalanceRoundedIcon from "@mui/icons-material/BalanceRounded";
 import HelpOutlineRoundedIcon from "@mui/icons-material/HelpOutlineRounded";
 import { createSvgIcon } from "@mui/material/utils";
 import { Tip } from "../Tip";
+import { Term } from "../term/Term";
+import type { TermId } from "../term/terms";
 
 /*
  * What's left, and what we chose to live with, look the same wherever they
@@ -97,12 +99,21 @@ export function LeftMark({ kind, size = 16, decorative = false }: { kind: LeftKi
   );
 }
 
-/* A kind's mark before a name for it, as a heading, label or tile: by default, the kind's own name. */
-export function LeftLabel({ kind, size = 15, children }: { kind: LeftKind; size?: number; children?: ReactNode }) {
+const LEFT_TERMS: Record<LeftKind, TermId> = { "product-gap": "product-gap", "technical-gap": "technical-gap", decision: "open-decision", tradeoff: "tradeoff" };
+
+/*
+ * A kind's mark before a name for it, as a heading, label or tile: by default,
+ * the kind's own name. The name opens what the kind means; `term` says which
+ * word it is when the name isn't the kind's own, such as "Gaps" for both kinds.
+ * `hoverOnly` where a tap does something else, such as a fold's heading.
+ */
+export function LeftLabel({ kind, size = 15, term, hoverOnly, children }: { kind: LeftKind; size?: number; term?: TermId; hoverOnly?: boolean; children?: ReactNode }) {
   return (
     <span className="left-label">
       <LeftMark kind={kind} size={size} decorative />
-      {children ?? LEFT_KINDS[kind].many}
+      <Term id={term ?? LEFT_TERMS[kind]} hoverOnly={hoverOnly}>
+        {children ?? LEFT_KINDS[kind].many}
+      </Term>
     </span>
   );
 }

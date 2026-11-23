@@ -3964,3 +3964,18 @@ button.page-table-row:hover .page-table-name strong {
   color: var(--muted);
   overflow-wrap: anywhere;
 }
+
+/* One of Docket's words, opening what it means (Term): dotted underline, help cursor. */
+.term {
+  cursor: help;
+  text-decoration: underline dotted;
+  text-decoration-color: color-mix(in srgb, currentColor 45%, transparent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  border-radius: 2px;
+}
+
+.term:focus-visible {
+  outline: 2px solid var(--accent, currentColor);
+  outline-offset: 2px;
+}
