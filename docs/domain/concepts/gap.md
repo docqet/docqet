@@ -1,7 +1,8 @@
 # Gap
 
 Something the software doesn't do yet, or doesn't do as intended, that we've
-chosen to write down rather than hide. We intend to close it.
+chosen to write down rather than hide. We intend to close it, and when and
+how is up to us: Docket lists it so we know about it.
 
 ## Details
 
@@ -17,12 +18,9 @@ Who would notice it decides where it's recorded:
   technical gap.
 
 When a gap has a visible effect and a technical cause, the effect is the
-product gap, and the cause is a gotcha in the technical doc. It's never
+product gap, and the technical doc's body explains the cause. It's never
 written as two gaps.
 
-- **It says until when it's open**: before a capability reaches a level, when
-  something happens, or not decided. From that and the capabilities' levels,
-  readers work out when it's [due](due.md).
 - **It can name what it falls short of**: a
   [stability checklist](stability-checklist.md) outcome, which then shows as
   not met, or a [rule](rule.md) the capability doesn't hold to yet, which the
@@ -43,13 +41,12 @@ close becomes a [tradeoff](tradeoff.md), with its cost.
 ## In the spec
 
 Gaps are listed in the frontmatter of the doc they're on, each with an `id`
-unique in that doc, `until`, `text`, and optionally the `outcome` or `rule` it
+unique in that doc, `text`, and optionally the `outcome` or `rule` it
 falls short of. On [city tax](../../../spec/examples/hotel-billing/docs/product/domains/billing/capabilities/city-tax.md):
 
 ```yaml
 gaps:
   - id: children-corrected-by-hand
-    until: beta
     rule: tax/children-pay-no-city-tax
     text: >-
       Guests' ages aren't recorded, so city tax is added for every guest on a
@@ -57,12 +54,11 @@ gaps:
 ```
 
 A technical gap on the [ledger](../../../spec/examples/hotel-billing/docs/technical/systems/ledger.md)
-names the capability its `until` is about, and an outcome:
+names an outcome:
 
 ```yaml
 gaps:
   - id: corrections-of-corrections-untested
-    until: extra-charges@ga
     outcome: maintainability/ga/others-can-change
     text: >-
       Nothing tests correcting a line that is itself a correction, ...
@@ -76,14 +72,6 @@ shows in points at it, in place of a bare TODO:
 export function correct(bill: Bill, line: Line, id: string, businessDay: string): void {
 ```
 
-`until` is one of:
-
-- a level, such as `beta`: before the capability it's on reaches it, or, on a
-  system or component, before any capability it serves does
-- `<capability>@<level>`, on a system or component: `extra-charges@ga`
-- `not-decided`, so nobody invents a trigger
-- anything else, as an event in words: `the second server is added`
-
 ## Not to be confused with
 
 - [Tradeoff](tradeoff.md): something we've decided to live with, and don't
@@ -91,3 +79,5 @@ export function correct(bill: Bill, line: Line, id: string, businessDay: string)
 - [Open decision](open-decision.md): what's intended isn't settled yet.
 - A draft [capability](capability.md): a whole result of value not started
   yet.
+- A task: Docket doesn't say when or how a gap is closed. Planning that is a
+  task tracker's job.

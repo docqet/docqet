@@ -1,9 +1,14 @@
 ---
+name: Payments
+summary: >-
+  Taking card payments through the payment provider, for deposits and payment
+  links.
+start: >-
+  `src/payments/provider.ts`
 capabilities: [deposits, pay-by-link]
 code: [src/payments/**]
 gaps:
   - id: no-timeout-on-provider-calls
-    until: pay-by-link@beta
     outcome: reliability/beta/fails-clearly
     text: >-
       Calls to the payment provider have no timeout, so a slow provider holds
@@ -13,25 +18,17 @@ tradeoffs:
     text: >-
       Guests type their card into the provider's hosted form, not one of
       ours.
+    gain: >-
+      Card numbers never reach our servers, so the hotel stays out of most
+      card-security rules.
     cost: >-
       The payment page looks like the provider's, not the hotel's.
 ---
-
-# Payments
-
-Taking card payments through the payment provider, for deposits and payment
-links.
-
-**Code:** `src/payments/provider.ts`
-
-## How it works
 
 The guest types their card into the provider's form, which hands the app a
 token. `takePayment` sends the provider that token and the amount, and keeps
 the reference it sends back. Card numbers never reach the app.
 
-## Gotchas
-
-- The integration tests run against the provider's sandbox
-  (`test/integration/sandbox.ts`), which accepts any test token instantly. Real
-  payments can take seconds.
+The integration tests run against the provider's sandbox
+(`test/integration/sandbox.ts`), which accepts any test token instantly. Real
+payments can take seconds.

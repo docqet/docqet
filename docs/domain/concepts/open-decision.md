@@ -5,14 +5,12 @@ isn't lost or quietly decided in code.
 
 ## Details
 
-It sits where its answer will go:
-
-| On | When its answer becomes | Example |
-| --- | --- | --- |
-| [Domain](domain.md) | A rule or concept | Does an early arrival's stay start that day? |
-| [Feature](feature.md) | A capability, or a tradeoff ruling one out | Should Reservations hold parking spaces as well as rooms? |
-| [Capability](capability.md) | A change to what it does | Who goes first on the waitlist? |
-| [System](system.md) or [component](component.md) | A tradeoff | Do releases switch over all at once, or one server at a time? |
+It goes on the doc it's about: a [domain](domain.md), [feature](feature.md),
+[capability](capability.md), [system](system.md) or
+[component](component.md). Does an early arrival's stay start that day is
+about Guest stays; who goes first on the waitlist is about the waitlist.
+Questions that building something is meant to answer, such as a prototype's,
+are open decisions too.
 
 A [rule](rule.md) never holds one: a rule is decided once its doc exists.
 Something the business hasn't committed to yet is an open decision, not a
@@ -23,37 +21,57 @@ feature and domain, but they're declared once.
 
 ## Lifecycle
 
-Open → Settled
+Open → Closed
 
-Once it's settled, it's removed, and its answer is written where it belongs:
-a rule, a concept, a capability, a change to what a capability does, or a
-tradeoff.
+Once it's answered, it's closed, not removed. Its answer is written where it
+belongs, such as a rule, a concept, a capability, a gap or a tradeoff, and the
+decision links to it, so what was decided can be traced back to the question
+that led to it. Only open decisions count as what's left.
 
 ## In the spec
 
-An open decision is a list item under an `## Open decisions` section in the
-body of the doc it's on, a short label in bold, then the question. On the
+An open decision is an item in the `decisions` frontmatter field of the doc
+it's on, with its `question` and, optionally, a `topic` of a few words. On the
 [Guest stays domain](../../../spec/examples/hotel-bookings/docs/product/domains/guest-stays/domain.md):
 
-```markdown
-## Open decisions
-
-- **Early arrivals:** when a guest arrives before the room's usual check-in
-  time, does their stay start that day, or is the night before part of it?
+```yaml
+decisions:
+  - topic: Early arrivals
+    question: >-
+      When a guest arrives before the room's usual check-in time, does
+      their stay start that day, or is the night before part of it?
 ```
 
 On the [waitlist](../../../spec/examples/hotel-bookings/docs/product/domains/guest-stays/capabilities/waitlist.md),
 a draft capability:
 
-```markdown
-## Open decisions
-
-- **Who goes first:** whoever asked first, or whoever's stay fits the free
-  nights best?
+```yaml
+decisions:
+  - topic: Who goes first
+    question: Whoever asked first, or whoever's stay fits the free nights best?
 ```
 
-It's prose for people, so it has no frontmatter. Readers find it by its
-heading.
+Closing one gives it a `status`, an `answer`, and `became`: what the answer
+was written as, by its typed ID or a gap's or tradeoff's own ID. On
+[Reservations](../../../spec/examples/hotel-bookings/docs/product/domains/guest-stays/features/reservations.md):
+
+```yaml
+decisions:
+  - topic: Agency bookings
+    question: Should bookings come in from online travel agencies?
+    status: closed
+    answer: >-
+      Not yet. Most bookings come straight to the desk, so clerks enter the
+      few agency bookings by hand.
+    became: [feature:reservations#front-desk-bookings-only]
+```
+
+Readers show a closed decision with what it became, and show the decision on
+the tradeoff, so either leads to the other.
+
+It's in frontmatter so readers can find, count and show it on every persona,
+feature and domain it touches. A question written in a doc's body isn't
+counted as one.
 
 ## Not to be confused with
 

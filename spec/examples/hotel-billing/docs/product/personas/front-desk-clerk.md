@@ -1,23 +1,22 @@
 ---
+name: Maria
+summary: >-
+  Runs the front desk: takes bookings, and checks guests in and out.
+role: Front desk
+title: Front desk clerk
 image: https://randomuser.me/api/portraits/women/68.jpg
+needs:
+  - To see everything a guest owes on one bill, so check-out is a single
+    payment.
+  - To put extras on a bill the moment they happen, so nothing is forgotten.
+  - To let company guests leave without paying, knowing their company will be
+    invoiced.
 ---
-
-# Maria, front desk clerk
-
-Runs the front desk: takes bookings, and checks guests in and out.
-
-## Needs
-
-- To see everything a guest owes on one bill, so check-out is a single
-  payment.
-- To put extras on a bill the moment they happen, so nothing is forgotten.
-- To let company guests leave without paying, knowing their company will be
-  invoiced.
 
 ## Knows
 
-What every extra costs, and which guests' companies pay for their stays. Not
-an accountant: they think in bills, not ledgers.
+What every extra costs, and which guests' companies pay for their stays. Not an
+accountant: they think in bills, not ledgers.
 
 ## Context
 

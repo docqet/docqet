@@ -1,4 +1,6 @@
 ---
+name: Deposits
+summary: The software takes a deposit on the guest's card when a stay is booked.
 stability: beta
 personas: [manager, front-desk-clerk]
 rules:
@@ -6,18 +8,12 @@ rules:
   - payments/deposit-counts-towards-the-bill
   - payments/card-numbers-are-never-kept
 concepts: [payment, bill]
-code: [src/payments/deposit*.ts]
+decisions:
+  - topic: Long stays
+    question: Is a week's stay still secured by one night's deposit?
 ---
 
-# Deposits
-
-The software takes a deposit on the guest's card when a stay is booked.
-
-## Covers
+## Includes
 
 - Clerks see whether a stay's deposit has been paid.
 - Clerks take a deposit again when the guest's card was declined.
-
-## Open decisions
-
-- **Long stays:** is a week's stay still secured by one night's deposit?

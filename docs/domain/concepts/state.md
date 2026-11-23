@@ -12,8 +12,7 @@ again across them, and finds the [contradictions](contradiction.md) between
 them. Showing only some projects combines just what they define.
 
 Some things are worked out only when the state is shown, since they depend on
-other projects: when each gap is [due](due.md), and which outcomes a
-capability meets with evidence.
+other projects: which outcomes a capability meets with evidence.
 
 ## In the spec
 

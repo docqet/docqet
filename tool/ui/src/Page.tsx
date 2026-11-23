@@ -8,10 +8,12 @@ import WarningAmberRoundedIcon from "@mui/icons-material/WarningAmberRounded";
 import Box from "@mui/material/Box";
 import type { Theme } from "@mui/material/styles";
 import { StabilityChecklist } from "./Checklist";
-import { ConceptChips, ConceptIcon, Markdown, related } from "./Concepts";
+import { ConceptChips, ConceptIcon, related } from "./Concepts";
+import { Body, CameFrom, DecisionList, Decided, Facets, Text, facets, saysMore } from "./Fields";
 import { RingGlyph } from "./design/maturity/RingGlyph";
 import { MATURITY_BANDS, maturityBand } from "./design/maturity/maturity";
 import { STABILITY, STABILITY_LEVEL_IDS, levelColor } from "./design/stability/stability";
+import { LeftLabel, LeftList } from "./design/left/LeftMark";
 import { CapabilityStability } from "./design/catalog/CapabilityLabel";
 import {
   CapabilityTrail,
@@ -27,7 +29,6 @@ import {
   Row,
   Tradeoffs,
   WhatsLeft,
-  withoutDecisions,
   checklistCounts,
   domainCapabilities,
   leftLine,
@@ -48,10 +49,12 @@ import {
   contradictionsOf,
   docDomains,
   domainName,
-  dueOf,
   technicalDoc,
   gapsById,
   openDecisions,
+  closedDecisions,
+  decidedBy,
+  type BecameKind,
   pageHref,
   subjectOf,
   featureConcepts,
@@ -71,7 +74,6 @@ import {
   type Doc,
   type DocketState,
   type Domain,
-  type Due,
   type TechnicalDoc,
   type TechnicalKind,
   type Evidence,
@@ -253,7 +255,7 @@ function Hero({
 }
 
 /* A figure in the band: what it's about, the figure, and a line saying more. */
-function Tile({ label, value, note, tone }: { label: string; value: ReactNode; note?: ReactNode; tone?: "warn" | "ok" }) {
+function Tile({ label, value, note, tone }: { label: ReactNode; value: ReactNode; note?: ReactNode; tone?: "warn" | "ok" }) {
   return (
     <div className="page-tile" data-tone={tone}>
       <span className="page-tile-label">{label}</span>
@@ -273,7 +275,7 @@ function Columns({ main, rail }: { main: ReactNode; rail: ReactNode }) {
   );
 }
 
-function Block({ title, count, id, aside, children }: { title: ReactNode; count?: number; id?: string; aside?: ReactNode; children: ReactNode }) {
+function Block({ title, count, id, aside, note, children }: { title: ReactNode; count?: number; id?: string; aside?: ReactNode; note?: ReactNode; children: ReactNode }) {
   return (
     <section className="page-block" id={id}>
       <header className="page-block-head">
@@ -281,6 +283,7 @@ function Block({ title, count, id, aside, children }: { title: ReactNode; count?
         {count !== undefined ? <span className="explore-count">{count}</span> : null}
         {aside ? <span className="page-block-aside">{aside}</span> : null}
       </header>
+      {note ? <p className="page-block-note">{note}</p> : null}
       {children}
     </section>
   );
@@ -302,56 +305,50 @@ function Card({ title, count, children }: { title?: ReactNode; count?: number; c
 
 /* ——— What it is ——— */
 
-/* A body's parts: what comes before any heading, then each `##` section, with its heading. */
-function bodySections(body: string): { heading: string | null; text: string }[] {
-  const parts: { heading: string | null; text: string }[] = [{ heading: null, text: "" }];
-  for (const line of body.split("\n")) {
-    const heading = line.match(/^#{1,2}\s+(.*)$/);
-    if (heading) parts.push({ heading: heading[1].trim(), text: "" });
-    else parts[parts.length - 1].text += `${line}\n`;
-  }
-  return parts.filter((p) => p.text.trim());
-}
-
 /*
- * What a doc's body says, its sections side by side as cards, such as a
- * capability's Covers, Learning and Success, or a persona's Needs and
- * Context. Where several sources define it, each gets a column, headed by
- * where it's from, so they can be compared.
+ * What a doc says beyond its name and summary, under `title`: its fields, by
+ * its type, as cards side by side, then its body, as written. Where several
+ * sources define it, each gets a column, headed by where it's from, so they
+ * can be compared. Nothing shows when no source says more.
  */
-function Sources({ state, doc, body = (f) => f.body, onConcept, onPick }: Go & { doc: Doc; body?: (f: Contribution) => string }) {
+function About({ kind, doc, title, aside, ...go }: Go & { kind: string; doc: Doc; title: ReactNode; aside?: ReactNode }) {
+  const { state } = go;
   const several = doc.from.length > 1;
-  const shown = doc.from.filter((f) => body(f).trim() || (several && f.summary));
+  const shown = doc.from.filter((f) => saysMore(kind, f, go) || (several && f.summary));
   if (!shown.length) return null;
-  const sections = (f: Contribution) =>
-    bodySections(body(f)).map((s, i) => (
-      <div key={i} className="page-facet">
-        {s.heading ? <span className="page-label">{s.heading}</span> : null}
-        <Markdown state={state} concept={f} text={s.text} onConcept={onConcept} onShow={noShow} onPick={onPick} />
-      </div>
-    ));
-  if (!several) return <div className="page-facets">{sections(shown[0])}</div>;
+  const says = (f: Contribution) => (
+    <>
+      <Facets items={facets(kind, f, go)} />
+      <Body from={f} go={go} />
+    </>
+  );
   return (
-    <div className="page-sources">
-      {shown.map((f, i) => (
-        <div key={i} className="page-source">
-          <div className="page-source-from">
-            {doc.from.some((o) => o.domain !== f.domain) ? (
-              <span className="explore-crumb">
-                <DomainIcon size={14} />
-                {domainName(state, f.domain)}
-              </span>
-            ) : null}
-            <span className="explore-crumb">
-              <ProjectIcon size={14} />
-              {projectName(state, f.project)}
-            </span>
-          </div>
-          {f.summary ? <p className="page-source-summary">{f.summary}</p> : null}
-          {sections(f)}
+    <Block title={title} aside={aside}>
+      {several ? (
+        <div className="page-sources">
+          {shown.map((f, i) => (
+            <div key={i} className="page-source">
+              <div className="page-source-from">
+                {doc.from.some((o) => o.domain !== f.domain) ? (
+                  <span className="explore-crumb">
+                    <DomainIcon size={14} />
+                    {domainName(state, f.domain)}
+                  </span>
+                ) : null}
+                <span className="explore-crumb">
+                  <ProjectIcon size={14} />
+                  {projectName(state, f.project)}
+                </span>
+              </div>
+              {f.summary ? <p className="page-source-summary">{f.summary}</p> : null}
+              {says(f)}
+            </div>
+          ))}
         </div>
-      ))}
-    </div>
+      ) : (
+        <div className="page-about">{says(shown[0])}</div>
+      )}
+    </Block>
   );
 }
 
@@ -506,7 +503,7 @@ const VERBS = [
  * `followers`, each says which capabilities follow it. `own`, when given,
  * is a first row for a capability's evidence of its own.
  */
-function RuleTable({ state, rules, own, followers = false, onOpen }: Go & { rules: Rule[]; own?: Evidence; followers?: boolean }) {
+function RuleTable({ state, rules, own, followers = false, onOpen, onConcept, onPick }: Go & { rules: Rule[]; own?: Evidence; followers?: boolean }) {
   const several = state.projects.length > 1;
   const places = (evidence: Evidence, verb: "verifies" | "implements", none: string, icon: ReactNode) =>
     evidence[verb].length ? (
@@ -566,11 +563,22 @@ function RuleTable({ state, rules, own, followers = false, onOpen }: Go & { rule
             {r.name}
           </strong>,
           <>
-            {r.summary ? <span>{r.summary}</span> : null}
+            {r.from.map((f, i) => (
+              <Body key={i} from={f} go={{ state, onConcept, onPick }} limit={320} />
+            ))}
+            <CameFrom kind="rule" id={r.id} go={{ state, onConcept, onPick }} inline />
+            {r.from.map((f, i) =>
+              f.why?.trim() ? (
+                <details key={i} className="page-rule-more">
+                  <summary>Why</summary>
+                  <Text from={f} text={f.why} go={{ state, onConcept, onPick }} />
+                </details>
+              ) : null,
+            )}
             {notYet.length ? (
               <span className="explore-evidence-warning">
                 <WarningAmberRoundedIcon sx={{ fontSize: 13 }} />
-                Not yet held in {notYet.map((c) => c.name).join(", ")}, by a known gap
+                Not yet held in {notYet.map((c) => c.name).join(", ")}, by a product gap
               </span>
             ) : null}
             {by.length || state.domains.length > 1 ? (
@@ -649,16 +657,12 @@ function CapabilityPage({ capability, ...go }: Go & { capability: Capability }) 
       <Columns
         main={
           <>
-            {capability.from.some((f) => withoutDecisions(f).trim()) || capability.from.length > 1 ? (
-              <Block title="What it does">
-                <Sources {...go} doc={capability} body={withoutDecisions} />
-              </Block>
-            ) : null}
+            <About {...go} kind="capability" doc={capability} title="What it does" />
             <Block title="Rules and evidence" count={rules.length}>
               <RuleTable {...go} rules={rules} own={capability.evidence} />
             </Block>
             {capability.tradeoffs.length ? (
-              <Block title="Tradeoffs" count={capability.tradeoffs.length}>
+              <Block title={<LeftLabel kind="tradeoff" size={18} />} count={capability.tradeoffs.length} note="Chosen on purpose: what each gains us, and what we accept in return.">
                 <Card>
                   <Tradeoffs state={state} ids={capability.tradeoffs} detailed bare />
                 </Card>
@@ -684,6 +688,8 @@ function CapabilityPage({ capability, ...go }: Go & { capability: Capability }) 
                 onPick={onPick}
               />
             </Card>
+            <DecidedCard {...go} doc={capability} />
+            <CameFromCard {...go} kind="capability" id={capability.id} />
             {on.length ? (
               <Card title="Built on" count={on.length}>
                 <TechnicalRows state={state} docs={on} />
@@ -697,18 +703,6 @@ function CapabilityPage({ capability, ...go }: Go & { capability: Capability }) 
             {concepts.length ? (
               <Card title="Concepts it uses" count={concepts.length}>
                 <ConceptChips concepts={concepts} onOpen={onConcept} scopeOf={(c) => domainName(state, c.domain)} />
-              </Card>
-            ) : null}
-            {capability.code.length ? (
-              <Card title="Code" count={capability.code.length}>
-                <ul className="page-code">
-                  {capability.code.map((c) => (
-                    <li key={c.glob}>
-                      <code>{c.glob}</code>
-                      <span className="faint">{plural(c.files, "file", "files")}</span>
-                    </li>
-                  ))}
-                </ul>
               </Card>
             ) : null}
           </>
@@ -744,11 +738,7 @@ function FeaturePage({ feature, ...go }: Go & { feature: Feature }) {
       <Columns
         main={
           <>
-            {feature.from.some((f) => withoutDecisions(f).trim()) || feature.from.length > 1 ? (
-              <Block title="About it">
-                <Sources {...go} doc={feature} body={withoutDecisions} />
-              </Block>
-            ) : null}
+            <About {...go} kind="feature" doc={feature} title="About it" />
             {feature.parts.length ? (
               feature.parts.map((part) => (
                 <Block
@@ -766,7 +756,7 @@ function FeaturePage({ feature, ...go }: Go & { feature: Feature }) {
               </Block>
             )}
             {feature.tradeoffs.length ? (
-              <Block title="Decided not to build" count={feature.tradeoffs.length}>
+              <Block title={<LeftLabel kind="tradeoff" size={18}>Decided not to build</LeftLabel>} count={feature.tradeoffs.length} note="Left out on purpose: what leaving each out gains us, and what we accept in return.">
                 <Card>
                   <Tradeoffs state={state} ids={feature.tradeoffs} detailed bare />
                 </Card>
@@ -784,6 +774,8 @@ function FeaturePage({ feature, ...go }: Go & { feature: Feature }) {
             <Card>
               <LeftRollup state={state} own={feature} capabilities={capabilities} onOpen={onOpen} detailed onConcept={onConcept} onPick={onPick} />
             </Card>
+            <DecidedCard {...go} doc={feature} />
+            <CameFromCard {...go} kind="feature" id={feature.id} />
             {personas.length ? (
               <Card title="Who it serves" count={personas.length}>
                 <PersonaRows state={state} personas={personas} feature={feature} onOpen={onOpen} />
@@ -832,11 +824,7 @@ function DomainPage({ domain, ...go }: Go & { domain: Domain }) {
       <Columns
         main={
           <>
-            {domain.from.some((f) => withoutDecisions(f).trim()) || domain.from.length > 1 ? (
-              <Block title="About it">
-                <Sources {...go} doc={domain} body={withoutDecisions} />
-              </Block>
-            ) : null}
+            <About {...go} kind="domain" doc={domain} title="About it" />
             <Block title="Features" count={features.length}>
               {features.length ? (
                 <div className="page-feature-grid">
@@ -889,6 +877,7 @@ function DomainPage({ domain, ...go }: Go & { domain: Domain }) {
             <Card>
               <LeftRollup state={state} own={domain} capabilities={capabilities} onOpen={onOpen} detailed onConcept={onConcept} onPick={onPick} />
             </Card>
+            <DecidedCard {...go} doc={domain} />
             {concepts.length ? (
               <Card title="Glossary" count={concepts.length}>
                 <ul>
@@ -938,11 +927,7 @@ function PersonaPage({ persona, ...go }: Go & { persona: Persona }) {
       <Columns
         main={
           <>
-            {persona.from.some((f) => f.body.trim()) ? (
-              <Block title="Who they are">
-                <Sources {...go} doc={persona} />
-              </Block>
-            ) : null}
+            <About {...go} kind="persona" doc={persona} title="Who they are" />
             {features.map((f) => {
               const readiness = personaReadinessIn(state, persona, f);
               return (
@@ -973,9 +958,12 @@ function PersonaPage({ persona, ...go }: Go & { persona: Persona }) {
           </>
         }
         rail={
-          <Card>
-            <LeftRollup state={state} capabilities={capabilities} technical={false} onOpen={onOpen} detailed onConcept={onConcept} onPick={onPick} />
-          </Card>
+          <>
+            <Card>
+              <LeftRollup state={state} capabilities={capabilities} technical={false} onOpen={onOpen} detailed onConcept={onConcept} onPick={onPick} />
+            </Card>
+            <CameFromCard {...go} kind="persona" id={persona.id} />
+          </>
         }
       />
     </>
@@ -1013,11 +1001,7 @@ function ConceptPage({ concept, ...go }: Go & { concept: Concept }) {
       <Columns
         main={
           <>
-            {concept.from.some((f) => f.body.trim()) ? (
-              <Block title="What it means" aside={<code className="faint">{concept.file}</code>}>
-                <Sources {...go} doc={concept} />
-              </Block>
-            ) : null}
+            <About {...go} kind="concept" doc={concept} title="What it means" aside={<code className="faint">{concept.file}</code>} />
             <Block title="Rules that refer to it" count={rules.length}>
               <RuleTable {...go} rules={rules} followers />
             </Block>
@@ -1025,6 +1009,7 @@ function ConceptPage({ concept, ...go }: Go & { concept: Concept }) {
         }
         rail={
           <>
+            <CameFromCard {...go} kind="concept" id={concept.id} />
             <Card title="Used by" count={concept.capabilities.length}>
               {groups.length ? (
                 groups.map(({ feature, capabilities }) => (
@@ -1080,11 +1065,36 @@ function ConceptPage({ concept, ...go }: Go & { concept: Concept }) {
 /* Every system and component some capabilities are built on, each once. */
 const builtOnAll = (state: DocketState, capabilities: Capability[]) => [...new Set(capabilities.flatMap((c) => builtOn(state, c)))];
 
-/* A doc's open decisions, as a list. */
-function DecisionList({ state, doc, onConcept, onPick }: Go & { doc: Doc }) {
-  const decisions = openDecisions(doc);
-  if (!decisions.length) return null;
-  return <Markdown state={state} concept={doc} text={decisions.map((d) => `- ${d}`).join("\n")} onConcept={onConcept} onShow={noShow} onPick={onPick} />;
+/* A doc's open decisions, from each of its sources, as a list. */
+function Decisions({ doc, ...go }: Go & { doc: Doc }) {
+  return (
+    <>
+      {doc.from.map((f, i) => {
+        const open = (f.decisions ?? []).filter((d) => d.status !== "closed");
+        return open.length ? <DecisionList key={i} from={f} decisions={open} go={go} /> : null;
+      })}
+    </>
+  );
+}
+
+/* A doc's closed decisions, with what each became, in a card of their own, or nothing with none. */
+function DecidedCard({ doc, ...go }: Go & { doc: Doc }) {
+  const count = closedDecisions(doc).length;
+  return count ? (
+    <Card title="Decided" count={count}>
+      <Decided doc={doc} go={go} />
+    </Card>
+  ) : null;
+}
+
+/* The closed decisions this came from, in a card of their own, or nothing with none. */
+function CameFromCard({ kind, id, ...go }: Go & { kind: BecameKind; id: string }) {
+  const count = decidedBy(go.state, kind, id).length;
+  return count ? (
+    <Card title="Came from a decision" count={count}>
+      <CameFrom kind={kind} id={id} go={go} />
+    </Card>
+  ) : null;
 }
 
 /* Capabilities as rows, each with its level, opening its page. */
@@ -1104,8 +1114,7 @@ function CapabilityList({ capabilities, onOpen }: { capabilities: Capability[]; 
 
 /*
  * A system or component: how it's built, in the code's words, and where that
- * falls short of what we intend. Its technical gaps, each with when it's to
- * close; its tradeoffs, with what they cost; the checklist outcomes it meets
+ * falls short of what we intend. Its technical gaps; its tradeoffs, with what they cost; the checklist outcomes it meets
  * for the capabilities it serves, and the evidence for it; and, beside them,
  * its open decisions and the capabilities that rely on it.
  */
@@ -1113,7 +1122,6 @@ function TechnicalPage({ doc, ...go }: Go & { doc: TechnicalDoc }) {
   const { state, onOpen } = go;
   const capabilities = doc.capabilities.flatMap((id) => find(state.capabilities, id) ?? []);
   const gaps = gapsById(state, doc.gaps);
-  const due = gaps.filter((g) => dueOf(state, g).when === "due").length;
   const outcomes = doc.meets.flatMap((id) => checklistOutcome(state.checklist, id) ?? []);
   const places = doc.evidence.implements.length + doc.evidence.verifies.length;
   const decisions = openDecisions(doc);
@@ -1126,13 +1134,8 @@ function TechnicalPage({ doc, ...go }: Go & { doc: TechnicalDoc }) {
         tiles={
           <>
             <Tile label="Serves" value={plural(capabilities.length, "capability", "capabilities")} note={<LevelBar capabilities={capabilities} />} />
-            <Tile
-              label="Technical gaps"
-              value={gaps.length || "None"}
-              note={gaps.length ? (due ? `${due} due now` : "None due yet") : "None written down"}
-              tone={due ? "warn" : undefined}
-            />
-            <Tile label="Tradeoffs" value={doc.tradeoffs.length || "None"} note="Chosen on purpose, with their cost" />
+            <Tile label={<LeftLabel kind="technical-gap" size={13} />} value={gaps.length || "None"} note={gaps.length ? "What only someone working on the code would notice" : "None written down"} />
+            <Tile label={<LeftLabel kind="tradeoff" size={13} />} value={doc.tradeoffs.length || "None"} note="Chosen on purpose, for what they gain" />
             <Tile label="Outcomes it meets" value={outcomes.length || "None"} note={places ? `Evidence in ${plural(places, "place", "places")}` : "Nothing points at it yet"} />
           </>
         }
@@ -1140,26 +1143,22 @@ function TechnicalPage({ doc, ...go }: Go & { doc: TechnicalDoc }) {
       <Columns
         main={
           <>
-            {doc.from.some((f) => withoutDecisions(f).trim()) ? (
-              <Block title="How it's built">
-                <Sources {...go} doc={doc} body={withoutDecisions} />
-              </Block>
-            ) : null}
-            <Block title="Technical gaps" count={gaps.length}>
+            <About {...go} kind={doc.kind} doc={doc} title="How it's built" />
+            <Block title={<LeftLabel kind="technical-gap" size={18} />} count={gaps.length} note={gaps.length ? "Shortfalls we know about and mean to close. Written down so nobody is surprised, each with what it affects." : undefined}>
               {gaps.length ? (
                 <Card>
-                  <ul className="explore-left-list">
+                  <LeftList detailed>
                     {gaps.map((g) => (
                       <GapItem key={g.id} state={state} gap={g} detailed />
                     ))}
-                  </ul>
+                  </LeftList>
                 </Card>
               ) : (
                 <p className="concepts-empty">None written down: nothing only someone working on the code would notice.</p>
               )}
             </Block>
             {doc.tradeoffs.length ? (
-              <Block title="Tradeoffs" count={doc.tradeoffs.length}>
+              <Block title={<LeftLabel kind="tradeoff" size={18} />} count={doc.tradeoffs.length} note="Chosen on purpose: what each gains us, and what we accept in return.">
                 <Card>
                   <Tradeoffs state={state} ids={doc.tradeoffs} detailed bare />
                 </Card>
@@ -1202,9 +1201,11 @@ function TechnicalPage({ doc, ...go }: Go & { doc: TechnicalDoc }) {
         }
         rail={
           <>
-            <Card title="Open decisions" count={decisions.length || undefined}>
-              {decisions.length ? <DecisionList {...go} doc={doc} /> : <p className="concepts-empty">None written down.</p>}
+            <Card title={<LeftLabel kind="decision" size={14} />} count={decisions.length || undefined}>
+              {decisions.length ? <Decisions {...go} doc={doc} /> : <p className="concepts-empty">None written down.</p>}
             </Card>
+            <DecidedCard {...go} doc={doc} />
+            <CameFromCard {...go} kind={doc.kind} id={doc.id} />
             <Card title="Capabilities that rely on it" count={capabilities.length}>
               {capabilities.length ? <CapabilityList capabilities={capabilities} onOpen={onOpen} /> : <p className="concepts-empty">It doesn't list any.</p>}
             </Card>
@@ -1256,21 +1257,13 @@ function SubjectLink({ state, type, id, onPick }: { state: DocketState; type: st
   );
 }
 
-const DUE_GROUPS: { when: Due["when"]; title: string; note: string }[] = [
-  { when: "due", title: "Due now", note: "What they're about is already at the level they were to close by, so that level expects them closed." },
-  { when: "next", title: "Before the next level", note: "To close before what they're about is promoted." },
-  { when: "later", title: "Later", note: "To close before a level further on." },
-  { when: "event", title: "When something happens", note: "To close once something has happened." },
-  { when: "undecided", title: "Not decided", note: "Nobody has decided when." },
-];
-
 type Show = "all" | "product" | "technical";
 
 /*
  * Everything that differs from what's intended, across the projects showing,
- * on one page: known gaps by when they're to close, open decisions by where
- * they are, and tradeoffs, which are decided. It can show just what someone
- * using the product would notice, or just what's under the hood.
+ * on one page: gaps and tradeoffs by what they're on, and open decisions
+ * by where they are. It can show just what someone using the product would
+ * notice, or just technical gaps.
  */
 function GapsPage(go: Go) {
   const { state, onPick } = go;
@@ -1278,9 +1271,8 @@ function GapsPage(go: Go) {
   const technicalType = (type: string) => type === "system" || type === "component";
   const shown = (type: string) => show === "all" || (show === "technical") === technicalType(type);
 
-  const gaps = state.gaps.filter((g) => shown(subjectOf(g).type)).map((g) => ({ gap: g, due: dueOf(state, g) }));
+  const gaps = state.gaps.filter((g) => shown(subjectOf(g).type));
   const productGaps = state.gaps.filter((g) => !technicalType(subjectOf(g).type)).length;
-  const dueNow = gaps.filter((g) => g.due.when === "due").length;
   const tradeoffs = state.tradeoffs.filter((t) => shown(subjectOf(t).type));
   const decided: { type: string; doc: Doc }[] = [
     ...state.domains.map((doc) => ({ type: "domain", doc })),
@@ -1290,11 +1282,23 @@ function GapsPage(go: Go) {
     ...state.components.map((doc) => ({ type: "component", doc })),
   ].filter(({ type, doc }) => shown(type) && openDecisions(doc).length);
   const decisions = decided.reduce((n, { doc }) => n + openDecisions(doc).length, 0);
-  /* Tradeoffs grouped by what they're on, in the order they come. */
-  const tradeoffGroups = [...new Set(tradeoffs.map((t) => t.id.slice(0, t.id.indexOf("#"))))].map((key) => ({
-    ...subjectOf({ id: `${key}#` }),
-    ids: tradeoffs.filter((t) => t.id.startsWith(`${key}#`)).map((t) => t.id),
-  }));
+  /* Where decisions have been made, and how many. */
+  const closedOn = [
+    ...state.domains.map((doc) => ({ type: "domain", doc })),
+    ...state.features.map((doc) => ({ type: "feature", doc })),
+    ...state.capabilities.map((doc) => ({ type: "capability", doc })),
+    ...state.systems.map((doc) => ({ type: "system", doc })),
+    ...state.components.map((doc) => ({ type: "component", doc })),
+  ].filter(({ type, doc }) => shown(type) && closedDecisions(doc).length);
+  const closed = closedOn.reduce((n, { doc }) => n + closedDecisions(doc).length, 0);
+  /* Gaps and tradeoffs grouped by what they're on, in the order they come. */
+  const bySubject = <T extends { id: string }>(items: T[]) =>
+    [...new Set(items.map((i) => i.id.slice(0, i.id.indexOf("#"))))].map((key) => ({
+      ...subjectOf({ id: `${key}#` }),
+      items: items.filter((i) => i.id.startsWith(`${key}#`)),
+    }));
+  const gapGroups = bySubject(gaps);
+  const tradeoffGroups = bySubject(tradeoffs);
   const technicalDocs = [...state.systems, ...state.components];
 
   return (
@@ -1309,16 +1313,15 @@ function GapsPage(go: Go) {
               </div>
               <h1>Gaps and tradeoffs</h1>
               <p className="page-lede">
-                Where the software differs from what's intended: what's left to close and when, what's still to decide, and what we chose to live with.
+                Where the software differs from what's intended: what's left to close, what's still to decide, and what we chose to live with.
               </p>
             </div>
           </div>
           <div className="page-tiles">
-            <Tile label="Known gaps" value={productGaps || "None"} note="What someone using it would notice" />
-            <Tile label="Technical gaps" value={state.gaps.length - productGaps || "None"} note="What only someone working on the code would" />
-            <Tile label="Due now" value={dueNow || "None"} note={show === "all" ? "Their level already expects them closed" : "Of those showing"} tone={dueNow ? "warn" : "ok"} />
-            <Tile label="Open decisions" value={decisions || "None"} note={`In ${plural(decided.length, "place", "places")}`} />
-            <Tile label="Tradeoffs" value={state.tradeoffs.length || "None"} note="Chosen on purpose, with their cost" />
+            <Tile label={<LeftLabel kind="product-gap" size={13} />} value={productGaps || "None"} note="What someone using it would notice" />
+            <Tile label={<LeftLabel kind="technical-gap" size={13} />} value={state.gaps.length - productGaps || "None"} note="What only someone working on the code would" />
+            <Tile label={<LeftLabel kind="decision" size={13} />} value={decisions || "None"} note={`In ${plural(decided.length, "place", "places")}`} />
+            <Tile label={<LeftLabel kind="tradeoff" size={13} />} value={state.tradeoffs.length || "None"} note="Chosen on purpose, for what they gain" />
           </div>
         </div>
       </div>
@@ -1329,8 +1332,8 @@ function GapsPage(go: Go) {
               {(
                 [
                   ["all", "Everything"],
-                  ["product", "What people notice"],
-                  ["technical", "Under the hood"],
+                  ["product", "Product gaps"],
+                  ["technical", "Technical gaps"],
                 ] as const
               ).map(([value, label]) => (
                 <button key={value} type="button" role="radio" aria-checked={show === value} className="filter-toggle" aria-pressed={show === value} onClick={() => setShow(value)}>
@@ -1338,41 +1341,28 @@ function GapsPage(go: Go) {
                 </button>
               ))}
             </div>
-            <Block title="Known gaps" count={gaps.length}>
-              {gaps.length ? (
-                DUE_GROUPS.map(({ when, title, note }) => {
-                  const group = gaps.filter((g) => g.due.when === when);
-                  if (!group.length) return null;
-                  return (
-                    <Card key={when} title={title} count={group.length}>
-                      <p className="faint page-note">{note}</p>
-                      <ul className="explore-left-list">
-                        {group.map(({ gap }) => {
-                          const subject = subjectOf(gap);
-                          return (
-                            <GapItem
-                              key={gap.id}
-                              state={state}
-                              gap={gap}
-                              detailed
-                              subject={
-                                <>
-                                  <SubjectLink state={state} type={subject.type} id={subject.id} onPick={onPick} />
-                                  {technicalType(subject.type) ? <span className="explore-tag">Under the hood</span> : null}
-                                </>
-                              }
-                            />
-                          );
-                        })}
-                      </ul>
-                    </Card>
-                  );
-                })
+            <Block title={<LeftLabel kind="product-gap" size={18}>Gaps</LeftLabel>} count={gaps.length} note={gaps.length ? "Shortfalls we know about and mean to close. Written down so nobody is surprised, each with what it affects." : undefined}>
+              {gapGroups.length ? (
+                <Card>
+                  {gapGroups.map((g) => (
+                    <div key={`${g.type}:${g.id}`} className="page-subject-group">
+                      <div className="page-subject">
+                        <SubjectLink state={state} type={g.type} id={g.id} onPick={onPick} />
+                        {technicalType(g.type) ? <span className="explore-tag">Technical</span> : null}
+                      </div>
+                      <LeftList detailed>
+                        {g.items.map((gap) => (
+                          <GapItem key={gap.id} state={state} gap={gap} detailed />
+                        ))}
+                      </LeftList>
+                    </div>
+                  ))}
+                </Card>
               ) : (
                 <p className="concepts-empty">None written down.</p>
               )}
             </Block>
-            <Block title="Tradeoffs" count={tradeoffs.length}>
+            <Block title={<LeftLabel kind="tradeoff" size={18} />} count={tradeoffs.length} note={tradeoffs.length ? "Chosen on purpose: what each gains us, and what we accept in return." : undefined}>
               {tradeoffGroups.length ? (
                 <Card>
                   {tradeoffGroups.map((g) => (
@@ -1381,7 +1371,7 @@ function GapsPage(go: Go) {
                         <SubjectLink state={state} type={g.type} id={g.id} onPick={onPick} />
                         {g.type === "feature" ? <span className="faint">Decided not to build</span> : null}
                       </div>
-                      <Tradeoffs state={state} ids={g.ids} detailed bare />
+                      <Tradeoffs state={state} ids={g.items.map((t) => t.id)} detailed bare />
                     </div>
                   ))}
                 </Card>
@@ -1393,20 +1383,32 @@ function GapsPage(go: Go) {
         }
         rail={
           <>
-            <Card title="Open decisions" count={decisions || undefined}>
+            <Card title={<LeftLabel kind="decision" size={14} />} count={decisions || undefined}>
               {decided.length ? (
                 decided.map(({ type, doc }) => (
                   <div key={`${type}:${doc.id}`} className="page-subject-group">
                     <div className="page-subject">
                       <SubjectLink state={state} type={type} id={doc.id} onPick={onPick} />
                     </div>
-                    <DecisionList {...go} doc={doc} />
+                    <Decisions {...go} doc={doc} />
                   </div>
                 ))
               ) : (
                 <p className="concepts-empty">None written down.</p>
               )}
             </Card>
+            {closed ? (
+              <Card title="Decided" count={closed}>
+                {closedOn.map(({ type, doc }) => (
+                  <div key={`${type}:${doc.id}`} className="page-subject-group">
+                    <div className="page-subject">
+                      <SubjectLink state={state} type={type} id={doc.id} onPick={onPick} />
+                    </div>
+                    <Decided doc={doc} go={go} />
+                  </div>
+                ))}
+              </Card>
+            ) : null}
             {technicalDocs.length ? (
               <Card title="How it's built" count={technicalDocs.length}>
                 <TechnicalRows state={state} docs={technicalDocs} />

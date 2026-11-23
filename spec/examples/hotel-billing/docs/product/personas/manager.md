@@ -1,23 +1,21 @@
 ---
+name: David
+summary: Runs the hotel, and answers for its takings to the owners.
+role: Manager
+title: Hotel manager
 image: https://randomuser.me/api/portraits/men/52.jpg
+needs:
+  - To see each day's takings, final and broken down, without waiting for the
+    bookkeeper.
+  - To be sure every night, every extra and the city's tax are charged, so the
+    hotel isn't out of pocket.
+  - To be covered when a guest who booked never arrives.
 ---
-
-# David, hotel manager
-
-Runs the hotel, and answers for its takings to the owners.
-
-## Needs
-
-- To see each day's takings, final and broken down, without waiting for the
-  bookkeeper.
-- To be sure every night, every extra and the city's tax are charged, so the
-  hotel isn't out of pocket.
-- To be covered when a guest who booked never arrives.
 
 ## Knows
 
-The hotel's numbers: occupancy, the average rate, last year's takings.
-Not the details of how the books are kept.
+The hotel's numbers: occupancy, the average rate, last year's takings. Not the
+details of how the books are kept.
 
 ## Context
 

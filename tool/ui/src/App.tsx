@@ -23,7 +23,6 @@ import {
   cardsOf,
   combine,
   domainGroup,
-  dueOf,
   filterBy,
   pickName,
   targetOf,
@@ -599,22 +598,20 @@ function FilterBar({
   );
 }
 
-/* How many known gaps there are, and how many are due, in the header: it opens the page with every gap, open decision and tradeoff. */
+/* How many gaps there are, in the header: it opens the page with every gap, open decision and tradeoff. */
 function GapsLink({ state }: { state: DocketState }) {
-  const due = state.gaps.filter((g) => dueOf(state, g).when === "due").length;
   return (
     <a
       className="stat stat-button"
       href={pageHref({ kind: "gaps", id: "" })}
-      title="Where the software differs from what's intended: known and technical gaps, open decisions and tradeoffs"
+      title="Where the software differs from what's intended: product and technical gaps, open decisions and tradeoffs"
     >
       <span className="stat-icon" aria-hidden>
-        <IncompleteCircleRoundedIcon sx={{ fontSize: 17, color: due ? "var(--warning)" : "text.secondary" }} />
+        <IncompleteCircleRoundedIcon sx={{ fontSize: 17, color: "text.secondary" }} />
       </span>
       <span className="stat-n">{state.gaps.length}</span>
       <span className="stat-label">
         {state.gaps.length === 1 ? "gap" : "gaps"}
-        {due ? `, ${due} due` : ""}
       </span>
       <ChevronRightRoundedIcon className="stat-chevron" aria-hidden sx={{ fontSize: 16 }} />
     </a>

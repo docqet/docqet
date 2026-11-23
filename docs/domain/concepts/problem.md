@@ -14,8 +14,6 @@ and can be about anything. The spec lists
 - `unknown-id`: a link or annotation names a doc, gap or tradeoff that doesn't
   exist, such as a `docket:gap` left behind after its gap was closed.
 - `unlinked-rule`: no capability follows a rule.
-- `until-not-served`: a technical gap's `until` names a capability its system
-  or component doesn't list.
 - `contradiction`: contributions that should agree don't.
 
 ## In the spec

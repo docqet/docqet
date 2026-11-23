@@ -1,8 +1,8 @@
 import type { ReactNode } from "react";
 import Box from "@mui/material/Box";
-import IncompleteCircleRoundedIcon from "@mui/icons-material/IncompleteCircleRounded";
 import RuleRoundedIcon from "@mui/icons-material/RuleRounded";
 import WarningAmberRoundedIcon from "@mui/icons-material/WarningAmberRounded";
+import { LeftMark } from "./design/left/LeftMark";
 
 /* A warning after a name, for something with a contradiction; what it is shows on hover. */
 export function ContradictionHint({ messages }: { messages: string[] }) {
@@ -20,13 +20,13 @@ export function RulesHint({ count }: { count: number }) {
   return <CountHint count={count} label={count === 1 ? "1 rule" : `${count} rules`} icon={<RuleRoundedIcon sx={{ fontSize: 14 }} />} />;
 }
 
-/* After a capability's name, how many known gaps it has, which the side panel lists. */
+/* After a capability's name, how many product gaps it has, which the side panel lists. */
 export function GapsHint({ count }: { count: number }) {
   return (
     <CountHint
       count={count}
-      label={count === 1 ? "1 known gap" : `${count} known gaps`}
-      icon={<IncompleteCircleRoundedIcon sx={{ fontSize: 13 }} />}
+      label={count === 1 ? "1 product gap" : `${count} product gaps`}
+      icon={<LeftMark kind="product-gap" size={13} decorative />}
     />
   );
 }

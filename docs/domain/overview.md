@@ -92,7 +92,6 @@ flowchart TB
 
   subgraph derived ["Derived"]
     evidence["Evidence"]
-    due["Due"]
     maturity["Maturity and band"]
     readiness["Readiness"]
     problem["Problem"]
@@ -125,14 +124,13 @@ flowchart TB
   annotation -- "marks where it shows" --> gap & tradeoff
 
   annotation -.-> evidence
-  gap -. "until, against levels" .-> due
   level -. "of capabilities" .-> maturity
   persona -.-> readiness
   maturity -. "of what serves them" .-> readiness
   project -. "its docs" .-> problem
 
   classDef derivedNode stroke-dasharray: 4 3
-  class evidence,due,maturity,readiness,problem derivedNode
+  class evidence,maturity,readiness,problem derivedNode
 ```
 
 Solid arrows are [declared](concepts/declared-and-derived.md): written in a
@@ -279,7 +277,6 @@ Some things are never features or capabilities:
 - [Open decision](concepts/open-decision.md): a question not settled yet.
 - [Gap](concepts/gap.md): something we intend to close.
 - [Tradeoff](concepts/tradeoff.md): something we chose, knowing its cost.
-- [Due](concepts/due.md): when a gap has to be closed.
 
 **Stability and maturity**
 

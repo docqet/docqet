@@ -1,4 +1,8 @@
 ---
+name: Pay by link
+summary: >-
+  Guests pay their bill by card from a link the hotel sends them, without
+  coming to the desk.
 stability: alpha
 personas: [guest, front-desk-clerk]
 rules:
@@ -8,20 +12,16 @@ concepts: [payment, bill]
 tradeoffs:
   - id: hotels-currency-only
     text: Guests pay in the hotel's currency, not their own.
+    gain: >-
+      The bill, the payment and the hotel's books are all in one currency,
+      with no exchange rates to keep.
     cost: >-
       Their card provider converts it, at its own rate, so the amount on
       their statement can differ from the bill.
+decisions:
+  - question: Do guests pay before they leave, or wait until they're home?
 ---
 
-# Pay by link
-
-Guests pay their bill by card from a link the hotel sends them, without
-coming to the desk.
-
-## Covers
+## Includes
 
 - Clerks send a guest a link to pay what they owe.
-
-## Learning
-
-- Do guests pay before they leave, or wait until they're home?

@@ -1379,30 +1379,58 @@ kbd {
 }
 
 .markdown {
+  min-width: 0;
   font-size: 13.5px;
   line-height: 1.55;
+  /* A long URL, path or identifier wraps rather than pushing the layout wider. */
+  overflow-wrap: anywhere;
 }
 
-/* A part of the doc, such as "What people can do". */
-.markdown h4 {
-  margin: 16px 0 6px;
-  font-size: 11px;
+/*
+ * Headings are the author's own, so they keep their order and get smaller,
+ * but stay modest: a body sits under a heading of the page's.
+ */
+.markdown .md-h1,
+.markdown .md-h2,
+.markdown .md-h3,
+.markdown .md-h4 {
+  margin: 18px 0 6px;
   font-weight: 650;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--faint);
+  line-height: 1.35;
+  color: var(--text);
+}
+
+.markdown .md-h1 {
+  font-size: 1.2em;
+}
+
+.markdown .md-h2 {
+  font-size: 1.08em;
+}
+
+.markdown .md-h3 {
+  font-size: 1em;
+}
+
+.markdown .md-h4 {
+  font-size: 0.95em;
+  color: var(--muted);
 }
 
 .markdown > :first-child {
   margin-top: 0;
 }
 
-/* A group within a part, such as a persona's name. */
-.markdown h5 {
-  margin: 10px 0 4px;
-  font-size: 13.5px;
-  font-weight: 650;
-  color: var(--text);
+.markdown > :last-child {
+  margin-bottom: 0;
+}
+
+.markdown img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 4px 0 12px;
+  border-radius: 6px;
 }
 
 .markdown li + li {
@@ -1426,18 +1454,143 @@ kbd {
 }
 
 .markdown ol {
-  padding-left: 20px;
+  list-style: decimal;
+  padding-left: 22px;
+}
+
+.markdown strong {
+  font-weight: 650;
+}
+
+/* Lists inside a list item, such as a nested bullet, sit close to it. */
+.markdown li > ul,
+.markdown li > ol,
+.markdown li > p {
+  margin: 3px 0 0;
+}
+
+.markdown ul.contains-task-list {
+  list-style: none;
+  padding-left: 4px;
+}
+
+.markdown .task-list-item input {
+  margin: 0 6px 0 0;
+  vertical-align: -1px;
+  accent-color: var(--accent);
+}
+
+.markdown :not(pre) > code,
+.left-item-text code,
+.gap-affect code,
+.tradeoff-choice code,
+.tradeoff-side code,
+.tradeoff-foot code {
+  padding: 1px 5px;
+  font-size: 0.86em;
+  background: color-mix(in srgb, var(--text) 6%, transparent);
+  border: 1px solid color-mix(in srgb, var(--text) 7%, transparent);
+  border-radius: 4px;
+  overflow-wrap: anywhere;
 }
 
 .markdown pre {
-  padding: 8px 10px;
+  margin: 4px 0 12px;
+  padding: 12px 14px;
   overflow-x: auto;
-  background: var(--accent-soft);
-  border-radius: 5px;
+  font-size: 12.5px;
+  line-height: 1.55;
+  background: color-mix(in srgb, var(--text) 4%, transparent);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.markdown pre code {
+  font-size: inherit;
+}
+
+.markdown blockquote {
+  margin: 0 0 8px;
+  padding: 2px 0 2px 14px;
+  color: var(--muted);
+  border-left: 3px solid var(--border-strong);
+}
+
+.markdown hr {
+  margin: 16px 0;
+  border: 0;
+  border-top: 1px solid var(--border);
+}
+
+/* Wide tables scroll inside their own box rather than the page. */
+.markdown-table {
+  margin: 4px 0 12px;
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.markdown table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.93em;
+}
+
+.markdown th,
+.markdown td {
+  padding: 7px 12px;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid var(--border);
+}
+
+.markdown th {
+  font-weight: 650;
+  background: color-mix(in srgb, var(--text) 3%, transparent);
+}
+
+.markdown tr:last-child td {
+  border-bottom: 0;
 }
 
 .markdown a {
   color: var(--concept);
+}
+
+/* Code highlighting, in the theme's colors. */
+.markdown .hljs-comment,
+.markdown .hljs-quote {
+  color: var(--faint);
+  font-style: italic;
+}
+
+.markdown .hljs-keyword,
+.markdown .hljs-selector-tag,
+.markdown .hljs-built_in,
+.markdown .hljs-type {
+  color: var(--accent);
+}
+
+.markdown .hljs-string,
+.markdown .hljs-regexp,
+.markdown .hljs-symbol {
+  color: var(--concept);
+}
+
+.markdown .hljs-number,
+.markdown .hljs-literal {
+  color: var(--warning);
+}
+
+.markdown .hljs-title,
+.markdown .hljs-function .hljs-title,
+.markdown .hljs-attr,
+.markdown .hljs-property {
+  color: var(--persona);
+}
+
+.markdown .hljs-meta {
+  color: var(--muted);
 }
 
 /* ——— Loading and errors ——— */
@@ -1823,6 +1976,16 @@ kbd {
   box-shadow: inset 0 0 0 1px var(--border);
 }
 
+/* A persona with no picture: their initials, centered in the same circle. */
+.persona-initials {
+  display: grid;
+  place-items: center;
+  font-weight: 650;
+  line-height: 1;
+  color: var(--persona);
+  user-select: none;
+}
+
 /* A list row with a picture: the picture beside its name, summary and meta. */
 .concept-list button.has-picture {
   grid-template-columns: auto 1fr;
@@ -2063,25 +2226,6 @@ kbd {
   color: var(--faint);
 }
 
-/* A gap's tag once it's due: its level already expects it closed. */
-.explore-tag[data-tone="warn"] {
-  color: var(--warning);
-  border-color: color-mix(in srgb, var(--warning) 45%, transparent);
-  background: color-mix(in srgb, var(--warning) 8%, transparent);
-}
-
-/* A tradeoff's cost and when to revisit it, each labelled. */
-.explore-tradeoff {
-  align-items: flex-start;
-  flex-direction: column;
-  gap: 2px;
-  color: var(--muted);
-}
-
-.explore-tradeoff strong {
-  font-weight: 600;
-}
-
 /* The code a gap or tradeoff names, in full, under its other details. */
 .explore-left-meta .explore-places {
   flex-basis: 100%;
@@ -2124,6 +2268,74 @@ kbd {
 }
 
 .link-row:hover .concept-row-name {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+/* In the side panel, a section or a kind of what's left, folded shut until it's opened. */
+.explore-fold > summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  list-style: none;
+  cursor: pointer;
+  user-select: none;
+}
+
+.explore-fold > summary::-webkit-details-marker {
+  display: none;
+}
+
+.explore-fold > summary > .explore-heading {
+  margin-bottom: 0;
+}
+
+.explore-fold-chevron {
+  margin-left: auto;
+  color: var(--faint);
+  transition: transform 120ms ease;
+}
+
+.explore-fold[open] > summary .explore-fold-chevron {
+  transform: rotate(180deg);
+}
+
+.explore-fold > summary:hover .explore-heading,
+.explore-fold > summary:hover .explore-gap-kind,
+.explore-fold > summary:hover .explore-fold-chevron {
+  color: var(--muted);
+}
+
+.explore-fold > summary:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.explore-fold-body {
+  margin-top: 8px;
+}
+
+/* A doc's fields and body, folded under its summary. */
+.explore-more {
+  margin-top: 10px;
+}
+
+.explore-more > summary {
+  width: fit-content;
+  gap: 2px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.explore-more > summary .explore-fold-chevron {
+  margin-left: 0;
+  color: inherit;
+}
+
+.explore-more > summary:hover,
+.explore-more > summary:hover .explore-fold-chevron {
   color: var(--accent);
   text-decoration: underline;
 }
@@ -2432,6 +2644,197 @@ a.filter-toggle {
   letter-spacing: -0.01em;
 }
 
+/* What the block's items are, under its heading, such as what makes a gap a gap. */
+.page-block-note {
+  margin: -8px 0 14px;
+  font-size: 13.5px;
+  color: var(--muted);
+}
+
+/* ——— What's left and tradeoffs: one mark, one color and one row wherever they show ——— */
+
+.left-mark {
+  display: inline-flex;
+  flex: none;
+  color: var(--warning);
+}
+
+.left-mark[data-kind="decision"] {
+  color: var(--accent);
+}
+
+.left-mark[data-kind="tradeoff"] {
+  color: var(--muted);
+}
+
+/* A kind's mark before its name, in a heading, label or tile. */
+.left-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Each item a row: its mark, then what it says, and under that anything more. */
+.left-list {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 13.5px;
+}
+
+.left-item {
+  display: grid;
+  grid-template-columns: 16px minmax(0, 1fr);
+  gap: 10px;
+  padding: 4px 0;
+}
+
+.left-item > .left-mark {
+  margin-top: 2px;
+}
+
+.left-item-body {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+  line-height: 1.5;
+}
+
+/* On a detail page, spaced out and ruled off, each with more under it. */
+.left-list[data-detailed] .left-item {
+  gap: 12px;
+  padding: 12px 0;
+}
+
+.left-list[data-detailed] .left-item:first-child {
+  padding-top: 2px;
+}
+
+.left-list[data-detailed] .left-item:last-child {
+  padding-bottom: 2px;
+}
+
+.left-list[data-detailed] .left-item + .left-item {
+  border-top: 1px solid var(--border);
+}
+
+.left-list[data-detailed] .left-item > .left-mark {
+  margin-top: 3px;
+}
+
+.left-list[data-detailed] .left-item-body {
+  gap: 8px;
+}
+
+.left-list[data-detailed] .left-item-text {
+  font-size: 14.5px;
+}
+
+/* How many of each kind, each with its mark. */
+.left-counts {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px 10px;
+}
+
+.left-count {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.gap-affects {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 14px;
+  font-size: 12.5px;
+  color: var(--muted);
+}
+
+.gap-affects-label {
+  font-size: 10.5px;
+  font-weight: 650;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
+.gap-affect {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.gap-affect .explore-tag {
+  flex-shrink: 0;
+}
+
+/*
+ * A tradeoff, as on a detail page: what we chose, then what it gains us and
+ * what we accept for it, side by side, then when we'd look at it again.
+ */
+.tradeoff-label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 4px;
+  font-size: 10.5px;
+  font-weight: 650;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
+.tradeoff-sides {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 10px;
+}
+
+.tradeoff-side {
+  padding: 10px 12px;
+  font-size: 13.5px;
+  line-height: 1.5;
+  border: 1px solid var(--side-border);
+  border-radius: 8px;
+  background: var(--side-bg);
+}
+
+.tradeoff-side .tradeoff-label {
+  color: var(--side);
+}
+
+.tradeoff-gain {
+  --side: var(--ok);
+  --side-bg: color-mix(in srgb, var(--ok) 6%, transparent);
+  --side-border: color-mix(in srgb, var(--ok) 22%, transparent);
+}
+
+.tradeoff-cost {
+  --side: var(--warning);
+  --side-bg: color-mix(in srgb, var(--warning) 6%, transparent);
+  --side-border: color-mix(in srgb, var(--warning) 22%, transparent);
+}
+
+.tradeoff-foot {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  color: var(--muted);
+}
+
+.tradeoff-foot svg {
+  flex-shrink: 0;
+  color: var(--faint);
+}
+
 .page-block-aside {
   margin-left: auto;
   font-size: 13px;
@@ -2470,41 +2873,11 @@ a.filter-toggle {
   overflow-wrap: anywhere;
 }
 
-/* What its body says, its sections side by side. */
-.page-facets {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 12px;
-}
-
-.page-facet {
-  padding: 14px 16px;
-  background: color-mix(in srgb, var(--text) 2%, transparent);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-}
-
-.page-facet .page-label {
-  display: block;
-  margin-bottom: 8px;
-}
-
-.page-facet .markdown {
-  font-size: 14px;
-}
-
 /* Several sources, a column each, to compare. */
 .page-sources {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
   gap: 20px;
-}
-
-.page-source {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  min-width: 0;
 }
 
 .page-source-from {
@@ -3157,7 +3530,7 @@ button.page-table-row:hover .page-table-name strong {
 
 /* ——— Gaps and tradeoffs, and systems' and components' pages ——— */
 
-/* Which gaps, tradeoffs and decisions the gaps page shows: everything, what people notice, or what's under the hood. */
+/* Which gaps, tradeoffs and decisions the gaps page shows: everything, product gaps, or technical gaps. */
 .page-show {
   display: flex;
   flex-wrap: wrap;
@@ -3212,4 +3585,281 @@ button.page-table-row:hover .page-table-name strong {
 .page-evidence-pair .page-label {
   display: block;
   margin-bottom: 4px;
+}
+
+/* ——— What a doc says: its fields, then its body ——— */
+
+/* A text value from frontmatter: Markdown, with no space around it. */
+.markdown.markdown-field {
+  margin-top: 0;
+}
+
+/* Fields as cards side by side, each as wide as it needs, a wide one taking a whole row. */
+.facets {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(260px, 100%), 1fr));
+  gap: 12px;
+  min-width: 0;
+}
+
+.facet {
+  min-width: 0;
+  padding: 14px 16px;
+  background: color-mix(in srgb, var(--text) 2%, transparent);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+.facet[data-wide] {
+  grid-column: 1 / -1;
+}
+
+.facet > .page-label {
+  display: block;
+  margin-bottom: 8px;
+}
+
+.facet .markdown {
+  font-size: 14px;
+}
+
+/* In the side panel, one under another, with no cards. */
+.facets-stacked {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 14px;
+  margin-top: 14px;
+}
+
+.facets-stacked .facet {
+  padding: 0;
+  background: none;
+  border: 0;
+  border-radius: 0;
+}
+
+.facets-stacked .facet > .page-label {
+  margin-bottom: 6px;
+}
+
+.facets-stacked .facet .markdown {
+  font-size: 13.5px;
+}
+
+/* A list of sentences, or of open decisions, each item its own Markdown. */
+.field-list,
+.decision-list,
+.confused-list {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.field-list > li {
+  position: relative;
+  min-width: 0;
+  padding-left: 16px;
+}
+
+.field-list > li::before {
+  position: absolute;
+  top: 0.62em;
+  left: 2px;
+  width: 5px;
+  height: 5px;
+  content: "";
+  background: var(--faint);
+  border-radius: 50%;
+}
+
+.decision-list > li,
+.confused-list > li {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.decision-topic,
+.confused-name {
+  font-weight: 650;
+  color: var(--text);
+  overflow-wrap: anywhere;
+}
+
+.confused-name.link {
+  justify-self: start;
+  text-align: left;
+}
+
+/* A concept's states in order, wrapping onto as many lines as they need. */
+.lifecycle {
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+}
+
+.lifecycle-states {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.lifecycle-states > li {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.lifecycle-state {
+  padding: 3px 10px;
+  font-size: 13px;
+  line-height: 1.4;
+  background: color-mix(in srgb, var(--concept) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--concept) 25%, transparent);
+  border-radius: 999px;
+  overflow-wrap: anywhere;
+}
+
+/* A doc's body: free Markdown, cut short with a fade when it's long, until asked for in full. */
+.doc-body {
+  min-width: 0;
+}
+
+.doc-body-text {
+  min-width: 0;
+}
+
+.doc-body-text[data-clamped] {
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 72px), transparent);
+  mask-image: linear-gradient(to bottom, #000 calc(100% - 72px), transparent);
+}
+
+.doc-body-toggle {
+  margin-top: 6px;
+  padding: 4px 0;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent);
+  cursor: pointer;
+  background: none;
+  border: 0;
+}
+
+.doc-body-toggle:hover {
+  text-decoration: underline;
+}
+
+.explore-source-body .doc-body,
+.concept-says .doc-body {
+  margin-top: 14px;
+}
+
+/* On a detail page: the fields, then the body in a panel of its own at a readable width. */
+.page-about,
+.page-source {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+}
+
+.page-about > .doc-body,
+.page-source > .doc-body {
+  padding: 16px 22px;
+  background: color-mix(in srgb, var(--text) 2%, transparent);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+.page-about > .doc-body .markdown,
+.page-source > .doc-body .markdown {
+  max-width: 76ch;
+  margin-top: 0;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+/* A rule's why, opened from its row. */
+.page-rule-more {
+  min-width: 0;
+  margin-top: 4px;
+}
+
+.page-rule-more > summary {
+  width: fit-content;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--accent);
+  cursor: pointer;
+}
+
+.page-rule-more > .markdown,
+.page-rule-more > .doc-body {
+  margin-top: 6px;
+}
+
+/* ——— Closed decisions, and what they became ——— */
+
+/* What was asked, quieter than what was decided. */
+.decided-question .markdown {
+  color: var(--muted);
+}
+
+.decided-list > li {
+  gap: 4px;
+}
+
+/* What a closed decision became: each a link, after its kind. */
+.became-list {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+  margin: 4px 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 13px;
+}
+
+.became-list > li {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  min-width: 0;
+}
+
+.became-list > li > a,
+.became-list > li > code {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.became-list .explore-tag,
+.came-from-line .explore-tag {
+  flex: none;
+}
+
+/* Where a decision was made, above its question. */
+.came-from-on {
+  font-size: 12px;
+  color: var(--faint);
+}
+
+/* Under a gap, tradeoff or rule: the decision it came from, in a line. */
+.came-from-line {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  min-width: 0;
+  margin-top: 4px;
+  font-size: 12.5px;
+  color: var(--muted);
+  overflow-wrap: anywhere;
 }

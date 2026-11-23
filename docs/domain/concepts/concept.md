@@ -17,26 +17,41 @@ own domain's, else the only one with that ID, unless it names a domain as
 
 ## In the spec
 
-A concept is a doc in its domain's `concepts/` folder, with sections for its
-details, its lifecycle, and what it's not to be confused with.
+A concept is a doc in its domain's `concepts/` folder. Its frontmatter has
+its name and `description`, which defines it, its `lifecycle`, as `states` in
+order and optional `text`, and `confused-with`, what it's easily mistaken for. Its details, what
+it's made of and how it relates to other concepts, are its body.
 [`booking.md`](../../../spec/examples/hotel-bookings/docs/product/domains/guest-stays/concepts/booking.md)
 in Guest stays:
 
 ```markdown
-# Booking
-
-A guest's hold on one room for a stay, from a check-in date to a check-out date.
-
-## Details
+---
+name: Booking
+description: >-
+  A guest's hold on one room for a stay, from a check-in date to a check-out
+  date.
+lifecycle:
+  states:
+    - Confirmed
+    - Checked in
+    - Checked out
+  text: A confirmed booking can instead be Cancelled, any time before check-in.
+---
 
 A booking is for one [room](room.md). Its nights run from the check-in date up
 to, but not including, the check-out date.
+```
 
-## Lifecycle
+Each item in `confused-with` has `text` saying how they differ, and either
+`concept`, a [link](link.md) to that concept written as any concept link is,
+or `term`, for a word that isn't a concept in the docs. Billing's
+[bill](../../../spec/examples/hotel-billing/docs/product/domains/billing/concepts/bill.md)
+isn't an invoice:
 
-Confirmed → Checked in → Checked out
-
-A confirmed booking can instead be Cancelled, any time before check-in.
+```yaml
+confused-with:
+  - term: Invoice
+    text: what a company is sent for a month of its staff's bills.
 ```
 
 ## Not to be confused with

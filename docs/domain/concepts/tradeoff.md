@@ -1,14 +1,15 @@
 # Tradeoff
 
-Something we chose over an alternative, knowing what it costs, and decided to
-live with.
+Something we chose over an alternative, for what it gains us, knowing what it
+costs, and decided to live with.
 
 ## Details
 
 A booking holds one room, not several, so a family that needs two rooms makes
 two bookings. It's a decision, not something left to do. It says what we
-chose, what it costs, and, when we expect to look at it again, what would make
-us. A [gap](gap.md) we'll never close is a tradeoff instead.
+chose, what we hope to gain by it, what it costs, and, when we expect to look
+at it again, what would make us. Without the gain, there's nothing to weigh the
+cost against. A [gap](gap.md) we'll never close is a tradeoff instead.
 
 It's on the thing the choice was made about:
 
@@ -34,8 +35,8 @@ reverse is deleted, or replaced by the new one.
 ## In the spec
 
 Tradeoffs are listed in the frontmatter of the doc they're on, each with an
-`id`, `text` saying what we chose and not what, its `cost`, and optionally
-`revisit`, a concrete trigger. One we expect to keep forever leaves `revisit`
+`id`, `text` saying what we chose and not what, its `gain`, its `cost`, and
+optionally `revisit`, a concrete trigger. One we expect to keep forever leaves `revisit`
 off. On the [ledger](../../../spec/examples/hotel-billing/docs/technical/systems/ledger.md):
 
 ```yaml
@@ -44,6 +45,9 @@ tradeoffs:
     text: >-
       A bill's balance is added up from its lines every time it's asked for,
       not stored on the bill.
+    gain: >-
+      The balance can never disagree with the lines, and there's nothing to
+      keep in step when a line is added.
     cost: Opening a bill gets slower as lines are added to it.
     revisit: a bill passes 1,000 lines
 ```
@@ -63,6 +67,9 @@ tradeoffs:
   - id: front-desk-bookings-only
     text: >-
       Bookings are taken at the front desk, not from online travel agencies.
+    gain: >-
+      No agency integrations to build or keep working, while most bookings
+      come straight to the desk.
     cost: >-
       Clerks enter each agency booking by hand, as it arrives by email.
     revisit: agency bookings pass a fifth of all bookings

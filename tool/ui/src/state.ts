@@ -12,8 +12,65 @@ export type Level = StabilityLevelId;
 /* A capability's level: one of the four, or null while it's a draft, declared and not started, as the design components take it. */
 export type CapabilityLevel = Level | null;
 
+/* What a closed decision became, as named, and the doc, gap or tradeoff it means here, or null where nothing showing has it. */
+export type Became = { ref: string; kind: BecameKind; id: string | null };
+export type BecameKind = "domain" | "feature" | "capability" | "rule" | "concept" | "persona" | "system" | "component" | "gap" | "tradeoff";
+
+/*
+ * A decision: a question, and a few words on what it's about. While it's
+ * open, nobody has answered it. Once it's closed, its answer says what was
+ * decided, and `became` names what it was written as: a rule, a capability, a
+ * gap, a tradeoff or any other doc, as `<type>:<id>`, or a gap's or
+ * tradeoff's own ID. Combining resolves those as `resolved`.
+ */
+export type Decision = {
+  topic: string | null;
+  question: string;
+  status: "open" | "closed";
+  answer: string | null;
+  became: string[];
+  resolved?: Became[];
+};
+
+/* The states a concept goes through, in order, and what the list doesn't show. */
+export type Lifecycle = { states: string[]; text: string | null };
+
+/* What a concept is easily mistaken for: another concept, as linked, or a word that isn't one, and how they differ. */
+export type Confusion = { concept: string | null; term: string | null; text: string };
+
+/*
+ * The frontmatter fields that say something rather than link, so each is its
+ * contribution's own, as its body is. Each type has some: open decisions on a
+ * domain, feature, capability, system or component; a persona's needs; a
+ * rule's why; a concept's
+ * lifecycle and what it's confused with; a system's or component's start.
+ * Text values are Markdown.
+ */
+export type Fields = {
+  decisions?: Decision[];
+  needs?: string[];
+  why?: string | null;
+  lifecycle?: Lifecycle | null;
+  confusedWith?: Confusion[];
+  start?: string | null;
+};
+
+const FIELD_KEYS = ["decisions", "needs", "why", "lifecycle", "confusedWith", "start"] as const;
+
+/* Every text a contribution's fields hold, for search. */
+export function fieldsText(f: Fields): string {
+  const parts: string[] = [];
+  for (const key of FIELD_KEYS) {
+    const value = f[key];
+    if (typeof value === "string") parts.push(value);
+    else if (Array.isArray(value)) for (const v of value) parts.push(typeof v === "string" ? v : Object.values(v).filter(Boolean).join(" "));
+    else if (value) parts.push([...value.states, value.text ?? ""].join(" "));
+  }
+  return parts.join(" ");
+}
+
 /* What one project says about a doc, in one domain: each doc has one from every project and domain that declares it. */
-export type Contribution = {
+export type Contribution = Fields & {
   /* Where it's defined, and its file in that project's repository. */
   project: string;
   /* The domain it's written in, which says what its rule and concept links mean. */
@@ -21,7 +78,10 @@ export type Contribution = {
   file: string;
   name: string;
   summary?: string;
-  /* Everything after the title and summary, as Markdown. */
+  /* A persona's role and title, which contributions should agree on as they do on its name. */
+  role?: string | null;
+  title?: string | null;
+  /* Its body: free Markdown, exactly as written, with no structure to rely on. */
   body: string;
 };
 
@@ -32,7 +92,7 @@ export type Contribution = {
  * `<id>@<domain>`. Its name, summary, body and file are its first
  * contribution's.
  */
-export type Doc = {
+export type Doc = Fields & {
   id: string;
   /* The project and domain its first contribution is from. */
   project: string;
@@ -83,7 +143,6 @@ export type Capability = Doc & {
   feature: string | null;
   rules: string[];
   concepts: string[];
-  code: CodeGlob[];
   /* Its product gaps and tradeoffs, as it declares them. */
   gaps: string[];
   tradeoffs: string[];
@@ -137,14 +196,19 @@ export type Rule = Doc & {
 };
 
 export type Concept = Doc & { capabilities: string[]; rules: string[] };
+/* A concept as state.json has it: its `description` is what readers show under its name, as other docs' `summary` is. */
+type RawConcept = Omit<Raw<Concept>, "summary"> & { description?: string };
 
 /*
  * A type of person the software serves, one across every domain. What it
  * relates to is worked out from the capabilities that list it.
  */
 export type Persona = Doc & {
+  /* How they use the software, such as the role it gives them, and the job title they hold. Either can be null. */
+  role: string | null;
+  title: string | null;
   /* Its picture's URL. */
-  image: string;
+  image: string | null;
   /* Every capability that lists it, and the features those are in. */
   capabilities: string[];
   features: string[];
@@ -153,9 +217,9 @@ export type Persona = Doc & {
 };
 
 /*
- * A known gap: something we intend to close. On a capability, it's what
- * someone using the product would notice; on a system or component, what only
- * someone working on the code would. Its ID is `<type>:<id>#<key>`, and the
+ * A known gap: something we intend to close, when and how we choose. On a
+ * capability, it's what someone using the product would notice; on a system
+ * or component, what only someone working on the code would. Its ID is `<type>:<id>#<key>`, and the
  * part before `#` is what it's on.
  */
 export type Gap = {
@@ -164,8 +228,6 @@ export type Gap = {
   project?: string;
   /* A product gap's domain; a technical gap has none. */
   domain?: string;
-  /* When it's to close by: a level, `<capability>@<level>`, `not-decided`, or an event in words. */
-  until: string;
   /* The stability checklist outcome it falls short of, as `<quality>/<level>/<id>`, or null. */
   outcome: string | null;
   /* The rule it doesn't hold to yet, as written; combining resolves it to `<id>@<domain>`. */
@@ -181,6 +243,8 @@ export type Tradeoff = {
   project?: string;
   domain?: string;
   text: string;
+  /* What we hope to get by choosing it. Missing from state written before it, and optional in the docs. */
+  gain?: string | null;
   cost: string;
   revisit: string | null;
   /* The code it explains, from `docket:tradeoff` annotations. */
@@ -278,7 +342,7 @@ export type StateFile = {
   /* A draft's `stability` is "draft". */
   capabilities: (Omit<Raw<Capability>, "stability" | "tradeoffs"> & { stability: Level | "draft"; tradeoffs?: string[] })[];
   rules: Omit<Raw<Rule>, "gaps">[];
-  concepts: Raw<Concept>[];
+  concepts: RawConcept[];
   /* Personas aren't in a domain, so these have no `domain`. Missing from state written before personas. */
   personas?: Omit<Raw<Persona>, "domain">[];
   /* Technical docs aren't in a domain either. Missing from state written before them, as is `tradeoffs`. */
@@ -380,7 +444,16 @@ export function combine(files: StateFile[]): DocketState {
 
   /* Add one project's contribution to the doc with this ID, making it if it's the first. */
   function contribute<T extends Doc>(list: T[], id: string, project: string, raw: Omit<Raw<Doc>, "domain"> & { domain: string }, make: (base: Doc) => T): T {
-    const from: Contribution = { project, domain: raw.domain, file: raw.file, name: raw.name, summary: raw.summary, body: raw.body };
+    const from: Contribution = { project, domain: raw.domain, file: raw.file, name: raw.name, summary: raw.summary, body: raw.body ?? "" };
+    for (const key of FIELD_KEYS) if (key in raw) Object.assign(from, { [key]: raw[key] });
+    /* Decisions from state written before they could close are open. */
+    if (from.decisions)
+      from.decisions = from.decisions.map((d) => ({ topic: d.topic ?? null, question: d.question, status: d.status ?? "open", answer: d.answer ?? null, became: d.became ?? [] }));
+    if ("role" in raw || "title" in raw) {
+      const who = raw as { role?: string | null; title?: string | null };
+      from.role = who.role ?? null;
+      from.title = who.title ?? null;
+    }
     let doc = find(list, id);
     if (!doc) {
       doc = make({ ...from, id, from: [] });
@@ -414,7 +487,6 @@ export function combine(files: StateFile[]): DocketState {
         feature: null,
         rules: [],
         concepts: [],
-        code: [],
         gaps: [],
         tradeoffs: [],
         builtBy: [],
@@ -423,7 +495,6 @@ export function combine(files: StateFile[]): DocketState {
       addEvidence(capability.evidence, c.evidence, project);
       capability.levels.push({ project, domain: c.domain, level });
       union(capability.personas, c.personas ?? []);
-      capability.code.push(...c.code.filter((g) => !capability.code.some((x) => x.glob === g.glob)));
       union(capability.gaps, own(c.gaps));
       union(capability.tradeoffs, own(c.tradeoffs));
       pending.push({ from: capability, domain: c.domain, rules: c.rules, concepts: c.concepts });
@@ -440,13 +511,15 @@ export function combine(files: StateFile[]): DocketState {
       pending.push({ from: rule, domain: r.domain, rules: [], concepts: r.concepts });
     }
     for (const c of file.concepts) {
-      contribute(state.concepts, `${c.id}@${c.domain}`, project, c, (base) => ({ ...base, capabilities: [], rules: [] }));
+      contribute(state.concepts, `${c.id}@${c.domain}`, project, { ...c, summary: c.description }, (base) => ({ ...base, capabilities: [], rules: [] }));
     }
     /* A persona is in no domain; its contributions are told apart by project, as a domain's are. */
     for (const p of file.personas ?? []) {
       contribute(state.personas, p.id, project, { ...p, domain: "" }, (base) => ({
         ...base,
-        image: p.image,
+        role: p.role ?? null,
+        title: p.title ?? null,
+        image: p.image ?? null,
         capabilities: [],
         features: [],
         readiness: null,
@@ -536,6 +609,38 @@ export function combine(files: StateFile[]): DocketState {
     if (rule) union(rule.gaps, [g.id]);
   }
 
+  /*
+   * What each closed decision became: a gap or tradeoff by its ID, preferring
+   * the decision's own project's; a rule or concept as a link to one is
+   * resolved from the decision's domain; anything else by its ID.
+   */
+  const lists: Record<string, { id: string }[]> = {
+    domain: state.domains, feature: state.features, capability: state.capabilities, persona: state.personas,
+    rule: state.rules, concept: state.concepts, system: state.systems, component: state.components,
+  };
+  const becameOf = (ref: string, f: Contribution): Became => {
+    if (ref.includes("#")) {
+      for (const [kind, items] of [["gap", state.gaps], ["tradeoff", state.tradeoffs]] as const) {
+        const hit = items.find((i) => i.id === `${ref}@${f.project}`) ?? items.find((i) => i.id.startsWith(`${ref}@`));
+        if (hit) return { ref, kind, id: hit.id };
+      }
+      return { ref, kind: "gap", id: null };
+    }
+    const kind = ref.slice(0, ref.indexOf(":")) as BecameKind;
+    const id = ref.slice(ref.indexOf(":") + 1);
+    const list = lists[kind] ?? [];
+    if (kind === "rule" || kind === "concept") {
+      const docs = list as Doc[];
+      if (id.includes("@")) return { ref, kind, id: find(docs, id)?.id ?? null };
+      const matches = docs.filter((d) => bareId(d.id) === id);
+      const hit = matches.find((d) => d.domain === f.domain) ?? (matches.length === 1 ? matches[0] : undefined);
+      return { ref, kind, id: hit?.id ?? null };
+    }
+    return { ref, kind, id: find(list, id)?.id ?? null };
+  };
+  for (const doc of [...state.domains, ...state.features, ...state.capabilities, ...state.systems, ...state.components])
+    for (const f of doc.from) for (const d of f.decisions ?? []) d.resolved = d.became.map((ref) => becameOf(ref, f));
+
   /* Which feature each capability is in: the first listing, with a contradiction when projects list it in different ones. */
   for (const c of state.capabilities) {
     const all = listings.get(`capability:${c.id}`) ?? [];
@@ -587,10 +692,10 @@ export function combine(files: StateFile[]): DocketState {
     d.band = band(d.maturity);
   }
 
-  /* Contradictions: a product doc whose name or summary differs between contributions, or a rule or concept within one domain. */
+  /* Contradictions: a product doc whose name or summary differs between contributions, or a rule or concept within one domain, where a rule is its name and body. */
   const differing = (type: string, docs: Doc[]) => {
     for (const doc of docs) {
-      const said = new Set(doc.from.map((f) => `${f.name}\n${f.summary ?? ""}`));
+      const said = new Set(doc.from.map((f) => [f.name, f.role ?? "", f.title ?? "", f.summary ?? "", type === "rule" ? f.body : ""].join("\n")));
       if (said.size < 2) continue;
       const who = list_(docProjects(doc).map(projectName));
       state.problems.push({
@@ -827,49 +932,39 @@ export function checklistOutcome(checklist: Checklist | null, id: string): { out
 
 /* ——— What's left ——— */
 
-/* Where a body's `##` section called `name` is: from its heading to the next heading at its level or above. */
-function sectionAt(body: string, name: string): { start: number; end: number; heading: number } | null {
-  const match = new RegExp(`^(#{1,2})\\s+${name}\\s*$`, "im").exec(body);
-  if (!match) return null;
-  const start = match.index;
-  const heading = start + match[0].length;
-  const next = new RegExp(`^#{1,${match[1].length}}\\s`, "m").exec(body.slice(heading));
-  return { start, heading, end: next ? heading + next.index : body.length };
+/* The open decisions a doc's contributions list, in order. */
+export const openDecisions = (doc: Doc): Decision[] => doc.from.flatMap((f) => (f.decisions ?? []).filter((d) => d.status !== "closed"));
+
+/* The closed decisions a doc's contributions list, in order. */
+export const closedDecisions = (doc: Doc): Decision[] => doc.from.flatMap((f) => (f.decisions ?? []).filter((d) => d.status === "closed"));
+
+/* A doc that holds decisions, with its kind, as a decision's way back to where it was made. */
+export type DecisionHolder = { kind: "domain" | "feature" | "capability" | "system" | "component"; doc: Doc };
+
+/* The closed decisions that became this doc, gap or tradeoff, by its ID here, with where each was made. */
+export function decidedBy(state: DocketState, kind: BecameKind, id: string): { on: DecisionHolder; from: Contribution; decision: Decision }[] {
+  const holders: DecisionHolder[] = [
+    ...state.domains.map((doc) => ({ kind: "domain" as const, doc })),
+    ...state.features.map((doc) => ({ kind: "feature" as const, doc })),
+    ...state.capabilities.map((doc) => ({ kind: "capability" as const, doc })),
+    ...state.systems.map((doc) => ({ kind: "system" as const, doc })),
+    ...state.components.map((doc) => ({ kind: "component" as const, doc })),
+  ];
+  return holders.flatMap((on) =>
+    on.doc.from.flatMap((from) =>
+      (from.decisions ?? []).filter((d) => d.status === "closed" && d.resolved?.some((b) => b.kind === kind && b.id === id)).map((decision) => ({ on, from, decision })),
+    ),
+  );
 }
 
-/* A body without a section, such as a capability's open decisions, which show under what's left instead. */
-export function withoutSection(body: string, name: string): string {
-  const at = sectionAt(body, name);
-  return at ? body.slice(0, at.start) + body.slice(at.end) : body;
-}
-
-/* Just one section of a body, its heading included, or nothing. */
-export function onlySection(body: string, name: string): string {
-  const at = sectionAt(body, name);
-  return at ? body.slice(at.start, at.end) : "";
-}
-
-/* The open decisions a capability's doc lists, from every contribution, each as Markdown: a list item or a paragraph. */
-export function openDecisions(doc: Doc): string[] {
-  return doc.from.flatMap((f) => {
-    const at = sectionAt(f.body, "open decisions");
-    if (!at) return [];
-    const text = f.body.slice(at.heading, at.end).trim();
-    const items: string[] = [];
-    for (const block of text.split(/\n\s*\n/)) {
-      const lines = block.split("\n").filter((l) => l.trim());
-      if (!lines.length) continue;
-      if (!/^\s*([-*]|\d+\.)\s+/.test(lines[0])) {
-        items.push(lines.map((l) => l.trim()).join(" "));
-        continue;
-      }
-      for (const l of lines) {
-        if (/^\s*([-*]|\d+\.)\s+/.test(l)) items.push(l.replace(/^\s*([-*]|\d+\.)\s+/, ""));
-        else items[items.length - 1] += ` ${l.trim()}`;
-      }
-    }
-    return items;
-  });
+/*
+ * The concept a link from a doc in `domain` means: the one named with
+ * `@<domain>`, else its own domain's, else the only one with that ID.
+ */
+export function conceptLinked(state: DocketState, link: string, domain: string): Concept | undefined {
+  if (link.includes("@")) return find(state.concepts, link);
+  const same = state.concepts.filter((c) => bareId(c.id) === link);
+  return same.find((c) => c.domain === domain) ?? (same.length === 1 ? same[0] : undefined);
 }
 
 /* A rule a capability follows that nothing verifies or implements yet, and which of those it lacks. */
@@ -884,7 +979,7 @@ export type TechnicalGap = { gap: Gap; on: TechnicalDoc };
  * with no evidence of a kind, which the spec calls a prompt, not a problem.
  * Tradeoffs aren't open: they're decided.
  */
-export type Left = { decisions: string[]; gaps: Gap[]; technical: TechnicalGap[]; rules: RuleWanting[] };
+export type Left = { decisions: Decision[]; gaps: Gap[]; technical: TechnicalGap[]; rules: RuleWanting[] };
 
 /* Gaps or tradeoffs by ID, in the order given. */
 export const gapsById = (state: DocketState, ids: string[]) => ids.flatMap((id) => state.gaps.find((g) => g.id === id) ?? []);
@@ -915,55 +1010,6 @@ export function leftIn(state: DocketState, capability: Capability, technical = t
 }
 
 export const leftCount = (left: Left) => left.decisions.length + left.gaps.length + left.technical.length + left.rules.length;
-
-/*
- * When a gap is to close, worked out from `until` and the levels of the
- * capabilities it's about, since those can come from other projects:
- *
- * - due: one is already at the level, which expects it closed
- * - next: the level is one's next, so it closes before that promotion
- * - later: a level further on
- * - event: something that has to happen, in words
- * - undecided: nobody has decided
- *
- * A capability's gap is about it, at its level in the gap's domain. A
- * system's or component's is about the capability `until` names, or else
- * every one it serves, the strictest first, each at the level of the part its
- * own project builds, since that's the part it serves.
- */
-export type Due = {
-  when: "due" | "next" | "later" | "event" | "undecided";
-  /* The level it's to close by, and the capability that decides when, at the level of the part it's about. */
-  level?: Level;
-  capability?: Capability;
-  at?: CapabilityLevel;
-  event?: string;
-};
-
-const DUE_ORDER: Due["when"][] = ["due", "next", "later"];
-
-export function dueOf(state: DocketState, gap: Gap): Due {
-  if (gap.until === "not-decided") return { when: "undecided" };
-  const m = /^(?:(.+)@)?(prototype|alpha|beta|ga)$/.exec(gap.until);
-  if (!m) return { when: "event", event: gap.until };
-  const level = m[2] as Level;
-  const subject = subjectOf(gap);
-  const about =
-    subject.type === "capability"
-      ? [subject.id]
-      : m[1]
-        ? [m[1]]
-        : (technicalDoc(state, `${subject.type}:${subject.id}`)?.capabilities ?? []);
-  let best: Due = { when: "later", level };
-  for (const c of about.flatMap((id) => find(state.capabilities, id) ?? [])) {
-    /* The part the gap is about: a capability's in the gap's domain, or the part the system's or component's own project builds, the lowest where there are several. */
-    const parts = c.levels.filter((l) => (subject.type === "capability" ? l.domain === gap.domain : l.project === gap.project));
-    const at = parts.length ? parts.reduce((low, l) => (rank(l.level) < rank(low) ? l.level : low), parts[0].level) : c.stability;
-    const when: Due["when"] = rank(at) >= levelIndex(level) ? "due" : nextLevel(at) === level ? "next" : "later";
-    if (!best.capability || DUE_ORDER.indexOf(when) < DUE_ORDER.indexOf(best.when)) best = { when, level, capability: c, at };
-  }
-  return best;
-}
 
 /*
  * Where a checklist outcome stands for a capability:

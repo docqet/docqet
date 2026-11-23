@@ -10,12 +10,12 @@ import Switch from "@mui/material/Switch";
 import { DetailsCard, DetailsEyebrow, DetailsPopover } from "./design/DetailsPopover";
 import { STABILITY, STABILITY_LEVEL_IDS } from "./design/stability/stability";
 import { StabilityMark } from "./design/stability/StabilityMark";
-import { DueTag, TechnicalLink, levelName, plural } from "./Explore";
+import { LEFT_KINDS, LeftLabel, gapKind } from "./design/left/LeftMark";
+import { TechnicalLink, levelName, plural } from "./Explore";
 import {
   appliesAt,
   outcomeStanding,
   outcomesOf,
-  subjectOf,
   type Capability,
   type Checklist,
   type ChecklistExample,
@@ -96,7 +96,7 @@ export function StabilityChecklist({ state, checklist, capability }: { state: Do
       <aside className="sc-note">
         <strong>A guideline, not a gate.</strong> It gives a level the same meaning for everyone, and doesn't replace engineering judgment: what an outcome takes,
         and whether it applies at all, depends on the software, who uses it and the circumstances. An outcome that applies is met, not applicable, or written
-        down as a known gap, GA included. The security and privacy baseline is the exception: it holds at every level, and is never a known gap.
+        down as a gap, GA included. The security and privacy baseline is the exception: it holds at every level, and is never a gap.
       </aside>
 
       <p className="sc-pick-label" id="sc-level">
@@ -198,11 +198,12 @@ export function StabilityChecklist({ state, checklist, capability }: { state: Do
                         <Guidance implementation={o.implementation} overengineering={o.overengineering} kindName={kindName} />
                         {of(o).gaps.map((g) => (
                           <p key={g.id} className="sc-gap">
-                            <span className="explore-gap-kind">{subjectOf(g).type === "capability" ? "Known gap" : "Technical gap"}</span>
-                            {g.text}
-                            <span className="explore-left-meta">
-                              <DueTag state={state} gap={g} of={capability} />
+                            <span className="explore-gap-kind">
+                              <LeftLabel kind={gapKind(g)} size={13}>
+                                {LEFT_KINDS[gapKind(g)].one}
+                              </LeftLabel>
                             </span>
+                            {g.text}
                           </p>
                         ))}
                         {appliesAt(o, own) && !of(o).gaps.length && of(o).by.length ? (

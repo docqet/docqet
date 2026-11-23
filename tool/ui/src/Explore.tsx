@@ -1,13 +1,17 @@
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import BoltOutlinedIcon from "@mui/icons-material/BoltOutlined";
 import CodeRoundedIcon from "@mui/icons-material/CodeRounded";
+import ExpandMoreRoundedIcon from "@mui/icons-material/ExpandMoreRounded";
 import ExtensionOutlinedIcon from "@mui/icons-material/ExtensionOutlined";
 import HubOutlinedIcon from "@mui/icons-material/HubOutlined";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import FilterListRoundedIcon from "@mui/icons-material/FilterListRounded";
 import MyLocationRoundedIcon from "@mui/icons-material/MyLocationRounded";
 import RuleRoundedIcon from "@mui/icons-material/RuleRounded";
+import RemoveRoundedIcon from "@mui/icons-material/RemoveRounded";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
+import UpdateRoundedIcon from "@mui/icons-material/UpdateRounded";
 import WarningAmberRoundedIcon from "@mui/icons-material/WarningAmberRounded";
 import WidgetsOutlinedIcon from "@mui/icons-material/WidgetsOutlined";
 import Box from "@mui/material/Box";
@@ -16,16 +20,17 @@ import { RingGlyph } from "./design/maturity/RingGlyph";
 import { STABILITY, levelColor } from "./design/stability/stability";
 import { StabilityMark } from "./design/stability/StabilityMark";
 import { CapabilityStability } from "./design/catalog/CapabilityLabel";
-import { ConceptChips, Markdown, PageLink, PanelHeader } from "./Concepts";
+import { LeftCounts, LeftItem, LeftLabel, LeftList, gapKind, type LeftKind } from "./design/left/LeftMark";
+import { ConceptChips, InlineMarkdown, PageLink, PanelHeader } from "./Concepts";
+import { Body, CameFrom, Decided, DecisionList, Facets, facets, needsFacet, type Facet } from "./Fields";
 import { DomainIcon } from "./FeatureMap";
 import { PersonaAvatar, PersonaIcon, ReadinessMeter, personaNameAndRole, type ReadinessBasis } from "./Personas";
 import { ProjectIcon } from "./PlatformFilter";
 import {
-  builtOn,
   capabilityTarget,
   checklistOutcome,
-  dueOf,
   openDecisions,
+  closedDecisions,
   outcomeStanding,
   outcomesOf,
   tradeoffsById,
@@ -38,9 +43,7 @@ import {
   find,
   leftCount,
   leftIn,
-  onlySection,
   pageHref,
-  withoutSection,
   projectName,
   partOf,
   personaReadinessIn,
@@ -48,7 +51,6 @@ import {
   type Capability,
   type CapabilityLevel,
   type Contribution,
-  type Due,
   type TechnicalDoc,
   type TechnicalKind,
   type EvidencePlace,
@@ -261,7 +263,9 @@ export function Head({
   name = doc.name,
   role,
   actions,
-  body = (f) => f.body,
+  facetsOf,
+  body = true,
+  fold = false,
   onShow,
   onConcept,
   onPick,
@@ -280,7 +284,12 @@ export function Head({
   /* Under what it's part of: more about its status, such as each domain's level. */
   extra?: ReactNode;
   actions?: ReactNode;
-  body?: (f: Contribution) => string;
+  /* The fields to show from each source: by default, all its type has. */
+  facetsOf?: (f: Contribution) => Facet[];
+  /* Whether to show each source's body, which the side panel cuts short when it's long. */
+  body?: boolean;
+  /* In the side panel: its fields and body folded away under its summary, when it has one. */
+  fold?: boolean;
   onShow: (target: Target) => void;
   onConcept: (id: string) => void;
   /* On a detail page: where links in its body to capabilities and features go. */
@@ -291,9 +300,26 @@ export function Head({
   const byProject = kind === "domain" || kind === "persona";
   const several = doc.from.length > 1;
   const project = !several && state.projects.length > 1 ? projectName(state, doc.from[0].project) : null;
-  const markdown = (f: Contribution) => {
-    const text = body(f);
-    return text.trim() ? <Markdown state={state} concept={f} text={text} onConcept={onConcept} onShow={onShow} onPick={onPick} /> : null;
+  const go = { state, onConcept, onShow, onPick };
+  const says = (f: Contribution) => {
+    const items = facetsOf ? facetsOf(f) : facets(kind, f, go);
+    const hasBody = body && f.body.trim() !== "";
+    const content = (
+      <>
+        <Facets items={items} stacked />
+        {hasBody ? <Body from={f} go={go} limit={360} /> : null}
+      </>
+    );
+    if (!fold || !f.summary || (!items.length && !hasBody)) return content;
+    return (
+      <details className="explore-fold explore-more">
+        <summary>
+          More about it
+          <FoldChevron />
+        </summary>
+        {content}
+      </details>
+    );
   };
   return (
     <>
@@ -362,7 +388,7 @@ export function Head({
             ) : null}
             <div className="explore-source-body">
               {f.summary ? <p className="explore-source-summary">{f.summary}</p> : null}
-              {markdown(f)}
+              {says(f)}
             </div>
           </div>
         ))}
@@ -397,6 +423,38 @@ export function Heading({ children, count }: { children: ReactNode; count?: numb
       {count !== undefined ? <span className="explore-count">{count}</span> : null}
     </h3>
   );
+}
+
+/*
+ * A section folded shut until it's opened, for what the side panel keeps
+ * at hand without showing: its heading and count say what's inside.
+ */
+/* In the side panel, a doc's closed decisions and what each became, folded. */
+function DecidedFold({ state, doc, onConcept, onShow }: { state: DocketState; doc: Doc; onConcept: (id: string) => void; onShow: (target: Target) => void }) {
+  const count = closedDecisions(doc).length;
+  return count ? (
+    <Fold title="Decided" count={count}>
+      <Decided doc={doc} go={{ state, onConcept, onShow }} />
+    </Fold>
+  ) : null;
+}
+
+export function Fold({ title, count, children }: { title: ReactNode; count?: number; children: ReactNode }) {
+  return (
+    <section>
+      <details className="explore-fold">
+        <summary>
+          <Heading count={count}>{title}</Heading>
+          <FoldChevron />
+        </summary>
+        <div className="explore-fold-body">{children}</div>
+      </details>
+    </section>
+  );
+}
+
+function FoldChevron() {
+  return <ExpandMoreRoundedIcon className="explore-fold-chevron" sx={{ fontSize: 18 }} />;
 }
 
 /* Maturity in short, beside a name: its ring, with the percentage, and its band; or why there's none. */
@@ -482,12 +540,13 @@ function DomainView({ state, domain, onOpen, onConcept, onShow, isFiltering, onF
         kind="domain"
         doc={domain}
         status={<Maturity value={domain.maturity} of="it builds no capability in a feature yet" />}
+        fold
         actions={<MapActions pick={pick} target={{ items: [domainGroup(domain.id)] }} onShow={onShow} isFiltering={isFiltering} onFilter={onFilter} />}
-        body={withoutDecisions}
         onShow={onShow}
         onConcept={onConcept}
       />
       <LeftRollup state={state} own={domain} capabilities={domainCapabilities(state, domain)} onOpen={onOpen} onConcept={onConcept} onShow={onShow} />
+      <DecidedFold state={state} doc={domain} onConcept={onConcept} onShow={onShow} />
       <section>
         <Heading count={features.length}>Features</Heading>
         <DomainFeatures state={state} domain={domain} features={features} onOpen={onOpen} />
@@ -610,20 +669,21 @@ function FeatureView({ state, feature, onOpen, onConcept, onShow, isFiltering, o
         doc={feature}
         trail={<DomainCrumbs state={state} domains={feature.parts.map((p) => p.domain)} onOpen={onOpen} />}
         status={<Maturity value={feature.maturity} of="it has no capabilities yet" />}
+        fold
         actions={<MapActions pick={pick} target={featureTarget(state, feature.id)} onShow={onShow} isFiltering={isFiltering} onFilter={onFilter} />}
-        body={withoutDecisions}
         onShow={onShow}
         onConcept={onConcept}
       />
       <LeftRollup state={state} own={feature} capabilities={capabilities} onOpen={onOpen} onConcept={onConcept} onShow={onShow} />
+      <DecidedFold state={state} doc={feature} onConcept={onConcept} onShow={onShow} />
       <FeatureParts state={state} feature={feature} onOpen={onOpen} />
-      <Tradeoffs state={state} ids={feature.tradeoffs} title="Decided not to build" />
       {personas.length ? (
         <section>
           <Heading count={personas.length}>Who it serves</Heading>
           <PersonaRows state={state} personas={personas} feature={feature} onOpen={onOpen} />
         </section>
       ) : null}
+      <Tradeoffs state={state} ids={feature.tradeoffs} title="Decided not to build" />
       {concepts.length ? (
         <section>
           <Heading count={concepts.length}>Concepts its capabilities use</Heading>
@@ -646,13 +706,11 @@ export function CapabilityTrail({ state, capability, onOpen }: { state: DocketSt
   );
 }
 
-/* A body without its open decisions, which show under what's left instead. */
-export const withoutDecisions = (f: Contribution) => withoutSection(f.body, "open decisions");
-
 /*
- * In the side panel, a capability: what it does, its level, what's left
- * about it, who it serves, the rules it follows by name, and the concepts it
- * uses. The evidence, checklist and code are on its detail page.
+ * In the side panel, a capability: what it does, its level, the rules it
+ * follows by name (folded), who it serves, what's left about it, its
+ * tradeoffs (folded), and the concepts it uses. What it's built on, the
+ * evidence, checklist and code are on its detail page.
  */
 function CapabilityView({ state, capability, onOpen, onConcept, onShow, isFiltering, onFilter }: Links & { capability: Capability }) {
   const concepts = capability.concepts.flatMap((id) => find(state.concepts, id) ?? []);
@@ -668,11 +726,20 @@ function CapabilityView({ state, capability, onOpen, onConcept, onShow, isFilter
         trail={<CapabilityTrail state={state} capability={capability} onOpen={onOpen} />}
         status={<Level name={capability.name} level={capability.stability} />}
         extra={<DomainLevels state={state} capability={capability} />}
+        fold
         actions={<MapActions pick={pick} target={capabilityTarget(state, capability.id)} onShow={onShow} isFiltering={isFiltering} onFilter={onFilter} />}
-        body={withoutDecisions}
         onShow={onShow}
         onConcept={onConcept}
       />
+      <Fold title="Rules it follows" count={rules.length}>
+        {rules.length ? <RuleNames rules={rules} /> : <p className="concepts-empty">None written down yet.</p>}
+      </Fold>
+      {personas.length ? (
+        <section>
+          <Heading count={personas.length}>Who it serves</Heading>
+          <PersonaRows state={state} personas={personas} onOpen={onOpen} />
+        </section>
+      ) : null}
       <WhatsLeft
         state={state}
         capability={capability}
@@ -680,18 +747,8 @@ function CapabilityView({ state, capability, onOpen, onConcept, onShow, isFilter
         onShow={onShow}
         checklist={<a href={pageHref(pick, "checklist")} target="_blank" rel="noopener">See the checklist</a>}
       />
+      <DecidedFold state={state} doc={capability} onConcept={onConcept} onShow={onShow} />
       <Tradeoffs state={state} ids={capability.tradeoffs} />
-      {personas.length ? (
-        <section>
-          <Heading count={personas.length}>Who it serves</Heading>
-          <PersonaRows state={state} personas={personas} onOpen={onOpen} />
-        </section>
-      ) : null}
-      <BuiltOn state={state} capability={capability} newTab />
-      <section>
-        <Heading count={rules.length}>Rules it follows</Heading>
-        {rules.length ? <RuleNames rules={rules} /> : <p className="concepts-empty">None written down yet.</p>}
-      </section>
       {concepts.length ? (
         <section>
           <Heading count={concepts.length}>Concepts it uses</Heading>
@@ -707,7 +764,7 @@ function RuleNames({ rules }: { rules: Rule[] }) {
   return (
     <ul className="explore-rule-names">
       {rules.map((r) => (
-        <li key={r.id} title={r.summary}>
+        <li key={r.id} title={r.body}>
           <RuleRoundedIcon sx={{ fontSize: 15, color: "text.secondary", flex: "none", mt: "2px" }} />
           <span>{r.name}</span>
         </li>
@@ -718,11 +775,22 @@ function RuleNames({ rules }: { rules: Rule[] }) {
 
 const countOf = (n: number, one: string, many: string) => (n ? [plural(n, one, many)] : []);
 
-/* What's left about a capability, in a line: "1 open decision · 2 known gaps". */
+/* What's left about a capability, as counts, each with its mark. */
+export function LeftSummary({ left }: { left: Left }) {
+  const counts: [LeftKind, number][] = [
+    ["decision", left.decisions.length],
+    ["product-gap", left.gaps.length],
+    ["technical-gap", left.technical.length],
+    ["rule", left.rules.length],
+  ];
+  return <LeftCounts counts={counts} />;
+}
+
+/* What's left about a capability, in a line: "1 open decision · 2 product gaps". */
 export const leftLine = (left: Left) =>
   [
     ...countOf(left.decisions.length, "open decision", "open decisions"),
-    ...countOf(left.gaps.length, "known gap", "known gaps"),
+    ...countOf(left.gaps.length, "product gap", "product gaps"),
     ...countOf(left.technical.length, "technical gap", "technical gaps"),
     ...countOf(left.rules.length, "rule without evidence", "rules without evidence"),
   ].join(" · ");
@@ -732,36 +800,6 @@ export const TECHNICAL_NAMES: Record<TechnicalKind, { one: string; many: string;
   system: { one: "System", many: "Systems", icon: <HubOutlinedIcon sx={{ fontSize: 18, color: "text.secondary" }} /> },
   component: { one: "Component", many: "Components", icon: <ExtensionOutlinedIcon sx={{ fontSize: 18, color: "text.secondary" }} /> },
 };
-
-/*
- * When a gap is to close, in words: "Due now: Extra charges is GA", "Before
- * Beta", "Until a second server is added", or that nobody has decided. `of`
- * is the capability it's shown under, so it isn't named again.
- */
-export function dueLabel(due: Due, of?: Capability): string {
-  const other = due.capability && due.capability.id !== of?.id ? due.capability : undefined;
-  switch (due.when) {
-    case "due":
-      return other ? `Due now: ${other.name} is ${levelName(due.at ?? null)}` : `Due now, at ${levelName(due.at ?? null)}`;
-    case "next":
-    case "later":
-      return other ? `Before ${other.name} reaches ${STABILITY[due.level!].name}` : `Before ${STABILITY[due.level!].name}`;
-    case "event":
-      return `Until ${due.event}`;
-    case "undecided":
-      return "When isn't decided";
-  }
-}
-
-/* When a gap is to close, as a tag, in the warning's tone once it's due. */
-export function DueTag({ state, gap, of }: { state: DocketState; gap: Gap; of?: Capability }) {
-  const due = dueOf(state, gap);
-  return (
-    <span className="explore-tag" data-tone={due.when === "due" ? "warn" : undefined}>
-      {dueLabel(due, of)}
-    </span>
-  );
-}
 
 /* A link to a system's or component's page: in this tab on a detail page, or a new one from the side panel. */
 export function TechnicalLink({ doc, newTab = false, children }: { doc: TechnicalDoc; newTab?: boolean; children?: ReactNode }) {
@@ -806,15 +844,15 @@ export function Places({ state, places, label, detailed = false }: { state: Dock
 }
 
 /*
- * A gap, as a list item: what it is, when it's to close, and with `detailed`
- * the checklist outcome it falls short of, the rule it doesn't hold to yet,
- * and where it shows in the code. `on`, for a technical gap, is the system or
- * component it's on.
+ * A gap, as an item in a LeftList: something we know falls short and mean to
+ * close, with its mark. With `detailed`, it says what it affects (the
+ * checklist outcome it falls short of, the rule it doesn't hold to yet, the
+ * system or component it's in) and where it shows in the code. `on`, for a
+ * technical gap, is the system or component it's on.
  */
 export function GapItem({
   state,
   gap,
-  of,
   on,
   subject,
   detailed = false,
@@ -822,7 +860,6 @@ export function GapItem({
 }: {
   state: DocketState;
   gap: Gap;
-  of?: Capability;
   on?: TechnicalDoc;
   /* Above it, what it's on, where that isn't clear from where it's shown. */
   subject?: ReactNode;
@@ -831,33 +868,67 @@ export function GapItem({
 }) {
   const named = detailed && gap.outcome ? checklistOutcome(state.checklist, gap.outcome) : undefined;
   const rule = gap.rule ? find(state.rules, gap.rule) : undefined;
+  if (detailed)
+    return (
+      <LeftItem kind={gapKind(gap)}>
+          {subject ? <span className="explore-gap-subject">{subject}</span> : null}
+          <div className="left-item-text">
+            <InlineMarkdown text={gap.text} />
+          </div>
+          <CameFrom kind="gap" id={gap.id} go={{ state, onConcept: () => {} }} inline />
+          {named || rule || on ? (
+            <div className="gap-affects">
+              <span className="gap-affects-label">Affects</span>
+              {named ? (
+                <span className="gap-affect">
+                  <span className="explore-tag">
+                    {named.quality.name} · {STABILITY[named.outcome.level].name}
+                  </span>
+                  {named.outcome.text}
+                </span>
+              ) : null}
+              {rule ? (
+                <span className="gap-affect">
+                  <span className="explore-tag">Rule</span>
+                  {rule.name}
+                </span>
+              ) : null}
+              {on ? (
+                <span className="gap-affect">
+                  <span className="explore-tag">In</span>
+                  <TechnicalLink doc={on} newTab={newTab} />
+                </span>
+              ) : null}
+            </div>
+          ) : null}
+          <Places state={state} places={gap.places} label="Marked" detailed />
+      </LeftItem>
+    );
   return (
-    <li>
+    <LeftItem kind={gapKind(gap)}>
       {subject ? <span className="explore-gap-subject">{subject}</span> : null}
-      {gap.text}
+      <div className="left-item-text">
+        <InlineMarkdown text={gap.text} />
+      </div>
       <span className="explore-left-meta">
-        <DueTag state={state} gap={gap} of={of} />
         {on ? (
           <span>
             In <TechnicalLink doc={on} newTab={newTab} />
           </span>
         ) : null}
         {rule ? <span>Doesn't yet hold to: {rule.name}</span> : null}
-        {named ? (
-          <span>
-            Falls short of {named.quality.name}: {named.outcome.text}
-          </span>
-        ) : null}
-        <Places state={state} places={gap.places} label="Marked" detailed={detailed} />
+        <Places state={state} places={gap.places} label="Marked" />
       </span>
-    </li>
+    </LeftItem>
   );
 }
 
 /*
- * Tradeoffs: what we chose, what it costs, and when to look at it again,
- * since they're decided, not open. A feature's are what it's decided not to
- * do. With `detailed`, the code each one explains.
+ * Tradeoffs: what we chose on purpose, what we hope to gain by it, what we
+ * accept in return, and when to look at it again, since they're decided, not
+ * open. A feature's are what it's decided not to do. In the side panel,
+ * folded, each is what we chose alone; with `detailed`, each is a card, the
+ * gain and the cost side by side, with the code it explains.
  */
 export function Tradeoffs({
   state,
@@ -875,43 +946,68 @@ export function Tradeoffs({
 }) {
   const list = tradeoffsById(state, ids);
   if (!list.length) return null;
-  const items = (
-    <ul className="explore-left-list">
+  const items = detailed ? (
+    <LeftList detailed>
       {list.map((t) => (
-        <li key={t.id}>
-          {t.text}
-          <span className="explore-left-meta explore-tradeoff">
-            <span>
-              <strong>Costs:</strong> {t.cost}
-            </span>
+        <LeftItem key={t.id} kind="tradeoff">
+          <div className="tradeoff-choice left-item-text">
+            <span className="tradeoff-label">We chose</span>
+            <InlineMarkdown text={t.text} />
+          </div>
+          <CameFrom kind="tradeoff" id={t.id} go={{ state, onConcept: () => {} }} inline />
+          <div className="tradeoff-sides">
+            <div className="tradeoff-side tradeoff-gain">
+              <span className="tradeoff-label">
+                <AddRoundedIcon sx={{ fontSize: 14 }} />
+                To gain
+              </span>
+              {t.gain ? <InlineMarkdown text={t.gain} /> : <span className="faint">Not written down</span>}
+            </div>
+            <div className="tradeoff-side tradeoff-cost">
+              <span className="tradeoff-label">
+                <RemoveRoundedIcon sx={{ fontSize: 14 }} />
+                We accept
+              </span>
+              <InlineMarkdown text={t.cost} />
+            </div>
+          </div>
+          <div className="tradeoff-foot">
+            <UpdateRoundedIcon sx={{ fontSize: 14 }} />
             {t.revisit ? (
               <span>
-                <strong>Revisit when:</strong> {t.revisit}
+                Revisit when <InlineMarkdown text={t.revisit} />
               </span>
-            ) : null}
-            <Places state={state} places={t.places} label="Marked" detailed={detailed} />
-          </span>
-        </li>
+            ) : (
+              <span>Kept for good: nothing would make us look again</span>
+            )}
+          </div>
+          <Places state={state} places={t.places} label="Marked" detailed />
+        </LeftItem>
       ))}
-    </ul>
+    </LeftList>
+  ) : (
+    <LeftList>
+      {list.map((t) => (
+        <LeftItem key={t.id} kind="tradeoff">
+          <div className="left-item-text">
+            <InlineMarkdown text={t.text} />
+          </div>
+        </LeftItem>
+      ))}
+    </LeftList>
   );
   if (bare) return items;
+  const heading = <LeftLabel kind="tradeoff">{title}</LeftLabel>;
+  if (!detailed)
+    return (
+      <Fold title={heading} count={list.length}>
+        {items}
+      </Fold>
+    );
   return (
     <section className="explore-left">
-      <Heading count={list.length}>{title}</Heading>
+      <Heading count={list.length}>{heading}</Heading>
       {items}
-    </section>
-  );
-}
-
-/* The systems and components a capability is built on, each opening its page. */
-export function BuiltOn({ state, capability, newTab = false }: { state: DocketState; capability: Capability; newTab?: boolean }) {
-  const on = builtOn(state, capability);
-  if (!on.length) return null;
-  return (
-    <section>
-      <Heading count={on.length}>Built on</Heading>
-      <TechnicalRows state={state} docs={on} newTab={newTab} />
     </section>
   );
 }
@@ -927,7 +1023,13 @@ export function TechnicalRows({ docs, newTab = false }: { state: DocketState; do
             <span className="concept-row-text">
               <span className="concept-row-name">{e.name}</span>
               <span className="concept-row-summary">
-                {[TECHNICAL_NAMES[e.kind].one, ...countOf(e.gaps.length, "technical gap", "technical gaps"), ...countOf(e.tradeoffs.length, "tradeoff", "tradeoffs")].join(" · ")}
+                <LeftCounts
+                  lead={TECHNICAL_NAMES[e.kind].one}
+                  counts={[
+                    ["technical-gap", e.gaps.length],
+                    ["tradeoff", e.tradeoffs.length],
+                  ]}
+                />
               </span>
             </span>
           </a>
@@ -939,7 +1041,7 @@ export function TechnicalRows({ docs, newTab = false }: { state: DocketState; do
 
 /*
  * What's still open about a capability, near the top so it's read first:
- * decisions nobody has made, its known gaps, the technical gaps of what it's
+ * decisions nobody has made, its product gaps, the technical gaps of what it's
  * built on, and the rules it follows that nothing verifies or implements yet;
  * then how much of its level's checklist is met, and `checklist`, a way to the
  * whole of it. With `detailed`, as on its detail page, each gap says more.
@@ -970,7 +1072,7 @@ export function WhatsLeft({
       {n ? (
         <LeftItems state={state} capability={capability} left={left} detailed={detailed} onConcept={onConcept} onShow={onShow} onPick={onPick} />
       ) : (
-        <p className="concepts-empty">Nothing open: no open decisions, known gaps, or rules without evidence are written down.</p>
+        <p className="concepts-empty">Nothing open: no open decisions, gaps, or rules without evidence are written down.</p>
       )}
       {counts ? (
         <p className="explore-left-checklist">
@@ -989,18 +1091,23 @@ export function WhatsLeft({
   );
 }
 
-/* Open decisions as a list under their label. */
-function Decisions({ state, doc, decisions, label = "Open decisions", onConcept, onShow, onPick }: { state: DocketState; doc: Doc; decisions: string[]; label?: string; onConcept: (id: string) => void; onShow: (target: Target) => void; onPick?: (pick: Pick) => void }) {
-  if (!decisions.length) return null;
+/* A doc's open decisions, from each of its sources, as a list under their label. */
+function Decisions({ state, doc, onConcept, onShow, onPick }: { state: DocketState; doc: Doc; onConcept: (id: string) => void; onShow: (target: Target) => void; onPick?: (pick: Pick) => void }) {
+  if (!openDecisions(doc).length) return null;
   return (
     <div className="explore-left-group">
-      <span className="explore-gap-kind">{label}</span>
-      <Markdown state={state} concept={doc} text={decisions.map((d) => `- ${d}`).join("\n")} onConcept={onConcept} onShow={onShow} onPick={onPick} />
+      <span className="explore-gap-kind">
+        <LeftLabel kind="decision" size={14} />
+      </span>
+      {doc.from.map((f, i) => {
+        const open = (f.decisions ?? []).filter((d) => d.status !== "closed");
+        return open.length ? <DecisionList key={i} from={f} decisions={open} go={{ state, onConcept, onShow, onPick }} /> : null;
+      })}
     </div>
   );
 }
 
-/* What's left about a capability: its open decisions, known gaps, technical gaps and rules without evidence, each under a label. */
+/* What's left about a capability: its open decisions, product gaps, technical gaps and rules without evidence, each under a label. */
 function LeftItems({
   state,
   capability,
@@ -1020,45 +1127,72 @@ function LeftItems({
 }) {
   return (
     <>
-      <Decisions state={state} doc={capability} decisions={left.decisions} onConcept={onConcept} onShow={onShow} onPick={onPick} />
+      <Decisions state={state} doc={capability} onConcept={onConcept} onShow={onShow} onPick={onPick} />
       {left.gaps.length ? (
-        <div className="explore-left-group">
-          <span className="explore-gap-kind">Known gaps</span>
-          <ul className="explore-left-list">
+        <LeftGroup kind="product-gap" count={left.gaps.length} folded={false}>
+          <LeftList detailed={detailed}>
             {left.gaps.map((g) => (
-              <GapItem key={g.id} state={state} gap={g} of={capability} detailed={detailed} />
+              <GapItem key={g.id} state={state} gap={g} detailed={detailed} />
             ))}
-          </ul>
-        </div>
+          </LeftList>
+        </LeftGroup>
       ) : null}
       {left.technical.length ? (
-        <div className="explore-left-group">
-          <span className="explore-gap-kind">Under the hood</span>
-          <ul className="explore-left-list">
+        <LeftGroup kind="technical-gap" count={left.technical.length} folded={!detailed}>
+          <LeftList detailed={detailed}>
             {left.technical.map(({ gap, on }) => (
-              <GapItem key={gap.id} state={state} gap={gap} of={capability} on={on} detailed={detailed} newTab={!detailed} />
+              <GapItem key={gap.id} state={state} gap={gap} on={on} detailed={detailed} newTab={!detailed} />
             ))}
-          </ul>
-        </div>
+          </LeftList>
+        </LeftGroup>
       ) : null}
       {left.rules.length ? (
-        <div className="explore-left-group">
-          <span className="explore-gap-kind">Rules without evidence</span>
-          <ul className="explore-left-list">
+        <LeftGroup kind="rule" count={left.rules.length} folded={!detailed}>
+          <LeftList>
             {left.rules.map(({ rule, missing }) => (
-              <li key={rule.id}>
-                {rule.name}
+              <LeftItem key={rule.id} kind="rule">
+                <div className="left-item-text">{rule.name}</div>
                 <span className="explore-left-meta">
                   <EvidenceWarning>
                     {missing.length === 2 ? "Nothing verifies or implements it" : missing[0] === "verifies" ? "Nothing verifies it" : "Nothing implements it"}
                   </EvidenceWarning>
                 </span>
-              </li>
+              </LeftItem>
             ))}
-          </ul>
-        </div>
+          </LeftList>
+        </LeftGroup>
       ) : null}
     </>
+  );
+}
+
+/*
+ * A kind of what's left under its mark and name; `folded`, as in the side
+ * panel for what only someone working on the code would act on, shut until
+ * opened.
+ */
+function LeftGroup({ kind, count, folded, children }: { kind: LeftKind; count: number; folded: boolean; children: ReactNode }) {
+  const label = (
+    <span className="explore-gap-kind">
+      <LeftLabel kind={kind} size={14} />
+    </span>
+  );
+  if (!folded)
+    return (
+      <div className="explore-left-group">
+        {label}
+        {children}
+      </div>
+    );
+  return (
+    <details className="explore-left-group explore-fold">
+      <summary>
+        {label}
+        <span className="explore-count">{count}</span>
+        <FoldChevron />
+      </summary>
+      <div className="explore-fold-body">{children}</div>
+    </details>
   );
 }
 
@@ -1097,12 +1231,12 @@ export function LeftRollup({
   return (
     <section className="explore-left">
       <Heading count={total || undefined}>What's left</Heading>
-      <Decisions state={state} doc={own ?? capabilities[0]} decisions={decisions} onConcept={onConcept} onShow={onShow} onPick={onPick} />
+      {own ? <Decisions state={state} doc={own} onConcept={onConcept} onShow={onShow} onPick={onPick} /> : null}
       {!capabilities.length ? (
         <p className="concepts-empty">It has no capabilities yet.</p>
       ) : !open.length ? (
         <p className="concepts-empty">
-          Nothing open across its {plural(capabilities.length, "capability", "capabilities")}: no open decisions, known gaps, or rules without evidence are
+          Nothing open across its {plural(capabilities.length, "capability", "capabilities")}: no open decisions, gaps, or rules without evidence are
           written down.
         </p>
       ) : detailed ? (
@@ -1120,7 +1254,7 @@ export function LeftRollup({
         <ul>
           {open.map(({ capability, left }) => (
             <li key={capability.id}>
-              <Row icon={NAMES.capability.icon} name={capability.name} summary={leftLine(left)} onClick={() => onOpen("capability", capability.id)}>
+              <Row icon={NAMES.capability.icon} name={capability.name} summary={<LeftSummary left={left} />} onClick={() => onOpen("capability", capability.id)}>
                 <CapabilityStability level={capability.stability} name={capability.name} focusable={false} />
               </Row>
             </li>
@@ -1166,7 +1300,8 @@ function PersonaView({ state, persona, onOpen, onConcept, onShow, isFiltering, o
         trail={domains.length ? <DomainCrumbs state={state} domains={domains} onOpen={onOpen} /> : undefined}
         status={<Readiness value={persona.readiness} basis={readinessBasis(state, persona)} />}
         actions={<MapActions pick={pick} target={targetOf(state, pick)} onShow={onShow} isFiltering={isFiltering} onFilter={onFilter} />}
-        body={(f) => onlySection(f.body, "needs")}
+        facetsOf={(f) => needsFacet(f, { state, onConcept, onShow })}
+        body={false}
         onShow={onShow}
         onConcept={onConcept}
       />
@@ -1261,7 +1396,7 @@ export function Row({
 }: {
   icon: ReactNode;
   name: string;
-  summary?: string;
+  summary?: ReactNode;
   onClick: () => void;
   children?: ReactNode;
 }) {

@@ -38,6 +38,8 @@ capabilities, in the order to show them, and its tradeoffs.
 
 ```markdown
 ---
+name: Reservations
+summary: Taking bookings and handling changes to them, before the guest arrives.
 capabilities:
   - room-booking
   - cancellations
@@ -51,10 +53,6 @@ tradeoffs:
       Clerks enter each agency booking by hand, as it arrives by email.
     revisit: agency bookings pass a fifth of all bookings
 ---
-
-# Reservations
-
-Taking bookings and handling changes to them, before the guest arrives.
 ```
 
 A feature lists no rules: its rules are the ones its capabilities follow. Its

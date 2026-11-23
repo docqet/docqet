@@ -38,6 +38,7 @@
       "summary": "Charging guests for their stays, and getting paid.",
       "maturity": 52,
       "band": "beta",
+      "decisions": [],
       "body": "A booking here is what a guest is charged for a stay, not the hold on a room\nthat Guest stays means by it."
     },
     {
@@ -47,6 +48,7 @@
       "summary": "Keeping the hotel's accounts, and getting paid by the companies it bills.",
       "maturity": 61,
       "band": "beta",
+      "decisions": [],
       "body": ""
     }
   ],
@@ -64,6 +66,7 @@
       ],
       "maturity": 67,
       "band": "beta",
+      "decisions": [],
       "body": "",
       "tradeoffs": []
     },
@@ -80,6 +83,7 @@
       ],
       "maturity": 49,
       "band": "alpha",
+      "decisions": [],
       "body": "",
       "tradeoffs": []
     },
@@ -96,6 +100,7 @@
       ],
       "maturity": 45,
       "band": "alpha",
+      "decisions": [],
       "body": "",
       "tradeoffs": []
     },
@@ -112,6 +117,7 @@
       ],
       "maturity": 73,
       "band": "beta",
+      "decisions": [],
       "body": "",
       "tradeoffs": []
     },
@@ -126,6 +132,7 @@
       ],
       "maturity": 35,
       "band": "alpha",
+      "decisions": [],
       "body": "Billing's part of the front desk is settling the bill at check-out. Checking\nguests in and out is Guest stays'.",
       "tradeoffs": []
     }
@@ -134,7 +141,9 @@
     {
       "id": "bookkeeper",
       "file": "docs/product/personas/bookkeeper.md",
-      "name": "Priya, bookkeeper",
+      "name": "Priya",
+      "role": "Back office",
+      "title": "Bookkeeper",
       "summary": "Keeps the hotel's books, and invoices the companies that pay for their staff's stays.",
       "image": "https://randomuser.me/api/portraits/women/90.jpg",
       "capabilities": [
@@ -147,12 +156,19 @@
         "closing-the-day"
       ],
       "readiness": 45,
-      "body": "## Needs\n\n- To get each day's takings into the accounting software without typing them\n  in.\n- To invoice every company once a month, and see what each one owes.\n- To keep companies within the credit the hotel allows them.\n\n## Knows\n\nBookkeeping, and the hotel's accounting software, well. Less about how the\nfront desk works.\n\n## Context\n\nPart time, two or three days a week, at a desk in the back office. Month end\nis their busiest time.\n\n## Expects\n\nDays that are closed and stay closed, invoice numbers that run in order, and\nan export their accounting software takes as it is.\n\n## Cares about\n\nBooks that balance. A day that changes after they've exported it means finding\nthe difference by hand."
+      "needs": [
+        "To get each day's takings into the accounting software without typing them in.",
+        "To invoice every company once a month, and see what each one owes.",
+        "To keep companies within the credit the hotel allows them."
+      ],
+      "body": "## Knows\n\nBookkeeping, and the hotel's accounting software, well. Less about how the front\ndesk works.\n\n## Context\n\nPart time, two or three days a week, at a desk in the back office. Month end is\ntheir busiest time.\n\n## Expects\n\nDays that are closed and stay closed, invoice numbers that run in order, and an\nexport their accounting software takes as it is.\n\n## Cares about\n\nBooks that balance. A day that changes after they've exported it means finding\nthe difference by hand."
     },
     {
       "id": "front-desk-clerk",
       "file": "docs/product/personas/front-desk-clerk.md",
-      "name": "Maria, front desk clerk",
+      "name": "Maria",
+      "role": "Front desk",
+      "title": "Front desk clerk",
       "summary": "Runs the front desk: takes bookings, and checks guests in and out.",
       "image": "https://randomuser.me/api/portraits/women/68.jpg",
       "capabilities": [
@@ -172,12 +188,19 @@
         "front-desk"
       ],
       "readiness": 54,
-      "body": "## Needs\n\n- To see everything a guest owes on one bill, so check-out is a single\n  payment.\n- To put extras on a bill the moment they happen, so nothing is forgotten.\n- To let company guests leave without paying, knowing their company will be\n  invoiced.\n\n## Knows\n\nWhat every extra costs, and which guests' companies pay for their stays. Not\nan accountant: they think in bills, not ledgers.\n\n## Context\n\nAt the desk, with the guest in front of them and often a queue behind. Check-out\nmornings are the busiest part of their day.\n\n## Expects\n\nA bill that reads like a receipt: each night, each extra, then the total.\nPayments by card at the desk.\n\n## Cares about\n\nA bill the guest doesn't argue with. A charge they can't explain, or one they\ncan't take off when it was a mistake, makes for a hard conversation."
+      "needs": [
+        "To see everything a guest owes on one bill, so check-out is a single payment.",
+        "To put extras on a bill the moment they happen, so nothing is forgotten.",
+        "To let company guests leave without paying, knowing their company will be invoiced."
+      ],
+      "body": "## Knows\n\nWhat every extra costs, and which guests' companies pay for their stays. Not an\naccountant: they think in bills, not ledgers.\n\n## Context\n\nAt the desk, with the guest in front of them and often a queue behind. Check-out\nmornings are the busiest part of their day.\n\n## Expects\n\nA bill that reads like a receipt: each night, each extra, then the total.\nPayments by card at the desk.\n\n## Cares about\n\nA bill the guest doesn't argue with. A charge they can't explain, or one they\ncan't take off when it was a mistake, makes for a hard conversation."
     },
     {
       "id": "guest",
       "file": "docs/product/personas/guest.md",
-      "name": "Sam, guest",
+      "name": "Sam",
+      "role": "Guest",
+      "title": null,
       "summary": "Stays at the hotel, for work or on holiday, and pays for the stay.",
       "image": "https://randomuser.me/api/portraits/men/32.jpg",
       "capabilities": [
@@ -192,12 +215,19 @@
         "front-desk"
       ],
       "readiness": 35,
-      "body": "## Needs\n\n- To pay without queueing at the desk on the way out.\n- To leave without paying when their company is paying for the stay.\n- A bill they can understand, with nothing on it they didn't have.\n\n## Knows\n\nNothing about the hotel's systems. Pays for things online and by card all the\ntime.\n\n## Context\n\nOn their phone, often in a hurry: packing, catching a train, or already home.\n\n## Expects\n\nPaying by link to work like any other online payment, in a minute or two.\n\n## Cares about\n\nNot being charged twice, and not being chased for something they've paid."
+      "needs": [
+        "To pay without queueing at the desk on the way out.",
+        "To leave without paying when their company is paying for the stay.",
+        "A bill they can understand, with nothing on it they didn't have."
+      ],
+      "body": "## Knows\n\nNothing about the hotel's systems. Pays for things online and by card all the\ntime.\n\n## Context\n\nOn their phone, often in a hurry: packing, catching a train, or already home.\n\n## Expects\n\nPaying by link to work like any other online payment, in a minute or two.\n\n## Cares about\n\nNot being charged twice, and not being chased for something they've paid."
     },
     {
       "id": "manager",
       "file": "docs/product/personas/manager.md",
-      "name": "David, hotel manager",
+      "name": "David",
+      "role": "Manager",
+      "title": "Hotel manager",
       "summary": "Runs the hotel, and answers for its takings to the owners.",
       "image": "https://randomuser.me/api/portraits/men/52.jpg",
       "capabilities": [
@@ -212,12 +242,19 @@
         "closing-the-day"
       ],
       "readiness": 70,
-      "body": "## Needs\n\n- To see each day's takings, final and broken down, without waiting for the\n  bookkeeper.\n- To be sure every night, every extra and the city's tax are charged, so the\n  hotel isn't out of pocket.\n- To be covered when a guest who booked never arrives.\n\n## Knows\n\nThe hotel's numbers: occupancy, the average rate, last year's takings.\nNot the details of how the books are kept.\n\n## Context\n\nLooks at the numbers first thing each morning, on a laptop or their phone.\n\n## Expects\n\nTotals for rooms, food and drink, and tax, the way the owners ask for them.\n\n## Cares about\n\nNumbers that don't change once a day is closed. If yesterday's takings move,\nthey stop trusting all of them."
+      "needs": [
+        "To see each day's takings, final and broken down, without waiting for the bookkeeper.",
+        "To be sure every night, every extra and the city's tax are charged, so the hotel isn't out of pocket.",
+        "To be covered when a guest who booked never arrives."
+      ],
+      "body": "## Knows\n\nThe hotel's numbers: occupancy, the average rate, last year's takings. Not the\ndetails of how the books are kept.\n\n## Context\n\nLooks at the numbers first thing each morning, on a laptop or their phone.\n\n## Expects\n\nTotals for rooms, food and drink, and tax, the way the owners ask for them.\n\n## Cares about\n\nNumbers that don't change once a day is closed. If yesterday's takings move,\nthey stop trusting all of them."
     },
     {
       "id": "night-auditor",
       "file": "docs/product/personas/night-auditor.md",
-      "name": "Tom, night auditor",
+      "name": "Tom",
+      "role": "Front desk",
+      "title": "Night auditor",
       "summary": "Looks after the hotel overnight, and makes sure each day is closed before morning.",
       "image": "https://randomuser.me/api/portraits/men/71.jpg",
       "capabilities": [
@@ -227,7 +264,11 @@
         "closing-the-day"
       ],
       "readiness": 100,
-      "body": "## Needs\n\n- To know the day was closed and every guest charged for the night, without\n  staying up to do it by hand.\n- To close the day themselves when the audit didn't run on its own.\n\n## Knows\n\nThe night audit's steps, from years of doing them on paper. Less at ease with\nsoftware that does them for them.\n\n## Context\n\nAt the front desk overnight, alone, with few guests around and no one to ask.\n\n## Expects\n\nTo see, at a glance, that tonight's audit has run, and what it charged.\n\n## Cares about\n\nNot handing over to the morning shift with yesterday still open."
+      "needs": [
+        "To know the day was closed and every guest charged for the night, without staying up to do it by hand.",
+        "To close the day themselves when the audit didn't run on its own."
+      ],
+      "body": "## Knows\n\nThe night audit's steps, from years of doing them on paper. Less at ease with\nsoftware that does them for them.\n\n## Context\n\nAt the front desk overnight, alone, with few guests around and no one to ask.\n\n## Expects\n\nTo see, at a glance, that tonight's audit has run, and what it charged.\n\n## Cares about\n\nNot handing over to the morning shift with yesterday still open."
     }
   ],
   "capabilities": [
@@ -249,14 +290,9 @@
         "bill",
         "charge"
       ],
-      "code": [
-        {
-          "glob": "src/ledger/**",
-          "files": 2
-        }
-      ],
       "gaps": [],
-      "body": "## Covers\n\n- Clerks correct a charge that was added by mistake.\n\n## Success\n\n- No guest leaves with an extra that never reached their bill.",
+      "decisions": [],
+      "body": "## Includes\n\n- Clerks correct a charge that was added by mistake.\n\n## Success\n\n- No guest leaves with an extra that never reached their bill.",
       "feature": "guest-bills",
       "evidence": {
         "implements": [],
@@ -284,16 +320,11 @@
         "bill",
         "charge"
       ],
-      "code": [
-        {
-          "glob": "src/tax/**",
-          "files": 1
-        }
-      ],
       "gaps": [
         "capability:city-tax#children-corrected-by-hand"
       ],
-      "body": "## Covers\n\n- Clerks see the city tax on a guest's bill, night by night.",
+      "decisions": [],
+      "body": "## Includes\n\n- Clerks see the city tax on a guest's bill, night by night.",
       "feature": "guest-bills",
       "evidence": {
         "implements": [],
@@ -318,9 +349,17 @@
         "bill",
         "charge"
       ],
-      "code": [],
       "gaps": [],
-      "body": "## Learning\n\n- Do guests split evenly, or charge by charge?",
+      "decisions": [
+        {
+          "topic": null,
+          "question": "Do guests split evenly, or charge by charge?",
+          "status": "open",
+          "answer": null,
+          "became": []
+        }
+      ],
+      "body": "",
       "feature": "guest-bills",
       "evidence": {
         "implements": [],
@@ -348,14 +387,17 @@
         "payment",
         "bill"
       ],
-      "code": [
+      "gaps": [],
+      "decisions": [
         {
-          "glob": "src/payments/deposit*.ts",
-          "files": 2
+          "topic": "Long stays",
+          "question": "Is a week's stay still secured by one night's deposit?",
+          "status": "open",
+          "answer": null,
+          "became": []
         }
       ],
-      "gaps": [],
-      "body": "## Covers\n\n- Clerks see whether a stay's deposit has been paid.\n- Clerks take a deposit again when the guest's card was declined.\n\n## Open decisions\n\n- **Long stays:** is a week's stay still secured by one night's deposit?",
+      "body": "## Includes\n\n- Clerks see whether a stay's deposit has been paid.\n- Clerks take a deposit again when the guest's card was declined.",
       "feature": "payments",
       "evidence": {
         "implements": [
@@ -394,9 +436,17 @@
         "payment",
         "bill"
       ],
-      "code": [],
       "gaps": [],
-      "body": "## Covers\n\n- Clerks send a guest a link to pay what they owe.\n\n## Learning\n\n- Do guests pay before they leave, or wait until they're home?",
+      "decisions": [
+        {
+          "topic": null,
+          "question": "Do guests pay before they leave, or wait until they're home?",
+          "status": "open",
+          "answer": null,
+          "became": []
+        }
+      ],
+      "body": "## Includes\n\n- Clerks send a guest a link to pay what they owe.",
       "feature": "payments",
       "evidence": {
         "implements": [
@@ -428,14 +478,9 @@
       "concepts": [
         "company-account"
       ],
-      "code": [
-        {
-          "glob": "src/companies/**",
-          "files": 1
-        }
-      ],
       "gaps": [],
-      "body": "## Covers\n\n- Bookkeepers name the guests whose stays a company pays for.\n- Bookkeepers see what each company owes.",
+      "decisions": [],
+      "body": "## Includes\n\n- Bookkeepers name the guests whose stays a company pays for.\n- Bookkeepers see what each company owes.",
       "feature": "company-accounts",
       "evidence": {
         "implements": [],
@@ -462,13 +507,8 @@
         "bill",
         "company-account"
       ],
-      "code": [
-        {
-          "glob": "src/companies/**",
-          "files": 1
-        }
-      ],
       "gaps": [],
+      "decisions": [],
       "body": "",
       "feature": "company-accounts",
       "evidence": {
@@ -495,16 +535,11 @@
       "concepts": [
         "company-account"
       ],
-      "code": [
-        {
-          "glob": "src/invoices/**",
-          "files": 2
-        }
-      ],
       "gaps": [
         "capability:invoices#no-payment-reminders"
       ],
-      "body": "## Covers\n\n- Bookkeepers record a company's payment against its invoice.",
+      "decisions": [],
+      "body": "## Includes\n\n- Bookkeepers record a company's payment against its invoice.",
       "feature": "company-accounts",
       "evidence": {
         "implements": [],
@@ -533,14 +568,9 @@
         "bill",
         "charge"
       ],
-      "code": [
-        {
-          "glob": "src/night-audit/**",
-          "files": 2
-        }
-      ],
       "gaps": [],
-      "body": "## Covers\n\n- Night auditors see whether tonight's audit has run, and what it charged.\n- Night auditors start the audit by hand when it hasn't run.\n\n## Success\n\n- Every morning starts with yesterday closed, without anyone staying up for it.",
+      "decisions": [],
+      "body": "## Includes\n\n- Night auditors see whether tonight's audit has run, and what it charged.\n- Night auditors start the audit by hand when it hasn't run.\n\n## Success\n\n- Every morning starts with yesterday closed, without anyone staying up for it.",
       "feature": "closing-the-day",
       "evidence": {
         "implements": [],
@@ -565,9 +595,9 @@
         "business-day",
         "charge"
       ],
-      "code": [],
       "gaps": [],
-      "body": "## Covers\n\n- Managers compare a day with the same day last year.",
+      "decisions": [],
+      "body": "## Includes\n\n- Managers compare a day with the same day last year.",
       "feature": "closing-the-day",
       "evidence": {
         "implements": [],
@@ -591,9 +621,17 @@
       "concepts": [
         "business-day"
       ],
-      "code": [],
       "gaps": [],
-      "body": "## Learning\n\n- Is a day at a time what the accountant wants, or one export a month?",
+      "decisions": [
+        {
+          "topic": null,
+          "question": "Is a day at a time what the accountant wants, or one export a month?",
+          "status": "open",
+          "answer": null,
+          "became": []
+        }
+      ],
+      "body": "",
       "feature": "closing-the-day",
       "evidence": {
         "implements": [],
@@ -619,9 +657,17 @@
         "bill",
         "booking"
       ],
-      "code": [],
       "gaps": [],
-      "body": "## Covers\n\n- Clerks see a departing guest's bill, with every night and charge on it.\n- Clerks take payment for the balance, and close the bill.\n\n## Learning\n\n- Do guests want their bill emailed as they leave, or printed at the desk?",
+      "decisions": [
+        {
+          "topic": null,
+          "question": "Do guests want their bill emailed as they leave, or printed at the desk?",
+          "status": "open",
+          "answer": null,
+          "became": []
+        }
+      ],
+      "body": "## Includes\n\n- Clerks see a departing guest's bill, with every night and charge on it.\n- Clerks take payment for the balance, and close the bill.",
       "feature": "front-desk",
       "evidence": {
         "implements": [],
@@ -647,14 +693,22 @@
         "payment",
         "bill"
       ],
-      "code": [],
       "gaps": [],
       "feature": "payments",
       "evidence": {
         "implements": [],
         "verifies": []
       },
-      "body": "## Open decisions\n\n- **Where the money goes:** always back to the card it came from, or to\n  whichever card the guest has with them?",
+      "decisions": [
+        {
+          "topic": "Where the money goes",
+          "question": "Always back to the card it came from, or to whichever card the guest has with them?",
+          "status": "open",
+          "answer": null,
+          "became": []
+        }
+      ],
+      "body": "",
       "tradeoffs": []
     }
   ],
@@ -664,7 +718,6 @@
       "domain": "billing",
       "file": "docs/product/domains/billing/rules/bills/charges-are-never-changed.md",
       "name": "A charge is never changed or deleted",
-      "summary": "A charge is corrected by adding a charge for the opposite amount, never by changing or deleting it.",
       "capabilities": [
         "extra-charges",
         "night-audit"
@@ -673,7 +726,8 @@
         "charge",
         "bill"
       ],
-      "body": "## Why\n\nThe hotel's accountant and the tax office need to see every charge that was\nmade, including the mistakes.",
+      "why": "The hotel's accountant and the tax office need to see every charge that was made, including the mistakes.",
+      "body": "A charge is corrected by adding a charge for the opposite amount, never by\nchanging or deleting it.",
       "evidence": {
         "implements": [
           {
@@ -696,7 +750,6 @@
       "domain": "billing",
       "file": "docs/product/domains/billing/rules/bills/closed-bills-dont-change.md",
       "name": "A closed bill can't change",
-      "summary": "Nothing can be charged or paid on a closed bill. A charge that arrives after the guest has left goes on a new bill for the same stay.",
       "capabilities": [
         "extra-charges",
         "pay-by-link",
@@ -707,7 +760,8 @@
         "charge",
         "payment"
       ],
-      "body": "",
+      "why": null,
+      "body": "Nothing can be charged or paid on a closed bill. A charge that arrives after\nthe guest has left goes on a new bill for the same stay.",
       "evidence": {
         "implements": [
           {
@@ -730,7 +784,6 @@
       "domain": "billing",
       "file": "docs/product/domains/billing/rules/tax/city-tax-per-guest-night.md",
       "name": "City tax is charged per guest, per night",
-      "summary": "Each guest on a stay is charged the city's tax for each night, at the rate on that night.",
       "capabilities": [
         "city-tax"
       ],
@@ -738,7 +791,8 @@
         "bill",
         "charge"
       ],
-      "body": "## Why\n\nThe hotel owes the city tax for every guest night, whether or not it charged\nthe guest.",
+      "why": "The hotel owes the city tax for every guest night, whether or not it charged the guest.",
+      "body": "Each guest on a stay is charged the city's tax for each night, at the rate on\nthat night.",
       "evidence": {
         "implements": [
           {
@@ -761,14 +815,14 @@
       "domain": "billing",
       "file": "docs/product/domains/billing/rules/tax/children-pay-no-city-tax.md",
       "name": "Children pay no city tax",
-      "summary": "Guests under 16 aren't charged city tax.",
       "capabilities": [
         "city-tax"
       ],
       "concepts": [
         "charge"
       ],
-      "body": "",
+      "why": null,
+      "body": "Guests under 16 aren't charged city tax.",
       "evidence": {
         "implements": [],
         "verifies": []
@@ -779,14 +833,14 @@
       "domain": "billing",
       "file": "docs/product/domains/billing/rules/tax/city-tax-stops-after-seven-nights.md",
       "name": "City tax stops after seven nights",
-      "summary": "A guest staying longer than seven nights is charged city tax for the first seven only.",
       "capabilities": [
         "city-tax"
       ],
       "concepts": [
         "charge"
       ],
-      "body": "",
+      "why": null,
+      "body": "A guest staying longer than seven nights is charged city tax for the first\nseven only.",
       "evidence": {
         "implements": [
           {
@@ -803,7 +857,6 @@
       "domain": "billing",
       "file": "docs/product/domains/billing/rules/bills/moving-charges-keeps-the-total.md",
       "name": "Moving charges keeps the total",
-      "summary": "Splitting a bill or moving charges between bills never changes the total owed across them.",
       "capabilities": [
         "split-bills"
       ],
@@ -811,7 +864,8 @@
         "bill",
         "charge"
       ],
-      "body": "",
+      "why": null,
+      "body": "Splitting a bill or moving charges between bills never changes the total owed\nacross them.",
       "evidence": {
         "implements": [],
         "verifies": []
@@ -822,14 +876,14 @@
       "domain": "billing",
       "file": "docs/product/domains/billing/rules/payments/deposit-is-the-first-night.md",
       "name": "A deposit is the first night",
-      "summary": "A stay's deposit is the first night's room rate, with its city tax.",
       "capabilities": [
         "deposits"
       ],
       "concepts": [
         "payment"
       ],
-      "body": "",
+      "why": null,
+      "body": "A stay's deposit is the first night's room rate, with its city tax.",
       "evidence": {
         "implements": [
           {
@@ -852,7 +906,6 @@
       "domain": "billing",
       "file": "docs/product/domains/billing/rules/payments/deposit-counts-towards-the-bill.md",
       "name": "A deposit counts towards the bill",
-      "summary": "A deposit is a payment on the guest's bill, so the guest pays only the rest at check-out.",
       "capabilities": [
         "deposits"
       ],
@@ -860,7 +913,8 @@
         "payment",
         "bill"
       ],
-      "body": "",
+      "why": null,
+      "body": "A deposit is a payment on the guest's bill, so the guest pays only the rest at\ncheck-out.",
       "evidence": {
         "implements": [
           {
@@ -888,7 +942,6 @@
       "domain": "billing",
       "file": "docs/product/domains/billing/rules/payments/card-numbers-are-never-kept.md",
       "name": "Card numbers are never kept",
-      "summary": "The hotel never stores a guest's card number. Only the payment provider holds it.",
       "capabilities": [
         "deposits",
         "pay-by-link"
@@ -896,7 +949,8 @@
       "concepts": [
         "payment"
       ],
-      "body": "## Why\n\nHolding card numbers would put the hotel under the card schemes' security\naudits.",
+      "why": "Holding card numbers would put the hotel under the card schemes' security audits.",
+      "body": "The hotel never stores a guest's card number. Only the payment provider holds\nit.",
       "evidence": {
         "implements": [
           {
@@ -924,7 +978,6 @@
       "domain": "finance",
       "file": "docs/product/domains/finance/rules/company-accounts/credit-limit.md",
       "name": "A company can't go over its credit limit",
-      "summary": "A bill can't move to a company's account if it would take what the company owes over its credit limit.",
       "capabilities": [
         "company-accounts",
         "direct-billing"
@@ -933,7 +986,8 @@
         "company-account",
         "bill"
       ],
-      "body": "",
+      "why": null,
+      "body": "A bill can't move to a company's account if it would take what the company owes\nover its credit limit.",
       "evidence": {
         "implements": [
           {
@@ -956,7 +1010,6 @@
       "domain": "finance",
       "file": "docs/product/domains/finance/rules/company-accounts/only-named-guests.md",
       "name": "Only named guests' bills go to a company",
-      "summary": "A bill can move to a company's account only if the company has named the guest as someone whose stays it pays for.",
       "capabilities": [
         "direct-billing"
       ],
@@ -964,7 +1017,8 @@
         "company-account",
         "bill"
       ],
-      "body": "",
+      "why": null,
+      "body": "A bill can move to a company's account only if the company has named the guest\nas someone whose stays it pays for.",
       "evidence": {
         "implements": [
           {
@@ -981,14 +1035,14 @@
       "domain": "finance",
       "file": "docs/product/domains/finance/rules/invoices/invoice-numbers-run-in-sequence.md",
       "name": "Invoice numbers run in sequence",
-      "summary": "Each invoice's number is one more than the last, with none skipped or used twice.",
       "capabilities": [
         "invoices"
       ],
       "concepts": [
         "company-account"
       ],
-      "body": "## Why\n\nThe tax office requires it, so it can tell no invoice is missing.",
+      "why": "The tax office requires it, so it can tell no invoice is missing.",
+      "body": "Each invoice's number is one more than the last, with none skipped or used\ntwice.",
       "evidence": {
         "implements": [
           {
@@ -1011,7 +1065,6 @@
       "domain": "finance",
       "file": "docs/product/domains/finance/rules/night-audit/one-room-charge-per-night.md",
       "name": "A guest is charged once a night for their room",
-      "summary": "Each guest in the hotel is charged for their room once for each night, even if the audit is started more than once.",
       "capabilities": [
         "night-audit"
       ],
@@ -1019,7 +1072,8 @@
         "business-day",
         "charge"
       ],
-      "body": "",
+      "why": null,
+      "body": "Each guest in the hotel is charged for their room once for each night, even if\nthe audit is started more than once.",
       "evidence": {
         "implements": [
           {
@@ -1047,7 +1101,6 @@
       "domain": "finance",
       "file": "docs/product/domains/finance/rules/night-audit/closed-days-dont-change.md",
       "name": "A closed day can't change",
-      "summary": "Once a business day is closed, nothing is added to it. A correction to a closed day goes on the current one.",
       "capabilities": [
         "night-audit",
         "daily-takings",
@@ -1057,7 +1110,8 @@
         "business-day",
         "charge"
       ],
-      "body": "## Why\n\nA closed day's takings have already gone to the accountant.",
+      "why": "A closed day's takings have already gone to the accountant.",
+      "body": "Once a business day is closed, nothing is added to it. A correction to a closed\nday goes on the current one.",
       "evidence": {
         "implements": [
           {
@@ -1080,13 +1134,13 @@
       "domain": "billing",
       "file": "docs/product/domains/billing/rules/payments/overpayments-are-refunded.md",
       "name": "Overpayments are refunded",
-      "summary": "A guest who has paid more than their bill is refunded the difference before the bill closes.",
       "capabilities": [],
       "concepts": [
         "payment",
         "bill"
       ],
-      "body": "",
+      "why": null,
+      "body": "A guest who has paid more than their bill is refunded the difference before the\nbill closes.",
       "evidence": {
         "implements": [],
         "verifies": []
@@ -1099,7 +1153,7 @@
       "domain": "billing",
       "file": "docs/product/domains/billing/concepts/bill.md",
       "name": "Bill",
-      "summary": "Everything a guest owes for one stay, and everything they've paid towards it.",
+      "description": "Everything a guest owes for one stay, and everything they've paid towards it.",
       "capabilities": [
         "extra-charges",
         "city-tax",
@@ -1120,14 +1174,28 @@
         "company-accounts/only-named-guests",
         "payments/overpayments-are-refunded"
       ],
-      "body": "## Details\n\nA bill is made of [charges](charge.md) and [payments](payment.md). Its balance\nis what's been charged less what's been paid. A guest's bill can move to their\n[company's account](company-account.md), which then owes it instead.\n\n## Lifecycle\n\nOpen → Closed\n\nA bill closes when its balance is zero, or when it moves to a company's\naccount.\n\n## Not to be confused with\n\n- **Invoice:** what a company is sent for a month of its staff's bills."
+      "lifecycle": {
+        "states": [
+          "Open",
+          "Closed"
+        ],
+        "text": "A bill closes when its balance is zero, or when it moves to a company's account."
+      },
+      "confusedWith": [
+        {
+          "concept": null,
+          "term": "Invoice",
+          "text": "what a company is sent for a month of its staff's bills."
+        }
+      ],
+      "body": "A bill is made of [charges](charge.md) and [payments](payment.md). Its balance\nis what's been charged less what's been paid. A guest's bill can move to their\n[company's account](../../finance/concepts/company-account.md), which then owes it instead."
     },
     {
       "id": "business-day",
       "domain": "finance",
       "file": "docs/product/domains/finance/concepts/business-day.md",
       "name": "Business day",
-      "summary": "The hotel's day for its accounts, from one night audit to the next.",
+      "description": "The hotel's day for its accounts, from one night audit to the next.",
       "capabilities": [
         "night-audit",
         "daily-takings",
@@ -1137,14 +1205,22 @@
         "night-audit/one-room-charge-per-night",
         "night-audit/closed-days-dont-change"
       ],
-      "body": "## Details\n\nA business day isn't a calendar day. It runs from when one night audit closes\nthe day before, usually around 03:00, until the next audit closes it. A\nbreakfast at 02:00 is on the previous business day.\n\n## Lifecycle\n\nOpen → Closed"
+      "lifecycle": {
+        "states": [
+          "Open",
+          "Closed"
+        ],
+        "text": null
+      },
+      "confusedWith": [],
+      "body": "A business day isn't a calendar day. It runs from when one night audit closes\nthe day before, usually around 03:00, until the next audit closes it. A\nbreakfast at 02:00 is on the previous business day."
     },
     {
       "id": "charge",
       "domain": "billing",
       "file": "docs/product/domains/billing/concepts/charge.md",
       "name": "Charge",
-      "summary": "One amount a guest owes, such as a night's room, a breakfast or a night's city tax.",
+      "description": "One amount a guest owes, such as a night's room, a breakfast or a night's city tax.",
       "capabilities": [
         "extra-charges",
         "city-tax",
@@ -1162,14 +1238,16 @@
         "night-audit/one-room-charge-per-night",
         "night-audit/closed-days-dont-change"
       ],
-      "body": "## Details\n\nEach charge is on one [bill](bill.md), and on the\n[business day](business-day.md) it was added. A correction is a charge for the\nopposite amount, pointing at the charge it corrects."
+      "lifecycle": null,
+      "confusedWith": [],
+      "body": "Each charge is on one [bill](bill.md), and on the\n[business day](../../finance/concepts/business-day.md) it was added. A correction is a charge for the\nopposite amount, pointing at the charge it corrects."
     },
     {
       "id": "company-account",
       "domain": "finance",
       "file": "docs/product/domains/finance/concepts/company-account.md",
       "name": "Company account",
-      "summary": "A company that pays for its staff's stays, and what it owes the hotel.",
+      "description": "A company that pays for its staff's stays, and what it owes the hotel.",
       "capabilities": [
         "company-accounts",
         "direct-billing",
@@ -1180,14 +1258,16 @@
         "company-accounts/only-named-guests",
         "invoices/invoice-numbers-run-in-sequence"
       ],
-      "body": "## Details\n\nA company account has a credit limit, and names the guests whose\n[bills](bill.md) it pays. It's invoiced once a month for the bills moved to it."
+      "lifecycle": null,
+      "confusedWith": [],
+      "body": "A company account has a credit limit, and names the guests whose\n[bills](../../billing/concepts/bill.md) it pays. It's invoiced once a month for the bills moved to it."
     },
     {
       "id": "payment",
       "domain": "billing",
       "file": "docs/product/domains/billing/concepts/payment.md",
       "name": "Payment",
-      "summary": "Money a guest has paid towards their bill, by card or in cash.",
+      "description": "Money a guest has paid towards their bill, by card or in cash.",
       "capabilities": [
         "deposits",
         "pay-by-link"
@@ -1199,19 +1279,35 @@
         "payments/card-numbers-are-never-kept",
         "payments/overpayments-are-refunded"
       ],
-      "body": "## Details\n\nA deposit is a payment taken before the guest arrives. A card payment is\nknown by the provider's reference, never by the card's number.\n\n## Lifecycle\n\nPending → Paid\n\nA pending card payment can instead be Declined."
+      "lifecycle": {
+        "states": [
+          "Pending",
+          "Paid"
+        ],
+        "text": "A pending card payment can instead be Declined."
+      },
+      "confusedWith": [],
+      "body": "A deposit is a payment taken before the guest arrives. A card payment is\nknown by the provider's reference, never by the card's number."
     },
     {
       "id": "booking",
       "domain": "billing",
       "file": "docs/product/domains/billing/concepts/booking.md",
       "name": "Booking",
-      "summary": "What a guest is charged for a stay: its nights, at the rate agreed when it was booked.",
+      "description": "What a guest is charged for a stay: its nights, at the rate agreed when it was booked.",
       "capabilities": [
         "check-out"
       ],
       "rules": [],
-      "body": "## Details\n\nA booking puts one room charge per night on the guest's [bill](bill.md), at its\nagreed rate, whatever the rate is on the night.\n\n## Not to be confused with\n\n- **The booking app's booking:** a guest's hold on a room. Billing doesn't\n  keep rooms free or taken, only what each stay costs."
+      "lifecycle": null,
+      "confusedWith": [
+        {
+          "concept": null,
+          "term": "The booking app's booking",
+          "text": "a guest's hold on a room. Billing doesn't keep rooms free or taken, only what each stay costs."
+        }
+      ],
+      "body": "A booking puts one room charge per night on the guest's [bill](bill.md), at its\nagreed rate, whatever the rate is on the night."
     }
   ],
   "systems": [
@@ -1258,7 +1354,9 @@
           }
         ]
       },
-      "body": "**Code:** `src/ledger/ledger.ts`, starting at `post`\n\n## How it works\n\nEverything that changes what a guest owes goes through `post`: room nights,\nextras, deposits, payments and corrections. A correction is a new line for\nthe opposite amount, pointing at the line it corrects with `corrects`.\n\n## Gotchas\n\n- Amounts are whole cents, never fractions of a unit, so totals add up\n  exactly. Convert at the edges, when reading input and showing amounts.\n- `post` refuses a closed bill, so anything that closes a bill has to post\n  everything first, deposits included."
+      "start": "`src/ledger/ledger.ts`, starting at `post`",
+      "decisions": [],
+      "body": "Everything that changes what a guest owes goes through `post`: room nights,\nextras, deposits, payments and corrections. A correction is a new line for\nthe opposite amount, pointing at the line it corrects with `corrects`.\n\nAmounts are whole cents, never fractions of a unit, so totals add up exactly.\nThey're converted at the edges, when reading input and showing amounts.\n\n`post` refuses a closed bill, so anything that closes a bill posts everything\nfirst, deposits included."
     }
   ],
   "components": [
@@ -1294,14 +1392,15 @@
         ],
         "verifies": []
       },
-      "body": "**Code:** `src/payments/provider.ts`\n\n## How it works\n\nThe guest types their card into the provider's form, which hands the app a\ntoken. `takePayment` sends the provider that token and the amount, and keeps\nthe reference it sends back. Card numbers never reach the app.\n\n## Gotchas\n\n- The integration tests run against the provider's sandbox\n  (`test/integration/sandbox.ts`), which accepts any test token instantly. Real\n  payments can take seconds."
+      "start": "`src/payments/provider.ts`",
+      "decisions": [],
+      "body": "The guest types their card into the provider's form, which hands the app a\ntoken. `takePayment` sends the provider that token and the amount, and keeps\nthe reference it sends back. Card numbers never reach the app.\n\nThe integration tests run against the provider's sandbox\n(`test/integration/sandbox.ts`), which accepts any test token instantly. Real\npayments can take seconds."
     }
   ],
   "gaps": [
     {
       "id": "capability:city-tax#children-corrected-by-hand",
       "domain": "billing",
-      "until": "beta",
       "outcome": null,
       "rule": "tax/children-pay-no-city-tax",
       "text": "Guests' ages aren't recorded, so city tax is added for every guest on a stay, and clerks correct it by hand for children.",
@@ -1310,7 +1409,6 @@
     {
       "id": "capability:invoices#no-payment-reminders",
       "domain": "finance",
-      "until": "not-decided",
       "outcome": null,
       "rule": null,
       "text": "Nothing reminds a company when an invoice is overdue. The bookkeeper checks the unpaid invoices each week and chases them by email.",
@@ -1318,7 +1416,6 @@
     },
     {
       "id": "system:ledger#corrections-of-corrections-untested",
-      "until": "extra-charges@ga",
       "outcome": "maintainability/ga/others-can-change",
       "rule": null,
       "text": "Nothing tests correcting a line that is itself a correction, so a change to `correct` could stop a twice-corrected charge netting to zero without anything failing.",
@@ -1332,7 +1429,6 @@
     },
     {
       "id": "component:payments#no-timeout-on-provider-calls",
-      "until": "pay-by-link@beta",
       "outcome": "reliability/beta/fails-clearly",
       "rule": null,
       "text": "Calls to the payment provider have no timeout, so a slow provider holds the request open until the platform gives up on it.",
@@ -1350,6 +1446,7 @@
       "id": "capability:pay-by-link#hotels-currency-only",
       "domain": "billing",
       "text": "Guests pay in the hotel's currency, not their own.",
+      "gain": "The bill, the payment and the hotel's books are all in one currency, with no exchange rates to keep.",
       "cost": "Their card provider converts it, at its own rate, so the amount on their statement can differ from the bill.",
       "revisit": null,
       "places": []
@@ -1358,6 +1455,7 @@
       "id": "capability:direct-billing#whole-bill-moves",
       "domain": "finance",
       "text": "A bill moves to a company's account whole, not charge by charge.",
+      "gain": "Clerks move a bill in one step at check-out, and a company's account only ever holds whole bills.",
       "cost": "A guest who pays for their own extras pays for them before their bill moves.",
       "revisit": "a company asks to pay for rooms only",
       "places": []
@@ -1365,6 +1463,7 @@
     {
       "id": "system:ledger#balance-worked-out-on-read",
       "text": "A bill's balance is added up from its lines every time it's asked for, not stored on the bill.",
+      "gain": "The balance can never disagree with the lines, and there's nothing to keep in step when a line is added.",
       "cost": "Opening a bill gets slower as lines are added to it.",
       "revisit": "a bill passes 1,000 lines",
       "places": [
@@ -1378,6 +1477,7 @@
     {
       "id": "component:payments#providers-card-form",
       "text": "Guests type their card into the provider's hosted form, not one of ours.",
+      "gain": "Card numbers never reach our servers, so the hotel stays out of most card-security rules.",
       "cost": "The payment page looks like the provider's, not the hotel's.",
       "revisit": null,
       "places": []

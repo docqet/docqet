@@ -14,17 +14,28 @@ export function PersonaIcon({ size = 16 }: { size?: number }) {
   return <PersonOutlineRoundedIcon sx={{ fontSize: size, flex: "none", color: "var(--persona)" }} />;
 }
 
-/* A persona's picture, round. Decorative: their name is always beside it. */
+/* A persona's picture, round, or their initials without one. Decorative: their name is always beside it. */
 export function PersonaAvatar({ persona, size = 28 }: { persona: Persona; size?: number }) {
+  if (!persona.image) {
+    const initials = persona.name
+      .split(/\s+/)
+      .filter(Boolean)
+      .slice(0, 2)
+      .map((w) => w[0].toUpperCase())
+      .join("");
+    return (
+      <span className="persona-avatar persona-initials" aria-hidden style={{ width: size, height: size, fontSize: Math.round(size * 0.4) }}>
+        {initials}
+      </span>
+    );
+  }
   return <img className="persona-avatar" src={persona.image} alt="" width={size} height={size} loading="lazy" />;
 }
 
-/* A persona's title, `<Name>, <role>` as the spec has it, split in two: "Maria" and "Front desk clerk". */
+/* A persona's name, and under it their job title and role in the software, whichever they have: "Founder · Client Admin". */
 export function personaNameAndRole(persona: Persona): { name: string; role: string | null } {
-  const at = persona.name.indexOf(", ");
-  if (at < 0) return { name: persona.name, role: null };
-  const role = persona.name.slice(at + 2);
-  return { name: persona.name.slice(0, at), role: role[0].toUpperCase() + role.slice(1) };
+  const under = [persona.title, persona.role].filter(Boolean).join(" · ");
+  return { name: persona.name, role: under || null };
 }
 
 /* A persona on the map: just their picture, name and role. Clicking it opens the rest in the side panel. */

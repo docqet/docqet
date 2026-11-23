@@ -1,16 +1,13 @@
 ---
+name: Sam
+summary: Stays at the hotel, for work or on holiday, and pays for the stay.
+role: Guest
 image: https://randomuser.me/api/portraits/men/32.jpg
+needs:
+  - To pay without queueing at the desk on the way out.
+  - To leave without paying when their company is paying for the stay.
+  - A bill they can understand, with nothing on it they didn't have.
 ---
-
-# Sam, guest
-
-Stays at the hotel, for work or on holiday, and pays for the stay.
-
-## Needs
-
-- To pay without queueing at the desk on the way out.
-- To leave without paying when their company is paying for the stay.
-- A bill they can understand, with nothing on it they didn't have.
 
 ## Knows
 

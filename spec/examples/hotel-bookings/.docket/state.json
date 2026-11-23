@@ -26,7 +26,7 @@
     "rules": 5,
     "gaps": 4,
     "problems": 0,
-    "tradeoffs": 3,
+    "tradeoffs": 4,
     "systems": 1,
     "components": 1
   },
@@ -38,7 +38,25 @@
       "summary": "Looking after guests from their booking to their check-out.",
       "maturity": 70,
       "band": "beta",
-      "body": "## Open decisions\n\n- **Early arrivals:** when a guest arrives before the room's usual check-in\n  time, does their stay start that day, or is the night before part of it?"
+      "decisions": [
+        {
+          "topic": "Early arrivals",
+          "question": "When a guest arrives before the room's usual check-in time, does their stay start that day, or is the night before part of it?",
+          "status": "open",
+          "answer": null,
+          "became": []
+        },
+        {
+          "topic": "Same-day turnover",
+          "question": "Can a room be booked from the day an earlier booking checks out?",
+          "status": "closed",
+          "answer": "Yes. The two stays don't share a night, and there's time to clean the room between check-out and check-in.",
+          "became": [
+            "rule:booking/same-day-turnover"
+          ]
+        }
+      ],
+      "body": ""
     },
     {
       "id": "property",
@@ -47,6 +65,7 @@
       "summary": "Keeping the hotel ready for guests.",
       "maturity": 15,
       "band": "prototype",
+      "decisions": [],
       "body": "Maintenance belongs here too, once the software takes on that job."
     }
   ],
@@ -65,6 +84,26 @@
       ],
       "maturity": 42,
       "band": "alpha",
+      "decisions": [
+        {
+          "topic": "Agency bookings",
+          "question": "Should bookings come in from online travel agencies?",
+          "status": "closed",
+          "answer": "Not yet. Most bookings come straight to the desk, so clerks enter the few agency bookings by hand.",
+          "became": [
+            "feature:reservations#front-desk-bookings-only"
+          ]
+        },
+        {
+          "topic": "Groups",
+          "question": "Should a group be able to book several rooms under one name?",
+          "status": "closed",
+          "answer": "Yes, as a capability of its own, explored as a prototype first.",
+          "became": [
+            "capability:group-bookings"
+          ]
+        }
+      ],
       "body": "",
       "tradeoffs": [
         "feature:reservations#front-desk-bookings-only"
@@ -82,6 +121,7 @@
       ],
       "maturity": 84,
       "band": "ga",
+      "decisions": [],
       "body": "",
       "tradeoffs": []
     },
@@ -97,6 +137,7 @@
       ],
       "maturity": 15,
       "band": "prototype",
+      "decisions": [],
       "body": "",
       "tradeoffs": []
     }
@@ -105,7 +146,9 @@
     {
       "id": "front-desk-clerk",
       "file": "docs/product/personas/front-desk-clerk.md",
-      "name": "Maria, front desk clerk",
+      "name": "Maria",
+      "role": "Front desk",
+      "title": "Front desk clerk",
       "summary": "Runs the front desk: takes bookings, and checks guests in and out.",
       "image": "https://randomuser.me/api/portraits/women/68.jpg",
       "capabilities": [
@@ -123,12 +166,19 @@
         "housekeeping"
       ],
       "readiness": 59,
-      "body": "## Needs\n\n- To tell a guest at once whether a room is free for their dates, and hold it\n  for them, without ever giving the same room to two guests.\n- To check guests in and out quickly, so nobody waits at the desk.\n- To know which rooms are ready before a guest arrives, without phoning\n  housekeeping.\n\n## Knows\n\nEvery room in the hotel, the regulars, and the cancellation policy by heart.\nComfortable with a computer, but has learned the system on the job, not from a\nmanual.\n\n## Context\n\nAt the desk all shift, on a shared desktop, with a guest or the phone waiting\nmost of the time. Interrupted constantly, so anything they start may be\nfinished minutes later.\n\n## Expects\n\nThe paper diary's view of the hotel: rooms down the side, nights across the\ntop. Talks about stays, rooms and arrivals, not reservations or inventory.\n\n## Cares about\n\nNever having to tell a guest standing in front of them that their room was\ngiven away. They'll go back to the paper diary the first time the app gets\nthat wrong."
+      "needs": [
+        "To tell a guest at once whether a room is free for their dates, and hold it for them, without ever giving the same room to two guests.",
+        "To check guests in and out quickly, so nobody waits at the desk.",
+        "To know which rooms are ready before a guest arrives, without phoning housekeeping."
+      ],
+      "body": "## Knows\n\nEvery room in the hotel, the regulars, and the cancellation policy by heart.\nComfortable with a computer, but has learned the system on the job, not from a\nmanual.\n\n## Context\n\nAt the desk all shift, on a shared desktop, with a guest or the phone waiting\nmost of the time. Interrupted constantly, so anything they start may be finished\nminutes later.\n\n## Expects\n\nThe paper diary's view of the hotel: rooms down the side, nights across the top.\nTalks about stays, rooms and arrivals, not reservations or inventory.\n\n## Cares about\n\nNever having to tell a guest standing in front of them that their room was given\naway. They'll go back to the paper diary the first time the app gets that wrong."
     },
     {
       "id": "housekeeper",
       "file": "docs/product/personas/housekeeper.md",
-      "name": "Ana, housekeeper",
+      "name": "Ana",
+      "role": "Housekeeping",
+      "title": "Housekeeper",
       "summary": "Cleans and readies the rooms between guests.",
       "image": "https://randomuser.me/api/portraits/women/26.jpg",
       "capabilities": [
@@ -139,12 +189,18 @@
         "housekeeping"
       ],
       "readiness": 15,
-      "body": "## Needs\n\n- To know which rooms to clean first, so arriving guests don't wait for a\n  room.\n- To tell the front desk a room is ready without walking back down to say so.\n\n## Knows\n\nThe building, floor by floor, and how long each kind of room takes. Uses a\nphone every day, but rarely for work.\n\n## Context\n\nOn their feet, moving from room to room with a trolley, a phone in their pocket.\nGloves on much of the time, so anything they do has to take a tap or two.\n\n## Expects\n\nA list of rooms, in the order they'll do them. Talks about rooms being clean,\ndirty or ready.\n\n## Cares about\n\nNot being rushed by the front desk for a room they didn't know was urgent."
+      "needs": [
+        "To know which rooms to clean first, so arriving guests don't wait for a room.",
+        "To tell the front desk a room is ready without walking back down to say so."
+      ],
+      "body": "## Knows\n\nThe building, floor by floor, and how long each kind of room takes. Uses a phone\nevery day, but rarely for work.\n\n## Context\n\nOn their feet, moving from room to room with a trolley, a phone in their pocket.\nGloves on much of the time, so anything they do has to take a tap or two.\n\n## Expects\n\nA list of rooms, in the order they'll do them. Talks about rooms being clean,\ndirty or ready.\n\n## Cares about\n\nNot being rushed by the front desk for a room they didn't know was urgent."
     },
     {
       "id": "manager",
       "file": "docs/product/personas/manager.md",
-      "name": "David, hotel manager",
+      "name": "David",
+      "role": "Manager",
+      "title": "Hotel manager",
       "summary": "Runs the hotel, and answers for its takings to the owners.",
       "image": "https://randomuser.me/api/portraits/men/52.jpg",
       "capabilities": [
@@ -152,7 +208,10 @@
       ],
       "features": [],
       "readiness": 15,
-      "body": "## Needs\n\n- To set what each room costs, night by night, so busy dates earn more.\n\n## Knows\n\nThe local market and the hotel's busy seasons. Reads a spreadsheet well, and\nexpects software to do the arithmetic for them.\n\n## Context\n\nAt a desk in the back office, a few times a week, in between everything else\nrunning a hotel brings.\n\n## Expects\n\nA calendar of rates, like the one they keep in a spreadsheet today.\n\n## Cares about\n\nRates they can change in a minute when a big event is announced, and being sure\nthe front desk is quoting them."
+      "needs": [
+        "To set what each room costs, night by night, so busy dates earn more."
+      ],
+      "body": "## Knows\n\nThe local market and the hotel's busy seasons. Reads a spreadsheet well, and\nexpects software to do the arithmetic for them.\n\n## Context\n\nAt a desk in the back office, a few times a week, in between everything else\nrunning a hotel brings.\n\n## Expects\n\nA calendar of rates, like the one they keep in a spreadsheet today.\n\n## Cares about\n\nRates they can change in a minute when a big event is announced, and being sure\nthe front desk is quoting them."
     }
   ],
   "capabilities": [
@@ -175,16 +234,21 @@
         "booking",
         "room"
       ],
-      "code": [
-        {
-          "glob": "src/booking/**",
-          "files": 5
-        }
-      ],
       "gaps": [
         "capability:room-booking#calendar-needs-a-mouse"
       ],
-      "body": "## Covers\n\n- Clerks see which rooms are free for a stay.\n- Clerks move a booking to new dates.\n\n## Success\n\n- The front desk stops keeping the paper diary alongside the app.",
+      "decisions": [
+        {
+          "topic": "Booking from the keyboard",
+          "question": "Must clerks be able to book from the keyboard alone at Beta?",
+          "status": "closed",
+          "answer": "Yes, since Beta expects everyone to be able to use it. The calendar doesn't support it yet, so it's a known gap.",
+          "became": [
+            "capability:room-booking#calendar-needs-a-mouse"
+          ]
+        }
+      ],
+      "body": "## Includes\n\n- Clerks see which rooms are free for a stay.\n- Clerks move a booking to new dates.\n\n## Success\n\n- The front desk stops keeping the paper diary alongside the app.",
       "feature": "reservations",
       "evidence": {
         "implements": [
@@ -223,16 +287,19 @@
       "concepts": [
         "booking"
       ],
-      "code": [
-        {
-          "glob": "src/cancellations/**",
-          "files": 2
-        }
-      ],
       "gaps": [
         "capability:cancellations#late-cancellations-refunded-in-full"
       ],
-      "body": "## Covers\n\n- Clerks tell a guest what they'd be refunded if they cancelled now.\n\n## Open decisions\n\n- **No-shows:** is a guest who never arrives treated as a late cancellation, or\n  charged for the whole stay?",
+      "decisions": [
+        {
+          "topic": "No-shows",
+          "question": "Is a guest who never arrives treated as a late cancellation, or charged for the whole stay?",
+          "status": "open",
+          "answer": null,
+          "became": []
+        }
+      ],
+      "body": "## Includes\n\n- Clerks tell a guest what they'd be refunded if they cancelled now.",
       "feature": "reservations",
       "evidence": {
         "implements": [],
@@ -257,9 +324,9 @@
         "booking",
         "room"
       ],
-      "code": [],
       "gaps": [],
-      "body": "## Covers\n\n- Clerks see today's arrivals.\n- Clerks move a guest to another room for the rest of their stay.\n\n## Success\n\n- A guest with a booking is checked in within two minutes of reaching the desk.",
+      "decisions": [],
+      "body": "## Includes\n\n- Clerks see today's arrivals.\n- Clerks move a guest to another room for the rest of their stay.\n\n## Success\n\n- A guest with a booking is checked in within two minutes of reaching the desk.",
       "feature": "front-desk",
       "evidence": {
         "implements": [],
@@ -281,9 +348,9 @@
       "concepts": [
         "booking"
       ],
-      "code": [],
       "gaps": [],
-      "body": "## Covers\n\n- Clerks see today's departures.\n\n## Success\n\n- The front desk closes the day with every departure settled.",
+      "decisions": [],
+      "body": "## Includes\n\n- Clerks see today's departures.\n\n## Success\n\n- The front desk closes the day with every departure settled.",
       "feature": "front-desk",
       "evidence": {
         "implements": [],
@@ -305,9 +372,17 @@
       "concepts": [
         "room"
       ],
-      "code": [],
       "gaps": [],
-      "body": "## Learning\n\n- Is ordering by arrival time enough, or do housekeepers plan by floor?",
+      "decisions": [
+        {
+          "topic": null,
+          "question": "Is ordering by arrival time enough, or do housekeepers plan by floor?",
+          "status": "open",
+          "answer": null,
+          "became": []
+        }
+      ],
+      "body": "",
       "feature": "housekeeping",
       "evidence": {
         "implements": [],
@@ -332,9 +407,17 @@
       "concepts": [
         "booking"
       ],
-      "code": [],
       "gaps": [],
-      "body": "## Learning\n\n- Do groups want one booking with many rooms, or many bookings linked\n  together?",
+      "decisions": [
+        {
+          "topic": null,
+          "question": "Do groups want one booking with many rooms, or many bookings linked together?",
+          "status": "open",
+          "answer": null,
+          "became": []
+        }
+      ],
+      "body": "",
       "feature": "reservations",
       "evidence": {
         "implements": [],
@@ -354,9 +437,17 @@
       ],
       "rules": [],
       "concepts": [],
-      "code": [],
       "gaps": [],
-      "body": "## Learning\n\n- Do rates change often enough to need a calendar, or is a rate per season\n  enough?",
+      "decisions": [
+        {
+          "topic": null,
+          "question": "Do rates change often enough to need a calendar, or is a rate per season enough?",
+          "status": "open",
+          "answer": null,
+          "became": []
+        }
+      ],
+      "body": "",
       "feature": null,
       "evidence": {
         "implements": [],
@@ -379,9 +470,17 @@
       "concepts": [
         "room@guest-stays"
       ],
-      "code": [],
       "gaps": [],
-      "body": "## Covers\n\n- Clerks see which rooms are ready for arriving guests.\n\n## Learning\n\n- Will housekeepers update a room's status as they go, or at the end of their\n  round?",
+      "decisions": [
+        {
+          "topic": null,
+          "question": "Will housekeepers update a room's status as they go, or at the end of their round?",
+          "status": "open",
+          "answer": null,
+          "became": []
+        }
+      ],
+      "body": "## Includes\n\n- Clerks see which rooms are ready for arriving guests.",
       "feature": "housekeeping",
       "evidence": {
         "implements": [],
@@ -406,14 +505,22 @@
         "booking",
         "room"
       ],
-      "code": [],
       "gaps": [],
       "feature": "reservations",
       "evidence": {
         "implements": [],
         "verifies": []
       },
-      "body": "## Covers\n\n- Clerks see who is waiting for each night.\n\n## Open decisions\n\n- **Who goes first:** whoever asked first, or whoever's stay fits the free\n  nights best?",
+      "decisions": [
+        {
+          "topic": "Who goes first",
+          "question": "Whoever asked first, or whoever's stay fits the free nights best?",
+          "status": "open",
+          "answer": null,
+          "became": []
+        }
+      ],
+      "body": "## Includes\n\n- Clerks see who is waiting for each night.",
       "tradeoffs": []
     }
   ],
@@ -423,7 +530,6 @@
       "domain": "guest-stays",
       "file": "docs/product/domains/guest-stays/rules/booking/no-double-booking.md",
       "name": "A room can't be double-booked",
-      "summary": "Two bookings for the same room can't share a night. A cancelled booking no longer holds its nights.",
       "capabilities": [
         "room-booking",
         "check-in",
@@ -433,7 +539,8 @@
         "booking",
         "room"
       ],
-      "body": "",
+      "why": null,
+      "body": "Two bookings for the same room can't share a night. A cancelled booking no\nlonger holds its nights.",
       "evidence": {
         "implements": [
           {
@@ -476,7 +583,6 @@
       "domain": "guest-stays",
       "file": "docs/product/domains/guest-stays/rules/booking/minimum-stay.md",
       "name": "A stay is at least one night",
-      "summary": "A booking's check-out date is after its check-in date.",
       "capabilities": [
         "room-booking",
         "group-bookings"
@@ -484,7 +590,8 @@
       "concepts": [
         "booking"
       ],
-      "body": "",
+      "why": null,
+      "body": "A booking's check-out date is after its check-in date.",
       "evidence": {
         "implements": [
           {
@@ -507,7 +614,6 @@
       "domain": "guest-stays",
       "file": "docs/product/domains/guest-stays/rules/booking/same-day-turnover.md",
       "name": "A stay can start on the day another ends",
-      "summary": "A room can be booked from the day an earlier booking checks out, because the two stays don't share a night.",
       "capabilities": [
         "room-booking"
       ],
@@ -515,7 +621,8 @@
         "booking",
         "room"
       ],
-      "body": "## Why\n\nGuests check out by 11:00 and check in from 15:00, which leaves time to clean\nthe room.",
+      "why": "Guests check out by 11:00 and check in from 15:00, which leaves time to clean the room.",
+      "body": "A room can be booked from the day an earlier booking checks out, because the\ntwo stays don't share a night.",
       "evidence": {
         "implements": [
           {
@@ -532,14 +639,14 @@
       "domain": "guest-stays",
       "file": "docs/product/domains/guest-stays/rules/cancellations/free-cancellation-window.md",
       "name": "Cancelling 48 hours ahead is free",
-      "summary": "A booking cancelled at least 48 hours before check-in is refunded in full.",
       "capabilities": [
         "cancellations"
       ],
       "concepts": [
         "booking"
       ],
-      "body": "",
+      "why": null,
+      "body": "A booking cancelled at least 48 hours before check-in is refunded in full.",
       "evidence": {
         "implements": [
           {
@@ -567,14 +674,14 @@
       "domain": "guest-stays",
       "file": "docs/product/domains/guest-stays/rules/cancellations/late-cancellation-fee.md",
       "name": "A late cancellation costs the first night",
-      "summary": "A booking cancelled less than 48 hours before check-in is refunded everything except the first night.",
       "capabilities": [
         "cancellations"
       ],
       "concepts": [
         "booking"
       ],
-      "body": "## Why\n\nThe room usually can't be rebooked at such short notice.",
+      "why": "The room usually can't be rebooked at such short notice.",
+      "body": "A booking cancelled less than 48 hours before check-in is refunded everything\nexcept the first night.",
       "evidence": {
         "implements": [],
         "verifies": []
@@ -587,7 +694,7 @@
       "domain": "guest-stays",
       "file": "docs/product/domains/guest-stays/concepts/booking.md",
       "name": "Booking",
-      "summary": "A guest's hold on one room for a stay, from a check-in date to a check-out date.",
+      "description": "A guest's hold on one room for a stay, from a check-in date to a check-out date.",
       "capabilities": [
         "room-booking",
         "cancellations",
@@ -602,14 +709,23 @@
         "cancellations/free-cancellation-window",
         "cancellations/late-cancellation-fee"
       ],
-      "body": "## Details\n\nA booking is for one [room](room.md). Its nights run from the check-in date up\nto, but not including, the check-out date.\n\n## Lifecycle\n\nConfirmed → Checked in → Checked out\n\nA confirmed booking can instead be Cancelled, any time before check-in."
+      "lifecycle": {
+        "states": [
+          "Confirmed",
+          "Checked in",
+          "Checked out"
+        ],
+        "text": "A confirmed booking can instead be Cancelled, any time before check-in."
+      },
+      "confusedWith": [],
+      "body": "A booking is for one [room](room.md). Its nights run from the check-in date up\nto, but not including, the check-out date."
     },
     {
       "id": "room",
       "domain": "guest-stays",
       "file": "docs/product/domains/guest-stays/concepts/room.md",
       "name": "Room",
-      "summary": "A room guests can stay in, known by its number.",
+      "description": "A room guests can stay in, known by its number.",
       "capabilities": [
         "room-booking",
         "check-in",
@@ -620,7 +736,9 @@
         "booking/no-double-booking",
         "booking/same-day-turnover"
       ],
-      "body": "## Details\n\nEach room has a type, such as double or twin, which sets its rate. A room is\n[booked](booking.md) a night at a time."
+      "lifecycle": null,
+      "confusedWith": [],
+      "body": "Each room has a type, such as double or twin, which sets its rate. A room is\n[booked](booking.md) a night at a time."
     }
   ],
   "systems": [
@@ -652,7 +770,9 @@
       "gaps": [
         "system:deployment#migrations-only-go-forward"
       ],
-      "tradeoffs": [],
+      "tradeoffs": [
+        "system:deployment#migrations-before-start"
+      ],
       "evidence": {
         "implements": [
           {
@@ -669,7 +789,17 @@
           }
         ]
       },
-      "body": "**Code:** `.github/workflows/deploy.yml`\n\n## How it works\n\nEvery merge to `main` builds one container image, tagged with the commit, and\ndeploys it. Rolling back deploys the previous tag. Migrations run before the\nnew image starts, from `db/migrations/`, in filename order.\n\n## Gotchas\n\n- A migration runs before the code that needs it, so the code that's still\n  running has to work with the new schema for a minute. Add columns before\n  using them, and remove them a release after the code stops reading them.\n\n## Open decisions\n\n- **Second instance:** once there's a second server, do releases switch over\n  all at once, or one server at a time?"
+      "start": "`.github/workflows/deploy.yml`",
+      "decisions": [
+        {
+          "topic": "Second instance",
+          "question": "Once there's a second server, do releases switch over all at once, or one server at a time?",
+          "status": "open",
+          "answer": null,
+          "became": []
+        }
+      ],
+      "body": "Every merge to `main` builds one container image, tagged with the commit, and\ndeploys it. Rolling back deploys the previous tag. Migrations run before the\nnew image starts, from `db/migrations/`, in filename order."
     }
   ],
   "components": [
@@ -710,14 +840,15 @@
         ],
         "verifies": []
       },
-      "body": "**Code:** `src/booking/`, starting at `assertRoomFree` and `saveBooking`\n\n## How it works\n\nThe app checks the room is free (`assertRoomFree`) so it can tell the clerk\nwhy it can't be booked. The bookings table's exclusion constraint is what\nactually guarantees it, since two clerks can pass the app's check at the same\nmoment.\n\n## Gotchas\n\n- Stays are half-open date ranges: the check-out date isn't a night of the\n  stay. `daterange` in Postgres is half-open by default, and `overlaps` in the\n  app has to agree with it."
+      "start": "`src/booking/`, starting at `assertRoomFree` and `saveBooking`",
+      "decisions": [],
+      "body": "The app checks the room is free (`assertRoomFree`) so it can tell the clerk\nwhy it can't be booked. The bookings table's exclusion constraint is what\nactually guarantees it, since two clerks can pass the app's check at the same\nmoment.\n\nA stay is a half-open date range: the check-out date isn't a night of the\nstay. `daterange` in Postgres is half-open by default, and `overlaps` in the\napp agrees with it."
     }
   ],
   "gaps": [
     {
       "id": "capability:cancellations#late-cancellations-refunded-in-full",
       "domain": "guest-stays",
-      "until": "beta",
       "outcome": null,
       "rule": "cancellations/late-cancellation-fee",
       "text": "The late-cancellation fee isn't charged yet, so every cancellation is refunded in full.",
@@ -726,7 +857,6 @@
     {
       "id": "capability:room-booking#calendar-needs-a-mouse",
       "domain": "guest-stays",
-      "until": "ga",
       "outcome": "usability/beta/everyone",
       "rule": null,
       "text": "The room calendar can't be used from the keyboard, so clerks need a mouse to pick dates.",
@@ -734,7 +864,6 @@
     },
     {
       "id": "system:deployment#migrations-only-go-forward",
-      "until": "ga",
       "outcome": "reliability/ga/recovery",
       "rule": null,
       "text": "Migrations have no down step, so undoing a release that changed the schema means restoring the database from the night before.",
@@ -742,7 +871,6 @@
     },
     {
       "id": "component:bookings#clashes-logged-as-unknown",
-      "until": "room-booking@ga",
       "outcome": "observability/beta/hears-of-errors",
       "rule": null,
       "text": "`saveBooking` passes every database error up as it is, so a clash that only the exclusion constraint caught is logged as an unknown failure, not as a double booking that was refused.",
@@ -760,6 +888,7 @@
       "id": "capability:room-booking#one-room-per-booking",
       "domain": "guest-stays",
       "text": "A booking holds one room, not several.",
+      "gain": "Booking, changing and cancelling stay simple: each booking is one room for one stay.",
       "cost": "A family that needs two rooms makes two bookings. Group bookings is where several rooms under one name is being explored.",
       "revisit": null,
       "places": []
@@ -768,13 +897,23 @@
       "id": "feature:reservations#front-desk-bookings-only",
       "domain": "guest-stays",
       "text": "Bookings are taken at the front desk, not from online travel agencies.",
+      "gain": "No agency integrations to build or keep working, while most bookings come straight to the desk.",
       "cost": "Clerks enter each agency booking by hand, as it arrives by email.",
       "revisit": "agency bookings pass a fifth of all bookings",
       "places": []
     },
     {
+      "id": "system:deployment#migrations-before-start",
+      "text": "Migrations run before the new image starts, while the old one is still serving, rather than stopping the app for each release.",
+      "gain": "Releases don't take the front desk offline.",
+      "cost": "The running code has to work with the new schema for a minute, so a column is added a release before it's used, and removed a release after the code stops reading it.",
+      "revisit": null,
+      "places": []
+    },
+    {
       "id": "component:bookings#constraint-not-lock",
       "text": "The database refuses overlapping bookings with an exclusion constraint, rather than the app locking the room while it checks.",
+      "gain": "No two bookings can overlap, however they arrive at once, without the app having to get locking right.",
       "cost": "Bookings need Postgres with `btree_gist`, and the check in the app is only there to give clerks a clear message first.",
       "revisit": null,
       "places": [

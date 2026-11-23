@@ -32,8 +32,8 @@ guest is charged for a stay in Billing. Both are right, each in its domain.
   two definitions, shown side by side, and that's not a problem. A capability
   uses its own domain's [rules](rule.md) and [concepts](concept.md), unless it
   names another domain's, or only one domain defines that ID.
-- **It holds open decisions whose answer becomes a rule or concept**, since
-  that's where the answer will go. See [open decision](open-decision.md).
+- **It holds open decisions about the part of the business as a whole.** See
+  [open decision](open-decision.md).
 - **It provides value only through its features.** A domain with no features
   is a part of the business the software doesn't serve yet.
 - **It's one level.** A domain holds its parts of features, never other
@@ -56,18 +56,19 @@ docs/product/domains/guest-stays/
 ```
 
 Its [`domain.md`](../../../spec/examples/hotel-bookings/docs/product/domains/guest-stays/domain.md)
-gives its name and summary, and anything worth saying about it. It has no
-frontmatter:
+gives its name, summary and open decisions in frontmatter, and anything more
+worth saying about it in its body:
 
 ```markdown
-# Guest stays
-
-Looking after guests from their booking to their check-out.
-
-## Open decisions
-
-- **Early arrivals:** when a guest arrives before the room's usual check-in
-  time, does their stay start that day, or is the night before part of it?
+---
+name: Guest stays
+summary: Looking after guests from their booking to their check-out.
+decisions:
+  - topic: Early arrivals
+    question: >-
+      When a guest arrives before the room's usual check-in time, does
+      their stay start that day, or is the night before part of it?
+---
 ```
 
 ## Not to be confused with

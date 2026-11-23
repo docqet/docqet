@@ -12,9 +12,8 @@ worked out from what they wrote.
   [annotations](annotation.md).
 - **Derived**: worked out by the [indexer](indexer.md), or by readers.
   [Evidence](evidence.md), [maturity](maturity.md), [bands](band.md),
-  [readiness](readiness.md), when each gap is [due](due.md), each checklist
-  outcome's standing, reverse links and [problems](problem.md). Nobody edits
-  it by hand.
+  [readiness](readiness.md), each checklist outcome's standing, reverse links
+  and [problems](problem.md). Nobody edits it by hand.
 
 Intention is only ever declared in a repository, so it's reviewed with the
 code. Servers and other tools read it and show it, but never change it.
@@ -26,18 +25,16 @@ Room booking's declared part is its doc:
 ```yaml
 stability: beta
 rules: [booking/no-double-booking, booking/minimum-stay, booking/same-day-turnover]
-code: [src/booking/**]
 ```
 
 Its derived part is in [state](state.md), worked out from that doc and
-everything else in the repository: the feature that lists it, how many files
-its code covers, and the evidence that names it:
+everything else in the repository: the feature that lists it, and the evidence
+that names it:
 
 ```json
 {
   "id": "room-booking",
   "feature": "reservations",
-  "code": [{ "glob": "src/booking/**", "files": 5 }],
   "evidence": {
     "implements": [{ "file": "src/booking/repository.ts", "line": 6, "text": "..." }]
   }

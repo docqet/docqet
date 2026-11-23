@@ -1,7 +1,6 @@
 ---
+name: A stay is at least one night
 concepts: [booking]
 ---
-
-# A stay is at least one night
 
 A booking's check-out date is after its check-in date.

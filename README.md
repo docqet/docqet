@@ -88,8 +88,9 @@ That makes it easy for anyone, person or agent, technical or not, to:
 
 - **See where the software is**: what it can do, who it does it for, and how
   stable each part is.
-- **Know what's left**: each part's known gaps, when each comes due, and what
-  its stability level expects that it doesn't yet meet.
+- **Know what's left**: each part's known gaps, and what its stability level
+  expects that it doesn't yet meet. When and how to close them is the team's
+  call.
 - **Understand the domain**: what its concepts mean, and which rules must
   always hold.
 - **Check the evidence**: go from any capability or rule to the code that
@@ -168,7 +169,7 @@ down:
 | ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------ |
 | **Evaluating tradeoffs**                   | Tradeoffs: what we chose instead of what, what it costs, and what would make us look again                                           |
 | **Amid uncertainty**                       | Known gaps, open decisions, drafts, and Prototype and Alpha levels, so what isn't known or done yet is said plainly                  |
-| **Deciding at the right moment**           | Open decisions, held where their answer will go until it's time to settle them, and when each gap comes due                          |
+| **Deciding at the right moment**           | Open decisions, held where their answer will go until it's time to settle them                                                      |
 | **Deciding how much is enough**            | Each capability's stability level, and the stability checklist: what that level generally expects, and what would be overengineering |
 | **Taking responsibility for the outcomes** | Every decision made in a commit and reviewed in a pull request. Intention an agent writes counts only once a person confirms it      |
 
@@ -189,8 +190,7 @@ falls short of it:
   looks wrong is meant to be that way, so neither a person nor an agent
   "fixes" it. A bug no longer looks just like a deliberate choice.
 - **Technical gaps**, marked where they are in the code instead of as bare
-  TODOs, and when each comes due, from the levels of the capabilities that
-  rely on that code.
+  TODOs, and shown on every capability that relies on that code.
 - **The standard each stability level expects**, grouped by qualities such as
   reliability and security, with each outcome not met, met with evidence from
   a system that meets it, or met on trust.

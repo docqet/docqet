@@ -1,13 +1,10 @@
 ---
+name: Card numbers are never kept
 concepts: [payment]
+why: >-
+  Holding card numbers would put the hotel under the card schemes' security
+  audits.
 ---
-
-# Card numbers are never kept
 
 The hotel never stores a guest's card number. Only the payment provider holds
 it.
-
-## Why
-
-Holding card numbers would put the hotel under the card schemes' security
-audits.

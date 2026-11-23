@@ -10,11 +10,17 @@ import RuleRoundedIcon from "@mui/icons-material/RuleRounded";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 import WidgetsOutlinedIcon from "@mui/icons-material/WidgetsOutlined";
 import Box from "@mui/material/Box";
+import ReactMarkdown, { type Components } from "react-markdown";
+import rehypeHighlight from "rehype-highlight";
+import remarkGfm from "remark-gfm";
 import { DetailsCard, DetailsEyebrow, DetailsPopover } from "./design/DetailsPopover";
+import { Body, Facets, facets } from "./Fields";
 import { CapabilityStability } from "./design/catalog/CapabilityLabel";
 import {
   byFeature,
   capabilityTarget,
+  conceptLinked,
+  fieldsText,
   find,
   bareId,
   domainName,
@@ -186,16 +192,21 @@ function follow(state: DocketState, from: { file: string; project: string }, hre
 }
 
 /*
- * A doc's body, as Markdown: headings, paragraphs, lists, links, bold,
- * italics, and code. Just what Docket's docs use; anything else shows as
- * text. Links resolve from `concept`, the doc the body is from. With
- * `onPick`, as on a detail page, a link to a capability or feature opens it
- * rather than showing it on the map.
+ * Markdown, from a doc's body or a text value in its frontmatter
+ * (GitHub-flavored: tables, task lists, nested lists, fenced code with
+ * highlighting, images). Nothing about it is assumed: it can be a word or
+ * pages, with headings or none. Links resolve from `concept`, the doc it's
+ * from: one to another doc opens it in Docket, one with a scheme opens in a
+ * new tab, and one Docket can't place shows as its text. With `onPick`, as on
+ * a detail page, a link to a capability or feature opens it rather than
+ * showing it on the map. Its headings sit under the heading of whatever shows
+ * it, so they keep their order but start a few levels down.
  */
 export function Markdown({
   state,
   concept,
   text,
+  className,
   onConcept,
   onShow,
   onPick,
@@ -203,84 +214,75 @@ export function Markdown({
   state: DocketState;
   concept: { file: string; project: string };
   text: string;
+  className?: string;
   onConcept: (id: string) => void;
   onShow: (target: Target) => void;
   onPick?: (pick: Pick) => void;
 }) {
-  const inline = (s: string): ReactNode[] =>
-    s.split(/(\[[^\]]+\]\([^)\s]+\)|\*\*[^*]+\*\*|`[^`]+`|\*[^*\s][^*]*\*|_[^_\s][^_]*_)/g).map((part, i) => {
-      const link = part.match(/^\[([^\]]+)\]\(([^)\s]+)\)$/);
-      if (link) {
-        const to = follow(state, concept, link[2]);
-        if (!to) return link[1];
-        if ("href" in to)
-          return (
-            <a key={i} href={to.href} target="_blank" rel="noreferrer">
-              {link[1]}
-            </a>
-          );
+  const components: Components = {
+    h1: ({ children }) => <h3 className="md-h1">{children}</h3>,
+    h2: ({ children }) => <h4 className="md-h2">{children}</h4>,
+    h3: ({ children }) => <h5 className="md-h3">{children}</h5>,
+    h4: ({ children }) => <h6 className="md-h4">{children}</h6>,
+    h5: ({ children }) => <h6 className="md-h4">{children}</h6>,
+    h6: ({ children }) => <h6 className="md-h4">{children}</h6>,
+    img: ({ src, alt }) => <img src={typeof src === "string" ? src : undefined} alt={alt ?? ""} loading="lazy" />,
+    table: ({ children }) => (
+      <div className="markdown-table">
+        <table>{children}</table>
+      </div>
+    ),
+    a: ({ href, children }) => {
+      const to = href ? follow(state, concept, href) : null;
+      if (!to) return <>{children}</>;
+      if ("href" in to)
         return (
-          <button
-            key={i}
-            type="button"
-            className="link"
-            onClick={() => ("concept" in to ? onConcept(to.concept) : onPick ? onPick(to.pick) : onShow(to.target))}
-          >
-            {link[1]}
-          </button>
+          <a href={to.href} target="_blank" rel="noreferrer">
+            {children}
+          </a>
         );
-      }
-      if (/^\*\*.+\*\*$/.test(part)) return <strong key={i}>{part.slice(2, -2)}</strong>;
-      if (/^`.+`$/.test(part)) return <code key={i}>{part.slice(1, -1)}</code>;
-      if (/^([*_]).+\1$/.test(part)) return <em key={i}>{part.slice(1, -1)}</em>;
-      return part;
-    });
-
-  const blocks = text.trim().split(/\n\s*\n/);
+      return (
+        <button type="button" className="link" onClick={() => ("concept" in to ? onConcept(to.concept) : onPick ? onPick(to.pick) : onShow(to.target))}>
+          {children}
+        </button>
+      );
+    },
+  };
   return (
-    <div className="markdown">
-      {blocks.map((block, i) => {
-        const heading = block.match(/^(#{1,6})\s+(.*)$/);
-        /* `#` and `##` head a part of the doc; `###` and deeper, such as a persona's name, a group within one. */
-        if (heading) return heading[1].length <= 2 ? <h4 key={i}>{inline(heading[2])}</h4> : <h5 key={i}>{inline(heading[2])}</h5>;
-        const lines = block.split("\n");
-        if (lines.every((l) => /^\s*([-*]|\d+\.)\s+/.test(l) || /^\s{2,}\S/.test(l))) {
-          const items: string[] = [];
-          for (const l of lines) {
-            if (/^\s*([-*]|\d+\.)\s+/.test(l)) items.push(l.replace(/^\s*([-*]|\d+\.)\s+/, ""));
-            else items[items.length - 1] += ` ${l.trim()}`;
-          }
-          const Tag = /^\s*\d+\./.test(lines[0]) ? "ol" : "ul";
-          return (
-            <Tag key={i}>
-              {items.map((item, j) => (
-                <li key={j}>{inline(item)}</li>
-              ))}
-            </Tag>
-          );
-        }
-        if (block.startsWith("```"))
-          return (
-            <pre key={i}>
-              <code>{block.replace(/^```\w*\n?|```$/g, "")}</code>
-            </pre>
-          );
-        return <p key={i}>{inline(lines.join(" "))}</p>;
-      })}
+    <div className={className ? `markdown ${className}` : "markdown"}>
+      <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[[rehypeHighlight, { detect: false }]]} components={components}>
+        {text.trim()}
+      </ReactMarkdown>
     </div>
   );
 }
 
+/* A sentence or two of Markdown, such as a gap's text, inline: code, bold and italics, with no paragraph around it. Links show as their text. */
+export function InlineMarkdown({ text }: { text: string }) {
+  return (
+    <ReactMarkdown remarkPlugins={[remarkGfm]} components={{ p: ({ children }) => <>{children}</>, a: ({ children }) => <>{children}</> }}>
+      {text.trim()}
+    </ReactMarkdown>
+  );
+}
+
 /*
- * Concepts its body links to, then those that share a rule with it, since a
- * rule that refers to two concepts says how they bear on each other.
+ * Concepts it's not to be confused with, then those its Markdown links to,
+ * then those that share a rule with it, since a rule that refers to two
+ * concepts says how they bear on each other.
  */
 export function related(state: DocketState, concept: Concept): Concept[] {
   const ids = new Set<string>();
-  for (const [, href] of concept.body.matchAll(/\]\(([^)\s]+)\)/g)) {
-    const to = follow(state, concept, href);
-    if (to && "concept" in to) ids.add(to.concept);
-  }
+  for (const f of concept.from)
+    for (const c of f.confusedWith ?? []) {
+      const to = c.concept ? conceptLinked(state, c.concept, f.domain) : undefined;
+      if (to) ids.add(to.id);
+    }
+  for (const f of concept.from)
+    for (const [, href] of `${f.body} ${fieldsText(f)}`.matchAll(/\]\(([^)\s]+)\)/g)) {
+      const to = follow(state, f, href);
+      if (to && "concept" in to) ids.add(to.concept);
+    }
   for (const ruleId of concept.rules) for (const id of find(state.rules, ruleId)?.concepts ?? []) ids.add(id);
   ids.delete(concept.id);
   return [...ids].flatMap((id) => find(state.concepts, id) ?? []);
@@ -359,7 +361,7 @@ function ConceptList({ state, onSelect }: { state: DocketState; onSelect: (id: s
   const terms = query.toLowerCase().split(/\s+/).filter(Boolean);
   const sorted = useMemo(() => [...state.concepts].sort((a, b) => a.name.localeCompare(b.name)), [state]);
   const shown = sorted.filter((c) => {
-    const text = `${c.name} ${c.summary ?? ""} ${c.id} ${c.body}`.toLowerCase();
+    const text = `${c.name} ${c.summary ?? ""} ${c.id} ${fieldsText(c)} ${c.body}`.toLowerCase();
     return terms.every((t) => text.includes(t));
   });
 
@@ -460,9 +462,12 @@ function ConceptView({
           </button>
         </div>
       ) : null}
-      {concept.body.trim() ? (
-        <Markdown state={state} concept={concept} text={concept.body} onConcept={onSelect} onShow={onShow} />
-      ) : null}
+      {concept.from.map((f, i) => (
+        <div key={i} className="concept-says">
+          <Facets items={facets("concept", f, { state, onConcept: onSelect, onShow })} stacked />
+          <Body from={f} go={{ state, onConcept: onSelect, onShow }} limit={360} />
+        </div>
+      ))}
       <p className="concept-file">
         <code>{concept.file}</code>
       </p>
@@ -515,7 +520,7 @@ function ConceptView({
                   <RuleRoundedIcon sx={{ fontSize: 15, color: "text.secondary", alignSelf: "flex-start", mt: "2px" }} />
                   <span className="concept-row-text">
                     <span className="concept-row-name">{r.name}</span>
-                    {r.summary ? <span className="concept-row-summary">{r.summary}</span> : null}
+                    {r.body ? <span className="concept-row-summary">{r.body}</span> : null}
                   </span>
                 </button>
               </li>

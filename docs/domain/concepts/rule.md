@@ -41,17 +41,27 @@ A rule belongs to the [domain](domain.md), not to a capability or a feature:
 
 A rule is one file in its domain's `rules/` folder, grouped by topic. Its ID is
 its path there: `booking/no-double-booking`.
+Its `name` is the rule in a few words, and `why` says why it holds, so
+whoever meets a case it didn't foresee can judge it. It has no `summary`: its
+body, if it has one, states the rule in full where the name doesn't, and gives
+examples or how it plays out.
 [`no-double-booking.md`](../../../spec/examples/hotel-bookings/docs/product/domains/guest-stays/rules/booking/no-double-booking.md):
 
 ```markdown
 ---
+name: A room can't be double-booked
 concepts: [booking, room]
 ---
 
-# A room can't be double-booked
-
 Two bookings for the same room can't share a night. A cancelled booking no
 longer holds its nights.
+```
+
+[`late-cancellation-fee.md`](../../../spec/examples/hotel-bookings/docs/product/domains/guest-stays/rules/cancellations/late-cancellation-fee.md)
+says why:
+
+```yaml
+why: The room usually can't be rebooked at such short notice.
 ```
 
 Capabilities follow it by listing it, as room booking does with

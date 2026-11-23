@@ -21,16 +21,21 @@ none.
 
 ## In the spec
 
-A component is a doc in `docs/technical/components/`.
+A component is a doc in `docs/technical/components/`, shaped as a system's
+is, with how it works as its body.
 [`bookings.md`](../../../spec/examples/hotel-bookings/docs/technical/components/bookings.md):
 
 ```markdown
 ---
+name: Bookings
+summary: >-
+  Where a room is held for a stay, and where no double-booking is enforced.
+start: >-
+  `src/booking/`, starting at `assertRoomFree` and `saveBooking`
 capabilities: [room-booking, group-bookings, check-in]
 code: [src/booking/**, db/migrations/001_bookings.sql]
 gaps:
   - id: clashes-logged-as-unknown
-    until: room-booking@ga
     outcome: observability/beta/hears-of-errors
     text: >-
       `saveBooking` passes every database error up as it is, so a clash that
@@ -46,24 +51,14 @@ tradeoffs:
       only there to give clerks a clear message first.
 ---
 
-# Bookings
-
-Where a room is held for a stay, and where no double-booking is enforced.
-
-**Code:** `src/booking/`, starting at `assertRoomFree` and `saveBooking`
-
-## How it works
-
 The app checks the room is free (`assertRoomFree`) so it can tell the clerk
 why it can't be booked. The bookings table's exclusion constraint is what
 actually guarantees it, since two clerks can pass the app's check at the same
 moment.
 
-## Gotchas
-
-- Stays are half-open date ranges: the check-out date isn't a night of the
-  stay. `daterange` in Postgres is half-open by default, and `overlaps` in the
-  app has to agree with it.
+A stay is a half-open date range: the check-out date isn't a night of the
+stay. `daterange` in Postgres is half-open by default, and `overlaps` in the
+app agrees with it.
 ```
 
 ## Not to be confused with

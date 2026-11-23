@@ -22,31 +22,36 @@ about.
 - **It's one across every domain.** People work across the parts of the
   business, so a persona is written for the whole project, not in a domain,
   and projects that serve the same people share its ID.
-- **It isn't a role or a permission.** It says who someone is and what they
-  need, not what they're allowed to do.
+- **It has a role and a title, but isn't a role.** Its role is how they use
+  the software, such as the role it gives them, and its title is the job they
+  hold. Either can be missing: a hotel guest has no title. The persona itself
+  says who someone is and what they need, not what they're allowed to do.
 - **It has no stability level or maturity.** It has a
   [readiness](readiness.md): how ready the software is for them, worked out
   from the maturity of what they need.
 
 ## In the spec
 
-A persona is a doc in `docs/product/personas/`, outside any domain, with a
-picture. [`front-desk-clerk.md`](../../../spec/examples/hotel-bookings/docs/product/personas/front-desk-clerk.md),
+A persona is a doc in `docs/product/personas/`, outside any domain. Its name
+and summary, its role and title, an optional picture, and a `needs` list are
+frontmatter. Without a picture, readers show their initials. Its body is for
+anything more about who they are, such as what they know, their context, the
+words and tools they expect, and what they care about, and can be left out.
+[`front-desk-clerk.md`](../../../spec/examples/hotel-bookings/docs/product/personas/front-desk-clerk.md),
 shortened:
 
 ```markdown
 ---
+name: Maria
+summary: >-
+  Runs the front desk: takes bookings, and checks guests in and out.
+role: Front desk
+title: Front desk clerk
 image: https://randomuser.me/api/portraits/women/68.jpg
+needs:
+  - To tell a guest at once whether a room is free for their dates, and hold it
+    for them, without ever giving the same room to two guests.
 ---
-
-# Maria, front desk clerk
-
-Runs the front desk: takes bookings, and checks guests in and out.
-
-## Needs
-
-- To tell a guest at once whether a room is free for their dates, and hold it
-  for them, without ever giving the same room to two guests.
 
 ## Knows
 
@@ -56,21 +61,11 @@ Every room in the hotel, the regulars, and the cancellation policy by heart.
 
 At the desk all shift, on a shared desktop, with a guest or the phone waiting
 most of the time.
-
-## Expects
-
-The paper diary's view of the hotel: rooms down the side, nights across the
-top.
-
-## Cares about
-
-Never having to tell a guest standing in front of them that their room was
-given away.
 ```
 
 A capability links them with `personas: [front-desk-clerk]`.
 
 ## Not to be confused with
 
-- A role or permission: what someone may do in the software. A persona is who
-  they are and what they need.
+- A role or permission: what someone may do in the software. A persona has a
+  role, but is who they are and what they need.

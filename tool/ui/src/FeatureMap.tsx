@@ -39,7 +39,7 @@ const GAP = 28;
 
 /*
  * A capability's line on a card in a domain: its name, with how many rules
- * and known gaps it has and any contradiction after it, and its level in
+ * and product gaps it has and any contradiction after it, and its level in
  * that domain. Clicking it opens the rest in the side panel.
  */
 function line(state: DocketState, c: Capability, domain: string) {

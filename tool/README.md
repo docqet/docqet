@@ -7,7 +7,7 @@ The `docket` command and the UI.
   Not built yet.
 - **[The UI](ui/)** reads only `state.json`. It answers, at a glance: what the
   software can do, who it serves and how far along it is for each of them, how
-  stable each capability is, the rules each follows, and what the known gaps
+  stable each capability is, the rules each follows, and what the gaps
   are. A rule shows the code and tests that point at it.
 
 The UI shows several projects together, each from its own `state.json`. Before
@@ -43,21 +43,29 @@ With more than one project on a platform, the UI shows them all on one map:
   several, it's worked out from all their parts of features, the same way as
   one project's, and its popover lists each project's.
 
-The side panel summarizes a doc: what it is, what's left, and what it's
-connected to. Its **Details** link opens everything about it, such as each
+The side panel summarizes a doc: what it is, how far along it is, what's
+left, and who it serves. What it says beyond its summary is folded under
+*More about it*; its tradeoffs, the rules it follows, and what's left that
+only someone working on the code acts on (*Technical gaps* and *Rules without
+evidence*) are folded until opened, each with how many it holds. Its
+**Details** link opens everything about it, such as what it's built on, each
 rule's evidence, the stability checklist and the code, in a new tab, at an
 address like `?capability=deposits` that keeps the projects showing.
 
 Where the software differs from what's intended shows where it's declared,
-and wherever it matters:
+and wherever it matters. Each kind looks the same everywhere, on the map, in
+the side panel, on a detail page and on the checklist: one mark and one color
+per kind (gaps, product or technical, open decisions, rules without evidence,
+tradeoffs), and each item a row with its mark, which a detail page adds more
+under.
 
-- **What's left** on a capability lists its open decisions, its known gaps,
-  the technical gaps of the systems and components it's built on, under
-  *Under the hood*, and its rules without evidence. Each gap says when it's to
-  close, in the warning's tone once it's due. A feature's or domain's adds its
-  own open decisions; a persona's leaves technical gaps out.
+- **What's left** on a capability lists its open decisions, its product
+  gaps, the technical gaps of the systems and components it's built on, and
+  its rules without evidence. A feature's or domain's
+  adds its own open decisions; a persona's leaves technical gaps out.
 - **Tradeoffs** show on their capability, and on a feature as what it's
-  decided not to build, each with what it costs and the code it explains.
+  decided not to build: in the side panel, what was chosen; on the detail
+  page, each with what it gains, what it costs, and the code it explains.
 - **Drafts** show as the word Draft, with no mark, and count toward no
   maturity or readiness.
 - **The checklist** marks each outcome not met, met with evidence (a system
@@ -68,8 +76,8 @@ and wherever it matters:
   open decisions, the outcomes it meets and their evidence, and what relies on
   it.
 - **Gaps and tradeoffs**, at `?view=gaps` and from the header, has every gap
-  by when it's due, every open decision by where it is, and every tradeoff, for
-  everything, what people notice, or what's under the hood.
+  and tradeoff by what it's on, every open decision by where it is, for
+  everything, product gaps, or technical gaps.
 
 `npm run build` writes a static site to `dist/`. Put a `state.json` beside its
 `index.html` and serve the folder. Nothing else runs on the server. To show

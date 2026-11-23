@@ -22,8 +22,20 @@ the capability links the [personas](persona.md) it serves: who does it, or who
 it's done for. What it doesn't do is said elsewhere. What must always or never
 happen is a [rule](rule.md) it follows, what's missing for now is a known
 [gap](gap.md), and what's limited by choice is a [tradeoff](tradeoff.md).
-Anything else it includes, when the sentence doesn't show it, is listed under
-what it covers, each a sentence of its own.
+The other things people do with it, or the software does for them, when the
+sentence doesn't show them, can be said in its body, each a sentence of its
+own: "Clerks move a booking to new dates." Each is something this capability
+does that nothing else on it says:
+
+- **It adds to the summary**, and never says it again in other words. If the
+  summary shows everything, the capability includes nothing more.
+- **It's something done, not a limit on doing it.** What must or can't
+  happen is a rule, even when it's about one action. An item that says
+  "only", "never", "can't", "without" or "before they can" is a rule in
+  disguise: the capability lists that rule, writing it if there isn't one, and
+  the item goes.
+- **It's this capability's.** What another capability does is said there, and
+  not here as a pointer to it.
 
 Something is a capability when:
 
@@ -33,8 +45,7 @@ Something is a capability when:
 - **Its result is distinct.** The actions that lead to the same result are
   part of one capability. Seeing which rooms are free, booking one, and moving
   a booking to new dates all lead to a guest with a room held for their stay,
-  under the same rules. So they're all room booking, listed under what it
-  covers. Cancelling leads to a different result under different rules, so
+  under the same rules. So they're all room booking. Cancelling leads to a different result under different rules, so
   it's a capability of its own.
 - **It can be depended on by itself.** People can rely on room booking while
   group bookings is still a prototype. That's why the stability level belongs
@@ -74,11 +85,18 @@ when someone decides to promote or demote it.
 
 ## In the spec
 
-A capability is a doc in its domain's `capabilities/` folder.
+A capability is a doc in its domain's `capabilities/` folder. Its name and
+summary, its level and its links are frontmatter. It names no code: the
+systems and components that list it say where it's built. Questions building
+it should answer are open decisions. Its body is for anything more about what
+it does, such as what else it includes or how we'll know it works, and can be
+left out.
 [`room-booking.md`](../../../spec/examples/hotel-bookings/docs/product/domains/guest-stays/capabilities/room-booking.md):
 
 ```markdown
 ---
+name: Room booking
+summary: Clerks book a free room for a guest's stay.
 stability: beta
 personas: [front-desk-clerk]
 rules:
@@ -86,10 +104,8 @@ rules:
   - booking/minimum-stay
   - booking/same-day-turnover
 concepts: [booking, room]
-code: [src/booking/**]
 gaps:
   - id: calendar-needs-a-mouse
-    until: ga
     outcome: usability/beta/everyone
     text: >-
       The room calendar can't be used from the keyboard, so clerks need a
@@ -97,16 +113,15 @@ gaps:
 tradeoffs:
   - id: one-room-per-booking
     text: A booking holds one room, not several.
+    gain: >-
+      Booking, changing and cancelling stay simple: each booking is one room
+      for one stay.
     cost: >-
       A family that needs two rooms makes two bookings. Group bookings is
       where several rooms under one name is being explored.
 ---
 
-# Room booking
-
-Clerks book a free room for a guest's stay.
-
-## Covers
+## Includes
 
 - Clerks see which rooms are free for a stay.
 - Clerks move a booking to new dates.
@@ -122,16 +137,18 @@ has its people, rules and an open decision before any code exists:
 
 ```markdown
 ---
+name: Waitlist
+summary: >-
+  Clerks put a guest on a waitlist when every room is taken, and offer them
+  the first room that frees up for their stay.
 stability: draft
 personas: [front-desk-clerk]
 rules: [booking/no-double-booking]
 concepts: [booking, room]
+decisions:
+  - topic: Who goes first
+    question: Whoever asked first, or whoever's stay fits the free nights best?
 ---
-
-# Waitlist
-
-Clerks put a guest on a waitlist when every room is taken, and offer them the
-first room that frees up for their stay.
 ```
 
 ## Not to be confused with

@@ -25,19 +25,26 @@ never the other way, and has no level or domain of its own.
 
 ## In the spec
 
-A system is a doc in `docs/technical/systems/`. Its frontmatter holds what
-tools compute with, and its body what an engineer reads first.
+A system is a doc in `docs/technical/systems/`. Its frontmatter holds its
+name and summary, `start`, where to start reading its code, and what tools
+compute with. Its body is how it works, in whatever shape explains it best,
+with no heading.
 [`ledger.md`](../../../spec/examples/hotel-billing/docs/technical/systems/ledger.md),
 with its body shortened:
 
 ```markdown
 ---
+name: Ledger
+summary: >-
+  Every amount a guest owes or pays, as lines on their bill that are only ever
+  added, never changed.
+start: >-
+  `src/ledger/ledger.ts`, starting at `post`
 capabilities: [extra-charges, split-bills, deposits, check-out, direct-billing]
 code: [src/ledger/**]
 meets: [reliability/beta/data-kept]
 gaps:
   - id: corrections-of-corrections-untested
-    until: extra-charges@ga
     outcome: maintainability/ga/others-can-change
     text: >-
       Nothing tests correcting a line that is itself a correction, so a change
@@ -52,22 +59,8 @@ tradeoffs:
     revisit: a bill passes 1,000 lines
 ---
 
-# Ledger
-
-Every amount a guest owes or pays, as lines on their bill that are only ever
-added, never changed.
-
-**Code:** `src/ledger/ledger.ts`, starting at `post`
-
-## How it works
-
 Everything that changes what a guest owes goes through `post`: room nights,
 extras, deposits, payments and corrections. ...
-
-## Gotchas
-
-- Amounts are whole cents, never fractions of a unit, so totals add up
-  exactly. Convert at the edges, when reading input and showing amounts.
 ```
 
 Code points back at it as evidence, `// docket:implements system:ledger`,

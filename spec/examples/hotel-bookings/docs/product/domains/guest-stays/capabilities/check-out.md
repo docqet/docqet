@@ -1,15 +1,14 @@
 ---
+name: Check-out
+summary: >-
+  Clerks check guests out on their departure day and take payment for anything
+  still owed.
 stability: ga
 personas: [front-desk-clerk]
 concepts: [booking]
 ---
 
-# Check-out
-
-Clerks check guests out on their departure day and take payment for anything
-still owed.
-
-## Covers
+## Includes
 
 - Clerks see today's departures.
 

@@ -1,19 +1,17 @@
 ---
+name: Room status
+summary: >-
+  Housekeepers mark rooms clean or dirty, so the front desk knows which are
+  ready.
 stability: prototype
 personas: [housekeeper, front-desk-clerk]
 concepts: [room@guest-stays]
+decisions:
+  - question: >-
+      Will housekeepers update a room's status as they go, or at the end
+      of their round?
 ---
 
-# Room status
-
-Housekeepers mark rooms clean or dirty, so the front desk knows which are
-ready.
-
-## Covers
+## Includes
 
 - Clerks see which rooms are ready for arriving guests.
-
-## Learning
-
-- Will housekeepers update a room's status as they go, or at the end of their
-  round?
