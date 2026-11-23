@@ -1,0 +1,62 @@
+# Bringing Docket to a repository
+
+A repository becomes a Docket project with a `docket.yaml` at its root:
+
+```yaml
+project:
+  id: hotel-bookings      # kebab case, unique among the platform's projects
+  name: Hotel Bookings    # named for the software
+platform:                 # optional: the projects that make up one product together
+  id: hotel
+  name: Hotel             # named for the product
+```
+
+Add `.docket/state.json` to `.gitignore`.
+
+## Intention read from code isn't declared
+
+You can work out a lot of the intention from existing code, tests and docs.
+That's useful, but it repeats what the code does, bugs included, so it isn't
+declared until a person confirms it. Docket has no marker for unconfirmed
+intention yet, so:
+
+- **Propose, then write.** Show the person what you'd declare, in small
+  batches they can check, before writing it as docs. Their confirmation is
+  what makes it declared.
+- **Say where it came from.** For each capability or rule, say what in the
+  code or existing docs it rests on, so they can judge it.
+- **Ask about what looks like a bug.** Code that seems to contradict its own
+  intent is a question, not a rule.
+- **Levels are theirs.** Propose each capability's level from what the
+  repository shows, and ask them to confirm it.
+
+## Where to start
+
+Start small, with one feature the person cares about, rather than the whole
+repository:
+
+1. **The domains.** Ask, or propose from how the business talks about itself,
+   not from how the code is split up. Most projects have one or two.
+2. **The feature and its capabilities**, each as one sentence saying who does
+   what, at its level. Capabilities asked for but not started are drafts.
+3. **The personas** those capabilities serve.
+4. **The rules** they follow, each with its `why`, which only a person can
+   usually give. A rule without a known why is worth asking about.
+5. **The gaps** people already know about, and the tradeoffs they've already
+   made.
+6. **Annotations** on the code and tests that implement or verify those rules
+   and capabilities, as you go.
+
+Technical docs come last and only where the code can't say something. Most of
+the code needs none.
+
+If the project already keeps any of this somewhere else, such as a wiki,
+tickets or another docs folder, offer to bring it into Docket and leave a
+pointer behind, rather than keeping two copies.
+
+## Telling the project about itself
+
+Anything this project does differently from the kit goes in its own agent
+instructions, outside the kit's block in `AGENTS.md`. Write it down there
+when it's settled, such as which repository holds the product docs for a
+platform, or what the project's domains are.

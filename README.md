@@ -310,8 +310,9 @@ in the same change as the code, and recording gaps and decisions as they're
 made.
 
 It's optional. Docket works without agents, and the kit is how they make the
-most of it. The first kit will be for Claude Code, grown out of the `docs`
-skill in forge. See [`kit/`](kit/).
+most of it. It's written for any agent, as an `AGENTS.md` block and an Agent
+Skills skill, and each project adds its own instructions beside it. See
+[`kit/`](kit/).
 
 ### 2. Docket server
 
@@ -355,7 +356,7 @@ is never edited directly.
 | Spec                  | A draft for review, with two example projects laid out as repositories. See [`spec/`](spec/).   |
 | Indexer               | Not built. The examples' `state.json` files are written by hand to show what it would produce.  |
 | Server and UI         | No server yet. A static UI reads one or more `state.json` files directly. See [`tool/`](tool/). |
-| Agent development kit | Not started. Forge's `docs` skill does part of the job today. See [`kit/`](kit/).               |
+| Agent development kit | A first draft for any agent: an `AGENTS.md` block and a `docket` skill. See [`kit/`](kit/).     |
 
 ## Open questions
 
