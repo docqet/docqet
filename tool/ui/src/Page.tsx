@@ -37,12 +37,11 @@ import {
   leftLine,
   levelName,
   plural,
-  readinessBasis,
   type ExploreKind,
 } from "./Explore";
 import { DomainIcon } from "./FeatureMap";
 import Logo from "./Logo";
-import { PersonaAvatar, ReadinessMeter, personaNameAndRole } from "./Personas";
+import { PersonaAvatar, ReadinessMeter, personaNameAndRole, readinessBasis } from "./Personas";
 import { ProjectIcon } from "./PlatformFilter";
 import {
   bareId,

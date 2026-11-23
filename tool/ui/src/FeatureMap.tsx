@@ -182,7 +182,7 @@ export function mapItems(
       id: personaCard(p.id),
       node: (
         <div className="slot persona-slot" data-persona={p.id} onClick={opener(onOpen, { kind: "persona", id: p.id })}>
-          <PersonaCard persona={p} />
+          <PersonaCard state={state} persona={p} />
         </div>
       ),
     });

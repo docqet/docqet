@@ -25,7 +25,7 @@ import { Term } from "./design/term/Term";
 import { InlineMarkdown, MoreAboutFold } from "./design/markdown/Markdown";
 import { CameFrom, Decided, DecisionList, Facets, facets } from "./Fields";
 import { DomainIcon } from "./FeatureMap";
-import { PersonaAvatar, PersonaIcon, ReadinessMeter, personaNameAndRole, type ReadinessBasis } from "./Personas";
+import { PersonaAvatar, PersonaIcon, ReadinessMeter, personaNameAndRole, readinessBasis, type ReadinessBasis } from "./Personas";
 import { ProjectIcon } from "./PlatformFilter";
 import {
   capabilityTarget,
@@ -481,14 +481,6 @@ export function Readiness({ value, basis }: { value: number | null; basis: Readi
       </Tip>
     );
   return <ReadinessMeter value={value} basis={basis} large />;
-}
-
-/* What a persona's readiness is worked out from: the capabilities that serve them, in `feature` or everywhere. */
-export function readinessBasis(state: DocketState, persona: Persona, feature?: Feature): ReadinessBasis {
-  const ids = feature ? feature.capabilities.filter((id) => persona.capabilities.includes(id)) : persona.capabilities;
-  /* Drafts count toward no readiness, so they aren't part of what it's from. */
-  const capabilities = ids.flatMap((id) => find(state.capabilities, id) ?? []).filter((c) => c.stability !== null);
-  return { persona: personaNameAndRole(persona).name, feature: feature?.name, capabilities };
 }
 
 /* A capability's level, as a mark and its name in the level's color; a draft has neither, only the word. */

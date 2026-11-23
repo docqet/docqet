@@ -8,7 +8,7 @@ import { DetailsCard, DetailsEyebrow, DetailsPopover } from "./design/DetailsPop
 import { Grip } from "./design/Grip";
 import { STABILITY_LEVEL_IDS } from "./design/stability/stability";
 import { CapabilityStability } from "./design/catalog/CapabilityLabel";
-import type { Capability, Persona } from "./state";
+import { find, type Capability, type DocketState, type Feature, type Persona } from "./state";
 
 export function PersonaIcon({ size = 16 }: { size?: number }) {
   return <PersonOutlineRoundedIcon sx={{ fontSize: size, flex: "none", color: "var(--persona)" }} />;
@@ -38,8 +38,8 @@ export function personaNameAndRole(persona: Persona): { name: string; role: stri
   return { name: persona.name, role: under || null };
 }
 
-/* A persona on the map: just their picture, name and role. Clicking it opens the rest in the side panel. */
-export function PersonaCard({ persona }: { persona: Persona }) {
+/* A persona on the map: their picture, name and role, and how ready the software is for them. Clicking it opens the rest in the side panel. */
+export function PersonaCard({ state, persona }: { state: DocketState; persona: Persona }) {
   const { name, role } = personaNameAndRole(persona);
   return (
     <Card
@@ -64,6 +64,11 @@ export function PersonaCard({ persona }: { persona: Persona }) {
           {name}
         </Box>
         {role ? <Box sx={{ typography: "body2", color: "text.secondary", lineHeight: 1.35 }}>{role}</Box> : null}
+        {persona.readiness !== null ? (
+          <Box sx={{ mt: 0.75 }}>
+            <ReadinessMeter value={persona.readiness} basis={readinessBasis(state, persona)} inButton />
+          </Box>
+        ) : null}
       </Box>
     </Card>
   );
@@ -122,6 +127,14 @@ const READINESS_SUMMARIES: Record<string, string> = {
 /* What a readiness is worked out from, for its popover: whose it is, and the capabilities that serve them, in a feature or everywhere. */
 export type ReadinessBasis = { persona: string; feature?: string; capabilities: Capability[] };
 
+/* What a persona's readiness is worked out from: the capabilities that serve them, in `feature` or everywhere. */
+export function readinessBasis(state: DocketState, persona: Persona, feature?: Feature): ReadinessBasis {
+  const ids = feature ? feature.capabilities.filter((id) => persona.capabilities.includes(id)) : persona.capabilities;
+  /* Drafts count toward no readiness, so they aren't part of what it's from. */
+  const capabilities = ids.flatMap((id) => find(state.capabilities, id) ?? []).filter((c) => c.stability !== null);
+  return { persona: personaNameAndRole(persona).name, feature: feature?.name, capabilities };
+}
+
 /*
  * How ready the software is for someone, for its popover: its step and bar,
  * what that step means, the capabilities it's worked out from with their
@@ -141,7 +154,9 @@ function ReadinessDetails({ value, basis }: { value: number; basis: ReadinessBas
           <Box sx={{ fontSize: "1.12em", fontWeight: 700 }} style={{ color: readinessColor(value) }}>
             {name}
           </Box>
-          <Box sx={{ fontWeight: 650, fontVariantNumeric: "tabular-nums" }}>{value}%</Box>
+          <Box sx={{ fontWeight: 650, fontVariantNumeric: "tabular-nums" }} style={{ color: readinessColor(value) }}>
+            {value}%
+          </Box>
         </Box>
         <Box sx={{ mt: 1 }}>
           <ReadinessTrack value={value} size="wide" />
@@ -176,7 +191,8 @@ function ReadinessDetails({ value, basis }: { value: number; basis: ReadinessBas
 /*
  * How ready the software is for someone, as a bar, with a popover (hover,
  * focus, or tap) saying what it means and what it's from. Small, in a row,
- * it's just the bar; large, it says its step and percentage beside it. Inside
+ * it's the bar and its percentage; large, it says its step too. Its
+ * percentage is always in its color. Inside
  * something clickable, `inButton` opens the popover on hover only, so a tap
  * still reaches the row.
  */
@@ -204,7 +220,7 @@ export function ReadinessMeter({
       >
         {large ? <strong>{name}</strong> : null}
         <ReadinessTrack value={value} size={large ? "large" : "small"} />
-        {large ? <span className="readiness-value">{value}%</span> : null}
+        <span className="readiness-value">{value}%</span>
       </span>
     </DetailsPopover>
   );
