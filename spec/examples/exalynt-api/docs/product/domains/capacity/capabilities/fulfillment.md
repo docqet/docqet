@@ -62,83 +62,99 @@ rules:
 concepts: [capacity-block, fulfilled, focus, payout-share]
 gaps:
   - id: no-start-or-fulfill-notifications
+    name: No notice of starts or fulfillment
     impact: inconvenient
-    summary: Nobody is told when a block is started or fulfilled.
+    description: Nobody is told when a block is started or fulfilled.
   - id: no-review
+    name: No review before fulfillment
     impact: damaging
-    summary: No one checks the work before a block is fulfilled.
+    description: No one checks the work before a block is fulfilled.
     when: A block is marked fulfilled before its work is done.
   - id: departed-engineers-blocks-stuck
+    name: Departed engineers' blocks can't be fulfilled
     impact: blocking
-    summary: >-
+    description: >-
       Only a block's own engineer can mark it fulfilled, so a block whose
       engineer has left can't be fulfilled by anyone else.
     when: A block's engineer leaves before marking it fulfilled.
   - id: my-blocks-only-grows
+    name: My blocks keeps every past block
     impact: inconvenient
-    summary: >-
+    description: >-
       My blocks shows every block an engineer has ever had, so its fulfilled
       column only grows.
     when: An engineer fulfills more and more blocks.
   - id: browser-week-not-utc
+    name: This week follows the browser, not UTC
     impact: inconvenient
-    summary: >-
+    description: >-
       "This week" on My blocks is the browser's own week, while a block's week
       starts on Monday UTC, so around midnight a block can show as ready when
       starting it is refused, or not yet ready when it can be started.
     when: Someone away from UTC looks at My blocks around the turn of the week.
   - id: block-history-not-recorded
+    name: Block history not recorded
     impact: inconvenient
-    summary: >-
+    description: >-
       A block's page shows only when it was started and fulfilled. Its
       scheduling, rescheduling, claims and unclaims aren't recorded, so they
       don't show.
   - id: early-starts-not-shown
+    name: Older blocks show no start
     impact: negligible
-    summary: A block started before starts were recorded shows no start.
+    description: A block started before starts were recorded shows no start.
   - id: starter-not-named
+    name: Lead or admin starter not named
     impact: negligible
-    summary: >-
+    description: >-
       A block started by a lead or an admin shows as started by Exalynt, not
       by name.
   - id: no-focus-notifications
+    name: No notice of focus changes
     impact: inconvenient
-    summary: >-
+    description: >-
       Nobody is told when a block's focus is added or changed, by Exalynt or
       by the client.
   - id: no-update-notifications
+    name: No notice of new updates
     impact: inconvenient
-    summary: >-
+    description: >-
       Nobody is told when an update is posted, and a block's page shows
       someone else's new updates only when it's opened again.
   - id: svg-images-blank
+    name: SVG images show blank
     impact: inconvenient
-    summary: >-
+    description: >-
       An SVG attached to an update or a focus as an image shows blank, though
       it still downloads.
     when: Someone attaches an SVG as an image.
   - id: no-focus-only-updates
+    name: No updates about a focus alone
     impact: inconvenient
-    summary: An update about a focus alone, with no block, can't be posted yet.
+    description: An update about a focus alone, with no block, can't be posted yet.
   - id: unused-focus-not-editable
+    name: Unused focuses can't be edited
     impact: inconvenient
-    summary: >-
+    description: >-
       A focus taken off every block can't be edited any more, though it can
       still be found and put back on a block.
     when: A focus is taken off every block.
   - id: focus-search-titles-only
+    name: Focus search matches titles only
     impact: inconvenient
-    summary: Searching a client's focuses matches their titles only.
+    description: Searching a client's focuses matches their titles only.
   - id: updates-per-block-only
+    name: Updates shown per block only
     impact: inconvenient
-    summary: >-
+    description: >-
       A block's page shows only that block's updates, not those posted on
       other blocks with the same focus.
 tradeoffs:
   - id: fulfilled-cant-be-reopened
+    name: Fulfilled is final, no reopening
     outcome: usability/beta/recover
     impact: damaging
-    summary: Marking a block fulfilled is final.
+    description: Marking a block fulfilled is final.
     drawback: >-
       A fulfilled block can't be reopened, even when it was marked fulfilled
       by mistake.

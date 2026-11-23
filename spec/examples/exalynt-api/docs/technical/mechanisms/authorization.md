@@ -6,8 +6,9 @@ description: >-
   What the terms mean in the domain is in the role and organization concepts.
 tradeoffs:
   - id: member-manage-gives-any-role
+    name: Member managers can give any role
     impact: damaging
-    summary: >-
+    description: >-
       `member:manage` gives any organization role, not only roles within the
       giver's own permissions: inviting someone or changing a member's role
       checks only that the role exists, so the default roles stay simple and
@@ -20,8 +21,9 @@ tradeoffs:
       An organization gives a custom role `member:manage` without every other
       permission.
   - id: application-access-not-enforced
+    name: Application access enforced only by the front ends
     impact: inconvenient
-    summary: >-
+    description: >-
       Which applications someone is offered is `application_access`, held per
       user and not by role, and only the front ends act on it: they decide
       what to show by it, and the API keeps checking permissions.

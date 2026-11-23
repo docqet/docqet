@@ -11,9 +11,10 @@ rules:
 concepts: [booking]
 gaps:
   - id: late-cancellations-refunded-in-full
+    name: Late cancellations refunded in full
     rule: cancellations/late-cancellation-fee
     impact: damaging
-    summary: >-
+    description: >-
       The late-cancellation fee isn't charged yet, so every cancellation is
       refunded in full.
 decisions:

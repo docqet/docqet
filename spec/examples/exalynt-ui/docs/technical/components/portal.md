@@ -18,85 +18,97 @@ capabilities:
   - client-agreements
 gaps:
   - id: home-screens-untested
+    name: Home screens untested in the portal
     outcome: functionality/beta/stays-correct
     impact: inconvenient
-    summary: >-
+    description: >-
       Home's workflow is tested end to end only by the API's tests. The
       portal's own unit tests cover what the page works out (`homeState`) and
       what it reads (`listCurrentCapacities`), not its screens or how a
       section fails.
     when: A change breaks Home's screens or how a section fails.
   - id: home-not-switchable
+    name: Home can't be switched off alone
     impact: inconvenient
-    summary: >-
+    description: >-
       Home can't be switched off on its own, so a bad release of it is rolled
       back with everything else.
     when: A release breaks Home.
   - id: blocks-read-twice-on-home
+    name: Blocks read twice on Home
     impact: negligible
-    summary: >-
+    description: >-
       The setup bubble reads the blocks on now, the teams and billing when the
       organization changes and each time it opens, so on Home the blocks are
       read twice.
   - id: team-read-per-page
+    name: Teams reread on every page
     impact: negligible
-    summary: >-
+    description: >-
       Each page that shows the organization's teams reads them again.
   - id: team-screens-untested
+    name: Your teams screens untested in the portal
     outcome: functionality/beta/stays-correct
     impact: inconvenient
-    summary: >-
+    description: >-
       Your teams is tested end to end only by the API's feature tests. The
       portal's own unit tests cover reading every page of teams and the order
       people show in.
     when: A change breaks the Your teams screens.
   - id: every-block-loaded
+    name: Capacity and Schedule load every block
     outcome: efficiency/beta/bounded
     impact: inconvenient
-    summary: >-
+    description: >-
       Capacity and the Schedule load every block the organization has bought,
       reading each page of them in turn, and Capacity filters, sorts and pages
       them in the browser.
     when: An organization has bought many blocks.
   - id: block-page-reads-every-block
+    name: Block page reads every block to find one
     impact: inconvenient
-    summary: >-
+    description: >-
       A block's page reads every one of the organization's blocks to find
       this one by its number.
     when: An organization has bought many blocks.
   - id: billing-screens-untested
+    name: Billing untested against a real provider
     outcome: functionality/beta/stays-correct
     impact: blocking
-    summary: >-
+    description: >-
       Billing and payment methods are tested end to end only by the API's
       feature tests, which run without a real payment provider.
     when: >-
       A change breaks Billing, or the real payment provider behaves unlike
       the tests.
   - id: members-unpaged
+    name: Members table unpaged
     outcome: efficiency/beta/bounded
     impact: inconvenient
-    summary: >-
+    description: >-
       The Members table reads every member of the organization at once,
       unpaged.
     when: An organization grows to many members.
   - id: members-screens-untested
+    name: Members page itself untested
     impact: inconvenient
-    summary: >-
+    description: >-
       The portal's own unit tests on Members cover only how pasted addresses
       are read, what is left to retry after some invitations fail, and the
       role an invitation starts on. The rules are tested by the API's
       acceptance tests, and nothing tests the page itself.
     when: A change breaks the Members page.
   - id: logo-not-cached
+    name: Organization logo never cached by the browser
     impact: negligible
-    summary: >-
+    description: >-
       An organization's logo is read with the session token, once per change
       and per page load, so the browser doesn't cache it.
 tradeoffs:
   - id: provider-pages-for-billing
+    name: Billing on the provider's own pages
     impact: inconvenient
-    summary: >-
+    description: >-
       Payment methods, invoices and company details stay on the payment
       provider's own pages, which Billing opens at an address the API asks the
       provider for. The portal knows nothing of the provider, and shows only a
@@ -105,8 +117,9 @@ tradeoffs:
       Clients leave the portal to see an invoice or change how they pay, and a
       portal page left open in another tab doesn't see what they changed there.
   - id: no-gravatar-for-members
+    name: Photos or initials, never Gravatar
     impact: negligible
-    summary: >-
+    description: >-
       Members show their own photo or their initials, never a Gravatar, which
       would send their address, hashed, to a third party.
     drawback: >-

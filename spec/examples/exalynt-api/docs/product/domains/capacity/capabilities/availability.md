@@ -26,63 +26,73 @@ rules:
 concepts: [effective-availability, capacity-unit, capacity-block]
 gaps:
   - id: no-spotting-overbooked-engineers
+    name: Overbooked engineers go unnoticed
     impact: inconvenient
-    summary: >-
+    description: >-
       Nobody can spot overbooked engineers, or shortfalls caused by reduced
       availability, including scheduled blocks no one has claimed yet. Leads
       see their team's availability and assignments, and admins spot
       overbooked and unassigned blocks.
   - id: no-spotting-overdue-blocks
+    name: Overdue blocks go unnoticed
     impact: inconvenient
-    summary: >-
+    description: >-
       Nobody can spot overdue blocks, assigned but still not fulfilled after
       their week ended. Leads see their team's availability and assignments,
       and admins spot overbooked and unassigned blocks.
   - id: reductions-into-started-work-refused
+    name: Reductions into started work refused
     impact: inconvenient
-    summary: >-
+    description: >-
       A reduction only blocks under way would fit is refused, and the engineer
       asks an admin to sort it out.
     when: An engineer reduces a week that already has work under way.
   - id: unscheduled-by-reduction-untold
+    name: Clients not told of unscheduled blocks
     impact: inconvenient
-    summary: >-
+    description: >-
       A client isn't told when a reduction unschedules one of their blocks.
       It's back among the blocks they have to schedule.
     when: A reduction takes a scheduled block out of a week.
   - id: browser-week-not-utc
+    name: This week follows the browser, not UTC
     impact: inconvenient
-    summary: >-
+    description: >-
       Weeks are UTC, and the console's "this week" is the browser's. Around
       midnight on a Sunday, a change the console offers can be refused as
       past.
     when: Someone changes availability around midnight on a Sunday.
   - id: far-weeks-adjustable-outside-console
+    name: Far weeks adjustable outside the console
     impact: negligible
-    summary: >-
+    description: >-
       A far future week can be adjusted outside the console, as with a block.
     when: Someone adjusts availability by calling the API directly.
   - id: team-changes-can-overbook
+    name: Team changes can overbook a week
     impact: inconvenient
-    summary: >-
+    description: >-
       A team change can still overbook a week, and that's only flagged across
       all of Exalynt.
     when: An engineer with claimed blocks moves to another team.
   - id: relies-on-staffing
+    name: Depends on Staffing, still Alpha
     outcome: security/alpha/stable-dependencies
     impact: blocking
-    summary: >-
+    description: >-
       Seeing availability next to assignments, and a lead seeing their team's,
       depend on Staffing, which is only Alpha.
     when: Staffing makes a breaking change.
   - id: screen-readers-unreviewed
+    name: Screen readers not reviewed
     outcome: usability/beta/everyone
     impact: blocking
-    summary: Real screen readers haven't been reviewed.
+    description: Real screen readers haven't been reviewed.
     when: Someone sets availability with a screen reader.
   - id: deployment-and-team-access-unreviewed
+    name: Deployment and team access not reviewed
     impact: damaging
-    summary: >-
+    description: >-
       The deployment setup, and how team-wide access resolves beyond the
       checks on leads, haven't been reviewed.
     when: >-

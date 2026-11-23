@@ -51,15 +51,17 @@ close becomes a [tradeoff](tradeoff.md), with its drawback.
 ## In the spec
 
 Gaps are listed in the frontmatter of the doc they're on, each with an `id`
-unique in that doc, a `summary`, and optionally the `outcome` or `rule` it
+unique in that doc, a `name` saying in a few words what falls short, a
+`description` of a sentence or two, and optionally the `outcome` or `rule` it
 falls short of, its `impact`, and `when` it bites. On [city tax](../../../spec/examples/hotel-billing/docs/product/domains/billing/capabilities/city-tax.md):
 
 ```yaml
 gaps:
   - id: children-corrected-by-hand
+    name: City tax charged for children
     rule: tax/children-pay-no-city-tax
     impact: inconvenient
-    summary: >-
+    description: >-
       Guests' ages aren't recorded, so city tax is added for every guest on a
       stay, and clerks correct it by hand for children.
 ```
@@ -70,9 +72,10 @@ names an outcome, and only bites when someone changes the code:
 ```yaml
 gaps:
   - id: corrections-of-corrections-untested
+    name: Corrections of corrections untested
     outcome: maintainability/ga/others-can-change
     impact: damaging
-    summary: >-
+    description: >-
       Nothing tests correcting a line that is itself a correction, ...
     when: Someone changes how corrections work.
 ```

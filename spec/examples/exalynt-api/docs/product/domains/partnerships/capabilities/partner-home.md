@@ -36,22 +36,25 @@ rules:
 concepts: [partnership, capacity-payout-basis, payout-share]
 gaps:
   - id: failed-load-says-to-reload
+    name: No retry when loading fails
     outcome: usability/beta/recover
     impact: inconvenient
-    summary: >-
+    description: >-
       If the clients or what each block earns can't be loaded, it says to
       reload: there's no retry on it.
   - id: missing-account-reminder-dropped-silently
+    name: Payout account reminder silently dropped
     outcome: functionality/alpha/errors-visible
     impact: inconvenient
-    summary: >-
+    description: >-
       If the payout account can't be read, the reminder that there's none is
       left off, without saying so.
     when: The payout account can't be read.
   - id: not-verified-for-everyone
+    name: Dark mode, phones and screen readers unverified
     outcome: usability/beta/everyone
     impact: blocking
-    summary: >-
+    description: >-
       Dark mode, narrow phones, keyboard use, switching between partnerships,
       and real screen readers haven't been verified.
     when: >-

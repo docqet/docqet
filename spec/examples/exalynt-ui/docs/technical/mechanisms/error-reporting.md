@@ -6,8 +6,9 @@ description: >-
 meets: [observability/alpha/see-errors]
 tradeoffs:
   - id: errors-only
+    name: Only errors collected, no page views
     impact: inconvenient
-    summary: >-
+    description: >-
       Only errors are collected: uncaught ones, and those pages pass to
       `reportError`. No page views, request timings or session recordings.
     drawback: >-

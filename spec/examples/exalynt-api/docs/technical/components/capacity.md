@@ -13,23 +13,26 @@ capabilities:
   - client-directory
 gaps:
   - id: buying-and-scheduling-not-load-tested
+    name: Buying and scheduling never load-tested
     outcome: efficiency/beta/realistic-volumes
     impact: inconvenient
-    summary: >-
+    description: >-
       Buying and scheduling haven't been load-tested.
     when: Buying and scheduling are used at realistic volumes.
   - id: weeks-and-types-not-paged
+    name: Capacity weeks and types not paged
     outcome: efficiency/beta/bounded
     impact: inconvenient
-    summary: >-
+    description: >-
       `GET /v1/capacity-weeks` and `GET /v1/capacity-types` aren't paged: the
       first's window is capped at 53 weeks, which acts as its page size, and
       there are three types.
     when: Capacity types grow well beyond the three there are.
 tradeoffs:
   - id: combined-room
+    name: Week's room combined, not per engineer
     impact: inconvenient
-    summary: >-
+    description: >-
       A week's room is combined, not per engineer: a block fits if the total
       covers it, even if no one engineer could do it alone, as the preferred
       week is a target and not a guarantee.

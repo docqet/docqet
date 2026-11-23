@@ -23,55 +23,64 @@ rules:
 concepts: [agreement, organization, partnership]
 gaps:
   - id: only-the-apps-hold-people-to-an-agreement
+    name: Only the apps enforce agreements
     impact: damaging
-    summary: >-
+    description: >-
       Only the apps hold people to an agreement: someone using the API
       directly can still do what their role allows without one in effect, and
       the admin app isn't gated.
   - id: new-versions-not-offered
+    name: New versions not offered
     impact: blocking
-    summary: >-
+    description: >-
       A new version isn't offered to an organization or person that accepted
       an earlier one, and nothing sends a client new terms (it has none).
     when: A new version of an agreement is published.
   - id: read-in-full-only-to-accept
+    name: Waiting agreements can't be read by others
     impact: blocking
-    summary: >-
+    description: >-
       An agreement is only read in full to accept it: nobody else can read
       one that's waiting, so an admin can't read an Engineer Agreement they've
       sent until it's accepted.
   - id: generated-pdf-file-name
+    name: Downloaded PDFs get a generated file name
     impact: negligible
-    summary: >-
+    description: >-
       A PDF downloaded from the browser's viewer gets a generated file name,
       not the agreement's.
   - id: names-outside-western-european-alphabets
+    name: Names outside Western alphabets lost in PDFs
     outcome: usability/beta/everyone
     impact: damaging
-    summary: >-
+    description: >-
       A name with characters outside Western European alphabets shows them as
       "?" in the PDF, and the PDF keeps them that way once accepted.
   - id: placeholder-client-agreement-records
+    name: Client agreement records are placeholders
     impact: blocking
-    summary: >-
+    description: >-
       Admins see only placeholder records of what clients have accepted, over
       placeholder clients. Nothing sends or accepts a client's agreement from
       there, and the real Client Agreements Exalynt keeps aren't shown.
   - id: placeholder-documents-local-only
+    name: Placeholder documents open only locally
     impact: blocking
-    summary: >-
+    description: >-
       Those placeholder records open their documents only in local
       development. They have to read the real agreements before this part
       leaves Prototype.
   - id: no-preview-before-sending
+    name: No preview before sending an Engineer Agreement
     impact: inconvenient
-    summary: >-
+    description: >-
       An admin has no preview of an Engineer Agreement before sending it, the
       terms they choose from are a copy of the real catalog, and the list of
       engineers doesn't say whose agreements are in effect.
   - id: shared-definitions-changed-in-place
+    name: Definitions changed in place after acceptance
     impact: damaging
-    summary: >-
+    description: >-
       The definition of Fulfilled, and version 1 of the Client Agreement,
       were changed in place to say the engineer marks a block fulfilled and
       nobody reviews it: a copy accepted before then still says a block is

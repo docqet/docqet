@@ -91,29 +91,33 @@ rules:
 concepts: [partnership, payout-share, capacity-payout-basis, fulfilled]
 gaps:
   - id: earning-doesnt-name-its-payout
+    name: Earning doesn't name its payout
     impact: inconvenient
-    summary: >-
+    description: >-
       An earning doesn't say which payout carried it; the payout lists its
       blocks.
   - id: attribution-and-terms-from-partnerships
+    name: Attribution and terms rely on Alpha Partnerships
     outcome: security/alpha/stable-dependencies
     impact: inconvenient
-    summary: >-
+    description: >-
       Which clients are attributed to the partnership, and its terms, come
       from Partnerships, which is still Alpha.
     when: Partnerships changes in a way that breaks what earnings rely on.
 tradeoffs:
   - id: nothing-before-partnership-earnings
+    name: Earnings start from launch, not backdated
     impact: inconvenient
-    summary: >-
+    description: >-
       Partnerships earn only on blocks fulfilled since partnership earnings
       existed.
     drawback: >-
       Blocks fulfilled before partnership earnings existed earn the partnership
       nothing.
   - id: earlier-blocks-count-after-attribution
+    name: Earlier blocks count only after attribution
     impact: inconvenient
-    summary: >-
+    description: >-
       Blocks a client bought before this was built count as bought for the
       partnership only if they were bought after the client was attributed to
       it.
@@ -121,14 +125,16 @@ tradeoffs:
       Blocks bought before the client was attributed earn the partnership
       nothing.
   - id: client-price-and-coupons-not-shown
+    name: Client price and coupons not shown
     impact: negligible
-    summary: >-
+    description: >-
       What the client paid for a block, and any coupon on it, isn't shown, as
       it never changes what the partnership earns.
     drawback: Partners can't see what their clients paid.
   - id: refunds-settled-outside-the-product
+    name: Refunds don't change partnership earnings
     impact: inconvenient
-    summary: >-
+    description: >-
       A refund after a block is fulfilled changes nothing the partnership
       earned.
     drawback: Exalynt settles it outside the product.

@@ -26,32 +26,37 @@ rules:
 concepts: [agreement, organization]
 gaps:
   - id: only-the-portal-holds-to-the-agreement
+    name: Only the portal enforces the agreement
     impact: damaging
-    summary: >-
+    description: >-
       Only the portal holds an organization to its Client Agreement: someone
       using the API directly can still do what their role allows without one
       in effect.
   - id: new-versions-not-offered
+    name: New versions not offered to organizations
     impact: blocking
-    summary: >-
+    description: >-
       A new version of the Client Agreement isn't offered to an organization
       that accepted an earlier one, and nothing sends a client new terms (it
       has none).
     when: A new version of the Client Agreement is published.
   - id: generated-pdf-file-name
+    name: Downloaded PDFs get a generated file name
     impact: negligible
-    summary: >-
+    description: >-
       A PDF downloaded from the browser's viewer gets a generated file name,
       not the agreement's.
   - id: names-outside-western-european-alphabets
+    name: Names outside Western alphabets lost in PDFs
     outcome: usability/beta/everyone
     impact: damaging
-    summary: >-
+    description: >-
       A name with characters outside Western European alphabets shows them as
       "?" in the PDF, and the PDF keeps them that way once accepted.
   - id: shared-definitions-changed-in-place
+    name: Version 1 changed in place after acceptance
     impact: damaging
-    summary: >-
+    description: >-
       The definition of Fulfilled, and version 1 of the Client Agreement, were
       changed in place to say the engineer marks a block fulfilled and nobody
       reviews it: a copy accepted before then still says a block is fulfilled
@@ -60,8 +65,9 @@ gaps:
       then still does.
 tradeoffs:
   - id: every-member-sees-agreements
+    name: Agreements visible to every member
     impact: negligible
-    summary: >-
+    description: >-
       Every member of an organization sees its agreements, whatever their
       role.
     drawback: >-

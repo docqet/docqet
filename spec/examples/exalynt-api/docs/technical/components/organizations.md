@@ -7,9 +7,10 @@ capabilities: [organizations-and-members, client-directory, billing]
 meets: [security/ga/sound]
 gaps:
   - id: shapes-shared-with-less-stable-capabilities
+    name: Response shapes shared with less stable capabilities
     outcome: compatibility/ga/stable-interface
     impact: inconvenient
-    summary: >-
+    description: >-
       `GET /organization-roles`, the only way an API caller gets the role IDs
       to invite with or set a member's role, belongs to roles and returns its
       whole `OrganizationRole`, permissions included. The `Organization` schema
@@ -19,33 +20,37 @@ gaps:
       Roles needs to change `OrganizationRole`, or `GET /clients` needs to
       change `Organization`, in a way that isn't additive.
   - id: sends-and-keys-never-pruned
+    name: Invitation sends and creation keys never pruned
     outcome: efficiency/beta/bounded
     impact: negligible
-    summary: >-
+    description: >-
       `organization_invitation_sends` and `organization_creation_keys` are
       never pruned: only the last day of sends and a retry's key are ever read,
       but rows stay forever. They're small, at most 50 sends per organization
       a day.
   - id: no-load-test
+    name: Never load-tested, running cost unknown
     outcome: efficiency/ga/speed-targets
     impact: blocking
-    summary: >-
+    description: >-
       The routes have never been tried at peak, and their running cost isn't
       known, including whether Clerk's plan limits fit expected sign-ups.
     when: Traffic reaches its peak, or sign-ups outgrow Clerk's plan limits.
   - id: rollback-and-restore-untried
+    name: Rollback and restore never practised
     outcome: reliability/ga/recovery
     impact: damaging
-    summary: >-
+    description: >-
       Deploys roll back by re-running an older commit, and there's a runbook
       for restoring deleted records from a backup, but neither has been
       practised for organizations.
     when: A deploy needs rolling back, or deleted records need restoring.
 tradeoffs:
   - id: lists-returned-whole
+    name: Lists returned whole, not paged
     outcome: efficiency/beta/bounded
     impact: inconvenient
-    summary: >-
+    description: >-
       Members, invitations, and `GET /v1/clients` are returned whole, not
       paged: an organization is sized for tens of members and Exalynt for tens
       to hundreds of clients.
@@ -54,8 +59,9 @@ tradeoffs:
       removal and role change.
     when: An organization grows well beyond tens of members.
   - id: shared-invitation-routes
+    name: Invitation routes shared, with stable copies beside
     impact: negligible
-    summary: >-
+    description: >-
       `GET /invitations` and `POST /invitations/{id}/accept` stay shared, with
       stable organization-only copies beside them: they also serve invitations
       to work with Exalynt and to manage a partnership, whose shape is still

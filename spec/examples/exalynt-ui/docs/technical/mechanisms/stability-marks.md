@@ -6,8 +6,9 @@ description: >-
 meets: [compatibility/prototype/marked]
 tradeoffs:
   - id: levels-kept-in-the-ui
+    name: Page levels declared in the UI, apart from the docs
     impact: inconvenient
-    summary: >-
+    description: >-
       Each page's level is declared once in the UI, in
       `src/featureStability.ts`, for the rail and the pages to read, apart
       from the capability docs' levels in the API's repository.

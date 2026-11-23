@@ -15,98 +15,112 @@ capabilities:
   - roles
 gaps:
   - id: clients-read-everything
+    name: Clients pages read every client and block
     outcome: efficiency/beta/bounded
     impact: inconvenient
-    summary: >-
+    description: >-
       The Clients pages read every client and every block before showing
       anything, and the list pages them in the browser. Each block's invoice
       is read from the payment provider by the API, one at a time.
     when: As clients and their blocks grow in number.
   - id: coupons-two-shapes
+    name: Two separate copies of coupon code
     impact: inconvenient
-    summary: >-
+    description: >-
       Client coupons (`data/coupons.ts`) and the revenue calculator's coupons
       are the same shape but separate code, and the two don't meet.
   - id: whole-lists-paged-in-browser
+    name: Partners and invitations paged in the browser
     outcome: efficiency/beta/bounded
     impact: inconvenient
-    summary: >-
+    description: >-
       The API sends every partnership and every pending invitation at once,
       and the Partners and Invitations lists page them in the browser.
     when: Partnerships and pending invitations grow to many.
   - id: roster-reads-everything
+    name: Engineers pages read everything on open
     outcome: efficiency/beta/bounded
     impact: inconvenient
-    summary: >-
+    description: >-
       Each Engineers page reads everyone, every team, client and block, once
       when it opens and again after a team change.
     when: As engineers, teams, clients and blocks grow in number.
   - id: roster-assumes-global-reads
+    name: Engineers pages assume global read permissions
     impact: blocking
-    summary: >-
+    description: >-
       The Engineers pages are written for administrators: without
       `user:read`, `team:read`, `capacity:read` or `client:read` the roster
       doesn't load, and with a team or own scope it shows only what that
       reaches.
     when: Someone without global reads is given the Engineers pages.
   - id: team-picker-ignores-permission
+    name: Team picker shown without team:manage
     impact: inconvenient
-    summary: >-
+    description: >-
       The team picker on the Engineers pages shows without `team:manage`, so
       the change is only refused by the API, and toasted.
     when: Someone without `team:manage` opens the Engineers pages.
   - id: terms-catalog-copied
+    name: Commercial Terms catalog copied into the UI
     impact: blocking
-    summary: >-
+    description: >-
       The Commercial Terms an admin chooses from, on an invitation or when
       sending an engineer new terms, come from the UI's own copy of the
       catalog (`src/shared/terms.ts`), not the API's.
     when: The API's catalog of Commercial Terms changes.
   - id: agreement-pdf-from-preview
+    name: Client agreement PDFs opened from the preview
     impact: blocking
-    summary: >-
+    description: >-
       A client's accepted agreements open their PDF from the API's agreement
       preview, filled in from the placeholder record each time, so they open
       only where `AGREEMENT_PREVIEW_ENABLED` is on (Compose, never
       production). They have to read the API's own agreement endpoints, as an
       engineer's page does.
   - id: readiness-per-person
+    name: Readiness read one person at a time
     impact: inconvenient
-    summary: >-
+    description: >-
       Whether someone is ready for client work is read for one person at a
       time (`engineers/useReadiness.ts`), since asking whether they can be
       paid asks the payout provider, so the Engineers list can't show it.
       The list has no Agreement column either, as that would take a request
       per engineer.
   - id: partner-page-reads-manager-account
+    name: Partner page shows the manager's payout account
     impact: inconvenient
-    summary: >-
+    description: >-
       A partner's page reads its manager's own payout account, not the
       partnership's.
   - id: scheduling-placeholder-teams
+    name: Scheduling uses placeholder teams
     impact: negligible
-    summary: >-
+    description: >-
       Scheduling shows its own placeholder teams (`data/teams.ts`), which
       don't match the API's teams on the Teams page, so its preference for a
       client's teams isn't real.
   - id: creator-role-guarded-by-page
+    name: Creator role guarded only by the Roles page
     impact: inconvenient
-    summary: >-
+    description: >-
       Only the Roles page stops the role given to an organization's creator
       being unmarked or deleted. The API allows it, and the next deploy gives
       creators a role again.
     when: Someone unmarks or deletes the creator role through the API directly.
   - id: one-scope-per-permission
+    name: Role editor allows one scope per permission
     impact: inconvenient
-    summary: >-
+    description: >-
       The role editor gives a permission one scope, though the API allows
       several, and saving keeps only the widest, so own and team becomes
       team.
     when: A role is saved with a permission given more than one scope.
   - id: roles-pages-untested
+    name: Roles pages have no tests of their own
     outcome: functionality/beta/stays-correct
     impact: damaging
-    summary: >-
+    description: >-
       Roles is tested end to end only by the API's tests. The pages have no
       automated tests of their own.
     when: A change breaks what the Roles pages save.

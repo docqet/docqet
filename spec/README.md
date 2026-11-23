@@ -256,9 +256,10 @@ required:
   takes. Readers show the name and description wherever the doc appears. A
   rule has none: its body says anything its name leaves out.
 
-What has no name, such as a gap, a tradeoff or what a concept is confused
-with, is said in its `summary` instead: the sentence or two that is the thing
-itself.
+A gap and a tradeoff have a `name` and a `description` too, though they're
+entries in a doc rather than docs of their own. What has no name, such as what
+a concept is confused with, is said in its `summary` instead: the sentence or
+two that is the thing itself.
 
 | Type | Frontmatter, in order | Its body, if it has one | Example |
 | --- | --- | --- | --- |
@@ -459,16 +460,18 @@ meets:
   - observability/alpha/see-errors
 gaps:
   - id: migrations-only-go-forward
+    name: Migrations have no down step
     outcome: reliability/ga/recovery
     impact: damaging
-    summary: >-
+    description: >-
       Migrations have no down step, so undoing a release that changed the
       schema means restoring the database from the night before.
     when: A release that changed the schema has to be undone.
 tradeoffs:
   - id: migrations-before-start
+    name: Migrations run while the old release serves
     impact: inconvenient
-    summary: >-
+    description: >-
       Migrations run before the new image starts, while the old one is still
       serving, rather than stopping the app for each release.
     benefit: Releases don't take the front desk offline.
@@ -568,17 +571,19 @@ the technical doc explains the cause in How it works.
 
 ### Gaps
 
-A **gap** is something we intend to close. It has an `id`, a `summary` of a
-sentence or two, and optionally the `outcome` or `rule` it falls short of, its
-`impact`, and `when` it bites. It doesn't say when or how it'll be closed:
+A **gap** is something we intend to close. It has an `id`, a `name` saying in
+a few words what falls short, such as `Calendar needs a mouse`, a
+`description` of a sentence or two, and optionally the `outcome` or `rule` it
+falls short of, its `impact`, and `when` it bites. It doesn't say when or how it'll be closed:
 Docket lists it so people know about it, and deciding that is up to them.
 
 ```yaml
 gaps:
   - id: calendar-needs-a-mouse
+    name: Calendar needs a mouse
     outcome: usability/beta/everyone
     impact: blocking
-    summary: >-
+    description: >-
       The room calendar can't be used from the keyboard, so clerks need a
       mouse to pick dates.
 ```
@@ -624,9 +629,10 @@ gaps:
 ```yaml
 gaps:
   - id: children-corrected-by-hand
+    name: City tax charged for children
     rule: tax/children-pay-no-city-tax
     impact: inconvenient
-    summary: >-
+    description: >-
       Guests' ages aren't recorded, so city tax is added for every guest on a
       stay, and clerks correct it by hand for children.
 ```
@@ -634,8 +640,9 @@ gaps:
 ### Tradeoffs
 
 A **tradeoff** is something we chose over an alternative and decided to live
-with. It has an `id`, a `summary` saying what we chose and not what, its
-`benefit`, what we hope to get by choosing it, and its `drawback`, what we
+with. It has an `id`, a `name` saying in a few words what we chose, such as
+`Front desk bookings only`, a `description` saying what we chose and not what,
+its `benefit`, what we hope to get by choosing it, and its `drawback`, what we
 give up or risk in return, each a sentence or two, and both what came with
 the choice. One tradeoff is one choice: when it has two drawbacks, its
 `drawback` says both. Readers show a tradeoff with no `benefit` as missing
@@ -649,8 +656,9 @@ security and privacy baseline:
 ```yaml
 tradeoffs:
   - id: front-desk-bookings-only
+    name: Front desk bookings only
     impact: inconvenient
-    summary: >-
+    description: >-
       Bookings are taken at the front desk, not from online travel agencies.
     benefit: >-
       No agency integrations to build or keep working, while most bookings
@@ -1235,11 +1243,11 @@ and showing several projects together means reading each one's state.json.
   empty when it has none.
 - **`gaps`**: every gap from every doc, each with its ID, its `domain` when
   it's a capability's, the `outcome` and `rule` it names or `null`, its
-  `impact` and `when` or `null`, its `summary`, and `places`: where `docket:gap` annotations mark it, in the same
+  `impact` and `when` or `null`, its `name` and `description`, and `places`: where `docket:gap` annotations mark it, in the same
   shape as evidence.
 - **`tradeoffs`**: every tradeoff from every doc, each with its ID, its
   `domain` when it's a feature's or capability's, the `outcome` it names or
-  `null`, `summary`, `benefit`, or `null` where it has none, `drawback`, its
+  `null`, `name`, `description`, `benefit`, or `null` where it has none, `drawback`, its
   `impact` and `when` or `null`, and `places`, from `docket:tradeoff` annotations.
 - **`problems`**: everything the indexer found wrong, each about a doc with
   that doc's `domain`.

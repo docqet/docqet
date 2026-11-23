@@ -12,9 +12,10 @@ rules:
 concepts: [bill, charge]
 gaps:
   - id: children-corrected-by-hand
+    name: City tax charged for children
     rule: tax/children-pay-no-city-tax
     impact: inconvenient
-    summary: >-
+    description: >-
       Guests' ages aren't recorded, so city tax is added for every guest on a
       stay, and clerks correct it by hand for children.
 ---

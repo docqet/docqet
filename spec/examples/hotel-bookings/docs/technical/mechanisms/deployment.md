@@ -8,16 +8,18 @@ meets:
   - observability/alpha/see-errors
 gaps:
   - id: migrations-only-go-forward
+    name: Migrations have no down step
     outcome: reliability/ga/recovery
     impact: damaging
-    summary: >-
+    description: >-
       Migrations have no down step, so undoing a release that changed the
       schema means restoring the database from the night before.
     when: A release that changed the schema has to be undone.
 tradeoffs:
   - id: migrations-before-start
+    name: Migrations run while the old release serves
     impact: inconvenient
-    summary: >-
+    description: >-
       Migrations run before the new image starts, while the old one is still
       serving, rather than stopping the app for each release.
     benefit: Releases don't take the front desk offline.

@@ -5,15 +5,17 @@ description: >-
 capabilities: [availability, scheduling, claiming-blocks, staffing]
 gaps:
   - id: not-load-tested
+    name: Availability never load-tested
     outcome: efficiency/beta/realistic-volumes
     impact: inconvenient
-    summary: >-
+    description: >-
       Availability hasn't been load-tested.
     when: Availability is used at realistic volumes.
 tradeoffs:
   - id: recurrence-rules-not-weeks
+    name: Recurrence rules kept, not a weeks column
     impact: inconvenient
-    summary: >-
+    description: >-
       Availability is stored as recurrence rules, not a `weeks` column. A
       column would do, as the rules are only ever `FREQ=WEEKLY` with an
       optional `COUNT`, but moving off them is an expand/contract migration on

@@ -837,7 +837,8 @@
       "rule": "cancellations/late-cancellation-fee",
       "impact": "damaging",
       "when": null,
-      "summary": "The late-cancellation fee isn't charged yet, so every cancellation is refunded in full.",
+      "name": "Late cancellations refunded in full",
+      "description": "The late-cancellation fee isn't charged yet, so every cancellation is refunded in full.",
       "places": []
     },
     {
@@ -847,7 +848,8 @@
       "rule": null,
       "impact": "blocking",
       "when": null,
-      "summary": "The room calendar can't be used from the keyboard, so clerks need a mouse to pick dates.",
+      "name": "Calendar needs a mouse",
+      "description": "The room calendar can't be used from the keyboard, so clerks need a mouse to pick dates.",
       "places": []
     },
     {
@@ -856,7 +858,8 @@
       "rule": null,
       "impact": "damaging",
       "when": "A release that changed the schema has to be undone.",
-      "summary": "Migrations have no down step, so undoing a release that changed the schema means restoring the database from the night before.",
+      "name": "Migrations have no down step",
+      "description": "Migrations have no down step, so undoing a release that changed the schema means restoring the database from the night before.",
       "places": []
     },
     {
@@ -865,7 +868,8 @@
       "rule": null,
       "impact": "inconvenient",
       "when": "Two bookings for the same room arrive at once.",
-      "summary": "`saveBooking` passes every database error up as it is, so a clash that only the exclusion constraint caught is logged as an unknown failure, not as a double booking that was refused.",
+      "name": "Booking clashes logged as unknown errors",
+      "description": "`saveBooking` passes every database error up as it is, so a clash that only the exclusion constraint caught is logged as an unknown failure, not as a double booking that was refused.",
       "places": [
         {
           "file": "src/booking/repository.ts",
@@ -880,7 +884,8 @@
       "id": "capability:room-booking#one-room-per-booking",
       "domain": "guest-stays",
       "outcome": null,
-      "summary": "A booking holds one room, not several.",
+      "name": "One room per booking",
+      "description": "A booking holds one room, not several.",
       "benefit": "Booking, changing and cancelling stay simple: each booking is one room for one stay.",
       "drawback": "A family that needs two rooms makes two bookings. Group bookings is where several rooms under one name is being explored.",
       "impact": "inconvenient",
@@ -891,7 +896,8 @@
       "id": "feature:reservations#front-desk-bookings-only",
       "domain": "guest-stays",
       "outcome": null,
-      "summary": "Bookings are taken at the front desk, not from online travel agencies.",
+      "name": "Front desk bookings only",
+      "description": "Bookings are taken at the front desk, not from online travel agencies.",
       "benefit": "No agency integrations to build or keep working, while most bookings come straight to the desk.",
       "drawback": "Clerks enter each agency booking by hand, as it arrives by email.",
       "impact": "inconvenient",
@@ -901,7 +907,8 @@
     {
       "id": "mechanism:deployment#migrations-before-start",
       "outcome": null,
-      "summary": "Migrations run before the new image starts, while the old one is still serving, rather than stopping the app for each release.",
+      "name": "Migrations run while the old release serves",
+      "description": "Migrations run before the new image starts, while the old one is still serving, rather than stopping the app for each release.",
       "benefit": "Releases don't take the front desk offline.",
       "drawback": "The running code has to work with the new schema for a minute, so a column is added a release before it's used, and removed a release after the code stops reading it.",
       "impact": "inconvenient",
@@ -911,7 +918,8 @@
     {
       "id": "component:bookings#constraint-not-lock",
       "outcome": null,
-      "summary": "The database refuses overlapping bookings with an exclusion constraint, rather than the app locking the room while it checks.",
+      "name": "Database constraint, not an app lock",
+      "description": "The database refuses overlapping bookings with an exclusion constraint, rather than the app locking the room while it checks.",
       "benefit": "No two bookings can overlap, however they arrive at once, without the app having to get locking right. The check in the app is only there to give clerks a clear message first.",
       "drawback": "Bookings need Postgres with `btree_gist`, so they can't move to a database without it.",
       "impact": "inconvenient",

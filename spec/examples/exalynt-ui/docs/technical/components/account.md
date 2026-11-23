@@ -11,46 +11,52 @@ capabilities:
   - notifications
 gaps:
   - id: sync-no-end-to-end-test
+    name: User sync has no end-to-end test
     outcome: functionality/beta/stays-correct
     impact: blocking
-    summary: >-
+    description: >-
       `POST /users/me/sync` has no end-to-end test, as the API's end-to-end
       server runs without Clerk. Acceptance and unit tests cover it instead.
     when: A change breaks syncing in a way only a real Clerk would show.
   - id: name-by-webhook-only
+    name: Name changes reach the API only by webhook
     impact: damaging
-    summary: >-
+    description: >-
       A name or primary address reaches the API only by Clerk's webhook, or
       by `api sync users`, so others see the old one until it arrives, and a
       retried older webhook can bring an old one back.
     when: Clerk retries an older webhook after a newer one has arrived.
   - id: clerk-failure-signs-out
+    name: Clerk failing to load signs the browser out
     impact: inconvenient
-    summary: >-
+    description: >-
       If Clerk fails to load, `ResetFailedClerk` clears Clerk's cookies and
       reloads, in the hope that helps, so even a brief Clerk outage signs
       that browser out.
     when: Clerk fails to load, even briefly.
   - id: google-connection-never-tried
+    name: Google connection never tried for real
     outcome: functionality/alpha/main-path
     impact: blocking
-    summary: >-
+    description: >-
       Nobody has yet completed a Google connection or disconnected one, as
       that needs a real Google account.
     when: >-
       Connecting or disconnecting a real Google account doesn't work as
       built.
   - id: tokens-filtered-in-browser
+    name: Access tokens filtered in the browser
     outcome: efficiency/beta/bounded
     impact: inconvenient
-    summary: >-
+    description: >-
       Access tokens reads every page of someone's tokens, then searches,
       filters, sorts and pages them in the browser.
     when: Someone's access tokens grow to many pages.
   - id: tokens-not-tried-by-everyone
+    name: Access tokens untried by partners or screen readers
     outcome: usability/beta/everyone
     impact: inconvenient
-    summary: >-
+    description: >-
       No partner has been through Access tokens in a browser, and no real
       screen reader has been through it or its organization limits, though
       it's the same page for everyone. QA only saw the limits disabled, for

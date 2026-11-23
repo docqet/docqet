@@ -365,7 +365,8 @@
       "rule": null,
       "impact": "blocking",
       "when": "A change breaks syncing in a way only a real Clerk would show.",
-      "summary": "`POST /users/me/sync` has no end-to-end test, as the API's end-to-end server runs without Clerk. Acceptance and unit tests cover it instead.",
+      "name": "User sync has no end-to-end test",
+      "description": "`POST /users/me/sync` has no end-to-end test, as the API's end-to-end server runs without Clerk. Acceptance and unit tests cover it instead.",
       "places": []
     },
     {
@@ -374,7 +375,8 @@
       "rule": null,
       "impact": "damaging",
       "when": "Clerk retries an older webhook after a newer one has arrived.",
-      "summary": "A name or primary address reaches the API only by Clerk's webhook, or by `api sync users`, so others see the old one until it arrives, and a retried older webhook can bring an old one back.",
+      "name": "Name changes reach the API only by webhook",
+      "description": "A name or primary address reaches the API only by Clerk's webhook, or by `api sync users`, so others see the old one until it arrives, and a retried older webhook can bring an old one back.",
       "places": []
     },
     {
@@ -383,7 +385,8 @@
       "rule": null,
       "impact": "inconvenient",
       "when": "Clerk fails to load, even briefly.",
-      "summary": "If Clerk fails to load, `ResetFailedClerk` clears Clerk's cookies and reloads, in the hope that helps, so even a brief Clerk outage signs that browser out.",
+      "name": "Clerk failing to load signs the browser out",
+      "description": "If Clerk fails to load, `ResetFailedClerk` clears Clerk's cookies and reloads, in the hope that helps, so even a brief Clerk outage signs that browser out.",
       "places": []
     },
     {
@@ -392,7 +395,8 @@
       "rule": null,
       "impact": "blocking",
       "when": "Connecting or disconnecting a real Google account doesn't work as built.",
-      "summary": "Nobody has yet completed a Google connection or disconnected one, as that needs a real Google account.",
+      "name": "Google connection never tried for real",
+      "description": "Nobody has yet completed a Google connection or disconnected one, as that needs a real Google account.",
       "places": []
     },
     {
@@ -401,7 +405,8 @@
       "rule": null,
       "impact": "inconvenient",
       "when": "Someone's access tokens grow to many pages.",
-      "summary": "Access tokens reads every page of someone's tokens, then searches, filters, sorts and pages them in the browser.",
+      "name": "Access tokens filtered in the browser",
+      "description": "Access tokens reads every page of someone's tokens, then searches, filters, sorts and pages them in the browser.",
       "places": []
     },
     {
@@ -410,7 +415,8 @@
       "rule": null,
       "impact": "inconvenient",
       "when": "A partner, or someone using a screen reader, works with Access tokens or its organization limits.",
-      "summary": "No partner has been through Access tokens in a browser, and no real screen reader has been through it or its organization limits, though it's the same page for everyone. QA only saw the limits disabled, for admins, engineers and team leads, who belong to no organization.",
+      "name": "Access tokens untried by partners or screen readers",
+      "description": "No partner has been through Access tokens in a browser, and no real screen reader has been through it or its organization limits, though it's the same page for everyone. QA only saw the limits disabled, for admins, engineers and team leads, who belong to no organization.",
       "places": []
     },
     {
@@ -419,7 +425,8 @@
       "rule": null,
       "impact": "inconvenient",
       "when": "As clients and their blocks grow in number.",
-      "summary": "The Clients pages read every client and every block before showing anything, and the list pages them in the browser. Each block's invoice is read from the payment provider by the API, one at a time.",
+      "name": "Clients pages read every client and block",
+      "description": "The Clients pages read every client and every block before showing anything, and the list pages them in the browser. Each block's invoice is read from the payment provider by the API, one at a time.",
       "places": []
     },
     {
@@ -428,7 +435,8 @@
       "rule": null,
       "impact": "inconvenient",
       "when": null,
-      "summary": "Client coupons (`data/coupons.ts`) and the revenue calculator's coupons are the same shape but separate code, and the two don't meet.",
+      "name": "Two separate copies of coupon code",
+      "description": "Client coupons (`data/coupons.ts`) and the revenue calculator's coupons are the same shape but separate code, and the two don't meet.",
       "places": []
     },
     {
@@ -437,7 +445,8 @@
       "rule": null,
       "impact": "inconvenient",
       "when": "Partnerships and pending invitations grow to many.",
-      "summary": "The API sends every partnership and every pending invitation at once, and the Partners and Invitations lists page them in the browser.",
+      "name": "Partners and invitations paged in the browser",
+      "description": "The API sends every partnership and every pending invitation at once, and the Partners and Invitations lists page them in the browser.",
       "places": []
     },
     {
@@ -446,7 +455,8 @@
       "rule": null,
       "impact": "inconvenient",
       "when": "As engineers, teams, clients and blocks grow in number.",
-      "summary": "Each Engineers page reads everyone, every team, client and block, once when it opens and again after a team change.",
+      "name": "Engineers pages read everything on open",
+      "description": "Each Engineers page reads everyone, every team, client and block, once when it opens and again after a team change.",
       "places": []
     },
     {
@@ -455,7 +465,8 @@
       "rule": null,
       "impact": "blocking",
       "when": "Someone without global reads is given the Engineers pages.",
-      "summary": "The Engineers pages are written for administrators: without `user:read`, `team:read`, `capacity:read` or `client:read` the roster doesn't load, and with a team or own scope it shows only what that reaches.",
+      "name": "Engineers pages assume global read permissions",
+      "description": "The Engineers pages are written for administrators: without `user:read`, `team:read`, `capacity:read` or `client:read` the roster doesn't load, and with a team or own scope it shows only what that reaches.",
       "places": []
     },
     {
@@ -464,7 +475,8 @@
       "rule": null,
       "impact": "inconvenient",
       "when": "Someone without `team:manage` opens the Engineers pages.",
-      "summary": "The team picker on the Engineers pages shows without `team:manage`, so the change is only refused by the API, and toasted.",
+      "name": "Team picker shown without team:manage",
+      "description": "The team picker on the Engineers pages shows without `team:manage`, so the change is only refused by the API, and toasted.",
       "places": []
     },
     {
@@ -473,7 +485,8 @@
       "rule": null,
       "impact": "blocking",
       "when": "The API's catalog of Commercial Terms changes.",
-      "summary": "The Commercial Terms an admin chooses from, on an invitation or when sending an engineer new terms, come from the UI's own copy of the catalog (`src/shared/terms.ts`), not the API's.",
+      "name": "Commercial Terms catalog copied into the UI",
+      "description": "The Commercial Terms an admin chooses from, on an invitation or when sending an engineer new terms, come from the UI's own copy of the catalog (`src/shared/terms.ts`), not the API's.",
       "places": []
     },
     {
@@ -482,7 +495,8 @@
       "rule": null,
       "impact": "blocking",
       "when": null,
-      "summary": "A client's accepted agreements open their PDF from the API's agreement preview, filled in from the placeholder record each time, so they open only where `AGREEMENT_PREVIEW_ENABLED` is on (Compose, never production). They have to read the API's own agreement endpoints, as an engineer's page does.",
+      "name": "Client agreement PDFs opened from the preview",
+      "description": "A client's accepted agreements open their PDF from the API's agreement preview, filled in from the placeholder record each time, so they open only where `AGREEMENT_PREVIEW_ENABLED` is on (Compose, never production). They have to read the API's own agreement endpoints, as an engineer's page does.",
       "places": []
     },
     {
@@ -491,7 +505,8 @@
       "rule": null,
       "impact": "inconvenient",
       "when": null,
-      "summary": "Whether someone is ready for client work is read for one person at a time (`engineers/useReadiness.ts`), since asking whether they can be paid asks the payout provider, so the Engineers list can't show it. The list has no Agreement column either, as that would take a request per engineer.",
+      "name": "Readiness read one person at a time",
+      "description": "Whether someone is ready for client work is read for one person at a time (`engineers/useReadiness.ts`), since asking whether they can be paid asks the payout provider, so the Engineers list can't show it. The list has no Agreement column either, as that would take a request per engineer.",
       "places": []
     },
     {
@@ -500,7 +515,8 @@
       "rule": null,
       "impact": "inconvenient",
       "when": null,
-      "summary": "A partner's page reads its manager's own payout account, not the partnership's.",
+      "name": "Partner page shows the manager's payout account",
+      "description": "A partner's page reads its manager's own payout account, not the partnership's.",
       "places": []
     },
     {
@@ -509,7 +525,8 @@
       "rule": null,
       "impact": "negligible",
       "when": null,
-      "summary": "Scheduling shows its own placeholder teams (`data/teams.ts`), which don't match the API's teams on the Teams page, so its preference for a client's teams isn't real.",
+      "name": "Scheduling uses placeholder teams",
+      "description": "Scheduling shows its own placeholder teams (`data/teams.ts`), which don't match the API's teams on the Teams page, so its preference for a client's teams isn't real.",
       "places": []
     },
     {
@@ -518,7 +535,8 @@
       "rule": null,
       "impact": "inconvenient",
       "when": "Someone unmarks or deletes the creator role through the API directly.",
-      "summary": "Only the Roles page stops the role given to an organization's creator being unmarked or deleted. The API allows it, and the next deploy gives creators a role again.",
+      "name": "Creator role guarded only by the Roles page",
+      "description": "Only the Roles page stops the role given to an organization's creator being unmarked or deleted. The API allows it, and the next deploy gives creators a role again.",
       "places": []
     },
     {
@@ -527,7 +545,8 @@
       "rule": null,
       "impact": "inconvenient",
       "when": "A role is saved with a permission given more than one scope.",
-      "summary": "The role editor gives a permission one scope, though the API allows several, and saving keeps only the widest, so own and team becomes team.",
+      "name": "Role editor allows one scope per permission",
+      "description": "The role editor gives a permission one scope, though the API allows several, and saving keeps only the widest, so own and team becomes team.",
       "places": []
     },
     {
@@ -536,7 +555,8 @@
       "rule": null,
       "impact": "damaging",
       "when": "A change breaks what the Roles pages save.",
-      "summary": "Roles is tested end to end only by the API's tests. The pages have no automated tests of their own.",
+      "name": "Roles pages have no tests of their own",
+      "description": "Roles is tested end to end only by the API's tests. The pages have no automated tests of their own.",
       "places": []
     },
     {
@@ -545,7 +565,8 @@
       "rule": null,
       "impact": "negligible",
       "when": null,
-      "summary": "The setup bubble reads again on each page and each time it opens, four requests and a call to the payout provider each time, until everything on it is done.",
+      "name": "Setup bubble rereads on every page",
+      "description": "The setup bubble reads again on each page and each time it opens, four requests and a call to the payout provider each time, until everything on it is done.",
       "places": []
     },
     {
@@ -554,7 +575,8 @@
       "rule": null,
       "impact": "inconvenient",
       "when": "What makes someone ready changes in one place and not the other.",
-      "summary": "Who's ready for client work is worked out in the browser, in the console's `components/setup/` and again on the admin's engineer page, so no acceptance test covers it, and the two can drift apart.",
+      "name": "Readiness worked out twice in the browser",
+      "description": "Who's ready for client work is worked out in the browser, in the console's `components/setup/` and again on the admin's engineer page, so no acceptance test covers it, and the two can drift apart.",
       "places": []
     },
     {
@@ -563,7 +585,8 @@
       "rule": null,
       "impact": "inconvenient",
       "when": "An engineer's blocks grow to many pages.",
-      "summary": "My blocks reads every block the engineer has ever had, a page at a time.",
+      "name": "My blocks reads every block ever",
+      "description": "My blocks reads every block the engineer has ever had, a page at a time.",
       "places": []
     },
     {
@@ -572,7 +595,8 @@
       "rule": null,
       "impact": "inconvenient",
       "when": null,
-      "summary": "A block's conversation counts are read when its page opens, and again when a conversation window closes, and at no other time.",
+      "name": "Conversation counts read only on open",
+      "description": "A block's conversation counts are read when its page opens, and again when a conversation window closes, and at no other time.",
       "places": []
     },
     {
@@ -581,7 +605,8 @@
       "rule": null,
       "impact": "inconvenient",
       "when": "A change breaks the Teams screens.",
-      "summary": "Teams is tested end to end only by the API's feature tests. The console's own unit tests cover finding the engineer's team.",
+      "name": "Teams screens untested in the console",
+      "description": "Teams is tested end to end only by the API's feature tests. The console's own unit tests cover finding the engineer's team.",
       "places": []
     },
     {
@@ -590,7 +615,8 @@
       "rule": null,
       "impact": "inconvenient",
       "when": "A call fails partway through changing a run of weeks.",
-      "summary": "Changing a run of weeks takes several calls, so a failure partway leaves some weeks changed and others not. The page says it failed and shows what's there.",
+      "name": "Availability changes across weeks not atomic",
+      "description": "Changing a run of weeks takes several calls, so a failure partway leaves some weeks changed and others not. The page says it failed and shows what's there.",
       "places": []
     },
     {
@@ -599,7 +625,8 @@
       "rule": null,
       "impact": "inconvenient",
       "when": "An engineer's earnings grow to a long list.",
-      "summary": "Earnings loads the whole list at once, with no pagination, and the API works out what's upcoming afresh on every read.",
+      "name": "Earnings loaded whole, unpaged",
+      "description": "Earnings loads the whole list at once, with no pagination, and the API works out what's upcoming afresh on every read.",
       "places": []
     },
     {
@@ -608,7 +635,8 @@
       "rule": null,
       "impact": "inconvenient",
       "when": "Earnings fails to load.",
-      "summary": "A failure to load Earnings is shown on the page but not reported to telemetry.",
+      "name": "Earnings load failures not reported",
+      "description": "A failure to load Earnings is shown on the page but not reported to telemetry.",
       "places": []
     },
     {
@@ -617,7 +645,8 @@
       "rule": null,
       "impact": "inconvenient",
       "when": "Around midnight on a Sunday, in a time zone away from UTC.",
-      "summary": "\"This week\" on My blocks and Availability is the browser's, while the API counts weeks from Monday in UTC, so around midnight on a Sunday a block can show Ready that can't be started yet, and a change to the week ending can be refused.",
+      "name": "This week taken from the browser's clock",
+      "description": "\"This week\" on My blocks and Availability is the browser's, while the API counts weeks from Monday in UTC, so around midnight on a Sunday a block can show Ready that can't be started yet, and a change to the week ending can be refused.",
       "places": []
     },
     {
@@ -626,7 +655,8 @@
       "rule": null,
       "impact": "damaging",
       "when": "Two people edit the same estimate at once.",
-      "summary": "Saving an estimate sends the whole of it, with no check of what changed since it was opened, so of two people editing at once the last save wins.",
+      "name": "Last estimate save silently wins",
+      "description": "Saving an estimate sends the whole of it, with no check of what changed since it was opened, so of two people editing at once the last save wins.",
       "places": []
     },
     {
@@ -635,7 +665,8 @@
       "rule": null,
       "impact": "inconvenient",
       "when": "A change breaks the estimate editor's screens.",
-      "summary": "The estimate editor is tested end to end only by the API's feature tests. The console's own tests cover the math and what a save sends.",
+      "name": "Estimate editor screens untested in the console",
+      "description": "The estimate editor is tested end to end only by the API's feature tests. The console's own tests cover the math and what a save sends.",
       "places": []
     },
     {
@@ -644,7 +675,8 @@
       "rule": null,
       "impact": "inconvenient",
       "when": "Naming the partnership or accepting its agreement fails on the welcome page.",
-      "summary": "Accepting an invitation on the welcome page is three calls: accepting, naming the partnership, and accepting its Partner Agreement. If naming fails the partner is told to name it in the hub, and if the agreement fails the hub opens on it to accept.",
+      "name": "Accepting an invitation takes three calls",
+      "description": "Accepting an invitation on the welcome page is three calls: accepting, naming the partnership, and accepting its Partner Agreement. If naming fails the partner is told to name it in the hub, and if the agreement fails the hub opens on it to accept.",
       "places": []
     },
     {
@@ -653,7 +685,8 @@
       "rule": null,
       "impact": "inconvenient",
       "when": "A change breaks Earnings' screens.",
-      "summary": "Earnings' screens are tested end to end only by the API's tests. The hub's unit tests cover the totals, each earning's state and note (`earningTotals`, `earningState`, `earningNote`) and reading every page.",
+      "name": "Earnings screens untested in the hub",
+      "description": "Earnings' screens are tested end to end only by the API's tests. The hub's unit tests cover the totals, each earning's state and note (`earningTotals`, `earningState`, `earningNote`) and reading every page.",
       "places": []
     },
     {
@@ -662,7 +695,8 @@
       "rule": null,
       "impact": "inconvenient",
       "when": "A change breaks Payouts' screens.",
-      "summary": "Payouts' screens are tested end to end only by the API's tests. The hub's unit tests cover the rows (`toRows`, `failureText`) and reading every page.",
+      "name": "Payouts screens untested in the hub",
+      "description": "Payouts' screens are tested end to end only by the API's tests. The hub's unit tests cover the rows (`toRows`, `failureText`) and reading every page.",
       "places": []
     },
     {
@@ -671,7 +705,8 @@
       "rule": null,
       "impact": "inconvenient",
       "when": "A change breaks Home's screens or how a section fails.",
-      "summary": "Home's workflow is tested end to end only by the API's tests. The portal's own unit tests cover what the page works out (`homeState`) and what it reads (`listCurrentCapacities`), not its screens or how a section fails.",
+      "name": "Home screens untested in the portal",
+      "description": "Home's workflow is tested end to end only by the API's tests. The portal's own unit tests cover what the page works out (`homeState`) and what it reads (`listCurrentCapacities`), not its screens or how a section fails.",
       "places": []
     },
     {
@@ -680,7 +715,8 @@
       "rule": null,
       "impact": "inconvenient",
       "when": "A release breaks Home.",
-      "summary": "Home can't be switched off on its own, so a bad release of it is rolled back with everything else.",
+      "name": "Home can't be switched off alone",
+      "description": "Home can't be switched off on its own, so a bad release of it is rolled back with everything else.",
       "places": []
     },
     {
@@ -689,7 +725,8 @@
       "rule": null,
       "impact": "negligible",
       "when": null,
-      "summary": "The setup bubble reads the blocks on now, the teams and billing when the organization changes and each time it opens, so on Home the blocks are read twice.",
+      "name": "Blocks read twice on Home",
+      "description": "The setup bubble reads the blocks on now, the teams and billing when the organization changes and each time it opens, so on Home the blocks are read twice.",
       "places": []
     },
     {
@@ -698,7 +735,8 @@
       "rule": null,
       "impact": "negligible",
       "when": null,
-      "summary": "Each page that shows the organization's teams reads them again.",
+      "name": "Teams reread on every page",
+      "description": "Each page that shows the organization's teams reads them again.",
       "places": []
     },
     {
@@ -707,7 +745,8 @@
       "rule": null,
       "impact": "inconvenient",
       "when": "A change breaks the Your teams screens.",
-      "summary": "Your teams is tested end to end only by the API's feature tests. The portal's own unit tests cover reading every page of teams and the order people show in.",
+      "name": "Your teams screens untested in the portal",
+      "description": "Your teams is tested end to end only by the API's feature tests. The portal's own unit tests cover reading every page of teams and the order people show in.",
       "places": []
     },
     {
@@ -716,7 +755,8 @@
       "rule": null,
       "impact": "inconvenient",
       "when": "An organization has bought many blocks.",
-      "summary": "Capacity and the Schedule load every block the organization has bought, reading each page of them in turn, and Capacity filters, sorts and pages them in the browser.",
+      "name": "Capacity and Schedule load every block",
+      "description": "Capacity and the Schedule load every block the organization has bought, reading each page of them in turn, and Capacity filters, sorts and pages them in the browser.",
       "places": []
     },
     {
@@ -725,7 +765,8 @@
       "rule": null,
       "impact": "inconvenient",
       "when": "An organization has bought many blocks.",
-      "summary": "A block's page reads every one of the organization's blocks to find this one by its number.",
+      "name": "Block page reads every block to find one",
+      "description": "A block's page reads every one of the organization's blocks to find this one by its number.",
       "places": []
     },
     {
@@ -734,7 +775,8 @@
       "rule": null,
       "impact": "blocking",
       "when": "A change breaks Billing, or the real payment provider behaves unlike the tests.",
-      "summary": "Billing and payment methods are tested end to end only by the API's feature tests, which run without a real payment provider.",
+      "name": "Billing untested against a real provider",
+      "description": "Billing and payment methods are tested end to end only by the API's feature tests, which run without a real payment provider.",
       "places": []
     },
     {
@@ -743,7 +785,8 @@
       "rule": null,
       "impact": "inconvenient",
       "when": "An organization grows to many members.",
-      "summary": "The Members table reads every member of the organization at once, unpaged.",
+      "name": "Members table unpaged",
+      "description": "The Members table reads every member of the organization at once, unpaged.",
       "places": []
     },
     {
@@ -752,7 +795,8 @@
       "rule": null,
       "impact": "inconvenient",
       "when": "A change breaks the Members page.",
-      "summary": "The portal's own unit tests on Members cover only how pasted addresses are read, what is left to retry after some invitations fail, and the role an invitation starts on. The rules are tested by the API's acceptance tests, and nothing tests the page itself.",
+      "name": "Members page itself untested",
+      "description": "The portal's own unit tests on Members cover only how pasted addresses are read, what is left to retry after some invitations fail, and the role an invitation starts on. The rules are tested by the API's acceptance tests, and nothing tests the page itself.",
       "places": []
     },
     {
@@ -761,7 +805,8 @@
       "rule": null,
       "impact": "negligible",
       "when": null,
-      "summary": "An organization's logo is read with the session token, once per change and per page load, so the browser doesn't cache it.",
+      "name": "Organization logo never cached by the browser",
+      "description": "An organization's logo is read with the session token, once per change and per page load, so the browser doesn't cache it.",
       "places": []
     }
   ],
@@ -769,7 +814,8 @@
     {
       "id": "mechanism:error-reporting#errors-only",
       "outcome": null,
-      "summary": "Only errors are collected: uncaught ones, and those pages pass to `reportError`. No page views, request timings or session recordings.",
+      "name": "Only errors collected, no page views",
+      "description": "Only errors are collected: uncaught ones, and those pages pass to `reportError`. No page views, request timings or session recordings.",
       "benefit": null,
       "drawback": "A slow page, or one people give up on without an error, leaves nothing to look at.",
       "impact": "inconvenient",
@@ -779,7 +825,8 @@
     {
       "id": "mechanism:stability-marks#levels-kept-in-the-ui",
       "outcome": null,
-      "summary": "Each page's level is declared once in the UI, in `src/featureStability.ts`, for the rail and the pages to read, apart from the capability docs' levels in the API's repository.",
+      "name": "Page levels declared in the UI, apart from the docs",
+      "description": "Each page's level is declared once in the UI, in `src/featureStability.ts`, for the rail and the pages to read, apart from the capability docs' levels in the API's repository.",
       "benefit": null,
       "drawback": "A level change is made in both repositories, and nothing checks that they agree.",
       "impact": "inconvenient",
@@ -789,7 +836,8 @@
     {
       "id": "component:auth#clerks-screens-for-session-tasks",
       "outcome": null,
-      "summary": "The session tasks Clerk can hold a session back for, a password reset it forces or two-step setup, use Clerk's own screens, dressed by `clerkAppearance`, since they're rare.",
+      "name": "Clerk's own screens for session tasks",
+      "description": "The session tasks Clerk can hold a session back for, a password reset it forces or two-step setup, use Clerk's own screens, dressed by `clerkAppearance`, since they're rare.",
       "benefit": null,
       "drawback": "Those few screens look like Clerk's rather than ours.",
       "impact": "negligible",
@@ -799,7 +847,8 @@
     {
       "id": "component:portal#provider-pages-for-billing",
       "outcome": null,
-      "summary": "Payment methods, invoices and company details stay on the payment provider's own pages, which Billing opens at an address the API asks the provider for. The portal knows nothing of the provider, and shows only a label for the default payment method.",
+      "name": "Billing on the provider's own pages",
+      "description": "Payment methods, invoices and company details stay on the payment provider's own pages, which Billing opens at an address the API asks the provider for. The portal knows nothing of the provider, and shows only a label for the default payment method.",
       "benefit": null,
       "drawback": "Clients leave the portal to see an invoice or change how they pay, and a portal page left open in another tab doesn't see what they changed there.",
       "impact": "inconvenient",
@@ -809,7 +858,8 @@
     {
       "id": "component:portal#no-gravatar-for-members",
       "outcome": null,
-      "summary": "Members show their own photo or their initials, never a Gravatar, which would send their address, hashed, to a third party.",
+      "name": "Photos or initials, never Gravatar",
+      "description": "Members show their own photo or their initials, never a Gravatar, which would send their address, hashed, to a third party.",
       "benefit": null,
       "drawback": "A member who hasn't uploaded a photo shows initials here, though their profile shows their Gravatar.",
       "impact": "negligible",

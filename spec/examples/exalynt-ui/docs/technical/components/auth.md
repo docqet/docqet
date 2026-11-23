@@ -9,8 +9,9 @@ capabilities:
   - partnerships
 tradeoffs:
   - id: clerks-screens-for-session-tasks
+    name: Clerk's own screens for session tasks
     impact: negligible
-    summary: >-
+    description: >-
       The session tasks Clerk can hold a session back for, a password reset
       it forces or two-step setup, use Clerk's own screens, dressed by
       `clerkAppearance`, since they're rare.

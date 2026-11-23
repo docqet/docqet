@@ -5,17 +5,19 @@ description: >-
 capabilities: [room-booking, group-bookings, check-in]
 gaps:
   - id: clashes-logged-as-unknown
+    name: Booking clashes logged as unknown errors
     outcome: observability/beta/hears-of-errors
     impact: inconvenient
-    summary: >-
+    description: >-
       `saveBooking` passes every database error up as it is, so a clash that
       only the exclusion constraint caught is logged as an unknown failure,
       not as a double booking that was refused.
     when: Two bookings for the same room arrive at once.
 tradeoffs:
   - id: constraint-not-lock
+    name: Database constraint, not an app lock
     impact: inconvenient
-    summary: >-
+    description: >-
       The database refuses overlapping bookings with an exclusion
       constraint, rather than the app locking the room while it checks.
     benefit: >-

@@ -80,120 +80,138 @@ rules:
 concepts: [organization, role, team]
 gaps:
   - id: invitations-never-expire
+    name: Invitations never expire and can't be resent
     impact: inconvenient
-    summary: >-
+    description: >-
       Invitations never expire and can't be resent: an Admin revokes one and
       invites the same address again.
   - id: referral-relies-on-alpha-partnerships
+    name: Referrals rely on Alpha Partnerships
     outcome: security/alpha/stable-dependencies
     impact: inconvenient
-    summary: >-
+    description: >-
       Which partner referred the organization comes from Partnerships, which
       is still Alpha.
     when: Partnerships makes a breaking change or resets its data.
   - id: logo-only-in-the-portal
+    name: Logo shown only in the portal
     impact: negligible
-    summary: >-
+    description: >-
       Only the portal shows the organization's logo: the console and the
       admin still show initials.
   - id: team-assignment-by-load-only
+    name: Teams assigned by load only
     impact: inconvenient
-    summary: >-
+    description: >-
       Assigning a new client a team goes only by load, not by what kind of
       work suits a team, and two clients signing up at once can land on the
       same team.
   - id: sign-up-shows-the-team
+    name: Sign-up reveals a team's contact details
     outcome: security/beta/misuse
     impact: damaging
-    summary: >-
+    description: >-
       Anyone who signs up sees the names and email addresses of the team
       they're given, with no one at Exalynt having looked at them first.
       Since anyone can create organizations, doing it again and again can
       show more than one team.
   - id: no-alert-on-failures
+    name: No alerts on failing sign-ups or invitations
     outcome: observability/beta/hears-of-errors
     impact: blocking
-    summary: >-
+    description: >-
       Exalynt doesn't alert itself when sign-up, inviting or joining start
       failing: someone notices first.
     when: Sign-up, inviting or joining start failing.
   - id: success-not-agreed
+    name: Success measures not agreed
     outcome: utility/beta/success-agreed
     impact: inconvenient
-    summary: >-
+    description: >-
       What success looks like hasn't been agreed with the client, so nothing
       yet shows it's met in real use.
   - id: no-availability-target
+    name: No availability target
     outcome: reliability/ga/availability
     impact: inconvenient
-    summary: No availability target has been agreed.
+    description: No availability target has been agreed.
   - id: no-speed-target
+    name: No response-time target or peak load test
     outcome: efficiency/ga/speed-targets
     impact: inconvenient
-    summary: >-
+    description: >-
       No response-time target has been agreed, and it hasn't been tried at
       peak load.
     when: Many people use it at once.
   - id: retention-not-decided
+    name: Closed organizations' data never deleted
     outcome: security/beta/duties
     impact: damaging
-    summary: >-
+    description: >-
       Nothing of an organization's data is deleted after it closes, even on
       request.
   - id: no-privacy-notice
+    name: No privacy notice at sign-up
     outcome: security/beta/duties
     impact: damaging
-    summary: >-
+    description: >-
       Sign-up doesn't link to a privacy notice, and the agreements with the
       services that hold people's details (sign-in, email, monitoring) aren't
       confirmed.
   - id: supported-browsers-not-stated
+    name: Supported browsers not stated
     outcome: compatibility/ga/every-platform
     impact: inconvenient
-    summary: >-
+    description: >-
       Which browsers and devices it supports isn't stated, and it hasn't been
       checked against them.
     when: Someone uses a browser or device it doesn't work on.
   - id: accessibility-standard-not-stated
+    name: Accessibility standard not stated
     outcome: usability/ga/all-accessible
     impact: inconvenient
-    summary: >-
+    description: >-
       The accessibility standard it meets isn't stated, and it hasn't been
       checked against one.
     when: Someone relies on assistive technology it doesn't work with.
   - id: no-support-commitments
+    name: No support or incident commitments
     outcome: supportability/ga/help
     impact: inconvenient
-    summary: >-
+    description: >-
       There's no stated support response time, no status page or outage
       notice, and no commitment to review serious incidents.
 tradeoffs:
   - id: closing-by-email
+    name: Closing the account by email
     impact: inconvenient
-    summary: >-
+    description: >-
       Closing the account is a conversation with Exalynt, by email from the
       Organization page.
     drawback: >-
       Nothing in the portal starts or tracks closing, and the organization isn't
       deleted afterwards.
   - id: fifty-invitations-a-day
+    name: Fifty invitations a day
     impact: inconvenient
-    summary: >-
+    description: >-
       An organization, and each person, can send 50 invitations a day.
     drawback: >-
       An organization inviting more people than that waits until the next day.
     when: An organization invites more than 50 people in a day.
   - id: members-unsorted-and-unpaged
+    name: Every member on one page, by name
     outcome: efficiency/beta/bounded
     impact: inconvenient
-    summary: >-
+    description: >-
       The list of members can't be sorted or paged: it shows every member, by
       name.
     drawback: A large organization's list is long to look through.
     when: An organization has many members.
   - id: last-save-wins
+    name: Last save wins on names and roles
     impact: damaging
-    summary: >-
+    description: >-
       The last save wins on the organization's name and on member roles:
       nothing checks what the person last read.
     drawback: >-
@@ -203,16 +221,18 @@ tradeoffs:
       Two people change the organization's name, or the same member's role, at
       once.
   - id: any-role-from-member-management
+    name: Member managers can give any role
     impact: damaging
-    summary: >-
+    description: >-
       Whoever can manage members can give anyone any role, Admin included.
     drawback: A role that manages members can do everything.
     when: >-
       Someone is given a role that manages members but isn't meant to do
       everything.
   - id: initials-without-a-photo
+    name: Initials for members without a photo
     impact: negligible
-    summary: A member without a photo of their own shows initials.
+    description: A member without a photo of their own shows initials.
     drawback: Members without a photo are told apart only by their initials.
 decisions:
   - topic: Keeping a closed organization's data

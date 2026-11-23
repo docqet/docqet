@@ -6,8 +6,9 @@ description: >-
 capabilities: [fulfillment]
 gaps:
   - id: orphaned-objects
+    name: Unused uploaded objects never cleaned up
     impact: inconvenient
-    summary: >-
+    description: >-
       An object uploaded for an update that then fails to post, or taken off
       an update by an edit or delete, stays in the client's organization.
       Focuses do the same.

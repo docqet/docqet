@@ -11,8 +11,9 @@ rules:
 concepts: [payment, bill]
 tradeoffs:
   - id: hotels-currency-only
+    name: Hotel's currency only
     impact: inconvenient
-    summary: Guests pay in the hotel's currency, not their own.
+    description: Guests pay in the hotel's currency, not their own.
     benefit: >-
       The bill, the payment and the hotel's books are all in one currency,
       with no exchange rates to keep.

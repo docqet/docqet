@@ -1348,7 +1348,8 @@
       "rule": "tax/children-pay-no-city-tax",
       "impact": "inconvenient",
       "when": null,
-      "summary": "Guests' ages aren't recorded, so city tax is added for every guest on a stay, and clerks correct it by hand for children.",
+      "name": "City tax charged for children",
+      "description": "Guests' ages aren't recorded, so city tax is added for every guest on a stay, and clerks correct it by hand for children.",
       "places": []
     },
     {
@@ -1358,7 +1359,8 @@
       "rule": null,
       "impact": "inconvenient",
       "when": null,
-      "summary": "Nothing reminds a company when an invoice is overdue. The bookkeeper checks the unpaid invoices each week and chases them by email.",
+      "name": "No reminders for overdue invoices",
+      "description": "Nothing reminds a company when an invoice is overdue. The bookkeeper checks the unpaid invoices each week and chases them by email.",
       "places": []
     },
     {
@@ -1367,7 +1369,8 @@
       "rule": null,
       "impact": "damaging",
       "when": "Someone changes how corrections work.",
-      "summary": "Nothing tests correcting a line that is itself a correction, so a change to `correct` could stop a twice-corrected charge netting to zero without anything failing.",
+      "name": "Corrections of corrections untested",
+      "description": "Nothing tests correcting a line that is itself a correction, so a change to `correct` could stop a twice-corrected charge netting to zero without anything failing.",
       "places": [
         {
           "file": "src/ledger/ledger.ts",
@@ -1382,7 +1385,8 @@
       "rule": null,
       "impact": "inconvenient",
       "when": "The payment provider is slow to answer.",
-      "summary": "Calls to the payment provider have no timeout, so a slow provider holds the request open until the platform gives up on it.",
+      "name": "No timeout on payment provider calls",
+      "description": "Calls to the payment provider have no timeout, so a slow provider holds the request open until the platform gives up on it.",
       "places": [
         {
           "file": "src/payments/provider.ts",
@@ -1397,7 +1401,8 @@
       "id": "capability:pay-by-link#hotels-currency-only",
       "domain": "billing",
       "outcome": null,
-      "summary": "Guests pay in the hotel's currency, not their own.",
+      "name": "Hotel's currency only",
+      "description": "Guests pay in the hotel's currency, not their own.",
       "benefit": "The bill, the payment and the hotel's books are all in one currency, with no exchange rates to keep.",
       "drawback": "Their card provider converts it, at its own rate, so the amount on their statement can differ from the bill.",
       "impact": "inconvenient",
@@ -1408,7 +1413,8 @@
       "id": "capability:direct-billing#whole-bill-moves",
       "domain": "finance",
       "outcome": null,
-      "summary": "A bill moves to a company's account whole, not charge by charge.",
+      "name": "Whole bills move, not single charges",
+      "description": "A bill moves to a company's account whole, not charge by charge.",
       "benefit": "Clerks move a bill in one step at check-out, and a company's account only ever holds whole bills.",
       "drawback": "A guest who pays for their own extras pays for them before their bill moves.",
       "impact": "inconvenient",
@@ -1418,7 +1424,8 @@
     {
       "id": "component:ledger#balance-worked-out-on-read",
       "outcome": "efficiency/beta/bounded",
-      "summary": "A bill's balance is added up from its lines every time it's asked for, not stored on the bill.",
+      "name": "Balance summed on read, not stored",
+      "description": "A bill's balance is added up from its lines every time it's asked for, not stored on the bill.",
       "benefit": "The balance can never disagree with the lines, and there's nothing to keep in step when a line is added.",
       "drawback": "Opening a bill gets slower as lines are added to it.",
       "impact": "inconvenient",
@@ -1434,7 +1441,8 @@
     {
       "id": "component:payments#providers-card-form",
       "outcome": null,
-      "summary": "Guests type their card into the provider's hosted form, not one of ours.",
+      "name": "Provider's hosted card form, not our own",
+      "description": "Guests type their card into the provider's hosted form, not one of ours.",
       "benefit": "Card numbers never reach our servers, so the hotel stays out of most card-security rules.",
       "drawback": "The payment page looks like the provider's, not the hotel's.",
       "impact": "negligible",

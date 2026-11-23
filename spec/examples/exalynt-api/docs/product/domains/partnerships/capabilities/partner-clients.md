@@ -36,24 +36,28 @@ rules:
 concepts: [partnership]
 gaps:
   - id: moving-restarts-since
+    name: Moving a client loses its history
     impact: damaging
-    summary: >-
+    description: >-
       Moving a client starts its "since" afresh, and nothing keeps the
       partnerships a client was attributed to before.
     when: Exalynt moves a client to another partnership.
   - id: no-attribution-notices
+    name: Partners not told of attribution changes
     impact: inconvenient
-    summary: >-
+    description: >-
       A partner isn't told when a client is attributed to them, moved, or
       removed.
   - id: phone-hides-how-and-window
+    name: Phones hide client source and earning window
     impact: inconvenient
-    summary: >-
+    description: >-
       On a phone, how each client came and its earning window aren't shown.
   - id: manual-attribution-from-partnerships
+    name: Attributing by hand relies on Alpha Partnerships
     outcome: security/alpha/stable-dependencies
     impact: blocking
-    summary: >-
+    description: >-
       Clients Exalynt attributes, moves, or removes by hand go through
       Partnerships, which is still Alpha.
     when: A breaking change in Partnerships.

@@ -72,64 +72,75 @@ rules:
 concepts: [team, role]
 gaps:
   - id: readiness-one-at-a-time
+    name: Payout readiness shown one person at a time
     impact: inconvenient
-    summary: >-
+    description: >-
       Readiness shows only for one person at a time, as asking whether someone
       can be paid asks the payout provider, so the list of everyone can't say
       who isn't ready.
   - id: lists-every-platform-role
+    name: Lists every platform role, not just engineers
     impact: negligible
-    summary: >-
+    description: >-
       It lists everyone holding a platform role, whatever the role, not only
       engineers.
   - id: joined-is-account-creation
+    name: Joined date is account creation
     impact: negligible
-    summary: >-
+    description: >-
       Joined is when their account was made, so someone who was a client first
       shows that earlier date.
   - id: moved-engineers-stay-on-blocks
+    name: Moved engineers stay on their blocks
     impact: inconvenient
-    summary: >-
+    description: >-
       Moving someone off a team leaves them on their blocks until they're
       reassigned, which can't be done in the apps yet.
     when: Someone on upcoming blocks is moved off their team.
   - id: reads-everything
+    name: Everything read on opening
     outcome: efficiency/beta/bounded
     impact: inconvenient
-    summary: >-
+    description: >-
       Everyone, every team, client and block is read on opening, and again
       after a team change.
     when: The numbers of people, teams, clients and blocks grow.
   - id: role-shown-only-to-role-managers
+    name: Role shown only to role managers
     impact: inconvenient
-    summary: Someone's role is named only to those who can manage roles.
+    description: Someone's role is named only to those who can manage roles.
   - id: team-change-offered-then-refused
+    name: Team change offered, then refused
     impact: inconvenient
-    summary: >-
+    description: >-
       Changing someone's team is offered to those who can't manage teams, and
       is refused when tried.
     when: Someone who can't manage teams tries to change someone's team.
   - id: role-and-applications-api-only
+    name: Role and applications changeable only by API
     impact: inconvenient
-    summary: >-
+    description: >-
       Someone's role and applications can't be changed in the apps, only by
       calling the API directly.
   - id: no-agreement-preview
+    name: No Engineer Agreement preview
     impact: damaging
-    summary: >-
+    description: >-
       There's no preview of an Engineer Agreement before sending it, and its
       terms come from the app's own copy of the terms catalog.
     when: >-
       The app's copy of the terms catalog falls out of step with the catalog.
   - id: agreements-not-listed
+    name: Agreements not shown in the list
     impact: inconvenient
-    summary: >-
+    description: >-
       The list of everyone doesn't say who has an Engineer Agreement, as that
       would take a request per engineer.
   - id: week-range-example-weak
+    name: Week range example misses the earlier limit
     outcome: functionality/beta/stays-correct
     impact: inconvenient
-    summary: >-
+    description: >-
       The acceptance example for listing the blocks someone is on by week has
       no block before the weeks asked for, so losing the earlier limit
       wouldn't fail it.
@@ -138,8 +149,9 @@ gaps:
       limit.
 tradeoffs:
   - id: written-for-administrators
+    name: Written for administrators, not narrower roles
     impact: inconvenient
-    summary: >-
+    description: >-
       It's written for administrators: without full reads of people, teams,
       capacity and clients the list doesn't load, and with narrower reach it
       shows only what that reaches.

@@ -17,79 +17,90 @@ capabilities:
   - engineer-agreements
 gaps:
   - id: setup-reads-on-every-page
+    name: Setup bubble rereads on every page
     impact: negligible
-    summary: >-
+    description: >-
       The setup bubble reads again on each page and each time it opens, four
       requests and a call to the payout provider each time, until everything
       on it is done.
   - id: readiness-worked-out-twice
+    name: Readiness worked out twice in the browser
     outcome: functionality/beta/stays-correct
     impact: inconvenient
-    summary: >-
+    description: >-
       Who's ready for client work is worked out in the browser, in the
       console's `components/setup/` and again on the admin's engineer page,
       so no acceptance test covers it, and the two can drift apart.
     when: What makes someone ready changes in one place and not the other.
   - id: board-reads-every-block
+    name: My blocks reads every block ever
     outcome: efficiency/beta/bounded
     impact: inconvenient
-    summary: >-
+    description: >-
       My blocks reads every block the engineer has ever had, a page at a
       time.
     when: An engineer's blocks grow to many pages.
   - id: conversation-counts-read-on-open
+    name: Conversation counts read only on open
     impact: inconvenient
-    summary: >-
+    description: >-
       A block's conversation counts are read when its page opens, and again
       when a conversation window closes, and at no other time.
   - id: team-screens-untested
+    name: Teams screens untested in the console
     outcome: functionality/beta/stays-correct
     impact: inconvenient
-    summary: >-
+    description: >-
       Teams is tested end to end only by the API's feature tests. The
       console's own unit tests cover finding the engineer's team.
     when: A change breaks the Teams screens.
   - id: availability-changes-not-atomic
+    name: Availability changes across weeks not atomic
     outcome: reliability/ga/holds-up
     impact: inconvenient
-    summary: >-
+    description: >-
       Changing a run of weeks takes several calls, so a failure partway
       leaves some weeks changed and others not. The page says it
       failed and shows what's there.
     when: A call fails partway through changing a run of weeks.
   - id: earnings-unpaged
+    name: Earnings loaded whole, unpaged
     outcome: efficiency/beta/bounded
     impact: inconvenient
-    summary: >-
+    description: >-
       Earnings loads the whole list at once, with no pagination, and the API
       works out what's upcoming afresh on every read.
     when: An engineer's earnings grow to a long list.
   - id: earnings-failures-unreported
+    name: Earnings load failures not reported
     outcome: observability/alpha/see-errors
     impact: inconvenient
-    summary: >-
+    description: >-
       A failure to load Earnings is shown on the page but not reported to
       telemetry.
     when: Earnings fails to load.
   - id: this-week-from-browser
+    name: This week taken from the browser's clock
     impact: inconvenient
-    summary: >-
+    description: >-
       "This week" on My blocks and Availability is the browser's, while the
       API counts weeks from Monday in UTC, so around midnight on a Sunday a
       block can show Ready that can't be started yet, and a change to the
       week ending can be refused.
     when: Around midnight on a Sunday, in a time zone away from UTC.
   - id: estimate-save-unchecked
+    name: Last estimate save silently wins
     impact: damaging
-    summary: >-
+    description: >-
       Saving an estimate sends the whole of it, with no check of what changed
       since it was opened, so of two people editing at once the last save
       wins.
     when: Two people edit the same estimate at once.
   - id: estimate-editor-screens-untested
+    name: Estimate editor screens untested in the console
     outcome: functionality/beta/stays-correct
     impact: inconvenient
-    summary: >-
+    description: >-
       The estimate editor is tested end to end only by the API's feature
       tests. The console's own tests cover the math and what a save sends.
     when: A change breaks the estimate editor's screens.

@@ -11,8 +11,9 @@ capabilities:
   - earnings
 tradeoffs:
   - id: apps-hold-people-to-agreements
+    name: Agreements enforced in the apps, not the API
     impact: damaging
-    summary: >-
+    description: >-
       The apps hold people to an agreement, not the API: the portal's,
       console's and hub's gates keep someone out until one is in effect, and
       the API answers what their role allows regardless.
@@ -20,8 +21,9 @@ tradeoffs:
       Someone using the API directly can still do what their role allows
       without an agreement in effect.
   - id: pdf-laid-out-in-go
+    name: PDFs drawn in Go without Unicode fonts
     impact: damaging
-    summary: >-
+    description: >-
       The PDF is laid out in Go with fpdf's Helvetica, not a browser or a
       Unicode font, so there's no headless browser to run or font to ship.
     drawback: >-
@@ -29,8 +31,9 @@ tradeoffs:
       name with characters outside Western European alphabets keeps them as
       "?" in its PDF.
   - id: no-flag-before-gates
+    name: No flag in front of the agreement gates
     impact: blocking
-    summary: >-
+    description: >-
       There's no flag in front of the console's or the portal's gate, like the
       other Beta features.
     drawback: >-
@@ -39,8 +42,9 @@ tradeoffs:
       deployed.
     when: Reading agreements fails.
   - id: accepted-agreements-outlive-their-user
+    name: Accepted agreements kept after their user is deleted
     impact: damaging
-    summary: >-
+    description: >-
       Accepted agreements outlive their user: deleting a user clears `user_id`
       on their accepted ones (migration 91) and keeps their PDFs, since the PDF
       is the record of what was agreed.

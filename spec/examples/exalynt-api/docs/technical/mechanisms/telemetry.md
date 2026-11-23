@@ -8,14 +8,16 @@ description: >-
 meets: [observability/alpha/see-errors]
 gaps:
   - id: log-retention-not-set
+    name: Log retention left at Grafana's default
     impact: damaging
-    summary: >-
+    description: >-
       Request log lines carry `remote_addr` and `user_id`, and how long
       Grafana Cloud keeps them is its default.
   - id: no-alerts-or-dashboards
+    name: No alerts or dashboards in Grafana Cloud
     outcome: observability/beta/hears-of-errors
     impact: damaging
-    summary: >-
+    description: >-
       Alerts and dashboards aren't set up in Grafana Cloud, though the
       in-cluster Alloy collector now sends there. Each feature with a
       `.changes` counter needs an alert on the share of its routes ending in a

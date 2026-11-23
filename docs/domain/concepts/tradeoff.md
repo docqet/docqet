@@ -42,16 +42,18 @@ A tradeoff we reverse is deleted, or replaced by the new one.
 ## In the spec
 
 Tradeoffs are listed in the frontmatter of the doc they're on, each with an
-`id`, a `summary` saying what we chose and not what, its `benefit`, and its
+`id`, a `name` saying in a few words what we chose, a `description` saying
+what we chose and not what, its `benefit`, and its
 `drawback`. Optionally, as a gap does, its `outcome` names the checklist
 outcome it falls short of, and its `impact` and `when` rate its drawback. On the [ledger](../../../spec/examples/hotel-billing/docs/technical/components/ledger.md):
 
 ```yaml
 tradeoffs:
   - id: balance-worked-out-on-read
+    name: Balance summed on read, not stored
     outcome: efficiency/beta/bounded
     impact: inconvenient
-    summary: >-
+    description: >-
       A bill's balance is added up from its lines every time it's asked for,
       not stored on the bill.
     benefit: >-
@@ -74,8 +76,9 @@ A feature's tradeoff is written the same way, on
 ```yaml
 tradeoffs:
   - id: front-desk-bookings-only
+    name: Front desk bookings only
     impact: inconvenient
-    summary: >-
+    description: >-
       Bookings are taken at the front desk, not from online travel agencies.
     benefit: >-
       No agency integrations to build or keep working, while most bookings

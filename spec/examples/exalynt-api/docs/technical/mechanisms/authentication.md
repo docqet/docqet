@@ -8,8 +8,9 @@ description: >-
 applies: platform
 gaps:
   - id: rate-limit-per-instance
+    name: Rate limit counted per instance
     impact: inconvenient
-    summary: >-
+    description: >-
       Each running instance counts its own rate limit, so an organization's
       real limit is `RATE_LIMIT_PER_MINUTE` times the instances running
       (`internal/middleware/ratelimit.go`).

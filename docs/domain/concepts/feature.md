@@ -47,7 +47,8 @@ capabilities:
   - waitlist
 tradeoffs:
   - id: front-desk-bookings-only
-    summary: >-
+    name: Front desk bookings only
+    description: >-
       Bookings are taken at the front desk, not from online travel agencies.
     drawback: Clerks enter each agency booking by hand, as it arrives by email.
 ---

@@ -6,44 +6,50 @@ description: >-
   them in a request acting in an organization or a partnership.
 gaps:
   - id: no-organization-runs-on-platform
+    name: Leaving out the organization runs on platform
     impact: damaging
-    summary: >-
+    description: >-
       `X-Organization-ID` is optional, so anyone signed in can leave it out
       and run on `api_platform`. Holding no platform role, they hold no
       permissions and `authz.Require` refuses them, so nothing crosses today,
       but Bounds are all that stand in the way.
     when: A query reachable without an organization forgets its Bounds.
   - id: shared-tables-unprotected
+    name: Shared tables lack row-level security
     impact: damaging
-    summary: >-
+    description: >-
       Shared tables have no row-level security, `users` above all, as staff
       names appear across organizations: a query there that forgets to filter
       can read every user's name and email.
     when: A query on a shared table forgets to filter.
   - id: no-staff-audit-trail
+    name: No audit trail of staff reads
     outcome: security/ga/traceable
     impact: inconvenient
-    summary: >-
+    description: >-
       What staff read across organizations isn't recorded beyond the request's
       log line. Left out by decision for now.
     when: Someone needs to know what staff read in an organization.
   - id: taken-id-is-a-conflict
+    name: Taken IDs reveal that they exist
     impact: negligible
-    summary: >-
+    description: >-
       A client-supplied ID that's already taken is a `409`, in any
       organization, as IDs are globally unique. Someone who already knows an ID
       can learn that it exists, and nothing else.
     when: Someone supplies an ID they know belongs to another organization.
   - id: indexes-not-led-by-organization
+    name: Indexes not all led by organization_id
     impact: inconvenient
-    summary: >-
+    description: >-
       Existing indexes don't all lead with `organization_id`, as some serve
       staff's views across organizations.
     when: Organizations' data grows large.
 tradeoffs:
   - id: setting-per-transaction
+    name: Tenant set per transaction, not per connection
     impact: inconvenient
-    summary: >-
+    description: >-
       The organization or partnership is set with `SET LOCAL` in a
       transaction around each statement, a `UnitOfWork`'s or a short one of
       its own, rather than on a connection kept for the request.

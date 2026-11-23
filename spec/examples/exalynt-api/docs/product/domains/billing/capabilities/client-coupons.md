@@ -8,24 +8,28 @@ personas: [exalynt-admin]
 concepts: [organization]
 gaps:
   - id: placeholder-coupons
+    name: Coupons are placeholder data
     impact: blocking
-    summary: >-
+    description: >-
       Coupons are placeholder data, held in memory until a reload, so a real
       client starts with none.
   - id: coupons-never-applied
+    name: Coupons never applied to payments
     impact: blocking
-    summary: >-
+    description: >-
       Nothing else knows of coupons, so a client can't use one and still pays
       in full, and a coupon added here never shows as used.
   - id: separate-from-revenue-calculator-coupons
+    name: Separate from the revenue calculator's coupons
     impact: inconvenient
-    summary: >-
+    description: >-
       The revenue calculator's coupons are the same shape, but the two don't
       meet.
   - id: no-record-of-who-changed-a-coupon
+    name: No record of who changed a coupon
     outcome: security/ga/traceable
     impact: inconvenient
-    summary: >-
+    description: >-
       It doesn't record who added or ended a coupon.
     when: Someone needs to know who added or ended a coupon.
 decisions:

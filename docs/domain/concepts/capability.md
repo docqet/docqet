@@ -107,15 +107,17 @@ rules:
 concepts: [booking, room]
 gaps:
   - id: calendar-needs-a-mouse
+    name: Calendar needs a mouse
     outcome: usability/beta/everyone
     impact: blocking
-    summary: >-
+    description: >-
       The room calendar can't be used from the keyboard, so clerks need a
       mouse to pick dates.
 tradeoffs:
   - id: one-room-per-booking
+    name: One room per booking
     impact: inconvenient
-    summary: A booking holds one room, not several.
+    description: A booking holds one room, not several.
     benefit: >-
       Booking, changing and cancelling stay simple: each booking is one room
       for one stay.

@@ -56,8 +56,9 @@ meets:
   - observability/alpha/see-errors
 gaps:
   - id: migrations-only-go-forward
+    name: Migrations have no down step
     outcome: reliability/ga/recovery
-    summary: >-
+    description: >-
       Migrations have no down step, so undoing a release that changed the
       schema means restoring the database from the night before.
 ---

@@ -7,18 +7,20 @@ capabilities: [extra-charges, split-bills, deposits, check-out, direct-billing]
 meets: [reliability/beta/data-kept]
 gaps:
   - id: corrections-of-corrections-untested
+    name: Corrections of corrections untested
     outcome: maintainability/ga/others-can-change
     impact: damaging
-    summary: >-
+    description: >-
       Nothing tests correcting a line that is itself a correction, so a change
       to `correct` could stop a twice-corrected charge netting to zero without
       anything failing.
     when: Someone changes how corrections work.
 tradeoffs:
   - id: balance-worked-out-on-read
+    name: Balance summed on read, not stored
     outcome: efficiency/beta/bounded
     impact: inconvenient
-    summary: >-
+    description: >-
       A bill's balance is added up from its lines every time it's asked for,
       not stored on the bill.
     benefit: >-

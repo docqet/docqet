@@ -36,37 +36,42 @@ rules:
 concepts: [partnership]
 gaps:
   - id: different-address-stays-sent
+    name: Different sign-up address leaves invitation sent
     impact: negligible
-    summary: >-
+    description: >-
       An invitation stays marked as sent when the person signs up with a
       different address from the one invited, though the link still
       attributes them.
     when: Someone signs up with a different address from the one invited.
   - id: existing-clients-spotted-by-name-only
+    name: Existing clients spotted by name only
     impact: damaging
-    summary: >-
+    description: >-
       A company that's already a client can only be spotted by having the
       same name, so one signing up under another name counts as new.
     when: A company that's already a client signs up under another name.
   - id: email-law-not-reviewed
+    name: Email law not reviewed, and no opt-out
     outcome: security/beta/duties
     impact: damaging
-    summary: >-
+    description: >-
       What the law asks of email a partner has Exalynt send to someone who
       never asked for it, such as a way to opt out, hasn't been reviewed, and
       the invitation has no opt-out.
   - id: referral-codes-from-partnerships
+    name: Referral codes rely on Alpha Partnerships
     outcome: security/alpha/stable-dependencies
     impact: blocking
-    summary: >-
+    description: >-
       The partnership's referral code, which every invitation carries, can
       only be attributed while its partnership is set up in Partnerships,
       which is still Alpha.
     when: A breaking change in Partnerships.
 tradeoffs:
   - id: revoked-links-still-attribute
+    name: Revoking leaves the emailed link working
     impact: inconvenient
-    summary: >-
+    description: >-
       Revoking an invitation doesn't stop its link: the email still has the
       link with the partnership's referral code.
     drawback: >-
