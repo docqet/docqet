@@ -1,6 +1,6 @@
 import Box from "@mui/material/Box";
 import Tooltip from "@mui/material/Tooltip";
-import type { ReactElement, ReactNode } from "react";
+import { createContext, useContext, type ReactElement, type ReactNode } from "react";
 
 const cleared = {
   padding: 0,
@@ -25,7 +25,18 @@ export type DetailsPopoverProps = {
   children: ReactElement;
 };
 
+/*
+ * Turns popovers off for everything inside, as in tabs and other controls for
+ * choosing, where hovering shouldn't open anything over what's being chosen.
+ */
+const PopoversOff = createContext(false);
+export const usePopoversOff = () => useContext(PopoversOff);
+export function NoPopovers({ children }: { children: ReactNode }) {
+  return <PopoversOff.Provider value>{children}</PopoversOff.Provider>;
+}
+
 export function DetailsPopover({ title, hoverOnly = false, children }: DetailsPopoverProps) {
+  if (useContext(PopoversOff)) return children;
   return (
     <Tooltip
       describeChild

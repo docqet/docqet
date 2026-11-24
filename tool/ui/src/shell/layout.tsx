@@ -1,5 +1,6 @@
 import { useEffect, type ReactNode } from "react";
 import { Term } from "../design/term/Term";
+import { NoPopovers } from "../design/DetailsPopover";
 import type { TermId } from "../design/term/terms";
 import { withParam, type Route } from "../routes";
 
@@ -99,6 +100,7 @@ export function Stat({ label, term, value, note, href, tone }: { label: ReactNod
   );
 }
 
+/* A tab. `term` is kept for callers, but tabs open no popovers: they choose what's shown. */
 export type TabDef = { id: string; label: ReactNode; term?: TermId; count?: number };
 
 /* Which tab is showing: the one the address names, if it's one of these, or else the first. */
@@ -112,7 +114,8 @@ export function Tabs({ tabs, current }: { tabs: TabDef[]; current: string }) {
     <nav className="view-tabs" aria-label="Tabs">
       {tabs.map((t, i) => (
         <a key={t.id} className="view-tab" href={withParam("tab", i === 0 ? null : t.id)} aria-current={t.id === current ? "page" : undefined}>
-          {labelled(t.label, t.term)}
+          {/* Tabs choose what's shown, so nothing in them opens a popover. */}
+          <NoPopovers>{t.label}</NoPopovers>
           {t.count !== undefined ? <span className="view-tab-count">{t.count}</span> : null}
         </a>
       ))}

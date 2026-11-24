@@ -3,7 +3,7 @@ import LayersOutlinedIcon from "@mui/icons-material/LayersOutlined";
 import LightbulbOutlinedIcon from "@mui/icons-material/LightbulbOutlined";
 import WarningAmberRoundedIcon from "@mui/icons-material/WarningAmberRounded";
 import Switch from "@mui/material/Switch";
-import { DetailsCard, DetailsEyebrow, DetailsPopover } from "./design/DetailsPopover";
+import { DetailsCard, DetailsEyebrow, DetailsPopover, NoPopovers } from "./design/DetailsPopover";
 import { STABILITY, STABILITY_LEVEL_IDS } from "./design/stability/stability";
 import { StabilityMark } from "./design/stability/StabilityMark";
 import { LEFT_KINDS, LeftLabel, gapKind } from "./design/left/LeftMark";
@@ -104,7 +104,10 @@ export function StabilityChecklist({ state, checklist, capability }: { state: Do
           return (
             <button key={id} type="button" role="radio" aria-checked={id === level} className="sc-level" onClick={() => setLevel(id)}>
               <span className="sc-level-top">
-                <StabilityMark level={id} focusable={false} />
+                {/* A choice, so its level opens no popover over it. */}
+                <NoPopovers>
+                  <StabilityMark level={id} focusable={false} />
+                </NoPopovers>
                 {id === own ? <span className="sc-level-own">Its level</span> : null}
               </span>
               <span className="sc-level-counts">

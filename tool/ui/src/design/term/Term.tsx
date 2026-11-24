@@ -1,6 +1,6 @@
 import Box from "@mui/material/Box";
 import type { ReactNode } from "react";
-import { DetailsCard, DetailsEyebrow, DetailsPopover } from "../DetailsPopover";
+import { DetailsCard, DetailsEyebrow, DetailsPopover, usePopoversOff } from "../DetailsPopover";
 import { TERMS, type TermId } from "./terms";
 
 /* What one of Docket's words means: its name, what it is, and an example. The content of Term's popover. */
@@ -38,6 +38,8 @@ export function Term({
   focusable?: boolean;
   hoverOnly?: boolean;
 }) {
+  /* Where popovers are off, as in tabs, the word reads plainly, with no dots. */
+  if (usePopoversOff()) return <>{children ?? TERMS[id].name}</>;
   return (
     <DetailsPopover hoverOnly={hoverOnly} title={<TermDetails id={id} />}>
       <span className="term" tabIndex={focusable && !hoverOnly ? 0 : undefined}>
