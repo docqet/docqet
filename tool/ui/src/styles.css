@@ -4288,6 +4288,67 @@ button.page-table-row:hover .page-table-name strong {
   --risk: var(--faint);
 }
 
+/*
+ * Risk carried's band as a color, --risk-band, set by `data-risk-band`, on
+ * the same scale as impact: low neutral, some the soft yellow, moderate
+ * orange, and high the alarm color.
+ */
+[data-risk-band="low"] {
+  --risk-band: var(--faint);
+}
+
+[data-risk-band="some"] {
+  --risk-band: var(--inconvenient);
+}
+
+[data-risk-band="moderate"] {
+  --risk-band: var(--blocking);
+}
+
+[data-risk-band="high"] {
+  --risk-band: var(--bad);
+}
+
+/* Risk carried where it's shown: its pie and percentage, in its band's color, opening what it means. */
+.risk-carried {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 650;
+  line-height: 16px;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+  color: var(--risk-band);
+  border-radius: 4px;
+  cursor: help;
+}
+
+.risk-carried[tabindex]:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+.risk-pie {
+  flex: none;
+  display: block;
+}
+
+.risk-pie-whole {
+  fill: color-mix(in srgb, var(--risk-band) 22%, transparent);
+}
+
+.risk-pie-fill {
+  fill: var(--risk-band);
+}
+
+.risk-carried-band {
+  font-size: 1.12em;
+  font-weight: 700;
+  color: var(--risk-band);
+}
+
 /* One gap's risk: its bars and score, opening how it's worked out. */
 .gap-risk-mark {
   font-weight: 700;

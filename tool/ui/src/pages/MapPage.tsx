@@ -6,7 +6,7 @@ import { mapGroups, mapItems, tidyMap } from "../FeatureMap";
 import Peek, { PICK_KINDS } from "../Peek";
 import { navigate, useSearch } from "../routes";
 import {
-  VERDICTS,
+  RISK_BANDS,
   cardsOf,
   domainGroup,
   filterBy,
@@ -21,7 +21,7 @@ import {
   type Pick,
   type Target,
 } from "../state";
-import { VERDICT_NAMES } from "../design/risk/RiskScore";
+import { RiskPie } from "../design/risk/RiskPie";
 import { Tip } from "../design/Tip";
 import "./map.css";
 
@@ -34,7 +34,7 @@ import "./map.css";
 type Lens = "stability" | "risk";
 const LENSES: { id: Lens; label: string; tip: string }[] = [
   { id: "stability", label: "Stability", tip: "Each capability's stability level, and each feature's and domain's maturity" },
-  { id: "risk", label: "Risk", tip: "How the gaps on each capability, feature and domain spread across risk" },
+  { id: "risk", label: "Gaps", tip: "What the open gaps on each capability, feature and domain put at stake: the risk they carry" },
 ];
 
 /*
@@ -217,10 +217,10 @@ function LensBar({ lens, onLens }: { lens: Lens; onLens: (lens: Lens) => void })
       </span>
       {lens === "risk" ? (
         <span className="lens-legend">
-          {VERDICTS.map((v) => (
-            <span key={v}>
-              <span className="risk-dot" data-verdict={v} aria-hidden />
-              {VERDICT_NAMES[v].name}
+          {RISK_BANDS.map((b) => (
+            <span key={b.id} data-risk-band={b.id}>
+              <RiskPie percent={b.from + 25} size={11} />
+              {b.name}
             </span>
           ))}
         </span>

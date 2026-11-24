@@ -1,7 +1,8 @@
 import Box from "@mui/material/Box";
-import { VERDICTS, riskScore, verdictOf, type Gap, type Risk, type RiskAcross, type RiskOn, type Verdict } from "../../state";
+import { VERDICTS, carriedText, riskScore, verdictOf, type Gap, type Risk, type RiskAcross, type RiskCarried, type RiskOn, type Verdict } from "../../state";
 import { DetailsCard, DetailsEyebrow, DetailsPopover } from "../DetailsPopover";
 import { plainText } from "../markdown/Markdown";
+import { RiskPie } from "./RiskPie";
 import { RiskWorkings } from "./RiskWorkings";
 
 /*
@@ -54,8 +55,12 @@ export function RiskBars({ verdict, size }: { verdict: Verdict | null; size: "sm
  * domain, persona or component: a short bar split by how many fall in each
  * verdict, with no number, since no one score stands for them all. One alone
  * shows its own score, with its verdict when `verdict` is set. Its popover
- * shows the spread with counts and names the riskiest few. Inside something
- * clickable, `inButton` opens it on hover only.
+ * shows the spread with counts and names the riskiest few. Given what
+ * they're on `carried`, as for a feature, domain or persona, it shows the
+ * risk carried instead, as a pie filling up to its percentage in the color
+ * of its band, whose popover names the band and shows the spread and how
+ * it's worked out. Inside
+ * something clickable, `inButton` opens it on hover only.
  */
 export function RiskScore<T extends Gap>({
   risk,
@@ -63,6 +68,7 @@ export function RiskScore<T extends Gap>({
   verdict = false,
   inButton = false,
   wide = false,
+  carried,
 }: {
   risk: RiskAcross<T>;
   /* What they're in, for the popover: "Risk in Scheduling". */
@@ -71,9 +77,28 @@ export function RiskScore<T extends Gap>({
   inButton?: boolean;
   /* Several, as a wider bar, where there's room. */
   wide?: boolean;
+  /* The risk the capabilities they're on carry, to show instead. */
+  carried?: RiskCarried;
 }) {
   if (!risk.items.length) return null;
   const name = risk.verdict ? VERDICT_NAMES[risk.verdict].name : "Not rated";
+  if (carried && carried.percent !== null && carried.band) {
+    const text = carriedText(carried.percent);
+    return (
+      <DetailsPopover hoverOnly={inButton} title={<CarriedDetails risk={risk} carried={carried} of={of} />}>
+        <span
+          className="risk-carried"
+          data-risk-band={carried.band.id}
+          role="img"
+          aria-label={`${carried.band.name}: ${text} carried`}
+          tabIndex={inButton ? undefined : 0}
+        >
+          <RiskPie percent={carried.percent} size={14} />
+          <span>{text}</span>
+        </span>
+      </DetailsPopover>
+    );
+  }
   if (risk.items.length > 1)
     return (
       <DetailsPopover hoverOnly={inButton} title={<RiskDetails risk={risk} of={of} />}>
@@ -156,6 +181,49 @@ function RiskDetails<T extends Gap>({ risk, of }: { risk: RiskAcross<T>; of: str
             ) : null}
           </>
         )}
+      </div>
+    </DetailsCard>
+  );
+}
+
+/*
+ * The risk some capabilities carry, for its popover: its band and what that
+ * puts at stake, the share, how the gaps on them spread across the
+ * verdicts, how it's worked out, and that it isn't their stability.
+ */
+function CarriedDetails<T extends Gap>({ risk, carried, of }: { risk: RiskAcross<T>; carried: RiskCarried; of: string }) {
+  const band = carried.band!;
+  const n = carried.capabilities;
+  return (
+    <DetailsCard card width={320}>
+      <div className="risk-carried-details" data-risk-band={band.id}>
+        <DetailsEyebrow>Risk carried in {of}</DetailsEyebrow>
+        <Box sx={{ mt: 1.25, display: "flex", alignItems: "center", gap: 1.5 }}>
+          <RiskPie percent={carried.percent!} size={40} />
+          <div>
+            <div className="risk-carried-band">{band.name}</div>
+            <Box sx={{ color: "text.secondary", fontVariantNumeric: "tabular-nums" }}>{carriedText(carried.percent!)} of the most it could carry</Box>
+          </div>
+        </Box>
+        <Box sx={{ mt: 1.25 }}>{band.says}</Box>
+        {carried.unacceptable ? (
+          <Box sx={{ mt: 1 }}>
+            {risk.counts.unacceptable === 1 ? "A gap here is" : "Gaps here are"} unacceptable, so it&rsquo;s at least moderate risk, whatever the share.
+          </Box>
+        ) : null}
+        <div className="risk-details-head">
+          {risk.items.length} {risk.items.length === 1 ? "gap" : "gaps"} by verdict
+        </div>
+        <VerdictSpread risk={risk} />
+        <Box sx={{ mt: 1.25, color: "text.secondary", fontSize: "0.92em" }}>
+          Each capability carries its riskiest gap&rsquo;s share of the most it could carry: a certain, damaging gap reaching everyone that breaks its
+          level&rsquo;s promise. Its {n} {n === 1 ? "capability" : "capabilities"} then count by their level, GA most, as in maturity. Drafts don&rsquo;t
+          count{risk.unrated ? ", and gaps not rated carry nothing" : ""}. Each quarter is a band: low, some, moderate and high risk.
+        </Box>
+        <Box sx={{ mt: 1, color: "text.secondary", fontSize: "0.92em" }}>
+          It isn&rsquo;t stability. Each capability&rsquo;s level is declared, and says how much people can depend on it; this is what the gaps still open
+          against those levels put at stake.
+        </Box>
       </div>
     </DetailsCard>
   );

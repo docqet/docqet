@@ -1090,6 +1090,20 @@ Tradeoffs and open decisions have no risk: a tradeoff is a drawback someone
 chose to live with, and a question doesn't happen to anyone.
 
 ## Evidence
+For some capabilities, as of a feature, domain or persona, readers also
+work out the **risk carried**: what the gaps still open on them put at
+stake, from 0 to 100%. It isn't their stability, which is declared. The most a capability could carry is 4 × its level weight × 1.5,
+and it carries its riskiest gap's raw score ÷ that, its own or one on what
+it's built on. The risk carried is the average of what each started
+capability carries, weighted by its level weight. Gaps with no `impact`
+carry nothing; drafts don't count. Its band is the quarter it falls in:
+`low risk` below 25%, `some risk` from 25%, `moderate risk` from 50% and
+`high risk` from 75%, and at least `moderate risk` while any gap is
+`unacceptable` on one of them. In Hotel Bookings, room booking at Beta carries 75% of 24,
+cancellations at Alpha 100% of 18, and group bookings at Prototype 33% of
+12, so together they carry `(75% × 4 + 100% × 3 + 33% × 2) ÷ 9 ≈ 74%`,
+`moderate risk`.
+
 
 A rule, capability, mechanism or component can have **evidence**: places in the
 repository that say they verify it, or implement it. Evidence is optional at

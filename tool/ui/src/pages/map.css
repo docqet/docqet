@@ -96,37 +96,9 @@
 
 /* ——— On the cards ——— */
 
-/* A capability's risk after its name: a dot, then its score, in --risk, its verdict's color, from data-verdict. */
-.risk-pin {
-  flex: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 11px;
-  font-weight: 650;
-  line-height: 1;
-  font-variant-numeric: tabular-nums;
-  color: var(--risk);
-}
-
-.risk-dot {
-  flex: none;
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--risk);
-}
-
-[data-verdict="none"] > .risk-dot,
-.risk-dot[data-verdict="none"] {
-  background: none;
-  box-shadow: inset 0 0 0 1.5px var(--risk);
-}
-
 /*
  * Each view shows only its own marks on the canvas: stability marks and
- * maturity, or risk. The peek shows them all, and a
+ * maturity, or the risk gaps carry. The peek shows them all, and a
  * persona's readiness always shows on their card.
  */
 .canvas:not([data-lens="stability"]) .lens-stability,
@@ -135,21 +107,20 @@
 }
 
 /*
- * The risk lens tints rows, and the cards of capabilities in no feature, from
- * what each carries: data-verdict, its risk's verdict. Tinted under the card's own background,
- * and at a lower specificity than hovering or what the peek has open, which
- * stay on top.
+ * The gaps lens tints rows, and the cards of capabilities in no feature, from
+ * what each carries: data-risk-band, the band of the risk its gaps carry.
+ * Low risk gets the bar alone. Tinted under the card's own background, and at
+ * a lower specificity than hovering or what the peek has open, which stay on
+ * top.
  */
-:where(.canvas[data-lens="risk"]) li[data-verdict],
-:where(.canvas[data-lens="risk"]) .slot[data-verdict] > .MuiCard-root {
-  background-image: linear-gradient(color-mix(in srgb, var(--risk) 13%, transparent), color-mix(in srgb, var(--risk) 13%, transparent));
-  box-shadow: inset 3px 0 var(--risk);
+:where(.canvas[data-lens="risk"]) li[data-risk-band],
+:where(.canvas[data-lens="risk"]) .slot[data-risk-band] > .MuiCard-root {
+  background-image: linear-gradient(color-mix(in srgb, var(--risk-band) 13%, transparent), color-mix(in srgb, var(--risk-band) 13%, transparent));
+  box-shadow: inset 3px 0 var(--risk-band);
 }
 
-:where(.canvas[data-lens="risk"]) li[data-verdict="none"],
-:where(.canvas[data-lens="risk"]) li[data-verdict="acceptable"],
-:where(.canvas[data-lens="risk"]) .slot[data-verdict="none"] > .MuiCard-root,
-:where(.canvas[data-lens="risk"]) .slot[data-verdict="acceptable"] > .MuiCard-root {
+:where(.canvas[data-lens="risk"]) li[data-risk-band="low"],
+:where(.canvas[data-lens="risk"]) .slot[data-risk-band="low"] > .MuiCard-root {
   background-image: none;
 }
 

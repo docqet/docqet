@@ -21,6 +21,7 @@ import {
   find,
   gapsById,
   riskAcross,
+  riskCarried,
   leftCount,
   leftIn,
   openDecisions,
@@ -241,7 +242,7 @@ export default function Peek({
         <section className="peek-gaps">
           <h3>
             Riskiest <Term id="gap">gaps</Term>
-            <RiskScore risk={risk} of={s.name} />
+            <RiskScore risk={risk} carried={s.within ? riskCarried(state, s.within) : undefined} of={s.name} />
           </h3>
           <ul>
             {riskiest.map(({ item: g, risk: r, on }) => (

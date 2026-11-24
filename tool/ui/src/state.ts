@@ -1309,6 +1309,55 @@ export function riskAcross<T extends Gap>(state: DocketState, items: T[], within
 
 /* A risk score as written. */
 export const riskScore = (score: number) => String(score);
+/*
+ * The risk some capabilities carry, as of a feature, domain or persona: how
+ * much of the most they could carry their riskiest gaps are, 0 to 100. The
+ * most a capability could carry is a certain damaging gap reaching all that
+ * breaks its level's promise. It carries its riskiest gap's raw score's share
+ * of that, its own or one on what it's built on, and counts with its level's
+ * weight in risk. Gaps with no impact rated carry nothing, and drafts don't
+ * count. Nothing started, it's null. Its band, the quarter it falls in,
+ * says how much the gaps still open on them put at stake, and is at least
+ * moderate while any gap is unacceptable on one of them. It isn't their
+ * stability: that's declared, and says how much people can depend on them.
+ */
+export const RISK_BANDS = [
+  { id: "low", from: 0, name: "Low risk", says: "Little is at stake in its open gaps." },
+  { id: "some", from: 25, name: "Some risk", says: "Its open gaps could cost people a little, or seldom." },
+  { id: "moderate", from: 50, name: "Moderate risk", says: "Some of its open gaps could cost people if they bite." },
+  { id: "high", from: 75, name: "High risk", says: "Its open gaps are likely to cost people, or to cost them a lot." },
+] as const;
+export type RiskBand = (typeof RISK_BANDS)[number];
+
+export type RiskCarried = { percent: number | null; capabilities: number; band: RiskBand | null; unacceptable: boolean };
+
+export function riskCarried(state: DocketState, capabilities: Capability[]): RiskCarried {
+  let carried = 0;
+  let weights = 0;
+  let started = 0;
+  let unacceptable = false;
+  for (const c of capabilities) {
+    if (!c.stability) continue;
+    const weight = RISK_WEIGHTS[c.stability];
+    const most = IMPACT_STEPS.damaging * weight * PROMISE_FACTOR;
+    const riskiest = gapsOn(state, c).reduce<RiskOn | null>((top, g) => {
+      const on = riskOn(state, g)(c);
+      return !top || on.raw > top.raw ? on : top;
+    }, null);
+    if (riskiest && verdictOf(riskiest.score) === "unacceptable" && riskiest.raw > 0) unacceptable = true;
+    carried += weight * ((riskiest?.raw ?? 0) / most);
+    weights += weight;
+    started++;
+  }
+  const percent = weights ? (carried / weights) * 100 : null;
+  const byShare = percent === null ? null : [...RISK_BANDS].reverse().find((b) => percent >= b.from)!;
+  const band = byShare && unacceptable && byShare.from < RISK_BANDS[2].from ? RISK_BANDS[2] : byShare;
+  return { percent, capabilities: started, band, unacceptable };
+}
+
+/* A share of risk carried as written: whole percents, and "<1%" for a little that rounds to none. */
+export const carriedText = (percent: number) => (percent > 0 && percent < 0.5 ? "<1%" : `${Math.round(percent)}%`);
+
 
 /* An impact's place, worst first, with none after every one. */
 export const impactRank = (impact: Impact | null) => (impact ? IMPACTS.indexOf(impact) : IMPACTS.length);

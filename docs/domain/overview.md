@@ -312,7 +312,8 @@ Some things are never features or capabilities:
 - [Tradeoff](concepts/tradeoff.md): something we chose, knowing its benefit and drawback.
 - [Risk](concepts/risk.md): what's at stake in a gap, scored from its impact,
   the level of each capability it's on, and whether it breaks that level's
-  promise, and its exposure, how that spreads across them.
+  promise, and its exposure, how that spreads across them; and the risk
+  carried by some capabilities, what their open gaps put at stake.
 
 **Stability, maturity and readiness**
 

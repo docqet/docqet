@@ -5,7 +5,7 @@ import { CapabilityCard } from "./design/catalog/CapabilityCard";
 import { FeatureCard } from "./design/catalog/FeatureCard";
 import { MaturityRing } from "./design/maturity/MaturityRing";
 import { RingGlyph } from "./design/maturity/RingGlyph";
-import { ContradictionHint, RiskDot } from "./CapabilityHints";
+import { ContradictionHint } from "./CapabilityHints";
 import { ConceptChips, ConceptIcon } from "./Concepts";
 import { PersonaCard } from "./Personas";
 import { ProjectIcon } from "./PlatformFilter";
@@ -25,6 +25,7 @@ import {
   projectName,
   partOf,
   riskAcross,
+  riskCarried,
   type Capability,
   type Doc,
   type DocketState,
@@ -44,10 +45,9 @@ const PERSONA_SLOT = 240;
 const GAP = 28;
 
 /*
- * A capability's line on a card in a domain: its name, any contradiction, its
- * risk, the highest score among its gaps on it, and its level in that domain.
- * `data` is what the map's risk lens colors its row or card by: its risk's
- * verdict, as map.css reads it.
+ * A capability's line on a card in a domain: its name, any contradiction, the
+ * risk its gaps carry, and its level in that domain. `data` is what the map's
+ * gaps lens colors its row or card by: that risk's band, as map.css reads it.
  * Clicking it opens it in the peek.
  */
 function line(state: DocketState, c: Capability, domain: string) {
@@ -55,6 +55,7 @@ function line(state: DocketState, c: Capability, domain: string) {
   const contradictions = contradictionsOf(state, "capability", c.id).map((p) => p.message);
   const gaps = gapsOn(state, c);
   const risk = riskAcross(state, gaps, [c]);
+  const carried = riskCarried(state, [c]);
   return {
     name: c.name,
     level: here,
@@ -62,12 +63,12 @@ function line(state: DocketState, c: Capability, domain: string) {
       <>
         <ContradictionHint messages={contradictions} />
         <span className="lens-risk">
-          <RiskDot risk={risk} />
+          <RiskScore risk={risk} carried={carried} of={c.name} inButton />
         </span>
       </>
     ),
     data: {
-      "data-verdict": gaps.length ? (risk.verdict ?? "none") : undefined,
+      "data-risk-band": gaps.length ? carried.band?.id : undefined,
     },
   };
 }
@@ -253,9 +254,8 @@ export function mapGroups(state: DocketState, onOpen: (pick: Pick) => void): Can
 
 /*
  * What the map shows about a feature's or domain's capabilities beyond
- * maturity, each only in its view: the risk across them, every gap on them,
- * their own and those of what they're built on, each scored on them, as a
- * spread or one gap's score.
+ * maturity, each only in its view: the risk they carry, from every gap on
+ * them, their own and those of what they're built on, each scored on them.
  */
 function AreaMarks({ state, capabilities, of }: { state: DocketState; capabilities: Capability[]; of: string }) {
   const gaps = [...new Set(capabilities.flatMap((c) => gapsOn(state, c)))];
@@ -263,7 +263,7 @@ function AreaMarks({ state, capabilities, of }: { state: DocketState; capabiliti
     <>
       {gaps.length ? (
         <span className="lens-risk">
-          <RiskScore risk={riskAcross(state, gaps, capabilities)} of={of} inButton />
+          <RiskScore risk={riskAcross(state, gaps, capabilities)} carried={riskCarried(state, capabilities)} of={of} inButton />
         </span>
       ) : null}
     </>
