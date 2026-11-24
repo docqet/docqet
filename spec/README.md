@@ -965,15 +965,17 @@ judge. Nothing is written for it, and it isn't in `state.json`: it depends on
 [risk](#risk) and on each capability's level in short, and both need projects
 put together.
 
-Readiness is worked out as a feature's [maturity](#how-maturity-is-worked-out)
-is, with the same scores and weights, and each capability counted once, at
-its level in short, drafts left out. The one difference: **a capability with
-a gap that's `unacceptable` on it scores as the level below its own**, scored
-on that capability, until the gap is closed: as if it hadn't been promoted
-yet. It keeps its own weight. A Beta capability held back scores 35, Alpha's,
-and an Alpha one 15, Prototype's; a gap is never unacceptable on a
-Prototype. So promoting a capability never lowers readiness, and acceptable
-and tolerable gaps don't lower it at all.
+Readiness is the [maturity](#how-maturity-is-worked-out) of some
+capabilities less the [risk carried](#risk) by them, each counted once, at
+its level in short, drafts left out:
+
+```text
+readiness = maturity × (1 − risk carried)
+```
+
+Every gap lowers it, through the riskiest gap on each capability. Promoting
+a capability can lower it, where its gaps break a promise the new level
+makes.
 
 | Readiness of                | Counts                                 |
 | --------------------------- | -------------------------------------- |
@@ -991,7 +993,7 @@ level's color:
 
 | Readiness     | From | What it recommends                                                                   |
 | ------------- | ---- | ------------------------------------------------------------------------------------ |
-| Not ready     | 0%   | Most of what they need is still being explored, or held back by what's unacceptable. |
+| Not ready     | 0%   | Most of what they need is still being explored, or its gaps put a lot at stake.      |
 | Partly ready  | 25%  | Some of it can be used, but much of what they need is still taking shape.            |
 | Mostly ready  | 50%  | Enough is settled for them to rely on day to day.                                    |
 | Ready         | 75%  | What they need is mostly stable, with nothing unacceptable left open.                |
@@ -999,16 +1001,18 @@ level's color:
 Readers show **what it still needs** with it: each started capability below
 Beta, the first level settled enough for real use, needs to reach Beta, and
 each gap that's unacceptable on one needs closing. A capability at Beta or GA
-with neither has nothing left. Drafts are listed as not started.
+with neither has nothing left. Lesser gaps lower readiness but aren't left to
+do. Drafts are listed as not started.
 
 In Hotel Bookings, the front desk clerk has room booking and check-in at
 Beta, cancellations at Alpha, check-out at GA, and group bookings and room
-status at Prototype. Room booking's calendar needs a mouse, cancellations
-refund late cancellations in full, and check-out relies on the deployment,
-whose migrations have no down step: each scores 76 there, `unacceptable`.
-So room booking counts as Alpha, cancellations as Prototype and check-out as
-Beta: (35 × 4 + 60 × 4 + 15 × 3 + 60 × 6 + 15 × 2 + 15 × 2) ÷ (4 + 4 + 3 + 6
-+ 2 + 2) = 845 ÷ 21 ≈ 40%, Partly ready. What's left:
+status at Prototype, so (60 × 4 + 60 × 4 + 35 × 3 + 100 × 6 + 15 × 2 + 15 ×
+2) ÷ 21 ≈ 59% mature. Room booking's calendar needs a mouse (75% of the most
+it could carry), cancellations refund late cancellations in full (100%),
+and the rest rely on the deployment, whose migrations have no down step
+(50% on check-out at GA, where it breaks a promise, and 33% on the others).
+They carry (75 × 4 + 33 × 4 + 100 × 3 + 50 × 6 + 33 × 2 + 33 × 2) ÷ 21 ≈ 56%,
+so readiness is 59% × (1 − 56%) ≈ 26%, Partly ready. What's left:
 
 ```text
 room booking    close capability:room-booking#calendar-needs-a-mouse
@@ -1020,12 +1024,12 @@ room status     reach Beta, now Prototype
 ```
 
 In Hotel Billing, the manager has city tax at Alpha, deposits and daily
-takings at Beta, and night audit at GA, with nothing unacceptable, so they're
-1185 ÷ 17 ≈ 70%, Mostly ready. The night auditor has only night audit, at
-GA, so they're 100%, Ready.
+takings at Beta, and night audit at GA: 1185 ÷ 17 ≈ 70% mature, carrying
+18%, so they're 57%, Mostly ready. The night auditor has only night audit,
+at GA, with no gaps, so they're 100%, Ready.
 
 Starting new work lowers readiness a little, since a Prototype weighs least:
-five GA capabilities and a new Prototype are 95%. A gap nobody wrote leaves a
+five GA capabilities with no gaps and a new Prototype are 95%. A gap nobody wrote leaves a
 capability counting in full, and readiness is as good as what's written down.
 
 ## Risk
@@ -1086,10 +1090,6 @@ domain, persona or component, each is scored only on the capabilities
 there, and readers show the highest risk and how many fall in each
 verdict.
 
-Tradeoffs and open decisions have no risk: a tradeoff is a drawback someone
-chose to live with, and a question doesn't happen to anyone.
-
-## Evidence
 For some capabilities, as of a feature, domain or persona, readers also
 work out the **risk carried**: what the gaps still open on them put at
 stake, from 0 to 100%. It isn't their stability, which is declared. The most a capability could carry is 4 × its level weight × 1.5,
@@ -1104,6 +1104,10 @@ cancellations at Alpha 100% of 18, and group bookings at Prototype 33% of
 12, so together they carry `(75% × 4 + 100% × 3 + 33% × 2) ÷ 9 ≈ 74%`,
 `moderate risk`.
 
+Tradeoffs and open decisions have no risk: a tradeoff is a drawback someone
+chose to live with, and a question doesn't happen to anyone.
+
+## Evidence
 
 A rule, capability, mechanism or component can have **evidence**: places in the
 repository that say they verify it, or implement it. Evidence is optional at

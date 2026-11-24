@@ -144,7 +144,7 @@ export const TERMS: Record<TermId, TermEntry> = {
     name: "Readiness",
     means:
       "Our view of how ready the software is to serve people in production, from the engineering judgement written down beside it: each capability's stability level, and its gaps and their risk. It's a recommendation, and you're the judge.",
-    more: "It's maturity, with a capability counted at the level below its own while a gap is unacceptable on it, and it always comes with what's left to do. A persona at 70% is Mostly ready: most of what they need can be relied on day to day.",
+    more: "It's maturity less the risk carried: maturity × (1 − risk carried), and it always comes with what's left to do. A persona at 70% is Mostly ready: most of what they need can be relied on day to day.",
   },
   "stability-checklist": {
     name: "Stability checklist",

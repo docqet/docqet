@@ -8,22 +8,22 @@ a recommendation: people judge. Nobody writes it down.
 
 ## Details
 
-Readiness is maturity that gaps can hold back. Each capability counts with
-its score and weight, at its level in short, its lowest across the domains
-that build it, except that **a capability with a gap that's unacceptable on
-it counts as the level below its own** until that gap is closed: as if it
-hadn't been promoted yet. A Beta capability held back scores what an Alpha
-one does, and keeps its own weight. A gap is never unacceptable on a
-Prototype, so there's no level below to fall to.
+Readiness is [maturity](maturity.md) less the [risk carried](risk.md#risk-carried)
+by the same capabilities: how far along the work is, less what the gaps still
+open on it put at stake.
 
-That way promoting a capability never lowers readiness, even when a gap that
-was tolerable at its old level is unacceptable at its new one, and a
-capability with an unacceptable gap still counts for the work that's done.
+```text
+readiness = maturity × (1 − risk carried)
+```
+
+A feature 60% mature carrying 20% risk is 48% ready. Both are worked out from
+the same capabilities, each at its level in short, its lowest across the
+domains that build it, with the same weights, so readiness can be read from
+the two numbers shown beside it.
 
 Impact, likelihood, reach, stability and broken promises all come in through
-risk: a gap's verdict on a capability is worked out from them. Acceptable and
-tolerable gaps don't lower readiness, since their verdict says they're fine to
-leave open at that level.
+risk carried, through the riskiest gap on each capability, so a tolerable
+gap still lowers readiness a little, and an unacceptable one a lot.
 
 | Readiness of             | Counts                                 |
 | ------------------------ | -------------------------------------- |
@@ -39,7 +39,7 @@ readiness. It falls in a quarter of its own:
 
 | Readiness     | From | What it recommends                                                                   |
 | ------------- | ---- | ------------------------------------------------------------------------------------ |
-| Not ready     | 0%   | Most of what they need is still being explored, or held back by what's unacceptable. |
+| Not ready     | 0%   | Most of what they need is still being explored, or its gaps put a lot at stake.      |
 | Partly ready  | 25%  | Some of it can be used, but much of what they need is still taking shape.            |
 | Mostly ready  | 50%  | Enough is settled for them to rely on day to day.                                    |
 | Ready         | 75%  | What they need is mostly stable, with nothing unacceptable left open.                |
@@ -47,10 +47,15 @@ readiness. It falls in a quarter of its own:
 - **It comes with what's left.** Each capability below Beta, the first level
   settled enough for real use, needs to reach Beta, and each gap that's
   unacceptable on one needs closing. A capability at Beta or GA with neither
-  has nothing left.
+  has nothing left. Lesser gaps still lower readiness, but aren't left to
+  do: their verdict says they're fine to leave open.
 - **It's a recommendation, not a verdict.** A persona at 60% who can do
-  without the one capability that's held back can start using the rest.
-  That's for people to judge.
+  without the one capability whose gaps put most at stake can start using
+  the rest. That's for people to judge.
+- **Promoting can lower it.** A capability's level counts for more once
+  promoted, but where its gaps break a promise the new level makes, the risk
+  they carry goes up too, and can outweigh it. That's what's at stake going
+  up.
 - **New work lowers it a little.** A new capability at Prototype weighs
   least, so starting one lowers readiness slightly without taking it away.
 - **It's as good as what's written down.** A gap nobody wrote, or rated too
@@ -64,28 +69,19 @@ capability's level across domains.
 
 In Hotel Bookings, the front desk clerk has room booking and check-in at
 Beta, cancellations at Alpha, check-out at GA, and group bookings and room
-status at Prototype. Three of them have a gap that's unacceptable on them,
-each scoring 76, so each counts as the level below its own:
-
-- **Room booking**, Beta, counts as Alpha: its
-  [calendar needs a mouse](../../../spec/examples/hotel-bookings/docs/product/domains/guest-stays/capabilities/room-booking.md),
-  `blocking`, and breaks the promise Beta makes that everyone can use it.
-- **Cancellations**, Alpha, counts as Prototype: late cancellations are
-  refunded in full, `damaging`, against a rule it follows.
-- **Check-out**, GA, counts as Beta: the
-  [deployment](../../../spec/examples/hotel-bookings/docs/technical/mechanisms/deployment.md)'s
-  migrations have no down step, `damaging` and `possible`, which falls short
-  of recovery, an outcome GA expects.
+status at Prototype, so what serves them is 59% mature. Each capability
+carries its riskiest gap's share of the most it could carry:
 
 ```text
-room booking    35 × 4    (Beta, counts as Alpha)
-check-in        60 × 4
-cancellations   15 × 3    (Alpha, counts as Prototype)
-check-out       60 × 6    (GA, counts as Beta)
-group bookings  15 × 2
-room status     15 × 2
+room booking    75%  calendar needs a mouse, blocking, breaks Beta's promise
+cancellations  100%  late cancellations refunded in full, damaging, breaks a rule
+check-in        33%  deployment's migrations go only forward, damaging, possible
+check-out       50%  the same, which breaks GA's promise of recovery
+group bookings  33%  the same
+room status     33%  the same
 
-845 ÷ 21 ≈ 40%
+risk carried    (75 × 4 + 33 × 4 + 100 × 3 + 50 × 6 + 33 × 2 + 33 × 2) ÷ 21 ≈ 56%
+readiness       59% × (1 − 56%) ≈ 26%
 ```
 
 That's Partly ready, and what's left is:
@@ -99,20 +95,21 @@ group bookings  reach Beta, now Prototype
 room status     reach Beta, now Prototype
 ```
 
-Closing those three gaps would make it 59%, Mostly ready. In Hotel Billing,
-the manager has city tax at Alpha, deposits and daily takings at Beta, and
-night audit at GA, with nothing unacceptable: (35 × 3 + 60 × 4 + 60 × 4 +
-100 × 6) ÷ 17 = 1185 ÷ 17 ≈ 70%, Mostly ready, with only city tax left to
-reach Beta. The night auditor has only night audit, at GA, so they're 100%,
-Ready.
+Closing those three gaps would leave 11% risk carried, from the bookings
+component's unknown clashes, and make it 53%, Mostly ready. In Hotel
+Billing, the manager has city tax at Alpha, deposits and daily takings at
+Beta, and night audit at GA: 70% mature, carrying 18%, from city tax's
+children corrected by hand and deposits' provider calls with no timeout, so
+57%, Mostly ready, with only city tax left to reach Beta. The night auditor
+has only night audit, at GA, with no gaps, so they're 100%, Ready.
 
 The spec has [how it's worked out](../../../spec/README.md#readiness).
 
 ## Not to be confused with
 
-- [Maturity](maturity.md): how far along the work is, for planning. It's the
-  same calculation with no gaps in it.
+- [Maturity](maturity.md): how far along the work is, for planning.
+  Readiness is maturity less the risk carried.
 - [Stability level](stability-level.md): how much people can depend on one
   capability, declared.
-- [Risk](risk.md): what's at stake in one gap. Readiness counts only the gaps
-  that are unacceptable.
+- [Risk carried](risk.md#risk-carried): what the open gaps put at stake.
+  Readiness takes it off maturity.

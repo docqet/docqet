@@ -79,7 +79,7 @@ Docket separates what the software is meant to do from what it does:
   on and whether it breaks that level's promise), each feature's **maturity** (how far along
   it is), the **readiness** of each capability, feature,
   domain and persona (a recommendation of how ready people can rely on it
-  being: maturity, held back by unacceptable gaps, with what's left), and any
+  being: maturity, less the risk its gaps carry, with what's left), and any
   problems in the docs themselves.
 - **The difference is the work.** What's declared is taken to hold, unless
   it's declared that it doesn't, or the evidence contradicts it. Docket names

@@ -1194,8 +1194,7 @@ export function riskOf(state: DocketState, item: Gap): Risk {
  * settled enough for real use, and no gap scores unacceptable on it, its own
  * or one on what it's built on. Only gaps count, not tradeoffs. One that's
  * started with something left still needs to reach Beta, where it's below,
- * and to close each of those gaps, and counts in readiness as the level below
- * its own until they're closed. A draft is not started, and never counts.
+ * and to close each of those gaps. A draft is not started, and never counts.
  */
 /* With what it needs, its open decisions, which don't count toward readiness, but are left to settle there too. */
 export type NotReady = { capability: Capability; belowBeta: boolean; gaps: Gap[]; decisions: Decision[] };
@@ -1215,16 +1214,23 @@ export function needsOf(state: DocketState, capability: Capability): NotReady {
 /*
  * The readiness of some capabilities, as of a feature, domain, persona or
  * project: a recommendation, 0 to 100, for people to judge by. It's their
- * weighted maturity, each at its level in short, except that one with a gap
- * that's unacceptable on it scores as the level below its own, keeping its
- * own weight, until that's closed: as if it hadn't been promoted yet. With it,
+ * maturity, each at its level in short, less the risk they carry:
+ * maturity × (1 − risk carried). With it, the two it's worked out from,
  * those with nothing left, those that still need something and what, and the
  * drafts, not started, which never count. Nothing started, it's null.
  */
-export type Readiness = { percent: number | null; ready: Capability[]; notReady: NotReady[]; notStarted: Capability[] };
+export type Readiness = {
+  percent: number | null;
+  maturity: number | null;
+  risk: RiskCarried;
+  ready: Capability[];
+  notReady: NotReady[];
+  notStarted: Capability[];
+};
 
 export function readinessOf(state: DocketState, capabilities: Capability[]): Readiness {
-  const readiness: Readiness = { percent: null, ready: [], notReady: [], notStarted: [] };
+  const risk = riskCarried(state, capabilities);
+  const readiness: Readiness = { percent: null, maturity: null, risk, ready: [], notReady: [], notStarted: [] };
   let total = 0;
   let weights = 0;
   for (const c of capabilities) {
@@ -1233,21 +1239,17 @@ export function readinessOf(state: DocketState, capabilities: Capability[]): Rea
       continue;
     }
     const needs = needsOf(state, c);
-    const { weight } = MATURITY_LEVELS[c.stability];
-    total += heldBackScore(c.stability, needs.gaps.length > 0) * weight;
+    const { score, weight } = MATURITY_LEVELS[c.stability];
+    total += score * weight;
     weights += weight;
     if (!needs.belowBeta && !needs.gaps.length) readiness.ready.push(c);
     else readiness.notReady.push(needs);
   }
-  readiness.percent = weights ? Math.round(total / weights) : null;
+  if (weights) {
+    readiness.maturity = total / weights;
+    readiness.percent = Math.round(readiness.maturity * (1 - (risk.percent ?? 0) / 100));
+  }
   return readiness;
-}
-
-/* A started capability's score in readiness: its level's, or the level below's while a gap is unacceptable on it. Below Prototype is 0. */
-function heldBackScore(level: Level, heldBack: boolean): number {
-  if (!heldBack) return MATURITY_LEVELS[level].score;
-  const below = LEVEL_ORDER[rank(level) - 1];
-  return below ? MATURITY_LEVELS[below].score : 0;
 }
 
 /* How many it's worked out from: the started ones. */
@@ -1255,7 +1257,7 @@ export const startedOf = (r: Readiness) => r.ready.length + r.notReady.length;
 
 /* Readiness's quarters, named for what they recommend, from the lowest. */
 export const READINESS_BANDS = [
-  { from: 0, name: "Not ready", says: "Most of what they need is still being explored, or held back by what's unacceptable." },
+  { from: 0, name: "Not ready", says: "Most of what they need is still being explored, or its gaps put a lot at stake." },
   { from: 25, name: "Partly ready", says: "Some of it can be used, but much of what they need is still taking shape." },
   { from: 50, name: "Mostly ready", says: "Enough is settled for them to rely on day to day." },
   { from: 75, name: "Ready", says: "What they need is mostly stable, with nothing unacceptable left open." },
@@ -1307,8 +1309,6 @@ export function riskAcross<T extends Gap>(state: DocketState, items: T[], within
   };
 }
 
-/* A risk score as written. */
-export const riskScore = (score: number) => String(score);
 /*
  * The risk some capabilities carry, as of a feature, domain or persona: how
  * much of the most they could carry their riskiest gaps are, 0 to 100. The
@@ -1358,6 +1358,8 @@ export function riskCarried(state: DocketState, capabilities: Capability[]): Ris
 /* A share of risk carried as written: whole percents, and "<1%" for a little that rounds to none. */
 export const carriedText = (percent: number) => (percent > 0 && percent < 0.5 ? "<1%" : `${Math.round(percent)}%`);
 
+/* A risk score as written. */
+export const riskScore = (score: number) => String(score);
 
 /* An impact's place, worst first, with none after every one. */
 export const impactRank = (impact: Impact | null) => (impact ? IMPACTS.indexOf(impact) : IMPACTS.length);

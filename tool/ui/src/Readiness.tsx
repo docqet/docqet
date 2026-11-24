@@ -10,14 +10,13 @@ import { STABILITY } from "./design/stability/stability";
 import { CapabilityStability } from "./design/catalog/CapabilityLabel";
 import { Tip } from "./design/Tip";
 import { docHref } from "./routes";
-import { READINESS_BANDS, readinessBand, startedOf, type NotReady, type Readiness } from "./state";
+import { READINESS_BANDS, carriedText, readinessBand, startedOf, type NotReady, type Readiness } from "./state";
 
 /*
  * Readiness: how ready people can rely on it being, as a recommendation for
- * them to judge, and what it still needs. It's the weighted maturity of its
- * capabilities, with those held back by an unacceptable gap counting as the
- * level below their own. It's never in a level's color, since it isn't a level, and never a
- * ring, since that's maturity's: a short straight bar filled as far as its
+ * them to judge, and what it still needs. It's the maturity of its
+ * capabilities less the risk they carry. It's never in a level's color,
+ * since it isn't a level, and never a ring, since that's maturity's: a short straight bar filled as far as its
  * percentage, in --ok in the Ready quarter, and in the text's own color below.
  */
 
@@ -176,7 +175,8 @@ const SHOWN = 5;
 
 /*
  * Readiness for its popover: its quarter and percentage, what that
- * recommends, what it's worked out from, what each capability with something
+ * recommends, how it's worked out from maturity and risk carried, what it's
+ * worked out from, what each capability with something
  * left still needs, the drafts, and what readiness is.
  */
 function ReadinessDetails({ readiness, of }: { readiness: Readiness; of: string }) {
@@ -202,6 +202,9 @@ function ReadinessDetails({ readiness, of }: { readiness: Readiness; of: string 
         </span>
       </Box>
       <Box sx={{ mt: 0.75, color: "text.secondary" }}>{readinessBand(readiness)!.says}</Box>
+      <Box sx={{ mt: 1, fontSize: "0.92em", fontVariantNumeric: "tabular-nums" }}>
+        {Math.round(readiness.maturity!)}% mature × (1 − {carriedText(readiness.risk.percent ?? 0)} risk carried) = {readiness.percent}%
+      </Box>
       <Box sx={{ mt: 0.75, color: "text.secondary" }}>
         From {plural(started, "started capability", "started capabilities")}, {readiness.ready.length} with nothing left
         {readiness.notStarted.length ? `, and ${plural(readiness.notStarted.length, "draft", "drafts")} not started` : ""}
@@ -232,7 +235,7 @@ function ReadinessDetails({ readiness, of }: { readiness: Readiness; of: string 
       ) : null}
       <Box sx={[section, { fontSize: "0.92em", color: "text.secondary" }]}>
         Our view of how ready this is to serve people in production, from the stability levels, gaps and impacts written down, for you
-        to judge. A capability with an unacceptable gap counts as the level below its own until it&rsquo;s closed, and drafts don&rsquo;t count.
+        to judge. It&rsquo;s maturity, less the share of risk its open gaps carry, and drafts don&rsquo;t count.
       </Box>
     </DetailsCard>
   );

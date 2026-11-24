@@ -60,6 +60,5 @@ and check-out at GA in Guest stays but Alpha in Billing, so Alpha in short:
 
 - [Stability level](stability-level.md): how much you can depend on one
   capability. Maturity is about the whole.
-- [Readiness](readiness.md): the same calculation, except that a capability
-  with an unacceptable gap counts as the level below its own, with what's
-  left.
+- [Readiness](readiness.md): maturity less the risk the same capabilities'
+  gaps carry, with what's left.

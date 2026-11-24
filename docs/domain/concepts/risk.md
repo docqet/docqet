@@ -79,9 +79,9 @@ unlikely, scores 38.
 ### Verdict
 
 A risk's **verdict** says whether it's OK to leave the gap open at the level
-it's at, by the third its score falls in. A capability with a gap that's
-`unacceptable` on it counts as the level below its own in
-[readiness](readiness.md) until it's closed:
+it's at, by the third its score falls in. A gap that's `unacceptable` on a
+capability is left to close before that capability is
+[ready](readiness.md):
 
 | Verdict        | Score     | What it means                                    |
 | -------------- | --------- | ------------------------------------------------ |
@@ -316,6 +316,6 @@ written for it in [state](state.md). The spec has
   capability, as declared. Risk, and the risk carried, say what's at stake
   in the gaps still open against it, and never change it.
 - [Readiness](readiness.md): how ready people can rely on the software
-  being. It counts only the gaps that are `unacceptable`.
+  being. It's maturity less the risk carried.
 - A priority: Docket doesn't say when a gap is closed. Risk says what's at
   stake; deciding what to do first is up to the people doing it.

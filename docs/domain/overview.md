@@ -66,8 +66,7 @@ reach each declares, the level of each capability it's on, and whether it
 breaks that level's promise. From levels and risk they work out
 **[readiness](concepts/readiness.md)**: how ready people can rely on each
 capability, feature, domain, project and persona being, as a recommendation,
-with what's left. It's maturity, except that a capability with an
-unacceptable gap counts as the level below its own until it's closed.
+with what's left. It's maturity less the risk their gaps carry.
 
 ```mermaid
 flowchart TB
@@ -139,8 +138,8 @@ flowchart TB
   gap -. "impact, likelihood, reach" .-> risk
   level -. "weight and promise" .-> risk
   level -. "of capabilities" .-> maturity
-  maturity -. "held back by" .-> readiness
-  risk -. "unacceptable gaps" .-> readiness
+  maturity -. "less risk carried" .-> readiness
+  risk -. "risk carried" .-> readiness
   project -. "its docs" .-> problem
 
   classDef derivedNode stroke-dasharray: 4 3
