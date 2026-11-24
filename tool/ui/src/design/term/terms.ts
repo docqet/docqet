@@ -143,8 +143,8 @@ export const TERMS: Record<TermId, TermEntry> = {
   readiness: {
     name: "Readiness",
     means:
-      "How ready people can rely on it being, as a recommendation for you to judge: the weighted maturity of its capabilities, except that one with an unacceptable gap counts for nothing until it's closed. It comes with what's left.",
-    more: "Hotel Billing's manager has city tax at Alpha, deposits at Beta held back by an unacceptable gap, daily takings at Beta and night audit at GA: 56%, Mostly ready. Closing the gap on deposits would make it 70%. Drafts don't count.",
+      "Our view of how ready the software is to serve people in production, from the engineering judgement written down beside it: each capability's stability level, and its gaps and their impact. It's a recommendation, and you're the judge.",
+    more: "It's maturity, held back where a gap is unacceptable at a capability's level, and it always comes with what's left to do. A persona at 56% is Mostly ready: most of what they need can be relied on day to day.",
   },
   "stability-checklist": {
     name: "Stability checklist",

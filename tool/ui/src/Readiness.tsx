@@ -209,8 +209,8 @@ function ReadinessDetails({ readiness, of }: { readiness: Readiness; of: string 
         </Box>
       ) : null}
       <Box sx={[section, { fontSize: "0.92em", color: "text.secondary" }]}>
-        A recommendation, for you to judge: the weighted maturity of its capabilities, where one with an unacceptable gap counts for
-        nothing until it&rsquo;s closed. Drafts don&rsquo;t count. A capability has nothing left at Beta or GA with no unacceptable gap.
+        Our view of how ready this is to serve people in production, from the stability levels, gaps and impacts written down, for you
+        to judge. A capability with an unacceptable gap counts for nothing until it&rsquo;s closed, and drafts don&rsquo;t count.
       </Box>
     </DetailsCard>
   );

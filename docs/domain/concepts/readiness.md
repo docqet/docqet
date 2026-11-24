@@ -1,10 +1,10 @@
 # Readiness
 
-How ready people can rely on the software being, as a percentage, with what
-it still needs. It's Docket's recommendation, and people judge. It's worked
-out from capabilities' [stability levels](stability-level.md), as
-[maturity](maturity.md) is, and from the [risk](risk.md) of their
-[gaps](gap.md). Nobody writes it down.
+Our view of how ready the software is to serve people in production, based on
+the engineering judgement written down beside it: each capability's
+[stability level](stability-level.md), and its [gaps](gap.md), their impact
+and so their [risk](risk.md). It's a percentage, with what's still left, and
+a recommendation: people judge. Nobody writes it down.
 
 ## Details
 

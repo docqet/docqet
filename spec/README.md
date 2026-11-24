@@ -963,8 +963,10 @@ capability's level in short needs every project that builds part of it.
 
 ## Readiness
 
-Readers work out how ready people can rely on the software being: a
-percentage, with what it still needs. It's a recommendation, and people
+Readers work out **readiness**: their view of how ready the software is to
+serve people in production, based on the engineering judgement written down
+in the docs, each capability's stability level and its gaps' impact and risk.
+It's a percentage, with what's still left, and a recommendation: people
 judge. Nothing is written for it, and it isn't in `state.json`: it depends on
 [risk](#risk) and on each capability's level in short, and both need projects
 put together.
