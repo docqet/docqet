@@ -26,12 +26,17 @@ import { StandingMark } from "../design/standing/StandingMark";
 import { Tip } from "../design/Tip";
 import "./map.css";
 
-/* What the map's cards can be colored by. Stability is how they always look. */
+/*
+ * What the map shows on its cards, one at a time: each shows only its own
+ * marks on the canvas, and the rest stay in the peek, which always shows
+ * everything about what's clicked. A persona's readiness is about the
+ * persona, so it always shows on their card.
+ */
 type Lens = "stability" | "risk" | "evidence";
 const LENSES: { id: Lens; label: string; tip: string }[] = [
-  { id: "stability", label: "Stability", tip: "Each capability's stability level" },
-  { id: "risk", label: "Risk", tip: "Whether each capability's gaps are acceptable to leave open at its level" },
-  { id: "evidence", label: "Evidence", tip: "Whether each capability's rules hold, with evidence or on trust" },
+  { id: "stability", label: "Stability", tip: "Each capability's stability level, and each feature's and domain's maturity" },
+  { id: "risk", label: "Risk", tip: "How the gaps on each capability, feature and domain spread across risk" },
+  { id: "evidence", label: "Evidence", tip: "How the rules each capability, feature and domain follows hold, with evidence or on trust" },
 ];
 
 /*
@@ -196,13 +201,13 @@ function isPick(state: DocketState, pick: Pick): boolean {
 }
 
 /*
- * What the cards are colored by, floating over the top left of the canvas:
- * one choice at a time, with what each color means beside it.
+ * What the map shows, floating over the top left of the canvas: one view at
+ * a time, with what each color means beside it.
  */
 function LensBar({ lens, onLens }: { lens: Lens; onLens: (lens: Lens) => void }) {
   return (
-    <div className="panel lens-bar" data-no-pan role="group" aria-label="Color by">
-      <span className="lens-label">Color by</span>
+    <div className="panel lens-bar" data-no-pan role="group" aria-label="Show on the map">
+      <span className="lens-label">Show</span>
       <span className="lens-choices">
         {LENSES.map((l) => (
           <Tip key={l.id} title={l.tip}>

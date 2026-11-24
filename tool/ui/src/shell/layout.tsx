@@ -81,7 +81,24 @@ export function PageHeader({
 }
 
 /* A figure in a header's strip: what it is, the figure, and a line saying more. With `href`, the whole tile links there. */
-export function Stat({ label, term, value, note, href, tone }: { label: ReactNode; term?: TermId; value: ReactNode; note?: ReactNode; href?: string; tone?: "warn" | "ok" }) {
+export function Stat({
+  label,
+  term,
+  value,
+  note,
+  href,
+  tone,
+  wide = false,
+}: {
+  label: ReactNode;
+  term?: TermId;
+  value: ReactNode;
+  note?: ReactNode;
+  href?: string;
+  tone?: "warn" | "ok";
+  /* Takes two columns, for a figure with more under it. */
+  wide?: boolean;
+}) {
   const body = (
     <>
       <span className="stat-tile-label">{labelled(label, term)}</span>
@@ -90,11 +107,11 @@ export function Stat({ label, term, value, note, href, tone }: { label: ReactNod
     </>
   );
   return href ? (
-    <a className="stat-tile stat-tile-link" href={href} data-tone={tone}>
+    <a className={`stat-tile stat-tile-link${wide ? " stat-tile-wide" : ""}`} href={href} data-tone={tone}>
       {body}
     </a>
   ) : (
-    <div className="stat-tile" data-tone={tone}>
+    <div className={`stat-tile${wide ? " stat-tile-wide" : ""}`} data-tone={tone}>
       {body}
     </div>
   );

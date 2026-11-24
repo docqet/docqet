@@ -2,28 +2,27 @@ import type { ReactNode } from "react";
 import BoltOutlinedIcon from "@mui/icons-material/BoltOutlined";
 import { DomainIcon } from "./FeatureMap";
 import { Excerpt, plainText } from "./design/markdown/Markdown";
-import { IMPACT_NAMES, ImpactBadge } from "./design/risk/ImpactBadge";
 import { LeftMark } from "./design/left/LeftMark";
 import { Tip } from "./design/Tip";
 import { docHref } from "./routes";
-import { IMPACTS, find, subjectOf, technicalDoc, type DocketState, type Gap, type Impact, type RiskAcross, type TechnicalDoc } from "./state";
-import { RiskScore } from "./design/risk/RiskScore";
+import { VERDICTS, find, riskOf, subjectOf, technicalDoc, type DocketState, type Gap, type Risk, type RiskAcross, type TechnicalDoc, type Verdict } from "./state";
+import { GapRiskMark, RiskBars, RiskScore, VERDICT_NAMES } from "./design/risk/RiskScore";
 import "./gaprows.css";
 
 export type GapRow = { gap: Gap; on?: TechnicalDoc };
 
 /*
  * Gaps, easy to take in at a glance however many there are: one line each,
- * grouped by impact, worst first. The worst two impacts are open; the
- * milder ones are folded, with how many each holds, so a long list leads
- * with what matters. Each line is what the gap says, cut to one line, which
- * opens the gap's own page where all of it is, and what it's on, unless
- * that's the page it's shown on (`here`). Product and technical gaps are told
- * apart by a word at the start, quietly, rather than a badge.
+ * led by its risk, its bars and score, which opens how it's worked out, so
+ * no part of its risk shows alone. Grouped by risk, worst first: the
+ * unacceptable and tolerable are open, the acceptable folded, with how many
+ * each holds. Each line is what the gap says, cut to one line, which opens
+ * the gap's own page, and what it's on, unless that's the page it's shown on
+ * (`here`). Product and technical gaps are told apart by a word, quietly.
  *
- * `grouped={false}` lists them as given, each with its impact, for a short
- * list such as the riskiest few. `allOpen` opens every group, as when a
- * filter has already picked the ones wanted.
+ * `grouped={false}` lists them as given, for a short list such as the
+ * riskiest few. `allOpen` opens every group, as when a filter has already
+ * picked the ones wanted.
  */
 export function GapRows({
   state,
@@ -38,31 +37,35 @@ export function GapRows({
   grouped?: boolean;
   allOpen?: boolean;
 }) {
+  const scored = rows.map((r) => ({ ...r, risk: riskOf(state, r.gap) }));
   if (!grouped)
     return (
       <ul className="gr-list gr-flat">
-        {rows.map((r) => (
-          <GapLine key={r.gap.id} state={state} row={r} here={here} impact />
+        {scored.map((r) => (
+          <GapLine key={r.gap.id} state={state} row={r} risk={r.risk} here={here} />
         ))}
       </ul>
     );
-  const levels: (Impact | null)[] = [...IMPACTS, null];
+  const groups: (Verdict | null)[] = [...VERDICTS, null];
   return (
     <div className="gr-groups">
-      {levels.map((impact) => {
-        const these = rows.filter((r) => r.gap.impact === impact);
+      {groups.map((verdict) => {
+        const these = scored.filter((r) => r.risk.verdict === verdict).sort((a, b) => (b.risk.score ?? -1) - (a.risk.score ?? -1));
         if (!these.length) return null;
-        const open = allOpen || impact === "damaging" || impact === "blocking";
+        const open = allOpen || verdict === "unacceptable" || verdict === "tolerable";
         return (
-          <details key={impact ?? "none"} className="gr-group" open={open}>
-            <summary className="gr-group-head" data-impact={impact ?? "none"}>
-              <ImpactBadge impact={impact} eyebrow="What this impact means" inButton />
+          <details key={verdict ?? "none"} className="gr-group" open={open}>
+            <summary className="gr-group-head" data-verdict={verdict ?? "none"}>
+              <span className="gr-group-verdict risk-score" data-verdict={verdict ?? "none"}>
+                <RiskBars verdict={verdict} size="small" />
+                {verdict ? VERDICT_NAMES[verdict].name : "Not rated"}
+              </span>
               <span className="gr-group-count">{these.length}</span>
-              {impact ? <span className="gr-group-test">What&rsquo;s lost: {IMPACT_NAMES[impact].lost}</span> : null}
+              <span className="gr-group-test">{verdict ? VERDICT_NAMES[verdict].means : "No impact rated, so no risk."}</span>
             </summary>
             <ul className="gr-list">
               {these.map((r) => (
-                <GapLine key={r.gap.id} state={state} row={r} here={here} />
+                <GapLine key={r.gap.id} state={state} row={r} risk={r.risk} here={here} />
               ))}
             </ul>
           </details>
@@ -72,12 +75,12 @@ export function GapRows({
   );
 }
 
-function GapLine({ state, row, here, impact = false }: { state: DocketState; row: GapRow; here?: { id: string }; impact?: boolean }) {
+function GapLine({ state, row, risk, here }: { state: DocketState; row: GapRow; risk: Risk; here?: { id: string } }) {
   const { gap } = row;
   const technical = !gap.domain;
   return (
     <li className="gr-row">
-      {impact ? <ImpactBadge impact={gap.impact} eyebrow="What's at stake in this gap" inButton /> : null}
+      <GapRiskMark risk={risk} on={risk.on[0] ?? null} />
       <span className="gr-kind">{technical ? "Technical" : "Product"}</span>
       <Tip title={plainText(gap.description)}>
         <a className="gr-summary" href={docHref("gap", gap.id)}>

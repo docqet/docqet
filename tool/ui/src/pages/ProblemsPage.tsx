@@ -55,15 +55,11 @@ const TYPES: Record<string, { name: string; note: string }> = {
   contradiction: { name: "Contradictions", note: "Projects that should agree about a doc say different things." },
   "in-two-features": { name: "In two features", note: "More than one feature lists the same capability." },
   "duplicate-id": { name: "Duplicate IDs", note: "Two docs, gaps or tradeoffs that should each have their own ID share one." },
-  "unknown-id": { name: "Links to nothing", note: "A link, annotation or decision names a doc, gap or tradeoff that doesn't exist." },
+  "unknown-id": { name: "Links to nothing", note: "A link, annotation or a gap's rule names a doc, gap or tradeoff that doesn't exist." },
   "invalid-frontmatter": { name: "Invalid fields", note: "A required field is missing, or a value isn't allowed, such as a link of the wrong type." },
   "broken-link": { name: "Broken links", note: "A relative link in a doc's body or a text value doesn't resolve." },
   "unlinked-rule": { name: "Rules nothing follows", note: "No capability follows the rule." },
   "unknown-outcome": { name: "Unknown outcomes", note: "A gap's or tradeoff's outcome, or one a mechanism or component says it meets, isn't in the checklist." },
-  "became-other-side": {
-    name: "Decisions across the line",
-    note: "A product doc's decision names a technical doc, gap or tradeoff, or the other way round.",
-  },
 };
 
 /* Contradictions, and the problems that are contradictions too, before the rest. */

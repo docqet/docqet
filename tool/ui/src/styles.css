@@ -865,9 +865,92 @@ kbd {
   text-overflow: ellipsis;
 }
 
-.area-maturity {
+/* At the right of the domain's line, as what the map shows sits at the right of every card and row: only the view's own shows, so only it takes the room. */
+.area-maturity,
+.area-marks > .lens-risk,
+.area-marks > .lens-evidence {
   flex: none;
+  margin-left: auto;
   cursor: default;
+}
+
+.area-marks {
+  display: contents;
+}
+
+/* Evidence spread: rules as a bar split by standing, as the risk and stability spreads are. */
+.evidence-spread-bar {
+  display: inline-flex;
+  flex: none;
+  gap: 1px;
+  width: 44px;
+  height: 5px;
+  vertical-align: middle;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.evidence-spread-bar.wide {
+  display: flex;
+  width: 100%;
+  gap: 2px;
+  height: 8px;
+  border-radius: 4px;
+}
+
+.evidence-spread-bar > span {
+  min-width: 2px;
+  background: var(--evidence);
+}
+
+.evidence-spread-bar.wide > span {
+  min-width: 4px;
+}
+
+.evidence-spread-mark {
+  display: inline-flex;
+  align-items: center;
+  height: 16px;
+  cursor: help;
+  border-radius: 3px;
+}
+
+.evidence-spread-mark:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.evidence-spread-counts {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin: 10px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.evidence-spread-counts > li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.evidence-spread-name {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+  color: var(--evidence);
+}
+
+.evidence-spread-name .sc-standing {
+  margin-top: 0;
+}
+
+.evidence-spread-n {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
 }
 
 /* An area's features in its maturity's popover. */
@@ -4062,64 +4145,6 @@ button.page-table-row:hover .page-table-name strong {
   margin-top: 6px;
 }
 
-/* ——— Closed decisions, and what they became ——— */
-
-/* What was asked, quieter than what was decided. */
-.decided-question .markdown {
-  color: var(--muted);
-}
-
-.decided-list > li {
-  gap: 4px;
-}
-
-/* What a closed decision became: each a link, after its kind. */
-.became-list {
-  display: grid;
-  gap: 4px;
-  min-width: 0;
-  margin: 4px 0 0;
-  padding: 0;
-  list-style: none;
-  font-size: 13px;
-}
-
-.became-list > li {
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
-  min-width: 0;
-}
-
-.became-list > li > a,
-.became-list > li > code {
-  min-width: 0;
-  overflow-wrap: anywhere;
-}
-
-.became-list .explore-tag,
-.came-from-line .explore-tag {
-  flex: none;
-}
-
-/* Where a decision was made, above its question. */
-.came-from-on {
-  font-size: 12px;
-  color: var(--faint);
-}
-
-/* Under a gap, tradeoff or rule: the decision it came from, in a line. */
-.came-from-line {
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
-  min-width: 0;
-  margin-top: 4px;
-  font-size: 12.5px;
-  color: var(--muted);
-  overflow-wrap: anywhere;
-}
-
 /* One of Docket's words, opening what it means (Term): dotted underline, help cursor. */
 .term {
   cursor: help;
@@ -4133,24 +4158,6 @@ button.page-table-row:hover .page-table-name strong {
 .term:focus-visible {
   outline: 2px solid var(--accent, currentColor);
   outline-offset: 2px;
-}
-
-/* What makes a drawback bite, under it. */
-.tradeoff-when {
-  margin-top: 8px;
-  font-size: 12.5px;
-  color: var(--muted);
-}
-
-/* The gaps riding on an open decision: the worst impact among them, and how many. */
-.decision-riding {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 4px 10px;
-  margin-top: 4px;
-  font-size: 12px;
-  color: var(--muted);
 }
 
 /*
@@ -4174,7 +4181,9 @@ button.page-table-row:hover .page-table-name strong {
 }
 
 .gap-head .impact-badge,
-.tradeoff-label .impact-badge {
+.tradeoff-label .impact-badge,
+.gap-head > .part-tag-focus,
+.tradeoff-label > .part-tag-focus {
   margin-left: auto;
 }
 
@@ -4206,21 +4215,129 @@ button.page-table-row:hover .page-table-name strong {
   --impact: var(--faint);
 }
 
-/* An impact as a badge: its name in a pill tinted with its color. */
-.impact-badge {
+/*
+ * A part of a gap's risk as a tag: its icon and its value, tinted with its
+ * color, --tag, with slightly rounded corners. Impact is in its own color;
+ * likelihood and reach are a hue each, stronger for higher values, from
+ * `data-step` 4 (certain, all) down to 1 (unlikely, few).
+ */
+.impact-badge,
+.judgement-badge,
+.part-ink {
+  --ink: 100%;
+}
+
+.impact-badge,
+.judgement-badge {
   flex: none;
   display: inline-flex;
   align-items: center;
-  padding: 0 7px;
+  gap: 4px;
+  padding: 0 6px 0 5px;
   font-size: 12px;
   font-weight: 650;
-  line-height: 18px;
+  line-height: 20px;
   letter-spacing: 0;
   text-transform: none;
   white-space: nowrap;
-  color: var(--impact);
-  background: color-mix(in srgb, var(--impact) 13%, transparent);
-  border-radius: 999px;
+  color: color-mix(in srgb, var(--tag) var(--ink, 100%), var(--muted));
+  background: color-mix(in srgb, var(--tag) var(--fill, 14%), transparent);
+  border-radius: 4px;
+}
+
+.impact-badge,
+.part-ink[data-part="impact"] {
+  --tag: var(--impact);
+}
+
+/* A value's name in its color, outside a tag, such as a popover's heading. */
+.part-ink {
+  color: color-mix(in srgb, var(--tag) var(--ink, 100%), var(--muted));
+}
+
+/* What a badge opens from: the tag inside takes the focus ring. */
+.part-tag-focus {
+  display: inline-flex;
+  flex: none;
+  border-radius: 4px;
+}
+
+.part-tag-focus {
+  cursor: help;
+}
+
+.part-tag-focus:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.risk-tag-icon {
+  flex: none;
+  opacity: 0.85;
+}
+
+/*
+ * Likelihood and reach in impact's colors, by their place on their scale:
+ * the most (certain, all) as damaging's, then blocking's, inconvenient's,
+ * and the least (unlikely, few) as negligible's.
+ */
+.judgement-badge[data-step="4"],
+.part-ink[data-step="4"] {
+  --tag: var(--bad);
+}
+
+.judgement-badge[data-step="3"],
+.part-ink[data-step="3"] {
+  --tag: var(--blocking);
+}
+
+.judgement-badge[data-step="2"],
+.part-ink[data-step="2"] {
+  --tag: var(--inconvenient);
+}
+
+.judgement-badge[data-step="1"],
+.part-ink[data-step="1"] {
+  --tag: var(--faint);
+}
+
+.judgement-badge-label {
+  font-weight: 500;
+  color: var(--muted);
+}
+
+/* A likelihood's or reach's scale in its popover: each value with its test, this one marked. */
+.judgement-scale {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.judgement-scale > li {
+  display: grid;
+  grid-template-columns: 118px minmax(0, 1fr);
+  align-items: start;
+  gap: 8px;
+  padding: 4px 6px;
+  font-size: 0.92em;
+  color: var(--muted);
+  border-radius: 4px;
+}
+
+.judgement-scale > li[data-current] {
+  color: var(--text);
+  background: color-mix(in srgb, var(--text) 7%, transparent);
+}
+
+/* Its likelihood and reach, where they aren't certain and all: quieter, after the name. */
+.impact-badge-judged {
+  margin-left: 6px;
+  padding-left: 6px;
+  font-weight: 500;
+  border-left: 1px solid color-mix(in srgb, var(--impact) 35%, transparent);
 }
 
 .impact-badge[data-impact="none"] {
@@ -4247,6 +4364,31 @@ button.page-table-row:hover .page-table-name strong {
   --risk: var(--faint);
 }
 
+/* One gap's risk: its bars and score, opening how it's worked out. */
+.gap-risk-mark {
+  font-weight: 700;
+  cursor: help;
+}
+
+.gap-risk-mark[data-verdict="none"] {
+  cursor: default;
+}
+
+.gap-risk-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 8px 0 12px;
+  font-size: 1.05em;
+  font-weight: 700;
+}
+
+.gap-risk-head > span:last-child {
+  font-weight: 500;
+  color: var(--muted);
+}
+
 /* A risk: bars rising to its verdict, and its score out of 100, in the verdict's color. */
 .risk-score {
   flex: none;
@@ -4266,20 +4408,13 @@ button.page-table-row:hover .page-table-name strong {
   font-weight: 500;
 }
 
+/* Every risk mark that opens a popover shows it, as other marks do, inside a link or a row too. */
+.risk-score[role="img"],
 .risk-score[tabindex] {
   cursor: help;
 }
 
 .risk-score[tabindex]:focus-visible {
-  outline: 2px solid currentColor;
-  outline-offset: 2px;
-}
-
-.impact-badge[tabindex] {
-  cursor: help;
-}
-
-.impact-badge[tabindex]:focus-visible {
   outline: 2px solid currentColor;
   outline-offset: 2px;
 }
@@ -4364,12 +4499,393 @@ button.page-table-row:hover .page-table-name strong {
   color: var(--risk);
 }
 
-.risk-riskiest {
-  margin-top: 8px;
-}
-
 .risk-on-score[data-verdict] {
   color: var(--risk);
+}
+
+/* How a risk is worked out: each part, what it is, where it sits in its range, and the factor it contributes, then the sum and the score. */
+.risk-workings {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) 52px 34px;
+  align-items: center;
+  column-gap: 10px;
+  row-gap: 5px;
+  font-variant-numeric: tabular-nums;
+}
+
+.risk-workings-group,
+.risk-details-head {
+  grid-column: 1 / -1;
+  margin-top: 8px;
+  font-size: 0.78em;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
+.risk-workings > .risk-workings-group:first-child {
+  margin-top: 0;
+}
+
+.risk-workings > span:not([class]) {
+  color: var(--muted);
+}
+
+.risk-workings-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--muted);
+}
+
+.risk-workings-value {
+  font-weight: 600;
+}
+
+.risk-workings-factor {
+  text-align: right;
+  color: var(--faint);
+}
+
+.risk-workings-total {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 6px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+}
+
+.risk-workings-total-line {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.risk-workings-sum {
+  font-size: 0.92em;
+  color: var(--faint);
+}
+
+.risk-workings-scale {
+  display: grid;
+  grid-template-columns: 33fr 34fr 33fr;
+  font-size: 0.78em;
+  color: var(--faint);
+  text-align: center;
+}
+
+.risk-on-head {
+  margin-top: 12px;
+  margin-bottom: 2px;
+}
+
+/*
+ * A part's slider: a track with a faint tick for each of its values, least
+ * risk on the left, filled up to its value, where the thumb sits. --at is
+ * how far along it is, from 0 to 1.
+ */
+.risk-slider {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 10px;
+  --slider-track: color-mix(in srgb, var(--text) 12%, transparent);
+  --slider-on: color-mix(in srgb, var(--text) 45%, transparent);
+}
+
+.risk-slider::before,
+.risk-slider-fill {
+  content: "";
+  position: absolute;
+  left: 3px;
+  top: 50%;
+  height: 2px;
+  transform: translateY(-50%);
+  border-radius: 1px;
+}
+
+.risk-slider::before {
+  right: 3px;
+  background: var(--slider-track);
+}
+
+.risk-slider-fill {
+  width: calc((100% - 6px) * var(--at));
+  background: var(--slider-on);
+}
+
+.risk-slider[data-none] .risk-slider-fill {
+  display: none;
+}
+
+.risk-slider-stop {
+  position: relative;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--slider-track);
+}
+
+.risk-slider-stop[data-on] {
+  background: transparent;
+}
+
+.risk-slider-stop[data-current] {
+  width: 10px;
+  height: 10px;
+  margin: 0 -2px;
+  background: var(--text);
+  box-shadow: 0 0 0 2px var(--popover);
+}
+
+/* The score's slider: 0 to 100 across the popover, split in thirds at the verdicts, filled to the score in its verdict's color. */
+.risk-score-slider {
+  position: relative;
+  display: block;
+  height: 12px;
+  --at: 0;
+}
+
+.risk-score-slider::before,
+.risk-score-slider .risk-slider-fill {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  height: 4px;
+  transform: translateY(-50%);
+  border-radius: 2px;
+}
+
+.risk-score-slider::before {
+  right: 0;
+  background: color-mix(in srgb, var(--text) 10%, transparent);
+}
+
+.risk-score-slider .risk-slider-fill {
+  width: calc(100% * var(--at));
+  background: var(--risk);
+}
+
+.risk-score-slider-third {
+  position: absolute;
+  top: 50%;
+  width: 3px;
+  height: 8px;
+  transform: translate(-50%, -50%);
+  background: var(--popover);
+}
+
+.risk-score-slider-thumb {
+  position: absolute;
+  top: 50%;
+  left: calc(100% * var(--at));
+  width: 12px;
+  height: 12px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: var(--risk);
+  box-shadow: 0 0 0 2px var(--popover);
+}
+
+/*
+ * Stability spread: capabilities as a bar split by how many are at each
+ * level, in each level's color (--level), drafts as a faint hatch. Small
+ * beside a name, or wide across its space.
+ */
+.stability-spread-bar {
+  display: inline-flex;
+  flex: none;
+  gap: 1px;
+  width: 44px;
+  height: 5px;
+  vertical-align: middle;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.stability-spread-bar.wide {
+  display: flex;
+  width: 100%;
+  gap: 2px;
+  height: 8px;
+  border-radius: 4px;
+}
+
+.stability-spread-bar > span {
+  min-width: 2px;
+  background: var(--level);
+}
+
+.stability-spread-bar.wide > span {
+  min-width: 4px;
+}
+
+.stability-spread-bar > span[data-draft] {
+  background: repeating-linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--faint) 45%, transparent) 0 2px,
+    transparent 2px 4px
+  );
+}
+
+.stability-spread-mark {
+  display: inline-flex;
+  align-items: center;
+  height: 16px;
+  cursor: help;
+  border-radius: 3px;
+}
+
+.stability-spread-mark.wide {
+  display: flex;
+  min-width: 0;
+}
+
+.stability-spread-mark:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.stability-spread-counts {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin: 10px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.stability-spread-counts > li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.stability-spread-name {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--level, var(--muted));
+  font-weight: 600;
+}
+
+.stability-spread-n {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+/* How several spread across the verdicts: one bar split by how many fall in each, and the counts under it. */
+.verdict-spread {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+/* A bar split by how many gaps fall in each verdict: small beside a name, or wide across a popover. */
+.verdict-spread-bar {
+  display: inline-flex;
+  flex: none;
+  gap: 1px;
+  width: 44px;
+  height: 5px;
+  vertical-align: middle;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.verdict-spread-bar.wide {
+  display: flex;
+  width: auto;
+  gap: 2px;
+  height: 8px;
+  border-radius: 2px;
+  overflow: visible;
+}
+
+.verdict-spread-bar > span {
+  min-width: 2px;
+  background: var(--risk);
+}
+
+.verdict-spread-bar.wide > span {
+  min-width: 4px;
+  border-radius: 2px;
+}
+
+.risk-spread-mark {
+  display: inline-flex;
+  align-items: center;
+  height: 16px;
+  cursor: help;
+  border-radius: 3px;
+}
+
+.risk-spread-mark.wide {
+  display: flex;
+  min-width: 0;
+}
+
+.risk-spread-mark.wide .verdict-spread-bar {
+  flex: 1;
+}
+
+.risk-spread-mark:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.verdict-spread-bar > span[data-verdict="acceptable"],
+.verdict-spread-bar > span[data-verdict="none"] {
+  background: color-mix(in srgb, var(--text) 18%, transparent);
+}
+
+.verdict-spread-counts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 12px;
+  font-size: 0.92em;
+  color: var(--muted);
+}
+
+.verdict-spread-counts strong {
+  color: var(--risk);
+  font-weight: 650;
+}
+
+.verdict-spread-counts [data-verdict="acceptable"] strong,
+.verdict-spread-counts [data-verdict="none"] strong {
+  color: var(--text);
+}
+
+/* The riskiest few: each name and score on a line, its parts under it. */
+.risk-riskiest {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 4px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.risk-riskiest > li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: 12px;
+  row-gap: 1px;
+}
+
+.risk-riskiest-name {
+  font-weight: 600;
 }
 
 /* In a risk popover: what it's on, or what rides on it, a row apiece. */

@@ -5,7 +5,7 @@ import RuleRoundedIcon from "@mui/icons-material/RuleRounded";
 import WarningAmberRoundedIcon from "@mui/icons-material/WarningAmberRounded";
 import { ConceptIcon } from "../Concepts";
 import { RULE_STANDING_LABELS, plural } from "../Explore";
-import { CameFrom, Facets, facets, type Go } from "../Fields";
+import { Facets, facets, type Go } from "../Fields";
 import { CapabilityStability } from "../design/catalog/CapabilityLabel";
 import { Body, Excerpt } from "../design/markdown/Markdown";
 import { StandingMark } from "../design/standing/StandingMark";
@@ -142,9 +142,6 @@ function RuleView({ state, rule, route }: { state: DocketState; rule: Rule; rout
           ))}
         </div>
       ) : null}
-      <div className="dp-came-from">
-        <CameFrom kind="rule" id={rule.id} go={go} inline />
-      </div>
 
       <Tabs tabs={tabs} current={tab} />
 

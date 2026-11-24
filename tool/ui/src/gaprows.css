@@ -1,4 +1,4 @@
-/* GapRows: gaps one line each, grouped by impact. */
+/* GapRows: gaps one line each, led by their risk, grouped by it. */
 
 .gr-groups {
   display: flex;
@@ -43,7 +43,7 @@
   background: color-mix(in srgb, var(--text) 3%, transparent);
 }
 
-.gr-group-head .impact-badge {
+.gr-group-verdict {
   font-size: 13px;
 }
 
@@ -73,10 +73,10 @@
   padding-bottom: 6px;
 }
 
-/* A gap's line: its kind, what it says, and what it's on, each in a column so the lines read down the page. */
+/* A gap's line: its risk, its kind, what it says, and what it's on, each in a column so the lines read down the page. */
 .gr-row {
   display: grid;
-  grid-template-columns: 74px minmax(0, 1fr) minmax(0, 220px);
+  grid-template-columns: 52px 74px minmax(0, 1fr) minmax(0, 220px);
   align-items: center;
   gap: 12px;
   padding: 6px 14px 6px 34px;
@@ -84,12 +84,11 @@
 }
 
 .gr-flat .gr-row {
-  grid-template-columns: 112px 74px minmax(0, 1fr) minmax(0, 220px);
   padding-left: 0;
 }
 
-/* The impact badge keeps to its name's width, not its column's. */
-.gr-flat .gr-row > :first-child {
+/* The risk keeps to its own width, not its column's. */
+.gr-row > :first-child {
   justify-self: start;
 }
 
@@ -155,6 +154,11 @@
 }
 
 /* ——— TradeoffRows: each line opens in place ——— */
+
+/* A tradeoff has no risk of its own, so its line has no risk column. */
+.gr-row.tr-row {
+  grid-template-columns: 74px minmax(0, 1fr) minmax(0, 220px);
+}
 
 .tr-row {
   cursor: pointer;
@@ -227,13 +231,6 @@
 .tr-sides dd a {
   color: var(--accent);
   text-decoration: none;
-}
-
-.tr-when {
-  display: block;
-  margin-top: 4px;
-  font-size: 12.5px;
-  color: var(--muted);
 }
 
 /* LeftFigure: what's left in a tile. */

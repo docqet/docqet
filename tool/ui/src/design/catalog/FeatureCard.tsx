@@ -115,7 +115,7 @@ export function FeatureCard({
             </Tooltip>
             {hint}
             {progress === null ? null : (
-              <Box sx={{ flex: "none", display: "flex", alignItems: "center", gap: 0.75 }}>
+              <Box className="lens-stability" sx={{ flex: "none", display: "flex", alignItems: "center", gap: 0.75 }}>
                 <MaturityRing
                   progress={progress}
                   subject="feature"

@@ -2,7 +2,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import type { ReactNode } from "react";
 import { DetailsPopover } from "../DetailsPopover";
-import { MaturityDetails, SUBJECT_NAMES, type MaturitySubject } from "./MaturityDetails";
+import { MaturityDetails, SUBJECT_NAMES, fromCapabilities, type MaturitySubject } from "./MaturityDetails";
 import { MATURITY_BANDS, clampMaturity, maturityBand } from "./maturity";
 import { RingGlyph } from "./RingGlyph";
 
@@ -36,7 +36,7 @@ export type MaturityRingProps = {
 };
 
 const countLabel = (subject: MaturitySubject, count: number) =>
-  subject === "feature"
+  fromCapabilities(subject)
     ? `${count} ${count === 1 ? "capability" : "capabilities"}`
     : `${count} ${count === 1 ? "feature" : "features"}`;
 
@@ -62,6 +62,7 @@ export function MaturityRing({
 
   return (
     <DetailsPopover
+      hoverOnly={!focusable}
       title={
         <MaturityDetails
           progress={value}

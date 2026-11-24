@@ -15,8 +15,8 @@ import { READINESS_BANDS, readinessBand, startedOf, type NotReady, type Readines
 /*
  * Readiness: how ready people can rely on it being, as a recommendation for
  * them to judge, and what it still needs. It's the weighted maturity of its
- * capabilities, with those held back by an unacceptable gap counting for
- * nothing. It's never in a level's color, since it isn't a level, and never a
+ * capabilities, with those held back by an unacceptable gap counting as the
+ * level below their own. It's never in a level's color, since it isn't a level, and never a
  * ring, since that's maturity's: a short straight bar filled as far as its
  * percentage, in --ok in the Ready quarter, and in the text's own color below.
  */
@@ -27,6 +27,20 @@ const plural = (n: number, one: string, many: string) => `${n} ${n === 1 ? one :
 export function readinessLabel(r: Readiness): string | null {
   const band = readinessBand(r);
   return band ? `${band.name} · ${r.percent}%` : null;
+}
+
+/* A readiness in words, its percentage in its bar's color: "Mostly ready · 59%". Null with nothing started. */
+export function ReadinessText({ readiness }: { readiness: Readiness }) {
+  const band = readinessBand(readiness);
+  if (!band) return null;
+  return (
+    <>
+      {band.name} ·{" "}
+      <span className="readiness-percent" style={{ color: readinessColor(readiness.percent!) }}>
+        {readiness.percent}%
+      </span>
+    </>
+  );
 }
 
 /* What a not-ready capability still needs, in a line: "Reach Beta (now Alpha) · close 2 unacceptable gaps". */
@@ -139,12 +153,18 @@ export function ReadinessMark({
         {large ? (
           <>
             <strong>{readinessBand(readiness)!.name}</strong>
-            <span className="readiness-count">{readiness.percent}%</span>
+            <span className="readiness-count" style={{ color: readinessColor(readiness.percent) }}>
+              {readiness.percent}%
+            </span>
           </>
         ) : bare ? (
-          <span className="readiness-count">{readiness.percent}%</span>
+          <span className="readiness-count" style={{ color: readinessColor(readiness.percent), fontWeight: 600 }}>
+            {readiness.percent}%
+          </span>
         ) : (
-          <span>{label}</span>
+          <span>
+            <ReadinessText readiness={readiness} />
+          </span>
         )}
       </span>
     </DetailsPopover>
@@ -169,7 +189,9 @@ function ReadinessDetails({ readiness, of }: { readiness: Readiness; of: string 
         <Box className="readiness-details-name" sx={{ fontSize: "1.12em", fontWeight: 700 }}>
           {readinessBand(readiness)!.name}
         </Box>
-        <Box sx={{ color: "text.secondary", fontVariantNumeric: "tabular-nums" }}>{readiness.percent}%</Box>
+        <Box sx={{ fontWeight: 600, fontVariantNumeric: "tabular-nums" }} style={{ color: readinessColor(readiness.percent!) }}>
+          {readiness.percent}%
+        </Box>
       </Box>
       <Box sx={{ mt: 1 }}>
         <ReadinessBar percent={readiness.percent!} size="wide" />
@@ -210,7 +232,7 @@ function ReadinessDetails({ readiness, of }: { readiness: Readiness; of: string 
       ) : null}
       <Box sx={[section, { fontSize: "0.92em", color: "text.secondary" }]}>
         Our view of how ready this is to serve people in production, from the stability levels, gaps and impacts written down, for you
-        to judge. A capability with an unacceptable gap counts for nothing until it&rsquo;s closed, and drafts don&rsquo;t count.
+        to judge. A capability with an unacceptable gap counts as the level below its own until it&rsquo;s closed, and drafts don&rsquo;t count.
       </Box>
     </DetailsCard>
   );

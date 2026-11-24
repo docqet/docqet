@@ -1,18 +1,22 @@
+import CasinoRoundedIcon from "@mui/icons-material/CasinoRounded";
+import CrisisAlertRoundedIcon from "@mui/icons-material/CrisisAlertRounded";
+import GroupsRoundedIcon from "@mui/icons-material/GroupsRounded";
 import Box from "@mui/material/Box";
 import type { ReactNode } from "react";
 import { DetailsCard, DetailsEyebrow, DetailsPopover } from "../DetailsPopover";
 
 /*
- * What's at stake in a gap, or in a tradeoff's drawback, when it bites: its
+ * What's at stake in a gap, or was in the gap a tradeoff was, when it bites: its
  * impact, as a badge in its color, with a popover (hover, focus, or tap)
  * saying what the impact means. Risk, which impact is one part of, has the
  * rising bars (see RiskScore).
  */
 
 /*
- * What happens to whoever relies on it when a gap bites, or a tradeoff's
- * drawback does, least to most, whatever kind of software it's in: each with
- * what it takes from them and the test that sets it.
+ * What a gap does to those it reaches when it bites, least to most,
+ * whatever kind of software it's in: each with what it takes from them and
+ * the test that sets it. How likely it is, and how many it reaches, are
+ * rated apart (below).
  */
 export type ImpactId = "negligible" | "inconvenient" | "blocking" | "damaging";
 
@@ -37,6 +41,181 @@ export const IMPACT_NAMES: Record<ImpactId, { name: string; lost: string; test: 
   },
 };
 
+/* Each part of a gap's risk that people rate has an icon: impact a target, likelihood dice, reach people. */
+export type RiskPart = "impact" | "likelihood" | "reach";
+
+export function RiskPartIcon({ part, size = 14 }: { part: RiskPart; size?: number }) {
+  const sx = { fontSize: size };
+  if (part === "impact") return <CrisisAlertRoundedIcon className="risk-tag-icon" sx={sx} aria-hidden />;
+  if (part === "likelihood") return <CasinoRoundedIcon className="risk-tag-icon" sx={sx} aria-hidden />;
+  return <GroupsRoundedIcon className="risk-tag-icon" sx={sx} aria-hidden />;
+}
+
+/* How likely it is to bite within a year, most first, with the test that sets it. Left out, it's certain. */
+export type LikelihoodId = "certain" | "expected" | "possible" | "unlikely";
+export const LIKELIHOOD_NAMES: Record<LikelihoodId, { name: string; test: string }> = {
+  certain: { name: "Certain", test: "It's happening, or it definitely will within a year." },
+  expected: { name: "Expected", test: "You'd bet on it happening within a year." },
+  possible: { name: "Possible", test: "It could happen, but you wouldn't bet on it." },
+  unlikely: { name: "Unlikely", test: "It would surprise you." },
+};
+
+/* What share of the people the software serves it would reach if it bit, most first. Left out, it's all. */
+export type ReachId = "all" | "most" | "some" | "few";
+export const REACH_NAMES: Record<ReachId, { name: string; test: string }> = {
+  all: { name: "All", test: "Everyone the software serves." },
+  most: { name: "Most", test: "Most of them: it's the usual case." },
+  some: { name: "Some", test: "A real share of them, but not the usual case." },
+  few: { name: "Few", test: "A small group with a particular need or situation." },
+};
+
+/* Its likelihood and reach, in a few words, where either isn't the usual certain and all: "Possible · reaches few". Empty otherwise. */
+export const judgementText = (likelihood: LikelihoodId | null, reach: ReachId | null) =>
+  [likelihood && likelihood !== "certain" ? LIKELIHOOD_NAMES[likelihood].name : null, reach && reach !== "all" ? `reaches ${reach}` : null]
+    .filter(Boolean)
+    .join(" · ")
+    .replace(/^r/, (c) => c.toUpperCase());
+
+/* Its likelihood and reach, for a popover: each with what it means. */
+export function JudgementSection({ likelihood, reach }: { likelihood: LikelihoodId | null; reach: ReachId | null }) {
+  const l = LIKELIHOOD_NAMES[likelihood ?? "certain"];
+  const r = REACH_NAMES[reach ?? "all"];
+  return (
+    <RiskSection label={`${l.name} · reaches ${r.name.toLowerCase()}`}>
+      <div>
+        <strong>{l.name}:</strong> {l.test}
+      </div>
+      <Box sx={{ mt: 0.5 }}>
+        <strong>Reaches {r.name.toLowerCase()}:</strong> {reach === "all" || !reach ? "All the people this software serves." : r.test}
+      </Box>
+    </RiskSection>
+  );
+}
+
+/*
+ * Each part of a gap's risk people rate, impact, likelihood and reach: its
+ * values most first, what each is called, the test that sets it, and its
+ * usual value where it has one. Each value has a color, its tag's, used on
+ * the tag, the popover's heading and its scale alike.
+ */
+type PartInfo = { eyebrow: string; scale: string; order: string[]; names: Record<string, { name: string; test: string }>; usual: string | null; means: string };
+
+const PARTS_INFO: Record<RiskPart, PartInfo> = {
+  impact: {
+    eyebrow: "How bad it is",
+    scale: "Impact, most first",
+    order: ["damaging", "blocking", "inconvenient", "negligible"],
+    names: IMPACT_NAMES,
+    usual: null,
+    means:
+      "How bad it is for those it reaches if it bit, by the first test it meets, most first. Never lowered for being unlikely or reaching few: likelihood and reach say that.",
+  },
+  likelihood: {
+    eyebrow: "How likely it is to bite",
+    scale: "Likelihood, most first",
+    order: ["certain", "expected", "possible", "unlikely"],
+    names: LIKELIHOOD_NAMES,
+    usual: "certain",
+    means:
+      "How likely the gap is to bite within the next year, by judgement. Left out, it's certain. When torn between two, pick the higher. Each step down takes a quarter off its risk.",
+  },
+  reach: {
+    eyebrow: "How many it would reach",
+    scale: "Reach, most first",
+    order: ["all", "most", "some", "few"],
+    names: { ...REACH_NAMES, all: { name: "All", test: "Everyone the software serves." } },
+    usual: "all",
+    means:
+      "How many of the people this software serves it would reach if it bit, by who they are and what they do, not a count. Left out, it's all. When torn between two, pick the higher. Each step down takes a quarter off its risk.",
+  },
+};
+
+/* The attributes that give a value its color: an impact's own, or a likelihood's or reach's hue at its strength, 4 for the most down to 1. */
+const colorOf = (part: RiskPart, value: string | null) =>
+  part === "impact"
+    ? { "data-part": part, "data-impact": value ?? "none" }
+    : { "data-part": part, "data-step": 4 - PARTS_INFO[part].order.indexOf(value ?? PARTS_INFO[part].usual!) };
+
+/* A value as a tag, without a popover: its part's icon and its name, in its color. `label` names the part first. */
+export function PartTag({ part, value, label = false, children }: { part: RiskPart; value: string | null; label?: boolean; children?: ReactNode }) {
+  const info = PARTS_INFO[part];
+  const v = value ?? info.usual;
+  return (
+    <span className={part === "impact" ? "impact-badge" : "judgement-badge"} {...colorOf(part, v)}>
+      <RiskPartIcon part={part} size={13} />
+      {label ? <span className="judgement-badge-label">{part === "impact" ? "Impact" : part === "likelihood" ? "Likelihood" : "Reach"}</span> : null}
+      {v ? info.names[v].name : "Not rated"}
+      {children}
+    </span>
+  );
+}
+
+/* A part's scale, for its popover: each value as its tag, with its test, this one marked. */
+function Scale({ part, value }: { part: RiskPart; value: string | null }) {
+  const info = PARTS_INFO[part];
+  return (
+    <RiskSection label={info.scale}>
+      <ul className="judgement-scale">
+        {info.order.map((v) => (
+          <li key={v} data-current={v === value || undefined}>
+            <span>
+              <PartTag part={part} value={v} />
+            </span>
+            <span>{info.names[v].test}</span>
+          </li>
+        ))}
+      </ul>
+    </RiskSection>
+  );
+}
+
+/* The top of a part's popover: what it is, this value's name in its color, and its test. */
+function PartHead({ part, value, eyebrow }: { part: RiskPart; value: string | null; eyebrow?: string }) {
+  const info = PARTS_INFO[part];
+  return (
+    <>
+      <DetailsEyebrow>{eyebrow ?? info.eyebrow}</DetailsEyebrow>
+      <Box className="part-ink" {...colorOf(part, value)} sx={{ mt: 1, display: "flex", alignItems: "center", gap: 0.75, fontSize: "1.12em", fontWeight: 700 }}>
+        <RiskPartIcon part={part} size={18} />
+        {value ? (part === "reach" ? `Reaches ${info.names[value].name.toLowerCase()}` : info.names[value].name) : "Not rated"}
+      </Box>
+      <Box sx={{ mt: 0.75 }}>{value ? info.names[value].test : "Nobody has said what happens when it bites."}</Box>
+    </>
+  );
+}
+
+/* `labelled` names the part in the badge too, where nothing around it says which it is. */
+export function JudgementBadge({
+  part,
+  value,
+  inButton = false,
+  labelled = false,
+}: {
+  part: "likelihood" | "reach";
+  value: LikelihoodId | ReachId | null;
+  inButton?: boolean;
+  labelled?: boolean;
+}) {
+  const info = PARTS_INFO[part];
+  const v = value ?? info.usual!;
+  return (
+    <DetailsPopover
+      hoverOnly={inButton}
+      title={
+        <DetailsCard card width={340}>
+          <PartHead part={part} value={v} />
+          <Scale part={part} value={v} />
+          <Box sx={{ mt: 1.25, color: "text.secondary", fontSize: "0.92em" }}>{info.means}</Box>
+        </DetailsCard>
+      }
+    >
+      <span role="img" aria-label={`${part === "likelihood" ? "Likelihood" : "Reach"}: ${info.names[v].name}`} tabIndex={inButton ? undefined : 0} className="part-tag-focus">
+        <PartTag part={part} value={v} label={labelled} />
+      </span>
+    </DetailsPopover>
+  );
+}
+
 /* How many there are of each impact, worst first: "3 damaging · 12 inconvenient · 2 not rated". */
 export const impactCounts = (items: { impact: ImpactId | null }[]) =>
   [
@@ -55,20 +234,37 @@ export const impactCounts = (items: { impact: ImpactId | null }[]) =>
  */
 export function ImpactBadge({
   impact,
+  likelihood,
+  reach,
   eyebrow,
   inButton = false,
   children,
 }: {
   impact: ImpactId | null;
+  /* A gap's, or what the gap a tradeoff was had: given, the popover says them, and the badge says them where they aren't certain and all, unless `inButton`, where a row has no room. */
+  likelihood?: LikelihoodId | null;
+  reach?: ReachId | null;
   eyebrow: string;
   inButton?: boolean;
   children?: ReactNode;
 }) {
   const name = impact ? IMPACT_NAMES[impact].name : "Not rated";
+  const rated = impact !== null && likelihood !== undefined;
+  const judged = rated && !inButton ? judgementText(likelihood, reach ?? null) : "";
   return (
-    <DetailsPopover hoverOnly={inButton} title={<ImpactDetails impact={impact} eyebrow={eyebrow}>{children}</ImpactDetails>}>
-      <span className="impact-badge" data-impact={impact ?? "none"} role="img" aria-label={`Impact: ${name}`} tabIndex={inButton ? undefined : 0}>
-        {name}
+    <DetailsPopover
+      hoverOnly={inButton}
+      title={
+        <ImpactDetails impact={impact} eyebrow={eyebrow}>
+          {rated ? <JudgementSection likelihood={likelihood} reach={reach ?? null} /> : null}
+          {children}
+        </ImpactDetails>
+      }
+    >
+      <span role="img" aria-label={`Impact: ${name}${judged ? `, ${judged}` : ""}`} tabIndex={inButton ? undefined : 0} className="part-tag-focus">
+        <PartTag part="impact" value={impact}>
+          {judged ? <span className="impact-badge-judged">{judged}</span> : null}
+        </PartTag>
       </span>
     </DetailsPopover>
   );
@@ -84,26 +280,19 @@ export function RiskSection({ label, children }: { label: string; children: Reac
   );
 }
 
-/* What an impact means, for the popover: its name, its test and what it takes, then its sections. */
+/* What an impact means, for the popover, as likelihood's and reach's do: its name and test, what it takes, its scale, then its sections. */
 function ImpactDetails({ impact, eyebrow, children }: { impact: ImpactId | null; eyebrow: string; children?: ReactNode }) {
   return (
-    <DetailsCard card width={320}>
+    <DetailsCard card width={340}>
       <div className="risk-details" data-impact={impact ?? "none"}>
-        <DetailsEyebrow>{eyebrow}</DetailsEyebrow>
-        <Box className="risk-details-name" sx={{ mt: 1, fontSize: "1.12em", fontWeight: 700 }}>
-          {impact ? IMPACT_NAMES[impact].name : "Not rated"}
-        </Box>
-        <Box sx={{ mt: 0.75 }}>{impact ? IMPACT_NAMES[impact].test : "Nobody has said what happens when it bites."}</Box>
+        <PartHead part="impact" value={impact} eyebrow={eyebrow} />
         {impact ? (
           <Box sx={{ mt: 0.5, color: "text.secondary" }}>
             What whoever relies on it loses: <strong>{IMPACT_NAMES[impact].lost}</strong>.
           </Box>
         ) : null}
-        {impact ? (
-          <Box sx={{ mt: 0.5, color: "text.secondary", fontSize: "0.92em" }}>
-            Judged for the people this software serves: a gap that would reach only a few of them rates one step lower.
-          </Box>
-        ) : null}
+        <Scale part="impact" value={impact} />
+        <Box sx={{ mt: 1.25, color: "text.secondary", fontSize: "0.92em" }}>{PARTS_INFO.impact.means}</Box>
         {children}
       </div>
     </DetailsCard>

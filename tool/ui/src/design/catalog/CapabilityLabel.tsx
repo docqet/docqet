@@ -41,13 +41,13 @@ const nameStyle = {
 
 /*
  * A Capability's line, as CapabilityCard and each row of a FeatureCard show
- * it: an optional grip, its bolt, its name, cut short on one line, an
- * optional `hint` after it, its stability, and the app's actions, such as
- * its menu.
+ * it: an optional grip, its bolt, its name, cut short on one line, then at
+ * the right an optional `hint`, such as its risk, its stability, and the
+ * app's actions, such as its menu. Whatever the map shows about it sits at
+ * the right, together.
  *
- * With `details`, the name and its hint open a popover of them on hover,
- * focus, or tap, as a stability mark does; without, the name's tooltip shows
- * it in full.
+ * With `details`, the name opens a popover of them on hover, focus, or tap,
+ * as a stability mark does; without, the name's tooltip shows it in full.
  */
 export function CapabilityLabel({
   name,
@@ -89,7 +89,6 @@ export function CapabilityLabel({
             <Box component="span" sx={nameStyle}>
               {name}
             </Box>
-            {hint}
           </Box>
         </DetailsPopover>
       ) : (
@@ -99,12 +98,14 @@ export function CapabilityLabel({
               {name}
             </Box>
           </Tooltip>
-          {hint}
           <Box sx={{ flex: 1 }} />
         </>
       )}
-      <Box sx={{ flex: "none", display: "flex", alignItems: "center", gap: 0.5 }}>
-        <CapabilityStability name={name} level={level} />
+      <Box sx={{ flex: "none", display: "flex", alignItems: "center", gap: 0.75 }}>
+        {hint}
+        <span className="lens-stability">
+          <CapabilityStability name={name} level={level} />
+        </span>
         {actions}
       </Box>
     </Box>

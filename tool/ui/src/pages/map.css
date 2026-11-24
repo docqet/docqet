@@ -124,17 +124,22 @@
   box-shadow: inset 0 0 0 1.5px var(--risk);
 }
 
-/* How a capability's rules hold, only while the map is colored by evidence, where it takes the dot's place. */
+/*
+ * Each view shows only its own marks on the canvas: stability marks and
+ * maturity, risk, or how rules hold. The peek shows them all, and a
+ * persona's readiness always shows on their card.
+ */
+.canvas:not([data-lens="stability"]) .lens-stability,
+.canvas:not([data-lens="risk"]) .lens-risk {
+  display: none !important;
+}
+
 .canvas .lens-evidence {
   display: none;
 }
 
 .canvas[data-lens="evidence"] .lens-evidence {
   display: inline-flex;
-}
-
-.canvas[data-lens="evidence"] .risk-pin {
-  display: none;
 }
 
 .lens-evidence .sc-standing {
@@ -302,8 +307,8 @@
 
 .peek-gaps li a {
   display: flex;
-  flex-direction: column;
-  gap: 3px;
+  align-items: flex-start;
+  gap: 10px;
   padding: 7px 8px;
   margin: 0 -8px;
   border-radius: 6px;
@@ -315,8 +320,11 @@
   background: color-mix(in srgb, var(--text) 4%, transparent);
 }
 
-.peek-gaps .impact-badge {
-  align-self: flex-start;
+/* A gap's risk before its name, the same width each, so the names line up. */
+.peek-gaps .gap-risk-mark {
+  flex: none;
+  min-width: 46px;
+  line-height: 19px;
 }
 
 .peek-gap-summary {
@@ -396,16 +404,6 @@
     width: auto;
     max-height: 60%;
   }
-}
-
-/* A gap's risk in the peek, at the end of its line, in its verdict's color. */
-.peek-gap-score {
-  margin-left: auto;
-  flex: none;
-  font-size: 12px;
-  font-weight: 650;
-  font-variant-numeric: tabular-nums;
-  color: var(--risk);
 }
 
 .peek-gaps h3 .risk-score {

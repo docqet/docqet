@@ -6,7 +6,9 @@ import { Term } from "../design/term/Term";
 import { docHref, withParam, type Route } from "../routes";
 import { Empty, PageHeader, Section, View } from "../shell/layout";
 import {
+  domainCapabilities,
   domainName,
+  levelInDomain,
   find,
   gapsById,
   maturityOf,
@@ -38,7 +40,15 @@ export default function FeaturesPage({ state }: { state: DocketState; route: Rou
       <PageHeader
         title="Features"
         lede="What can it do? Every domain, the features it has a part in, and their capabilities, with how far along each is."
-        marks={<Maturity value={overall} subject="project" of="nothing showing has a capability in a feature yet" />}
+        marks={
+          <Maturity
+            value={overall}
+            subject="project"
+            of="nothing showing has a capability in a feature yet"
+            levels={state.capabilities.filter((c) => c.feature).map((c) => c.stability)}
+            spreadOf="every feature showing"
+          />
+        }
         actions={<GroupToggle group={group} />}
       />
       {!state.capabilities.length && !state.domains.length ? (
@@ -143,7 +153,13 @@ function DomainBranch({ state, domain }: { state: DocketState; domain: Domain })
       head={
         <>
           <DocLink kind="domain" id={domain.id} name={domain.name} />
-          <Maturity value={domain.maturity} subject="domain" of="it builds no capability in a feature yet" />
+          <Maturity
+            value={domain.maturity}
+            subject="domain"
+            of="it builds no capability in a feature yet"
+            levels={domainCapabilities(state, domain).map((c) => levelInDomain(c, domain.id))}
+            spreadOf={domain.name}
+          />
           <span className="ix-meta">
             {plural(features.length, "feature", "features")} · {plural(capabilities, "capability", "capabilities")}
           </span>
@@ -181,7 +197,12 @@ function FeatureBranch({ state, feature, domain }: { state: DocketState; feature
       head={
         <>
           <DocLink kind="feature" id={feature.id} name={feature.name} />
-          <Maturity value={part?.maturity ?? null} of="it has no capabilities here yet" />
+          <Maturity
+            value={part?.maturity ?? null}
+            of="it has no capabilities here yet"
+            levels={capabilities.map((c) => levelInDomain(c, domain))}
+            spreadOf={feature.name}
+          />
           <span className="ix-meta">
             {plural(capabilities.length, "capability", "capabilities")}
             {elsewhere.length ? (

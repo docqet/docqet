@@ -112,7 +112,7 @@ function SideNav({ state, at }: { state: DocketState; at: Section }) {
       label: "State",
       items: [
         { section: "left", label: "What's left", icon: <GapIcon />, question: "Gaps and open decisions, riskiest first", count: state.gaps.length + decisions },
-        { section: "decided", label: "Decided", icon: <TaskAltRoundedIcon />, question: "Tradeoffs, non-goals and closed decisions", count: state.tradeoffs.length },
+        { section: "decided", label: "Decided", icon: <TaskAltRoundedIcon />, question: "Tradeoffs and non-goals", count: state.tradeoffs.length },
         { section: "problems", label: "Doc problems", icon: <WarningAmberRoundedIcon />, question: "Contradictions and mistakes in the docs", count: state.problems.length },
       ],
     },

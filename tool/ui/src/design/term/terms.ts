@@ -122,14 +122,14 @@ export const TERMS: Record<TermId, TermEntry> = {
   "open-decision": {
     name: "Open decision",
     means:
-      "A question about what's intended that hasn't been settled yet, recorded so it isn't lost or quietly decided in code. Once settled, it closes, saying what it became.",
+      "A question about what's intended that hasn't been settled yet, recorded so it isn't lost or quietly decided in code. Once it's answered, it's deleted, and the answer is written as whatever it became.",
     more: "Does an early arrival's stay start that day?",
   },
   risk: {
     name: "Risk",
     means:
-      "What's at stake in leaving a gap open, from 0 to 100: its impact, weighed by the stability of each capability it's on, and higher where it breaks the promise that level makes. Its verdict says whether that's acceptable (under 33), tolerable (33 to 66) or unacceptable (67 and up).",
-    more: "A damaging gap that breaks a promise on a GA capability is 100, unacceptable; the same gap on a Prototype is 48, tolerable.",
+      "What's at stake in leaving a gap open, from 0 to 100: what it could do, its impact times how likely it is and how many it reaches, weighed by how much people rely on each capability it's on, from its stability, and higher where it breaks the promise that level makes. Its verdict says whether that's acceptable (under 33), tolerable (33 to 66) or unacceptable (67 and up).",
+    more: "A certain damaging gap reaching everyone that breaks a promise on a GA capability is 100. Only possible, it's 76, still unacceptable; on a Beta capability, where it breaks no promise, 48, tolerable.",
   },
   exposure: {
     name: "Exposure",
@@ -143,8 +143,8 @@ export const TERMS: Record<TermId, TermEntry> = {
   readiness: {
     name: "Readiness",
     means:
-      "Our view of how ready the software is to serve people in production, from the engineering judgement written down beside it: each capability's stability level, and its gaps and their impact. It's a recommendation, and you're the judge.",
-    more: "It's maturity, held back where a gap is unacceptable at a capability's level, and it always comes with what's left to do. A persona at 56% is Mostly ready: most of what they need can be relied on day to day.",
+      "Our view of how ready the software is to serve people in production, from the engineering judgement written down beside it: each capability's stability level, and its gaps and their risk. It's a recommendation, and you're the judge.",
+    more: "It's maturity, with a capability counted at the level below its own while a gap is unacceptable on it, and it always comes with what's left to do. A persona at 70% is Mostly ready: most of what they need can be relied on day to day.",
   },
   "stability-checklist": {
     name: "Stability checklist",

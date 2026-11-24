@@ -38,8 +38,8 @@ picks which question you're asking:
 | Personas | Who it serves, and how ready it is for each | `?view=personas` |
 | Language | What the words mean: concepts, and the rules that must hold | `?view=language` |
 | How it's built | Mechanisms and components | `?view=built` |
-| What's left | Gaps and open decisions, by impact | `?view=left` |
-| Decided | Tradeoffs, non-goals and closed decisions | `?view=decided` |
+| What's left | Gaps and open decisions, for everything or one project, persona, domain, feature or capability, filtered and ordered by any part of risk | `?view=left&for=persona:<id>` |
+| Decided | Tradeoffs and non-goals | `?view=decided` |
 | Doc problems | Contradictions and mistakes in the docs | `?view=problems` |
 
 Every domain, feature, capability, persona, concept, rule, mechanism,
@@ -51,8 +51,14 @@ so back returns, and the platform and projects showing ride along in the
 address.
 
 On the map, clicking something opens a small peek beside the canvas: what it
-is, three figures, its riskiest gaps and a link to its page. "Color by" tints
-the canvas by stability, risk or evidence. Where
+is, three figures, its riskiest gaps and a link to its page, all of it
+whatever's showing. "Show" chooses what the canvas shows, one at a time:
+Stability (each capability's level, and each feature's and domain's
+maturity), Risk (the risk spread of each capability, feature and domain,
+with rows tinted by risk) or Evidence (the evidence spread of each, how
+their rules hold, tinted the same way). Each shows only its own marks, at
+the right of each card and row. A persona's readiness always shows on their
+card. Where
 the cards sit is this browser's own, for each platform.
 
 ### Several projects
@@ -82,18 +88,28 @@ neither from the other:
   Anything spanning domains counts each capability once, at its level in
   short: a feature from its capabilities, and a project, or everything
   showing, from its features. A domain comes from its parts of features. It
-  shows on features, domains, projects and the map, never on personas.
+  shows on features, domains, projects and the map, and on a persona's page
+  as the maturity of what serves them.
 - **Readiness** is how ready people can rely on it being, as a
   recommendation: the same weighted average as maturity, each capability at
   its level in short, except that one with a gap that's unacceptable on it
-  scores 0 until that's closed. It's a percentage in one of four quarters, Not
-  ready yet, Partly ready, Mostly ready and Ready, drawn as a short
-  straight bar in the text's color, or `--ok` once Ready, never a ring, which
-  is maturity's. Drafts are listed apart, as not
+  scores as the level below its own until that's closed. It's a percentage in
+  one of four quarters, Not ready, Partly ready, Mostly ready and Ready, drawn
+  as a short straight bar from grey to green, never a ring, which is
+  maturity's. Drafts are listed apart, as not
   started, and never count. It shows on personas, on a feature for a persona,
   on the overview, and on capability, feature and domain pages, each with
   what it still needs: each capability below Beta, or with an unacceptable
   gap, and what to do about it, linking to each.
+- **Stability spread** is how many capabilities are at each level, as a
+  short bar split by how many there are of each, in each level's color, with
+  no number. It goes wherever maturity does, since maturity is worked out
+  from it, and wherever capabilities are counted together. Its popover counts
+  each level.
+- **Risk spread** is how several gaps fall across the verdicts, as a short
+  bar split by how many there are of each, with no number, since no one score
+  stands for them all. Its popover counts each verdict and names the riskiest
+  few. A single gap shows its own score, and its popover how it's worked out.
 
 ### How things are shown
 
@@ -111,15 +127,28 @@ and wherever it matters, with one mark per kind everywhere: gaps, open
 decisions and tradeoffs.
 
 - **Gaps** are listed one line each, by name, grouped by impact, worst first,
-  with the milder impacts folded. A gap's page has its name, what it's in, its
-  impact, whether it breaks a promise, when it bites, and its links: the rule
-  or checklist outcome it falls short of, what it shows on, the decision it
-  waits on, and where the code marks it.
+  with the milder impacts folded. A gap's page has its name, what it's in, and
+  its risk profile, a section of its own: its risk, how it's worked out from
+  its impact, likelihood, reach and stability, whether it breaks a promise
+  and why, and its score on each capability it's on. Then its links: the rule
+  or checklist outcome it falls short of, what it shows on, and where the
+  code marks it.
 - **What's left** is the open decisions and the gaps, and nothing else:
   missing evidence is never something left to do. Counts of it show the gap
-  and decision marks with how many, and the worst impact.
-- **Tradeoffs** are listed the same way as gaps, grouped by their drawback's
-  impact. Opening one shows its drawback, its benefit where one is written
+  and decision marks with how many, and the worst impact. Its page is for
+  everything showing, or for one project, persona, domain, feature or
+  capability, chosen at the top right, with each gap scored on that one's
+  capabilities. Its tiles are the gaps, with their risk spread and how many
+  there are at each risk, and the open decisions. Gaps are a table showing
+  each one's risk, which opens how it's worked out, its impact, likelihood,
+  reach, the stability of the capability it scores highest on, its kind, and
+  whether it breaks a promise. Impact, likelihood and reach are tags, each
+  value in its color, the same in the table, the filters and their popovers. Each of those is a filter, with counts given
+  the others, and the gaps can be ordered by risk or grouped by any of them,
+  or by what they're on, riskiest first within each. All of it is in the
+  address.
+- **Tradeoffs** are listed by what they're on, with no risk, since each is
+  chosen. Opening one shows its drawback, its benefit where one is written
   down, and the checklist outcome it falls short of on purpose.
 - **Drafts** show as the word Draft, with no mark, and count toward no
   maturity or readiness.

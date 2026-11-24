@@ -212,19 +212,10 @@ a.page-feature {
   text-decoration: none;
 }
 
-/* How many capabilities are at each level, each with its level's squares, in its color. */
-.page-level-counts {
-  display: inline-flex;
-  flex-wrap: wrap;
-  gap: 4px 12px;
-  font-size: 12.5px;
-  color: var(--muted);
-}
 
-.page-level-count {
+/* A maturity as a stat's value: its ring, with the percentage beside it, then its band. */
+.page-stat-maturity {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  white-space: nowrap;
-  color: var(--level, var(--muted));
+  gap: 8px;
 }

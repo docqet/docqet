@@ -12,27 +12,13 @@ export type Level = StabilityLevelId;
 /* A capability's level: one of the four, or null while it's a draft, declared and not started, as the design components take it. */
 export type CapabilityLevel = Level | null;
 
-/* What a closed decision became, as named, and the doc, gap or tradeoff it means here, or null where nothing showing has it. */
-export type Became = { ref: string; kind: BecameKind; id: string | null };
-export type BecameKind = "domain" | "feature" | "capability" | "rule" | "concept" | "persona" | "mechanism" | "component" | "gap" | "tradeoff";
-
 /*
- * A decision: a question, and a few words on what it's about. While it's
- * open, nobody has answered it. Once it's closed, its answer says what was
- * decided, and `became` names what it was written as: a rule, a capability, a
- * gap, a tradeoff or any other doc, as `<type>:<id>`, or a gap's or
- * tradeoff's own ID. Combining resolves those as `resolved`.
+ * An open decision: a question nobody has answered yet, and a few words on
+ * what it's about. Answering one deletes it, so every decision is open.
  */
 export type Decision = {
   topic: string | null;
   question: string;
-  status: "open" | "closed";
-  answer: string | null;
-  became: string[];
-  resolved?: Became[];
-  /* While it's open, the gaps riding on it, as written: a key on its doc, or a gap's own ID. Combining resolves them as `riding`, those found. */
-  gaps: string[];
-  riding?: string[];
 };
 
 /* What a concept is easily mistaken for: another concept, as linked, or a word that isn't one, and how they differ. */
@@ -217,11 +203,16 @@ export type Persona = Doc & {
  * part before `#` is what it's on.
  */
 /*
- * What happens to whoever relies on it when a gap bites, or a tradeoff's
- * drawback does, worst first. The one part of risk written by hand.
+ * What a gap does to those it reaches when it bites, worst first: how severe it is, whoever it reaches.
  */
 export const IMPACTS = ["damaging", "blocking", "inconvenient", "negligible"] as const;
 export type Impact = (typeof IMPACTS)[number];
+/* How likely it is to bite within a year, most first. Left out, it's certain. */
+export const LIKELIHOODS = ["certain", "expected", "possible", "unlikely"] as const;
+export type Likelihood = (typeof LIKELIHOODS)[number];
+/* What share of the people the software serves it would reach if it bit, most first. Left out, it's all. */
+export const REACHES = ["all", "most", "some", "few"] as const;
+export type Reach = (typeof REACHES)[number];
 
 export type Gap = {
   id: string;
@@ -233,10 +224,11 @@ export type Gap = {
   outcome: string | null;
   /* The rule it doesn't hold to yet, as written; combining resolves it to `<id>@<domain>`. */
   rule: string | null;
-  /* What happens to whoever relies on it when it bites, or null where nobody has said. */
+  /* What it does to those it reaches when it bites, or null where nobody has said. */
   impact: Impact | null;
-  /* What makes it bite, when it isn't already happening: context for people, never part of risk. */
-  when: string | null;
+  /* How likely it is to bite, and how many it would reach, or null where left out: certain, and all. */
+  likelihood: Likelihood | null;
+  reach: Reach | null;
   /* What falls short, in a few words, and in a sentence or two. */
   name: string;
   description: string;
@@ -258,9 +250,6 @@ export type Tradeoff = {
   benefit: string | null;
   /* What we give up or risk in return. */
   drawback: string;
-  /* Its drawback's impact and when it bites, as a gap's. */
-  impact: Impact | null;
-  when: string | null;
   /* The code it explains, from `docket:tradeoff` annotations. */
   places: EvidencePlace[];
 };
@@ -363,10 +352,10 @@ export type StateFile = {
   /* `applies` is missing from state written before it, meaning "project". */
   mechanisms?: (Omit<Raw<TechnicalDoc>, "domain" | "kind" | "applies"> & { applies?: "project" | "platform" })[];
   components?: Omit<Raw<TechnicalDoc>, "domain" | "kind" | "applies">[];
-  /* `impact` and `when` are missing from state written before them. */
-  gaps: (Omit<Gap, "impact" | "when"> & Partial<Gap>)[];
+  /* `impact`, `likelihood` and `reach` are missing from state written before them. */
+  gaps: (Omit<Gap, "impact" | "likelihood" | "reach"> & Partial<Gap>)[];
   /* State written before a tradeoff had one benefit and one drawback has lists of each instead. */
-  tradeoffs?: (Omit<Tradeoff, "benefit" | "drawback" | "impact" | "when"> & Partial<Tradeoff> & { benefits?: string[]; drawbacks?: string[] })[];
+  tradeoffs?: (Omit<Tradeoff, "benefit" | "drawback"> & Partial<Tradeoff> & { benefits?: string[]; drawbacks?: string[] })[];
   problems: Problem[];
   /* Missing from state written before the checklist. */
   checklist?: Checklist;
@@ -414,8 +403,7 @@ const idOf = (ref: string) => ref.slice(ref.indexOf(":") + 1);
  * One project's state with its links as IDs. State.json writes every link as
  * a reference, `<type>:<id>`, as the docs do, and the page keys each doc by its
  * ID in its type's list, so it reads the links it resolves by ID alone. A
- * decision's `became` and a problem's `subject` name several types, so they
- * stay references.
+ * problem's `subject` names several types, so it stays a reference.
  */
 function linksById(file: StateFile): StateFile {
   const ids = (refs: string[] | undefined) => (refs ?? []).map(idOf);
@@ -495,9 +483,9 @@ export function combine(files: StateFile[]): DocketState {
   function contribute<T extends Doc>(list: T[], id: string, project: string, raw: Omit<Raw<Doc>, "domain"> & { domain: string }, make: (base: Doc) => T): T {
     const from: Contribution = { project, domain: raw.domain, file: raw.file, name: raw.name, description: raw.description, body: raw.body ?? "" };
     for (const key of FIELD_KEYS) if (key in raw) Object.assign(from, { [key]: raw[key] });
-    /* Decisions from state written before they could close are open. */
+    /* State written when decisions could close keeps answered ones, which aren't decisions any more. */
     if (from.decisions)
-      from.decisions = from.decisions.map((d) => ({ topic: d.topic ?? null, question: d.question, status: d.status ?? "open", answer: d.answer ?? null, became: d.became ?? [], gaps: d.gaps ?? [] }));
+      from.decisions = (from.decisions as (Decision & { status?: string })[]).filter((d) => d.status !== "closed").map((d) => ({ topic: d.topic ?? null, question: d.question }));
     if ("role" in raw || "title" in raw) {
       const who = raw as { role?: string | null; title?: string | null };
       from.role = who.role ?? null;
@@ -609,14 +597,12 @@ export function combine(files: StateFile[]): DocketState {
     }
     /* Each place in the code a gap or tradeoff names says which repository it's in, as evidence does. */
     const placed = (places: EvidencePlace[] | undefined) => (places ?? []).map((p) => ({ ...p, project }));
-    state.gaps.push(...file.gaps.map((g) => ({ ...g, impact: g.impact ?? null, when: g.when ?? null, project, id: `${g.id}@${project}`, places: placed(g.places) })));
+    state.gaps.push(...file.gaps.map((g) => ({ ...g, impact: g.impact ?? null, likelihood: g.likelihood ?? null, reach: g.reach ?? null, project, id: `${g.id}@${project}`, places: placed(g.places) })));
     state.tradeoffs.push(
       ...(file.tradeoffs ?? []).map(({ benefits, drawbacks, ...t }) => ({
         ...t,
         benefit: t.benefit ?? (benefits?.length ? benefits.join(" ") : null),
         drawback: t.drawback ?? (drawbacks ?? []).join(" "),
-        impact: t.impact ?? null,
-        when: t.when ?? null,
         project,
         id: `${t.id}@${project}`,
         places: placed(t.places),
@@ -670,43 +656,6 @@ export function combine(files: StateFile[]): DocketState {
     g.rule = rule?.id ?? null;
     if (rule) union(rule.gaps, [g.id]);
   }
-
-  /*
-   * What each closed decision became: a gap or tradeoff by its ID, preferring
-   * the decision's own project's; a rule or concept as a link to one is
-   * resolved from the decision's domain; anything else by its ID.
-   */
-  const lists: Record<string, { id: string }[]> = {
-    domain: state.domains, feature: state.features, capability: state.capabilities, persona: state.personas,
-    rule: state.rules, concept: state.concepts, mechanism: state.mechanisms, component: state.components,
-  };
-  const becameOf = (ref: string, f: Contribution): Became => {
-    if (ref.includes("#")) {
-      for (const [kind, items] of [["gap", state.gaps], ["tradeoff", state.tradeoffs]] as const) {
-        const hit = items.find((i) => i.id === `${ref}@${f.project}`) ?? items.find((i) => i.id.startsWith(`${ref}@`));
-        if (hit) return { ref, kind, id: hit.id };
-      }
-      return { ref, kind: "gap", id: null };
-    }
-    const kind = ref.slice(0, ref.indexOf(":")) as BecameKind;
-    const id = ref.slice(ref.indexOf(":") + 1);
-    const list = lists[kind] ?? [];
-    if (kind === "rule" || kind === "concept") return { ref, kind, id: find(list as Doc[], inDomain(id, f.domain))?.id ?? null };
-    return { ref, kind, id: find(list, id)?.id ?? null };
-  };
-  /* The gaps riding on each decision: a key means a gap on its own doc; a gap's own ID is found as `became` finds one. */
-  const ridingOf = (ref: string, kind: string, doc: Doc, f: Contribution) => {
-    const full = ref.includes("#") ? ref : `${kind}:${doc.id}#${ref}`;
-    return (state.gaps.find((g) => g.id === `${full}@${f.project}`) ?? state.gaps.find((g) => g.id.startsWith(`${full}@`)))?.id ?? [];
-  };
-  const holders = [["domain", state.domains], ["feature", state.features], ["capability", state.capabilities], ["mechanism", state.mechanisms], ["component", state.components]] as const;
-  for (const [kind, docs] of holders)
-    for (const doc of docs as Doc[])
-      for (const f of doc.from)
-        for (const d of f.decisions ?? []) {
-          d.resolved = d.became.map((ref) => becameOf(ref, f));
-          d.riding = d.gaps.flatMap((ref) => ridingOf(ref, kind, doc, f));
-        }
 
   /* Which feature each capability is in: the first listing, with a contradiction when projects list it in different ones. */
   for (const c of state.capabilities) {
@@ -1018,6 +967,9 @@ export const appliesAt = (outcome: ChecklistOutcome, level: CapabilityLevel) =>
   level !== null && levelIndex(outcome.level) <= levelIndex(level) && (!outcome.until || levelIndex(outcome.until) >= levelIndex(level));
 
 /* The level after this one: Prototype after a draft, or null after GA. */
+/* A capability's level in a domain: its own there, as it can differ by domain, or else its level in short. */
+export const levelInDomain = (c: Capability, domain: string): CapabilityLevel => c.levels.find((l) => l.domain === domain)?.level ?? c.stability;
+
 export const nextLevel = (level: CapabilityLevel): Level | null => LEVEL_ORDER[rank(level) + 1] ?? null;
 
 /* Every outcome of a quality, in level order. */
@@ -1033,30 +985,11 @@ export function checklistOutcome(checklist: Checklist | null, id: string): { out
 
 /* ——— What's left ——— */
 
-/* The open decisions a doc's contributions list, in order. */
-export const openDecisions = (doc: Doc): Decision[] => doc.from.flatMap((f) => (f.decisions ?? []).filter((d) => d.status !== "closed"));
-
-/* The closed decisions a doc's contributions list, in order. */
-export const closedDecisions = (doc: Doc): Decision[] => doc.from.flatMap((f) => (f.decisions ?? []).filter((d) => d.status === "closed"));
+/* The open decisions a doc's contributions list, in order: all of them, since answering one deletes it. */
+export const openDecisions = (doc: Doc): Decision[] => doc.from.flatMap((f) => f.decisions ?? []);
 
 /* A doc that holds decisions, with its kind, as a decision's way back to where it was made. */
 export type DecisionHolder = { kind: "domain" | "feature" | "capability" | "mechanism" | "component"; doc: Doc };
-
-/* The closed decisions that became this doc, gap or tradeoff, by its ID here, with where each was made. */
-export function decidedBy(state: DocketState, kind: BecameKind, id: string): { on: DecisionHolder; from: Contribution; decision: Decision }[] {
-  const holders: DecisionHolder[] = [
-    ...state.domains.map((doc) => ({ kind: "domain" as const, doc })),
-    ...state.features.map((doc) => ({ kind: "feature" as const, doc })),
-    ...state.capabilities.map((doc) => ({ kind: "capability" as const, doc })),
-    ...state.mechanisms.map((doc) => ({ kind: "mechanism" as const, doc })),
-    ...state.components.map((doc) => ({ kind: "component" as const, doc })),
-  ];
-  return holders.flatMap((on) =>
-    on.doc.from.flatMap((from) =>
-      (from.decisions ?? []).filter((d) => d.status === "closed" && d.resolved?.some((b) => b.kind === kind && b.id === id)).map((decision) => ({ on, from, decision })),
-    ),
-  );
-}
 
 /* The concept a link from a doc in `domain` means: the one in the domain it names with `@<domain>`, else its own domain's. */
 export const conceptLinked = (state: DocketState, link: string, domain: string): Concept | undefined => find(state.concepts, inDomain(link, domain));
@@ -1153,28 +1086,32 @@ export function showsOn(state: DocketState, item: { id: string }): Capability[] 
 }
 
 /*
- * What's at stake in leaving a gap or tradeoff open, as the spec's Risk
- * section works it out, on each capability it shows on: its impact's step,
- * times that capability's level's weight in risk, times 1.5 where it breaks
- * a promise that level makes, naming a rule the capability follows or an
- * outcome its level expects, put on 0 to 100 by a log scale, so each step of
- * impact or level, and breaking a promise, adds a steady amount: 0 is a
- * negligible gap on a Prototype, and 100 a damaging gap breaking a promise on
- * GA. A draft weighs nothing, and scores 0. Its risk is the highest of
- * those, or null with no impact
- * rated; its verdict, the third of the scale that falls in; its exposure, how
- * its scores spread across the capabilities, highest first. A tradeoff breaks
- * no promise: one that names an outcome falls short on purpose. `when` is
- * never part of it.
+ * What's at stake in leaving a gap open, as the spec's Risk
+ * section works it out, on each capability it shows on: what the gap could
+ * do, its impact's step times its likelihood times its reach, times how much
+ * people rely on what it's in, that capability's level's weight in risk,
+ * times 1.5 where it breaks a promise that level makes, naming a rule the
+ * capability follows or an outcome its level expects. That's put on 0 to 100
+ * by a log scale, so each step adds a steady amount: 0 is a certain
+ * negligible gap reaching all on a Prototype, and 100 a certain damaging gap
+ * reaching all and breaking a promise on GA. Less likely or reaching fewer,
+ * it scores lower, and never below 0. A draft weighs nothing, and scores 0.
+ * Its risk is the highest of those, or null with no impact rated; its
+ * verdict, the third of the scale that falls in; its exposure, how its
+ * scores spread across the capabilities, highest first. A tradeoff has none:
+ * it's chosen.
  */
 export const IMPACT_STEPS: Record<Impact, number> = { negligible: 1, inconvenient: 2, blocking: 3, damaging: 4 };
+/* Each step down takes off a quarter. */
+export const LIKELIHOOD_FACTORS: Record<Likelihood, number> = { certain: 1, expected: 0.75, possible: 0.5, unlikely: 0.25 };
+export const REACH_FACTORS: Record<Reach, number> = { all: 1, most: 0.75, some: 0.5, few: 0.25 };
 export const PROMISE_FACTOR = 1.5;
-/* How much each level weighs in risk: the higher, the more people rely on it. A draft weighs nothing. Risk's own, apart from maturity's. */
+/* How much people are entitled to rely on each level, and how exposed they are to its gaps. A draft weighs nothing. Risk's own, apart from maturity's. */
 export const RISK_WEIGHTS: Record<Level, number> = { prototype: 2, alpha: 3, beta: 4, ga: 6 };
-/* The lowest and highest raw scores there are, which are 0 and 100: a negligible gap on a Prototype, and a damaging gap breaking a promise on GA. */
+/* The raw scores that are 0 and 100: a certain negligible gap reaching all on a Prototype, and a certain damaging gap reaching all and breaking a promise on GA. */
 const RAW_MIN = IMPACT_STEPS.negligible * RISK_WEIGHTS.prototype;
 const RAW_MAX = IMPACT_STEPS.damaging * RISK_WEIGHTS.ga * PROMISE_FACTOR;
-const onScale = (raw: number) => (raw > 0 ? Math.round((Math.log(raw / RAW_MIN) / Math.log(RAW_MAX / RAW_MIN)) * 100) : 0);
+const onScale = (raw: number) => (raw > 0 ? Math.max(0, Math.round((Math.log(raw / RAW_MIN) / Math.log(RAW_MAX / RAW_MIN)) * 100)) : 0);
 
 /* Whether leaving it open is acceptable, by the third of the scale its risk falls in, worst first. */
 export const VERDICTS = ["unacceptable", "tolerable", "acceptable"] as const;
@@ -1184,9 +1121,21 @@ export const VERDICT_FROM: Record<Verdict, number> = { unacceptable: 67, tolerab
 export const verdictOf = (score: number | null): Verdict | null =>
   score === null ? null : score >= VERDICT_FROM.unacceptable ? "unacceptable" : score >= VERDICT_FROM.tolerable ? "tolerable" : "acceptable";
 
-export type RiskOn = { capability: Capability; weight: number; promise: boolean; score: number };
+/* How it scores on one capability: each part's factor, what they multiply to, and that on the scale. */
+export type RiskOn = {
+  capability: Capability;
+  impact: number;
+  likelihood: number;
+  reach: number;
+  weight: number;
+  promise: boolean;
+  raw: number;
+  score: number;
+};
 export type Risk = {
   impact: Impact | null;
+  likelihood: Likelihood;
+  reach: Reach;
   score: number | null;
   verdict: Verdict | null;
   /* Whether it breaks a promise on any capability it shows on. */
@@ -1198,20 +1147,22 @@ export type Risk = {
   exposure: { score: number; capabilities: number }[];
 };
 
-/* How a gap or tradeoff scores on one capability, as riskOf works it out. */
-function riskOn(state: DocketState, item: Gap | Tradeoff): (capability: Capability) => RiskOn {
-  const outcome = "rule" in item && item.outcome ? checklistOutcome(state.checklist, item.outcome)?.outcome : undefined;
-  const rule = "rule" in item ? item.rule : null;
-  const step = item.impact ? IMPACT_STEPS[item.impact] : 0;
+/* How a gap scores on one capability, as riskOf works it out. */
+function riskOn(state: DocketState, item: Gap): (capability: Capability) => RiskOn {
+  const outcome = item.outcome ? checklistOutcome(state.checklist, item.outcome)?.outcome : undefined;
+  const rule = item.rule;
+  const impact = item.impact ? IMPACT_STEPS[item.impact] : 0;
+  const likelihood = LIKELIHOOD_FACTORS[item.likelihood ?? "certain"];
+  const reach = REACH_FACTORS[item.reach ?? "all"];
   return (capability) => {
     const weight = capability.stability ? RISK_WEIGHTS[capability.stability] : 0;
     const promise = weight > 0 && ((!!rule && capability.rules.includes(rule)) || (!!outcome && appliesAt(outcome, capability.stability)));
-    const score = onScale(step * weight * (promise ? PROMISE_FACTOR : 1));
-    return { capability, weight, promise, score };
+    const raw = impact * likelihood * reach * weight * (promise ? PROMISE_FACTOR : 1);
+    return { capability, impact, likelihood, reach, weight, promise, raw, score: onScale(raw) };
   };
 }
 
-export function riskOf(state: DocketState, item: Gap | Tradeoff): Risk {
+export function riskOf(state: DocketState, item: Gap): Risk {
   const on = showsOn(state, item)
     .map(riskOn(state, item))
     .sort((a, b) => b.score - a.score || b.weight - a.weight);
@@ -1224,6 +1175,8 @@ export function riskOf(state: DocketState, item: Gap | Tradeoff): Risk {
   }
   return {
     impact: item.impact,
+    likelihood: item.likelihood ?? "certain",
+    reach: item.reach ?? "all",
     score: rated ? (on[0]?.score ?? 0) : null,
     verdict: verdictOf(rated ? (on[0]?.score ?? 0) : null),
     promise: on.some((o) => o.promise),
@@ -1241,8 +1194,8 @@ export function riskOf(state: DocketState, item: Gap | Tradeoff): Risk {
  * settled enough for real use, and no gap scores unacceptable on it, its own
  * or one on what it's built on. Only gaps count, not tradeoffs. One that's
  * started with something left still needs to reach Beta, where it's below,
- * and to close each of those gaps, and counts for nothing in readiness until
- * they're closed. A draft is not started, and never counts.
+ * and to close each of those gaps, and counts in readiness as the level below
+ * its own until they're closed. A draft is not started, and never counts.
  */
 /* With what it needs, its open decisions, which don't count toward readiness, but are left to settle there too. */
 export type NotReady = { capability: Capability; belowBeta: boolean; gaps: Gap[]; decisions: Decision[] };
@@ -1263,7 +1216,8 @@ export function needsOf(state: DocketState, capability: Capability): NotReady {
  * The readiness of some capabilities, as of a feature, domain, persona or
  * project: a recommendation, 0 to 100, for people to judge by. It's their
  * weighted maturity, each at its level in short, except that one with a gap
- * that's unacceptable on it counts for nothing until that's closed. With it,
+ * that's unacceptable on it scores as the level below its own, keeping its
+ * own weight, until that's closed: as if it hadn't been promoted yet. With it,
  * those with nothing left, those that still need something and what, and the
  * drafts, not started, which never count. Nothing started, it's null.
  */
@@ -1279,14 +1233,21 @@ export function readinessOf(state: DocketState, capabilities: Capability[]): Rea
       continue;
     }
     const needs = needsOf(state, c);
-    const { score, weight } = MATURITY_LEVELS[c.stability];
-    total += needs.gaps.length ? 0 : score * weight;
+    const { weight } = MATURITY_LEVELS[c.stability];
+    total += heldBackScore(c.stability, needs.gaps.length > 0) * weight;
     weights += weight;
     if (!needs.belowBeta && !needs.gaps.length) readiness.ready.push(c);
     else readiness.notReady.push(needs);
   }
   readiness.percent = weights ? Math.round(total / weights) : null;
   return readiness;
+}
+
+/* A started capability's score in readiness: its level's, or the level below's while a gap is unacceptable on it. Below Prototype is 0. */
+function heldBackScore(level: Level, heldBack: boolean): number {
+  if (!heldBack) return MATURITY_LEVELS[level].score;
+  const below = LEVEL_ORDER[rank(level) - 1];
+  return below ? MATURITY_LEVELS[below].score : 0;
 }
 
 /* How many it's worked out from: the started ones. */
@@ -1310,7 +1271,7 @@ export const isReady = (r: Readiness): boolean | null => (r.percent === null ? n
 export const readyShare = (r: Readiness) => (r.percent === null ? null : r.percent / 100);
 
 /*
- * What's at stake across some gaps or tradeoffs, as in a capability, feature,
+ * What's at stake across some gaps, as in a capability, feature,
  * domain, persona or component: each one's risk and verdict there, its
  * highest score on the capabilities `within` where given, or its risk
  * anywhere, riskiest first; the highest of those, and its verdict; and how many fall in each
@@ -1319,19 +1280,21 @@ export const readyShare = (r: Readiness) => (r.percent === null ? null : r.perce
 export type RiskAcross<T> = {
   score: number | null;
   verdict: Verdict | null;
-  items: { item: T; score: number | null; verdict: Verdict | null }[];
+  /* Each with where it scores highest among those capabilities, null with none. */
+  items: { item: T; risk: Risk; on: RiskOn | null; score: number | null; verdict: Verdict | null }[];
   /* How many fall in each verdict. */
   counts: Record<Verdict, number>;
   unrated: number;
 };
 
-export function riskAcross<T extends Gap | Tradeoff>(state: DocketState, items: T[], within?: Capability[]): RiskAcross<T> {
+export function riskAcross<T extends Gap>(state: DocketState, items: T[], within?: Capability[]): RiskAcross<T> {
   const ids = within ? new Set(within.map((c) => c.id)) : null;
   const scored = items
     .map((item) => {
       const risk = riskOf(state, item);
-      const score = risk.score === null || !ids ? risk.score : Math.max(0, ...risk.on.filter((o) => ids.has(o.capability.id)).map((o) => o.score));
-      return { item, score, verdict: verdictOf(score) };
+      const on = (ids ? risk.on.filter((o) => ids.has(o.capability.id)) : risk.on)[0] ?? null;
+      const score = risk.score === null || !ids ? risk.score : (on?.score ?? 0);
+      return { item, risk, on, score, verdict: verdictOf(score) };
     })
     .sort((a, b) => (b.score ?? -1) - (a.score ?? -1));
   const score = scored[0]?.score ?? null;
@@ -1360,8 +1323,8 @@ export function byRisk(a: Risk, b: Risk): number {
   return 0;
 }
 
-/* Items in order of their risk, riskiest first, keeping the given order among equals. `of` says which gap or tradeoff each is. */
-export function inRiskOrder<T>(state: DocketState, items: T[], of: (item: T) => Gap | Tradeoff): T[] {
+/* Items in order of their risk, riskiest first, keeping the given order among equals. `of` says which gap each is. */
+export function inRiskOrder<T>(state: DocketState, items: T[], of: (item: T) => Gap): T[] {
   const risks = new Map(items.map((i) => [i, riskOf(state, of(i))]));
   return [...items].sort((a, b) => byRisk(risks.get(a)!, risks.get(b)!));
 }

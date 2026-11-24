@@ -2,10 +2,9 @@ import type { ReactNode } from "react";
 import Box from "@mui/material/Box";
 import WarningAmberRoundedIcon from "@mui/icons-material/WarningAmberRounded";
 import { LeftMark } from "./design/left/LeftMark";
-import { VERDICT_NAMES, verdictCounts } from "./design/risk/RiskScore";
-import { StandingMark } from "./design/standing/StandingMark";
+import { RiskSpreadBar, VERDICT_NAMES, verdictCounts } from "./design/risk/RiskScore";
 import { Tip } from "./design/Tip";
-import { riskScore, type Gap, type RiskAcross, type RuleStanding } from "./state";
+import { riskScore, type Gap, type RiskAcross } from "./state";
 
 /*
  * A warning after a name, for something with a contradiction; what it is shows
@@ -32,14 +31,23 @@ export function DecisionsHint({ count }: { count: number }) {
 }
 
 /*
- * After a capability's name on the map, its risk: the highest score among
- * its gaps on it, after a small dot in its verdict's color, or a faint dot
- * alone where none of them is rated. Nothing with no gaps.
+ * After a capability's name on the map, its risk: with several gaps on it, a
+ * short bar split by how many fall in each verdict; with one, its score after
+ * a small dot in its verdict's color, or a faint dot alone where it isn't
+ * rated. Nothing with no gaps.
  */
 export function RiskDot({ risk }: { risk: RiskAcross<Gap> }) {
   const n = risk.items.length;
   if (!n) return null;
-  const label = risk.score === null ? `${n === 1 ? "1 gap" : `${n} gaps`}, none rated` : `Risk ${riskScore(risk.score)} · ${VERDICT_NAMES[risk.verdict!].name} · ${verdictCounts(risk)}`;
+  if (n > 1)
+    return (
+      <Tip title={`${n} gaps: ${verdictCounts(risk)}`}>
+        <span className="risk-pin" role="img" aria-label={`${n} gaps: ${verdictCounts(risk)}`}>
+          <RiskSpreadBar risk={risk} />
+        </span>
+      </Tip>
+    );
+  const label = risk.score === null ? "1 gap, not rated" : `Risk ${riskScore(risk.score)} · ${VERDICT_NAMES[risk.verdict!].name}`;
   return (
     <Tip title={label}>
       <span className="risk-pin" data-verdict={risk.verdict ?? "none"} role="img" aria-label={label}>
@@ -47,20 +55,6 @@ export function RiskDot({ risk }: { risk: RiskAcross<Gap> }) {
         {risk.score !== null ? riskScore(risk.score) : null}
       </span>
     </Tip>
-  );
-}
-
-/*
- * After a capability's name on the map, while it's colored by evidence: how
- * its rules hold together, as one standing mark, with the counts on hover.
- * Shown only in that lens, by map.css, so the cards don't rebuild.
- */
-export function EvidenceHint({ standing, label }: { standing: RuleStanding | null; label: string }) {
-  if (!standing) return null;
-  return (
-    <span className="lens-evidence">
-      <StandingMark standing={standing} label={label} />
-    </span>
   );
 }
 

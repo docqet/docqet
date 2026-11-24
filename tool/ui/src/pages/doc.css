@@ -31,19 +31,6 @@
   color: var(--faint);
 }
 
-.dp-came-from {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  margin-bottom: 16px;
-  font-size: 13px;
-  color: var(--muted);
-}
-
-.dp-came-from:empty {
-  display: none;
-}
-
 .dp-note {
   max-width: 760px;
   margin: 0 0 16px;
@@ -567,43 +554,135 @@
   color: var(--muted);
 }
 
-.dp-chips {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px;
+/* A gap's risk profile: its own section, between what it says and its links. */
+.dp-risk {
+  max-width: 820px;
+  margin-bottom: 24px;
 }
 
-.dp-chip {
-  display: inline-flex;
-  align-items: center;
-  height: 28px;
-  padding: 0 10px;
-  font-size: 12.5px;
-  font-weight: 600;
-  color: var(--muted);
-  background: color-mix(in srgb, var(--text) 4%, transparent);
+.dp-risk-title {
+  margin: 0 0 10px;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.dp-risk-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+  gap: 16px 28px;
+  padding: 18px 20px;
+  background: var(--popover);
   border: 1px solid var(--border);
-  border-radius: 999px;
-  cursor: help;
+  border-radius: 10px;
 }
 
-.dp-chips > .impact-badge {
-  height: 28px;
-  padding: 0 10px;
-  font-size: 12.5px;
-  font-weight: 600;
+/* Its risk, large, in its verdict's color, and what the verdict means. */
+.dp-risk-head {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
-.dp-chip.risk-score {
-  gap: 7px;
-  color: var(--risk);
+.dp-risk-score.risk-score {
+  gap: 8px;
+  font-size: 28px;
+  font-weight: 750;
+  line-height: 1.1;
 }
 
-.dp-chip[data-tone="warn"] {
+.dp-risk-score .risk-track {
+  font-size: 18px;
+}
+
+.dp-risk-verdict {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.dp-risk-means {
+  font-size: 13.5px;
+  color: var(--muted);
+}
+
+.dp-risk-workings {
+  grid-row: span 2;
+  min-width: 0;
+}
+
+.dp-risk-promise {
+  margin: 0;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+.dp-risk-promise[data-breaks] {
   color: var(--warning);
-  border-color: color-mix(in srgb, var(--warning) 35%, transparent);
-  background: color-mix(in srgb, var(--warning) 8%, transparent);
+}
+
+/* Its score on each capability it's on, highest first. */
+.dp-risk-on {
+  margin-top: 16px;
+}
+
+.dp-risk-on h3 {
+  margin: 0 0 6px;
+  font-size: 11px;
+  font-weight: 650;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
+.dp-risk-on ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--popover);
+}
+
+.dp-risk-on li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto 3em;
+  align-items: center;
+  gap: 12px;
+  padding: 7px 14px;
+  font-size: 13.5px;
+}
+
+.dp-risk-on li + li {
+  border-top: 1px solid var(--border);
+}
+
+.dp-risk-on a {
+  color: var(--text);
+  text-decoration: none;
+}
+
+.dp-risk-on a:hover {
+  color: var(--accent);
+}
+
+.dp-risk-breaks {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--warning);
+}
+
+.dp-risk-on li > :nth-child(2):not(.dp-risk-breaks) {
+  grid-column: 3;
+}
+
+@media (max-width: 720px) {
+  .dp-risk-card {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .dp-risk-workings {
+    grid-row: auto;
+  }
 }
 
 /* The links it has, a label column and what each is. */
@@ -696,41 +775,3 @@
   cursor: pointer;
 }
 
-/* What a technical gap shows on: a line per stability level, the names wrapping. */
-.dp-shows-on {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.dp-shows-on-level {
-  display: grid;
-  grid-template-columns: 130px minmax(0, 1fr);
-  gap: 12px;
-  align-items: baseline;
-}
-
-.dp-shows-on-head {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 12.5px;
-  font-weight: 600;
-  color: var(--muted);
-  white-space: nowrap;
-}
-
-.dp-shows-on-names {
-  line-height: 1.7;
-}
-
-.dp-links dd .dp-shows-on-names a {
-  font-weight: 500;
-}
-
-@media (max-width: 720px) {
-  .dp-shows-on-level {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 2px;
-  }
-}

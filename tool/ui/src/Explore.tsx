@@ -15,11 +15,13 @@ import type { MaturitySubject } from "./design/maturity/MaturityDetails";
 import { STABILITY, levelColor } from "./design/stability/stability";
 import { CapabilityStability } from "./design/catalog/CapabilityLabel";
 import { GapFilter, GapKindTag, LeftCounts, LeftItem, LeftLabel, LeftList, gapKind, type GapShow, type LeftKind } from "./design/left/LeftMark";
-import { ImpactBadge, RiskSection } from "./design/risk/ImpactBadge";
-import { RiskScore, VERDICT_NAMES } from "./design/risk/RiskScore";
+import { RiskSection } from "./design/risk/ImpactBadge";
+import { GapRiskMark, RiskScore, VERDICT_NAMES } from "./design/risk/RiskScore";
+import { RiskWorkings } from "./design/risk/RiskWorkings";
+import { StabilitySpread } from "./design/stability/StabilitySpread";
 import { Term } from "./design/term/Term";
 import { InlineMarkdown, MoreAboutFold } from "./design/markdown/Markdown";
-import { CameFrom, DecisionList, Facets, facets } from "./Fields";
+import { DecisionList, Facets, facets } from "./Fields";
 import { DomainIcon } from "./FeatureMap";
 import { PersonaAvatar, PersonaIcon, personaNameAndRole } from "./Personas";
 import { ReadinessMark } from "./Readiness";
@@ -64,7 +66,6 @@ import {
   type Gap,
   type Risk,
   type TechnicalGap,
-  type Tradeoff,
   type Left,
   type Persona,
   type Pick,
@@ -263,19 +264,42 @@ function FoldChevron() {
   return <ExpandMoreRoundedIcon className="explore-fold-chevron" sx={{ fontSize: 18 }} />;
 }
 
-/* Maturity in short, beside a name: its ring, with the percentage, and its band; or why there's none. */
-export function Maturity({ value, of, subject = "feature", count }: { value: number | null; of: string; subject?: MaturitySubject; count?: number }) {
+/*
+ * Maturity in short, beside a name: its ring, with the percentage, and its
+ * band; or why there's none. With `levels`, its stability spread after it,
+ * what it's worked out from, `spreadOf` naming what they're in.
+ */
+export function Maturity({
+  value,
+  of,
+  subject = "feature",
+  count,
+  levels,
+  spreadOf,
+}: {
+  value: number | null;
+  of: string;
+  subject?: MaturitySubject;
+  count?: number;
+  levels?: CapabilityLevel[];
+  spreadOf?: string;
+}) {
+  const spread = levels?.length ? <StabilitySpread levels={levels} of={spreadOf ?? "these"} /> : null;
   if (value === null)
     return (
-      <Tip title={`No maturity yet: ${of}`}>
-        <span className="explore-level faint">No maturity yet</span>
-      </Tip>
+      <span className="explore-level">
+        <Tip title={`No maturity yet: ${of}`}>
+          <span className="faint">No maturity yet</span>
+        </Tip>
+        {spread}
+      </span>
     );
   const band = maturityBand(value);
   return (
     <Box component="span" className="explore-level" sx={levelColor(band)}>
       <MaturityRing progress={value} subject={subject} count={count} size={22} />
       <strong>{MATURITY_BANDS[band]}</strong>
+      {spread}
     </Box>
   );
 }
@@ -445,7 +469,6 @@ export function GapItem({
           <div className="left-item-text">
             <InlineMarkdown text={gap.name} />
           </div>
-          <CameFrom kind="gap" id={gap.id} go={{ state, onConcept: () => {} }} inline />
           {named || rule || on ? (
             <div className="gap-affects">
               <span className="gap-affects-label">Affects</span>
@@ -472,14 +495,6 @@ export function GapItem({
               ) : null}
             </div>
           ) : null}
-          {gap.when ? (
-            <div className="gap-affects">
-              <span className="gap-affects-label">When</span>
-              <span className="gap-affect">
-                <InlineMarkdown text={gap.when} />
-              </span>
-            </div>
-          ) : null}
           <Places state={state} places={gap.places} label="Marked" detailed />
       </LeftItem>
     );
@@ -501,11 +516,6 @@ export function GapItem({
           </span>
         ) : null}
         {rule ? <span>Doesn't yet hold to: {rule.name}</span> : null}
-        {gap.when ? (
-          <span>
-            When: <InlineMarkdown text={gap.when} />
-          </span>
-        ) : null}
         <Places state={state} places={gap.places} label="Marked" />
       </span>
     </LeftItem>
@@ -516,16 +526,19 @@ export function GapItem({
 export const exposureText = (risk: Risk) => risk.exposure.map((e) => `${riskScore(e.score)} on ${e.capabilities}`).join(" · ");
 
 /*
- * A gap's or tradeoff's risk, for a risk popover: its score and verdict, then
- * each capability it shows on, highest score first, with its level, whether
- * it breaks that level's promise, and its score there.
+ * A gap's risk, for a risk popover: its score and verdict, how
+ * it's worked out where it scores highest, each part and what it
+ * contributes, then each capability it shows on, highest score first, with
+ * its level, whether it breaks that level's promise, and its score there.
  */
 export function RiskExposure({ risk }: { risk: Risk }) {
   const n = risk.on.length;
   const rated = risk.score !== null;
   return (
     <RiskSection label={rated ? `Risk ${riskScore(risk.score!)} · ${VERDICT_NAMES[risk.verdict!].name}` : n === 1 ? "On 1 capability" : `On ${n} capabilities`}>
-      {n ? (
+      {n ? <RiskWorkings risk={risk} on={risk.on[0]} /> : null}
+      {n > 1 ? <div className="risk-workings-group risk-on-head">On each capability</div> : null}
+      {n > 1 || !rated ? (
         <ul className="risk-on">
           {risk.on.map(({ capability: c, promise, score }) => (
             <li key={c.id}>
@@ -544,67 +557,26 @@ export function RiskExposure({ risk }: { risk: Risk }) {
             </li>
           ))}
         </ul>
-      ) : (
+      ) : n ? null : (
         "None showing."
       )}
-      {rated ? null : <div className="risk-note">With no impact rated, it has no risk.</div>}
     </RiskSection>
   );
 }
 
-/* What's at stake in a gap: its impact as a meter, whose popover says whether it breaks a promise, what relies on it, and when it bites. */
+/* What's at stake in a gap: its risk, its bars and score, opening how it's worked out, so no part of its risk shows alone. */
 function GapRisk({ state, gap }: { state: DocketState; gap: Gap }) {
   const risk = riskOf(state, gap);
-  const rule = gap.rule ? find(state.rules, gap.rule) : undefined;
-  const named = gap.outcome ? checklistOutcome(state.checklist, gap.outcome) : undefined;
-  const outcome = named ? `${named.quality.name} at ${STABILITY[named.outcome.level].name}: “${named.outcome.text}”` : "";
-  return (
-    <ImpactBadge impact={gap.impact} eyebrow={`What's at stake in this ${gapKind(gap) === "technical-gap" ? "technical" : "product"} gap`}>
-      <RiskSection label="Breaks a promise">
-        {rule && risk.promise
-          ? `Yes. A capability it's on follows “${rule.name}”, and it doesn't hold to it yet.`
-          : rule
-            ? `No. It doesn't hold to “${rule.name}”, but no capability it's on with a level follows it.`
-            : named && risk.promise
-              ? `Yes. A level it's on expects ${outcome}`
-              : named
-                ? `Not yet. It falls short of ${outcome}, which no level it's on expects yet.`
-                : "No. It names no rule or checklist outcome."}
-      </RiskSection>
-      <RiskExposure risk={risk} />
-      {gap.when ? (
-        <RiskSection label="When it bites">
-          <InlineMarkdown text={gap.when} />
-        </RiskSection>
-      ) : null}
-    </ImpactBadge>
-  );
-}
-
-/* What a tradeoff accepts: its drawback's impact as a meter, whose popover says what relies on it and when it bites. It breaks no promise: it's chosen. */
-function TradeoffRisk({ state, tradeoff }: { state: DocketState; tradeoff: Tradeoff }) {
-  return (
-    <ImpactBadge impact={tradeoff.impact} eyebrow="What this tradeoff accepts">
-      <RiskSection label="Drawback">
-        <InlineMarkdown text={tradeoff.drawback} />
-      </RiskSection>
-      <RiskExposure risk={riskOf(state, tradeoff)} />
-      {tradeoff.when ? (
-        <RiskSection label="When it bites">
-          <InlineMarkdown text={tradeoff.when} />
-        </RiskSection>
-      ) : null}
-    </ImpactBadge>
-  );
+  return <GapRiskMark risk={risk} on={risk.on[0] ?? null} />;
 }
 
 /*
  * One side of a tradeoff: its benefit, marked +, or its drawback, marked −,
- * with when the drawback bites. Both are what came with the choice. A benefit
+ * Both are what came with the choice. A benefit
  * not written down says so, since there's nothing to weigh the drawback
  * against.
  */
-function TradeoffSide({ side, text, when = null }: { side: "benefits" | "drawbacks"; text: string | null; when?: string | null }) {
+function TradeoffSide({ side, text }: { side: "benefits" | "drawbacks"; text: string | null }) {
   const Icon = side === "benefits" ? AddRoundedIcon : RemoveRoundedIcon;
   return (
     <div className={`tradeoff-side tradeoff-${side}`}>
@@ -623,11 +595,6 @@ function TradeoffSide({ side, text, when = null }: { side: "benefits" | "drawbac
       ) : (
         <span className="tradeoff-none">Not written down</span>
       )}
-      {when ? (
-        <div className="tradeoff-when">
-          When: <InlineMarkdown text={when} />
-        </div>
-      ) : null}
     </div>
   );
 }
@@ -670,7 +637,7 @@ export function Tradeoffs({
   /* Without its own heading, as in a block that has one. */
   bare?: boolean;
 }) {
-  const list = inRiskOrder(state, tradeoffsById(state, ids), (t) => t);
+  const list = tradeoffsById(state, ids);
   if (!list.length) return null;
   const items = detailed ? (
     <LeftList detailed>
@@ -679,14 +646,12 @@ export function Tradeoffs({
           <div className="tradeoff-choice left-item-text">
             <span className="tradeoff-label">
               We chose
-              <TradeoffRisk state={state} tradeoff={t} />
             </span>
             <InlineMarkdown text={t.name} />
           </div>
-          <CameFrom kind="tradeoff" id={t.id} go={{ state, onConcept: () => {} }} inline />
           <div className="tradeoff-sides">
             <TradeoffSide side="benefits" text={t.benefit} />
-            <TradeoffSide side="drawbacks" text={t.drawback} when={t.when} />
+            <TradeoffSide side="drawbacks" text={t.drawback} />
           </div>
           <FallsShortOf state={state} outcome={t.outcome} />
           <Places state={state} places={t.places} label="Marked" detailed />
@@ -697,9 +662,6 @@ export function Tradeoffs({
     <LeftList>
       {list.map((t) => (
         <LeftItem key={t.id} kind="tradeoff">
-          <div className="gap-head">
-            <TradeoffRisk state={state} tradeoff={t} />
-          </div>
           <div className="left-item-text">
             <InlineMarkdown text={t.name} />
           </div>
@@ -812,7 +774,7 @@ function Decisions({ state, doc, onConcept, onShow, onPick }: { state: DocketSta
         <LeftLabel kind="decision" size={14} />
       </span>
       {doc.from.map((f, i) => {
-        const open = (f.decisions ?? []).filter((d) => d.status !== "closed");
+        const open = f.decisions ?? [];
         return open.length ? <DecisionList key={i} from={f} decisions={open} go={{ state, onConcept, onShow, onPick }} /> : null;
       })}
     </div>

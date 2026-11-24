@@ -11,17 +11,16 @@ import { PersonaAvatar, PersonaIcon, personaNameAndRole, personaReadiness } from
 import { ReadinessMark } from "./Readiness";
 import { docHref, type DocKind } from "./routes";
 import { InlineMarkdown } from "./design/markdown/Markdown";
-import { ImpactBadge } from "./design/risk/ImpactBadge";
-import { RiskScore } from "./design/risk/RiskScore";
+import { GapRiskMark, RiskScore } from "./design/risk/RiskScore";
 import { StabilityMark } from "./design/stability/StabilityMark";
 import { Term } from "./design/term/Term";
 import {
   domainCapabilities,
+  levelInDomain,
   domainName,
   find,
   gapsById,
   riskAcross,
-  riskScore,
   leftCount,
   leftIn,
   openDecisions,
@@ -89,7 +88,7 @@ function summarize(state: DocketState, at: Pick): Summary | null {
     const { left, gaps } = across(state, capabilities);
     return {
       name: f.name,
-      mark: <Maturity value={f.maturity} of="none of its capabilities has a level" />,
+      mark: <Maturity value={f.maturity} of="none of its capabilities has a level" levels={capabilities.map((c) => c.stability)} spreadOf={f.name} />,
       figures: [
         { label: "Capabilities", value: capabilities.length, tab: "capabilities" },
         { label: "What's left", value: openDecisions(f).length + left, tab: "left" },
@@ -106,7 +105,15 @@ function summarize(state: DocketState, at: Pick): Summary | null {
     const { left, gaps } = across(state, capabilities);
     return {
       name: d.name,
-      mark: <Maturity value={d.maturity} subject="domain" of="none of its features has a level" />,
+      mark: (
+        <Maturity
+          value={d.maturity}
+          subject="domain"
+          of="none of its features has a level"
+          levels={capabilities.map((c) => levelInDomain(c, d.id))}
+          spreadOf={d.name}
+        />
+      ),
       figures: [
         { label: "Features", value: d.features.length, tab: "features" },
         { label: "Capabilities", value: capabilities.length, tab: "features" },
@@ -237,18 +244,13 @@ export default function Peek({
             <RiskScore risk={risk} of={s.name} />
           </h3>
           <ul>
-            {riskiest.map(({ item: g, score, verdict }) => (
+            {riskiest.map(({ item: g, risk: r, on }) => (
               <li key={g.id}>
                 <a href={docHref("gap", g.id)}>
-                  <ImpactBadge impact={g.impact} eyebrow="What's at stake" inButton />
+                  <GapRiskMark risk={r} on={on} inButton />
                   <span className="peek-gap-summary">
                     <InlineMarkdown text={g.name} />
                   </span>
-                  {score !== null ? (
-                    <span className="peek-gap-score" data-verdict={verdict ?? "none"}>
-                      {riskScore(score)}
-                    </span>
-                  ) : null}
                 </a>
               </li>
             ))}

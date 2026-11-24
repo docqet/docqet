@@ -199,18 +199,8 @@
   min-width: 0;
 }
 
-.ov-bar {
+.ov-bar-cell > .stability-spread-mark {
   flex: 1;
-  display: flex;
-  gap: 2px;
-  height: 8px;
-  overflow: hidden;
-  border-radius: 4px;
-}
-
-.ov-seg {
-  min-width: 4px;
-  background: var(--level);
 }
 
 /* A draft has no level, so no color: a faint hatch, there but not started. */

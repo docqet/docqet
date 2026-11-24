@@ -2,16 +2,16 @@ import Box from "@mui/material/Box";
 import type { Theme } from "@mui/material/styles";
 import { useMemo } from "react";
 import { Maturity, NAMES, TECHNICAL_NAMES, plural } from "../Explore";
-import { Tip } from "../design/Tip";
+import { StabilitySpread } from "../design/stability/StabilitySpread";
 import { GapsCell } from "./indexParts";
 import { LeftFigure } from "../GapRows";
 import { PersonaAvatar, personaReadiness } from "../Personas";
-import { ReadinessMark, StillNeeds, readinessLabel } from "../Readiness";
+import { ReadinessMark, ReadinessText, StillNeeds } from "../Readiness";
 import { InlineMarkdown } from "../design/markdown/Markdown";
 import { MaturityRing } from "../design/maturity/MaturityRing";
 import { RingGlyph } from "../design/maturity/RingGlyph";
 import { MATURITY_BANDS, maturityBand } from "../design/maturity/maturity";
-import { ImpactBadge } from "../design/risk/ImpactBadge";
+import { GapRiskMark } from "../design/risk/RiskScore";
 import { STABILITY, STABILITY_LEVEL_IDS, levelColor } from "../design/stability/stability";
 import { Term } from "../design/term/Term";
 import { docHref, sectionHref, type Route } from "../routes";
@@ -26,6 +26,7 @@ import {
   gapsById,
   inRiskOrder,
   riskAcross,
+  riskOf,
   maturityOf,
   openDecisions,
   subjectOf,
@@ -97,7 +98,7 @@ export default function OverviewPage({ state }: { state: DocketState; route: Rou
               term="readiness"
               href="#still-needs"
               tone={isReady(readiness) ? "ok" : undefined}
-              value={readinessLabel(readiness) ?? <span className="ov-faint">Nothing started</span>}
+              value={readiness.percent === null ? <span className="ov-faint">Nothing started</span> : <ReadinessText readiness={readiness} />}
               note={
                 startedOf(readiness)
                   ? `A recommendation, from ${plural(startedOf(readiness), "started capability", "started capabilities")}${readiness.notStarted.length ? `, ${readiness.notStarted.length} not started` : ""}`
@@ -114,7 +115,7 @@ export default function OverviewPage({ state }: { state: DocketState; route: Rou
                     <span className="ov-ellipsis">{leastReady.persona.name}</span>
                   </>
                 }
-                note={readinessLabel(leastReady.readiness)}
+                note={<ReadinessText readiness={leastReady.readiness} />}
               />
             ) : null}
             <Stat label="What's left" term="gap" href={sectionHref("left")} value={<LeftFigure gaps={state.gaps} decisions={decisions} risk={riskAcross(state, state.gaps)} of="everything" />} />
@@ -252,6 +253,7 @@ function MaturityMark({ state, maturity }: { state: DocketState; maturity: numbe
       <Box component="span" className="ov-band" sx={levelColor(band)}>
         {MATURITY_BANDS[band]}
       </Box>
+      <StabilitySpread levels={state.capabilities.filter((c) => c.feature).map((c) => c.stability)} of={several ? "every project showing" : "this project"} />
     </span>
   );
 }
@@ -292,7 +294,6 @@ function DomainStability({ state }: { state: DocketState }) {
     <>
       <ul className="ov-domains">
         {rows.map(({ domain, levels, gaps, decisions, risk }) => {
-          const counts = BAR_ORDER.map((level) => ({ level, n: levels.filter((l) => l === level).length })).filter((c) => c.n);
           return (
             <li key={domain.id}>
               <a className="ov-link ov-ellipsis" href={docHref("domain", domain.id)}>
@@ -300,17 +301,7 @@ function DomainStability({ state }: { state: DocketState }) {
               </a>
               <Maturity value={domain.maturity} subject="domain" count={domain.features.length} of="none of its capabilities has a level yet" />
               <span className="ov-bar-cell">
-                <span className="ov-bar" role="img" aria-label={counts.map((c) => `${c.n} ${levelLabel(c.level)}`).join(", ") || "No capabilities"}>
-                  {counts.map(({ level, n }) => (
-                    <Tip key={level ?? "draft"} title={`${n} ${levelLabel(level)}`}>
-                      {level ? (
-                        <Box component="span" className="ov-seg" sx={levelVar(level)} style={{ flex: n }} />
-                      ) : (
-                        <span className="ov-seg ov-seg-draft" style={{ flex: n }} />
-                      )}
-                    </Tip>
-                  ))}
-                </span>
+                {levels.length ? <StabilitySpread levels={levels} of={domain.name} wide /> : <span className="ov-faint">No capabilities</span>}
                 <span className="ov-count">{levels.length}</span>
               </span>
               <span className="ov-left">
@@ -356,12 +347,13 @@ function GapOn({ state, gap }: { state: DocketState; gap: Gap }) {
   return null;
 }
 
-/* One of the riskiest gaps: its impact, what it says, linking to its page, and what it's on. */
+/* One of the riskiest gaps: its risk, opening how it's worked out, what it says, linking to its page, and what it's on. */
 function GapRow({ state, gap }: { state: DocketState; gap: Gap }) {
+  const risk = riskOf(state, gap);
   return (
     <li>
       <span className="ov-gap-impact">
-        <ImpactBadge impact={gap.impact} eyebrow="Gap" />
+        <GapRiskMark risk={risk} on={risk.on[0] ?? null} />
       </span>
       <a className="ov-gap-summary" href={docHref("gap", gap.id)}>
         <InlineMarkdown text={gap.name} />

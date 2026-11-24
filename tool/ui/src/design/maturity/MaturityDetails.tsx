@@ -5,10 +5,20 @@ import { MATURITY_BANDS, clampMaturity, maturityBand } from "./maturity";
 import { RingGlyph } from "./RingGlyph";
 import { levelColor, type StabilityLevelId } from "../stability/stability";
 
-/* A feature's maturity comes from its capabilities, a domain's from its parts of features, and a project's from its features. */
-export type MaturitySubject = "feature" | "domain" | "project";
+/*
+ * A feature's maturity comes from its capabilities, a domain's from its parts
+ * of features, and a project's from its features. A persona's is of what
+ * serves them, from the capabilities that list them, as a feature's is.
+ */
+export type MaturitySubject = "feature" | "domain" | "project" | "persona";
 
-export const SUBJECT_NAMES: Record<MaturitySubject, string> = { feature: "Feature", domain: "Domain", project: "Project" };
+export const SUBJECT_NAMES: Record<MaturitySubject, string> = { feature: "Feature", domain: "Domain", project: "Project", persona: "Persona" };
+
+/* What the work is on, in a sentence: "this feature", or "what serves them". */
+export const subjectPhrase = (subject: MaturitySubject) => (subject === "persona" ? "what serves them" : `this ${subject}`);
+
+/* Whether it's worked out from capabilities, rather than from features. */
+export const fromCapabilities = (subject: MaturitySubject) => subject === "feature" || subject === "persona";
 
 export type MaturityDetailsProps = {
   /** 0 to 100; anything outside is clamped, and fractions rounded. */
@@ -42,8 +52,8 @@ const BAND_SUMMARIES: Record<StabilityLevelId, string> = {
 };
 
 function basis(subject: MaturitySubject, count: number) {
-  return subject === "feature"
-    ? `Based on its ${count} ${count === 1 ? "capability" : "capabilities"}`
+  return fromCapabilities(subject)
+    ? `Based on ${subject === "persona" ? "the" : "its"} ${count} ${count === 1 ? "capability" : "capabilities"}`
     : `The weighted average of its ${count} ${count === 1 ? "feature" : "features"}`;
 }
 
@@ -67,7 +77,7 @@ export function MaturityDetails({
   return (
     <DetailsCard card={card}>
       <DetailsEyebrow>
-        {SUBJECT_NAMES[subject]} maturity
+        {subject === "persona" ? "Maturity of what serves them" : `${SUBJECT_NAMES[subject]} maturity`}
       </DetailsEyebrow>
       <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mt: 1 }}>
         <RingGlyph progress={value} size={56} />
@@ -83,7 +93,7 @@ export function MaturityDetails({
       <Box sx={{ mt: 1.5 }}>{BAND_SUMMARIES[band]}</Box>
       {breakdown ? <Box sx={section}>{breakdown}</Box> : null}
       <Box sx={[section, { fontSize: "0.92em", color: "text.secondary" }]}>
-        Maturity is how far along the work on this {subject} is, for planning: how close the work under
+        Maturity is how far along the work on {subjectPhrase(subject)} is, for planning: how close the work under
         way is to being stable and supported. Whether people can use it is its readiness.
       </Box>
     </DetailsCard>
