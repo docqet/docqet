@@ -126,7 +126,7 @@
 
 /*
  * Each view shows only its own marks on the canvas: stability marks and
- * maturity, risk, or how rules hold. The peek shows them all, and a
+ * maturity, or risk. The peek shows them all, and a
  * persona's readiness always shows on their card.
  */
 .canvas:not([data-lens="stability"]) .lens-stability,
@@ -134,37 +134,12 @@
   display: none !important;
 }
 
-.canvas .lens-evidence {
-  display: none;
-}
-
-.canvas[data-lens="evidence"] .lens-evidence {
-  display: inline-flex;
-}
-
-.lens-evidence .sc-standing {
-  margin-top: 0;
-}
-
 /*
- * The lenses tint rows, and the cards of capabilities in no feature, from
- * what each carries: data-verdict, its risk's verdict, and
- * data-evidence, how its rules hold. Tinted under the card's own background,
+ * The risk lens tints rows, and the cards of capabilities in no feature, from
+ * what each carries: data-verdict, its risk's verdict. Tinted under the card's own background,
  * and at a lower specificity than hovering or what the peek has open, which
  * stay on top.
  */
-[data-evidence="evidence"] {
-  --evidence: var(--ok);
-}
-
-[data-evidence="trust"] {
-  --evidence: color-mix(in srgb, var(--ok) 50%, var(--faint));
-}
-
-[data-evidence="gap"] {
-  --evidence: var(--warning);
-}
-
 :where(.canvas[data-lens="risk"]) li[data-verdict],
 :where(.canvas[data-lens="risk"]) .slot[data-verdict] > .MuiCard-root {
   background-image: linear-gradient(color-mix(in srgb, var(--risk) 13%, transparent), color-mix(in srgb, var(--risk) 13%, transparent));
@@ -175,18 +150,6 @@
 :where(.canvas[data-lens="risk"]) li[data-verdict="acceptable"],
 :where(.canvas[data-lens="risk"]) .slot[data-verdict="none"] > .MuiCard-root,
 :where(.canvas[data-lens="risk"]) .slot[data-verdict="acceptable"] > .MuiCard-root {
-  background-image: none;
-}
-
-:where(.canvas[data-lens="evidence"]) li[data-evidence],
-:where(.canvas[data-lens="evidence"]) .slot[data-evidence] > .MuiCard-root {
-  background-image: linear-gradient(color-mix(in srgb, var(--evidence) 11%, transparent), color-mix(in srgb, var(--evidence) 11%, transparent));
-  box-shadow: inset 3px 0 var(--evidence);
-}
-
-/* On trust is the usual standing, not a warning: a bar, no wash. */
-:where(.canvas[data-lens="evidence"]) li[data-evidence="trust"],
-:where(.canvas[data-lens="evidence"]) .slot[data-evidence="trust"] > .MuiCard-root {
   background-image: none;
 }
 

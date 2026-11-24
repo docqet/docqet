@@ -22,7 +22,6 @@ import {
   type Target,
 } from "../state";
 import { VERDICT_NAMES } from "../design/risk/RiskScore";
-import { StandingMark } from "../design/standing/StandingMark";
 import { Tip } from "../design/Tip";
 import "./map.css";
 
@@ -32,11 +31,10 @@ import "./map.css";
  * everything about what's clicked. A persona's readiness is about the
  * persona, so it always shows on their card.
  */
-type Lens = "stability" | "risk" | "evidence";
+type Lens = "stability" | "risk";
 const LENSES: { id: Lens; label: string; tip: string }[] = [
   { id: "stability", label: "Stability", tip: "Each capability's stability level, and each feature's and domain's maturity" },
   { id: "risk", label: "Risk", tip: "How the gaps on each capability, feature and domain spread across risk" },
-  { id: "evidence", label: "Evidence", tip: "How the rules each capability, feature and domain follows hold, with evidence or on trust" },
 ];
 
 /*
@@ -225,21 +223,6 @@ function LensBar({ lens, onLens }: { lens: Lens; onLens: (lens: Lens) => void })
               {VERDICT_NAMES[v].name}
             </span>
           ))}
-        </span>
-      ) : lens === "evidence" ? (
-        <span className="lens-legend">
-          <span>
-            <StandingMark standing="evidence" label="Every rule held, with evidence" />
-            With evidence
-          </span>
-          <span>
-            <StandingMark standing="trust" label="Held, some or all on trust" />
-            On trust
-          </span>
-          <span>
-            <StandingMark standing="gap" label="A rule not held yet: a gap says so" />
-            Not held yet
-          </span>
         </span>
       ) : null}
     </div>

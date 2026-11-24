@@ -6,7 +6,6 @@ import { FeatureCard } from "./design/catalog/FeatureCard";
 import { MaturityRing } from "./design/maturity/MaturityRing";
 import { RingGlyph } from "./design/maturity/RingGlyph";
 import { ContradictionHint, RiskDot } from "./CapabilityHints";
-import { EvidenceSpread } from "./design/standing/EvidenceSpread";
 import { ConceptChips, ConceptIcon } from "./Concepts";
 import { PersonaCard } from "./Personas";
 import { ProjectIcon } from "./PlatformFilter";
@@ -25,14 +24,12 @@ import {
   personaCard,
   projectName,
   partOf,
-  ruleStanding,
   riskAcross,
   type Capability,
   type Doc,
   type DocketState,
   type Domain,
   type Pick,
-  type RuleStanding,
 } from "./state";
 import { Tip } from "./design/Tip";
 
@@ -49,9 +46,8 @@ const GAP = 28;
 /*
  * A capability's line on a card in a domain: its name, any contradiction, its
  * risk, the highest score among its gaps on it, and its level in that domain.
- * How its rules hold sits in it too, shown only while the map is colored by
- * evidence. `data` is what the map's lenses color its row or card by: its
- * risk's verdict and how its rules hold, as map.css reads them.
+ * `data` is what the map's risk lens colors its row or card by: its risk's
+ * verdict, as map.css reads it.
  * Clicking it opens it in the peek.
  */
 function line(state: DocketState, c: Capability, domain: string) {
@@ -59,7 +55,6 @@ function line(state: DocketState, c: Capability, domain: string) {
   const contradictions = contradictionsOf(state, "capability", c.id).map((p) => p.message);
   const gaps = gapsOn(state, c);
   const risk = riskAcross(state, gaps, [c]);
-  const standings = standingsOf(state, [c]);
   return {
     name: c.name,
     level: here,
@@ -69,35 +64,12 @@ function line(state: DocketState, c: Capability, domain: string) {
         <span className="lens-risk">
           <RiskDot risk={risk} />
         </span>
-        <span className="lens-evidence">
-          <EvidenceSpread standings={standings} of={c.name} inButton />
-        </span>
       </>
     ),
     data: {
       "data-verdict": gaps.length ? (risk.verdict ?? "none") : undefined,
-      "data-evidence": overallStanding(standings) ?? undefined,
     },
   };
-}
-
-/*
- * How the rules some capabilities follow hold: each rule's standing on each
- * capability that follows it, for their evidence spread.
- */
-function standingsOf(state: DocketState, capabilities: Capability[]): RuleStanding[] {
-  return capabilities.flatMap((c) =>
-    c.rules.flatMap((id) => {
-      const rule = find(state.rules, id);
-      return rule ? [ruleStanding(c, rule)] : [];
-    }),
-  );
-}
-
-/* How a capability's rules hold, all together, for tinting its row: not, where a gap says one doesn't; with evidence, where every one has some; or else on trust. Null with no rules. */
-function overallStanding(standings: RuleStanding[]): RuleStanding | null {
-  if (!standings.length) return null;
-  return standings.includes("gap") ? "gap" : standings.every((s) => s === "evidence") ? "evidence" : "trust";
 }
 
 /*
@@ -283,7 +255,7 @@ export function mapGroups(state: DocketState, onOpen: (pick: Pick) => void): Can
  * What the map shows about a feature's or domain's capabilities beyond
  * maturity, each only in its view: the risk across them, every gap on them,
  * their own and those of what they're built on, each scored on them, as a
- * spread or one gap's score; and their evidence spread.
+ * spread or one gap's score.
  */
 function AreaMarks({ state, capabilities, of }: { state: DocketState; capabilities: Capability[]; of: string }) {
   const gaps = [...new Set(capabilities.flatMap((c) => gapsOn(state, c)))];
@@ -294,9 +266,6 @@ function AreaMarks({ state, capabilities, of }: { state: DocketState; capabiliti
           <RiskScore risk={riskAcross(state, gaps, capabilities)} of={of} inButton />
         </span>
       ) : null}
-      <span className="lens-evidence">
-        <EvidenceSpread standings={standingsOf(state, capabilities)} of={of} inButton />
-      </span>
     </>
   );
 }
