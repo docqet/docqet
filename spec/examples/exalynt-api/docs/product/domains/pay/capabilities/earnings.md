@@ -47,50 +47,33 @@ concepts:
   - concept:agreement@agreements
   - concept:capacity-block@capacity
 gaps:
-  - id: no-money-sent-in-production
-    name: No money sent in production yet
-    impact: blocking
-    description: >-
-      No money is sent in production yet, and people are told so.
   - id: upcoming-shares-can-change
     name: Upcoming lead and support shares can change
     rule: rule:when-basis-and-percentages-are-fixed
     impact: inconvenient
+    likelihood: possible
+    reach: some
     description: >-
       Upcoming lead and support earnings follow today's team and
       availability, so they can change before the block is fulfilled. Who
       earns them is fixed when it's fulfilled, and the basis and percentages
       aren't fixed when the block is assigned.
-  - id: no-earnings-before-earnings-existed
-    name: Earlier blocks have no earnings
-    impact: inconvenient
-    description: >-
-      Blocks fulfilled before earnings existed have none.
-  - id: on-hold-reads-earned
-    name: Held earnings read as Earned
-    impact: negligible
-    description: >-
-      On hold isn't a status of its own: an earning held up by the payout
-      account reads Earned, and an alert says why.
   - id: expected-pay-not-on-the-block
     name: Expected pay not shown on the block
     impact: inconvenient
+    likelihood: possible
+    reach: some
     description: >-
       What an assigned block will pay shows only among a person's earnings,
       not on the block.
   - id: earnings-go-with-a-deleted-user
     name: Earnings lost when a user is deleted
     impact: damaging
+    likelihood: unlikely
+    reach: few
     description: >-
       Someone's earnings go if their user is deleted.
     when: Someone's user is deleted.
-  - id: load-failures-not-reported
-    name: Load failures not reported to Exalynt
-    outcome: observability/beta/hears-of-errors
-    impact: inconvenient
-    description: >-
-      A failure to load is shown to the person but isn't reported to Exalynt.
-    when: Earnings fail to load.
 ---
 
 ## Includes

@@ -5,15 +5,6 @@ description: >-
   What engineers, leads, and partnerships earn on fulfilled blocks, recorded
   as each is fulfilled.
 capabilities: [capability:earnings, capability:partner-earnings, capability:partner-clients, capability:partner-home]
-gaps:
-  - id: person-earnings-not-paged
-    name: A person's earnings not paged
-    outcome: efficiency/beta/bounded
-    impact: inconvenient
-    description: >-
-      A person's earnings aren't paged: they load whole, and what's upcoming
-      is worked out afresh on every read.
-    when: A person's earnings build up over many fulfilled blocks.
 ---
 
 An earning has exactly one payee, `user_id` or `partnership_id`, which

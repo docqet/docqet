@@ -38,7 +38,9 @@ concepts: [concept:partnership]
 gaps:
   - id: existing-clients-spotted-by-name-only
     name: Existing clients spotted by name only
-    impact: damaging
+    impact: inconvenient
+    likelihood: unlikely
+    reach: few
     description: >-
       A company that's already a client can only be spotted by having the
       same name, so one signing up under another name counts as new.
@@ -47,6 +49,7 @@ gaps:
     name: Email law not reviewed, and no opt-out
     outcome: security/beta/duties
     impact: damaging
+    likelihood: unlikely
     description: >-
       What the law asks of email a partner has Exalynt send to someone who
       never asked for it, such as a way to opt out, hasn't been reviewed, and
@@ -55,6 +58,8 @@ tradeoffs:
   - id: revoked-links-still-attribute
     name: Revoking leaves the emailed link working
     impact: inconvenient
+    likelihood: unlikely
+    reach: few
     description: >-
       Revoking an invitation doesn't stop its link: the email still has the
       link with the partnership's referral code.

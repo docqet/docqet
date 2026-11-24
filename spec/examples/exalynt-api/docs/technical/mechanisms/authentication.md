@@ -7,15 +7,6 @@ description: >-
   copied to our database, and organizations, memberships, and roles are the
   API's own.
 applies: platform
-gaps:
-  - id: rate-limit-per-instance
-    name: Rate limit counted per instance
-    impact: inconvenient
-    description: >-
-      Each running instance counts its own rate limit, so an organization's
-      real limit is `RATE_LIMIT_PER_MINUTE` times the instances running
-      (`internal/middleware/ratelimit.go`).
-    when: Several instances run and one organization sends heavy traffic.
 ---
 
 ```text

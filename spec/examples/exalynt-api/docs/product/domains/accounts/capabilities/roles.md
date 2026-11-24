@@ -46,22 +46,11 @@ rules:
   - rule:inviting-with-applications-needs-access
 concepts: [concept:role, concept:organization]
 gaps:
-  - id: holders-not-shown
-    name: Role holder counts not shown
-    impact: inconvenient
-    description: >-
-      How many people hold a role isn't shown, so whether one can be deleted
-      is only learned by trying.
-  - id: roles-given-elsewhere
-    name: Roles can't be given while managing them
-    impact: inconvenient
-    description: >-
-      Nobody is given a role while managing roles: invitations and the API
-      give platform roles, and an organization's own members give
-      organization roles.
   - id: one-scope-per-permission
     name: Only one scope per permission
     impact: inconvenient
+    likelihood: possible
+    reach: few
     description: >-
       A permission can be given only one scope when editing a role, though
       several are allowed. Saving a role's permissions keeps only the widest,
@@ -71,29 +60,13 @@ gaps:
   - id: deploys-restore-built-in-roles
     name: Deploys restore built-in roles
     impact: damaging
+    likelihood: unlikely
     description: >-
       Each deploy puts back permissions taken off Admin, Member, Billing, and
       Administrator, and renaming one makes a new role under the old name. A
       role says so going by name alone, so a role of the other kind with one
       of those names says it too.
     when: An admin takes a permission off a built-in role, or renames one.
-  - id: creator-role-guarded-only-by-the-app
-    name: Creator role guarded only by the app
-    rule: rule:creators-get-the-creator-role
-    impact: blocking
-    description: >-
-      Only the app stops the role given to creators being unmarked or
-      deleted: the API allows it, and the next deploy gives creators a role
-      again.
-    when: Someone unmarks or deletes the creators' role through the API.
-  - id: tested-only-through-the-api
-    name: Tested end to end only through the API
-    outcome: functionality/beta/stays-correct
-    impact: inconvenient
-    description: >-
-      The workflow is tested end to end only through the API: the apps have
-      no automated tests of their own for it.
-    when: A change breaks managing roles in the apps.
 ---
 
 ## Includes

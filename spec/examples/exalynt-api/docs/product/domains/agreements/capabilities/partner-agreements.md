@@ -23,31 +23,12 @@ rules:
   - rule:agreements-stay-private
 concepts: [concept:agreement, concept:partnership@partnerships]
 gaps:
-  - id: only-the-partner-hub-holds-to-the-agreement
-    name: Only the Partner Hub enforces the agreement
-    impact: damaging
-    description: >-
-      Only the Partner Hub holds a partnership to its agreement: someone using
-      the API directly can still do what managing it allows without one in
-      effect.
-  - id: no-new-terms
-    name: No way to send new terms
-    impact: blocking
-    description: >-
-      Nothing sends a partnership new terms after its invitation, so it has
-      one Partner Agreement at most for now.
-    when: A partnership's terms need to change.
-  - id: unnamed-partnership-in-the-document
-    name: Unnamed partnership stays unnamed in the document
-    impact: negligible
-    description: >-
-      A partnership accepted before it's named shows "your partnership" in the
-      document as accepted.
-    when: Naming a partnership fails before its agreement is accepted.
   - id: names-outside-western-european-alphabets
     name: Names outside Western alphabets lost in PDFs
     outcome: usability/beta/everyone
-    impact: damaging
+    impact: inconvenient
+    likelihood: unlikely
+    reach: few
     description: >-
       A name with characters outside Western European alphabets shows them as
       "?" in the PDF, and the PDF keeps them that way once accepted.

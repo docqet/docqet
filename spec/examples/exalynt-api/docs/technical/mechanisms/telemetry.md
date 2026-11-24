@@ -7,31 +7,6 @@ description: >-
   Grafana Alloy collector the exalynt/collector repo deploys, forwarding to
   Grafana Cloud. The README's Configuration section covers the settings.
 meets: [observability/alpha/see-errors]
-gaps:
-  - id: log-retention-not-set
-    name: Log retention left at Grafana's default
-    impact: damaging
-    description: >-
-      Request log lines carry `remote_addr` and `user_id`, and how long
-      Grafana Cloud keeps them is its default.
-  - id: no-alerts-or-dashboards
-    name: No alerts or dashboards in Grafana Cloud
-    outcome: observability/beta/hears-of-errors
-    impact: damaging
-    description: >-
-      Alerts and dashboards aren't set up in Grafana Cloud, though the
-      in-cluster Alloy collector now sends there. Each feature with a
-      `.changes` counter needs an alert on the share of its routes ending in a
-      5xx, over a few minutes, above about 1%, and a panel of those routes'
-      request rate and p95 latency with its `.changes` counter by `operation`
-      and `outcome`. Also needed: an alert on any `capacity.changes` with
-      `reason` = `charged_not_recorded`, since a client has paid for nothing,
-      one on `access_tokens.authentications` with `reason` `error` above a few
-      in a few minutes, and client home's production alert. The organization
-      routes' alert links the respond-to-organization-errors runbook.
-    when: >-
-      A client is charged for capacity that isn't recorded, or a feature's
-      routes start failing.
 ---
 
 Every request gets a SERVER span named for its route template, with a CLIENT

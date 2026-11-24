@@ -36,20 +36,11 @@ concepts:
   - concept:effective-availability
   - concept:team
 gaps:
-  - id: no-letting-go-once-started
-    name: Can't let go once the week starts
-    impact: inconvenient
-    description: >-
-      Once a block's week has started, an engineer can't let go of it. They
-      ask an admin, who takes them off it.
-    when: An engineer needs to let go of a block whose week has started.
-  - id: no-claim-notifications
-    name: No notice of claims or unclaims
-    impact: inconvenient
-    description: Nobody is told when a block is claimed or unclaimed.
   - id: taken-off-untold
     name: Engineers not told when taken off
     impact: inconvenient
+    likelihood: possible
+    reach: few
     description: >-
       An engineer isn't told when a client's move or unschedule takes them off
       a block, so a client can take an engineer off by moving a block away and
@@ -58,43 +49,20 @@ gaps:
   - id: stranded-block-client-untold
     name: Clients not told of stranded blocks
     impact: inconvenient
+    likelihood: unlikely
+    reach: few
     description: >-
       When a claim leaves another block with nobody who can take it, that
       block's client isn't told, and it surfaces as a missed week an admin
       rebooks.
     when: A claim leaves another block with nobody who can take it.
-  - id: blocks-read-once
-    name: Others' claims show only on reading again
-    impact: inconvenient
-    description: >-
-      An engineer's blocks and their clients' blocks are read once on opening,
-      so someone else's claim shows only on reading again, or when claiming
-      the block is refused.
-  - id: about-a-year-ahead
-    name: Blocks beyond about a year not shown
-    impact: inconvenient
-    description: >-
-      An engineer's weeks go about a year ahead, from the start of this month.
-      A block scheduled further out isn't shown.
-    when: A client schedules a block more than about a year ahead.
   - id: clicking-unclaims
     name: Clicking a block unclaims it
     impact: inconvenient
+    reach: some
     description: >-
       Before a block's week starts, clicking it on My Schedule unclaims it, so
       an engineer can't open its page from there until the week starts.
-  - id: no-teammates-weeks
-    name: Teammates' weeks not visible
-    impact: inconvenient
-    description: >-
-      An engineer can't see their teammates' weeks: who's on what, or how much
-      room each has. A block's own page says who's on it.
-  - id: unscheduled-blocks-unseen
-    name: Unscheduled blocks not visible
-    impact: inconvenient
-    description: >-
-      An engineer doesn't see a block a client hasn't scheduled yet, and can't
-      ask the client to schedule it from the product.
 decisions:
   - topic: Unclaiming window
     question: >-

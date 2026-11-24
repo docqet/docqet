@@ -14,19 +14,12 @@ capabilities:
   - capability:partner-agreements
   - capability:partner-home
   - capability:organizations-and-members
-gaps:
-  - id: listings-not-paged
-    name: Partnership listings not paged
-    outcome: efficiency/beta/bounded
-    impact: inconvenient
-    description: >-
-      The admin's list of partnerships and of attributed clients, and
-      someone's own partnerships, return everything.
-    when: Partnerships and the clients attributed to them grow in number.
 tradeoffs:
   - id: limits-counted-from-invitations
     name: Sending limits counted from invitation rows
-    impact: inconvenient
+    impact: negligible
+    likelihood: unlikely
+    reach: few
     description: >-
       Sending limits are counted from the invitations themselves, not a
       limiter or a log of sends: the day's new invitations are a count of

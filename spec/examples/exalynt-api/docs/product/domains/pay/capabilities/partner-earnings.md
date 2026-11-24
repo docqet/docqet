@@ -90,17 +90,12 @@ rules:
   - rule:clients-see-who-referred-them@partnerships
   - rule:introductions-dont-affect-engineer-assignment@partnerships
 concepts: [concept:partnership@partnerships, concept:payout-share, concept:capacity-payout-basis, concept:fulfilled@capacity]
-gaps:
-  - id: earning-doesnt-name-its-payout
-    name: Earning doesn't name its payout
-    impact: inconvenient
-    description: >-
-      An earning doesn't say which payout carried it; the payout lists its
-      blocks.
 tradeoffs:
   - id: nothing-before-partnership-earnings
     name: Earnings start from launch, not backdated
     impact: inconvenient
+    likelihood: unlikely
+    reach: few
     description: >-
       Partnerships earn only on blocks fulfilled since partnership earnings
       existed.
@@ -110,6 +105,8 @@ tradeoffs:
   - id: earlier-blocks-count-after-attribution
     name: Earlier blocks count only after attribution
     impact: inconvenient
+    likelihood: unlikely
+    reach: few
     description: >-
       Blocks a client bought before this was built count as bought for the
       partnership only if they were bought after the client was attributed to
@@ -117,20 +114,6 @@ tradeoffs:
     drawback: >-
       Blocks bought before the client was attributed earn the partnership
       nothing.
-  - id: client-price-and-coupons-not-shown
-    name: Client price and coupons not shown
-    impact: negligible
-    description: >-
-      What the client paid for a block, and any coupon on it, isn't shown, as
-      it never changes what the partnership earns.
-    drawback: Partners can't see what their clients paid.
-  - id: refunds-settled-outside-the-product
-    name: Refunds don't change partnership earnings
-    impact: inconvenient
-    description: >-
-      A refund after a block is fulfilled changes nothing the partnership
-      earned.
-    drawback: Exalynt settles it outside the product.
 ---
 
 ## Includes

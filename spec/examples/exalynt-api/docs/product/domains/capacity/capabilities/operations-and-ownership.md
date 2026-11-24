@@ -6,14 +6,6 @@ description: >-
   for them, and keep what they own.
 stability: prototype
 personas: [persona:client-admin-founder, persona:client-admin-operations]
-gaps:
-  - id: not-built
-    name: Operations and ownership not built
-    impact: inconvenient
-    description: >-
-      None of it is built: at MVP, no client's software is live under
-      Exalynt's operations. Who operates it is agreed on a call, and the
-      ownership commitments stay in the readme.
 decisions:
   - topic: Choosing who operates
     question: >-

@@ -3,20 +3,12 @@ id: estimates
 name: Estimates
 description: An estimate and everything in it is one document, replaced whole.
 capabilities: [capability:estimates]
-gaps:
-  - id: later-save-wins
-    name: Later of two saves silently wins
-    outcome: reliability/ga/holds-up
-    impact: damaging
-    description: >-
-      A PUT doesn't check what the caller last read, so the later of two saves
-      replaces the earlier one. An `If-Unmodified-Since` precondition with a
-      `412` could be added without breaking anyone.
-    when: Two people edit the same estimate at once.
 tradeoffs:
   - id: prices-copied-onto-estimate
     name: Prices copied onto the estimate when made
-    impact: inconvenient
+    impact: negligible
+    likelihood: unlikely
+    reach: few
     description: >-
       Prices are copied onto the estimate when it's made, so a client's
       estimate doesn't change when prices do. Every response returns the copy
@@ -27,7 +19,9 @@ tradeoffs:
     when: A capacity type is added.
   - id: unindexed-search
     name: Unindexed ILIKE search over estimates
-    impact: inconvenient
+    impact: negligible
+    likelihood: unlikely
+    reach: few
     description: >-
       Search is `ILIKE '%word%'` over four columns, with no index: at 2,000
       estimates that's a few milliseconds, measured against the local stack on

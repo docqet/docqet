@@ -26,16 +26,11 @@ rules:
   - rule:agreements-stay-private
 concepts: [concept:agreement, concept:organization@accounts]
 gaps:
-  - id: only-the-portal-holds-to-the-agreement
-    name: Only the portal enforces the agreement
-    impact: damaging
-    description: >-
-      Only the portal holds an organization to its Client Agreement: someone
-      using the API directly can still do what their role allows without one
-      in effect.
   - id: new-versions-not-offered
     name: New versions not offered to organizations
-    impact: blocking
+    impact: inconvenient
+    likelihood: possible
+    reach: some
     description: >-
       A new version of the Client Agreement isn't offered to an organization
       that accepted an earlier one, and nothing sends a client new terms (it
@@ -44,13 +39,16 @@ gaps:
   - id: names-outside-western-european-alphabets
     name: Names outside Western alphabets lost in PDFs
     outcome: usability/beta/everyone
-    impact: damaging
+    impact: inconvenient
+    likelihood: unlikely
+    reach: few
     description: >-
       A name with characters outside Western European alphabets shows them as
       "?" in the PDF, and the PDF keeps them that way once accepted.
   - id: shared-definitions-changed-in-place
     name: Version 1 changed in place after acceptance
     impact: damaging
+    likelihood: unlikely
     description: >-
       The definition of Fulfilled, and version 1 of the Client Agreement, were
       changed in place to say the engineer marks a block fulfilled and nobody
@@ -62,6 +60,8 @@ tradeoffs:
   - id: every-member-sees-agreements
     name: Agreements visible to every member
     impact: negligible
+    likelihood: possible
+    reach: some
     description: >-
       Every member of an organization sees its agreements, whatever their
       role.

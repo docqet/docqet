@@ -19,33 +19,12 @@ rules:
   - rule:retrying-a-purchase-never-charges-twice
 concepts: [concept:capacity-block, concept:capacity-unit, concept:invoice@billing]
 gaps:
-  - id: no-failed-payment-email
-    name: No email about failed payments
-    impact: inconvenient
-    description: >-
-      A block whose payment fails shows that it failed until its invoice is
-      paid, on the payment provider's page for it. Nobody is emailed about a
-      failed payment.
-    when: A block's payment fails.
-  - id: retry-protection-expires
-    name: Double-charge protection expires
-    rule: rule:retrying-a-purchase-never-charges-twice
-    impact: damaging
-    description: >-
-      A retried purchase is protected from charging twice only for as long as
-      the payment provider keeps the attempt, at least 24 hours.
-    when: A purchase is retried after the provider has let the attempt go.
-  - id: retry-repeats-provider-error
-    name: Retries repeat a provider error
-    impact: inconvenient
-    description: >-
-      The payment provider repeats a failed attempt's result, so a retry after
-      a provider error can fail the same way. It still can't charge twice.
-    when: The payment provider errors on a purchase.
   - id: unknown-outcome-retry-while-open
     name: Unclear purchase retry safe only while open
     rule: rule:retrying-a-purchase-never-charges-twice
-    impact: damaging
+    impact: inconvenient
+    likelihood: unlikely
+    reach: few
     description: >-
       If it can't be told whether a purchase went through, the client is told
       so, and trying again can't charge twice, but only while that attempt is
@@ -53,20 +32,12 @@ gaps:
     when: >-
       A purchase's outcome is unknown and the client closes or reloads before
       trying again.
-  - id: real-payments-untried
-    name: Real declines and bank debits untried
-    outcome: functionality/beta/unusual-input
-    impact: damaging
-    description: >-
-      A decline replayed by the real payment provider, and a real bank debit
-      from start to finish, haven't been tried.
-    when: >-
-      The real provider replays a decline, or a client pays by bank debit, and
-      it's handled differently than tested.
   - id: touch-and-screen-readers-untried
     name: Touch screens and screen readers untried
     outcome: usability/beta/everyone
-    impact: blocking
+    impact: inconvenient
+    likelihood: possible
+    reach: few
     description: Real touch screens and screen readers haven't been tried.
     when: Someone buys blocks on a touch screen or with a screen reader.
 decisions:

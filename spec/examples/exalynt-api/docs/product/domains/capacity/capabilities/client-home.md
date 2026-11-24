@@ -10,42 +10,12 @@ rules:
   - rule:exalynt-can-move-lapsed-blocks
   - rule:the-preferred-week-is-a-target
 concepts: [concept:capacity-block]
-gaps:
-  - id: engineer-not-always-named
-    name: Block's engineer not always named
-    impact: negligible
-    description: >-
-      A block's engineer is named only when they're on one of the client's
-      teams and the team has loaded. Otherwise it says an engineer at Exalynt.
-  - id: no-retry-on-failed-section
-    name: No retry on a failed section
-    outcome: usability/beta/recover
-    impact: inconvenient
-    description: A failed section says to reload. There's no retry on it.
-    when: A section of the page fails to load.
-  - id: changes-show-on-reopening
-    name: Changes show only on reopening
-    impact: inconvenient
-    description: Changes show only when the page opens again.
-  - id: custom-roles-and-session-end-unverified
-    name: Custom roles and session end unverified
-    impact: inconvenient
-    description: >-
-      Custom roles, and a session ending while the page is open, haven't been
-      verified.
-    when: >-
-      Someone with a custom role opens the page, or their session ends while
-      it's open.
-  - id: screen-readers-unverified
-    name: Screen readers not verified
-    outcome: usability/beta/everyone
-    impact: negligible
-    description: Real screen readers haven't been verified.
-    when: Someone uses the page with a screen reader.
 tradeoffs:
   - id: status-not-work
     name: Block status, not the work done
     impact: inconvenient
+    likelihood: possible
+    reach: some
     description: >-
       A block shows who's on it and where it stands, not what was done on it.
     drawback: >-

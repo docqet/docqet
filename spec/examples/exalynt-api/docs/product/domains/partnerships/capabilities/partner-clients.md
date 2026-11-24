@@ -38,20 +38,18 @@ concepts: [concept:partnership]
 gaps:
   - id: moving-restarts-since
     name: Moving a client loses its history
-    impact: damaging
+    impact: inconvenient
+    likelihood: unlikely
+    reach: few
     description: >-
       Moving a client starts its "since" afresh, and nothing keeps the
       partnerships a client was attributed to before.
     when: Exalynt moves a client to another partnership.
-  - id: no-attribution-notices
-    name: Partners not told of attribution changes
-    impact: inconvenient
-    description: >-
-      A partner isn't told when a client is attributed to them, moved, or
-      removed.
   - id: phone-hides-how-and-window
     name: Phones hide client source and earning window
     impact: inconvenient
+    likelihood: expected
+    reach: few
     description: >-
       On a phone, how each client came and its earning window aren't shown.
 ---

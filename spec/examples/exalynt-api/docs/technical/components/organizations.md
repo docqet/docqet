@@ -6,38 +6,13 @@ description: >-
   logo.
 capabilities: [capability:organizations-and-members, capability:client-directory, capability:billing]
 meets: [security/ga/sound]
-gaps:
-  - id: sends-and-keys-never-pruned
-    name: Invitation sends and creation keys never pruned
-    outcome: efficiency/beta/bounded
-    impact: negligible
-    description: >-
-      `organization_invitation_sends` and `organization_creation_keys` are
-      never pruned: only the last day of sends and a retry's key are ever read,
-      but rows stay forever. They're small, at most 50 sends per organization
-      a day.
-  - id: no-load-test
-    name: Never load-tested, running cost unknown
-    outcome: efficiency/ga/speed-targets
-    impact: blocking
-    description: >-
-      The routes have never been tried at peak, and their running cost isn't
-      known, including whether Clerk's plan limits fit expected sign-ups.
-    when: Traffic reaches its peak, or sign-ups outgrow Clerk's plan limits.
-  - id: rollback-and-restore-untried
-    name: Rollback and restore never practised
-    outcome: reliability/ga/recovery
-    impact: damaging
-    description: >-
-      Deploys roll back by re-running an older commit, and there's a runbook
-      for restoring deleted records from a backup, but neither has been
-      practised for organizations.
-    when: A deploy needs rolling back, or deleted records need restoring.
 tradeoffs:
   - id: lists-returned-whole
     name: Lists returned whole, not paged
     outcome: efficiency/beta/bounded
-    impact: inconvenient
+    impact: negligible
+    likelihood: unlikely
+    reach: few
     description: >-
       Members, invitations, and `GET /v1/clients` are returned whole, not
       paged: an organization is sized for tens of members and Exalynt for tens
@@ -49,6 +24,8 @@ tradeoffs:
   - id: shared-invitation-routes
     name: Invitation routes shared, with stable copies beside
     impact: negligible
+    likelihood: possible
+    reach: few
     description: >-
       `GET /invitations` and `POST /invitations/{id}/accept` stay shared, with
       stable organization-only copies beside them: they also serve invitations

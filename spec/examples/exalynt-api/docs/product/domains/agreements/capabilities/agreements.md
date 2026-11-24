@@ -23,55 +23,20 @@ rules:
   - rule:agreements-stay-private
 concepts: [concept:agreement, concept:organization@accounts, concept:partnership@partnerships]
 gaps:
-  - id: only-the-apps-hold-people-to-an-agreement
-    name: Only the apps enforce agreements
-    impact: damaging
-    description: >-
-      Only the apps hold people to an agreement: someone using the API
-      directly can still do what their role allows without one in effect, and
-      the admin app isn't gated.
-  - id: new-versions-not-offered
-    name: New versions not offered
-    impact: blocking
-    description: >-
-      A new version isn't offered to an organization or person that accepted
-      an earlier one, and nothing sends a client new terms (it has none).
-    when: A new version of an agreement is published.
-  - id: read-in-full-only-to-accept
-    name: Waiting agreements can't be read by others
-    impact: blocking
-    description: >-
-      An agreement is only read in full to accept it: nobody else can read
-      one that's waiting, so an admin can't read an Engineer Agreement they've
-      sent until it's accepted.
-  - id: names-outside-western-european-alphabets
-    name: Names outside Western alphabets lost in PDFs
-    outcome: usability/beta/everyone
-    impact: damaging
-    description: >-
-      A name with characters outside Western European alphabets shows them as
-      "?" in the PDF, and the PDF keeps them that way once accepted.
   - id: no-preview-before-sending
     name: No preview before sending an Engineer Agreement
     impact: inconvenient
+    likelihood: possible
+    reach: few
     description: >-
       An admin has no preview of an Engineer Agreement before sending it, the
       terms they choose from are a copy of the real catalog, and the list of
       engineers doesn't say whose agreements are in effect.
-  - id: shared-definitions-changed-in-place
-    name: Definitions changed in place after acceptance
-    impact: damaging
-    description: >-
-      The definition of Fulfilled, and version 1 of the Client Agreement,
-      were changed in place to say the engineer marks a block fulfilled and
-      nobody reviews it: a copy accepted before then still says a block is
-      fulfilled once it's reviewed and approved.
 decisions:
   - topic: Changing shared definitions
     question: >-
       When a shared definition changes, how does that reach agreement versions
       that were already accepted?
-    gaps: [shared-definitions-changed-in-place]
 ---
 
 ## Includes

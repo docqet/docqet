@@ -4,18 +4,12 @@ name: Availability
 description: >-
   How much of a week each engineer offers, which Capacity adds up per team.
 capabilities: [capability:availability, capability:scheduling, capability:claiming-blocks, capability:staffing]
-gaps:
-  - id: not-load-tested
-    name: Availability never load-tested
-    outcome: efficiency/beta/realistic-volumes
-    impact: inconvenient
-    description: >-
-      Availability hasn't been load-tested.
-    when: Availability is used at realistic volumes.
 tradeoffs:
   - id: recurrence-rules-not-weeks
     name: Recurrence rules kept, not a weeks column
-    impact: inconvenient
+    impact: negligible
+    likelihood: possible
+    reach: few
     description: >-
       Availability is stored as recurrence rules, not a `weeks` column. A
       column would do, as the rules are only ever `FREQ=WEEKLY` with an

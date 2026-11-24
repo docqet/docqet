@@ -68,55 +68,16 @@ rules:
   - rule:partners-see-only-their-partnerships-earnings
 concepts: [concept:payout, concept:payout-share, concept:capacity-payout-basis, concept:partnership@partnerships]
 gaps:
-  - id: pre-production-payouts-say-paid
-    name: Pre-production payouts wrongly say Paid
-    impact: damaging
-    description: >-
-      Payouts released before production sent money through the payments
-      partner say Paid, though nothing was sent.
-  - id: leads-cant-see-team-payout-status
-    name: Leads can't see their team's payout status
-    rule: rule:who-sees-payout-status
-    impact: inconvenient
-    description: >-
-      A lead can't see the payout status of their team's blocks.
-  - id: paid-means-reached-the-balance
-    name: Paid doesn't mean the bank has it
-    impact: inconvenient
-    description: >-
-      Paid means the money has reached the payee's balance with the payments
-      partner, not their bank. The payments partner pays it on to the bank
-      itself, usually within a couple of days, and keeps for the payee
-      anything the bank sends back.
-  - id: failed-payout-reads-earned
-    name: Failed payouts read as Earned
-    impact: negligible
-    description: >-
-      An earning whose payout failed reads as Earned on the earnings page,
-      with a note saying so.
   - id: nothing-held-back-from-a-release
     name: Nothing can be held back from a release
-    impact: blocking
+    impact: inconvenient
+    likelihood: possible
+    reach: few
     description: >-
       Nothing can be held back from a release, or looked into from it.
     when: >-
       An admin wants to hold back or look into one payee's payout before a
       release.
-  - id: releases-dont-say-who
-    name: Releases don't say who released them
-    outcome: security/ga/traceable
-    impact: inconvenient
-    description: >-
-      A past release doesn't say who released it.
-    when: Someone needs to know who released a payout.
-  - id: unanswered-releases-stay-processing
-    name: Unanswered releases stay Processing
-    impact: inconvenient
-    description: >-
-      A release that got no answer from the payments partner stays
-      Processing, and an admin is told, until the next release sends it
-      again.
-    when: The payments partner doesn't answer a release.
 ---
 
 ## Includes

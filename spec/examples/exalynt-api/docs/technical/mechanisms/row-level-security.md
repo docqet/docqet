@@ -9,6 +9,7 @@ gaps:
   - id: no-organization-runs-on-platform
     name: Leaving out the organization runs on platform
     impact: damaging
+    likelihood: unlikely
     description: >-
       `X-Organization-ID` is optional, so anyone signed in can leave it out
       and run on `api_platform`. Holding no platform role, they hold no
@@ -18,38 +19,18 @@ gaps:
   - id: shared-tables-unprotected
     name: Shared tables lack row-level security
     impact: damaging
+    likelihood: unlikely
     description: >-
       Shared tables have no row-level security, `users` above all, as staff
       names appear across organizations: a query there that forgets to filter
       can read every user's name and email.
     when: A query on a shared table forgets to filter.
-  - id: no-staff-audit-trail
-    name: No audit trail of staff reads
-    outcome: security/ga/traceable
-    impact: inconvenient
-    description: >-
-      What staff read across organizations isn't recorded beyond the request's
-      log line. Left out by decision for now.
-    when: Someone needs to know what staff read in an organization.
-  - id: taken-id-is-a-conflict
-    name: Taken IDs reveal that they exist
-    impact: negligible
-    description: >-
-      A client-supplied ID that's already taken is a `409`, in any
-      organization, as IDs are globally unique. Someone who already knows an ID
-      can learn that it exists, and nothing else.
-    when: Someone supplies an ID they know belongs to another organization.
-  - id: indexes-not-led-by-organization
-    name: Indexes not all led by organization_id
-    impact: inconvenient
-    description: >-
-      Existing indexes don't all lead with `organization_id`, as some serve
-      staff's views across organizations.
-    when: Organizations' data grows large.
 tradeoffs:
   - id: setting-per-transaction
     name: Tenant set per transaction, not per connection
-    impact: inconvenient
+    impact: negligible
+    likelihood: unlikely
+    reach: few
     description: >-
       The organization or partnership is set with `SET LOCAL` in a
       transaction around each statement, a `UnitOfWork`'s or a short one of

@@ -35,32 +35,6 @@ rules:
   - rule:clients-see-who-referred-them
   - rule:introductions-dont-affect-engineer-assignment
 concepts: [concept:partnership, concept:capacity-payout-basis@pay, concept:payout-share@pay]
-gaps:
-  - id: failed-load-says-to-reload
-    name: No retry when loading fails
-    outcome: usability/beta/recover
-    impact: inconvenient
-    description: >-
-      If the clients or what each block earns can't be loaded, it says to
-      reload: there's no retry on it.
-  - id: missing-account-reminder-dropped-silently
-    name: Payout account reminder silently dropped
-    outcome: functionality/alpha/errors-visible
-    impact: inconvenient
-    description: >-
-      If the payout account can't be read, the reminder that there's none is
-      left off, without saying so.
-    when: The payout account can't be read.
-  - id: not-verified-for-everyone
-    name: Dark mode, phones and screen readers unverified
-    outcome: usability/beta/everyone
-    impact: blocking
-    description: >-
-      Dark mode, narrow phones, keyboard use, switching between partnerships,
-      and real screen readers haven't been verified.
-    when: >-
-      Someone uses a keyboard only, a screen reader, a narrow phone, or dark
-      mode.
 ---
 
 ## Includes

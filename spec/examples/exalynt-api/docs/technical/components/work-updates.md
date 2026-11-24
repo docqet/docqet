@@ -5,14 +5,6 @@ description: >-
   What engineers write about a block's work as they do it, shown on its page
   with when it was started and fulfilled.
 capabilities: [capability:fulfillment]
-gaps:
-  - id: orphaned-objects
-    name: Unused uploaded objects never cleaned up
-    impact: negligible
-    description: >-
-      An object uploaded for an update that then fails to post, or taken off
-      an update by an edit or delete, stays in the client's organization.
-      Focuses do the same.
 ---
 
 **Blocks and focuses.** `work_updates.capacity_id` and `focus_id` are both

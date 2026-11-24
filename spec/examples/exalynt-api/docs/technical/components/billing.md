@@ -11,7 +11,9 @@ meets: [reliability/beta/fails-clearly]
 tradeoffs:
   - id: provider-is-source-of-truth
     name: Payment provider is the source of truth
-    impact: inconvenient
+    impact: negligible
+    likelihood: unlikely
+    reach: few
     description: >-
       The provider is the source of truth for invoices and billing details,
       and our row only links to it: we keep the least needed to find an
@@ -21,7 +23,9 @@ tradeoffs:
       hosted pages doesn't fit.
   - id: tax-inside-payments-provider
     name: Tax handled by the payments provider, not its own
-    impact: inconvenient
+    impact: negligible
+    likelihood: unlikely
+    reach: few
     description: >-
       Tax is part of the payments provider, not a provider of its own: the
       provider already holds the billing address tax is worked out from, and

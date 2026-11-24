@@ -29,72 +29,20 @@ rules:
   - rule:a-focus-belongs-to-one-estimate
 concepts: [concept:estimate, concept:capacity-block, concept:capacity-unit]
 gaps:
-  - id: no-asking-for-estimates
-    name: Clients can't ask for estimates
-    impact: inconvenient
-    description: >-
-      Clients can't ask for an estimate, or for an updated one when the scope
-      changes, in the product. They ask Exalynt outside it.
-  - id: no-estimate-notifications
-    name: No notice of shared or changed estimates
-    impact: inconvenient
-    description: >-
-      Nobody is told when an estimate is shared with their organization or
-      changed.
-  - id: prospects-attached-by-hand
-    name: Prospects' estimates attached by hand
-    impact: inconvenient
-    description: >-
-      A prospect's estimate is attached to their organization by hand once
-      they've signed up.
-  - id: fixed-operations-fee
-    name: Operations fee changes need a release
-    impact: inconvenient
-    description: The operations fee is fixed, so changing it takes a release.
-    when: Exalynt changes its operations fee.
-  - id: operations-not-shown
-    name: Operations left off estimates
-    impact: inconvenient
-    description: >-
-      Operations aren't shown for now: there's no way to include them when
-      writing an estimate, and nothing on the client's estimate or its PDF.
-      Exalynt still keeps whether an estimate includes them, and its fee.
-    when: Exalynt starts offering operations with its estimates.
-  - id: tried-paces-not-saved
-    name: Tried paces not saved
-    impact: inconvenient
-    description: Paces the client tries are never saved, and reset on leaving.
   - id: pdf-leaves-out-planned-pace
     name: PDF leaves out each focus's planned pace
     impact: inconvenient
+    likelihood: possible
+    reach: few
     description: >-
       The PDF offers the project on each pace as an option, with every focus
       on it, and leaves out the pace each focus was planned on.
-  - id: pdf-not-kept
-    name: PDFs not kept as sent
-    impact: inconvenient
-    description: >-
-      The PDF is built on the reader's device, so it isn't stored or kept as
-      sent.
-    when: Someone needs the estimate as it was sent, after it's been changed.
-  - id: no-retry-after-failed-load
-    name: No retry after a failed load
-    outcome: usability/beta/recover
-    impact: inconvenient
-    description: A failed load says to reload, with no way to retry in place.
-    when: A load fails.
-  - id: tested-only-through-the-api
-    name: Tested end to end only through the API
-    outcome: functionality/beta/stays-correct
-    impact: inconvenient
-    description: >-
-      The workflow is tested end to end only through the API. The console's
-      own tests cover the math and what a save sends.
-    when: A change breaks the console's side of the workflow.
 tradeoffs:
   - id: last-save-wins
     name: Last save wins, without a warning
-    impact: damaging
+    impact: inconvenient
+    likelihood: unlikely
+    reach: few
     description: >-
       When two people edit one estimate at once, the later save replaces the
       earlier one, without a warning.
@@ -104,6 +52,8 @@ tradeoffs:
     name: Deleting an estimate is permanent
     outcome: usability/beta/recover
     impact: inconvenient
+    likelihood: unlikely
+    reach: few
     description: Deleting an estimate is permanent.
     drawback: Getting one back means restoring a backup.
     when: Someone deletes an estimate by mistake.
@@ -112,7 +62,6 @@ decisions:
     question: >-
       Is asking for an estimate, or for a particular engineer, a flow of
       its own? _At MVP:_ no. Clients ask Exalynt outside the product.
-    gaps: [no-asking-for-estimates]
 ---
 
 ## Includes

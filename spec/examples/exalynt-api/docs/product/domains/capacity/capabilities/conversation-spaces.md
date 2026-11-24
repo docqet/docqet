@@ -31,54 +31,17 @@ rules:
   - rule:a-blocks-conversations-are-for-its-client-and-the-teams-supporting-it
 concepts: [concept:space, concept:space-membership, concept:conversation]
 gaps:
-  - id: google-chat-opens-the-whole-space
-    name: Google Chat opens the whole space
-    impact: inconvenient
-    description: >-
-      In Google Chat, a conversation opens beside the rest of the client's
-      space, with every other conversation on its blocks, not on its own.
-    when: Google Chat is the messaging provider.
-  - id: where-clients-see-conversations
-    name: Clients' conversations in Google Chat or a prototype
-    impact: inconvenient
-    description: >-
-      With Google Chat, clients see a block's conversations only in Google
-      Chat, not on their block page in the app. With Stream, they open them
-      from their block page, which is still a prototype.
-  - id: counts-read-on-opening
-    name: Conversation counts not live
-    impact: negligible
-    description: >-
-      A conversation's counts are read when its block's page opens, not as
-      messages come in.
-  - id: deleted-chats-still-shown
-    name: Deleted Google Chat conversations still shown
-    impact: negligible
-    description: A conversation deleted in Google Chat still shows on its block.
-    when: Someone deletes a conversation in Google Chat.
-  - id: switching-providers-leaves-conversations
-    name: Switching providers leaves conversations behind
-    impact: inconvenient
-    description: >-
-      Switching messaging providers leaves a block's earlier conversations
-      behind: the block shows only those with the provider in use, and their
-      subjects can be used again.
-    when: The messaging provider is switched.
-  - id: stream-names-changeable-outside
-    name: Stream names changeable outside the app
-    impact: inconvenient
-    description: >-
-      With Stream, someone can change the name others see them by from outside
-      the app. It's set back the next time they open a conversation.
-    when: Someone changes their Stream name from outside the app.
   - id: stream-messages-final
     name: Stream messages can't be edited or deleted
-    impact: damaging
+    impact: inconvenient
+    likelihood: possible
+    reach: few
     description: With Stream, nobody can edit or delete a message once it's sent.
     when: Someone sends a message they need to take back.
   - id: nothing-retried
     name: Space membership changes never retried
     impact: damaging
+    likelihood: unlikely
     description: >-
       Nothing is retried. If the messaging provider fails to put someone in a
       space, such as an engineer who just joined a client's team, they're
@@ -91,31 +54,12 @@ gaps:
     when: >-
       The messaging provider fails to put someone in a space or take them
       out.
-  - id: older-organizations-not-with-provider
-    name: Older organizations' spaces missing at the provider
-    impact: inconvenient
-    description: >-
-      Organizations from before conversation spaces have their space, but the
-      messaging provider doesn't have it, with everyone who belongs in it,
-      until someone joins it or a conversation is started in it.
-  - id: returning-people-not-put-back
-    name: Returning people not put back in spaces
-    impact: inconvenient
-    description: >-
-      Someone unbanned, or made one of Exalynt's people again, isn't put back
-      in the spaces they were taken out of.
-    when: Someone is unbanned, or made one of Exalynt's people again.
-  - id: reply-limit
-    name: Conversations capped at the provider's reply limit
-    impact: inconvenient
-    description: >-
-      A conversation can't carry on past the most replies the messaging
-      provider allows in one. Start another when it fills.
-    when: A conversation reaches the messaging provider's reply limit.
 tradeoffs:
   - id: stream-shows-gravatar
     name: Gravatar as the fallback photo on Stream
     impact: negligible
+    likelihood: possible
+    reach: some
     description: >-
       With Stream, someone without an uploaded photo shows their Gravatar, as
       they do everywhere else in the app.

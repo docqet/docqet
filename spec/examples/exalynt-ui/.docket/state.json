@@ -22,7 +22,7 @@
       "ga": 0
     },
     "rules": 0,
-    "gaps": 41,
+    "gaps": 0,
     "problems": 90,
     "tradeoffs": 5,
     "mechanisms": 2,
@@ -163,14 +163,7 @@
         "capability:notifications"
       ],
       "meets": [],
-      "gaps": [
-        "component:account#sync-no-end-to-end-test",
-        "component:account#name-by-webhook-only",
-        "component:account#clerk-failure-signs-out",
-        "component:account#google-connection-never-tried",
-        "component:account#tokens-filtered-in-browser",
-        "component:account#tokens-not-tried-by-everyone"
-      ],
+      "gaps": [],
       "tradeoffs": [],
       "evidence": {
         "implements": [],
@@ -196,18 +189,7 @@
         "capability:roles"
       ],
       "meets": [],
-      "gaps": [
-        "component:admin#clients-read-everything",
-        "component:admin#coupons-two-shapes",
-        "component:admin#whole-lists-paged-in-browser",
-        "component:admin#roster-reads-everything",
-        "component:admin#roster-assumes-global-reads",
-        "component:admin#terms-catalog-copied",
-        "component:admin#readiness-per-person",
-        "component:admin#creator-role-guarded-by-page",
-        "component:admin#one-scope-per-permission",
-        "component:admin#roles-pages-untested"
-      ],
+      "gaps": [],
       "tradeoffs": [],
       "evidence": {
         "implements": [],
@@ -257,19 +239,7 @@
         "capability:engineer-agreements"
       ],
       "meets": [],
-      "gaps": [
-        "component:console#setup-reads-on-every-page",
-        "component:console#readiness-worked-out-twice",
-        "component:console#board-reads-every-block",
-        "component:console#conversation-counts-read-on-open",
-        "component:console#team-screens-untested",
-        "component:console#availability-changes-not-atomic",
-        "component:console#earnings-unpaged",
-        "component:console#earnings-failures-unreported",
-        "component:console#this-week-from-browser",
-        "component:console#estimate-save-unchecked",
-        "component:console#estimate-editor-screens-untested"
-      ],
+      "gaps": [],
       "tradeoffs": [],
       "evidence": {
         "implements": [],
@@ -295,11 +265,7 @@
         "capability:getting-set-up"
       ],
       "meets": [],
-      "gaps": [
-        "component:hub#welcome-three-calls",
-        "component:hub#earnings-screens-untested",
-        "component:hub#payouts-screens-untested"
-      ],
+      "gaps": [],
       "tradeoffs": [],
       "evidence": {
         "implements": [],
@@ -327,19 +293,7 @@
         "capability:client-agreements"
       ],
       "meets": [],
-      "gaps": [
-        "component:portal#home-screens-untested",
-        "component:portal#home-not-switchable",
-        "component:portal#blocks-read-twice-on-home",
-        "component:portal#team-read-per-page",
-        "component:portal#team-screens-untested",
-        "component:portal#every-block-loaded",
-        "component:portal#block-page-reads-every-block",
-        "component:portal#billing-screens-untested",
-        "component:portal#members-unpaged",
-        "component:portal#members-screens-untested",
-        "component:portal#logo-not-cached"
-      ],
+      "gaps": [],
       "tradeoffs": [
         "component:portal#provider-pages-for-billing",
         "component:portal#no-gravatar-for-members"
@@ -352,418 +306,7 @@
       "body": "Every page acts in the organization being looked at. `AccessProvider` holds\nit and the reader's role in it, and `Layout.tsx` builds the rail from that\nrole: a role without capacity, estimate or team reads (Billing) doesn't get\nthose pages, and one without `invoice:read` (Member) doesn't get Billing. The\npages that are left check the same permissions, say why when the role can't\nsee them, and ask the API for nothing then. `RequireOrganization` sends\nsomeone in no organization to onboarding, or offers someone with the console\nto create one. Switching organization starts each page again.\n\nNobody works in an organization until its Client Agreement is in effect:\n`Layout.tsx` puts the agreement in place of every page (`AgreementGate`), for\nsomeone with `organization:manage` to accept, or tells anyone else an Admin\nhas to first. The organization switcher stays, to work in another. The gate\nis the app's alone: the API still answers what a member's role allows\nwithout an agreement in effect, so anything new that must wait for the\nagreement has to sit behind the gate.\n\nEvery page reads and writes the API: the portal has no placeholder data\n(`data/relationships.ts` only orders the API's teams). A block's own page\n(`capacity/View.tsx`) is marked Prototype in `src/featureStability.ts`, below\nFulfillment's Alpha, because whether it's the right page for a client is\nstill the question, not because its data is fake. Its focus, timeline and\nconversations are the console's, from `src/components/block/`.\n\nThe setup bubble's steps are worked out by `beforeWorkStarts`\n(`components/setup/`), which unit tests cover. Estimates' figures are worked\nout in the browser by `src/estimates/`, from the sizes it shares with the API\nand the prices each estimate carries; unit tests pin them to the API's.\n\nBuying holds one `Idempotency-Key` for each opening of\n`PurchaseCapacityDialog`, so trying again while the dialog is open can't\ncharge twice, and closing it starts a new purchase with a new key. The\nprovider's page for an invoice is opened at an address the API reads from the\nprovider each time, since those addresses expire, so the portal never keeps\none. The Schedule's weeks are the API's, rolling over at midnight UTC."
     }
   ],
-  "gaps": [
-    {
-      "id": "component:account#sync-no-end-to-end-test",
-      "outcome": "functionality/beta/stays-correct",
-      "rule": null,
-      "impact": "inconvenient",
-      "when": "A change breaks syncing in a way only a real Clerk would show.",
-      "name": "User sync has no end-to-end test",
-      "description": "`POST /users/me/sync` has no end-to-end test, as the API's end-to-end server runs without Clerk. Acceptance and unit tests cover it instead.",
-      "places": []
-    },
-    {
-      "id": "component:account#name-by-webhook-only",
-      "outcome": null,
-      "rule": null,
-      "impact": "inconvenient",
-      "when": "Clerk retries an older webhook after a newer one has arrived.",
-      "name": "Name changes reach the API only by webhook",
-      "description": "A name or primary address reaches the API only by Clerk's webhook, or by `api sync users`, so others see the old one until it arrives, and a retried older webhook can bring an old one back.",
-      "places": []
-    },
-    {
-      "id": "component:account#clerk-failure-signs-out",
-      "outcome": null,
-      "rule": null,
-      "impact": "inconvenient",
-      "when": "Clerk fails to load, even briefly.",
-      "name": "Clerk failing to load signs the browser out",
-      "description": "If Clerk fails to load, `ResetFailedClerk` clears Clerk's cookies and reloads, in the hope that helps, so even a brief Clerk outage signs that browser out.",
-      "places": []
-    },
-    {
-      "id": "component:account#google-connection-never-tried",
-      "outcome": "functionality/alpha/main-path",
-      "rule": null,
-      "impact": "blocking",
-      "when": "Connecting or disconnecting a real Google account doesn't work as built.",
-      "name": "Google connection never tried for real",
-      "description": "Nobody has yet completed a Google connection or disconnected one, as that needs a real Google account.",
-      "places": []
-    },
-    {
-      "id": "component:account#tokens-filtered-in-browser",
-      "outcome": "efficiency/beta/bounded",
-      "rule": null,
-      "impact": "inconvenient",
-      "when": "Someone's access tokens grow to many pages.",
-      "name": "Access tokens filtered in the browser",
-      "description": "Access tokens reads every page of someone's tokens, then searches, filters, sorts and pages them in the browser.",
-      "places": []
-    },
-    {
-      "id": "component:account#tokens-not-tried-by-everyone",
-      "outcome": "usability/beta/everyone",
-      "rule": null,
-      "impact": "inconvenient",
-      "when": "A partner, or someone using a screen reader, works with Access tokens or its organization limits.",
-      "name": "Access tokens untried by partners or screen readers",
-      "description": "No partner has been through Access tokens in a browser, and no real screen reader has been through it or its organization limits, though it's the same page for everyone. QA only saw the limits disabled, for admins, engineers and team leads, who belong to no organization.",
-      "places": []
-    },
-    {
-      "id": "component:admin#clients-read-everything",
-      "outcome": "efficiency/beta/bounded",
-      "rule": null,
-      "impact": "inconvenient",
-      "when": "As clients and their blocks grow in number.",
-      "name": "Clients pages read every client and block",
-      "description": "The Clients pages read every client and every block before showing anything, and the list pages them in the browser. Each block's invoice is read from the payment provider by the API, one at a time.",
-      "places": []
-    },
-    {
-      "id": "component:admin#coupons-two-shapes",
-      "outcome": null,
-      "rule": null,
-      "impact": "inconvenient",
-      "when": null,
-      "name": "Two separate copies of coupon code",
-      "description": "Client coupons (`data/coupons.ts`) and the revenue calculator's coupons are the same shape but separate code, and the two don't meet.",
-      "places": []
-    },
-    {
-      "id": "component:admin#whole-lists-paged-in-browser",
-      "outcome": "efficiency/beta/bounded",
-      "rule": null,
-      "impact": "inconvenient",
-      "when": "Partnerships and pending invitations grow to many.",
-      "name": "Partners and invitations paged in the browser",
-      "description": "The API sends every partnership and every pending invitation at once, and the Partners and Invitations lists page them in the browser.",
-      "places": []
-    },
-    {
-      "id": "component:admin#roster-reads-everything",
-      "outcome": "efficiency/beta/bounded",
-      "rule": null,
-      "impact": "inconvenient",
-      "when": "As engineers, teams, clients and blocks grow in number.",
-      "name": "Engineers pages read everything on open",
-      "description": "Each Engineers page reads everyone, every team, client and block, once when it opens and again after a team change.",
-      "places": []
-    },
-    {
-      "id": "component:admin#roster-assumes-global-reads",
-      "outcome": null,
-      "rule": null,
-      "impact": "blocking",
-      "when": "Someone without global reads is given the Engineers pages.",
-      "name": "Engineers pages assume global read permissions",
-      "description": "The Engineers pages are written for administrators: without `user:read`, `team:read`, `capacity:read` or `client:read` the roster doesn't load, and with a team or own scope it shows only what that reaches.",
-      "places": []
-    },
-    {
-      "id": "component:admin#terms-catalog-copied",
-      "outcome": null,
-      "rule": null,
-      "impact": "blocking",
-      "when": "The API's catalog of Commercial Terms changes.",
-      "name": "Commercial Terms catalog copied into the UI",
-      "description": "The Commercial Terms an admin chooses from, on an invitation or when sending an engineer new terms, come from the UI's own copy of the catalog (`src/shared/terms.ts`), not the API's.",
-      "places": []
-    },
-    {
-      "id": "component:admin#readiness-per-person",
-      "outcome": null,
-      "rule": null,
-      "impact": "inconvenient",
-      "when": null,
-      "name": "Readiness read one person at a time",
-      "description": "Whether someone is ready for client work is read for one person at a time (`engineers/useReadiness.ts`), since asking whether they can be paid asks the payout provider, so the Engineers list can't show it. The list has no Agreement column either, as that would take a request per engineer.",
-      "places": []
-    },
-    {
-      "id": "component:admin#creator-role-guarded-by-page",
-      "outcome": null,
-      "rule": null,
-      "impact": "inconvenient",
-      "when": "Someone unmarks or deletes the creator role through the API directly.",
-      "name": "Creator role guarded only by the Roles page",
-      "description": "Only the Roles page stops the role given to an organization's creator being unmarked or deleted. The API allows it, and the next deploy gives creators a role again.",
-      "places": []
-    },
-    {
-      "id": "component:admin#one-scope-per-permission",
-      "outcome": null,
-      "rule": null,
-      "impact": "inconvenient",
-      "when": "A role is saved with a permission given more than one scope.",
-      "name": "Role editor allows one scope per permission",
-      "description": "The role editor gives a permission one scope, though the API allows several, and saving keeps only the widest, so own and team becomes team.",
-      "places": []
-    },
-    {
-      "id": "component:admin#roles-pages-untested",
-      "outcome": "functionality/beta/stays-correct",
-      "rule": null,
-      "impact": "inconvenient",
-      "when": "A change breaks what the Roles pages save.",
-      "name": "Roles pages have no tests of their own",
-      "description": "Roles is tested end to end only by the API's tests. The pages have no automated tests of their own.",
-      "places": []
-    },
-    {
-      "id": "component:console#setup-reads-on-every-page",
-      "outcome": null,
-      "rule": null,
-      "impact": "negligible",
-      "when": null,
-      "name": "Setup bubble rereads on every page",
-      "description": "The setup bubble reads again on each page and each time it opens, four requests and a call to the payout provider each time, until everything on it is done.",
-      "places": []
-    },
-    {
-      "id": "component:console#readiness-worked-out-twice",
-      "outcome": "functionality/beta/stays-correct",
-      "rule": null,
-      "impact": "inconvenient",
-      "when": "What makes someone ready changes in one place and not the other.",
-      "name": "Readiness worked out twice in the browser",
-      "description": "Who's ready for client work is worked out in the browser, in the console's `components/setup/` and again on the admin's engineer page, so no acceptance test covers it, and the two can drift apart.",
-      "places": []
-    },
-    {
-      "id": "component:console#board-reads-every-block",
-      "outcome": "efficiency/beta/bounded",
-      "rule": null,
-      "impact": "inconvenient",
-      "when": "An engineer's blocks grow to many pages.",
-      "name": "My blocks reads every block ever",
-      "description": "My blocks reads every block the engineer has ever had, a page at a time.",
-      "places": []
-    },
-    {
-      "id": "component:console#conversation-counts-read-on-open",
-      "outcome": null,
-      "rule": null,
-      "impact": "inconvenient",
-      "when": null,
-      "name": "Conversation counts read only on open",
-      "description": "A block's conversation counts are read when its page opens, and again when a conversation window closes, and at no other time.",
-      "places": []
-    },
-    {
-      "id": "component:console#team-screens-untested",
-      "outcome": "functionality/beta/stays-correct",
-      "rule": null,
-      "impact": "inconvenient",
-      "when": "A change breaks the Teams screens.",
-      "name": "Teams screens untested in the console",
-      "description": "Teams is tested end to end only by the API's feature tests. The console's own unit tests cover finding the engineer's team.",
-      "places": []
-    },
-    {
-      "id": "component:console#availability-changes-not-atomic",
-      "outcome": "reliability/ga/holds-up",
-      "rule": null,
-      "impact": "inconvenient",
-      "when": "A call fails partway through changing a run of weeks.",
-      "name": "Availability changes across weeks not atomic",
-      "description": "Changing a run of weeks takes several calls, so a failure partway leaves some weeks changed and others not. The page says it failed and shows what's there.",
-      "places": []
-    },
-    {
-      "id": "component:console#earnings-unpaged",
-      "outcome": "efficiency/beta/bounded",
-      "rule": null,
-      "impact": "inconvenient",
-      "when": "An engineer's earnings grow to a long list.",
-      "name": "Earnings loaded whole, unpaged",
-      "description": "Earnings loads the whole list at once, with no pagination, and the API works out what's upcoming afresh on every read.",
-      "places": []
-    },
-    {
-      "id": "component:console#earnings-failures-unreported",
-      "outcome": "observability/alpha/see-errors",
-      "rule": null,
-      "impact": "inconvenient",
-      "when": "Earnings fails to load.",
-      "name": "Earnings load failures not reported",
-      "description": "A failure to load Earnings is shown on the page but not reported to telemetry.",
-      "places": []
-    },
-    {
-      "id": "component:console#this-week-from-browser",
-      "outcome": null,
-      "rule": null,
-      "impact": "inconvenient",
-      "when": "Around midnight on a Sunday, in a time zone away from UTC.",
-      "name": "This week taken from the browser's clock",
-      "description": "\"This week\" on My blocks and Availability is the browser's, while the API counts weeks from Monday in UTC, so around midnight on a Sunday a block can show Ready that can't be started yet, and a change to the week ending can be refused.",
-      "places": []
-    },
-    {
-      "id": "component:console#estimate-save-unchecked",
-      "outcome": null,
-      "rule": null,
-      "impact": "damaging",
-      "when": "Two people edit the same estimate at once.",
-      "name": "Last estimate save silently wins",
-      "description": "Saving an estimate sends the whole of it, with no check of what changed since it was opened, so of two people editing at once the last save wins.",
-      "places": []
-    },
-    {
-      "id": "component:console#estimate-editor-screens-untested",
-      "outcome": "functionality/beta/stays-correct",
-      "rule": null,
-      "impact": "inconvenient",
-      "when": "A change breaks the estimate editor's screens.",
-      "name": "Estimate editor screens untested in the console",
-      "description": "The estimate editor is tested end to end only by the API's feature tests. The console's own tests cover the math and what a save sends.",
-      "places": []
-    },
-    {
-      "id": "component:hub#welcome-three-calls",
-      "outcome": null,
-      "rule": null,
-      "impact": "inconvenient",
-      "when": "Naming the partnership or accepting its agreement fails on the welcome page.",
-      "name": "Accepting an invitation takes three calls",
-      "description": "Accepting an invitation on the welcome page is three calls: accepting, naming the partnership, and accepting its Partner Agreement. If naming fails the partner is told to name it in the hub, and if the agreement fails the hub opens on it to accept.",
-      "places": []
-    },
-    {
-      "id": "component:hub#earnings-screens-untested",
-      "outcome": "functionality/beta/stays-correct",
-      "rule": null,
-      "impact": "inconvenient",
-      "when": "A change breaks Earnings' screens.",
-      "name": "Earnings screens untested in the hub",
-      "description": "Earnings' screens are tested end to end only by the API's tests. The hub's unit tests cover the totals, each earning's state and note (`earningTotals`, `earningState`, `earningNote`) and reading every page.",
-      "places": []
-    },
-    {
-      "id": "component:hub#payouts-screens-untested",
-      "outcome": "functionality/beta/stays-correct",
-      "rule": null,
-      "impact": "inconvenient",
-      "when": "A change breaks Payouts' screens.",
-      "name": "Payouts screens untested in the hub",
-      "description": "Payouts' screens are tested end to end only by the API's tests. The hub's unit tests cover the rows (`toRows`, `failureText`) and reading every page.",
-      "places": []
-    },
-    {
-      "id": "component:portal#home-screens-untested",
-      "outcome": "functionality/beta/stays-correct",
-      "rule": null,
-      "impact": "inconvenient",
-      "when": "A change breaks Home's screens or how a section fails.",
-      "name": "Home screens untested in the portal",
-      "description": "Home's workflow is tested end to end only by the API's tests. The portal's own unit tests cover what the page works out (`homeState`) and what it reads (`listCurrentCapacities`), not its screens or how a section fails.",
-      "places": []
-    },
-    {
-      "id": "component:portal#home-not-switchable",
-      "outcome": null,
-      "rule": null,
-      "impact": "inconvenient",
-      "when": "A release breaks Home.",
-      "name": "Home can't be switched off alone",
-      "description": "Home can't be switched off on its own, so a bad release of it is rolled back with everything else.",
-      "places": []
-    },
-    {
-      "id": "component:portal#blocks-read-twice-on-home",
-      "outcome": null,
-      "rule": null,
-      "impact": "negligible",
-      "when": null,
-      "name": "Blocks read twice on Home",
-      "description": "The setup bubble reads the blocks on now, the teams and billing when the organization changes and each time it opens, so on Home the blocks are read twice.",
-      "places": []
-    },
-    {
-      "id": "component:portal#team-read-per-page",
-      "outcome": null,
-      "rule": null,
-      "impact": "negligible",
-      "when": null,
-      "name": "Teams reread on every page",
-      "description": "Each page that shows the organization's teams reads them again.",
-      "places": []
-    },
-    {
-      "id": "component:portal#team-screens-untested",
-      "outcome": "functionality/beta/stays-correct",
-      "rule": null,
-      "impact": "inconvenient",
-      "when": "A change breaks the Your teams screens.",
-      "name": "Your teams screens untested in the portal",
-      "description": "Your teams is tested end to end only by the API's feature tests. The portal's own unit tests cover reading every page of teams and the order people show in.",
-      "places": []
-    },
-    {
-      "id": "component:portal#every-block-loaded",
-      "outcome": "efficiency/beta/bounded",
-      "rule": null,
-      "impact": "inconvenient",
-      "when": "An organization has bought many blocks.",
-      "name": "Capacity and Schedule load every block",
-      "description": "Capacity and the Schedule load every block the organization has bought, reading each page of them in turn, and Capacity filters, sorts and pages them in the browser.",
-      "places": []
-    },
-    {
-      "id": "component:portal#block-page-reads-every-block",
-      "outcome": null,
-      "rule": null,
-      "impact": "inconvenient",
-      "when": "An organization has bought many blocks.",
-      "name": "Block page reads every block to find one",
-      "description": "A block's page reads every one of the organization's blocks to find this one by its number.",
-      "places": []
-    },
-    {
-      "id": "component:portal#billing-screens-untested",
-      "outcome": "functionality/beta/stays-correct",
-      "rule": null,
-      "impact": "inconvenient",
-      "when": "A change breaks Billing, or the real payment provider behaves unlike the tests.",
-      "name": "Billing untested against a real provider",
-      "description": "Billing and payment methods are tested end to end only by the API's feature tests, which run without a real payment provider.",
-      "places": []
-    },
-    {
-      "id": "component:portal#members-unpaged",
-      "outcome": "efficiency/beta/bounded",
-      "rule": null,
-      "impact": "inconvenient",
-      "when": "An organization grows to many members.",
-      "name": "Members table unpaged",
-      "description": "The Members table reads every member of the organization at once, unpaged.",
-      "places": []
-    },
-    {
-      "id": "component:portal#members-screens-untested",
-      "outcome": null,
-      "rule": null,
-      "impact": "inconvenient",
-      "when": "A change breaks the Members page.",
-      "name": "Members page itself untested",
-      "description": "The portal's own unit tests on Members cover only how pasted addresses are read, what is left to retry after some invitations fail, and the role an invitation starts on. The rules are tested by the API's acceptance tests, and nothing tests the page itself.",
-      "places": []
-    },
-    {
-      "id": "component:portal#logo-not-cached",
-      "outcome": null,
-      "rule": null,
-      "impact": "negligible",
-      "when": null,
-      "name": "Organization logo never cached by the browser",
-      "description": "An organization's logo is read with the session token, once per change and per page load, so the browser doesn't cache it.",
-      "places": []
-    }
-  ],
+  "gaps": [],
   "tradeoffs": [
     {
       "id": "mechanism:error-reporting#errors-only",
@@ -774,7 +317,9 @@
       "drawback": "A slow page, or one people give up on without an error, leaves nothing to look at.",
       "impact": "inconvenient",
       "when": "A page is slow, or people give up on it without an error.",
-      "places": []
+      "places": [],
+      "likelihood": "possible",
+      "reach": "few"
     },
     {
       "id": "mechanism:stability-marks#levels-kept-in-the-ui",
@@ -785,7 +330,9 @@
       "drawback": "A level change is made in both repositories, and nothing checks that they agree.",
       "impact": "inconvenient",
       "when": "A feature's level is changed in one repository and not the other.",
-      "places": []
+      "places": [],
+      "likelihood": "possible",
+      "reach": "few"
     },
     {
       "id": "component:auth#clerks-screens-for-session-tasks",
@@ -796,7 +343,9 @@
       "drawback": "Those few screens look like Clerk's rather than ours.",
       "impact": "negligible",
       "when": null,
-      "places": []
+      "places": [],
+      "likelihood": "unlikely",
+      "reach": "few"
     },
     {
       "id": "component:portal#provider-pages-for-billing",
@@ -807,7 +356,9 @@
       "drawback": "Clients leave the portal to see an invoice or change how they pay, and a portal page left open in another tab doesn't see what they changed there.",
       "impact": "inconvenient",
       "when": null,
-      "places": []
+      "places": [],
+      "likelihood": "possible",
+      "reach": "some"
     },
     {
       "id": "component:portal#no-gravatar-for-members",
@@ -818,7 +369,9 @@
       "drawback": "A member who hasn't uploaded a photo shows initials here, though their profile shows their Gravatar.",
       "impact": "negligible",
       "when": null,
-      "places": []
+      "places": [],
+      "likelihood": "expected",
+      "reach": "some"
     }
   ],
   "problems": [

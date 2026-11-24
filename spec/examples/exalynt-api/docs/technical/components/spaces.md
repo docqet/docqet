@@ -8,43 +8,16 @@ description: >-
   Stream.
 capabilities: [capability:conversation-spaces]
 gaps:
-  - id: no-retries-or-synchronization
-    name: No retries or sync with the provider
-    outcome: reliability/ga/holds-up
-    impact: damaging
-    description: >-
-      A failed provider call is only on the span, and nothing compares our
-      records with the provider's members. The only repair is
-      `StartBlockConversation`, which puts everyone `belonging` to the space in
-      it first; nothing takes out someone a failed removal left in.
-    when: A call to a real messaging provider fails.
   - id: sync-users-has-no-hook
     name: User sync doesn't remove people from spaces
     impact: damaging
+    likelihood: unlikely
     description: >-
       `api sync users` has no hook, so a ban or deletion it applies doesn't
       take the user out of the provider's spaces.
     when: >-
       `api sync users` bans or deletes someone in a real messaging provider's
       spaces.
-  - id: hooks-run-however-flagged
-    name: Space hooks run even with conversations off
-    impact: inconvenient
-    description: >-
-      The hooks run inside sign-up, accepting and removing members, however
-      conversations are flagged: `CreateReferred` records a space in its
-      transaction, and `CreateSpace`, `AddMembers` and `RemoveMembers` call the
-      provider synchronously after the change commits, up to its timeout each.
-      The `conversations` flag only hides them in the UI. With `noop` in
-      production they cost nothing.
-    when: A real messaging provider is slow or unreachable.
-  - id: space-id-nullable
-    name: Organization space_id still nullable
-    impact: blocking
-    description: >-
-      `organizations.space_id` is nullable, as code deployed before spaces
-      creates organizations without one while it rolls out.
-    when: Code deployed before spaces creates an organization.
 ---
 
 For spaces and memberships our row comes first and the provider follows. Its

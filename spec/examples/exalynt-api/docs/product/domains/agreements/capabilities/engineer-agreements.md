@@ -25,37 +25,28 @@ rules:
   - rule:agreements-stay-private
 concepts: [concept:agreement]
 gaps:
-  - id: only-the-console-holds-to-the-agreement
-    name: Only the console enforces the agreement
-    impact: damaging
-    description: >-
-      Only the console holds engineers to an agreement: someone using the API
-      directly can still do what their role allows without one in effect, and
-      the admin app isn't gated.
   - id: new-versions-not-offered
     name: New versions not offered to engineers
     impact: inconvenient
+    likelihood: possible
+    reach: few
     description: >-
       A new version of the Engineer Agreement isn't offered to an engineer
       who accepted an earlier one.
     when: A new version of the Engineer Agreement is published.
-  - id: earlier-engineers-kept-out
-    name: Existing engineers kept out until sent one
-    impact: inconvenient
-    description: >-
-      Engineers and admins already at Exalynt when agreements began are kept
-      out of the console until an admin sends each of them an Engineer
-      Agreement.
   - id: names-outside-western-european-alphabets
     name: Names outside Western alphabets lost in PDFs
     outcome: usability/beta/everyone
-    impact: damaging
+    impact: inconvenient
+    likelihood: possible
+    reach: few
     description: >-
       A name with characters outside Western European alphabets shows them as
       "?" in the PDF, and the PDF keeps them that way once accepted.
   - id: shared-definitions-changed-in-place
     name: Version 1 changed in place after acceptance
-    impact: damaging
+    impact: inconvenient
+    likelihood: unlikely
     description: >-
       The definition of Fulfilled, and version 1 of the Engineer Agreement,
       were changed in place to say the engineer marks a block fulfilled and

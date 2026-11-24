@@ -3,19 +3,12 @@ id: payouts
 name: Payouts
 description: How earnings become money sent, to people and to partnerships.
 capabilities: [capability:payouts, capability:partner-payouts]
-gaps:
-  - id: person-and-admin-lists-not-paged
-    name: Payout lists not paged
-    outcome: efficiency/beta/bounded
-    impact: inconvenient
-    description: >-
-      A person's and the admin's payout lists aren't paged:
-      `GET /users/me/payouts` and `GET /payouts` return everything.
-    when: Payouts build up over time.
 tradeoffs:
   - id: waiting-worked-out-on-read
     name: Waiting payouts worked out on read, not stored
-    impact: inconvenient
+    impact: negligible
+    likelihood: unlikely
+    reach: few
     description: >-
       What's waiting is worked out on read, not stored as a run: there's no
       scheduler or draft to keep in step, and a week nobody released rolls

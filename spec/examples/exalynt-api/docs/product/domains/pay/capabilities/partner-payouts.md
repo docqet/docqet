@@ -62,38 +62,27 @@ rules:
   - rule:exalynt-bears-partnership-earnings
   - rule:partners-see-only-their-partnerships-earnings
 concepts: [concept:payout, concept:partnership@partnerships]
-gaps:
-  - id: payouts-page-doesnt-say-why-held
-    name: Payouts page doesn't say why earnings are held
-    impact: inconvenient
-    description: >-
-      The Payouts page doesn't say when the payout account is holding
-      earnings up, beyond having none; Earnings does.
-    when: The partnership's payout account is holding earnings up.
 tradeoffs:
   - id: pre-production-payouts-say-paid
     name: Pre-production payouts left saying Paid
-    impact: damaging
+    impact: inconvenient
+    likelihood: unlikely
+    reach: few
     description: >-
       Payouts released before production sent money through the payments
       partner are left saying Paid.
     drawback: They say Paid, though nothing was sent.
   - id: paid-means-reached-the-balance
     name: Paid means in the balance, not the bank
-    impact: inconvenient
+    impact: negligible
+    likelihood: possible
+    reach: few
     description: >-
       Paid means the money has reached the partnership's balance with the
       payments partner, not its bank.
     drawback: >-
       The payments partner pays it on to the bank itself, usually within a
       couple of days.
-  - id: sent-payouts-not-taken-back
-    name: Sent payouts not taken back here
-    impact: inconvenient
-    description: >-
-      A sent payout isn't taken back here.
-    drawback: Corrections are settled outside the product.
-    when: A sent payout needs correcting.
 ---
 
 ## Includes
