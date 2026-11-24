@@ -14,11 +14,15 @@ drawback against. A [gap](gap.md) we'll never close is a tradeoff instead.
 One tradeoff is one choice. When a choice has two drawbacks, its drawback
 says both, rather than the choice being written twice.
 
-Its drawback has an impact, on the same scale as a gap's, and `when` it
-bites, so the choices we live with can be ordered by what we've accepted, as
-[risk](risk.md) describes. A choice that's fine until something changes,
-such as a quicker design that slows down as bills grow, says so in `when`,
-which is also when it's worth looking at again.
+A tradeoff carries no [risk](risk.md). Risk asks whether it's OK to leave
+something open, and a tradeoff is the answer: someone weighed its drawback
+against its benefit and chose to live with it. Its drawback says what was
+accepted, in words. A choice that's fine until something changes, such as a
+quicker design that slows down as bills grow, says so in its drawback, which
+is also when it's worth looking at again. A drawback that starts to worry
+someone means the choice isn't settled any more: it's reopened as an
+[open decision](open-decision.md), or turned back into a gap, which is
+scored.
 
 It's on the thing the choice was made about:
 
@@ -44,22 +48,22 @@ Tradeoffs are listed in the frontmatter of the doc they're on, each with an
 `id`, a `name` saying in a few words what we chose, a `description` saying
 what we chose and not what, its `benefit`, and its
 `drawback`. Optionally, as a gap does, its `outcome` names the checklist
-outcome it falls short of, and its `impact` and `when` rate its drawback. On the [ledger](../../../spec/examples/hotel-billing/docs/technical/components/ledger.md):
+outcome it falls short of. On the [ledger](../../../spec/examples/hotel-billing/docs/technical/components/ledger.md):
 
 ```yaml
 tradeoffs:
   - id: balance-worked-out-on-read
     name: Balance summed on read, not stored
     outcome: efficiency/beta/bounded
-    impact: inconvenient
     description: >-
       A bill's balance is added up from its lines every time it's asked for,
       not stored on the bill.
     benefit: >-
       The balance can never disagree with the lines, and there's nothing to
       keep in step when a line is added.
-    drawback: Opening a bill gets slower as lines are added to it.
-    when: A bill grows to thousands of lines, as on a long company stay.
+    drawback: >-
+      Opening a bill gets slower as lines are added to it, which shows once a
+      bill grows to thousands of lines, as on a long company stay.
 ```
 
 The code it explains points at it:
@@ -76,7 +80,6 @@ A feature's tradeoff is written the same way, on
 tradeoffs:
   - id: front-desk-bookings-only
     name: Front desk bookings only
-    impact: inconvenient
     description: >-
       Bookings are taken at the front desk, not from online travel agencies.
     benefit: >-

@@ -13,8 +13,6 @@ capabilities:
 tradeoffs:
   - id: apps-hold-people-to-agreements
     name: Agreements enforced in the apps, not the API
-    impact: damaging
-    likelihood: unlikely
     description: >-
       The apps hold people to an agreement, not the API: the portal's,
       console's and hub's gates keep someone out until one is in effect, and
@@ -24,9 +22,6 @@ tradeoffs:
       without an agreement in effect.
   - id: pdf-laid-out-in-go
     name: PDFs drawn in Go without Unicode fonts
-    impact: inconvenient
-    likelihood: possible
-    reach: few
     description: >-
       The PDF is laid out in Go with fpdf's Helvetica, not a browser or a
       Unicode font, so there's no headless browser to run or font to ship.
@@ -36,15 +31,13 @@ tradeoffs:
       "?" in its PDF.
   - id: accepted-agreements-outlive-their-user
     name: Accepted agreements kept after their user is deleted
-    impact: negligible
-    likelihood: unlikely
-    reach: few
     description: >-
       Accepted agreements outlive their user: deleting a user clears `user_id`
       on their accepted ones (migration 91) and keeps their PDFs, since the PDF
       is the record of what was agreed.
-    drawback: A deleted person's name and email stay in those PDFs and rows.
-    when: A user who accepted an agreement is deleted.
+    drawback: >-
+      A deleted person's name and email stay in those PDFs and rows. That
+      matters when a user who accepted an agreement is deleted.
 ---
 
 An offer is a row with its type, version and Commercial Terms. While it's

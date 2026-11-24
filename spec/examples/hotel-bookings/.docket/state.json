@@ -37,21 +37,7 @@
       "decisions": [
         {
           "topic": "Early arrivals",
-          "question": "When a guest arrives before the room's usual check-in time, does their stay start that day, or is the night before part of it?",
-          "status": "open",
-          "answer": null,
-          "became": [],
-          "gaps": []
-        },
-        {
-          "topic": "Same-day turnover",
-          "question": "Can a room be booked from the day an earlier booking checks out?",
-          "status": "closed",
-          "answer": "Yes. The two stays don't share a night, and there's time to clean the room between check-out and check-in.",
-          "became": [
-            "rule:same-day-turnover"
-          ],
-          "gaps": []
+          "question": "When a guest arrives before the room's usual check-in time, does their stay start that day, or is the night before part of it?"
         }
       ],
       "body": ""
@@ -78,28 +64,7 @@
         "capability:group-bookings",
         "capability:waitlist"
       ],
-      "decisions": [
-        {
-          "topic": "Agency bookings",
-          "question": "Should bookings come in from online travel agencies?",
-          "status": "closed",
-          "answer": "Not yet. Most bookings come straight to the desk, so clerks enter the few agency bookings by hand.",
-          "became": [
-            "feature:reservations#front-desk-bookings-only"
-          ],
-          "gaps": []
-        },
-        {
-          "topic": "Groups",
-          "question": "Should a group be able to book several rooms under one name?",
-          "status": "closed",
-          "answer": "Yes, as a capability of its own, explored as a prototype first.",
-          "became": [
-            "capability:group-bookings"
-          ],
-          "gaps": []
-        }
-      ],
+      "decisions": [],
       "body": "",
       "tradeoffs": [
         "feature:reservations#front-desk-bookings-only"
@@ -214,18 +179,7 @@
       "gaps": [
         "capability:room-booking#calendar-needs-a-mouse"
       ],
-      "decisions": [
-        {
-          "topic": "Booking from the keyboard",
-          "question": "Must clerks be able to book from the keyboard alone at Beta?",
-          "status": "closed",
-          "answer": "Yes, since Beta expects everyone to be able to use it. The calendar doesn't support it yet, so it's a known gap.",
-          "became": [
-            "capability:room-booking#calendar-needs-a-mouse"
-          ],
-          "gaps": []
-        }
-      ],
+      "decisions": [],
       "body": "## Includes\n\n- Clerks see which rooms are free for a stay.\n- Clerks move a booking to new dates.\n\n## Success\n\n- The front desk stops keeping the paper diary alongside the app.",
       "feature": "feature:reservations",
       "evidence": {
@@ -271,11 +225,7 @@
       "decisions": [
         {
           "topic": "No-shows",
-          "question": "Is a guest who never arrives treated as a late cancellation, or charged for the whole stay?",
-          "status": "open",
-          "answer": null,
-          "became": [],
-          "gaps": []
+          "question": "Is a guest who never arrives treated as a late cancellation, or charged for the whole stay?"
         }
       ],
       "body": "## Includes\n\n- Clerks tell a guest what they'd be refunded if they cancelled now.",
@@ -355,11 +305,7 @@
       "decisions": [
         {
           "topic": null,
-          "question": "Is ordering by arrival time enough, or do housekeepers plan by floor?",
-          "status": "open",
-          "answer": null,
-          "became": [],
-          "gaps": []
+          "question": "Is ordering by arrival time enough, or do housekeepers plan by floor?"
         }
       ],
       "body": "",
@@ -391,11 +337,7 @@
       "decisions": [
         {
           "topic": null,
-          "question": "Do groups want one booking with many rooms, or many bookings linked together?",
-          "status": "open",
-          "answer": null,
-          "became": [],
-          "gaps": []
+          "question": "Do groups want one booking with many rooms, or many bookings linked together?"
         }
       ],
       "body": "",
@@ -422,11 +364,7 @@
       "decisions": [
         {
           "topic": null,
-          "question": "Do rates change often enough to need a calendar, or is a rate per season enough?",
-          "status": "open",
-          "answer": null,
-          "became": [],
-          "gaps": []
+          "question": "Do rates change often enough to need a calendar, or is a rate per season enough?"
         }
       ],
       "body": "",
@@ -456,11 +394,7 @@
       "decisions": [
         {
           "topic": null,
-          "question": "Will housekeepers update a room's status as they go, or at the end of their round?",
-          "status": "open",
-          "answer": null,
-          "became": [],
-          "gaps": []
+          "question": "Will housekeepers update a room's status as they go, or at the end of their round?"
         }
       ],
       "body": "## Includes\n\n- Clerks see which rooms are ready for arriving guests.",
@@ -497,11 +431,7 @@
       "decisions": [
         {
           "topic": "Who goes first",
-          "question": "Whoever asked first, or whoever's stay fits the free nights best?",
-          "status": "open",
-          "answer": null,
-          "became": [],
-          "gaps": []
+          "question": "Whoever asked first, or whoever's stay fits the free nights best?"
         }
       ],
       "body": "## Includes\n\n- Clerks see who is waiting for each night.",
@@ -762,11 +692,7 @@
       "decisions": [
         {
           "topic": "Second instance",
-          "question": "Once there's a second server, do releases switch over all at once, or one server at a time?",
-          "status": "open",
-          "answer": null,
-          "became": [],
-          "gaps": []
+          "question": "Once there's a second server, do releases switch over all at once, or one server at a time?"
         }
       ],
       "body": "Every merge to `main` builds one container image, tagged with the commit, and\ndeploys it. Rolling back deploys the previous tag. Migrations run before the\nnew image starts, from `db/migrations/`, in filename order."
@@ -821,7 +747,8 @@
       "outcome": null,
       "rule": "rule:late-cancellation-fee",
       "impact": "damaging",
-      "when": null,
+      "likelihood": null,
+      "reach": null,
       "name": "Late cancellations refunded in full",
       "description": "The late-cancellation fee isn't charged yet, so every cancellation is refunded in full.",
       "places": []
@@ -832,7 +759,8 @@
       "outcome": "usability/beta/everyone",
       "rule": null,
       "impact": "blocking",
-      "when": null,
+      "likelihood": null,
+      "reach": null,
       "name": "Calendar needs a mouse",
       "description": "The room calendar can't be used from the keyboard, so clerks need a mouse to pick dates.",
       "places": []
@@ -842,7 +770,8 @@
       "outcome": "reliability/ga/recovery",
       "rule": null,
       "impact": "damaging",
-      "when": "A release that changed the schema has to be undone.",
+      "likelihood": "possible",
+      "reach": null,
       "name": "Migrations have no down step",
       "description": "Migrations have no down step, so undoing a release that changed the schema means restoring the database from the night before.",
       "places": []
@@ -852,9 +781,10 @@
       "outcome": "observability/beta/hears-of-errors",
       "rule": null,
       "impact": "inconvenient",
-      "when": "Two bookings for the same room arrive at once.",
+      "likelihood": "possible",
+      "reach": null,
       "name": "Booking clashes logged as unknown errors",
-      "description": "`saveBooking` passes every database error up as it is, so a clash that only the exclusion constraint caught is logged as an unknown failure, not as a double booking that was refused.",
+      "description": "`saveBooking` passes every database error up as it is, so a clash that only the exclusion constraint caught is logged as an unknown failure, not as a double booking that was refused. That happens when two bookings for the same room arrive at once.",
       "places": [
         {
           "file": "src/booking/repository.ts",
@@ -873,8 +803,6 @@
       "description": "A booking holds one room, not several.",
       "benefit": "Booking, changing and cancelling stay simple: each booking is one room for one stay.",
       "drawback": "A family that needs two rooms makes two bookings. Group bookings is where several rooms under one name is being explored.",
-      "impact": "inconvenient",
-      "when": null,
       "places": []
     },
     {
@@ -885,8 +813,6 @@
       "description": "Bookings are taken at the front desk, not from online travel agencies.",
       "benefit": "No agency integrations to build or keep working, while most bookings come straight to the desk.",
       "drawback": "Clerks enter each agency booking by hand, as it arrives by email.",
-      "impact": "inconvenient",
-      "when": null,
       "places": []
     },
     {
@@ -896,8 +822,6 @@
       "description": "Migrations run before the new image starts, while the old one is still serving, rather than stopping the app for each release.",
       "benefit": "Releases don't take the front desk offline.",
       "drawback": "The running code has to work with the new schema for a minute, so a column is added a release before it's used, and removed a release after the code stops reading it.",
-      "impact": "inconvenient",
-      "when": null,
       "places": []
     },
     {
@@ -907,8 +831,6 @@
       "description": "The database refuses overlapping bookings with an exclusion constraint, rather than the app locking the room while it checks.",
       "benefit": "No two bookings can overlap, however they arrive at once, without the app having to get locking right. The check in the app is only there to give clerks a clear message first.",
       "drawback": "Bookings need Postgres with `btree_gist`, so they can't move to a database without it.",
-      "impact": "inconvenient",
-      "when": "Bookings move to another database.",
       "places": [
         {
           "file": "db/migrations/001_bookings.sql",

@@ -79,8 +79,8 @@ changed, not docs to fill in the structure.
 | Something is missing that you or the user mean to fix                      | A gap: on the capability if people using it would notice, on the component or mechanism if only someone working on the code would         |
 | Something was chosen over an alternative, with a drawback                  | A tradeoff on the doc it's about, with its `benefit` and `drawback`, and `docket:tradeoff` on the code where it shows                     |
 | A question about intention came up that nobody has answered                | An open decision on the doc it's about. Ask first if the answer changes what you build                                                    |
-| A decision was made                                                        | Close it: `status: closed`, its `answer`, and in `became` what it was written as                                                          |
-| A gap was closed                                                           | Remove it, its `docket:gap` annotations, and its key from any decision's `gaps`                                                           |
+| A decision was made                                                        | Delete it, and write the answer as whatever it became                                                                                     |
+| A gap was closed                                                           | Remove it and its `docket:gap` annotations                                                                                                |
 | Code now implements or verifies a rule, capability, mechanism or component | A `docket:implements` or `docket:verifies` annotation on it. See [annotations.md](annotations.md)                                         |
 | A new area of code has something the code can't say                        | A component, with `docket:implements` on its entry points. Most code needs no doc                                                         |
 | How something already documented works has changed                         | Its body, so it no longer says something untrue                                                                                           |
@@ -89,7 +89,7 @@ changed, not docs to fill in the structure.
 | Code that an annotation names was deleted or moved                         | Move or remove the annotation with it                                                                                                     |
 
 [gaps-and-decisions.md](gaps-and-decisions.md) covers gaps, tradeoffs and
-decisions, including how to rate a gap's impact. [docs.md](docs.md) covers how
+decisions, including how to rate a gap's impact, likelihood and reach. [docs.md](docs.md) covers how
 to write each doc.
 
 Product docs never name pages, buttons, endpoints, tables or functions, so a
@@ -105,7 +105,7 @@ person has stated or confirmed it.
 | Who decides | What                                                                                                                                                                            |
 | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | A person    | What the software should do, its rules, who it serves, each capability's level, which feature a capability is in, whether a gap is closed later or accepted as a tradeoff       |
-| You         | Annotations, what a technical doc says about how the code works, gaps you found or left, tradeoffs in how you built something, and each one's impact, all listed in your report |
+| You         | Annotations, what a technical doc says about how the code works, gaps you found or left and each one's impact, likelihood and reach, and tradeoffs in how you built something, all listed in your report |
 
 - **The user's request is a decision.** When they say what the software should
   do, write it down. When they say a rule, write the rule.
@@ -144,7 +144,7 @@ Then tell the user, in a short **Docket** section at the end of your report:
 - What you changed in the docs and annotations.
 - What's waiting on them: intention you inferred that needs confirming,
   questions you recorded as open decisions, and gaps and tradeoffs you added,
-  each with its impact.
+  each with its impact, likelihood and reach.
 
 Don't commit unless you're asked to.
 

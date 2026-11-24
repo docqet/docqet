@@ -73,7 +73,6 @@ gaps:
     reach: few
     description: >-
       Someone's earnings go if their user is deleted.
-    when: Someone's user is deleted.
 ---
 
 ## Includes

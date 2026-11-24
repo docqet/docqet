@@ -459,19 +459,11 @@
       "decisions": [
         {
           "topic": null,
-          "question": "Is this the right way to choose notifications?",
-          "status": "open",
-          "answer": null,
-          "became": [],
-          "gaps": []
+          "question": "Is this the right way to choose notifications?"
         },
         {
           "topic": null,
-          "question": "Which notifications do people want at all?",
-          "status": "open",
-          "answer": null,
-          "became": [],
-          "gaps": []
+          "question": "Which notifications do people want at all?"
         }
       ],
       "body": "## Includes\n\n- Clients, engineers, admins and partners set up the channels their\n  notifications can go to, such as the verified email addresses on their\n  account.\n- Clients are notified when a payment fails, an invoice is issued, or an invited\n  member joins.",
@@ -582,13 +574,7 @@
       "decisions": [
         {
           "topic": "Keeping a closed organization's data",
-          "question": "How long is an organization's data kept after it closes?",
-          "status": "open",
-          "answer": null,
-          "became": [],
-          "gaps": [
-            "retention-not-decided"
-          ]
+          "question": "How long is an organization's data kept after it closes?"
         }
       ],
       "body": "## Includes\n\n- Clients log in.\n- The software gives a client an engineering team on signing up.\n- Clients accept an invitation to join an organization, signing up first if they\n  don't have an account yet.\n- Clients switch between the organizations they belong to, and create another.\n- Clients update the organization's details, and its billing information on the\n  payment provider's pages.\n- Clients see which partner referred the organization, by name, when one did.\n- Admins manage members, and give each one the Admin, Member, or Billing role.\n- Admins see the organization's pending invitations, with each one's email\n  address, role, and when it was sent.\n- Admins revoke a pending invitation.\n- Clients leave the organization.\n\n## Success\n\n- Not agreed with the client yet.",
@@ -742,11 +728,7 @@
       "decisions": [
         {
           "topic": "Changing shared definitions",
-          "question": "When a shared definition changes, how does that reach agreement versions that were already accepted?",
-          "status": "open",
-          "answer": null,
-          "became": [],
-          "gaps": []
+          "question": "When a shared definition changes, how does that reach agreement versions that were already accepted?"
         }
       ],
       "body": "## Includes\n\n- Admins set the Commercial Terms of the Engineer Agreement when inviting\n  someone to the console.\n- Admins send an engineer a new Engineer Agreement on the terms chosen.\n- Admins send an Engineer Agreement with no terms, or no shares.\n- Admins see an engineer's Engineer Agreements, offered and accepted, and open\n  each accepted one as the PDF made when it was accepted.",
@@ -797,13 +779,7 @@
       "decisions": [
         {
           "topic": "Changing shared definitions",
-          "question": "When a shared definition changes, how does that reach agreement versions that were already accepted?",
-          "status": "open",
-          "answer": null,
-          "became": [],
-          "gaps": [
-            "shared-definitions-changed-in-place"
-          ]
+          "question": "When a shared definition changes, how does that reach agreement versions that were already accepted?"
         }
       ],
       "body": "## Includes\n\n- Members and Billing see that an Admin has to accept the Client Agreement\n  first, and switch to another organization meanwhile.\n- Everyone in the organization sees its accepted Client Agreements, who accepted\n  each and when, and opens each as the PDF made when it was accepted, to read,\n  print, or download.\n- Clients are told if another Admin accepted it while they were reading, or\n  their role changed so they no longer can, and see the organization as it is\n  now instead.\n\n## Success\n\n- Every organization working in the portal has a Client Agreement in effect,\n  accepted by one of its Admins without help, and everyone in it can open the\n  copy they accepted.",
@@ -854,13 +830,7 @@
       "decisions": [
         {
           "topic": "Changing shared definitions",
-          "question": "When a shared definition changes, how does that reach agreement versions that were already accepted?",
-          "status": "open",
-          "answer": null,
-          "became": [],
-          "gaps": [
-            "shared-definitions-changed-in-place"
-          ]
+          "question": "When a shared definition changes, how does that reach agreement versions that were already accepted?"
         }
       ],
       "body": "## Includes\n\n- Engineers see their accepted Engineer Agreements, which one is in effect, and\n  its terms, and open each accepted one as the PDF made when it was accepted, to\n  read, print, or download.\n- Engineers see a newer Engineer Agreement waiting for them, read it in full,\n  and accept it.\n- Engineers are told if the one they're accepting was replaced or already\n  accepted while they read it, and read what's waiting now instead.\n\n## Success\n\n- Every engineer working in the console has an Engineer Agreement in effect,\n  reads and accepts a new one without help, and is paid by the terms they\n  accepted.",
@@ -980,11 +950,7 @@
       "decisions": [
         {
           "topic": null,
-          "question": "Is a coupon for one client, taken off each block's price, forever or once, the shape Exalynt needs?",
-          "status": "open",
-          "answer": null,
-          "became": [],
-          "gaps": []
+          "question": "Is a coupon for one client, taken off each block's price, forever or once, the shape Exalynt needs?"
         }
       ],
       "body": "## Includes\n\n- Admins end a coupon, and see a client's coupons, active, used up, and ended.\n- Admins see where each coupon was used, and what it took off.",
@@ -1071,27 +1037,15 @@
       "decisions": [
         {
           "topic": "Buying without a call",
-          "question": "The site says blocks are \"bought after a call, not from a card\", but clients can purchase in the app. Does a client's first block, or every block, follow a call? A client can buy before it has a team, and Exalynt contacts a new client before its first block starts, outside the product.",
-          "status": "open",
-          "answer": null,
-          "became": [],
-          "gaps": []
+          "question": "The site says blocks are \"bought after a call, not from a card\", but clients can purchase in the app. Does a client's first block, or every block, follow a call? A client can buy before it has a team, and Exalynt contacts a new client before its first block starts, outside the product."
         },
         {
           "topic": "Refunds and cancellation",
-          "question": "We promise to fulfill or refund every block. When and how a refund happens, who can start one, and whether a client can cancel a block that hasn't been fulfilled are all still open. That includes what happens to unfulfilled blocks when a client closes their account, and whether a refunded first purchase still opens a partnership's earning window.",
-          "status": "open",
-          "answer": null,
-          "became": [],
-          "gaps": []
+          "question": "We promise to fulfill or refund every block. When and how a refund happens, who can start one, and whether a client can cancel a block that hasn't been fulfilled are all still open. That includes what happens to unfulfilled blocks when a client closes their account, and whether a refunded first purchase still opens a partnership's earning window."
         },
         {
           "topic": "Who sees the payout basis",
-          "question": "Each type of block's Capacity Payout Basis is listed with its price for anyone signed in, clients included, so engineers can see what a block would earn them before claiming it. Whether clients should see it, beside the price they pay, is still to be decided.",
-          "status": "open",
-          "answer": null,
-          "became": [],
-          "gaps": []
+          "question": "Each type of block's Capacity Payout Basis is listed with its price for anyone signed in, clients included, so engineers can see what a block would earn them before claiming it. Whether clients should see it, beside the price they pay, is still to be decided."
         }
       ],
       "body": "## Includes\n\n- Clients review an order with its tax, as the payment provider works it out,\n  before buying it for that total.\n- Clients buy more than one block for the same week, to move separate work\n  forward in parallel.\n- Clients see every block they've bought in one table, sorted by any column and\n  filtered by status, type, engineer, team, and when it was bought, each with\n  its type, size, who's on it, its week, when it was bought, and what it needs\n  from them next.\n- Clients open any block to see it on its own, with its invoice.",
@@ -1151,11 +1105,7 @@
       "decisions": [
         {
           "topic": "Unclaiming window",
-          "question": "An engineer can unclaim until a block's week starts, even hours before, leaving it with nobody as the week begins. Keep that, or stop unclaiming some days before the week starts?",
-          "status": "open",
-          "answer": null,
-          "became": [],
-          "gaps": []
+          "question": "An engineer can unclaim until a block's week starts, even hours before, leaving it with nobody as the week begins. Keep that, or stop unclaiming some days before the week starts?"
         }
       ],
       "body": "## Includes\n\n- Engineers see their upcoming and current blocks, for any client.\n- Engineers see their weeks a month at a time, each with their availability and\n  the blocks they're on. What doesn't fit their availability shows too, greyed,\n  with why.\n- Engineers see what each block would earn them once it's fulfilled, by the\n  Engineer Share in their agreement and the block's payout basis.\n- Engineers see what's expected of them that week before claiming a block.\n- Engineers claim a block late, after its preferred week has started.\n- Before claiming, engineers see any other block that week the claim would leave\n  with nobody who can take it, and can claim anyway.\n- Engineers unclaim a block whether they claimed it or an admin put them on it.\n  It goes back to the client's shared queue.",
@@ -1319,11 +1269,7 @@
       "decisions": [
         {
           "topic": "Clients who can't join",
-          "question": "They're reached by email, outside the app. Whether anything should help with that is undecided.",
-          "status": "open",
-          "answer": null,
-          "became": [],
-          "gaps": []
+          "question": "They're reached by email, outside the app. Whether anything should help with that is undecided."
         }
       ],
       "body": "## Includes\n\n- The app keeps who belongs where in step with the messaging provider, and\n  points at the conversations.\n- Clients join their organization's space once they're in the organization:\n  they're put in, or invited if the messaging provider requires it, without\n  asking.\n- Clients talk about any block from when it's bought.\n- Engineers join the space of every client their team supports, without asking.\n- Engineers see who is in a client's space: the client's people and Exalynt's,\n  which of them leads a team, who has yet to accept an invitation, and who can't\n  join and has to be emailed instead.\n- Engineers see a block's conversations, how many messages each has, when the\n  last came, and how many they haven't read, and open them: in the console with\n  Stream, or in Google Chat.\n- Team leads do everything an engineer can, for the clients their team supports.\n- Admins do everything an engineer can, for every client.",
@@ -1468,11 +1414,7 @@
       "decisions": [
         {
           "topic": "Asking for estimates and engineers",
-          "question": "Is asking for an estimate, or for a particular engineer, a flow of its own? _At MVP:_ no. Clients ask Exalynt outside the product.",
-          "status": "open",
-          "answer": null,
-          "became": [],
-          "gaps": []
+          "question": "Is asking for an estimate, or for a particular engineer, a flow of its own? _At MVP:_ no. Clients ask Exalynt outside the product."
         }
       ],
       "body": "## Includes\n\n- Clients see the pace each focus of an estimate is planned at, and any\n  discounts off it.\n- Clients download an estimate as a PDF.\n- Engineers prepare and update estimates: focuses, such as new features or\n  improvements to an existing system, each sized, planned at a pace and still\n  priced on every block type, with an optional description and notes, and\n  discounts off the whole project.\n- Admins prepare and update estimates for any client organization, or for a\n  prospect that isn't a client yet, with discounts off the whole project.\n- Admins send a prospect their estimate as a PDF, and attach it to their\n  organization once they sign up.",
@@ -1587,67 +1529,35 @@
       "decisions": [
         {
           "topic": "Choosing who operates",
-          "question": "The client chooses how their software is operated and can decide any time before launch. Exalynt operates only software it built.",
-          "status": "open",
-          "answer": null,
-          "became": [],
-          "gaps": []
+          "question": "The client chooses how their software is operated and can decide any time before launch. Exalynt operates only software it built."
         },
         {
           "topic": "Operations fee",
-          "question": "For software Exalynt operates, the operations fee starts only once it's in production use. Infrastructure is passed through at cost.",
-          "status": "open",
-          "answer": null,
-          "became": [],
-          "gaps": []
+          "question": "For software Exalynt operates, the operations fee starts only once it's in production use. Infrastructure is passed through at cost."
         },
         {
           "topic": "Taking over",
-          "question": "A client can take over operations at any time. The handoff is one-way, and Exalynt doesn't take operations back.",
-          "status": "open",
-          "answer": null,
-          "became": [],
-          "gaps": []
+          "question": "A client can take over operations at any time. The handoff is one-way, and Exalynt doesn't take operations back."
         },
         {
           "topic": "Ownership",
-          "question": "The client owns the custom software, its source code, and their data, and keeps them when they stop. Exalynt keeps its reusable libraries, tooling, and frameworks.",
-          "status": "open",
-          "answer": null,
-          "became": [],
-          "gaps": []
+          "question": "The client owns the custom software, its source code, and their data, and keeps them when they stop. Exalynt keeps its reusable libraries, tooling, and frameworks."
         },
         {
           "topic": "Going live",
-          "question": "Who marks software as live in production, which starts the operations fee?",
-          "status": "open",
-          "answer": null,
-          "became": [],
-          "gaps": []
+          "question": "Who marks software as live in production, which starts the operations fee?"
         },
         {
           "topic": "Takeover handoff",
-          "question": "Who carries out a takeover, and how are source code, data, and deployment and configuration artifacts handed over?",
-          "status": "open",
-          "answer": null,
-          "became": [],
-          "gaps": []
+          "question": "Who carries out a takeover, and how are source code, data, and deployment and configuration artifacts handed over?"
         },
         {
           "topic": "Infrastructure charges",
-          "question": "Who records infrastructure pass-through charges, and how often are they billed?",
-          "status": "open",
-          "answer": null,
-          "became": [],
-          "gaps": []
+          "question": "Who records infrastructure pass-through charges, and how often are they billed?"
         },
         {
           "topic": null,
-          "question": "Operations needs fleshing out as a whole. Client capabilities and rules are written, but Exalynt's side isn't decided yet.",
-          "status": "open",
-          "answer": null,
-          "became": [],
-          "gaps": []
+          "question": "Operations needs fleshing out as a whole. Client capabilities and rules are written, but Exalynt's side isn't decided yet."
         }
       ],
       "body": "## Includes\n\n- Clients see whether each piece of their software is live in production, and\n  whether it's **Self Operated** or **Operated by Exalynt**.\n- Clients take over operations of software Exalynt operates, and receive its\n  source code, data, and deployment and configuration artifacts.\n- Clients get their source code and data at any time, including when they stop\n  working with Exalynt.\n- Clients see where their code lives and who has access to it.",
@@ -1703,27 +1613,15 @@
       "decisions": [
         {
           "topic": "Rescheduling window",
-          "question": "Until when can a client move or take back a scheduled block? Any time before its week starts, or only up to some point before it?",
-          "status": "open",
-          "answer": null,
-          "became": [],
-          "gaps": []
+          "question": "Until when can a client move or take back a scheduled block? Any time before its week starts, or only up to some point before it?"
         },
         {
           "topic": "Unscheduled capacity",
-          "question": "Do clients get reminders to schedule? Can admins or leads schedule on a client's behalf? What happens to capacity that's never scheduled?",
-          "status": "open",
-          "answer": null,
-          "became": [],
-          "gaps": []
+          "question": "Do clients get reminders to schedule? Can admins or leads schedule on a client's behalf? What happens to capacity that's never scheduled?"
         },
         {
           "topic": "Preferred-week moves",
-          "question": "Is a reason shown to the client? Should moving the week of a block that has an assigned engineer require someone to acknowledge coverage?",
-          "status": "open",
-          "answer": null,
-          "became": [],
-          "gaps": []
+          "question": "Is a reason shown to the client? Should moving the week of a block that has an assigned engineer require someone to acknowledge coverage?"
         }
       ],
       "body": "## Includes\n\n- Clients see each block's preferred week, its assigned engineer if there is\n  one, and that engineer's team.\n- The software takes an engineer off a block the client takes back out of its\n  week.\n- Admins move a block's preferred week.",
@@ -1781,19 +1679,11 @@
       "decisions": [
         {
           "topic": "Cross-team handoff",
-          "question": "Do leads confirm a handoff in the product, or coordinate outside the product and have the current engineer release the block?",
-          "status": "open",
-          "answer": null,
-          "became": [],
-          "gaps": []
+          "question": "Do leads confirm a handoff in the product, or coordinate outside the product and have the current engineer release the block?"
         },
         {
           "topic": "Urgent blocks",
-          "question": "Are there reminders before the preferred week starts, and who owns escalation once a block is urgent? Which channels carry release and urgent alerts?",
-          "status": "open",
-          "answer": null,
-          "became": [],
-          "gaps": []
+          "question": "Are there reminders before the preferred week starts, and who owns escalation once a block is urgent? Which channels carry release and urgent alerts?"
         }
       ],
       "body": "## Includes\n\n- Admins see capacity purchases, and upcoming and current assignments, across\n  all clients and teams.\n- Admins spot overbooked blocks, and blocks that are scheduled but unassigned.\n- Admins reassign or unassign a scheduled block.",
@@ -2106,21 +1996,11 @@
       "decisions": [
         {
           "topic": "Referral codes over time",
-          "question": "Can a partner get a new code, for instance after sharing one too widely, and does the old one stop working?",
-          "status": "open",
-          "answer": null,
-          "became": [],
-          "gaps": []
+          "question": "Can a partner get a new code, for instance after sharing one too widely, and does the old one stop working?"
         },
         {
           "topic": "Changing terms",
-          "question": "Terms are set when inviting a partnership. Can an admin change them afterwards, and if so, does a change reach clients already attributed or only those attributed after it?",
-          "status": "open",
-          "answer": null,
-          "became": [],
-          "gaps": [
-            "no-handover-or-new-terms"
-          ]
+          "question": "Terms are set when inviting a partnership. Can an admin change them afterwards, and if so, does a change reach clients already attributed or only those attributed after it?"
         }
       ],
       "body": "## Includes\n\n- Exalynt enrolls clients, engineers, or established external partners.\n- Clients sign up with a partner's referral code or link, and are told when\n  signing up that the partner may earn from it.\n- Partners accept Exalynt's invitation to the Partnership Program and its\n  Partner Agreement in one step, reading the agreement first.\n- Partners name the partnership after themselves or the business they partner\n  for, and rename it.\n- Partners see and copy the partnership's referral code and sign-up link, with a\n  reminder to tell the people they share it with that they may earn from it.\n- Partners see the partnership's terms: its share, what it's a share of, and how\n  long it earns on each client, or that it has no time limit.\n- Partners who manage several partnerships switch between them, viewing one at a\n  time.\n- Admins enroll a partner in the Partnership Program by inviting them by email,\n  including someone who already has an account as a client member or engineer,\n  and see any partnerships they already manage.\n- Admins set a partnership's terms when inviting it, as its Partner Agreement's\n  Commercial Terms, the same way as an engineer's: its Referral Share and its\n  Earning Window, how long it earns on each client, or no time limit, starting\n  from 5% of the engineering capacity referred clients purchase and have\n  fulfilled within 12 months. Inviting with no Referral Share, or no terms at\n  all, asks the admin to confirm first, since the partnership then earns\n  nothing.\n- Admins see pending partner invitations, with each one's email address, the\n  partnership it's for, and when it was sent, and revoke one.\n- Admins see the clients attributed to each partnership, with how each came to\n  it and since when.\n- Admins attribute a client to a partnership, which moves it from any other, and\n  remove a client's attribution.\n- Admins see each partnership's terms, and each of its clients' earning windows.\n- Admins see what a partnership has earned, in total and on each client, block\n  by block, and every payout sent to it.",
@@ -12280,12 +12160,11 @@
       "outcome": null,
       "rule": null,
       "impact": "damaging",
-      "when": "Someone impersonates a user through the sign-in provider.",
+      "likelihood": "unlikely",
+      "reach": null,
       "name": "Impersonators can create lasting tokens",
       "description": "Someone impersonating a user through the sign-in provider can create a token for them, which outlasts the impersonation.",
-      "places": [],
-      "likelihood": "unlikely",
-      "reach": null
+      "places": []
     },
     {
       "id": "capability:access-tokens#bans-can-arrive-late",
@@ -12293,12 +12172,11 @@
       "outcome": null,
       "rule": "rule:bans-suspend-a-persons-tokens",
       "impact": "damaging",
-      "when": "Someone is banned.",
+      "likelihood": "unlikely",
+      "reach": null,
       "name": "Bans can arrive late or out of order",
       "description": "A ban can arrive late or out of order: a banned user's tokens work until word of it arrives. An older update arriving after the ban undoes it until the next update or a sync, and nothing runs the sync on a schedule, so that could be a long time. An update that doesn't mention a ban leaves it alone.",
-      "places": [],
-      "likelihood": "unlikely",
-      "reach": null
+      "places": []
     },
     {
       "id": "capability:organizations-and-members#invitations-never-expire",
@@ -12306,12 +12184,11 @@
       "outcome": null,
       "rule": null,
       "impact": "inconvenient",
-      "when": null,
+      "likelihood": "possible",
+      "reach": "few",
       "name": "Invitations never expire and can't be resent",
       "description": "Invitations never expire and can't be resent: an Admin revokes one and invites the same address again.",
-      "places": [],
-      "likelihood": "possible",
-      "reach": "few"
+      "places": []
     },
     {
       "id": "capability:organizations-and-members#sign-up-shows-the-team",
@@ -12319,12 +12196,11 @@
       "outcome": "security/beta/misuse",
       "rule": null,
       "impact": "inconvenient",
-      "when": null,
+      "likelihood": "unlikely",
+      "reach": null,
       "name": "Sign-up reveals a team's contact details",
       "description": "Anyone who signs up sees the names and email addresses of the team they're given, with no one at Exalynt having looked at them first. Since anyone can create organizations, doing it again and again can show more than one team.",
-      "places": [],
-      "likelihood": "unlikely",
-      "reach": null
+      "places": []
     },
     {
       "id": "capability:organizations-and-members#retention-not-decided",
@@ -12332,12 +12208,11 @@
       "outcome": "security/beta/duties",
       "rule": null,
       "impact": "damaging",
-      "when": null,
+      "likelihood": "unlikely",
+      "reach": null,
       "name": "Closed organizations' data never deleted",
       "description": "Nothing of an organization's data is deleted after it closes, even on request.",
-      "places": [],
-      "likelihood": "unlikely",
-      "reach": null
+      "places": []
     },
     {
       "id": "capability:organizations-and-members#no-privacy-notice",
@@ -12345,12 +12220,11 @@
       "outcome": "security/beta/duties",
       "rule": null,
       "impact": "damaging",
-      "when": null,
+      "likelihood": "unlikely",
+      "reach": null,
       "name": "No privacy notice at sign-up",
       "description": "Sign-up doesn't link to a privacy notice, and the agreements with the services that hold people's details (sign-in, email, monitoring) aren't confirmed.",
-      "places": [],
-      "likelihood": "unlikely",
-      "reach": null
+      "places": []
     },
     {
       "id": "capability:roles#one-scope-per-permission",
@@ -12358,12 +12232,11 @@
       "outcome": null,
       "rule": null,
       "impact": "inconvenient",
-      "when": "A role with a permission given several scopes is saved in the app.",
-      "name": "Only one scope per permission",
-      "description": "A permission can be given only one scope when editing a role, though several are allowed. Saving a role's permissions keeps only the widest, so own and team becomes team, and someone on no team loses their own reach.",
-      "places": [],
       "likelihood": "possible",
-      "reach": "few"
+      "reach": "few",
+      "name": "Only one scope per permission",
+      "description": "A permission can be given only one scope when editing a role, though several are allowed. Saving a role's permissions keeps only the widest, so own and team becomes team, and someone on no team loses their own reach. That happens when a role with a permission given several scopes is saved in the app.",
+      "places": []
     },
     {
       "id": "capability:roles#deploys-restore-built-in-roles",
@@ -12371,12 +12244,11 @@
       "outcome": null,
       "rule": null,
       "impact": "damaging",
-      "when": "An admin takes a permission off a built-in role, or renames one.",
-      "name": "Deploys restore built-in roles",
-      "description": "Each deploy puts back permissions taken off Admin, Member, Billing, and Administrator, and renaming one makes a new role under the old name. A role says so going by name alone, so a role of the other kind with one of those names says it too.",
-      "places": [],
       "likelihood": "unlikely",
-      "reach": null
+      "reach": null,
+      "name": "Deploys restore built-in roles",
+      "description": "Each deploy puts back permissions taken off Admin, Member, Billing, and Administrator, and renaming one makes a new role under the old name. A role says so going by name alone, so a role of the other kind with one of those names says it too. That bites when an admin takes a permission off a built-in role, or renames one.",
+      "places": []
     },
     {
       "id": "capability:agreements#no-preview-before-sending",
@@ -12384,12 +12256,11 @@
       "outcome": null,
       "rule": null,
       "impact": "inconvenient",
-      "when": null,
+      "likelihood": "possible",
+      "reach": "few",
       "name": "No preview before sending an Engineer Agreement",
       "description": "An admin has no preview of an Engineer Agreement before sending it, the terms they choose from are a copy of the real catalog, and the list of engineers doesn't say whose agreements are in effect.",
-      "places": [],
-      "likelihood": "possible",
-      "reach": "few"
+      "places": []
     },
     {
       "id": "capability:client-agreements#new-versions-not-offered",
@@ -12397,12 +12268,11 @@
       "outcome": null,
       "rule": null,
       "impact": "inconvenient",
-      "when": "A new version of the Client Agreement is published.",
-      "name": "New versions not offered to organizations",
-      "description": "A new version of the Client Agreement isn't offered to an organization that accepted an earlier one, and nothing sends a client new terms (it has none).",
-      "places": [],
       "likelihood": "possible",
-      "reach": "some"
+      "reach": "some",
+      "name": "New versions not offered to organizations",
+      "description": "A new version of the Client Agreement isn't offered to an organization that accepted an earlier one, and nothing sends a client new terms (it has none). That matters once a new version of the Client Agreement is published.",
+      "places": []
     },
     {
       "id": "capability:client-agreements#names-outside-western-european-alphabets",
@@ -12410,12 +12280,11 @@
       "outcome": "usability/beta/everyone",
       "rule": null,
       "impact": "inconvenient",
-      "when": null,
+      "likelihood": "unlikely",
+      "reach": "few",
       "name": "Names outside Western alphabets lost in PDFs",
       "description": "A name with characters outside Western European alphabets shows them as \"?\" in the PDF, and the PDF keeps them that way once accepted.",
-      "places": [],
-      "likelihood": "unlikely",
-      "reach": "few"
+      "places": []
     },
     {
       "id": "capability:client-agreements#shared-definitions-changed-in-place",
@@ -12423,12 +12292,11 @@
       "outcome": null,
       "rule": null,
       "impact": "damaging",
-      "when": null,
+      "likelihood": "unlikely",
+      "reach": null,
       "name": "Version 1 changed in place after acceptance",
       "description": "The definition of Fulfilled, and version 1 of the Client Agreement, were changed in place to say the engineer marks a block fulfilled and nobody reviews it: a copy accepted before then still says a block is fulfilled once it's reviewed and approved. Version 1 was changed in place again to stop saying each block is assigned to a product: a copy accepted before then still does.",
-      "places": [],
-      "likelihood": "unlikely",
-      "reach": null
+      "places": []
     },
     {
       "id": "capability:engineer-agreements#new-versions-not-offered",
@@ -12436,12 +12304,11 @@
       "outcome": null,
       "rule": null,
       "impact": "inconvenient",
-      "when": "A new version of the Engineer Agreement is published.",
-      "name": "New versions not offered to engineers",
-      "description": "A new version of the Engineer Agreement isn't offered to an engineer who accepted an earlier one.",
-      "places": [],
       "likelihood": "possible",
-      "reach": "few"
+      "reach": "few",
+      "name": "New versions not offered to engineers",
+      "description": "A new version of the Engineer Agreement isn't offered to an engineer who accepted an earlier one. That matters once a new version of the Engineer Agreement is published.",
+      "places": []
     },
     {
       "id": "capability:engineer-agreements#names-outside-western-european-alphabets",
@@ -12449,12 +12316,11 @@
       "outcome": "usability/beta/everyone",
       "rule": null,
       "impact": "inconvenient",
-      "when": null,
+      "likelihood": "possible",
+      "reach": "few",
       "name": "Names outside Western alphabets lost in PDFs",
       "description": "A name with characters outside Western European alphabets shows them as \"?\" in the PDF, and the PDF keeps them that way once accepted.",
-      "places": [],
-      "likelihood": "possible",
-      "reach": "few"
+      "places": []
     },
     {
       "id": "capability:engineer-agreements#shared-definitions-changed-in-place",
@@ -12462,12 +12328,11 @@
       "outcome": null,
       "rule": null,
       "impact": "inconvenient",
-      "when": null,
+      "likelihood": "unlikely",
+      "reach": null,
       "name": "Version 1 changed in place after acceptance",
       "description": "The definition of Fulfilled, and version 1 of the Engineer Agreement, were changed in place to say the engineer marks a block fulfilled and nobody reviews it: a copy accepted before then still says a block is fulfilled once it's reviewed and approved.",
-      "places": [],
-      "likelihood": "unlikely",
-      "reach": null
+      "places": []
     },
     {
       "id": "capability:partner-agreements#names-outside-western-european-alphabets",
@@ -12475,12 +12340,11 @@
       "outcome": "usability/beta/everyone",
       "rule": null,
       "impact": "inconvenient",
-      "when": null,
+      "likelihood": "unlikely",
+      "reach": "few",
       "name": "Names outside Western alphabets lost in PDFs",
       "description": "A name with characters outside Western European alphabets shows them as \"?\" in the PDF, and the PDF keeps them that way once accepted.",
-      "places": [],
-      "likelihood": "unlikely",
-      "reach": "few"
+      "places": []
     },
     {
       "id": "capability:billing#no-fees-or-infrastructure-charges",
@@ -12488,12 +12352,11 @@
       "outcome": null,
       "rule": null,
       "impact": "inconvenient",
-      "when": null,
+      "likelihood": "possible",
+      "reach": "some",
       "name": "Operations and infrastructure charges not shown",
       "description": "Clients can't see operations fees or infrastructure pass-through charges, each shown separately from capacity.",
-      "places": [],
-      "likelihood": "possible",
-      "reach": "some"
+      "places": []
     },
     {
       "id": "capability:billing#charged-but-unrecorded-purchases",
@@ -12501,12 +12364,11 @@
       "outcome": null,
       "rule": null,
       "impact": "inconvenient",
-      "when": "A purchase is charged but recording it fails.",
+      "likelihood": "unlikely",
+      "reach": "few",
       "name": "Charged purchases can go unrecorded",
       "description": "A purchase that was charged but not recorded has no invoice or blocks with Exalynt until it's retried, and the payment provider's updates about it are ignored, since Exalynt has no record of the invoice. If it can't be retried, it's sorted out by hand with the payment provider.",
-      "places": [],
-      "likelihood": "unlikely",
-      "reach": "few"
+      "places": []
     },
     {
       "id": "capability:capacity-purchasing#unknown-outcome-retry-while-open",
@@ -12514,12 +12376,11 @@
       "outcome": null,
       "rule": "rule:retrying-a-purchase-never-charges-twice",
       "impact": "inconvenient",
-      "when": "A purchase's outcome is unknown and the client closes or reloads before trying again.",
+      "likelihood": "unlikely",
+      "reach": "few",
       "name": "Unclear purchase retry safe only while open",
       "description": "If it can't be told whether a purchase went through, the client is told so, and trying again can't charge twice, but only while that attempt is still open. Closing it, or reloading, starts a new purchase.",
-      "places": [],
-      "likelihood": "unlikely",
-      "reach": "few"
+      "places": []
     },
     {
       "id": "capability:capacity-purchasing#touch-and-screen-readers-untried",
@@ -12527,12 +12388,11 @@
       "outcome": "usability/beta/everyone",
       "rule": null,
       "impact": "inconvenient",
-      "when": "Someone buys blocks on a touch screen or with a screen reader.",
-      "name": "Touch screens and screen readers untried",
-      "description": "Real touch screens and screen readers haven't been tried.",
-      "places": [],
       "likelihood": "possible",
-      "reach": "few"
+      "reach": "few",
+      "name": "Touch screens and screen readers untried",
+      "description": "Real touch screens and screen readers haven't been tried. That matters for someone buying blocks on a touch screen or with a screen reader.",
+      "places": []
     },
     {
       "id": "capability:claiming-blocks#taken-off-untold",
@@ -12540,12 +12400,11 @@
       "outcome": null,
       "rule": null,
       "impact": "inconvenient",
-      "when": "A client moves or unschedules a claimed block.",
+      "likelihood": "possible",
+      "reach": "few",
       "name": "Engineers not told when taken off",
       "description": "An engineer isn't told when a client's move or unschedule takes them off a block, so a client can take an engineer off by moving a block away and back. My Schedule shows it the next time it's read.",
-      "places": [],
-      "likelihood": "possible",
-      "reach": "few"
+      "places": []
     },
     {
       "id": "capability:claiming-blocks#stranded-block-client-untold",
@@ -12553,12 +12412,11 @@
       "outcome": null,
       "rule": null,
       "impact": "inconvenient",
-      "when": "A claim leaves another block with nobody who can take it.",
+      "likelihood": "unlikely",
+      "reach": "few",
       "name": "Clients not told of stranded blocks",
       "description": "When a claim leaves another block with nobody who can take it, that block's client isn't told, and it surfaces as a missed week an admin rebooks.",
-      "places": [],
-      "likelihood": "unlikely",
-      "reach": "few"
+      "places": []
     },
     {
       "id": "capability:claiming-blocks#clicking-unclaims",
@@ -12566,12 +12424,11 @@
       "outcome": null,
       "rule": null,
       "impact": "inconvenient",
-      "when": null,
+      "likelihood": null,
+      "reach": "some",
       "name": "Clicking a block unclaims it",
       "description": "Before a block's week starts, clicking it on My Schedule unclaims it, so an engineer can't open its page from there until the week starts.",
-      "places": [],
-      "likelihood": null,
-      "reach": "some"
+      "places": []
     },
     {
       "id": "capability:conversation-spaces#stream-messages-final",
@@ -12579,12 +12436,11 @@
       "outcome": null,
       "rule": null,
       "impact": "inconvenient",
-      "when": "Someone sends a message they need to take back.",
-      "name": "Stream messages can't be edited or deleted",
-      "description": "With Stream, nobody can edit or delete a message once it's sent.",
-      "places": [],
       "likelihood": "possible",
-      "reach": "few"
+      "reach": "few",
+      "name": "Stream messages can't be edited or deleted",
+      "description": "With Stream, nobody can edit or delete a message once it's sent. That matters when someone sends a message they need to take back.",
+      "places": []
     },
     {
       "id": "capability:conversation-spaces#nothing-retried",
@@ -12592,12 +12448,11 @@
       "outcome": null,
       "rule": null,
       "impact": "damaging",
-      "when": "The messaging provider fails to put someone in a space or take them out.",
+      "likelihood": "unlikely",
+      "reach": null,
       "name": "Space membership changes never retried",
       "description": "Nothing is retried. If the messaging provider fails to put someone in a space, such as an engineer who just joined a client's team, they're asked to request access when they open its conversations, until a conversation is next started for that client, which puts everyone who belongs in the space. If it fails to take someone out, such as an engineer who left the team, they stay in the space and can keep reading it until they're taken out by hand. Starting a conversation says when it failed, and can be tried again.",
-      "places": [],
-      "likelihood": "unlikely",
-      "reach": null
+      "places": []
     },
     {
       "id": "capability:estimates#pdf-leaves-out-planned-pace",
@@ -12605,12 +12460,11 @@
       "outcome": null,
       "rule": null,
       "impact": "inconvenient",
-      "when": null,
+      "likelihood": "possible",
+      "reach": "few",
       "name": "PDF leaves out each focus's planned pace",
       "description": "The PDF offers the project on each pace as an option, with every focus on it, and leaves out the pace each focus was planned on.",
-      "places": [],
-      "likelihood": "possible",
-      "reach": "few"
+      "places": []
     },
     {
       "id": "capability:fulfillment#departed-engineers-blocks-stuck",
@@ -12618,12 +12472,11 @@
       "outcome": null,
       "rule": null,
       "impact": "inconvenient",
-      "when": "A block's engineer leaves before marking it fulfilled.",
+      "likelihood": "possible",
+      "reach": "few",
       "name": "Departed engineers' blocks can't be fulfilled",
       "description": "Only a block's own engineer can mark it fulfilled, so a block whose engineer has left can't be fulfilled by anyone else.",
-      "places": [],
-      "likelihood": "possible",
-      "reach": "few"
+      "places": []
     },
     {
       "id": "capability:scheduling#no-moving-in-the-admin-app",
@@ -12631,12 +12484,11 @@
       "outcome": null,
       "rule": null,
       "impact": "inconvenient",
-      "when": null,
+      "likelihood": "possible",
+      "reach": "few",
       "name": "No moving blocks in the admin app",
       "description": "An admin has no way to move a block in the admin app yet.",
-      "places": [],
-      "likelihood": "possible",
-      "reach": "few"
+      "places": []
     },
     {
       "id": "capability:scheduling#moving-takes-the-engineer-off",
@@ -12644,12 +12496,11 @@
       "outcome": null,
       "rule": null,
       "impact": "inconvenient",
-      "when": "A block with an engineer is moved to another week.",
+      "likelihood": "expected",
+      "reach": "some",
       "name": "Moving a block drops its engineer",
       "description": "Moving a block always takes its engineer off. Whoever moves it, it's to keep its engineer if they can fit it in the new week, and only otherwise go back to the shared queue for that week.",
-      "places": [],
-      "likelihood": "expected",
-      "reach": "some"
+      "places": []
     },
     {
       "id": "capability:scheduling#room-counts-the-whole-team",
@@ -12657,12 +12508,11 @@
       "outcome": null,
       "rule": null,
       "impact": "inconvenient",
-      "when": "No single eligible engineer can fit a block into a week the team has room in.",
-      "name": "Room counts the whole team's availability",
-      "description": "A week has room when the team's combined availability covers a block, though capacity a client buys is never split across engineers, so it's to need one eligible engineer who can fit the whole block alone. An admin sorts out a block no single engineer can fit.",
-      "places": [],
       "likelihood": "unlikely",
-      "reach": "few"
+      "reach": "few",
+      "name": "Room counts the whole team's availability",
+      "description": "A week has room when the team's combined availability covers a block, though capacity a client buys is never split across engineers, so it's to need one eligible engineer who can fit the whole block alone. An admin sorts out a block no single engineer can fit. That shows when no single eligible engineer can fit a block into a week the team has room in.",
+      "places": []
     },
     {
       "id": "capability:scheduling#team-changes-can-overbook",
@@ -12670,12 +12520,11 @@
       "outcome": null,
       "rule": "rule:weeks-are-never-overbooked",
       "impact": "inconvenient",
-      "when": "A team change takes away availability a week was booked against.",
+      "likelihood": "unlikely",
+      "reach": "few",
       "name": "Team changes can overbook a week",
       "description": "Team changes aren't checked against bookings, so a week can end up overbooked after it was booked. The admin's overview flags it only across all of Exalynt, not per team, and nothing else happens. An engineer offering less takes blocks out instead.",
-      "places": [],
-      "likelihood": "unlikely",
-      "reach": "few"
+      "places": []
     },
     {
       "id": "capability:scheduling#unscheduled-by-reduction-untold",
@@ -12683,12 +12532,11 @@
       "outcome": null,
       "rule": null,
       "impact": "inconvenient",
-      "when": "An engineer's reduction unschedules a client's block.",
+      "likelihood": "possible",
+      "reach": "few",
       "name": "Clients not told of unscheduled blocks",
       "description": "A client isn't told when an engineer's reduction unschedules one of their blocks. It's back among the blocks they have to schedule.",
-      "places": [],
-      "likelihood": "possible",
-      "reach": "few"
+      "places": []
     },
     {
       "id": "capability:staffing#assignment-eligibility-unchecked",
@@ -12696,12 +12544,11 @@
       "outcome": null,
       "rule": "rule:assignment-requires-eligibility",
       "impact": "inconvenient",
-      "when": "An admin puts an engineer on a block of a client their team doesn't support.",
-      "name": "Assignments not checked for eligibility",
-      "description": "An admin putting an engineer on a block isn't checked for that engineer's eligibility.",
-      "places": [],
       "likelihood": "unlikely",
-      "reach": "few"
+      "reach": "few",
+      "name": "Assignments not checked for eligibility",
+      "description": "An admin putting an engineer on a block isn't checked for that engineer's eligibility. That matters when an admin puts an engineer on a block of a client their team doesn't support.",
+      "places": []
     },
     {
       "id": "capability:staffing#assignment-availability-unchecked",
@@ -12709,12 +12556,11 @@
       "outcome": null,
       "rule": "rule:assignment-must-fit-availability",
       "impact": "inconvenient",
-      "when": "An admin puts an engineer on a block they don't have the availability for.",
-      "name": "Assignments not checked for availability",
-      "description": "An admin putting an engineer on a block isn't checked for that engineer's availability.",
-      "places": [],
       "likelihood": "unlikely",
-      "reach": "few"
+      "reach": "few",
+      "name": "Assignments not checked for availability",
+      "description": "An admin putting an engineer on a block isn't checked for that engineer's availability. That matters when an admin puts an engineer on a block they don't have the availability for.",
+      "places": []
     },
     {
       "id": "capability:teams#names-can-name-clients",
@@ -12722,12 +12568,11 @@
       "outcome": null,
       "rule": null,
       "impact": "damaging",
-      "when": "A team is named after one of its clients.",
-      "name": "Team names can name clients",
-      "description": "Nothing checks that a team's name doesn't name one of its clients, though every client it supports sees it. Name teams for what they do.",
-      "places": [],
       "likelihood": "unlikely",
-      "reach": null
+      "reach": null,
+      "name": "Team names can name clients",
+      "description": "Nothing checks that a team's name doesn't name one of its clients, though every client it supports sees it. Name teams for what they do. That matters if a team is named after one of its clients.",
+      "places": []
     },
     {
       "id": "capability:teams#terms-from-the-apps-copy",
@@ -12735,12 +12580,11 @@
       "outcome": null,
       "rule": null,
       "impact": "damaging",
-      "when": "The terms catalog changes and the app's copy isn't updated.",
-      "name": "Terms from the app's own catalog copy",
-      "description": "The terms on an invitation come from the app's own copy of the terms catalog.",
-      "places": [],
       "likelihood": "unlikely",
-      "reach": null
+      "reach": null,
+      "name": "Terms from the app's own catalog copy",
+      "description": "The terms on an invitation come from the app's own copy of the terms catalog. That matters once the terms catalog changes and the app's copy isn't updated.",
+      "places": []
     },
     {
       "id": "capability:teams#invitations-dont-expire",
@@ -12748,12 +12592,11 @@
       "outcome": null,
       "rule": null,
       "impact": "damaging",
-      "when": "An old invitation is accepted by someone who shouldn't join any more.",
-      "name": "Invitations don't expire",
-      "description": "An engineer invitation doesn't expire.",
-      "places": [],
       "likelihood": "unlikely",
-      "reach": null
+      "reach": null,
+      "name": "Invitations don't expire",
+      "description": "An engineer invitation doesn't expire. That matters if an old invitation is accepted by someone who shouldn't join any more.",
+      "places": []
     },
     {
       "id": "capability:client-invitations#existing-clients-spotted-by-name-only",
@@ -12761,12 +12604,11 @@
       "outcome": null,
       "rule": null,
       "impact": "inconvenient",
-      "when": "A company that's already a client signs up under another name.",
+      "likelihood": "unlikely",
+      "reach": "few",
       "name": "Existing clients spotted by name only",
       "description": "A company that's already a client can only be spotted by having the same name, so one signing up under another name counts as new.",
-      "places": [],
-      "likelihood": "unlikely",
-      "reach": "few"
+      "places": []
     },
     {
       "id": "capability:client-invitations#email-law-not-reviewed",
@@ -12774,12 +12616,11 @@
       "outcome": "security/beta/duties",
       "rule": null,
       "impact": "damaging",
-      "when": null,
+      "likelihood": "unlikely",
+      "reach": null,
       "name": "Email law not reviewed, and no opt-out",
       "description": "What the law asks of email a partner has Exalynt send to someone who never asked for it, such as a way to opt out, hasn't been reviewed, and the invitation has no opt-out.",
-      "places": [],
-      "likelihood": "unlikely",
-      "reach": null
+      "places": []
     },
     {
       "id": "capability:partner-clients#moving-restarts-since",
@@ -12787,12 +12628,11 @@
       "outcome": null,
       "rule": null,
       "impact": "inconvenient",
-      "when": "Exalynt moves a client to another partnership.",
-      "name": "Moving a client loses its history",
-      "description": "Moving a client starts its \"since\" afresh, and nothing keeps the partnerships a client was attributed to before.",
-      "places": [],
       "likelihood": "unlikely",
-      "reach": "few"
+      "reach": "few",
+      "name": "Moving a client loses its history",
+      "description": "Moving a client starts its \"since\" afresh, and nothing keeps the partnerships a client was attributed to before. That happens when Exalynt moves a client to another partnership.",
+      "places": []
     },
     {
       "id": "capability:partner-clients#phone-hides-how-and-window",
@@ -12800,12 +12640,11 @@
       "outcome": null,
       "rule": null,
       "impact": "inconvenient",
-      "when": null,
+      "likelihood": "expected",
+      "reach": "few",
       "name": "Phones hide client source and earning window",
       "description": "On a phone, how each client came and its earning window aren't shown.",
-      "places": [],
-      "likelihood": "expected",
-      "reach": "few"
+      "places": []
     },
     {
       "id": "capability:partnerships#existing-clients-spotted-by-name-only",
@@ -12813,12 +12652,11 @@
       "outcome": null,
       "rule": null,
       "impact": "inconvenient",
-      "when": "A company that's already a client signs up under another name.",
+      "likelihood": "unlikely",
+      "reach": "few",
       "name": "Existing clients spotted by name only",
       "description": "A company that's already a client can only be spotted by having the same name, so one signing up under another name counts as new.",
-      "places": [],
-      "likelihood": "unlikely",
-      "reach": "few"
+      "places": []
     },
     {
       "id": "capability:partnerships#no-handover-or-new-terms",
@@ -12826,12 +12664,11 @@
       "outcome": null,
       "rule": null,
       "impact": "inconvenient",
-      "when": "A partnership needs a new manager or new terms.",
-      "name": "No handover or new terms for partnerships",
-      "description": "Nothing hands a partnership to another manager, or sends it new terms.",
-      "places": [],
       "likelihood": "possible",
-      "reach": "few"
+      "reach": "few",
+      "name": "No handover or new terms for partnerships",
+      "description": "Nothing hands a partnership to another manager, or sends it new terms. That matters once a partnership needs a new manager or new terms.",
+      "places": []
     },
     {
       "id": "capability:earnings#upcoming-shares-can-change",
@@ -12839,12 +12676,11 @@
       "outcome": null,
       "rule": "rule:when-basis-and-percentages-are-fixed",
       "impact": "inconvenient",
-      "when": null,
+      "likelihood": "possible",
+      "reach": "some",
       "name": "Upcoming lead and support shares can change",
       "description": "Upcoming lead and support earnings follow today's team and availability, so they can change before the block is fulfilled. Who earns them is fixed when it's fulfilled, and the basis and percentages aren't fixed when the block is assigned.",
-      "places": [],
-      "likelihood": "possible",
-      "reach": "some"
+      "places": []
     },
     {
       "id": "capability:earnings#expected-pay-not-on-the-block",
@@ -12852,12 +12688,11 @@
       "outcome": null,
       "rule": null,
       "impact": "inconvenient",
-      "when": null,
+      "likelihood": "possible",
+      "reach": "some",
       "name": "Expected pay not shown on the block",
       "description": "What an assigned block will pay shows only among a person's earnings, not on the block.",
-      "places": [],
-      "likelihood": "possible",
-      "reach": "some"
+      "places": []
     },
     {
       "id": "capability:earnings#earnings-go-with-a-deleted-user",
@@ -12865,12 +12700,11 @@
       "outcome": null,
       "rule": null,
       "impact": "damaging",
-      "when": "Someone's user is deleted.",
+      "likelihood": "unlikely",
+      "reach": "few",
       "name": "Earnings lost when a user is deleted",
       "description": "Someone's earnings go if their user is deleted.",
-      "places": [],
-      "likelihood": "unlikely",
-      "reach": "few"
+      "places": []
     },
     {
       "id": "capability:payout-accounts#one-account-one-country",
@@ -12878,12 +12712,11 @@
       "outcome": null,
       "rule": null,
       "impact": "inconvenient",
-      "when": "Someone wants a second account, or to be paid in another country.",
-      "name": "One account, its country fixed once chosen",
-      "description": "There's one account per person or partnership, and its country is fixed once it's chosen, as the payments partner's form holds one and verifies them for one country.",
-      "places": [],
       "likelihood": "unlikely",
-      "reach": "few"
+      "reach": "few",
+      "name": "One account, its country fixed once chosen",
+      "description": "There's one account per person or partnership, and its country is fixed once it's chosen, as the payments partner's form holds one and verifies them for one country. That matters for someone who wants a second account, or to be paid in another country.",
+      "places": []
     },
     {
       "id": "capability:payout-accounts#no-payouts-to-mexico",
@@ -12891,12 +12724,11 @@
       "outcome": null,
       "rule": null,
       "impact": "blocking",
-      "when": "A payee's bank account is in Mexico.",
+      "likelihood": "unlikely",
+      "reach": "few",
       "name": "No payouts to Mexico",
       "description": "People can't be paid in Mexico, so it isn't offered as a country: the payments partner can't send there.",
-      "places": [],
-      "likelihood": "unlikely",
-      "reach": "few"
+      "places": []
     },
     {
       "id": "capability:payout-accounts#form-asks-for-business-details",
@@ -12904,12 +12736,11 @@
       "outcome": null,
       "rule": null,
       "impact": "inconvenient",
-      "when": null,
+      "likelihood": "expected",
+      "reach": "some",
       "name": "Form asks for business details",
       "description": "The payments partner's form asks for business details, as if the payee sold something: a website or a description of what they sell, even in the US, and more of them outside it. In Canada it also asks for an ID document and a selfie.",
-      "places": [],
-      "likelihood": "expected",
-      "reach": "some"
+      "places": []
     },
     {
       "id": "capability:payout-accounts#changes-made-in-the-partners-dashboard",
@@ -12917,12 +12748,11 @@
       "outcome": null,
       "rule": null,
       "impact": "inconvenient",
-      "when": "Someone changes their bank account.",
+      "likelihood": "possible",
+      "reach": "few",
       "name": "Changes need the payments partner's dashboard",
       "description": "Once an account is set up, changing it happens in the payments partner's own dashboard rather than its form.",
-      "places": [],
-      "likelihood": "possible",
-      "reach": "few"
+      "places": []
     },
     {
       "id": "capability:payout-accounts#removing-closes-the-account",
@@ -12930,12 +12760,11 @@
       "outcome": null,
       "rule": null,
       "impact": "inconvenient",
-      "when": "Someone removes their account and later adds one again.",
+      "likelihood": "unlikely",
+      "reach": "few",
       "name": "Removing an account means starting over",
       "description": "Removing an account closes it with the payments partner, so adding one again means going through their checks from the start.",
-      "places": [],
-      "likelihood": "unlikely",
-      "reach": "few"
+      "places": []
     },
     {
       "id": "capability:payouts#nothing-held-back-from-a-release",
@@ -12943,60 +12772,55 @@
       "outcome": null,
       "rule": null,
       "impact": "inconvenient",
-      "when": "An admin wants to hold back or look into one payee's payout before a release.",
-      "name": "Nothing can be held back from a release",
-      "description": "Nothing can be held back from a release, or looked into from it.",
-      "places": [],
       "likelihood": "possible",
-      "reach": "few"
+      "reach": "few",
+      "name": "Nothing can be held back from a release",
+      "description": "Nothing can be held back from a release, or looked into from it. That matters when an admin wants to hold back or look into one payee's payout before a release.",
+      "places": []
     },
     {
       "id": "mechanism:api-docs#no-release-notes",
       "outcome": "compatibility/beta/changes-heard",
       "rule": null,
       "impact": "inconvenient",
-      "when": null,
+      "likelihood": "unlikely",
+      "reach": "few",
       "name": "No release notes for the API or apps",
       "description": "Nothing tells people what changed in a release, for the API or the apps, Beta features included. Changes show only in the reference and in git history.",
-      "places": [],
-      "likelihood": "unlikely",
-      "reach": "few"
+      "places": []
     },
     {
       "id": "mechanism:row-level-security#no-organization-runs-on-platform",
       "outcome": null,
       "rule": null,
       "impact": "damaging",
-      "when": "A query reachable without an organization forgets its Bounds.",
-      "name": "Leaving out the organization runs on platform",
-      "description": "`X-Organization-ID` is optional, so anyone signed in can leave it out and run on `api_platform`. Holding no platform role, they hold no permissions and `authz.Require` refuses them, so nothing crosses today, but Bounds are all that stand in the way.",
-      "places": [],
       "likelihood": "unlikely",
-      "reach": null
+      "reach": null,
+      "name": "Leaving out the organization runs on platform",
+      "description": "`X-Organization-ID` is optional, so anyone signed in can leave it out and run on `api_platform`. Holding no platform role, they hold no permissions and `authz.Require` refuses them, so nothing crosses today, but Bounds are all that stand in the way. That matters if a query reachable without an organization forgets its Bounds.",
+      "places": []
     },
     {
       "id": "mechanism:row-level-security#shared-tables-unprotected",
       "outcome": null,
       "rule": null,
       "impact": "damaging",
-      "when": "A query on a shared table forgets to filter.",
+      "likelihood": "unlikely",
+      "reach": null,
       "name": "Shared tables lack row-level security",
       "description": "Shared tables have no row-level security, `users` above all, as staff names appear across organizations: a query there that forgets to filter can read every user's name and email.",
-      "places": [],
-      "likelihood": "unlikely",
-      "reach": null
+      "places": []
     },
     {
       "id": "component:spaces#sync-users-has-no-hook",
       "outcome": null,
       "rule": null,
       "impact": "damaging",
-      "when": "`api sync users` bans or deletes someone in a real messaging provider's spaces.",
-      "name": "User sync doesn't remove people from spaces",
-      "description": "`api sync users` has no hook, so a ban or deletion it applies doesn't take the user out of the provider's spaces.",
-      "places": [],
       "likelihood": "unlikely",
-      "reach": null
+      "reach": null,
+      "name": "User sync doesn't remove people from spaces",
+      "description": "`api sync users` has no hook, so a ban or deletion it applies doesn't take the user out of the provider's spaces. That matters when it bans or deletes someone in a real messaging provider's spaces.",
+      "places": []
     }
   ],
   "tradeoffs": [
@@ -13007,12 +12831,8 @@
       "name": "Tokens have no scopes",
       "description": "A token can do everything its user can, wherever it works: there are no scopes.",
       "benefit": null,
-      "drawback": "A script that needs only a little access holds all of its user's.",
-      "impact": "damaging",
-      "when": "A script's token leaks or the script misbehaves.",
-      "places": [],
-      "likelihood": "unlikely",
-      "reach": null
+      "drawback": "A script that needs only a little access holds all of its user's. That matters when a script's token leaks or the script misbehaves.",
+      "places": []
     },
     {
       "id": "capability:access-tokens#managing-tokens-needs-a-session",
@@ -13022,11 +12842,7 @@
       "description": "Managing tokens needs a session: a token can't list, create, or revoke tokens.",
       "benefit": null,
       "drawback": "Tokens can't be managed from scripts.",
-      "impact": "negligible",
-      "when": null,
-      "places": [],
-      "likelihood": "unlikely",
-      "reach": "few"
+      "places": []
     },
     {
       "id": "capability:access-tokens#limited-tokens-reach-their-users-record",
@@ -13035,12 +12851,8 @@
       "name": "Limited tokens still reach their user's record",
       "description": "A limited token still reaches its user's own record: it can read and change their profile, including updating it from the sign-in provider, and sees their platform role and applications.",
       "benefit": null,
-      "drawback": "A limited token reaches more than its organizations, though none of it reveals another organization.",
-      "impact": "inconvenient",
-      "when": "A limited token leaks or its script misbehaves.",
-      "places": [],
-      "likelihood": "unlikely",
-      "reach": "few"
+      "drawback": "A limited token reaches more than its organizations, though none of it reveals another organization. That matters only when a limited token leaks or its script misbehaves.",
+      "places": []
     },
     {
       "id": "capability:access-tokens#limited-tokens-can-leave",
@@ -13049,12 +12861,8 @@
       "name": "Limited tokens can leave an organization",
       "description": "A limited token can remove its user from one of its organizations, as their own session can.",
       "benefit": null,
-      "drawback": "A script can take its user out of an organization. That's within its limit, and acts on nothing else.",
-      "impact": "negligible",
-      "when": "A script removes its user from an organization.",
-      "places": [],
-      "likelihood": "unlikely",
-      "reach": "few"
+      "drawback": "A script can take its user out of an organization. That's within its limit, and acts on nothing else. It matters only if a script actually does.",
+      "places": []
     },
     {
       "id": "capability:access-tokens#failed-authentication-not-rate-limited",
@@ -13063,12 +12871,8 @@
       "name": "Failed authentication isn't rate limited",
       "description": "Requests that fail to authenticate aren't rate limited.",
       "benefit": null,
-      "drawback": "Each request with a bad token costs a lookup that nothing counts, though a token can't be guessed.",
-      "impact": "negligible",
-      "when": "Someone floods the API with bad tokens.",
-      "places": [],
-      "likelihood": "unlikely",
-      "reach": null
+      "drawback": "Each request with a bad token costs a lookup that nothing counts, though a token can't be guessed. That matters only if someone floods the API with bad tokens.",
+      "places": []
     },
     {
       "id": "capability:notifications#no-email-on-scheduling",
@@ -13078,11 +12882,7 @@
       "description": "Clients aren't emailed when a block is scheduled, or when an availability change affects their capacity: the client scheduled the block themselves, and an availability change that matters reaches them as a moved preferred week.",
       "benefit": null,
       "drawback": "A client hears nothing of a scheduled block, nor of an availability change that doesn't move a preferred week.",
-      "impact": "negligible",
-      "when": null,
-      "places": [],
-      "likelihood": "possible",
-      "reach": "some"
+      "places": []
     },
     {
       "id": "capability:notifications#one-set-of-choices",
@@ -13092,11 +12892,7 @@
       "description": "One set of choices covers every organization someone belongs to, and each notification is to name the one it's about.",
       "benefit": null,
       "drawback": "Someone in several organizations can't choose differently for each.",
-      "impact": "inconvenient",
-      "when": "Someone belongs to several organizations.",
-      "places": [],
-      "likelihood": "possible",
-      "reach": "few"
+      "places": []
     },
     {
       "id": "capability:notifications#last-channel-stays",
@@ -13106,11 +12902,7 @@
       "description": "The last channel can't be removed, as what's always on needs somewhere to go. Being always on means at least one channel, not all of them.",
       "benefit": null,
       "drawback": "Nobody can remove every channel to stop notifications altogether.",
-      "impact": "negligible",
-      "when": null,
-      "places": [],
-      "likelihood": "possible",
-      "reach": "few"
+      "places": []
     },
     {
       "id": "capability:organizations-and-members#closing-by-email",
@@ -13120,11 +12912,7 @@
       "description": "Closing the account is a conversation with Exalynt, by email from the Organization page.",
       "benefit": null,
       "drawback": "Nothing in the portal starts or tracks closing, and the organization isn't deleted afterwards.",
-      "impact": "inconvenient",
-      "when": null,
-      "places": [],
-      "likelihood": "possible",
-      "reach": "few"
+      "places": []
     },
     {
       "id": "capability:organizations-and-members#fifty-invitations-a-day",
@@ -13134,11 +12922,7 @@
       "description": "An organization, and each person, can send 50 invitations a day.",
       "benefit": null,
       "drawback": "An organization inviting more people than that waits until the next day.",
-      "impact": "negligible",
-      "when": "An organization invites more than 50 people in a day.",
-      "places": [],
-      "likelihood": "unlikely",
-      "reach": "few"
+      "places": []
     },
     {
       "id": "capability:organizations-and-members#last-save-wins",
@@ -13147,12 +12931,8 @@
       "name": "Last save wins on names and roles",
       "description": "The last save wins on the organization's name and on member roles: nothing checks what the person last read.",
       "benefit": null,
-      "drawback": "Two people changing the same thing at once can undo each other's change without knowing.",
-      "impact": "inconvenient",
-      "when": "Two people change the organization's name, or the same member's role, at once.",
-      "places": [],
-      "likelihood": "unlikely",
-      "reach": "few"
+      "drawback": "Two people changing the same thing at once can undo each other's change without knowing. That takes two people changing the organization's name, or the same member's role, at once.",
+      "places": []
     },
     {
       "id": "capability:organizations-and-members#any-role-from-member-management",
@@ -13161,12 +12941,8 @@
       "name": "Member managers can give any role",
       "description": "Whoever can manage members can give anyone any role, Admin included.",
       "benefit": null,
-      "drawback": "A role that manages members can do everything.",
-      "impact": "damaging",
-      "when": "Someone is given a role that manages members but isn't meant to do everything.",
-      "places": [],
-      "likelihood": "unlikely",
-      "reach": null
+      "drawback": "A role that manages members can do everything. That matters when someone is given a role that manages members but isn't meant to do everything.",
+      "places": []
     },
     {
       "id": "capability:client-agreements#every-member-sees-agreements",
@@ -13176,11 +12952,7 @@
       "description": "Every member of an organization sees its agreements, whatever their role.",
       "benefit": null,
       "drawback": "Members and Billing see the organization's terms with Exalynt, not just its Admins.",
-      "impact": "negligible",
-      "when": null,
-      "places": [],
-      "likelihood": "possible",
-      "reach": "some"
+      "places": []
     },
     {
       "id": "capability:billing#prices-listed-before-tax",
@@ -13190,11 +12962,7 @@
       "description": "Prices are listed before tax everywhere, such as on estimates and when choosing blocks.",
       "benefit": null,
       "drawback": "The tax is only known once an order is reviewed, since the payment provider works it out from the billing address.",
-      "impact": "negligible",
-      "when": null,
-      "places": [],
-      "likelihood": "possible",
-      "reach": "most"
+      "places": []
     },
     {
       "id": "capability:client-directory#no-primary-contact",
@@ -13204,11 +12972,7 @@
       "description": "A client's members aren't shown, since staff can't see them.",
       "benefit": null,
       "drawback": "There's no primary contact for a client.",
-      "impact": "inconvenient",
-      "when": null,
-      "places": [],
-      "likelihood": "possible",
-      "reach": "few"
+      "places": []
     },
     {
       "id": "capability:client-home#status-not-work",
@@ -13218,11 +12982,7 @@
       "description": "A block shows who's on it and where it stands, not what was done on it.",
       "benefit": null,
       "drawback": "A client can't tell from home what was done on a block, and opens the block's own page for that.",
-      "impact": "inconvenient",
-      "when": null,
-      "places": [],
-      "likelihood": "possible",
-      "reach": "some"
+      "places": []
     },
     {
       "id": "capability:conversation-spaces#stream-shows-gravatar",
@@ -13231,12 +12991,8 @@
       "name": "Gravatar as the fallback photo on Stream",
       "description": "With Stream, someone without an uploaded photo shows their Gravatar, as they do everywhere else in the app.",
       "benefit": null,
-      "drawback": "Stream keeps a link made from a hash of their email address.",
-      "impact": "negligible",
-      "when": "Stream is the messaging provider.",
-      "places": [],
-      "likelihood": "possible",
-      "reach": "some"
+      "drawback": "Stream keeps a link made from a hash of their email address. That's only while Stream is the messaging provider.",
+      "places": []
     },
     {
       "id": "capability:engineers#written-for-administrators",
@@ -13245,12 +13001,8 @@
       "name": "Written for administrators, not narrower roles",
       "description": "It's written for administrators: without full reads of people, teams, capacity and clients the list doesn't load, and with narrower reach it shows only what that reaches.",
       "benefit": null,
-      "drawback": "There's no rule for what a team-limited view of people shows, as only the admin view matters for now.",
-      "impact": "negligible",
-      "when": "Someone other than an administrator needs the list of people.",
-      "places": [],
-      "likelihood": "unlikely",
-      "reach": "few"
+      "drawback": "There's no rule for what a team-limited view of people shows, as only the admin view matters for now. That matters once someone other than an administrator needs the list of people.",
+      "places": []
     },
     {
       "id": "capability:estimates#last-save-wins",
@@ -13259,12 +13011,8 @@
       "name": "Last save wins, without a warning",
       "description": "When two people edit one estimate at once, the later save replaces the earlier one, without a warning.",
       "benefit": null,
-      "drawback": "The earlier person's changes are lost without them knowing.",
-      "impact": "inconvenient",
-      "when": "Two people edit one estimate at once.",
-      "places": [],
-      "likelihood": "unlikely",
-      "reach": "few"
+      "drawback": "The earlier person's changes are lost without them knowing. That takes two people editing one estimate at once.",
+      "places": []
     },
     {
       "id": "capability:estimates#deleting-is-permanent",
@@ -13273,12 +13021,8 @@
       "name": "Deleting an estimate is permanent",
       "description": "Deleting an estimate is permanent.",
       "benefit": null,
-      "drawback": "Getting one back means restoring a backup.",
-      "impact": "inconvenient",
-      "when": "Someone deletes an estimate by mistake.",
-      "places": [],
-      "likelihood": "unlikely",
-      "reach": "few"
+      "drawback": "Getting one back means restoring a backup. That matters when someone deletes an estimate by mistake.",
+      "places": []
     },
     {
       "id": "capability:fulfillment#fulfilled-cant-be-reopened",
@@ -13288,11 +13032,7 @@
       "description": "Marking a block fulfilled is final.",
       "benefit": null,
       "drawback": "A fulfilled block can't be reopened, even when it was marked fulfilled by mistake.",
-      "impact": "inconvenient",
-      "when": "A block is marked fulfilled by mistake.",
-      "places": [],
-      "likelihood": "unlikely",
-      "reach": "few"
+      "places": []
     },
     {
       "id": "capability:teams#names-unique-across-all-teams",
@@ -13302,11 +13042,7 @@
       "description": "Team names are unique across all teams, not per client.",
       "benefit": null,
       "drawback": "Two teams can't both be called \"Platform\", even for different clients.",
-      "impact": "negligible",
-      "when": "Teams for different clients would take the same name.",
-      "places": [],
-      "likelihood": "possible",
-      "reach": "few"
+      "places": []
     },
     {
       "id": "capability:client-invitations#revoked-links-still-attribute",
@@ -13316,11 +13052,7 @@
       "description": "Revoking an invitation doesn't stop its link: the email still has the link with the partnership's referral code.",
       "benefit": null,
       "drawback": "Whoever uses a revoked invitation's link is still attributed to the partnership.",
-      "impact": "inconvenient",
-      "when": "Someone uses a revoked invitation's link.",
-      "places": [],
-      "likelihood": "unlikely",
-      "reach": "few"
+      "places": []
     },
     {
       "id": "capability:partner-earnings#nothing-before-partnership-earnings",
@@ -13330,11 +13062,7 @@
       "description": "Partnerships earn only on blocks fulfilled since partnership earnings existed.",
       "benefit": null,
       "drawback": "Blocks fulfilled before partnership earnings existed earn the partnership nothing.",
-      "impact": "inconvenient",
-      "when": null,
-      "places": [],
-      "likelihood": "unlikely",
-      "reach": "few"
+      "places": []
     },
     {
       "id": "capability:partner-earnings#earlier-blocks-count-after-attribution",
@@ -13344,11 +13072,7 @@
       "description": "Blocks a client bought before this was built count as bought for the partnership only if they were bought after the client was attributed to it.",
       "benefit": null,
       "drawback": "Blocks bought before the client was attributed earn the partnership nothing.",
-      "impact": "inconvenient",
-      "when": null,
-      "places": [],
-      "likelihood": "unlikely",
-      "reach": "few"
+      "places": []
     },
     {
       "id": "capability:partner-payout-accounts#one-account-per-partnership-checked-each-time",
@@ -13358,11 +13082,7 @@
       "description": "Each partnership has its own payout account, even when several are paid to the same bank account.",
       "benefit": null,
       "drawback": "Someone managing several partnerships that are paid to the same bank account sets it up, and goes through the payments partner's checks, on each.",
-      "impact": "inconvenient",
-      "when": "Someone manages several partnerships paid to the same bank account.",
-      "places": [],
-      "likelihood": "unlikely",
-      "reach": "few"
+      "places": []
     },
     {
       "id": "capability:partner-payout-accounts#one-account-one-country",
@@ -13371,12 +13091,8 @@
       "name": "One country per account, fixed once chosen",
       "description": "There's one account per partnership, and its country is fixed once it's chosen, as the payments partner's form holds one and verifies it for one country.",
       "benefit": null,
-      "drawback": "A partnership can't be paid to a second account, or move its account to another country.",
-      "impact": "inconvenient",
-      "when": "A partnership wants a second account, or to be paid in another country.",
-      "places": [],
-      "likelihood": "unlikely",
-      "reach": "few"
+      "drawback": "A partnership can't be paid to a second account, or move its account to another country. That matters when a partnership wants a second account, or to be paid in another country.",
+      "places": []
     },
     {
       "id": "capability:partner-payout-accounts#no-payouts-to-mexico",
@@ -13386,11 +13102,7 @@
       "description": "Mexico isn't offered as a country, since the payments partner can't send there.",
       "benefit": null,
       "drawback": "Partnerships can't be paid in Mexico.",
-      "impact": "blocking",
-      "when": "A partnership's bank account is in Mexico.",
-      "places": [],
-      "likelihood": "unlikely",
-      "reach": "few"
+      "places": []
     },
     {
       "id": "capability:partner-payout-accounts#form-asks-for-business-details",
@@ -13400,11 +13112,7 @@
       "description": "Accounts are set up on the payments partner's form as it is.",
       "benefit": null,
       "drawback": "The form asks for business details, as if the partnership sold something: a website or a description of what it sells, and more of them outside the US. In Canada it also asks for an ID document and a selfie.",
-      "impact": "inconvenient",
-      "when": null,
-      "places": [],
-      "likelihood": "expected",
-      "reach": "few"
+      "places": []
     },
     {
       "id": "capability:partner-payout-accounts#changes-made-in-the-partners-dashboard",
@@ -13414,11 +13122,7 @@
       "description": "Once an account is set up, changing it happens in the payments partner's own dashboard rather than its form.",
       "benefit": null,
       "drawback": "Managers change the bank account somewhere other than where they set it up.",
-      "impact": "inconvenient",
-      "when": "A manager changes the bank account.",
-      "places": [],
-      "likelihood": "possible",
-      "reach": "few"
+      "places": []
     },
     {
       "id": "capability:partner-payout-accounts#removing-closes-the-account",
@@ -13427,12 +13131,8 @@
       "name": "Removing an account closes it",
       "description": "Removing an account closes it with the payments partner.",
       "benefit": null,
-      "drawback": "Adding one again means going through their checks from the start.",
-      "impact": "inconvenient",
-      "when": "A manager removes the account and later adds one again.",
-      "places": [],
-      "likelihood": "unlikely",
-      "reach": "few"
+      "drawback": "Adding one again means going through their checks from the start. That matters only for a manager who removes the account and later adds one again.",
+      "places": []
     },
     {
       "id": "capability:partner-payouts#pre-production-payouts-say-paid",
@@ -13442,11 +13142,7 @@
       "description": "Payouts released before production sent money through the payments partner are left saying Paid.",
       "benefit": null,
       "drawback": "They say Paid, though nothing was sent.",
-      "impact": "inconvenient",
-      "when": null,
-      "places": [],
-      "likelihood": "unlikely",
-      "reach": "few"
+      "places": []
     },
     {
       "id": "capability:partner-payouts#paid-means-reached-the-balance",
@@ -13456,11 +13152,7 @@
       "description": "Paid means the money has reached the partnership's balance with the payments partner, not its bank.",
       "benefit": null,
       "drawback": "The payments partner pays it on to the bank itself, usually within a couple of days.",
-      "impact": "negligible",
-      "when": null,
-      "places": [],
-      "likelihood": "possible",
-      "reach": "few"
+      "places": []
     },
     {
       "id": "mechanism:authorization#application-access-not-enforced",
@@ -13468,12 +13160,8 @@
       "name": "Application access enforced only by the front ends",
       "description": "Which applications someone is offered is `application_access`, held per user and not by role, and only the front ends act on it: they decide what to show by it, and the API keeps checking permissions.",
       "benefit": null,
-      "drawback": "Someone who isn't offered an application can still call its routes with whatever their permissions allow.",
-      "impact": "inconvenient",
-      "when": "An organization counts on application access alone to keep someone out of an application.",
-      "places": [],
-      "likelihood": "unlikely",
-      "reach": "few"
+      "drawback": "Someone who isn't offered an application can still call its routes with whatever their permissions allow. That matters when an organization counts on application access alone to keep someone out of an application.",
+      "places": []
     },
     {
       "id": "mechanism:row-level-security#setting-per-transaction",
@@ -13482,11 +13170,7 @@
       "description": "The organization or partnership is set with `SET LOCAL` in a transaction around each statement, a `UnitOfWork`'s or a short one of its own, rather than on a connection kept for the request.",
       "benefit": null,
       "drawback": "A statement outside a `UnitOfWork` costs three more round trips, so work issuing many belongs in one.",
-      "impact": "negligible",
-      "when": "Work issues many statements outside a `UnitOfWork`.",
-      "places": [],
-      "likelihood": "unlikely",
-      "reach": "few"
+      "places": []
     },
     {
       "id": "component:agreements#apps-hold-people-to-agreements",
@@ -13495,11 +13179,7 @@
       "description": "The apps hold people to an agreement, not the API: the portal's, console's and hub's gates keep someone out until one is in effect, and the API answers what their role allows regardless.",
       "benefit": null,
       "drawback": "Someone using the API directly can still do what their role allows without an agreement in effect.",
-      "impact": "damaging",
-      "when": null,
-      "places": [],
-      "likelihood": "unlikely",
-      "reach": null
+      "places": []
     },
     {
       "id": "component:agreements#pdf-laid-out-in-go",
@@ -13508,11 +13188,7 @@
       "description": "The PDF is laid out in Go with fpdf's Helvetica, not a browser or a Unicode font, so there's no headless browser to run or font to ship.",
       "benefit": null,
       "drawback": "A character outside Windows-1252 is \"?\" for good once accepted, so a name with characters outside Western European alphabets keeps them as \"?\" in its PDF.",
-      "impact": "inconvenient",
-      "when": null,
-      "places": [],
-      "likelihood": "possible",
-      "reach": "few"
+      "places": []
     },
     {
       "id": "component:agreements#accepted-agreements-outlive-their-user",
@@ -13520,12 +13196,8 @@
       "name": "Accepted agreements kept after their user is deleted",
       "description": "Accepted agreements outlive their user: deleting a user clears `user_id` on their accepted ones (migration 91) and keeps their PDFs, since the PDF is the record of what was agreed.",
       "benefit": null,
-      "drawback": "A deleted person's name and email stay in those PDFs and rows.",
-      "impact": "negligible",
-      "when": "A user who accepted an agreement is deleted.",
-      "places": [],
-      "likelihood": "unlikely",
-      "reach": "few"
+      "drawback": "A deleted person's name and email stay in those PDFs and rows. That matters when a user who accepted an agreement is deleted.",
+      "places": []
     },
     {
       "id": "component:availability#recurrence-rules-not-weeks",
@@ -13534,11 +13206,7 @@
       "description": "Availability is stored as recurrence rules, not a `weeks` column. A column would do, as the rules are only ever `FREQ=WEEKLY` with an optional `COUNT`, but moving off them is an expand/contract migration on a table Capacity reads, with nothing to gain for now.",
       "benefit": null,
       "drawback": "The database can't filter by the weeks a rule covers, so `from` on the overrides list is widened by 51 weeks and checked in Go, and a page of overrides can come back short.",
-      "impact": "negligible",
-      "when": null,
-      "places": [],
-      "likelihood": "possible",
-      "reach": "few"
+      "places": []
     },
     {
       "id": "component:billing#provider-is-source-of-truth",
@@ -13547,11 +13215,7 @@
       "description": "The provider is the source of truth for invoices and billing details, and our row only links to it: we keep the least needed to find an invoice and relate its blocks.",
       "benefit": null,
       "drawback": "Reading an invoice is a call to the provider, and a provider without hosted pages doesn't fit.",
-      "impact": "negligible",
-      "when": null,
-      "places": [],
-      "likelihood": "unlikely",
-      "reach": "few"
+      "places": []
     },
     {
       "id": "component:billing#tax-inside-payments-provider",
@@ -13559,12 +13223,8 @@
       "name": "Tax handled by the payments provider, not its own",
       "description": "Tax is part of the payments provider, not a provider of its own: the provider already holds the billing address tax is worked out from, and issues the invoice the tax goes on, so a separate tax provider would pull billing details out of it and push tax lines back in.",
       "benefit": null,
-      "drawback": "A payments provider that can't work out tax has to call a tax service inside its own implementation.",
-      "impact": "negligible",
-      "when": "A payments provider that can't work out tax is added.",
-      "places": [],
-      "likelihood": "unlikely",
-      "reach": "few"
+      "drawback": "A payments provider that can't work out tax has to call a tax service inside its own implementation. That matters only if a payments provider that can't work out tax is added.",
+      "places": []
     },
     {
       "id": "component:capacity#combined-room",
@@ -13573,11 +13233,7 @@
       "description": "A week's room is combined, not per engineer: a block fits if the total covers it, even if no one engineer could do it alone, as the preferred week is a target and not a guarantee.",
       "benefit": null,
       "drawback": "A block can be scheduled into a week where no single engineer can fit it, and an admin sorts it out.",
-      "impact": "inconvenient",
-      "when": "No one engineer has room for a whole block in its week.",
-      "places": [],
-      "likelihood": "possible",
-      "reach": "few"
+      "places": []
     },
     {
       "id": "component:estimates#prices-copied-onto-estimate",
@@ -13586,11 +13242,7 @@
       "description": "Prices are copied onto the estimate when it's made, so a client's estimate doesn't change when prices do. Every response returns the copy as `capacity_prices`, and the console and portal price from it.",
       "benefit": null,
       "drawback": "A capacity type added later only reaches estimates made after it's recorded.",
-      "impact": "negligible",
-      "when": "A capacity type is added.",
-      "places": [],
-      "likelihood": "unlikely",
-      "reach": "few"
+      "places": []
     },
     {
       "id": "component:estimates#unindexed-search",
@@ -13598,12 +13250,8 @@
       "name": "Unindexed ILIKE search over estimates",
       "description": "Search is `ILIKE '%word%'` over four columns, with no index: at 2,000 estimates that's a few milliseconds, measured against the local stack on 2026-10-23.",
       "benefit": null,
-      "drawback": "It scans.",
-      "impact": "negligible",
-      "when": "Estimates grow far beyond the 2,000 measured.",
-      "places": [],
-      "likelihood": "unlikely",
-      "reach": "few"
+      "drawback": "It scans, which matters only once estimates grow far beyond the 2,000 measured.",
+      "places": []
     },
     {
       "id": "component:organizations#lists-returned-whole",
@@ -13611,12 +13259,8 @@
       "name": "Lists returned whole, not paged",
       "description": "Members, invitations, and `GET /v1/clients` are returned whole, not paged: an organization is sized for tens of members and Exalynt for tens to hundreds of clients.",
       "benefit": null,
-      "drawback": "The last-manager check reads every member and organization role on each removal and role change.",
-      "impact": "negligible",
-      "when": "An organization grows well beyond tens of members.",
-      "places": [],
-      "likelihood": "unlikely",
-      "reach": "few"
+      "drawback": "The last-manager check reads every member and organization role on each removal and role change. That gets slow only once an organization grows well beyond tens of members.",
+      "places": []
     },
     {
       "id": "component:organizations#shared-invitation-routes",
@@ -13625,11 +13269,7 @@
       "description": "`GET /invitations` and `POST /invitations/{id}/accept` stay shared, with stable organization-only copies beside them: they also serve invitations to work with Exalynt and to manage a partnership, whose shape is still settling, so the stable contract for organizations is `/users/me/organization-invitations`.",
       "benefit": null,
       "drawback": "There are two ways to list and accept an organization's invitation, and onboarding reads both listings.",
-      "impact": "negligible",
-      "when": null,
-      "places": [],
-      "likelihood": "possible",
-      "reach": "few"
+      "places": []
     },
     {
       "id": "component:partnerships#limits-counted-from-invitations",
@@ -13637,12 +13277,8 @@
       "name": "Sending limits counted from invitation rows",
       "description": "Sending limits are counted from the invitations themselves, not a limiter or a log of sends: the day's new invitations are a count of `client_invitations` rows created in the last 24 hours, revoked ones included, and a resend compares the row's `sent_at`, so nothing else is stored or run. That's why revoking sets `revoked_at` and blanks the address rather than deleting (migration 95): a deleted row would free up a slot, and the count needs no address.",
       "benefit": null,
-      "drawback": "Two invitations at the same moment can both pass the 50th, and the count is a rolling 24 hours, not a calendar day.",
-      "impact": "negligible",
-      "when": "A partnership reaches the day's limit of 50 invitations.",
-      "places": [],
-      "likelihood": "unlikely",
-      "reach": "few"
+      "drawback": "Two invitations at the same moment can both pass the 50th, and the count is a rolling 24 hours, not a calendar day. That matters only when a partnership reaches the day's limit of 50 invitations.",
+      "places": []
     },
     {
       "id": "component:payouts#waiting-worked-out-on-read",
@@ -13650,12 +13286,8 @@
       "name": "Waiting payouts worked out on read, not stored",
       "description": "What's waiting is worked out on read, not stored as a run: there's no scheduler or draft to keep in step, and a week nobody released rolls into the next.",
       "benefit": null,
-      "drawback": "Every read asks the provider about each payee's account.",
-      "impact": "negligible",
-      "when": "The number of payees grows.",
-      "places": [],
-      "likelihood": "unlikely",
-      "reach": "few"
+      "drawback": "Every read asks the provider about each payee's account. That gets slower as the number of payees grows.",
+      "places": []
     }
   ],
   "problems": [

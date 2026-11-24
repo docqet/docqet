@@ -93,9 +93,6 @@ concepts: [concept:partnership@partnerships, concept:payout-share, concept:capac
 tradeoffs:
   - id: nothing-before-partnership-earnings
     name: Earnings start from launch, not backdated
-    impact: inconvenient
-    likelihood: unlikely
-    reach: few
     description: >-
       Partnerships earn only on blocks fulfilled since partnership earnings
       existed.
@@ -104,9 +101,6 @@ tradeoffs:
       nothing.
   - id: earlier-blocks-count-after-attribution
     name: Earlier blocks count only after attribution
-    impact: inconvenient
-    likelihood: unlikely
-    reach: few
     description: >-
       Blocks a client bought before this was built count as bought for the
       partnership only if they were bought after the client was attributed to

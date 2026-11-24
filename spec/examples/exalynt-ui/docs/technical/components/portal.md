@@ -20,9 +20,6 @@ capabilities:
 tradeoffs:
   - id: provider-pages-for-billing
     name: Billing on the provider's own pages
-    impact: inconvenient
-    likelihood: possible
-    reach: some
     description: >-
       Payment methods, invoices and company details stay on the payment
       provider's own pages, which Billing opens at an address the API asks the
@@ -33,9 +30,6 @@ tradeoffs:
       portal page left open in another tab doesn't see what they changed there.
   - id: no-gravatar-for-members
     name: Photos or initials, never Gravatar
-    impact: negligible
-    likelihood: expected
-    reach: some
     description: >-
       Members show their own photo or their initials, never a Gravatar, which
       would send their address, hashed, to a third party.

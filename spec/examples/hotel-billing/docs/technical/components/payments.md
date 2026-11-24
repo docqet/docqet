@@ -10,14 +10,13 @@ gaps:
     name: No timeout on payment provider calls
     outcome: reliability/beta/fails-clearly
     impact: inconvenient
+    likelihood: expected
     description: >-
       Calls to the payment provider have no timeout, so a slow provider holds
       the request open until the platform gives up on it.
-    when: The payment provider is slow to answer.
 tradeoffs:
   - id: providers-card-form
     name: Provider's hosted card form, not our own
-    impact: negligible
     description: >-
       Guests type their card into the provider's hosted form, not one of
       ours.

@@ -308,11 +308,7 @@
       "decisions": [
         {
           "topic": null,
-          "question": "Do guests split evenly, or charge by charge?",
-          "status": "open",
-          "answer": null,
-          "became": [],
-          "gaps": []
+          "question": "Do guests split evenly, or charge by charge?"
         }
       ],
       "body": "",
@@ -347,11 +343,7 @@
       "decisions": [
         {
           "topic": "Long stays",
-          "question": "Is a week's stay still secured by one night's deposit?",
-          "status": "open",
-          "answer": null,
-          "became": [],
-          "gaps": []
+          "question": "Is a week's stay still secured by one night's deposit?"
         }
       ],
       "body": "## Includes\n\n- Clerks see whether a stay's deposit has been paid.\n- Clerks take a deposit again when the guest's card was declined.",
@@ -397,11 +389,7 @@
       "decisions": [
         {
           "topic": null,
-          "question": "Do guests pay before they leave, or wait until they're home?",
-          "status": "open",
-          "answer": null,
-          "became": [],
-          "gaps": []
+          "question": "Do guests pay before they leave, or wait until they're home?"
         }
       ],
       "body": "## Includes\n\n- Clerks send a guest a link to pay what they owe.",
@@ -583,11 +571,7 @@
       "decisions": [
         {
           "topic": null,
-          "question": "Is a day at a time what the accountant wants, or one export a month?",
-          "status": "open",
-          "answer": null,
-          "became": [],
-          "gaps": []
+          "question": "Is a day at a time what the accountant wants, or one export a month?"
         }
       ],
       "body": "",
@@ -620,11 +604,7 @@
       "decisions": [
         {
           "topic": null,
-          "question": "Do guests want their bill emailed as they leave, or printed at the desk?",
-          "status": "open",
-          "answer": null,
-          "became": [],
-          "gaps": []
+          "question": "Do guests want their bill emailed as they leave, or printed at the desk?"
         }
       ],
       "body": "## Includes\n\n- Clerks see a departing guest's bill, with every night and charge on it.\n- Clerks take payment for the balance, and close the bill.",
@@ -662,11 +642,7 @@
       "decisions": [
         {
           "topic": "Where the money goes",
-          "question": "Always back to the card it came from, or to whichever card the guest has with them?",
-          "status": "open",
-          "answer": null,
-          "became": [],
-          "gaps": []
+          "question": "Always back to the card it came from, or to whichever card the guest has with them?"
         }
       ],
       "body": "",
@@ -1326,7 +1302,8 @@
       "outcome": null,
       "rule": "rule:children-pay-no-city-tax",
       "impact": "inconvenient",
-      "when": null,
+      "likelihood": null,
+      "reach": null,
       "name": "City tax charged for children",
       "description": "Guests' ages aren't recorded, so city tax is added for every guest on a stay, and clerks correct it by hand for children.",
       "places": []
@@ -1337,7 +1314,8 @@
       "outcome": null,
       "rule": null,
       "impact": "inconvenient",
-      "when": null,
+      "likelihood": null,
+      "reach": null,
       "name": "No reminders for overdue invoices",
       "description": "Nothing reminds a company when an invoice is overdue. The bookkeeper checks the unpaid invoices each week and chases them by email.",
       "places": []
@@ -1347,9 +1325,10 @@
       "outcome": "maintainability/ga/others-can-change",
       "rule": null,
       "impact": "damaging",
-      "when": "Someone changes how corrections work.",
+      "likelihood": "expected",
+      "reach": "few",
       "name": "Corrections of corrections untested",
-      "description": "Nothing tests correcting a line that is itself a correction, so a change to `correct` could stop a twice-corrected charge netting to zero without anything failing.",
+      "description": "Nothing tests correcting a line that is itself a correction, so a change to how corrections work in `correct` could stop a twice-corrected charge netting to zero without anything failing.",
       "places": [
         {
           "file": "src/ledger/ledger.ts",
@@ -1363,7 +1342,8 @@
       "outcome": "reliability/beta/fails-clearly",
       "rule": null,
       "impact": "inconvenient",
-      "when": "The payment provider is slow to answer.",
+      "likelihood": "expected",
+      "reach": null,
       "name": "No timeout on payment provider calls",
       "description": "Calls to the payment provider have no timeout, so a slow provider holds the request open until the platform gives up on it.",
       "places": [
@@ -1384,8 +1364,6 @@
       "description": "Guests pay in the hotel's currency, not their own.",
       "benefit": "The bill, the payment and the hotel's books are all in one currency, with no exchange rates to keep.",
       "drawback": "Their card provider converts it, at its own rate, so the amount on their statement can differ from the bill.",
-      "impact": "inconvenient",
-      "when": null,
       "places": []
     },
     {
@@ -1396,8 +1374,6 @@
       "description": "A bill moves to a company's account whole, not charge by charge.",
       "benefit": "Clerks move a bill in one step at check-out, and a company's account only ever holds whole bills.",
       "drawback": "A guest who pays for their own extras pays for them before their bill moves.",
-      "impact": "inconvenient",
-      "when": null,
       "places": []
     },
     {
@@ -1406,9 +1382,7 @@
       "name": "Balance summed on read, not stored",
       "description": "A bill's balance is added up from its lines every time it's asked for, not stored on the bill.",
       "benefit": "The balance can never disagree with the lines, and there's nothing to keep in step when a line is added.",
-      "drawback": "Opening a bill gets slower as lines are added to it.",
-      "impact": "inconvenient",
-      "when": "A bill grows to thousands of lines, as on a long company stay.",
+      "drawback": "Opening a bill gets slower as lines are added to it, which shows once a bill grows to thousands of lines, as on a long company stay.",
       "places": [
         {
           "file": "src/ledger/ledger.ts",
@@ -1424,8 +1398,6 @@
       "description": "Guests type their card into the provider's hosted form, not one of ours.",
       "benefit": "Card numbers never reach our servers, so the hotel stays out of most card-security rules.",
       "drawback": "The payment page looks like the provider's, not the hotel's.",
-      "impact": "negligible",
-      "when": null,
       "places": []
     }
   ],

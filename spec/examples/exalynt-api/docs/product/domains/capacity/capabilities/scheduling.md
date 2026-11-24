@@ -47,7 +47,6 @@ gaps:
       Moving a block always takes its engineer off. Whoever moves it, it's to
       keep its engineer if they can fit it in the new week, and only otherwise
       go back to the shared queue for that week.
-    when: A block with an engineer is moved to another week.
   - id: room-counts-the-whole-team
     name: Room counts the whole team's availability
     impact: inconvenient
@@ -57,9 +56,8 @@ gaps:
       A week has room when the team's combined availability covers a block,
       though capacity a client buys is never split across engineers, so it's
       to need one eligible engineer who can fit the whole block alone. An
-      admin sorts out a block no single engineer can fit.
-    when: >-
-      No single eligible engineer can fit a block into a week the team has room
+      admin sorts out a block no single engineer can fit. That shows when no
+      single eligible engineer can fit a block into a week the team has room
       in.
   - id: team-changes-can-overbook
     name: Team changes can overbook a week
@@ -72,7 +70,6 @@ gaps:
       overbooked after it was booked. The admin's overview flags it only
       across all of Exalynt, not per team, and nothing else happens. An
       engineer offering less takes blocks out instead.
-    when: A team change takes away availability a week was booked against.
   - id: unscheduled-by-reduction-untold
     name: Clients not told of unscheduled blocks
     impact: inconvenient
@@ -81,7 +78,6 @@ gaps:
     description: >-
       A client isn't told when an engineer's reduction unschedules one of
       their blocks. It's back among the blocks they have to schedule.
-    when: An engineer's reduction unschedules a client's block.
 decisions:
   - topic: Rescheduling window
     question: >-

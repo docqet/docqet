@@ -45,7 +45,6 @@ gaps:
       An engineer isn't told when a client's move or unschedule takes them off
       a block, so a client can take an engineer off by moving a block away and
       back. My Schedule shows it the next time it's read.
-    when: A client moves or unschedules a claimed block.
   - id: stranded-block-client-untold
     name: Clients not told of stranded blocks
     impact: inconvenient
@@ -55,7 +54,6 @@ gaps:
       When a claim leaves another block with nobody who can take it, that
       block's client isn't told, and it surfaces as a missed week an admin
       rebooks.
-    when: A claim leaves another block with nobody who can take it.
   - id: clicking-unclaims
     name: Clicking a block unclaims it
     impact: inconvenient

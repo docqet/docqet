@@ -44,7 +44,6 @@ gaps:
     description: >-
       A company that's already a client can only be spotted by having the
       same name, so one signing up under another name counts as new.
-    when: A company that's already a client signs up under another name.
   - id: email-law-not-reviewed
     name: Email law not reviewed, and no opt-out
     outcome: security/beta/duties
@@ -57,16 +56,12 @@ gaps:
 tradeoffs:
   - id: revoked-links-still-attribute
     name: Revoking leaves the emailed link working
-    impact: inconvenient
-    likelihood: unlikely
-    reach: few
     description: >-
       Revoking an invitation doesn't stop its link: the email still has the
       link with the partnership's referral code.
     drawback: >-
       Whoever uses a revoked invitation's link is still attributed to the
       partnership.
-    when: Someone uses a revoked invitation's link.
 ---
 
 ## Includes

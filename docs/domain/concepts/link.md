@@ -34,7 +34,6 @@ rule                       → concepts
 concept                    → concepts                  (confused-with)
 gap                        → an outcome, a rule        (outcome, rule)
 tradeoff                   → an outcome                (outcome)
-decision                   → a doc, gap or tradeoff on its side  (became)
 component                  → capabilities, outcomes    (meets)
 mechanism                  → outcomes                  (meets)
 annotation                 → rules, capabilities, mechanisms, components    (docket:verifies, docket:implements)

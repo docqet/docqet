@@ -24,11 +24,12 @@ gaps:
     name: Calendar needs a mouse      # what falls short, in a few words
     outcome: usability/beta/everyone  # optional: the checklist outcome it falls short of
     rule: rule:minimum-stay           # optional: a rule the capability follows but doesn't hold yet
-    impact: blocking                  # see below
+    impact: blocking                  # see below: how bad it is for those it reaches
+    likelihood: possible              # optional, `certain` when left out
+    reach: few                        # optional, `all` when left out
     description: >-
-      The room calendar can't be used from the keyboard, so clerks need a
-      mouse to pick dates.
-    when: A clerk can't use a mouse.  # optional: what makes it bite, if it isn't already
+      The room calendar can't be used from the keyboard, so a clerk who can't
+      use a mouse can't pick dates. None of the clerks needs to today.
 ```
 
 A gap's ID is its doc's reference plus its key:
@@ -62,23 +63,23 @@ one doc, so check its other files before choosing a key.
   soon and changes what people can rely on.
 - **Mark where it shows in the code** with `docket:gap <gap ID>` when there's
   a clear place, instead of a bare TODO.
-- **Closing a gap** removes it, its `docket:gap` annotations, and its key from
-  any open decision's `gaps`.
+- **Closing a gap** removes it and its `docket:gap` annotations.
 - **A gap we decide never to close** becomes a tradeoff, with its drawback.
-  That's a person's decision.
+  That's a person's decision. The gap is deleted, with nothing linking the
+  two.
 
-### Rating impact
+### Rating impact, likelihood and reach
 
-Impact is always about the people the software serves: who its capabilities'
-personas stand for, and whoever runs it, builds on it, or depends on what it
-produces. Rate it in two steps, using judgement about this software's
-circumstances: what it takes from those it would affect, then what share of
-them it would affect if it bit. Rate the consequence, never how likely it is
-to bite, and never lower it because the capability is early: rate it as if
-people relied on the capability, since risk weighs it by its level already,
-and nobody re-rates it when it's promoted.
+Three ratings say what a gap could do, each by judgement about this
+software's circumstances. None needs to be exact: they make the judgement
+visible, so a person can see it and correct it. Never lower any of them
+because the capability is early: rate them as if people relied on the
+capability, since risk weighs them by its level already, and nobody re-rates
+them when it's promoted.
 
-First, what it takes. Ask in order, and stop at the first yes:
+**Impact** is how bad it is for those it reaches, if it bit. Never lower it
+for being unlikely or reaching few: that's what the other two are for. Ask in
+order, and stop at the first yes:
 
 1. Could it leave something wrong that can't be fully put right, or that
    someone acts on without knowing, at a cost? Data lost or kept wrong, money
@@ -90,24 +91,40 @@ First, what it takes. Ask in order, and stop at the first yes:
    comes out right? **`inconvenient`**
 4. Otherwise, **`negligible`**: nothing anyone relies on changes.
 
-Then, how many of them it would reach. Most of them, or a meaningful share:
-keep the rating. Only a few: one step lower. None of them today:
-`negligible`, with `when` saying who would change that, such as "Clients who
-use screen readers join." Legal or contractual exposure the business really
-has, and anyone able to do what they shouldn't, stay `damaging` however few
-it reaches. The same gap can rate differently in different software: read the
-personas before rating anything about who can use it.
-
 A wrong result someone notices and puts right is `inconvenient`. When torn
-between two, pick the lower unless the higher one's test is plainly met. A gap
-that only bites in some conditions, such as untested code, is rated by what
-would happen if it bit. `when` says what those conditions are, in terms of the
-design, not of how the system is used.
+between two, pick the lower unless the higher one's test is plainly met.
 
-Readers order gaps by risk, worked out from the impact, the level of each
-capability the gap is on, and whether it breaks that level's promise. Rate
-each gap you add, and say in your report how you rated it, so a person can
-correct it.
+**Likelihood** is how likely it is to bite within the next year. Leave it out
+when it's `certain`. When torn, pick the higher:
+
+- `certain`: it's happening, or it definitely will within a year.
+- `expected`: you'd bet on it happening within a year.
+- `possible`: it could happen, but you wouldn't bet on it.
+- `unlikely`: it would surprise you.
+
+A gap that only bites in some conditions, such as untested code, says what
+they are in its description, in terms of the design, not of how the system is
+used, and its likelihood says how likely they are.
+
+**Reach** is how many of the people the software serves it would reach, if it
+bit: who its capabilities' personas stand for, and whoever runs it, builds on
+it, or depends on what it produces. Leave it out when it's `all`. When torn,
+pick the higher:
+
+- `all`: everyone the software serves.
+- `most`: most of them, the usual case.
+- `some`: a real share of them, but not the usual case.
+- `few`: a small group with a particular need or situation.
+
+Read the personas before rating anything about who can use it: the same gap
+can reach differently in different software. Legal or contractual exposure
+the business really has, and anyone able to do what they shouldn't, are
+always `all`.
+
+Readers order gaps by risk, worked out from the three ratings, the level of
+each capability the gap is on, and whether it breaks that level's promise.
+Rate each gap you add, and say in your report how you rated it, so a person
+can correct it.
 
 ## Tradeoffs
 
@@ -119,7 +136,6 @@ tradeoffs:
   - id: constraint-not-lock
     name: Database constraint, not an app lock   # what we chose, in a few words
     outcome: reliability/beta/data-kept          # optional: an outcome it falls short of on purpose
-    impact: inconvenient                         # rates its drawback, as a gap's impact does
     description: >-
       The database refuses overlapping bookings with an exclusion constraint,
       rather than the app locking the room while it checks.
@@ -128,8 +144,7 @@ tradeoffs:
       to get locking right.
     drawback: >-
       Bookings need Postgres with `btree_gist`, so they can't move to a
-      database without it.
-    when: Bookings move to another database.
+      database without it, should they ever need to.
 ```
 
 - **Always write the `benefit`.** A choice whose reason isn't written down
@@ -140,6 +155,10 @@ tradeoffs:
 - **A technical tradeoff you made while building is yours to record.** A limit
   on what a capability does, or a non-goal on a feature, is a product choice:
   record it once a person has made it.
+- **A tradeoff isn't rated.** It carries no risk: someone already weighed its
+  drawback and chose to live with it. A drawback that's worth worrying about
+  means the choice isn't settled: record an open decision on it, or turn it
+  back into a gap.
 
 ## Decisions
 
@@ -153,25 +172,17 @@ decisions:
     question: >-
       Is a guest who never arrives treated as a late cancellation, or charged
       for the whole stay?
-    gaps: [late-cancellations-refunded-in-full]   # optional: gaps whose cost depends on the answer
-  - topic: Groups
-    question: Should a group be able to book several rooms under one name?
-    status: closed
-    answer: Yes, as a capability of its own, explored as a prototype first.
-    became: [capability:group-bookings]
 ```
 
-- **Open** is the default, so an open decision has no `status`. Only open
-  decisions count as what's left.
+- **Every decision written down is open**, and counts as what's left.
 - **Record one** when a question about intention comes up that nobody has
   answered and you didn't need answered to go on. Write the question so that
   someone without your context can answer it, and put any options in it.
-- **Close one** only with a person's answer: set `status: closed`, write the
-  `answer` in a sentence or two, and list in `became` what it was written as:
-  docs as `<type>:<id>`, or gaps' and tradeoffs' own IDs. Write those in the
-  same change. A decision answered with nothing to write down, such as "no",
-  has an `answer` and no `became`.
+- **Answer one** only with a person's answer: delete it, and write the answer
+  where it belongs, as a rule, concept, capability, gap, tradeoff or whatever
+  it became, in the same change. Nothing links back to the question; git has
+  its history. A decision answered with nothing to write down, such as "no",
+  is just deleted.
 - **Stay on the decision's side.** A decision on a domain, feature or
   capability becomes product docs, or their gaps or tradeoffs. One on a
   mechanism or component becomes technical docs, or theirs.
-- **Remove `gaps`** from a decision when you close it.

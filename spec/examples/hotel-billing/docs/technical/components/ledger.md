@@ -11,24 +11,25 @@ gaps:
     name: Corrections of corrections untested
     outcome: maintainability/ga/others-can-change
     impact: damaging
+    likelihood: expected
+    reach: few
     description: >-
       Nothing tests correcting a line that is itself a correction, so a change
-      to `correct` could stop a twice-corrected charge netting to zero without
-      anything failing.
-    when: Someone changes how corrections work.
+      to how corrections work in `correct` could stop a twice-corrected charge
+      netting to zero without anything failing.
 tradeoffs:
   - id: balance-worked-out-on-read
     name: Balance summed on read, not stored
     outcome: efficiency/beta/bounded
-    impact: inconvenient
     description: >-
       A bill's balance is added up from its lines every time it's asked for,
       not stored on the bill.
     benefit: >-
       The balance can never disagree with the lines, and there's nothing to
       keep in step when a line is added.
-    drawback: Opening a bill gets slower as lines are added to it.
-    when: A bill grows to thousands of lines, as on a long company stay.
+    drawback: >-
+      Opening a bill gets slower as lines are added to it, which shows once a
+      bill grows to thousands of lines, as on a long company stay.
 ---
 
 Everything that changes what a guest owes goes through `post`: room nights,

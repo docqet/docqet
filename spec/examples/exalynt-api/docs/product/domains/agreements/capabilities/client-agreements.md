@@ -34,8 +34,8 @@ gaps:
     description: >-
       A new version of the Client Agreement isn't offered to an organization
       that accepted an earlier one, and nothing sends a client new terms (it
-      has none).
-    when: A new version of the Client Agreement is published.
+      has none). That matters once a new version of the Client Agreement is
+      published.
   - id: names-outside-western-european-alphabets
     name: Names outside Western alphabets lost in PDFs
     outcome: usability/beta/everyone
@@ -59,9 +59,6 @@ gaps:
 tradeoffs:
   - id: every-member-sees-agreements
     name: Agreements visible to every member
-    impact: negligible
-    likelihood: possible
-    reach: some
     description: >-
       Every member of an organization sees its agreements, whatever their
       role.
@@ -73,7 +70,6 @@ decisions:
     question: >-
       When a shared definition changes, how does that reach agreement versions
       that were already accepted?
-    gaps: [shared-definitions-changed-in-place]
 ---
 
 ## Includes

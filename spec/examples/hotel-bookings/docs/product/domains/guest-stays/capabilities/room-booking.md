@@ -20,7 +20,6 @@ gaps:
 tradeoffs:
   - id: one-room-per-booking
     name: One room per booking
-    impact: inconvenient
     description: A booking holds one room, not several.
     benefit: >-
       Booking, changing and cancelling stay simple: each booking is one room
@@ -28,14 +27,6 @@ tradeoffs:
     drawback: >-
       A family that needs two rooms makes two bookings. Group bookings is
       where several rooms under one name is being explored.
-decisions:
-  - topic: Booking from the keyboard
-    question: Must clerks be able to book from the keyboard alone at Beta?
-    status: closed
-    answer: >-
-      Yes, since Beta expects everyone to be able to use it. The calendar
-      doesn't support it yet, so it's a known gap.
-    became: [capability:room-booking#calendar-needs-a-mouse]
 ---
 
 ## Includes

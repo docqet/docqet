@@ -36,8 +36,9 @@ gaps:
     impact: inconvenient
     likelihood: possible
     reach: few
-    description: With Stream, nobody can edit or delete a message once it's sent.
-    when: Someone sends a message they need to take back.
+    description: >-
+      With Stream, nobody can edit or delete a message once it's sent. That
+      matters when someone sends a message they need to take back.
   - id: nothing-retried
     name: Space membership changes never retried
     impact: damaging
@@ -51,20 +52,15 @@ gaps:
       engineer who left the team, they stay in the space and can keep reading
       it until they're taken out by hand. Starting a conversation says when it
       failed, and can be tried again.
-    when: >-
-      The messaging provider fails to put someone in a space or take them
-      out.
 tradeoffs:
   - id: stream-shows-gravatar
     name: Gravatar as the fallback photo on Stream
-    impact: negligible
-    likelihood: possible
-    reach: some
     description: >-
       With Stream, someone without an uploaded photo shows their Gravatar, as
       they do everywhere else in the app.
-    drawback: Stream keeps a link made from a hash of their email address.
-    when: Stream is the messaging provider.
+    drawback: >-
+      Stream keeps a link made from a hash of their email address. That's only
+      while Stream is the messaging provider.
 decisions:
   - topic: Clients who can't join
     question: >-

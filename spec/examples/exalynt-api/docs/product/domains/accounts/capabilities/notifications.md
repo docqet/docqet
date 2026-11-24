@@ -36,9 +36,6 @@ rules:
 tradeoffs:
   - id: no-email-on-scheduling
     name: No client email on scheduling or availability
-    impact: negligible
-    likelihood: possible
-    reach: some
     description: >-
       Clients aren't emailed when a block is scheduled, or when an
       availability change affects their capacity: the client scheduled the
@@ -49,20 +46,13 @@ tradeoffs:
       that doesn't move a preferred week.
   - id: one-set-of-choices
     name: One set of choices for all organizations
-    impact: inconvenient
-    likelihood: possible
-    reach: few
     description: >-
       One set of choices covers every organization someone belongs to, and
       each notification is to name the one it's about.
     drawback: >-
       Someone in several organizations can't choose differently for each.
-    when: Someone belongs to several organizations.
   - id: last-channel-stays
     name: Last channel can't be removed
-    impact: negligible
-    likelihood: possible
-    reach: few
     description: >-
       The last channel can't be removed, as what's always on needs somewhere
       to go. Being always on means at least one channel, not all of them.

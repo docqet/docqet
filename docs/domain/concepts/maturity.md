@@ -1,6 +1,6 @@
 # Maturity
 
-How far along a feature, a domain or a project is: how much of the work under
+How far along a feature, a domain, a project, or what serves a persona is: how much of the work under
 way is stable and supported. It's a percentage, derived from capabilities'
 [stability levels](stability-level.md), and nobody writes it down. It's for
 seeing where the work is heading. How ready people can rely on it being,
@@ -16,6 +16,8 @@ all, since no work has started on them.
 - **A domain's** comes from its parts of features, each from the capabilities
   that domain builds, at their levels there.
 - **A project's**, or a platform's, comes from its features.
+- **What serves a persona** comes from the capabilities that list them, as a
+  feature's does, each counted once at its level in short.
 
 Each maturity falls in a [band](band.md).
 
@@ -59,5 +61,5 @@ and check-out at GA in Guest stays but Alpha in Billing, so Alpha in short:
 - [Stability level](stability-level.md): how much you can depend on one
   capability. Maturity is about the whole.
 - [Readiness](readiness.md): the same calculation, except that a capability
-  with an unacceptable gap counts for nothing, with what's left. A persona
-  has a readiness, never a maturity.
+  with an unacceptable gap counts as the level below its own, with what's
+  left.

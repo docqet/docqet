@@ -103,8 +103,8 @@ these changes:
 - Rules have no kind: core and edge case are gone.
 - A capability can be a draft: declared, with no work started.
 - A gap has no kind and no `until`: when and how it's closed is up to the
-  team, not the docs. Each says its impact, so readers can order gaps by
-  risk. A tradeoff is a list of its own, with its benefit and drawback. A feature can have tradeoffs and open decisions, and a
+  team, not the docs. Each says its impact, likelihood and reach, so readers
+  can order gaps by risk. A tradeoff is a list of its own, with its benefit and drawback. A feature can have tradeoffs and open decisions, and a
   domain open decisions.
 
 Technical docs are forge's `engineering-docs` layout, with these changes:
@@ -120,9 +120,9 @@ Technical docs are forge's `engineering-docs` layout, with these changes:
   `docket:implements` (see [Evidence](#evidence)).
 - Forge's Gotchas section is gone. A gotcha that's a choice with a drawback is a
   tradeoff, one we mean to fix is a gap, and the rest is in the body.
-- A gap has no `Until`, and gains an `impact` and a `when`. A tradeoff's
-  `Costs` is its `drawback`, beside its `benefit`, and its `Revisit when` is
-  its `when`, rated by its drawback's `impact`.
+- A gap has no `Until`, and gains an `impact`, a `likelihood` and a `reach`.
+  A tradeoff's `Costs` is its `drawback`, beside its `benefit`, and its
+  `Revisit when` goes in its drawback.
 - A mechanism or component can say which checklist outcomes it meets.
 - Providers and runbooks aren't read. A repository can keep them anywhere.
 
@@ -164,7 +164,7 @@ and renaming or moving a file within its type's folder breaks nothing.
   can be renamed for people without changing its ID.
 - **A reference names its type**, as `<type>:<id>`, such as
   `rule:no-double-booking`, everywhere one is written: frontmatter links,
-  annotations, a decision's `became`, and `state.json`. A reference reads
+  annotations, and `state.json`. A reference reads
   the same in a doc as in code, so searching for one finds everything that
   names that doc. A link of the wrong type for its field, such as a concept
   in `rules`, is `invalid-frontmatter`.
@@ -298,7 +298,7 @@ The body column is a suggestion of what's worth writing, not a structure.
 
 - **`stability`** is `draft`, `prototype`, `alpha`, `beta` or `ga`, which
   tools show as Draft, Prototype, Alpha, Beta and GA. Only capabilities have
-  one. A feature's, domain's and project's maturity, and their and personas'
+  one. A feature's, domain's, project's and persona's maturity, and their
   [readiness](#readiness), are worked out from their capabilities' (see
   [Features and maturity](#features-and-maturity)).
 - **`personas`** lists the personas a capability serves: who does it, or who
@@ -320,29 +320,13 @@ The body column is a suggestion of what's worth writing, not a structure.
 - **`decisions`** lists the decisions on a domain, feature, capability,
   mechanism or component: questions about what's intended, including those that
   building it is meant to answer. A question goes on the doc it's about. Each
-  has its `question` and, optionally, a `topic` of a few words, and is open
-  until it's answered:
-  - **`status`** is `open` or `closed`, and `open` when left out. Only open
-    decisions count as what's left.
-  - **`answer`**, once it's closed, says in a sentence or two what was
-    decided.
-  - **`became`**, once it's closed, lists what the answer was written as, one
-    item or several: a doc as `<type>:<id>`, such as
-    `rule:same-day-turnover` or `capability:group-bookings`, or a
-    gap's or tradeoff's own ID, such as
-    `capability:room-booking#calendar-needs-a-mouse`. Each stays on the
-    decision's side: a decision on a domain, feature or capability becomes
-    product docs, or their gaps or tradeoffs, and one on a mechanism or
-    component becomes mechanisms or components, or their gaps or tradeoffs.
-    A link to a rule or
-    concept resolves as any other does, from the decision's domain. Readers
-    show each, and show the decision on what it became, so either side leads
-    to the other. A decision closed with nothing to write down, such as one
-    answered "no", has an `answer` and no `became`.
-  - **`gaps`**, while it's open, lists the gaps riding on it: those whose
-    cost depends on how it's answered. Each is a gap's key on the same doc,
-    or a gap's own ID, on the decision's side as `became` is. A decision has
-    no impact of its own; readers show the highest risk among its gaps.
+  has its `question` and, optionally, a `topic` of a few words. Every
+  decision written down is open, and counts as what's left. Answering one
+  deletes it: the answer is written where it belongs, as a rule, concept,
+  capability, gap, tradeoff or whatever it became, with no link back to the
+  question. It stays on the decision's side: a decision on a domain, feature
+  or capability becomes product docs, or their gaps or tradeoffs, and one on
+  a mechanism or component becomes mechanisms or components, or theirs.
 
 ```yaml
 decisions:
@@ -350,11 +334,6 @@ decisions:
     question: >-
       Always back to the card it came from, or to whichever card the guest
       has with them?
-  - topic: Groups
-    question: Should a group be able to book several rooms under one name?
-    status: closed
-    answer: Yes, as a capability of its own, explored as a prototype first.
-    became: [capability:group-bookings]
 ```
 
 - **`why`** says why a rule holds, so whoever meets a case it didn't foresee
@@ -488,14 +467,13 @@ gaps:
     name: Migrations have no down step
     outcome: reliability/ga/recovery
     impact: damaging
+    likelihood: possible
     description: >-
       Migrations have no down step, so undoing a release that changed the
       schema means restoring the database from the night before.
-    when: A release that changed the schema has to be undone.
 tradeoffs:
   - id: migrations-before-start
     name: Migrations run while the old release serves
-    impact: inconvenient
     description: >-
       Migrations run before the new image starts, while the old one is still
       serving, rather than stopping the app for each release.
@@ -542,7 +520,6 @@ rule                       → concepts
 concept                    → concepts                  (confused-with)
 gap                        → an outcome, a rule        (outcome, rule)
 tradeoff                   → an outcome                (outcome)
-decision                   → a doc, gap or tradeoff on its side  (became)
 component                  → capabilities, outcomes    (meets)
 mechanism                  → outcomes                  (meets)
 annotation                 → rules, capabilities, mechanisms, components    (docket:verifies, docket:implements)
@@ -606,7 +583,7 @@ the technical doc explains the cause in How it works.
 A **gap** is something we intend to close. It has an `id`, a `name` saying in
 a few words what falls short, such as `Calendar needs a mouse`, a
 `description` of a sentence or two, and optionally the `outcome` or `rule` it
-falls short of, its `impact`, and `when` it bites. It doesn't say when or how it'll be closed:
+falls short of, its `impact`, its `likelihood` and its `reach`. It doesn't say when or how it'll be closed:
 Docket lists it so people know about it, and deciding that is up to them.
 A gap is what falls short in the thing itself, never what a level already
 says: relying on a capability at a lower level isn't one, and nor is being
@@ -628,16 +605,14 @@ gaps:
       mouse to pick dates.
 ```
 
-- **`impact`** is what the gap would do to the people the software serves:
-  who its capabilities' personas stand for, and whoever runs it, builds on
-  it, or depends on what it produces. It's judged for that software, in two
-  steps: what it takes from those it would affect, then what share of them it
-  would affect if it bit. It's rated by the consequence, never by how likely
-  it is, and never by the capability's level: it's rated as if people relied
-  on the capability, since [risk](#risk) weighs it by its level, so it isn't
-  re-rated when the capability is promoted. Readers order gaps by [risk](#risk)
-  from it, and show a gap without one as not rated, after the rest. It's one
-  of four, from least to most, each taking more than the one before:
+- **`impact`** is how bad the gap is for those it reaches, if it bit. It's
+  never lowered for being unlikely or reaching few, since `likelihood` and
+  `reach` say that, and never by the capability's level: all three are rated
+  as if people relied on the capability, since [risk](#risk) weighs them by
+  its level, so they aren't re-rated when the capability is promoted. Readers
+  order gaps by [risk](#risk) from them, and show a gap without an impact as
+  not rated, after the rest. It's one of four, from least to most, each
+  taking more than the one before:
 
   | Impact         | What's lost                   | The test                                                                                                                                                                                                              |
   | -------------- | ----------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -650,21 +625,36 @@ gaps:
   that can't be put right, or that someone acts on unknowing, at a cost
   (`damaging`)? Could it stop someone, with no way around it (`blocking`)?
   Does it cost time, a step by hand or a workaround (`inconvenient`)?
-  Otherwise it's `negligible`. Then weigh its reach: only a few of the people
-  the software serves steps it down one, and none of them today makes it
-  `negligible`, with `when` saying who would change that. Legal or
-  contractual exposure the business has, and anyone able to do what they
-  shouldn't, stay `damaging` however few it reaches. A wrong result someone
-  notices and puts right is `inconvenient`; blocking a meaningful share of
-  them is `blocking`; a gap that changes
-  nothing for anyone yet is `negligible`, however untidy. When torn between
-  two, pick the lower unless the higher one's test is plainly met. A gap that
-  only bites in certain conditions, such as untested code, is rated by what
-  would happen if it bit.
-- **`when`** says, in a sentence, what makes it bite, when it isn't already
-  happening: "Someone changes how corrections work." It describes the design,
-  never how the running system is used, and it's context for people only:
-  it's never part of risk, since Docket can't know whether it holds.
+  Otherwise it's `negligible`. A wrong result someone notices and puts right
+  is `inconvenient`; a gap that changes nothing for anyone yet is
+  `negligible`, however untidy. When torn between two, pick the lower unless
+  the higher one's test is plainly met. A gap that only bites in certain
+  conditions, such as untested code, is rated by what would happen if it bit,
+  and says what the conditions are in its description.
+- **`likelihood`** is how likely the gap is to bite within the next year.
+  It's `certain` when left out. When torn between two, pick the higher:
+
+  | Likelihood | The test                                             |
+  | ---------- | ---------------------------------------------------- |
+  | `certain`  | It's happening, or it definitely will within a year. |
+  | `expected` | You'd bet on it happening within a year.             |
+  | `possible` | It could happen, but you wouldn't bet on it.         |
+  | `unlikely` | It would surprise you.                               |
+
+- **`reach`** is how many of the people the software serves it would reach,
+  if it bit: who its capabilities' personas stand for, and whoever runs it,
+  builds on it, or depends on what it produces. It's judged for that
+  software, by who they are and what they do, not by a count. It's `all` when
+  left out. When torn between two, pick the higher. Legal or contractual
+  exposure the business has, and anyone able to do what they shouldn't, are
+  always `all`:
+
+  | Reach  | The test                                           |
+  | ------ | -------------------------------------------------- |
+  | `all`  | Everyone the software serves.                      |
+  | `most` | Most of them: it's the usual case.                 |
+  | `some` | A real share of them, but not the usual case.      |
+  | `few`  | A small group with a particular need or situation. |
 
 - **`outcome`** names the [stability checklist](#stability-checklist) outcome
   it falls short of, as `<quality>/<level>/<id>`. Most gaps are limits on what
@@ -695,7 +685,7 @@ give up or risk in return, each a sentence or two, and both what came with
 the choice. One tradeoff is one choice: when it has two drawbacks, its
 `drawback` says both. Readers show a tradeoff with no `benefit` as missing
 it, since a choice whose reason isn't written down can't be weighed against
-its drawback. Its `impact` and `when` rate its drawback, as a gap's do. Optionally, its `outcome` names the
+its drawback. A drawback that only bites in certain conditions says what they are. A tradeoff isn't rated and has no risk: someone weighed its drawback and chose to live with it. Optionally, its `outcome` names the
 [stability checklist](#stability-checklist) outcome it falls short of on
 purpose, as a gap's does, so the checklist shows it as not met by choice
 rather than met:
@@ -704,7 +694,6 @@ rather than met:
 tradeoffs:
   - id: front-desk-bookings-only
     name: Front desk bookings only
-    impact: inconvenient
     description: >-
       Bookings are taken at the front desk, not from online travel agencies.
     benefit: >-
@@ -713,7 +702,8 @@ tradeoffs:
     drawback: Clerks enter each agency booking by hand, as it arrives by email.
 ```
 
-A gap we decide never to close becomes a tradeoff, with its drawback.
+A gap we decide never to close is deleted, and written as a tradeoff, with
+its drawback.
 
 ## Stability levels
 
@@ -954,6 +944,10 @@ too, worked out from all their features the same way, as if they were one
 project. Showing only some projects works out each feature's and domain's
 maturity from the capabilities those projects declare.
 
+A **persona's maturity** is that of what serves them: worked out as a
+feature's is, from the capabilities that list them, each once at its level in
+short.
+
 Maturity isn't a finish line, and 100% isn't the goal. It means everything
 under way is GA. Software that keeps growing usually has newer parts settling
 in, and stays Established as it does.
@@ -974,9 +968,12 @@ put together.
 Readiness is worked out as a feature's [maturity](#how-maturity-is-worked-out)
 is, with the same scores and weights, and each capability counted once, at
 its level in short, drafts left out. The one difference: **a capability with
-a gap that's `unacceptable` on it scores 0**, scored on that capability, until
-the gap is closed. It keeps its weight, so the more people depend on it, the
-more it costs. Acceptable and tolerable gaps don't lower it.
+a gap that's `unacceptable` on it scores as the level below its own**, scored
+on that capability, until the gap is closed: as if it hadn't been promoted
+yet. It keeps its own weight. A Beta capability held back scores 35, Alpha's,
+and an Alpha one 15, Prototype's; a gap is never unacceptable on a
+Prototype. So promoting a capability never lowers readiness, and acceptable
+and tolerable gaps don't lower it at all.
 
 | Readiness of                | Counts                                 |
 | --------------------------- | -------------------------------------- |
@@ -1004,18 +1001,28 @@ Beta, the first level settled enough for real use, needs to reach Beta, and
 each gap that's unacceptable on one needs closing. A capability at Beta or GA
 with neither has nothing left. Drafts are listed as not started.
 
-In Hotel Billing, the manager has city tax at Alpha, deposits at Beta, and
-daily takings at Beta and night audit at GA, with no gaps. Deposits relies on
-the ledger, whose untested corrections are `damaging` and score 72 there,
-`unacceptable`, so deposits scores 0: (35 × 3 + 0 × 4 + 60 × 4 + 100 × 6) ÷
-(3 + 4 + 4 + 6) = 945 ÷ 17 ≈ 56%, Mostly ready. What's left:
+In Hotel Bookings, the front desk clerk has room booking and check-in at
+Beta, cancellations at Alpha, check-out at GA, and group bookings and room
+status at Prototype. Room booking's calendar needs a mouse, cancellations
+refund late cancellations in full, and check-out relies on the deployment,
+whose migrations have no down step: each scores 76 there, `unacceptable`.
+So room booking counts as Alpha, cancellations as Prototype and check-out as
+Beta: (35 × 4 + 60 × 4 + 15 × 3 + 60 × 6 + 15 × 2 + 15 × 2) ÷ (4 + 4 + 3 + 6
++ 2 + 2) = 845 ÷ 21 ≈ 40%, Partly ready. What's left:
 
 ```text
-city tax   reach Beta, now Alpha
-deposits   close component:ledger#corrections-of-corrections-untested
+room booking    close capability:room-booking#calendar-needs-a-mouse
+cancellations   reach Beta, now Alpha
+                close capability:cancellations#late-cancellations-refunded-in-full
+check-out       close mechanism:deployment#migrations-only-go-forward
+group bookings  reach Beta, now Prototype
+room status     reach Beta, now Prototype
 ```
 
-The night auditor has only night audit, at GA, so they're 100%, Ready.
+In Hotel Billing, the manager has city tax at Alpha, deposits and daily
+takings at Beta, and night audit at GA, with nothing unacceptable, so they're
+1185 ÷ 17 ≈ 70%, Mostly ready. The night auditor has only night audit, at
+GA, so they're 100%, Ready.
 
 Starting new work lowers readiness a little, since a Prototype weighs least:
 five GA capabilities and a new Prototype are 95%. A gap nobody wrote leaves a
@@ -1029,47 +1036,58 @@ matter are read first. Nothing is written for it, and it isn't in
 mechanism that applies across a platform shows on every project's
 capabilities. A product gap shows on its capability; a technical gap on
 every capability its mechanism or component serves. On each capability it
-shows on, a gap scores:
+shows on, a gap scores what it could do, times how much people rely on what
+it's in:
 
 ```text
-impact step × level weight × 1.5 if it breaks that level's promise
+impact step × likelihood × reach × level weight × 1.5 if it breaks that level's promise
 ```
 
 1. **Its impact step**: `negligible` 1, `inconvenient` 2, `blocking` 3,
    `damaging` 4.
-2. **The capability's level weight**, as in
+2. **Its likelihood**: `certain` 1, `expected` ¾, `possible` ½,
+   `unlikely` ¼. `certain` when left out.
+3. **Its reach**: `all` 1, `most` ¾, `some` ½, `few` ¼. `all` when left out.
+4. **The capability's level weight**, as in
    [maturity](#how-maturity-is-worked-out): Prototype 2, Alpha 3, Beta 4,
-   GA 6. A draft weighs 0.
-3. **Whether it breaks that level's promise**: it names a rule that
+   GA 6. It says how much people are entitled to rely on that capability,
+   and how exposed they are to its gaps. A draft weighs 0.
+5. **Whether it breaks that level's promise**: it names a rule that
    capability follows, or a checklist outcome that capability's level
    expects, so that outcome shows as not met there. A draft makes no promise.
 
-Each score is put on 0 to 100 by a log scale, from 2, the least there is (a
-negligible gap on a Prototype), to 36, the most (a damaging gap breaking a
-promise on GA), and rounded: `100 × ln(raw ÷ 2) ÷ ln(18)`. A draft scores
-0. A gap's risk is its highest score. A gap with no `impact` has no risk. Its **verdict** is
+Each score is put on 0 to 100 by a log scale, from 2 (a certain negligible
+gap reaching all on a Prototype) to 36 (a certain damaging gap reaching all
+and breaking a promise on GA), rounded, and never below 0:
+`100 × ln(raw ÷ 2) ÷ ln(18)`. A draft scores 0. A gap's risk is its highest score. A gap with no `impact` has no risk. Its **verdict** is
 the third its risk falls in: `acceptable` below 33, `tolerable` from 33, and
 `unacceptable` from 67. Its **exposure** is how its scores spread: how many
 capabilities carry each score, highest first. Readers order gaps by risk, highest first, then by
 exposure, comparing the number of capabilities at each score from the
 highest down, then gaps with no impact.
 
-The ledger's `corrections-of-corrections-untested` is `damaging`, and names
-`maintainability/ga/others-can-change`, which only GA expects. The ledger
-serves extra charges at GA, where it breaks that promise: 4 × 6 × 1.5 = 36,
-or 100. It serves deposits at Beta (72), check-out and direct billing at
-Alpha (62 each), and split bills at Prototype (48). Its risk is 100,
-`unacceptable`, and its exposure `100 on 1 · 72 on 1 · 62 on 2 · 48 on 1`.
+Hotel Bookings' deployment has `migrations-only-go-forward`, `damaging` and
+`possible`, reaching `all`, which names `reliability/ga/recovery`, an outcome
+only GA expects. Shown on its own, Hotel Bookings has check-out at GA, where
+it breaks that promise: 4 × ½ × 1 × 6 × 1.5 = 18, or 76. Deployment also
+serves room booking and check-in at Beta (48 each), cancellations at Alpha
+(38), and group bookings, room status, cleaning and the rate calendar at
+Prototype (24 each). Its risk is 76, `unacceptable`, and its exposure
+`76 on 1 · 48 on 2 · 38 on 1 · 24 on 4`. Shown with Hotel Billing, check-out
+is Alpha, so its risk there is 48.
+
+The ledger's `corrections-of-corrections-untested` is `damaging`,
+`expected` and reaches `few`: 4 × ¾ × ¼ = 0.75 before its level. On extra
+charges at GA, where it breaks a promise, that's 6.75, or 42, `tolerable`;
+on split bills at Prototype it's 1.5, below the least there is, so 0.
 
 Where several gaps are shown together, as for a capability, feature,
 domain, persona or component, each is scored only on the capabilities
 there, and readers show the highest risk and how many fall in each
 verdict.
 
-`when` is never part of risk. Tradeoffs are scored the same way by their
-drawback's impact, without the promise: a tradeoff that names an outcome
-falls short on purpose, so it breaks no promise. An open decision has no
-risk of its own, and shows the highest risk among the gaps it lists.
+Tradeoffs and open decisions have no risk: a tradeoff is a drawback someone
+chose to live with, and a question doesn't happen to anyone.
 
 ## Evidence
 
@@ -1326,7 +1344,7 @@ and showing several projects together means reading each one's state.json.
 - **Fields are named in camel case**, as the rest of `state.json` is:
   `confused-with` is `confusedWith`. A field the doc leaves out is there
   anyway, as `[]` for a list and `null` otherwise, such as a rule's `why`
-  or a persona's `image`. Each decision is its `topic`, or `null`, `question`, `status`, `answer`, or `null`, `became` as written, and `gaps` as written, or `[]`. Each `confusedWith` is its
+  or a persona's `image`. Each decision is its `topic`, or `null`, and `question`. Each `confusedWith` is its
   `concept` or `term`, the other `null`, and `summary`.
 - **`mechanisms`** and **`components`**: each with its ID, file, name,
   `description`, `capabilities`, `meets`, its `gaps` and
@@ -1343,12 +1361,12 @@ and showing several projects together means reading each one's state.json.
   empty when it has none.
 - **`gaps`**: every gap from every doc, each with its ID, its `domain` when
   it's a capability's, the `outcome` and `rule` it names or `null`, its
-  `impact` and `when` or `null`, its `name` and `description`, and `places`: where `docket:gap` annotations mark it, in the same
+  `impact`, `likelihood` and `reach` or `null`, its `name` and `description`, and `places`: where `docket:gap` annotations mark it, in the same
   shape as evidence.
 - **`tradeoffs`**: every tradeoff from every doc, each with its ID, its
   `domain` when it's a feature's or capability's, the `outcome` it names or
-  `null`, `name`, `description`, `benefit`, or `null` where it has none, `drawback`, its
-  `impact` and `when` or `null`, and `places`, from `docket:tradeoff` annotations.
+  `null`, `name`, `description`, `benefit`, or `null` where it has none, `drawback`, and
+  `places`, from `docket:tradeoff` annotations.
 - **`problems`**: everything the indexer found wrong, each about a doc with
   that doc's `domain`.
 - **`checklist`**: the stability checklist the project was indexed against, so
@@ -1366,7 +1384,7 @@ and showing several projects together means reading each one's state.json.
 
 | Type                  | Raised when                                                                                                      |
 | --------------------- | ---------------------------------------------------------------------------------------------------------------- |
-| `unknown-id`          | A link, annotation, `rule`, `became` or a decision's `gaps` names a doc, gap or tradeoff that doesn't exist.     |
+| `unknown-id`          | A link, annotation or `rule` names a doc, gap or tradeoff that doesn't exist.                                    |
 | `invalid-frontmatter` | A required field is missing, or a value isn't allowed, such as a link of the wrong type for its field, or a domain folder has no `domain.md` to give its ID. |
 | `duplicate-id`        | A project has two docs of one type with the same ID in one domain, or two domains, personas, mechanisms or components with the same ID, or a doc has two gaps or tradeoffs with the same key across the projects and domains that write it. |
 | `broken-link`         | A relative link in a doc's body or a text value doesn't resolve.                                                 |
@@ -1375,7 +1393,6 @@ and showing several projects together means reading each one's state.json.
 | `contradiction`       | Contributions that should agree don't, as Domains describes.                                                     |
 | `invalid-annotation`  | An annotation names a rule without its domain.                                                                   |
 | `unknown-outcome`     | A gap's or tradeoff's `outcome`, or an entry in `meets`, isn't a checklist outcome.                              |
-| `became-other-side`   | A decision's `became` or `gaps` names a technical doc, or its gap or tradeoff, from a product doc, or the other way round. |
 
 `in-two-features` is a contradiction too, when the listings
 are in different projects. Combining raises `contradiction` and

@@ -6,9 +6,6 @@ capabilities: [capability:estimates]
 tradeoffs:
   - id: prices-copied-onto-estimate
     name: Prices copied onto the estimate when made
-    impact: negligible
-    likelihood: unlikely
-    reach: few
     description: >-
       Prices are copied onto the estimate when it's made, so a client's
       estimate doesn't change when prices do. Every response returns the copy
@@ -16,18 +13,15 @@ tradeoffs:
     drawback: >-
       A capacity type added later only reaches estimates made after it's
       recorded.
-    when: A capacity type is added.
   - id: unindexed-search
     name: Unindexed ILIKE search over estimates
-    impact: negligible
-    likelihood: unlikely
-    reach: few
     description: >-
       Search is `ILIKE '%word%'` over four columns, with no index: at 2,000
       estimates that's a few milliseconds, measured against the local stack on
       2026-10-23.
-    drawback: It scans.
-    when: Estimates grow far beyond the 2,000 measured.
+    drawback: >-
+      It scans, which matters only once estimates grow far beyond the 2,000
+      measured.
 ---
 
 `PUT /v1/estimates/{id}` replaces the estimate in one transaction: it updates

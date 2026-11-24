@@ -31,13 +31,13 @@ written as two gaps.
   always hold, and no rule says so, write the rule and name it: the rule is
   what we intend, and the gap is the part not done yet. Several gaps can name
   one rule, each a part of it.
-- **It says what's at stake**: its impact, what happens to whoever relies on
-  it when it bites, from `negligible` to `damaging`, so Docket can work out
-  its [risk](risk.md). A gap that only bites in certain conditions says when, as
-  context for people.
-- **It can be riding on an [open decision](open-decision.md)**: what it
-  costs depends on how a question is answered. The decision names it, and
-  shows what's at stake.
+- **It says what's at stake**: its impact, how bad it is for those it
+  reaches, from `negligible` to `damaging`; its likelihood, how likely it is
+  to bite within a year, from `certain` to `unlikely`; and its reach, how many
+  of the people the software serves it would reach, from `all` to `few`. From
+  them and the capability's level, Docket works out its [risk](risk.md). A
+  gap that only bites in certain conditions says what they are in its
+  description, and its likelihood says how likely they are.
 
 A capability that's missing altogether isn't a gap: it's a draft capability.
 Relying on a capability at a lower level isn't a gap either, such as
@@ -61,14 +61,16 @@ be fixed soon and changes what people can rely on.
 Open → Closed
 
 A closed gap is deleted, and git has its history. A gap we decide never to
-close becomes a [tradeoff](tradeoff.md), with its drawback.
+close is deleted too, and written as a [tradeoff](tradeoff.md), with its
+drawback.
 
 ## In the spec
 
 Gaps are listed in the frontmatter of the doc they're on, each with an `id`
 unique in that doc, a `name` saying in a few words what falls short, a
 `description` of a sentence or two, and optionally the `outcome` or `rule` it
-falls short of, its `impact`, and `when` it bites. On [city tax](../../../spec/examples/hotel-billing/docs/product/domains/billing/capabilities/city-tax.md):
+falls short of, its `impact`, its `likelihood`, `certain` when left out, and
+its `reach`, `all` when left out. On [city tax](../../../spec/examples/hotel-billing/docs/product/domains/billing/capabilities/city-tax.md):
 
 ```yaml
 gaps:
@@ -82,7 +84,9 @@ gaps:
 ```
 
 A technical gap on the [ledger](../../../spec/examples/hotel-billing/docs/technical/components/ledger.md)
-names an outcome, and only bites when someone changes the code:
+names an outcome. It's `expected`, since someone is likely to change how
+corrections work within a year, and reaches `few`, since only a
+twice-corrected charge is at stake:
 
 ```yaml
 gaps:
@@ -90,9 +94,12 @@ gaps:
     name: Corrections of corrections untested
     outcome: maintainability/ga/others-can-change
     impact: damaging
+    likelihood: expected
+    reach: few
     description: >-
-      Nothing tests correcting a line that is itself a correction, ...
-    when: Someone changes how corrections work.
+      Nothing tests correcting a line that is itself a correction, so a change
+      to how corrections work in `correct` could stop a twice-corrected charge
+      netting to zero without anything failing.
 ```
 
 Its ID is `component:ledger#corrections-of-corrections-untested`, and the code it

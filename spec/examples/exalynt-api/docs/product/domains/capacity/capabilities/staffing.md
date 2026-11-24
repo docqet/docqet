@@ -44,10 +44,8 @@ gaps:
     reach: few
     description: >-
       An admin putting an engineer on a block isn't checked for that
-      engineer's eligibility.
-    when: >-
-      An admin puts an engineer on a block of a client their team doesn't
-      support.
+      engineer's eligibility. That matters when an admin puts an engineer on a
+      block of a client their team doesn't support.
   - id: assignment-availability-unchecked
     name: Assignments not checked for availability
     rule: rule:assignment-must-fit-availability
@@ -56,10 +54,8 @@ gaps:
     reach: few
     description: >-
       An admin putting an engineer on a block isn't checked for that
-      engineer's availability.
-    when: >-
-      An admin puts an engineer on a block they don't have the availability
-      for.
+      engineer's availability. That matters when an admin puts an engineer on
+      a block they don't have the availability for.
 decisions:
   - topic: Cross-team handoff
     question: >-

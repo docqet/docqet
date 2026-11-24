@@ -29,17 +29,15 @@ gaps:
       If it can't be told whether a purchase went through, the client is told
       so, and trying again can't charge twice, but only while that attempt is
       still open. Closing it, or reloading, starts a new purchase.
-    when: >-
-      A purchase's outcome is unknown and the client closes or reloads before
-      trying again.
   - id: touch-and-screen-readers-untried
     name: Touch screens and screen readers untried
     outcome: usability/beta/everyone
     impact: inconvenient
     likelihood: possible
     reach: few
-    description: Real touch screens and screen readers haven't been tried.
-    when: Someone buys blocks on a touch screen or with a screen reader.
+    description: >-
+      Real touch screens and screen readers haven't been tried. That matters
+      for someone buying blocks on a touch screen or with a screen reader.
 decisions:
   - topic: Buying without a call
     question: >-

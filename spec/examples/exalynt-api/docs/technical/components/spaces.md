@@ -14,10 +14,8 @@ gaps:
     likelihood: unlikely
     description: >-
       `api sync users` has no hook, so a ban or deletion it applies doesn't
-      take the user out of the provider's spaces.
-    when: >-
-      `api sync users` bans or deletes someone in a real messaging provider's
-      spaces.
+      take the user out of the provider's spaces. That matters when it bans or
+      deletes someone in a real messaging provider's spaces.
 ---
 
 For spaces and memberships our row comes first and the provider follows. Its

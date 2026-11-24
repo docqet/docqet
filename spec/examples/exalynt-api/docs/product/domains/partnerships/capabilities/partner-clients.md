@@ -43,8 +43,8 @@ gaps:
     reach: few
     description: >-
       Moving a client starts its "since" afresh, and nothing keeps the
-      partnerships a client was attributed to before.
-    when: Exalynt moves a client to another partnership.
+      partnerships a client was attributed to before. That happens when
+      Exalynt moves a client to another partnership.
   - id: phone-hides-how-and-window
     name: Phones hide client source and earning window
     impact: inconvenient

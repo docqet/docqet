@@ -51,7 +51,6 @@ gaps:
     description: >-
       Someone impersonating a user through the sign-in provider can create a
       token for them, which outlasts the impersonation.
-    when: Someone impersonates a user through the sign-in provider.
   - id: bans-can-arrive-late
     name: Bans can arrive late or out of order
     rule: rule:bans-suspend-a-persons-tokens
@@ -63,60 +62,47 @@ gaps:
       until the next update or a sync, and nothing runs the sync on a
       schedule, so that could be a long time. An update that doesn't mention a
       ban leaves it alone.
-    when: Someone is banned.
 tradeoffs:
   - id: no-scopes
     name: Tokens have no scopes
-    impact: damaging
-    likelihood: unlikely
     description: >-
       A token can do everything its user can, wherever it works: there are no
       scopes.
-    drawback: A script that needs only a little access holds all of its user's.
-    when: A script's token leaks or the script misbehaves.
+    drawback: >-
+      A script that needs only a little access holds all of its user's. That
+      matters when a script's token leaks or the script misbehaves.
   - id: managing-tokens-needs-a-session
     name: Managing tokens needs a session, not a token
-    impact: negligible
-    likelihood: unlikely
-    reach: few
     description: >-
       Managing tokens needs a session: a token can't list, create, or revoke
       tokens.
     drawback: Tokens can't be managed from scripts.
   - id: limited-tokens-reach-their-users-record
     name: Limited tokens still reach their user's record
-    impact: inconvenient
-    likelihood: unlikely
-    reach: few
     description: >-
       A limited token still reaches its user's own record: it can read and
       change their profile, including updating it from the sign-in provider,
       and sees their platform role and applications.
     drawback: >-
       A limited token reaches more than its organizations, though none of it
-      reveals another organization.
-    when: A limited token leaks or its script misbehaves.
+      reveals another organization. That matters only when a limited token
+      leaks or its script misbehaves.
   - id: limited-tokens-can-leave
     name: Limited tokens can leave an organization
-    impact: negligible
-    likelihood: unlikely
-    reach: few
     description: >-
       A limited token can remove its user from one of its organizations, as
       their own session can.
     drawback: >-
       A script can take its user out of an organization. That's within its
-      limit, and acts on nothing else.
-    when: A script removes its user from an organization.
+      limit, and acts on nothing else. It matters only if a script actually
+      does.
   - id: failed-authentication-not-rate-limited
     name: Failed authentication isn't rate limited
-    impact: negligible
-    likelihood: unlikely
     description: Requests that fail to authenticate aren't rate limited.
     drawback: >-
       Each request with a bad token costs a lookup that nothing counts, though a
-      token can't be guessed.
-    when: Someone floods the API with bad tokens.
+      token can't be guessed. That matters only if someone floods the API with
+      bad tokens.
 ---
 
 ## Includes

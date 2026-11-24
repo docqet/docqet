@@ -40,23 +40,19 @@ gaps:
 tradeoffs:
   - id: last-save-wins
     name: Last save wins, without a warning
-    impact: inconvenient
-    likelihood: unlikely
-    reach: few
     description: >-
       When two people edit one estimate at once, the later save replaces the
       earlier one, without a warning.
-    drawback: The earlier person's changes are lost without them knowing.
-    when: Two people edit one estimate at once.
+    drawback: >-
+      The earlier person's changes are lost without them knowing. That takes
+      two people editing one estimate at once.
   - id: deleting-is-permanent
     name: Deleting an estimate is permanent
     outcome: usability/beta/recover
-    impact: inconvenient
-    likelihood: unlikely
-    reach: few
     description: Deleting an estimate is permanent.
-    drawback: Getting one back means restoring a backup.
-    when: Someone deletes an estimate by mistake.
+    drawback: >-
+      Getting one back means restoring a backup. That matters when someone
+      deletes an estimate by mistake.
 decisions:
   - topic: Asking for estimates and engineers
     question: >-

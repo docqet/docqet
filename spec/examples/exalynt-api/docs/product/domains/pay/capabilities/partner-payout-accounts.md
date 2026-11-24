@@ -51,9 +51,6 @@ concepts: [concept:payout, concept:partnership@partnerships]
 tradeoffs:
   - id: one-account-per-partnership-checked-each-time
     name: Each partnership has its own account
-    impact: inconvenient
-    likelihood: unlikely
-    reach: few
     description: >-
       Each partnership has its own payout account, even when several are paid
       to the same bank account.
@@ -61,36 +58,24 @@ tradeoffs:
       Someone managing several partnerships that are paid to the same bank
       account sets it up, and goes through the payments partner's checks, on
       each.
-    when: Someone manages several partnerships paid to the same bank account.
   - id: one-account-one-country
     name: One country per account, fixed once chosen
-    impact: inconvenient
-    likelihood: unlikely
-    reach: few
     description: >-
       There's one account per partnership, and its country is fixed once it's
       chosen, as the payments partner's form holds one and verifies it for
       one country.
     drawback: >-
       A partnership can't be paid to a second account, or move its account to
-      another country.
-    when: >-
-      A partnership wants a second account, or to be paid in another country.
+      another country. That matters when a partnership wants a second account,
+      or to be paid in another country.
   - id: no-payouts-to-mexico
     name: Mexico not offered as a country
-    impact: blocking
-    likelihood: unlikely
-    reach: few
     description: >-
       Mexico isn't offered as a country, since the payments partner can't
       send there.
     drawback: Partnerships can't be paid in Mexico.
-    when: A partnership's bank account is in Mexico.
   - id: form-asks-for-business-details
     name: Payments partner's form used as it is
-    impact: inconvenient
-    likelihood: expected
-    reach: few
     description: >-
       Accounts are set up on the payments partner's form as it is.
     drawback: >-
@@ -99,25 +84,20 @@ tradeoffs:
       US. In Canada it also asks for an ID document and a selfie.
   - id: changes-made-in-the-partners-dashboard
     name: Changes made in the payments partner's dashboard
-    impact: inconvenient
-    likelihood: possible
-    reach: few
     description: >-
       Once an account is set up, changing it happens in the payments
       partner's own dashboard rather than its form.
     drawback: >-
       Managers change the bank account somewhere other than where they set it
       up.
-    when: A manager changes the bank account.
   - id: removing-closes-the-account
     name: Removing an account closes it
-    impact: inconvenient
-    likelihood: unlikely
-    reach: few
     description: >-
       Removing an account closes it with the payments partner.
-    drawback: Adding one again means going through their checks from the start.
-    when: A manager removes the account and later adds one again.
+    drawback: >-
+      Adding one again means going through their checks from the start. That
+      matters only for a manager who removes the account and later adds one
+      again.
 ---
 
 ## Includes

@@ -74,17 +74,14 @@ concepts: [concept:team, concept:role@accounts]
 tradeoffs:
   - id: written-for-administrators
     name: Written for administrators, not narrower roles
-    impact: negligible
-    likelihood: unlikely
-    reach: few
     description: >-
       It's written for administrators: without full reads of people, teams,
       capacity and clients the list doesn't load, and with narrower reach it
       shows only what that reaches.
     drawback: >-
       There's no rule for what a team-limited view of people shows, as only
-      the admin view matters for now.
-    when: Someone other than an administrator needs the list of people.
+      the admin view matters for now. That matters once someone other than an
+      administrator needs the list of people.
 ---
 
 ## Includes

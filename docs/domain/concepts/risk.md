@@ -1,72 +1,87 @@
 # Risk
 
 What's at stake in leaving a [gap](gap.md) open: a score from 0 to 100,
-worked out from its impact, the [stability level](stability-level.md) of
-each capability it shows on, and whether it breaks the promise that level
-makes, with a verdict on whether that's acceptable. Gaps are ordered by it,
-riskiest first. Nobody writes it down.
+worked out from what the gap could do (its impact, how likely it is and how
+many it reaches) and from how much people rely on each capability it shows
+on (its [stability level](stability-level.md), and whether the gap breaks the
+promise that level makes), with a verdict on whether that's acceptable. Gaps
+are ordered by it, riskiest first. Nobody writes it down.
 
 ## Details
 
 A long list of gaps says nothing about which ones to care about. Docket can't
-know how a running system is used, but it can tell what's at stake from what's
-written down:
+know how a running system is used, but it can tell what's at stake from the
+judgement written down beside it. Three parts are about the gap, and rated by
+hand on it, since only people know them:
 
-- **Impact**, declared on the gap: what happens to whoever relies on it when
-  it bites. It's the one part of risk written by hand, since only people know
-  the consequence.
-- **Stability**, derived: the level of each capability it shows on. A
-  product gap shows on its capability, and a technical gap on every
-  capability that relies on its mechanism or component. Stable capabilities
-  weigh more than early ones, since more people depend on them, and on real
-  data.
-- **Whether it breaks that level's promise**, derived, for each capability:
-  it names a [rule](rule.md) that capability follows, or a
+- **Impact**: how bad it is for those it reaches when it bites.
+- **Likelihood**: how likely it is to bite within a year.
+- **Reach**: how many of the people the software serves it would reach.
+
+Two are about what it's in, and worked out:
+
+- **Stability**: the level of each capability it shows on. A product gap
+  shows on its capability, and a technical gap on every capability that
+  relies on its mechanism or component. The level says how much people are
+  entitled to rely on that capability, and how exposed they are to its gaps:
+  a Prototype is opt-in and its data may be fake, while people have built on
+  a GA capability with real data.
+- **Whether it breaks that level's promise**, for each capability: it names a
+  [rule](rule.md) that capability follows, or a
   [stability checklist](stability-checklist.md) outcome that capability's
   level expects. People depending on that level are relying on something
   that isn't true yet.
 
+The gap's three ratings describe the gap, so they never change when its
+capability is promoted. Only what it's in changes, so the same gap's risk
+grows as its capability moves up, and nobody re-rates it.
+
 On each capability it shows on, a gap scores:
 
 ```text
-impact × level weight × 1.5 if it breaks that level's promise
+impact × likelihood × reach  ×  level weight × 1.5 if it breaks that level's promise
+└── what the gap could do ─┘    └──── how much people rely on what it's in ────┘
 ```
 
-put on 0 to 100 by a log scale, rounded to a whole number. 0 is the least
-there is, a negligible gap on a Prototype, 1 × 2 = 2, and 100 the most, a
-damaging gap that breaks a promise on GA, 4 × 6 × 1.5 = 36:
+| Impact         | Step |     | Likelihood | Factor |     | Reach  | Factor |     | Level     | Weight |
+| -------------- | ---- | --- | ---------- | ------ | --- | ------ | ------ | --- | --------- | ------ |
+| `negligible`   | 1    |     | `certain`  | 1      |     | `all`  | 1      |     | Prototype | 2      |
+| `inconvenient` | 2    |     | `expected` | ¾      |     | `most` | ¾      |     | Alpha     | 3      |
+| `blocking`     | 3    |     | `possible` | ½      |     | `some` | ½      |     | Beta      | 4      |
+| `damaging`     | 4    |     | `unlikely` | ¼      |     | `few`  | ¼      |     | GA        | 6      |
+
+It's put on 0 to 100 by a log scale and rounded to a whole number. 0 is a
+certain negligible gap reaching everyone on a Prototype, 1 × 2 = 2, and 100 a
+certain damaging gap reaching everyone that breaks a promise on GA,
+4 × 6 × 1.5 = 36:
 
 ```text
-score = 100 × ln(raw ÷ 2) ÷ ln(36 ÷ 2)
+score = 100 × ln(raw ÷ 2) ÷ ln(36 ÷ 2), and never below 0
 ```
 
 Since the raw score multiplies its parts, the log scale makes each of them
 add a steady amount instead: each step of impact or level, and breaking a
-promise, moves the score the same way wherever it starts. Equal distances on
-the scale mean equal multiples of what's at stake, so the verdicts can be
-even thirds of it.
-
-| Impact         | Step |     | Level     | Weight |
-| -------------- | ---- | --- | --------- | ------ |
-| `negligible`   | 1    |     | Prototype | 2      |
-| `inconvenient` | 2    |     | Alpha     | 3      |
-| `blocking`     | 3    |     | Beta      | 4      |
-| `damaging`     | 4    |     | GA        | 6      |
+promise, moves the score the same way wherever it starts. A gap that's less
+likely, or reaches fewer, scores lower, down to 0. A certain gap reaching
+everyone, which is what a gap is when it says neither, scores as impact and
+level alone.
 
 A draft weighs nothing, since it promises nothing, so a gap scores 0 there.
 The gap's **risk** is its highest score: what's at stake where it matters
 most. A gap with no impact rated has no risk, and comes after every gap
 that's rated.
 
-Stability can outweigh impact: a damaging gap on a Prototype, where data may
-be fake, scores 48, below a blocking gap on GA at 76.
+Stability can outweigh impact: a certain damaging gap on a Prototype, where
+data may be fake, scores 48, below a certain blocking gap on GA at 76. And
+likelihood can outweigh stability: the same damaging gap on GA, if it's
+unlikely, scores 38.
 
 ### Verdict
 
 A risk's **verdict** says whether it's OK to leave the gap open at the level
 it's at, by the third its score falls in. A capability with a gap that's
-`unacceptable` on it counts for nothing in [readiness](readiness.md) until
-it's closed:
+`unacceptable` on it counts as the level below its own in
+[readiness](readiness.md) until it's closed:
 
 | Verdict        | Score     | What it means                                    |
 | -------------- | --------- | ------------------------------------------------ |
@@ -74,8 +89,8 @@ it's closed:
 | `tolerable`    | 33 to 66  | OK to leave for now, but worth closing.          |
 | `unacceptable` | 67 to 100 | Not OK to leave open at the level it's at.       |
 
-Every score there is, with the score where it breaks that level's promise
-after it:
+Every score for a certain gap reaching everyone, with the score where it
+breaks that level's promise after it:
 
 | Impact         | Prototype | Alpha   | Beta    | GA       |
 | -------------- | --------- | ------- | ------- | -------- |
@@ -83,6 +98,11 @@ after it:
 | `blocking`     | 38 / 52   | 52 / 66 | 62 / 76 | 76 / 90  |
 | `inconvenient` | 24 / 38   | 38 / 52 | 48 / 62 | 62 / 76  |
 | `negligible`   | 0 / 14    | 14 / 28 | 24 / 38 | 38 / 52  |
+
+Each step down in likelihood or reach takes off 10 for `expected` or `most`,
+24 for `possible` or `some`, and 48 for `unlikely` or `few`, never going below
+0. A damaging gap on Beta is 72 when certain, 62 when expected, 48 when
+possible and 24 when unlikely.
 
 Where there's more than one gap, as in a capability, feature, domain,
 persona or component, each is scored on the capabilities there, and they're
@@ -92,31 +112,23 @@ shown as their highest risk and how many fall in each verdict.
 
 A gap's **exposure** is how its risk spreads across the capabilities it
 shows on: how many carry each score, highest first, such as
-`100 on 1 · 72 on 1 · 62 on 2`. Of two gaps with the same risk, the one with
+`76 on 1 · 48 on 2 · 38 on 1`. Of two gaps with the same risk, the one with
 more capabilities at that score comes first; if they're level there, the one
 with more at the next score, and so on. A gap in something many capabilities
 rely on is more exposed than one on a single capability.
 
-### Impact
+### Rating a gap
 
-Impact is one of four, from least to most. It's always about the people the
-software serves: the people its capabilities' [personas](persona.md) stand
-for, and whoever runs it, builds on it, or depends on what it produces. It's
-set in two steps, by judgement, in that software's circumstances:
+All three ratings are judgement, in that software's circumstances, and none
+of them needs to be exact. Each is rated as if people relied on the
+capability, whatever its level, since risk weighs the level already. Where in
+the code a gap is doesn't change them, so a gap in a background job, a
+library or a deploy script is rated the same way as one on a screen.
 
-1. **What it takes from those of them it would affect**, by the test below.
-2. **What share of them it would affect**, if it bit. Only a few of them
-   steps it down one; none of them makes it `negligible`.
+#### Impact
 
-So the same gap can rate differently in different software: a calendar that
-needs a mouse blocks a public booking site's guests who can't use one, and is
-`inconvenient` or less in an office tool whose staff all can. Where in the
-code a gap is doesn't change it, so a gap in a background job, a library or a
-deploy script is rated the same way as one on a screen. It's never set by how
-likely the gap is to bite, or by the capability's level: rate it as if people
-relied on the capability, whatever its level, since risk weighs it by that
-level already. So the same gap's risk grows as its capability is promoted,
-and nobody re-rates it. Each step takes more from them than the one before:
+How bad it is for those it reaches, if it bit. It's one of four, from least
+to most, each taking more than the one before:
 
 | Impact         | What's lost                   | The test                                                                                                                                                                                                              |
 | -------------- | ----------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -125,7 +137,7 @@ and nobody re-rates it. Each step takes more from them than the one before:
 | `blocking`     | The outcome                   | Someone, or some group of people, can't get done what they rely on it for, by any route available, until it's closed. They know it, and it waits.                                                                     |
 | `damaging`     | Something they can't get back | It leaves something wrong that can't be fully put right, or that someone acts on without knowing, at a cost: data lost or kept wrong, money moved wrongly, legal or financial exposure, someone able to do what they shouldn't. |
 
-To rate what it takes, ask these in order, and stop at the first yes:
+Ask these in order, and stop at the first yes:
 
 1. Could it leave something wrong that can't be fully put right, or that
    someone acts on without knowing, at a cost? It's `damaging`.
@@ -135,73 +147,102 @@ To rate what it takes, ask these in order, and stop at the first yes:
    they get is still right? It's `inconvenient`.
 4. Otherwise, it's `negligible`.
 
-Then weigh how many of the people the software serves it would reach, if it
-bit:
-
-| It would reach                                 | Impact                                                    |
-| ---------------------------------------------- | --------------------------------------------------------- |
-| Most of them, or a meaningful share            | As rated                                                  |
-| Only a few of them                             | One step lower                                            |
-| None of them today                             | `negligible`, with `when` saying who would change that    |
-
-Two kinds of `damaging` never step down, since one case is enough: legal or
-contractual exposure the business really has, such as an accessibility duty,
-and someone able to do what they shouldn't, such as seeing another tenant's
-data.
-
 Where the lines fall:
 
 - **A wrong result someone notices and puts right is `inconvenient`**: clerks
   correcting children's city tax by hand. It's `damaging` only once nobody
   catches it, or it can't be taken back.
-- **Blocking a meaningful share of them is `blocking`**: a room calendar that
-  can't be used from the keyboard is `blocking` if some of the hotel's clerks
-  can't use a mouse, though others get by. If none of them would, it's
-  `negligible` until one joins.
 - **Only people count.** A gap that changes nothing for anyone yet, such as
   records that are never cleaned up, is `negligible`, however untidy it is.
-- **It's judgement, not arithmetic.** The share is how many of them it could
-  reach, by who they are and what they do, not a count anyone has to know.
-  When it's unclear, rate it as if it reached them, and say why in its
-  description.
+- **It's never lowered for being rare or reaching few.** That's what
+  likelihood and reach are for. A calendar that needs a mouse is `blocking`
+  for anyone who can't use one, however few they are.
 - **When torn between two, pick the lower** unless the higher one's test is
   plainly met. That keeps `damaging` rare, so it means something.
 
-A gap that can only bite in certain conditions, such as an untested
-correction, or a design that slows down as bills grow, is rated by what would
-happen if it bit. Its `when` says what makes it bite, as context for people.
-It's never part of risk, since Docket has no way to know whether the condition
-holds in the running system.
+#### Likelihood
 
-A [tradeoff](tradeoff.md) rates its drawback the same way, so the choices we
-live with can be ordered by what we've accepted. It's scored the same way,
-without the promise: one that names an outcome falls short on purpose, so it
-breaks no promise. An [open decision](open-decision.md) has no impact of its own, since
-a question doesn't happen to anyone, but it shows the highest risk among the
-gaps riding on it.
+How likely it is to bite within the next year. Left out, it's `certain`:
+
+| Likelihood | The test                                             |
+| ---------- | ---------------------------------------------------- |
+| `certain`  | It's happening, or it definitely will within a year. |
+| `expected` | You'd bet on it happening within a year.             |
+| `possible` | It could happen, but you wouldn't bet on it.         |
+| `unlikely` | It would surprise you.                               |
+
+A gap that's biting today is `certain`. One that bites only in some
+condition, such as untested corrections that matter only when someone changes
+them, is rated by how likely that condition is, and its description says what
+the condition is. When torn between two, pick the higher.
+
+#### Reach
+
+How many of the people the software serves it would reach, if it bit: the
+people its capabilities' [personas](persona.md) stand for, and whoever runs
+it, builds on it, or depends on what it produces. Left out, it's `all`:
+
+| Reach  | The test                                           |
+| ------ | -------------------------------------------------- |
+| `all`  | Everyone the software serves.                      |
+| `most` | Most of them: it's the usual case.                 |
+| `some` | A real share of them, but not the usual case.      |
+| `few`  | A small group with a particular need or situation. |
+
+It's who they are and what they do, not a count anyone has to know. So the
+same gap can reach differently in different software: a calendar that needs a
+mouse reaches `some` of a public booking site's guests, and `few` of an
+office tool's staff. When it's unclear, or when torn between two, pick the
+higher, and say why in its description.
+
+Two kinds of gap always reach `all`, since one case lands on everyone: legal
+or contractual exposure the business really has, such as an accessibility
+duty, and someone able to do what they shouldn't, such as seeing another
+tenant's data.
+
+### Tradeoffs and decisions
+
+A [tradeoff](tradeoff.md) has no risk. Risk asks whether it's OK to leave a
+gap open, and a tradeoff is someone's answer: they weighed its drawback and
+chose to live with it. An [open decision](open-decision.md) has none either,
+since a question doesn't happen to anyone: whatever the software does while
+it's open is a gap, rated on its own.
 
 ## In the spec
 
-Each gap's `impact` is in its doc. The ledger's untested corrections are
-`damaging`, when someone changes how corrections work. They name
-`maintainability/ga/others-can-change`, which only GA expects. The ledger is
-relied on by extra charges at GA, deposits at Beta, check-out and direct
-billing at Alpha, and split bills at Prototype, so they score:
+Each gap's `impact`, `likelihood` and `reach` are in its doc. Hotel
+Bookings' [deployment](../../../spec/examples/hotel-bookings/docs/technical/mechanisms/deployment.md)
+has migrations with no down step, so undoing a release that changed the
+schema means restoring last night's database. That's `damaging`, `possible`,
+since a release like that seldom needs undoing, and it reaches everyone. It
+names `reliability/ga/recovery`, which only GA expects. Shown on its own,
+Hotel Bookings relies on deployment for check-out at GA, room booking and
+check-in at Beta, cancellations at Alpha, and four capabilities at
+Prototype, so it scores:
 
 ```text
-extra charges   GA, breaks its promise   4 × 6 × 1.5 = 36  → 100
-deposits        Beta                     4 × 4       = 16  →  72
-check-out       Alpha                    4 × 3       = 12  →  62
-direct billing  Alpha                    4 × 3       = 12  →  62
-split bills     Prototype                4 × 2       =  8  →  48
+check-out       GA, breaks its promise   4 × ½ × 1 × 6 × 1.5 = 18  → 76
+room booking    Beta                     4 × ½ × 1 × 4       =  8  → 48
+check-in        Beta                     4 × ½ × 1 × 4       =  8  → 48
+cancellations   Alpha                    4 × ½ × 1 × 3       =  6  → 38
+four more       Prototype                4 × ½ × 1 × 2       =  4  → 24
 ```
 
-Their risk is 100, unacceptable, and their exposure
-`100 on 1 · 72 on 1 · 62 on 2 · 48 on 1`.
+Its risk is 76, unacceptable, and its exposure
+`76 on 1 · 48 on 2 · 38 on 1 · 24 on 4`. Shown with Hotel Billing, check-out
+is Alpha, the lowest across the domains that build it, so its risk there is
+48, tolerable.
 
-City tax's children corrected by hand are `inconvenient`, name a rule city tax
-follows, and show only on city tax, at Alpha: 2 × 3 × 1.5 = 9, or 52,
-tolerable. The ledger's gap comes first.
+The [ledger](../../../spec/examples/hotel-billing/docs/technical/components/ledger.md)'s
+untested corrections of corrections are `damaging` too, but only a
+twice-corrected charge is at stake, so they reach `few`, and they're
+`expected`, since someone is likely to change how corrections work: 4 × ¾ ×
+¼ × 6 × 1.5 = 6.75 on extra charges at GA, or 42, tolerable.
+
+City tax's children corrected by hand are `inconvenient` and happening now,
+so `certain`, reach every clerk, name a rule city tax follows, and show only
+on city tax, at Alpha: 2 × 3 × 1.5 = 9, or 52, tolerable. It comes before the
+ledger's gap.
 
 Readers work out risk once projects are put together, since a mechanism that
 applies across a platform shows on every project's capabilities. Nothing is

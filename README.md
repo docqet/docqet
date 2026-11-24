@@ -75,8 +75,8 @@ Docket separates what the software is meant to do from what it does:
   commits, pull requests, CI results and more.
 - **State is derived.** Tools read both and work out everything else, which
   nobody writes by hand: each rule's evidence, each gap's **risk** (its
-  declared impact, scored by the stability of what it's on and whether it
-  breaks that level's promise), each feature's **maturity** (how far along
+  declared impact, likelihood and reach, scored by the stability of what it's
+  on and whether it breaks that level's promise), each feature's **maturity** (how far along
   it is), the **readiness** of each capability, feature,
   domain and persona (a recommendation of how ready people can rely on it
   being: maturity, held back by unacceptable gaps, with what's left), and any

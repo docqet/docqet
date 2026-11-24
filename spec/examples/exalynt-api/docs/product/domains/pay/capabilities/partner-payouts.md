@@ -65,18 +65,12 @@ concepts: [concept:payout, concept:partnership@partnerships]
 tradeoffs:
   - id: pre-production-payouts-say-paid
     name: Pre-production payouts left saying Paid
-    impact: inconvenient
-    likelihood: unlikely
-    reach: few
     description: >-
       Payouts released before production sent money through the payments
       partner are left saying Paid.
     drawback: They say Paid, though nothing was sent.
   - id: paid-means-reached-the-balance
     name: Paid means in the balance, not the bank
-    impact: negligible
-    likelihood: possible
-    reach: few
     description: >-
       Paid means the money has reached the partnership's balance with the
       payments partner, not its bank.

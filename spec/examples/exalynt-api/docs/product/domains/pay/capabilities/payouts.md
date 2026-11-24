@@ -74,10 +74,9 @@ gaps:
     likelihood: possible
     reach: few
     description: >-
-      Nothing can be held back from a release, or looked into from it.
-    when: >-
-      An admin wants to hold back or look into one payee's payout before a
-      release.
+      Nothing can be held back from a release, or looked into from it. That
+      matters when an admin wants to hold back or look into one payee's payout
+      before a release.
 ---
 
 ## Includes

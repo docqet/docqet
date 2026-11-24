@@ -41,15 +41,17 @@ gaps:
     name: Booking clashes logged as unknown errors
     outcome: observability/beta/hears-of-errors
     impact: inconvenient
+    likelihood: possible
     description: >-
       `saveBooking` passes every database error up as it is, so a clash that
       only the exclusion constraint caught is logged as an unknown failure,
-      not as a double booking that was refused.
-    when: Two bookings for the same room arrive at once.
+      not as a double booking that was refused. That happens when two bookings
+      for the same room arrive at once.
 tradeoffs:
   - id: constraint-not-lock
     name: Database constraint, not an app lock
     impact: inconvenient
+    likelihood: unlikely
     description: >-
       The database refuses overlapping bookings with an exclusion
       constraint, rather than the app locking the room while it checks.
@@ -60,7 +62,6 @@ tradeoffs:
     drawback: >-
       Bookings need Postgres with `btree_gist`, so they can't move to a
       database without it.
-    when: Bookings move to another database.
 ---
 
 The app checks the room is free (`assertRoomFree`) so it can tell the clerk

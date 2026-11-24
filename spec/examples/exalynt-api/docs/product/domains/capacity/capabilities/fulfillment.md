@@ -70,19 +70,14 @@ gaps:
     description: >-
       Only a block's own engineer can mark it fulfilled, so a block whose
       engineer has left can't be fulfilled by anyone else.
-    when: A block's engineer leaves before marking it fulfilled.
 tradeoffs:
   - id: fulfilled-cant-be-reopened
     name: Fulfilled is final, no reopening
     outcome: usability/beta/recover
-    impact: inconvenient
-    likelihood: unlikely
-    reach: few
     description: Marking a block fulfilled is final.
     drawback: >-
       A fulfilled block can't be reopened, even when it was marked fulfilled
       by mistake.
-    when: A block is marked fulfilled by mistake.
 ---
 
 ## Includes

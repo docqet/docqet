@@ -6,15 +6,13 @@ capabilities: [capability:payouts, capability:partner-payouts]
 tradeoffs:
   - id: waiting-worked-out-on-read
     name: Waiting payouts worked out on read, not stored
-    impact: negligible
-    likelihood: unlikely
-    reach: few
     description: >-
       What's waiting is worked out on read, not stored as a run: there's no
       scheduler or draft to keep in step, and a week nobody released rolls
       into the next.
-    drawback: Every read asks the provider about each payee's account.
-    when: The number of payees grows.
+    drawback: >-
+      Every read asks the provider about each payee's account. That gets
+      slower as the number of payees grows.
 ---
 
 **Never sent twice.**

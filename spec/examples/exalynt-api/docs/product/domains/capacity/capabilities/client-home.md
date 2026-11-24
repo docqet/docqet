@@ -13,9 +13,6 @@ concepts: [concept:capacity-block]
 tradeoffs:
   - id: status-not-work
     name: Block status, not the work done
-    impact: inconvenient
-    likelihood: possible
-    reach: some
     description: >-
       A block shows who's on it and where it stands, not what was done on it.
     drawback: >-

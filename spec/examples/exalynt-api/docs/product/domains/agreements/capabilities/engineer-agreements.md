@@ -32,8 +32,8 @@ gaps:
     reach: few
     description: >-
       A new version of the Engineer Agreement isn't offered to an engineer
-      who accepted an earlier one.
-    when: A new version of the Engineer Agreement is published.
+      who accepted an earlier one. That matters once a new version of the
+      Engineer Agreement is published.
   - id: names-outside-western-european-alphabets
     name: Names outside Western alphabets lost in PDFs
     outcome: usability/beta/everyone
@@ -57,7 +57,6 @@ decisions:
     question: >-
       When a shared definition changes, how does that reach agreement versions
       that were already accepted?
-    gaps: [shared-definitions-changed-in-place]
 ---
 
 ## Includes

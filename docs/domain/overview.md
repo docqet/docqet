@@ -58,15 +58,16 @@ Anything in the repository can point at a rule, capability, mechanism or
 component with an **[annotation](concepts/annotation.md)**, as evidence that it
 verifies or implements it, or mark where a gap or tradeoff shows in the code.
 The **[indexer](concepts/indexer.md)** reads all of it, and works out each
-one's evidence and any problems. Readers work out each feature's, domain's
-and project's **[maturity](concepts/maturity.md)**, how far along it is, and
-score gaps by **[risk](concepts/risk.md)**, from the impact each declares,
-the level of each capability it's on, and whether it breaks that level's
-promise. From levels and risk they work out
+one's evidence and any problems. Readers work out each feature's, domain's,
+project's and persona's **[maturity](concepts/maturity.md)**, how far along it
+is, and
+score gaps by **[risk](concepts/risk.md)**, from the impact, likelihood and
+reach each declares, the level of each capability it's on, and whether it
+breaks that level's promise. From levels and risk they work out
 **[readiness](concepts/readiness.md)**: how ready people can rely on each
 capability, feature, domain, project and persona being, as a recommendation,
 with what's left. It's maturity, except that a capability with an
-unacceptable gap counts for nothing until it's closed.
+unacceptable gap counts as the level below its own until it's closed.
 
 ```mermaid
 flowchart TB
@@ -130,13 +131,12 @@ flowchart TB
 
   gap -- "falls short of" --> outcome
   gap -- "doesn't yet hold to" --> rule
-  decision -- "has riding on it" --> gap
 
   annotation -- "verifies, implements" --> rule & capability & technical
   annotation -- "marks where it shows" --> gap & tradeoff
 
   annotation -.-> evidence
-  gap & tradeoff -. "impact" .-> risk
+  gap -. "impact, likelihood, reach" .-> risk
   level -. "weight and promise" .-> risk
   level -. "of capabilities" .-> maturity
   maturity -. "held back by" .-> readiness
@@ -320,8 +320,8 @@ Some things are never features or capabilities:
   on a capability.
 - [Stability checklist](concepts/stability-checklist.md): what each level
   generally expects.
-- [Maturity](concepts/maturity.md): how far along a feature, domain or project
-  is.
+- [Maturity](concepts/maturity.md): how far along a feature, domain, project,
+  or what serves a persona, is.
 - [Band](concepts/band.md): the quarter of the maturity scale something is in.
 - [Readiness](concepts/readiness.md): how ready people can rely on the
   software being, as a recommendation, with what it still needs.

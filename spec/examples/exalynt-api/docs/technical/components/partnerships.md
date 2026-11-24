@@ -17,9 +17,6 @@ capabilities:
 tradeoffs:
   - id: limits-counted-from-invitations
     name: Sending limits counted from invitation rows
-    impact: negligible
-    likelihood: unlikely
-    reach: few
     description: >-
       Sending limits are counted from the invitations themselves, not a
       limiter or a log of sends: the day's new invitations are a count of
@@ -30,8 +27,8 @@ tradeoffs:
       a slot, and the count needs no address.
     drawback: >-
       Two invitations at the same moment can both pass the 50th, and the count
-      is a rolling 24 hours, not a calendar day.
-    when: A partnership reaches the day's limit of 50 invitations.
+      is a rolling 24 hours, not a calendar day. That matters only when a
+      partnership reaches the day's limit of 50 invitations.
 ---
 
 **Earning windows.** A client's earning window on the clients list comes from

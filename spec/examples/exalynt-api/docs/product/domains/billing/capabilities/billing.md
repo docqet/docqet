@@ -46,13 +46,9 @@ gaps:
       with Exalynt until it's retried, and the payment provider's updates
       about it are ignored, since Exalynt has no record of the invoice. If it
       can't be retried, it's sorted out by hand with the payment provider.
-    when: A purchase is charged but recording it fails.
 tradeoffs:
   - id: prices-listed-before-tax
     name: Prices listed before tax
-    impact: negligible
-    likelihood: possible
-    reach: most
     description: >-
       Prices are listed before tax everywhere, such as on estimates and when
       choosing blocks.

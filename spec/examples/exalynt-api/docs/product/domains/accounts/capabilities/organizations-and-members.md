@@ -118,9 +118,6 @@ gaps:
 tradeoffs:
   - id: closing-by-email
     name: Closing the account by email
-    impact: inconvenient
-    likelihood: possible
-    reach: few
     description: >-
       Closing the account is a conversation with Exalynt, by email from the
       Organization page.
@@ -129,42 +126,29 @@ tradeoffs:
       deleted afterwards.
   - id: fifty-invitations-a-day
     name: Fifty invitations a day
-    impact: negligible
-    likelihood: unlikely
-    reach: few
     description: >-
       An organization, and each person, can send 50 invitations a day.
     drawback: >-
       An organization inviting more people than that waits until the next day.
-    when: An organization invites more than 50 people in a day.
   - id: last-save-wins
     name: Last save wins on names and roles
-    impact: inconvenient
-    likelihood: unlikely
-    reach: few
     description: >-
       The last save wins on the organization's name and on member roles:
       nothing checks what the person last read.
     drawback: >-
       Two people changing the same thing at once can undo each other's change
-      without knowing.
-    when: >-
-      Two people change the organization's name, or the same member's role, at
-      once.
+      without knowing. That takes two people changing the organization's name,
+      or the same member's role, at once.
   - id: any-role-from-member-management
     name: Member managers can give any role
-    impact: damaging
-    likelihood: unlikely
     description: >-
       Whoever can manage members can give anyone any role, Admin included.
-    drawback: A role that manages members can do everything.
-    when: >-
-      Someone is given a role that manages members but isn't meant to do
-      everything.
+    drawback: >-
+      A role that manages members can do everything. That matters when someone
+      is given a role that manages members but isn't meant to do everything.
 decisions:
   - topic: Keeping a closed organization's data
     question: How long is an organization's data kept after it closes?
-    gaps: [retention-not-decided]
 ---
 
 ## Includes

@@ -10,22 +10,16 @@ tradeoffs:
   - id: lists-returned-whole
     name: Lists returned whole, not paged
     outcome: efficiency/beta/bounded
-    impact: negligible
-    likelihood: unlikely
-    reach: few
     description: >-
       Members, invitations, and `GET /v1/clients` are returned whole, not
       paged: an organization is sized for tens of members and Exalynt for tens
       to hundreds of clients.
     drawback: >-
       The last-manager check reads every member and organization role on each
-      removal and role change.
-    when: An organization grows well beyond tens of members.
+      removal and role change. That gets slow only once an organization grows
+      well beyond tens of members.
   - id: shared-invitation-routes
     name: Invitation routes shared, with stable copies beside
-    impact: negligible
-    likelihood: possible
-    reach: few
     description: >-
       `GET /invitations` and `POST /invitations/{id}/accept` stay shared, with
       stable organization-only copies beside them: they also serve invitations

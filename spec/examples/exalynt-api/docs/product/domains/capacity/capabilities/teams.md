@@ -59,31 +59,28 @@ gaps:
     description: >-
       Nothing checks that a team's name doesn't name one of its clients,
       though every client it supports sees it. Name teams for what they do.
-    when: A team is named after one of its clients.
+      That matters if a team is named after one of its clients.
   - id: terms-from-the-apps-copy
     name: Terms from the app's own catalog copy
     impact: damaging
     likelihood: unlikely
     description: >-
       The terms on an invitation come from the app's own copy of the terms
-      catalog.
-    when: The terms catalog changes and the app's copy isn't updated.
+      catalog. That matters once the terms catalog changes and the app's copy
+      isn't updated.
   - id: invitations-dont-expire
     name: Invitations don't expire
     impact: damaging
     likelihood: unlikely
-    description: An engineer invitation doesn't expire.
-    when: An old invitation is accepted by someone who shouldn't join any more.
+    description: >-
+      An engineer invitation doesn't expire. That matters if an old invitation
+      is accepted by someone who shouldn't join any more.
 tradeoffs:
   - id: names-unique-across-all-teams
     name: Names unique across teams, not per client
-    impact: negligible
-    likelihood: possible
-    reach: few
     description: Team names are unique across all teams, not per client.
     drawback: >-
       Two teams can't both be called "Platform", even for different clients.
-    when: Teams for different clients would take the same name.
 ---
 
 ## Includes

@@ -55,7 +55,6 @@ gaps:
     description: >-
       A company that's already a client can only be spotted by having the
       same name, so one signing up under another name counts as new.
-    when: A company that's already a client signs up under another name.
   - id: no-handover-or-new-terms
     name: No handover or new terms for partnerships
     impact: inconvenient
@@ -63,7 +62,7 @@ gaps:
     reach: few
     description: >-
       Nothing hands a partnership to another manager, or sends it new terms.
-    when: A partnership needs a new manager or new terms.
+      That matters once a partnership needs a new manager or new terms.
 decisions:
   - topic: Referral codes over time
     question: >-
@@ -74,7 +73,6 @@ decisions:
       Terms are set when inviting a partnership. Can an admin change them
       afterwards, and if so, does a change reach clients already
       attributed or only those attributed after it?
-    gaps: [no-handover-or-new-terms]
 ---
 
 ## Includes

@@ -237,7 +237,6 @@ component  → capabilities, outcomes        (meets)
 mechanism  → outcomes                      (meets)
 gap        → an outcome, a rule            (outcome, rule)
 tradeoff   → an outcome                    (outcome)
-decision   → a doc, gap or tradeoff        (became)
 ```
 
 Every link is a reference, `<type>:<id>`, the same in frontmatter as in an

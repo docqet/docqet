@@ -13,7 +13,6 @@ concepts: [concept:bill@billing, concept:company-account]
 tradeoffs:
   - id: whole-bill-moves
     name: Whole bills move, not single charges
-    impact: inconvenient
     description: A bill moves to a company's account whole, not charge by charge.
     benefit: >-
       Clerks move a bill in one step at check-out, and a company's account

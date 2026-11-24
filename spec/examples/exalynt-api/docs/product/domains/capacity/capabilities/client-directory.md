@@ -60,9 +60,6 @@ concepts: [concept:capacity-block, concept:invoice@billing, concept:organization
 tradeoffs:
   - id: no-primary-contact
     name: Client members not shown to staff
-    impact: inconvenient
-    likelihood: possible
-    reach: few
     description: A client's members aren't shown, since staff can't see them.
     drawback: There's no primary contact for a client.
 ---

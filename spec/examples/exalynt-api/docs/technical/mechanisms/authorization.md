@@ -8,19 +8,15 @@ description: >-
 tradeoffs:
   - id: application-access-not-enforced
     name: Application access enforced only by the front ends
-    impact: inconvenient
-    likelihood: unlikely
-    reach: few
     description: >-
       Which applications someone is offered is `application_access`, held per
       user and not by role, and only the front ends act on it: they decide
       what to show by it, and the API keeps checking permissions.
     drawback: >-
       Someone who isn't offered an application can still call its routes with
-      whatever their permissions allow.
-    when: >-
-      An organization counts on application access alone to keep someone out of
-      an application.
+      whatever their permissions allow. That matters when an organization
+      counts on application access alone to keep someone out of an
+      application.
 ---
 
 | Term | What it is | Where |

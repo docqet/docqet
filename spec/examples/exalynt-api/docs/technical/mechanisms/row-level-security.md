@@ -14,8 +14,8 @@ gaps:
       `X-Organization-ID` is optional, so anyone signed in can leave it out
       and run on `api_platform`. Holding no platform role, they hold no
       permissions and `authz.Require` refuses them, so nothing crosses today,
-      but Bounds are all that stand in the way.
-    when: A query reachable without an organization forgets its Bounds.
+      but Bounds are all that stand in the way. That matters if a query
+      reachable without an organization forgets its Bounds.
   - id: shared-tables-unprotected
     name: Shared tables lack row-level security
     impact: damaging
@@ -24,13 +24,9 @@ gaps:
       Shared tables have no row-level security, `users` above all, as staff
       names appear across organizations: a query there that forgets to filter
       can read every user's name and email.
-    when: A query on a shared table forgets to filter.
 tradeoffs:
   - id: setting-per-transaction
     name: Tenant set per transaction, not per connection
-    impact: negligible
-    likelihood: unlikely
-    reach: few
     description: >-
       The organization or partnership is set with `SET LOCAL` in a
       transaction around each statement, a `UnitOfWork`'s or a short one of
@@ -38,7 +34,6 @@ tradeoffs:
     drawback: >-
       A statement outside a `UnitOfWork` costs three more round trips, so work
       issuing many belongs in one.
-    when: Work issues many statements outside a `UnitOfWork`.
 ---
 
 Every table holding an organization's records has an `organization_id`, filled

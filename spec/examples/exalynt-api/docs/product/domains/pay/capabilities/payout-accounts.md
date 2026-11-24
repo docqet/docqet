@@ -24,8 +24,8 @@ gaps:
     description: >-
       There's one account per person or partnership, and its country is fixed
       once it's chosen, as the payments partner's form holds one and verifies
-      them for one country.
-    when: Someone wants a second account, or to be paid in another country.
+      them for one country. That matters for someone who wants a second
+      account, or to be paid in another country.
   - id: no-payouts-to-mexico
     name: No payouts to Mexico
     impact: blocking
@@ -34,7 +34,6 @@ gaps:
     description: >-
       People can't be paid in Mexico, so it isn't offered as a country: the
       payments partner can't send there.
-    when: A payee's bank account is in Mexico.
   - id: form-asks-for-business-details
     name: Form asks for business details
     impact: inconvenient
@@ -53,7 +52,6 @@ gaps:
     description: >-
       Once an account is set up, changing it happens in the payments
       partner's own dashboard rather than its form.
-    when: Someone changes their bank account.
   - id: removing-closes-the-account
     name: Removing an account means starting over
     impact: inconvenient
@@ -62,7 +60,6 @@ gaps:
     description: >-
       Removing an account closes it with the payments partner, so adding one
       again means going through their checks from the start.
-    when: Someone removes their account and later adds one again.
 ---
 
 ## Includes

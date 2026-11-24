@@ -315,11 +315,7 @@
       "description": "Only errors are collected: uncaught ones, and those pages pass to `reportError`. No page views, request timings or session recordings.",
       "benefit": null,
       "drawback": "A slow page, or one people give up on without an error, leaves nothing to look at.",
-      "impact": "inconvenient",
-      "when": "A page is slow, or people give up on it without an error.",
-      "places": [],
-      "likelihood": "possible",
-      "reach": "few"
+      "places": []
     },
     {
       "id": "mechanism:stability-marks#levels-kept-in-the-ui",
@@ -327,12 +323,8 @@
       "name": "Page levels declared in the UI, apart from the docs",
       "description": "Each page's level is declared once in the UI, in `src/featureStability.ts`, for the rail and the pages to read, apart from the capability docs' levels in the API's repository.",
       "benefit": null,
-      "drawback": "A level change is made in both repositories, and nothing checks that they agree.",
-      "impact": "inconvenient",
-      "when": "A feature's level is changed in one repository and not the other.",
-      "places": [],
-      "likelihood": "possible",
-      "reach": "few"
+      "drawback": "A level change is made in both repositories, and nothing checks that they agree. That shows when a feature's level is changed in one repository and not the other.",
+      "places": []
     },
     {
       "id": "component:auth#clerks-screens-for-session-tasks",
@@ -341,11 +333,7 @@
       "description": "The session tasks Clerk can hold a session back for, a password reset it forces or two-step setup, use Clerk's own screens, dressed by `clerkAppearance`, since they're rare.",
       "benefit": null,
       "drawback": "Those few screens look like Clerk's rather than ours.",
-      "impact": "negligible",
-      "when": null,
-      "places": [],
-      "likelihood": "unlikely",
-      "reach": "few"
+      "places": []
     },
     {
       "id": "component:portal#provider-pages-for-billing",
@@ -354,11 +342,7 @@
       "description": "Payment methods, invoices and company details stay on the payment provider's own pages, which Billing opens at an address the API asks the provider for. The portal knows nothing of the provider, and shows only a label for the default payment method.",
       "benefit": null,
       "drawback": "Clients leave the portal to see an invoice or change how they pay, and a portal page left open in another tab doesn't see what they changed there.",
-      "impact": "inconvenient",
-      "when": null,
-      "places": [],
-      "likelihood": "possible",
-      "reach": "some"
+      "places": []
     },
     {
       "id": "component:portal#no-gravatar-for-members",
@@ -367,11 +351,7 @@
       "description": "Members show their own photo or their initials, never a Gravatar, which would send their address, hashed, to a third party.",
       "benefit": null,
       "drawback": "A member who hasn't uploaded a photo shows initials here, though their profile shows their Gravatar.",
-      "impact": "negligible",
-      "when": null,
-      "places": [],
-      "likelihood": "expected",
-      "reach": "some"
+      "places": []
     }
   ],
   "problems": [

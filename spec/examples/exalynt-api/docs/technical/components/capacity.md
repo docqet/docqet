@@ -15,9 +15,6 @@ capabilities:
 tradeoffs:
   - id: combined-room
     name: Week's room combined, not per engineer
-    impact: inconvenient
-    likelihood: possible
-    reach: few
     description: >-
       A week's room is combined, not per engineer: a block fits if the total
       covers it, even if no one engineer could do it alone, as the preferred
@@ -25,7 +22,6 @@ tradeoffs:
     drawback: >-
       A block can be scheduled into a week where no single engineer can fit
       it, and an admin sorts it out.
-    when: No one engineer has room for a whole block in its week.
 ---
 
 A block moves `pending` → `available` → `scheduled` → `in_progress` →

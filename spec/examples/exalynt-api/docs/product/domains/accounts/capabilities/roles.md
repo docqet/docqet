@@ -55,8 +55,8 @@ gaps:
       A permission can be given only one scope when editing a role, though
       several are allowed. Saving a role's permissions keeps only the widest,
       so own and team becomes team, and someone on no team loses their own
-      reach.
-    when: A role with a permission given several scopes is saved in the app.
+      reach. That happens when a role with a permission given several scopes
+      is saved in the app.
   - id: deploys-restore-built-in-roles
     name: Deploys restore built-in roles
     impact: damaging
@@ -65,8 +65,8 @@ gaps:
       Each deploy puts back permissions taken off Admin, Member, Billing, and
       Administrator, and renaming one makes a new role under the old name. A
       role says so going by name alone, so a role of the other kind with one
-      of those names says it too.
-    when: An admin takes a permission off a built-in role, or renames one.
+      of those names says it too. That bites when an admin takes a permission
+      off a built-in role, or renames one.
 ---
 
 ## Includes

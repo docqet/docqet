@@ -12,14 +12,13 @@ gaps:
     name: Migrations have no down step
     outcome: reliability/ga/recovery
     impact: damaging
+    likelihood: possible
     description: >-
       Migrations have no down step, so undoing a release that changed the
       schema means restoring the database from the night before.
-    when: A release that changed the schema has to be undone.
 tradeoffs:
   - id: migrations-before-start
     name: Migrations run while the old release serves
-    impact: inconvenient
     description: >-
       Migrations run before the new image starts, while the old one is still
       serving, rather than stopping the app for each release.
