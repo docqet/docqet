@@ -27,14 +27,6 @@
   color: var(--accent);
 }
 
-/* ——— Header ——— */
-
-.ov-maturity {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-}
-
 .ov-band {
   font-size: 14px;
   font-weight: 650;

@@ -3,7 +3,7 @@ import type { Theme } from "@mui/material/styles";
 import { useMemo } from "react";
 import { Maturity, NAMES, TECHNICAL_NAMES, plural } from "../Explore";
 import { StabilitySpread } from "../design/stability/StabilitySpread";
-import { GapsCell, ExposureStat } from "./indexParts";
+import { ExposureStat, GapsCell, MaturityStat } from "./indexParts";
 import { LeftFigure } from "../GapRows";
 import { PersonaAvatar, personaReadiness } from "../Personas";
 import { ReadinessMark, StillNeeds } from "../Readiness";
@@ -76,15 +76,20 @@ export default function OverviewPage({ state }: { state: DocketState; route: Rou
         kind={several ? <Term id="platform">Platform</Term> : <Term id="project">Project</Term>}
         title={name}
         lede={<Lede state={state} />}
-        marks={maturity !== null ? <MaturityMark state={state} maturity={maturity} /> : null}
         stats={
           <>
+            <MaturityStat
+              maturity={maturity}
+              subject="project"
+              count={state.features.filter((f) => f.maturity !== null).length}
+              spread={state.features.map((f) => f.band)}
+              of={several ? "every project showing" : "this project"}
+            />
             <ExposureStat state={state} capabilities={state.capabilities} of={several ? "every project showing" : "this project"} />
             <Stat
               label="Readiness"
               term="readiness"
               href="#still-needs"
-              tone={isReady(readiness) ? "ok" : undefined}
               value={readiness.percent === null ? <span className="ov-faint">Nothing started</span> : <ReadinessMark readiness={readiness} of="Readiness" inButton />}
               note={
                 startedOf(readiness)
@@ -205,29 +210,6 @@ function Lede({ state }: { state: DocketState }) {
     <>
       {listed}: {sizes}.
     </>
-  );
-}
-
-/* The overall maturity beside the name: its ring, whose popover breaks it down by project or by part of a feature, and its band. */
-function MaturityMark({ state, maturity }: { state: DocketState; maturity: number }) {
-  const several = state.projects.length > 1;
-  const started = state.features.filter((f) => f.maturity !== null);
-  const band = maturityBand(maturity);
-  return (
-    <span className="ov-maturity">
-      <MaturityRing
-        progress={maturity}
-        subject="project"
-        count={started.length}
-        label={several ? "Maturity across projects" : undefined}
-        size={40}
-        spread={state.features.map((f) => f.band)}
-      />
-      <Box component="span" className="ov-band" sx={levelColor(band)}>
-        {MATURITY_BANDS[band]}
-      </Box>
-      <StabilitySpread levels={state.capabilities.filter((c) => c.feature).map((c) => c.stability)} of={several ? "every project showing" : "this project"} />
-    </span>
   );
 }
 

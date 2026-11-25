@@ -15,6 +15,11 @@ import { docHref, type DocKind } from "../routes";
 import { bareId, exposureOf, gapsOn, type Capability, type CapabilityLevel, type DocketState, type Gap, type Persona, type RiskAcross } from "../state";
 import { ExposureMark, RiskScore } from "../design/risk/RiskScore";
 import { Stat } from "../shell/layout";
+import Box from "@mui/material/Box";
+import { MaturityRing } from "../design/maturity/MaturityRing";
+import { fromCapabilities, type MaturitySubject } from "../design/maturity/MaturityDetails";
+import { MATURITY_BANDS, maturityBand } from "../design/maturity/maturity";
+import { levelColor } from "../design/stability/stability";
 import "./index.css";
 
 /* The pieces the index pages share: each kind's mark, counts of what's left, a level, personas, and a filter box. */
@@ -162,6 +167,48 @@ export function Num({ n, children }: { n: number; children?: ReactNode }) {
 
 /* By name, A to Z. */
 export const byName = (a: { name: string }, b: { name: string }) => a.name.localeCompare(b.name);
+
+/*
+ * A maturity as a figure in a page's header: its ring and band, opening how
+ * what it's worked out from spreads across the levels (or bands) and how
+ * it's worked out. It's how aggregated stability shows on every page, as
+ * ExposureStat is for aggregated risk and ReadinessMark for readiness: in a
+ * card, never beside the page's title. `count` is how many capabilities (or,
+ * for a domain or project, features) it's from; `of` names what it's of.
+ */
+export function MaturityStat({
+  maturity,
+  subject,
+  count,
+  spread,
+  of,
+  href,
+}: {
+  maturity: number | null;
+  subject: MaturitySubject;
+  count: number;
+  spread: CapabilityLevel[];
+  of: string;
+  href?: string;
+}) {
+  const across = fromCapabilities(subject) ? (count === 1 ? "1 capability" : `${count} capabilities`) : count === 1 ? "1 feature" : `${count} features`;
+  if (maturity === null) return <Stat label="Maturity" term="maturity" value={<span className="ix-none">None yet</span>} note="Nothing has a level yet" href={href} />;
+  const band = maturityBand(maturity);
+  return (
+    <Stat
+      label="Maturity"
+      term="maturity"
+      value={
+        <Box component="span" className="stat-maturity" sx={levelColor(band)}>
+          <MaturityRing progress={maturity} subject={subject} count={count} size={22} focusable={!href} label={`Maturity of ${of}`} spread={spread} />
+          <strong>{MATURITY_BANDS[band]}</strong>
+        </Box>
+      }
+      note={`Across ${across}`}
+      href={href}
+    />
+  );
+}
 
 /*
  * The exposure of some capabilities, as a figure in a page's header: its

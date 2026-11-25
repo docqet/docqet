@@ -1,14 +1,13 @@
 import { Fragment, useEffect, useRef, type ReactNode } from "react";
 import RuleRoundedIcon from "@mui/icons-material/RuleRounded";
 import WarningAmberRoundedIcon from "@mui/icons-material/WarningAmberRounded";
-import Box from "@mui/material/Box";
 import { StabilityChecklist } from "./Checklist";
 import { ConceptChips, ConceptIcon, related } from "./Concepts";
 import { DecisionList, Facets, facets } from "./Fields";
 import { Body, Excerpt, MORE_ABOUT } from "./design/markdown/Markdown";
 import { MaturityRing } from "./design/maturity/MaturityRing";
-import { MATURITY_BANDS, featureMaturity, maturityBand } from "./design/maturity/maturity";
-import { STABILITY, levelColor } from "./design/stability/stability";
+import { featureMaturity } from "./design/maturity/maturity";
+import { STABILITY } from "./design/stability/stability";
 import { StabilityMark } from "./design/stability/StabilityMark";
 import { StabilitySpread } from "./design/stability/StabilitySpread";
 import { LeftLabel } from "./design/left/LeftMark";
@@ -87,7 +86,7 @@ import {
 } from "./state";
 import { Tip } from "./design/Tip";
 import { GapRows, LeftFigure } from "./GapRows";
-import { ExposureStat } from "./pages/indexParts";
+import { ExposureStat, MaturityStat } from "./pages/indexParts";
 import { TradeoffRows } from "./TradeoffRows";
 import { docHref, navigate, sectionHref, withParam, type Route } from "./routes";
 import { Empty, PageHeader, Section, Stat, Tabs, View, currentTab, type TabDef } from "./shell/layout";
@@ -380,26 +379,6 @@ function LevelName({ level, name, named = false }: { level: CapabilityLevel; nam
 
 /* The levels of a feature's capabilities in one domain, at their levels there. */
 const partLevels = (state: DocketState, ids: string[], domain: string) => ids.flatMap((id) => find(state.capabilities, id) ?? []).map((c) => levelInDomain(c, domain));
-
-/* A maturity as a stat: its ring and band, with its stability spread under it, what it's worked out from. */
-function MaturityStat({ maturity, levels, of, href }: { maturity: number | null; levels: CapabilityLevel[]; of: string; href: string }) {
-  if (maturity === null) return <Stat label="Maturity" value={<span className="faint">None yet</span>} note="Nothing has a level yet" href={href} />;
-  const band = maturityBand(maturity);
-  return (
-    <Stat
-      label="Maturity"
-     
-      value={
-        <Box component="span" className="page-stat-maturity" sx={levelColor(band)}>
-          <MaturityRing progress={maturity} subject="persona" count={levels.filter(Boolean).length} size={22} focusable={false} label={`Maturity of ${of}`} spread={levels} />
-          {MATURITY_BANDS[band]}
-        </Box>
-      }
-      note={<StabilitySpread levels={levels} of={of} inButton />}
-      href={href}
-    />
-  );
-}
 
 const MAX_AVATARS = 6;
 
@@ -1011,12 +990,18 @@ function FeaturePage({ feature, route, ...go }: PageProps & { feature: Feature }
         kind="feature"
         doc={feature}
         trail={<DomainTrail state={state} domains={feature.parts.map((p) => p.domain)} />}
-        marks={<Maturity value={feature.maturity} subject="feature" count={feature.capabilities.length} of="none of its capabilities has a level yet" spread={capabilities.map((c) => c.stability)} />}
         stats={
           <>
             <Stat label="Capabilities" term="capability" value={capabilities.length || "None"} note={<StabilitySpread levels={capabilities.map((c) => c.stability)} of={feature.name} inButton />} href={tabHref("capabilities")} />
-            <ReadinessStat readiness={readiness} tab="overview" of={`Readiness of ${feature.name}`} />
+            <MaturityStat
+              maturity={feature.maturity}
+              subject="feature"
+              count={capabilities.filter((c) => c.stability).length}
+              spread={capabilities.map((c) => c.stability)}
+              of={feature.name}
+            />
             <ExposureStat state={state} capabilities={capabilities} of={feature.name} />
+            <ReadinessStat readiness={readiness} tab="overview" of={`Readiness of ${feature.name}`} />
             <LeftStat left={left} of={feature.name} />
             <Stat
               label="Serves"
@@ -1140,15 +1125,6 @@ function DomainPage({ domain, route, ...go }: PageProps & { domain: Domain }) {
         state={state}
         kind="domain"
         doc={domain}
-        marks={
-          <Maturity
-            value={domain.maturity}
-            subject="domain"
-            count={domain.features.length}
-            of="none of its features has a level yet"
-            spread={domain.features.map((id) => partOf(find(state.features, id), domain.id)?.band ?? null)}
-          />
-        }
         stats={
           <>
             <Stat
@@ -1158,8 +1134,15 @@ function DomainPage({ domain, route, ...go }: PageProps & { domain: Domain }) {
               href={tabHref("features")}
             />
             <Stat label="Capabilities" term="capability" value={capabilities.length || "None"} note={<StabilitySpread levels={capabilities.map((c) => levelInDomain(c, domain.id))} of={domain.name} inButton />} href={tabHref("features")} />
-            <ReadinessStat readiness={readiness} tab="overview" of={`Readiness of ${domain.name}`} />
+            <MaturityStat
+              maturity={domain.maturity}
+              subject="domain"
+              count={domain.features.filter((id) => partOf(find(state.features, id), domain.id)?.maturity != null).length}
+              spread={domain.features.map((id) => partOf(find(state.features, id), domain.id)?.band ?? null)}
+              of={domain.name}
+            />
             <ExposureStat state={state} capabilities={capabilities} of={domain.name} />
+            <ReadinessStat readiness={readiness} tab="overview" of={`Readiness of ${domain.name}`} />
             <Stat
               label="Language" term="concept"
               value={plural(concepts.length, "concept", "concepts")}
@@ -1296,27 +1279,24 @@ function PersonaPage({ persona, route, ...go }: PageProps & { persona: Persona }
           </span>
         }
         trail={domains.length ? <DomainTrail state={state} domains={domains} /> : undefined}
-        marks={
-          <>
-            <ReadinessMark readiness={readiness} of={`Readiness for ${name}`} large />
-          </>
-        }
         stats={
           <>
             <Stat
               label="Capabilities"
               term="capability"
               value={capabilities.length || "None"}
-              note={features.length ? `that serve them, in ${plural(features.length, "feature", "features")}` : "that serve them"}
+              note={capabilities.length ? <StabilitySpread levels={capabilities.map((c) => c.stability)} of={`what serves ${persona.name}`} inButton /> : "that serve them"}
               href={tabHref("serves")}
             />
             <MaturityStat
               maturity={featureMaturity(capabilities.map((c) => c.stability))}
-              levels={capabilities.map((c) => c.stability)}
+              subject="persona"
+              count={capabilities.filter((c) => c.stability).length}
+              spread={capabilities.map((c) => c.stability)}
               of={`what serves ${persona.name}`}
-              href={tabHref("serves")}
             />
             <ExposureStat state={state} capabilities={capabilities} of={`what serves ${persona.name}`} />
+            <ReadinessStat readiness={readiness} tab="readiness" of={`Readiness for ${name}`} />
             <LeftStat left={left} of={`what serves ${persona.name}`} />
           </>
         }
