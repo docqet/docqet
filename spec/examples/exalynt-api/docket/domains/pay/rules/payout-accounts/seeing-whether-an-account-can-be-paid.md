@@ -1,0 +1,8 @@
+---
+docket: rule
+id: seeing-whether-an-account-can-be-paid
+domain: pay
+name: Seeing whether an account can be paid
+---
+
+A person sees whether their account can be paid, and what to fix if not.

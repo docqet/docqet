@@ -522,7 +522,7 @@ docket init --id hotel-bookings --name "Hotel Bookings" --platform hotel
 docket kit
 # write the first docs, with an agent following the kit's adopting.md
 docket check
-git add docket.yaml docs/ .agents/ .claude/ AGENTS.md CLAUDE.md .gitignore
+git add docket.yaml docket/ .agents/ .claude/ AGENTS.md CLAUDE.md .gitignore
 git commit -m "Adopt Docket"
 ```
 

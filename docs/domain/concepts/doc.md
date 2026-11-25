@@ -18,8 +18,9 @@ else is body. What a doc must say is a required field, so a doc with no body
 is complete. No heading in a body means anything to a tool, and readers show
 the body whole, rendered as Markdown, without assuming its shape or size.
 
-A doc's **ID** is declared in the doc, so it stays the same when the file is
-renamed or moved, or the doc's name changes. Everything else names the doc by
+A doc's **type**, its **ID** and its [domain](domain.md), if it has one, are
+declared in the doc, so where its file is means nothing. It can be renamed,
+moved or regrouped, and its ID stays the same when the doc's name changes. Everything else names the doc by
 **reference**, its type and ID, such as `rule:no-double-booking`, in docs and
 code alike. What an ID identifies depends on the doc's type:
 
@@ -31,30 +32,35 @@ code alike. What an ID identifies depends on the doc's type:
 
 ## In the spec
 
-Each type has a folder, which gives a doc its type. Within it, a doc's file
-name and any folders it's in are the author's to choose and change. The ID is
-the doc's `id` field:
+A Markdown file is a doc when its frontmatter has `docket`, which gives its
+type. Then comes its `id`, then `domain` for a feature, capability, rule or
+concept. Files without `docket` aren't docs, and nothing reads them. Docs can
+be anywhere in the repository. The recommended home is a `docket/` folder at
+its root, with a folder per type and per domain:
 
-| Type | Folder | Example ID |
+| `docket` | Recommended folder | Example ID |
 | --- | --- | --- |
-| domain | `docs/product/domains/<domain>/domain.md` | `guest-stays` |
-| feature | `docs/product/domains/<domain>/features/` | `reservations` |
-| capability | `docs/product/domains/<domain>/capabilities/` | `room-booking` |
-| rule | `docs/product/domains/<domain>/rules/` | `no-double-booking` |
-| concept | `docs/product/domains/<domain>/concepts/` | `booking` |
-| persona | `docs/product/personas/` | `front-desk-clerk` |
-| initiative | `docs/product/initiatives/` | `busy-season` |
-| mechanism | `docs/technical/mechanisms/` | `deployment` |
-| component | `docs/technical/components/` | `bookings` |
+| domain | `docket/domains/<domain>/domain.md` | `guest-stays` |
+| feature | `docket/domains/<domain>/features/` | `reservations` |
+| capability | `docket/domains/<domain>/capabilities/` | `room-booking` |
+| rule | `docket/domains/<domain>/rules/` | `no-double-booking` |
+| concept | `docket/domains/<domain>/concepts/` | `booking` |
+| persona | `docket/personas/` | `front-desk-clerk` |
+| initiative | `docket/initiatives/` | `busy-season` |
+| mechanism | `docket/mechanisms/` | `deployment` |
+| component | `docket/components/` | `bookings` |
 
-Every doc is shaped the same way: YAML frontmatter with its `id`, `name`,
-`description` and its type's other fields, then an optional body.
-[`cancellations.md`](../../../spec/examples/hotel-bookings/docs/product/domains/guest-stays/capabilities/cancellations.md),
+Every doc is shaped the same way: YAML frontmatter with its `docket`, `id`,
+`domain` if it's in one, `name`, `description` and its type's other fields,
+then an optional body.
+[`cancellations.md`](../../../spec/examples/hotel-bookings/docket/domains/guest-stays/capabilities/cancellations.md),
 shortened, has no body at all:
 
 ```markdown
 ---
+docket: capability
 id: cancellations
+domain: guest-stays
 name: Cancellations
 description: >-
   Clerks cancel a booking when a guest's plans change, and the guest is

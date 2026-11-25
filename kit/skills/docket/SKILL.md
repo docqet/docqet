@@ -14,30 +14,39 @@ leave decisions about intention with people.
 
 ## Where things are
 
+A Markdown file is a Docket doc when its frontmatter has `docket`, its type.
+Docs can be anywhere in the repository, so find them by that field
+(`grep -rl --include='*.md' '^docket: '`), never by folder. Most projects keep
+them in the recommended layout:
+
 ```text
 docket.yaml                                 the project's id and name, and its platform
-docs/product/                               what it should do, in the domain's words
+docket/
 ├── personas/                               who it serves, across every domain
 ├── initiatives/                            bodies of work, such as the MVP, across every domain
-└── domains/<domain>/
-    ├── domain.md                           a part of the business with its own language
-    ├── features/                           a job the product does, listing its capabilities
-    ├── capabilities/                       one result of value; the only docs with a level
-    ├── rules/                              one rule per file: what must always or never happen
-    └── concepts/                           what a word means in this domain
-docs/technical/                             how it's meant to be built, in the code's words
+├── domains/<domain>/
+│   ├── domain.md                           a part of the business with its own language
+│   ├── features/                           a job the product does, listing its capabilities
+│   ├── capabilities/                       one result of value; the only docs with a level
+│   ├── rules/                              one rule per file: what must always or never happen
+│   └── concepts/                           what a word means in this domain
 ├── mechanisms/                             how something works across the whole project
 └── components/                             one area of the code, and the capabilities relying on it
 .docket/state.json                          derived by `docket index`, never edited
 ```
 
-Every doc says its ID in its `id` field, such as `id: no-double-booking`, and
-everything else names it by reference, `<type>:<id>`, such as
+Personas, initiatives, domains, features, capabilities, rules and concepts are
+product docs: what it should do, in the domain's words. Mechanisms and
+components are technical docs: how it's meant to be built, in the code's words.
+
+Every doc starts by saying what it is: `docket`, its type, `id`, its ID, such
+as `no-double-booking`, and `domain`, for a feature, capability, rule or
+concept. Everything else names it by reference, `<type>:<id>`, such as
 `rule:no-double-booking`, in frontmatter and annotations alike. Searching for
 a reference finds everything that names the doc. A file's name and the folders
-it's in below its type's mean nothing, so rename or move files freely within
-their type's folder. Name a new file after its ID. Changing an ID is a breaking
-change: every reference to it has to follow.
+it's in mean nothing, so rename or move files freely. Put a new doc where the
+project keeps others of its type, named after its ID. Changing an ID or a
+`domain` is a breaking change: every reference to it has to follow.
 
 Each doc's structure is its YAML frontmatter. Its body is free Markdown that
 nothing reads. [docs.md](docs.md) has every type's fields.
@@ -45,11 +54,11 @@ nothing reads. [docs.md](docs.md) has every type's fields.
 ## Before a change
 
 1. **Find what the change touches.** Search for annotations on the code
-   you're changing (`grep -rn "docket:" <path>`), and for the code's area in
-   `docs/technical/components/`. A component's `capabilities` lists the
+   you're changing (`grep -rn "docket:" <path>`), and for the code's area among the
+   components (`grep -rl --include='*.md' '^docket: component'`). A component's `capabilities` lists the
    capabilities relying on it. A mechanism applies to every capability the
-   project serves. When a task is described in product terms, search
-   `docs/product/` for its words. If `.docket/state.json` exists, it has the
+   project serves. When a task is described in product terms, search the
+   product docs for its words. If `.docket/state.json` exists, it has the
    links in both directions, but it may be out of date: the docs win.
 2. **Read each capability it touches**: its `stability`, `personas`, the
    `rules` it follows, its `gaps`, `tradeoffs` and open `decisions`. Read

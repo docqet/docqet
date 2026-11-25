@@ -19,8 +19,8 @@ guest is charged for a stay in Billing. Both are right, each in its domain.
   several. Repackaging the software, or reorganizing the teams that build it,
   never creates, removes or splits a domain.
 - **Every product doc but a persona or an initiative is written in exactly
-  one domain**: the one whose words it uses. A project's docs for each domain are in a folder of
-  their own.
+  one domain**: the one whose words it uses, which it names in its
+  `domain` field.
 - **Domains are shared by ID.** Projects that work in the same part of the
   business use the same domain ID, and their contributions to it are one
   domain.
@@ -44,12 +44,13 @@ guest is charged for a stay in Billing. Both are right, each in its domain.
 
 ## In the spec
 
-A domain is a folder under `docs/product/domains/` with a `domain.md`, whose
-`id` is the domain's ID. The folder's name means nothing. Everything written in
-its words is inside it:
+A domain is a doc whose `docket` is `domain`, and whose `id` is the domain's
+ID. Everything written in its words names that ID in its `domain` field, so
+its files can be anywhere. The recommended layout keeps them together, in a
+folder of the domain's own:
 
 ```text
-docs/product/domains/guest-stays/
+docket/domains/guest-stays/
 ├── domain.md
 ├── features/reservations.md
 ├── capabilities/room-booking.md
@@ -57,12 +58,13 @@ docs/product/domains/guest-stays/
 └── concepts/booking.md
 ```
 
-Its [`domain.md`](../../../spec/examples/hotel-bookings/docs/product/domains/guest-stays/domain.md)
+Its [`domain.md`](../../../spec/examples/hotel-bookings/docket/domains/guest-stays/domain.md)
 gives its name, description and open decisions in frontmatter, and anything more
 worth saying about it in its body:
 
 ```markdown
 ---
+docket: domain
 id: guest-stays
 name: Guest stays
 description: Looking after guests from their booking to their check-out.

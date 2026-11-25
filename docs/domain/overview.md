@@ -159,7 +159,7 @@ flowchart TB
 ```
 
 Solid arrows are [declared](concepts/declared-and-derived.md): written in a
-doc, or given by the folder it's in. Dashed arrows and boxes are derived from
+doc. Dashed arrows and boxes are derived from
 them, and nobody writes them by hand. An arrow into a group means some of
 what's in it: [which each one holds](#where-intention-and-reality-differ) is
 set out below.

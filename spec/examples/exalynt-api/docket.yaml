@@ -1,4 +1,4 @@
-# Marks this repository as a Docket project. Its docs are in docs/product/.
+# Marks this repository as a Docket project. Its docs are in docket/.
 project:
   id: exalynt-api
   name: Exalynt API

@@ -48,7 +48,8 @@ export async function saveBooking(db: Pool, booking: Booking): Promise<void> {
   code.** Annotate its entry points, where someone changing it should start
   reading, and anything else that's part of it, such as a migration or a
   workflow. Where only part of a file is its, annotate only that part.
-- **Annotations go outside `docs/`.** The indexer only looks there.
+- **Annotations go in code, tests and config, never in a Docket doc.** The
+  indexer doesn't look in docs for them.
 
 ## Keeping them true
 

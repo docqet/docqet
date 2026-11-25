@@ -100,7 +100,7 @@ the install copies it as a file.
 ## Known gaps
 
 - **The indexer would read the kit's examples as annotations.** The spec has
-  the indexer look for annotations in every file outside `docs/`, so the
+  the indexer look for annotations in every file that isn't a Docket doc, so the
   examples in `.agents/skills/docket/` would be reported as annotations naming
   docs that don't exist. The spec needs to leave the kit out, or agent
   instructions in general, before the indexer is built.

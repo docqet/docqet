@@ -31,17 +31,18 @@ about.
 
 ## In the spec
 
-A persona is a doc in `docs/product/personas/`, outside any domain. Its name
+A persona is a doc whose `docket` is `persona`, outside any domain. Its name
 and description, its role and title, an optional picture and the initiatives
 it's part of are frontmatter.
 Without a picture, readers show their initials. Its body is for anything more
 about who they are, such as what they need, what they know, their context, the
 words and tools they expect, and what they care about, and can be left out.
-[`front-desk-clerk.md`](../../../spec/examples/hotel-bookings/docs/product/personas/front-desk-clerk.md),
+[`front-desk-clerk.md`](../../../spec/examples/hotel-bookings/docket/personas/front-desk-clerk.md),
 shortened:
 
 ```markdown
 ---
+docket: persona
 id: front-desk-clerk
 name: Maria
 description: >-

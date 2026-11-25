@@ -56,7 +56,7 @@ or changes it. An outcome, under its quality and level, shortened:
 
 Its full ID is `reliability/beta/undo-release`. A mechanism that meets it lists
 it, as Hotel Bookings'
-[deployment](../../../spec/examples/hotel-bookings/docs/technical/mechanisms/deployment.md)
+[deployment](../../../spec/examples/hotel-bookings/docket/mechanisms/deployment.md)
 does:
 
 ```yaml

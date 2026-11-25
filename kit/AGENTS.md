@@ -1,9 +1,10 @@
 ## Docket
 
 This repository records what its software is meant to do with Docket.
-`docket.yaml` marks it. Product docs in `docs/product/` say what the software
-should do, in the domain's words. Technical docs in `docs/technical/` say how
-it's meant to be built, in the code's words. Comments in code, tests and config
+`docket.yaml` marks it. Its docs, usually in `docket/`, are the Markdown files
+whose frontmatter has `docket`. Product docs say what the software should do,
+in the domain's words. Technical docs, mechanisms and components, say how it's
+meant to be built, in the code's words. Comments in code, tests and config
 point back at them: `docket:implements`, `docket:verifies`, `docket:gap` and
 `docket:tradeoff`. Keep all of it true as you work. The `docket` skill, in
 `.agents/skills/docket/`, has the details: read its `SKILL.md` before your

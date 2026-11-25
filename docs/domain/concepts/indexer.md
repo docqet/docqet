@@ -23,13 +23,13 @@ Run at a repository's root:
 docket index
 ```
 
-It reads `docket.yaml`, everything under `docs/product/` and
-`docs/technical/`, and every other file for annotations, and writes
-`.docket/state.json`, which is gitignored:
+It reads `docket.yaml`, every Markdown file whose frontmatter has `docket`,
+wherever it is, and every file for annotations, and writes
+`.docket/state.json`, which is gitignored. Where a doc is tells it nothing:
 
 ```text
 docket.yaml                    → the project's ID and name
-docs/product/**, docs/technical/**   → docs, links, levels, gaps, tradeoffs
+**/*.md with `docket:`         → docs, links, levels, gaps, tradeoffs
 src/**, test/**, db/**, ...    → annotations
                                ⇒ .docket/state.json
 ```

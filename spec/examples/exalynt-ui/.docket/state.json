@@ -37,7 +37,7 @@
   "mechanisms": [
     {
       "id": "error-reporting",
-      "file": "docs/technical/mechanisms/error-reporting.md",
+      "file": "docket/mechanisms/error-reporting.md",
       "name": "Error reporting",
       "description": "How the apps report unexpected failures from the browser, so someone looking can see what went wrong.",
       "applies": "project",
@@ -94,7 +94,7 @@
     },
     {
       "id": "stability-marks",
-      "file": "docs/technical/mechanisms/stability-marks.md",
+      "file": "docket/mechanisms/stability-marks.md",
       "name": "Stability marks",
       "description": "How every app page shows its stability level, from one record of every feature in every app.",
       "applies": "project",
@@ -153,7 +153,7 @@
   "components": [
     {
       "id": "account",
-      "file": "docs/technical/components/account.md",
+      "file": "docket/components/account.md",
       "name": "Account",
       "description": "The profile every app mounts at `/<app>/account`: the signed-in person's own account, their bio, their access tokens, their notification choices, and the app's theme.",
       "capabilities": [
@@ -174,7 +174,7 @@
     },
     {
       "id": "admin",
-      "file": "docs/technical/components/admin.md",
+      "file": "docket/components/admin.md",
       "name": "Admin",
       "description": "The admin, where Exalynt's admins run clients, partners, engineers, teams, roles and payouts.",
       "capabilities": [
@@ -200,7 +200,7 @@
     },
     {
       "id": "auth",
-      "file": "docs/technical/components/auth.md",
+      "file": "docket/components/auth.md",
       "name": "Auth",
       "description": "Signing in and up, and onboarding: the pages that belong to no app, where someone gets an account and joins or creates what they'll work in.",
       "capabilities": [
@@ -222,7 +222,7 @@
     },
     {
       "id": "console",
-      "file": "docs/technical/components/console.md",
+      "file": "docket/components/console.md",
       "name": "Console",
       "description": "The console, where Exalynt's engineers set themselves up, claim and work their blocks, offer their time, write estimates, and see what they're paid.",
       "capabilities": [
@@ -250,7 +250,7 @@
     },
     {
       "id": "hub",
-      "file": "docs/technical/components/hub.md",
+      "file": "docket/components/hub.md",
       "name": "Hub",
       "description": "The Partner Hub, where a partnership's manager follows the clients it has brought in, invites more, and sees what it earns and how it's paid.",
       "capabilities": [
@@ -276,7 +276,7 @@
     },
     {
       "id": "portal",
-      "file": "docs/technical/components/portal.md",
+      "file": "docket/components/portal.md",
       "name": "Portal",
       "description": "The client portal, where a client organization's people buy and schedule capacity, follow their blocks, read estimates, pay, and manage the organization.",
       "capabilities": [

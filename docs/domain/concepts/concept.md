@@ -17,17 +17,19 @@ own domain's, unless it names another domain, as
 
 ## In the spec
 
-A concept is a doc in its domain's `concepts/` folder. Its frontmatter has
-only its name, its `description`, which defines it, and `confused-with`, what
-it's easily mistaken for. Everything else is its body, in whatever shape suits
-it: what it's made of, how it relates to other concepts, and the states it
+A concept is a doc whose `docket` is `concept`, and whose `domain` is the one
+it means what it says in. Besides those, its frontmatter has only its name, its
+`description`, which defines it, and `confused-with`, what it's easily
+mistaken for. Everything else is its body, in whatever shape suits it: what it's made of, how it relates to other concepts, and the states it
 moves through.
-[`booking.md`](../../../spec/examples/hotel-bookings/docs/product/domains/guest-stays/concepts/booking.md)
+[`booking.md`](../../../spec/examples/hotel-bookings/docket/domains/guest-stays/concepts/booking.md)
 in Guest stays:
 
 ```markdown
 ---
+docket: concept
 id: booking
+domain: guest-stays
 name: Booking
 description: >-
   A guest's hold on one room for a stay, from a check-in date to a check-out
@@ -49,7 +51,7 @@ A confirmed booking can instead be Cancelled, any time before check-in.
 Each item in `confused-with` has a `summary` saying how they differ, and either
 `concept`, a [link](link.md) to that concept written as any concept link is,
 or `term`, for a word that isn't a concept in the docs. Billing's
-[bill](../../../spec/examples/hotel-billing/docs/product/domains/billing/concepts/bill.md)
+[bill](../../../spec/examples/hotel-billing/docket/domains/billing/concepts/bill.md)
 isn't an invoice:
 
 ```yaml

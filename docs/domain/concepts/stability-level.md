@@ -49,9 +49,9 @@ stability: beta
 ```
 
 A capability that spans domains declares its level in each. Hotel Bookings'
-[check-out](../../../spec/examples/hotel-bookings/docs/product/domains/guest-stays/capabilities/check-out.md),
+[check-out](../../../spec/examples/hotel-bookings/docket/domains/guest-stays/capabilities/check-out.md),
 in Guest stays, says `stability: ga`, and Hotel Billing's
-[check-out](../../../spec/examples/hotel-billing/docs/product/domains/billing/capabilities/check-out.md),
+[check-out](../../../spec/examples/hotel-billing/docket/domains/billing/capabilities/check-out.md),
 in Billing, says `stability: alpha`, so check-out is Alpha in short.
 
 ## Not to be confused with

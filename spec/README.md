@@ -56,35 +56,45 @@ tool. Anyone can adopt the format or write their own indexer for it.
 
 ```text
 docket.yaml                              config: the project's ID and name
-docs/
-└── product/
-    ├── personas/                        who the software serves, across every domain
-    ├── initiatives/                     bodies of work, across every domain
-    └── domains/
-        └── <domain>/                    one folder per domain the project works in
-            ├── domain.md                the domain's ID, name and summary
-            ├── features/                the product's jobs, each grouping capabilities
-            ├── capabilities/            the only docs with a stability level
-            ├── rules/                   one rule per file, in folders of your own, such as by topic
-            └── concepts/
-└── technical/
-    ├── mechanisms/                      how something works across the project
-    └── components/                      how one area of the code is built
+docket/                                  the docs, laid out as you like; this layout is recommended
+├── personas/                            who the software serves, across every domain
+├── initiatives/                         bodies of work, across every domain
+├── domains/
+│   └── <domain>/                        a folder per domain the project works in
+│       ├── domain.md                    the domain's ID, name and summary
+│       ├── features/                    the product's jobs, each grouping capabilities
+│       ├── capabilities/                the only docs with a stability level
+│       ├── rules/                       one rule per file, in folders of your own, such as by topic
+│       └── concepts/
+├── mechanisms/                          how something works across the project
+└── components/                          how one area of the code is built
 <code and tests, anywhere>               docket:implements, verifies, gap and tradeoff comments
 .docket/state.json                       written by `docket index`, gitignored
 ```
 
-This is the product docs layout forge's `docs` skill uses today, with
-these changes:
+**Nothing depends on where a doc is.** Each doc says what it is in its
+frontmatter: its type in `docket`, its ID, and its domain, if it's in one (see
+[IDs](#ids)). A Markdown file is a Docket doc when its frontmatter has
+`docket`, wherever it is in the project, and every other file is left alone.
+Files can be renamed, moved and put in folders of the author's own, and
+nothing breaks.
 
+The layout above is what we recommend, and what the examples use. A
+`docket/` folder at the root keeps the docs together, and apart from any other
+docs the repository has. It has no dot because people write it. `.docket/`,
+with a dot, holds only what tools write. Within `docket/`, a folder per type,
+and per domain, makes each doc easy to find. Group them differently where that
+suits the project better.
+
+The product docs are forge's `docs` skill's, with these changes:
+
+- They're in `docket/`, with the technical docs, not in `docs/product/`, and
+  each says its own type and domain.
 - Features are new. A feature is a job the product does, and it groups the
   capabilities that do it.
 - Domains are new. A domain is a part of the business with a language of its
-  own, and a project's docs are in a folder per domain it works in, under
-  `domains/`. Forge's single `domain/` folder of rules and concepts becomes
-  one of these per domain.
-- Each folder directly under `docs/product/` holds one kind of thing:
-  `personas/` and `initiatives/`, which span domains, and `domains/`.
+  own, and each doc written in one names it in its `domain` field. Forge's
+  single `domain/` folder of rules and concepts becomes one domain or more.
 - What tools depend on is a frontmatter field: its name and description,
   bold-label lines such as `**Stability:** Alpha`, Why and Open decisions.
   Everything else, such as a persona's needs, what a capability includes and
@@ -112,12 +122,12 @@ these changes:
   can order gaps by risk. A tradeoff is a list of its own, with its benefit and drawback. A feature can have tradeoffs and open decisions, and a
   domain open decisions.
 
-Technical docs are forge's `engineering-docs` layout, with these changes:
+Technical docs are forge's `engineering-docs` skill's, with these changes:
 
-- `docs/engineering/` is `docs/technical/`, to say what the docs hold, how
-  the software is meant to be built, rather than who writes them.
-- `architecture/systems/` is `mechanisms/`, since "system" usually means the
-  whole software, and `architecture/features/` is `components/`, since a
+- They're in `docket/`, with the product docs, not in `docs/engineering/`.
+  Their type says they're technical, not their folder.
+- An architecture doc for a system is a mechanism, since "system" usually
+  means the whole software, and one for a feature is a component, since a
   feature is a job the product does in Docket.
 - Links, gaps, tradeoffs and open decisions are frontmatter, not sections.
   How it works is the body.
@@ -136,24 +146,39 @@ real repository it's gitignored.
 
 ## IDs
 
-Every doc says its ID in its `id` field, the first in its frontmatter. Where
-the file is says only two things: its type, from the type's folder it's
-under, and its domain, from the domain's folder it's in. Its file name, and
-any folders it's in below its type's, are the author's to choose and change,
-and renaming or moving a file within its type's folder breaks nothing.
+Every doc starts its frontmatter by saying what it is: `docket`, its type,
+then `id`, its ID, then `domain`, for a doc written in a domain. Where its file
+is says nothing, so its file name and the folders it's in are the author's to
+choose and change, and renaming or moving it breaks nothing.
 
-| Type       | Under                                         | Example ID          |
-| ---------- | --------------------------------------------- | ------------------- |
-| domain     | `docs/product/domains/<domain>/domain.md`     | `guest-stays`       |
-| feature    | `docs/product/domains/<domain>/features/`     | `reservations`      |
-| capability | `docs/product/domains/<domain>/capabilities/` | `room-booking`      |
-| rule       | `docs/product/domains/<domain>/rules/`        | `no-double-booking` |
-| concept    | `docs/product/domains/<domain>/concepts/`     | `booking`           |
-| persona    | `docs/product/personas/`                      | `front-desk-clerk`  |
-| initiative | `docs/product/initiatives/`                   | `busy-season`       |
-| mechanism  | `docs/technical/mechanisms/`                  | `deployment`        |
-| component  | `docs/technical/components/`                  | `bookings`          |
+```yaml
+---
+docket: capability
+id: room-booking
+domain: guest-stays
+name: Room booking
+---
+```
 
+| `docket`   | `domain`                        | Recommended folder                      | Example ID          |
+| ---------- | ------------------------------- | --------------------------------------- | ------------------- |
+| domain     | none: its `id` is the domain's  | `docket/domains/<domain>/domain.md`     | `guest-stays`       |
+| feature    | required                        | `docket/domains/<domain>/features/`     | `reservations`      |
+| capability | required                        | `docket/domains/<domain>/capabilities/` | `room-booking`      |
+| rule       | required                        | `docket/domains/<domain>/rules/`        | `no-double-booking` |
+| concept    | required                        | `docket/domains/<domain>/concepts/`     | `booking`           |
+| persona    | none                            | `docket/personas/`                      | `front-desk-clerk`  |
+| initiative | none                            | `docket/initiatives/`                   | `busy-season`       |
+| mechanism  | none                            | `docket/mechanisms/`                    | `deployment`        |
+| component  | none                            | `docket/components/`                    | `bookings`          |
+
+- **`docket` marks a file as a Docket doc** and gives its type, one of those
+  above. A Markdown file without it isn't a Docket doc, and nothing reads it.
+  A type that isn't one of these is `invalid-frontmatter`.
+- **`domain` is the ID of the domain the doc is written in**, and must be one
+  the project has a domain doc for. A feature, capability, rule or concept
+  without one is `invalid-frontmatter`, and one naming a domain the project
+  doesn't have is `unknown-id`.
 - **IDs and values are kebab case**: lowercase words joined by hyphens, such
   as `room-booking`, `not-decided` or `ga`. Tools show values with their own
   labels, such as GA for `ga`.
@@ -199,7 +224,9 @@ Every doc is a Markdown file in two parts: YAML frontmatter, then a body.
 
 ```markdown
 ---
+docket: concept
 id: bill
+domain: billing
 name: Bill
 description: >-
   Everything a guest owes for one stay, and everything they've paid towards
@@ -274,8 +301,9 @@ Everything else is the body. That means:
 
 ## Doc types
 
-Every doc has an `id` (see [IDs](#ids)) and a `name`, and every doc but a
-rule has a `description`, all required:
+Every doc has its `docket` type and an `id`, a doc in a domain has its
+`domain` (see [IDs](#ids)), and every doc has a `name` and, but for a rule, a
+`description`, all required:
 
 - **`name`** is what it's called, such as `Room booking`. A persona's is the
   invented person's, such as `Maria`, and a rule's is the rule in a few words.
@@ -291,15 +319,15 @@ two that is the thing itself.
 
 | Type | Frontmatter, in order | Its body, if it has one | Example |
 | --- | --- | --- | --- |
-| domain | `id`, `name`, `description`, `decisions` | Anything more about the part of the business | [guest-stays](examples/hotel-bookings/docs/product/domains/guest-stays/domain.md) |
-| feature | `id`, `name`, `description`, `capabilities` (required), `tradeoffs`, `decisions` | Anything more about the job | [reservations](examples/hotel-bookings/docs/product/domains/guest-stays/features/reservations.md) |
-| capability | `id`, `name`, `description`, `stability` (required), `personas`, `initiatives`, `rules`, `concepts`, `gaps`, `tradeoffs`, `decisions` | Anything more about what it does, such as what else it includes, or how we'll know it's working | [room-booking](examples/hotel-bookings/docs/product/domains/guest-stays/capabilities/room-booking.md) |
-| rule | `id`, `name`, `concepts`, `why` | The rule in full, where its name doesn't say it all, and examples or how it plays out | [same-day-turnover](examples/hotel-bookings/docs/product/domains/guest-stays/rules/booking/same-day-turnover.md) |
-| concept | `id`, `name`, `description`, `confused-with` | Its details: what it's made of, how it relates to other concepts, and the states it moves through | [booking](examples/hotel-bookings/docs/product/domains/guest-stays/concepts/booking.md) |
-| persona | `id`, `name`, `description`, `role`, `title`, `image`, `initiatives` | Anything more about who they are, such as what they need, what they know, their context, what they expect, and what they care about | [front-desk-clerk](examples/hotel-bookings/docs/product/personas/front-desk-clerk.md) |
-| initiative | `id`, `name`, `description` | Anything more about the work, such as what's in it and why | [busy-season](examples/hotel-bookings/docs/product/initiatives/busy-season.md) |
-| mechanism | `id`, `name`, `description`, `applies`, `meets`, `gaps`, `tradeoffs`, `decisions` | How it works | [deployment](examples/hotel-bookings/docs/technical/mechanisms/deployment.md) |
-| component | `id`, `name`, `description`, `capabilities`, `meets`, `gaps`, `tradeoffs`, `decisions` | How it works | [bookings](examples/hotel-bookings/docs/technical/components/bookings.md) |
+| domain | `docket`, `id`, `name`, `description`, `decisions` | Anything more about the part of the business | [guest-stays](examples/hotel-bookings/docket/domains/guest-stays/domain.md) |
+| feature | `docket`, `id`, `domain`, `name`, `description`, `capabilities` (required), `tradeoffs`, `decisions` | Anything more about the job | [reservations](examples/hotel-bookings/docket/domains/guest-stays/features/reservations.md) |
+| capability | `docket`, `id`, `domain`, `name`, `description`, `stability` (required), `personas`, `initiatives`, `rules`, `concepts`, `gaps`, `tradeoffs`, `decisions` | Anything more about what it does, such as what else it includes, or how we'll know it's working | [room-booking](examples/hotel-bookings/docket/domains/guest-stays/capabilities/room-booking.md) |
+| rule | `docket`, `id`, `domain`, `name`, `concepts`, `why` | The rule in full, where its name doesn't say it all, and examples or how it plays out | [same-day-turnover](examples/hotel-bookings/docket/domains/guest-stays/rules/booking/same-day-turnover.md) |
+| concept | `docket`, `id`, `domain`, `name`, `description`, `confused-with` | Its details: what it's made of, how it relates to other concepts, and the states it moves through | [booking](examples/hotel-bookings/docket/domains/guest-stays/concepts/booking.md) |
+| persona | `docket`, `id`, `name`, `description`, `role`, `title`, `image`, `initiatives` | Anything more about who they are, such as what they need, what they know, their context, what they expect, and what they care about | [front-desk-clerk](examples/hotel-bookings/docket/personas/front-desk-clerk.md) |
+| initiative | `docket`, `id`, `name`, `description` | Anything more about the work, such as what's in it and why | [busy-season](examples/hotel-bookings/docket/initiatives/busy-season.md) |
+| mechanism | `docket`, `id`, `name`, `description`, `applies`, `meets`, `gaps`, `tradeoffs`, `decisions` | How it works | [deployment](examples/hotel-bookings/docket/mechanisms/deployment.md) |
+| component | `docket`, `id`, `name`, `description`, `capabilities`, `meets`, `gaps`, `tradeoffs`, `decisions` | How it works | [bookings](examples/hotel-bookings/docket/components/bookings.md) |
 
 The body column is a suggestion of what's worth writing, not a structure.
 
@@ -382,7 +410,9 @@ it ("Clerks move a booking to new dates"), or how we'll know it does its job.
 
 ```yaml
 ---
+docket: capability
 id: room-booking
+domain: guest-stays
 name: Room booking
 description: Clerks book a free room for a guest's stay.
 stability: beta
@@ -408,6 +438,7 @@ since the same people work across domains.
 
 ```markdown
 ---
+docket: persona
 id: front-desk-clerk
 name: Maria
 description: Runs the front desk: takes bookings, and checks guests in and out.
@@ -461,6 +492,7 @@ domain, since the work cuts across domains and features.
 
 ```markdown
 ---
+docket: initiative
 id: busy-season
 name: Busy season
 description: >-
@@ -498,16 +530,17 @@ initiatives: [initiative:busy-season]
 A mechanism or component says how part of the software is built, in the code's
 words, for the engineer or agent about to change it. A **mechanism** is how
 something works across the whole project, such as Hotel Bookings'
-[deployment](examples/hotel-bookings/docs/technical/mechanisms/deployment.md)
+[deployment](examples/hotel-bookings/docket/mechanisms/deployment.md)
 or Exalynt's authentication. It says how something works, not a convention
 or standard to follow. A **component** is one area of the code, named as the
 code names it, such as Hotel Bookings'
-[bookings](examples/hotel-bookings/docs/technical/components/bookings.md) or
-Hotel Billing's [ledger](examples/hotel-billing/docs/technical/components/ledger.md),
+[bookings](examples/hotel-bookings/docket/components/bookings.md) or
+Hotel Billing's [ledger](examples/hotel-billing/docket/components/ledger.md),
 however many capabilities rely on it.
 
 ```markdown
 ---
+docket: mechanism
 id: deployment
 name: Deployment
 description: >-
@@ -552,7 +585,7 @@ new image starts, from `db/migrations/`, in filename order.
   what every project on the platform serves, worked out the same way. It's
   for something one repository runs for all of them, such as authentication
   in an API gateway that every service sits behind. Exalynt's
-  [authentication](examples/exalynt-api/docs/technical/mechanisms/authentication.md)
+  [authentication](examples/exalynt-api/docket/mechanisms/authentication.md)
   applies to its platform, since every app's requests go through it.
 - **Only what the code can't say.** Leave out what a competent reader learns
   from the code in a few minutes, such as lists of endpoints, tables or
@@ -598,9 +631,9 @@ rule and the product:
   capabilities follow. Features don't list rules, and `state.json` doesn't
   either: a reader works them out from the feature's capabilities.
 - **A rule keeps its ID as capabilities start or stop following it.** Rules
-  can be kept in folders under `rules/`, such as one for each part of the
-  domain, like `booking/`, but never one for a capability or a feature. The
-  folders are for people and mean nothing to tools.
+  can be kept in folders of their own, such as one for each part of the
+  domain, like `rules/booking/`, but never one for a capability or a feature.
+  The folders are for people and mean nothing to tools.
 - **Following a rule claims it holds.** For each capability that follows it,
   a rule has a standing: not held, when one of the capability's gaps names it
   in `rule`; held with evidence, when anything verifies or implements it; or
@@ -766,8 +799,8 @@ level says how stable the work is right now, so people know what they can rely
 on before they rely on it.
 
 A capability declared but not started is a **draft**, `stability: draft`, such
-as the [waitlist](examples/hotel-bookings/docs/product/domains/guest-stays/capabilities/waitlist.md)
-or [refunds](examples/hotel-billing/docs/product/domains/billing/capabilities/refunds.md).
+as the [waitlist](examples/hotel-bookings/docket/domains/guest-stays/capabilities/waitlist.md)
+or [refunds](examples/hotel-billing/docket/domains/billing/capabilities/refunds.md).
 It isn't a level: it promises nothing, claims nothing on the checklist, and
 counts toward no maturity or readiness. Readers show it as the word Draft,
 with no level's mark.
@@ -892,7 +925,9 @@ A feature's doc lists its capabilities, in the order to show them:
 
 ```yaml
 ---
+docket: feature
 id: reservations
+domain: guest-stays
 name: Reservations
 description: Taking bookings and handling changes to them, before the guest arrives.
 capabilities:
@@ -1229,8 +1264,8 @@ export function balance(bill: Bill): number {
 ```
 
 - **The indexer doesn't parse anything.** It looks for the four verbs in every
-  file in the repository outside `docs/`, in whatever comment syntax the file
-  uses.
+  file in the repository that isn't a Docket doc, in whatever comment syntax
+  the file uses.
 - **An annotation is on the first line below it** that isn't blank or another
   annotation. The indexer records the file, the annotation's line, and that
   line's text as written, every time it runs. Nobody writes a line number
@@ -1288,26 +1323,25 @@ platform:
     Bookings. Every project on the platform should give the same one; readers
     use the first project's.
 
-A doc's domain is the one whose `domain.md` is in the folder under
-`docs/product/domains/` that the doc is in, so nothing in a doc says it, and
-the folder's own name means nothing. Moving a doc to another domain's folder
-moves it to that domain. Both hotel examples work in two domains each.
+A project works in the domains it has domain docs for, so nothing here says
+which. Both hotel examples work in two domains each.
 
 ## Domains
 
 A **domain** is a part of the business with a language of its own: a business
 area and a bounded context, in domain-driven design's terms, as one. Every
 product doc but a persona or an initiative is written in exactly one domain,
-the one whose folder it's in. Mechanisms and components are in no domain
-either. A project works in as many domains as it has folders under
-`docs/product/domains/`, and projects that work in the same part of the
-business use the same domain ID.
+the one its `domain` field names. Changing a doc's `domain` moves it to that
+domain, wherever its file is. Mechanisms and components are in no domain
+either. A project works in as many domains as it has domain docs, and projects
+that work in the same part of the business use the same domain ID.
 
-A domain's `domain.md` gives its name and description, any open decisions, and
-anything more worth saying about it in its body:
+A domain doc gives its name and description, any open decisions, and anything
+more worth saying about it in its body:
 
 ```yaml
 ---
+docket: domain
 id: guest-stays
 name: Guest stays
 description: Looking after guests from their booking to their check-out.
@@ -1413,7 +1447,7 @@ and showing several projects together means reading each one's state.json.
 - **`summary`**: how many domains, features, personas and initiatives there
   are, capabilities per level with `draft` among them, how many rules, gaps,
   tradeoffs, mechanisms, components and problems. This is the at-a-glance view.
-- **`domains`**: each of the project's `domain.md` files.
+- **`domains`**: each of the project's domain docs.
 - **`features`**: each with its capabilities and its `tradeoffs`. Each
   capability names the feature it's in, as a reference, or `null`,
   and lists its `gaps` and `tradeoffs`, by ID. Its `stability` can be
@@ -1476,8 +1510,8 @@ and showing several projects together means reading each one's state.json.
 
 | Type                  | Raised when                                                                                                      |
 | --------------------- | ---------------------------------------------------------------------------------------------------------------- |
-| `unknown-id`          | A link, annotation or `rule` names a doc, gap or tradeoff that doesn't exist.                                    |
-| `invalid-frontmatter` | A required field is missing, or a value isn't allowed, such as a link of the wrong type for its field, or a domain folder has no `domain.md` to give its ID. |
+| `unknown-id`          | A link, annotation, `rule` or `domain` names a doc, gap or tradeoff that doesn't exist.                          |
+| `invalid-frontmatter` | A required field is missing, or a value isn't allowed, such as a link of the wrong type for its field, such as a `docket` that isn't a type, or a feature, capability, rule or concept with no `domain`. |
 | `duplicate-id`        | A project has two docs of one type with the same ID in one domain, or two domains, personas, initiatives, mechanisms or components with the same ID, or a doc has two gaps or tradeoffs with the same key across the projects and domains that write it. |
 | `broken-link`         | A relative link in a doc's body or a text value doesn't resolve.                                                 |
 | `unlinked-rule`       | No capability follows a rule.                                                                                    |

@@ -39,13 +39,14 @@ and it's for the front desk clerk and the housekeeper.
 
 ## In the spec
 
-An initiative is a doc in `docs/product/initiatives/`, outside any domain,
+An initiative is a doc whose `docket` is `initiative`, outside any domain,
 like a persona. It has an `id`, a `name` and a `description`, and its body
 can say more. The same ID in two projects is one initiative.
-[`busy-season.md`](../../../spec/examples/hotel-bookings/docs/product/initiatives/busy-season.md):
+[`busy-season.md`](../../../spec/examples/hotel-bookings/docket/initiatives/busy-season.md):
 
 ```markdown
 ---
+docket: initiative
 id: busy-season
 name: Busy season
 description: >-

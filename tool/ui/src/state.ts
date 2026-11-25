@@ -356,7 +356,7 @@ export type StateFile = {
   indexedAt: string;
   /* Its counts, such as capabilities at each level. The page works out its own, so it reads none of them. */
   summary?: { capabilities?: Record<Level | "draft", number> };
-  /* Each of its domain.md files. A domain is its own domain, so these have no `domain`. */
+  /* Each of its domain docs. A domain is its own domain, so these have no `domain`. */
   domains: Omit<Raw<Domain>, "domain" | "features" | "capabilities">[];
   /* `tradeoffs` is missing from state written before tradeoffs. */
   features: (Omit<Raw<Feature>, "tradeoffs"> & { tradeoffs?: string[] })[];
@@ -648,7 +648,7 @@ export function combine(files: StateFile[]): DocketState {
     state.problems.push(...file.problems.map((p) => ({ ...p, subject: subject(p) })));
   }
 
-  /* A domain docs are written in, with no domain.md showing, still gets a place, named by its ID. */
+  /* A domain docs are written in, with no domain doc showing, still gets a place, named by its ID. */
   for (const doc of [...state.features, ...state.capabilities, ...state.rules, ...state.concepts]) {
     for (const f of doc.from) {
       if (!find(state.domains, f.domain)) {

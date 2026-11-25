@@ -33,13 +33,15 @@ Whether some work is a feature, a capability or neither is set out in the
 
 ## In the spec
 
-A feature is a doc in its domain's `features/` folder. It lists its
+A feature is a doc whose `docket` is `feature`, with its `domain`. It lists its
 capabilities, in the order to show them, and its tradeoffs.
-[`reservations.md`](../../../spec/examples/hotel-bookings/docs/product/domains/guest-stays/features/reservations.md):
+[`reservations.md`](../../../spec/examples/hotel-bookings/docket/domains/guest-stays/features/reservations.md):
 
 ```markdown
 ---
+docket: feature
 id: reservations
+domain: guest-stays
 name: Reservations
 description: Taking bookings and handling changes to them, before the guest arrives.
 capabilities:

@@ -31,7 +31,7 @@
   "domains": [
     {
       "id": "billing",
-      "file": "docs/product/domains/billing/domain.md",
+      "file": "docket/domains/billing/domain.md",
       "name": "Billing",
       "description": "Charging guests for their stays, and getting paid.",
       "decisions": [],
@@ -39,7 +39,7 @@
     },
     {
       "id": "finance",
-      "file": "docs/product/domains/finance/domain.md",
+      "file": "docket/domains/finance/domain.md",
       "name": "Finance",
       "description": "Keeping the hotel's accounts, and getting paid by the companies it bills.",
       "decisions": [],
@@ -50,7 +50,7 @@
     {
       "id": "guest-bills",
       "domain": "billing",
-      "file": "docs/product/domains/billing/features/guest-bills.md",
+      "file": "docket/domains/billing/features/guest-bills.md",
       "name": "Guest bills",
       "description": "Keeping an accurate record of what each guest owes during their stay.",
       "capabilities": [
@@ -65,7 +65,7 @@
     {
       "id": "payments",
       "domain": "billing",
-      "file": "docs/product/domains/billing/features/payments.md",
+      "file": "docket/domains/billing/features/payments.md",
       "name": "Payments",
       "description": "Getting paid for stays, before the guest arrives and while they're here.",
       "capabilities": [
@@ -80,7 +80,7 @@
     {
       "id": "company-accounts",
       "domain": "finance",
-      "file": "docs/product/domains/finance/features/company-accounts.md",
+      "file": "docket/domains/finance/features/company-accounts.md",
       "name": "Company accounts",
       "description": "Billing companies for their staff's stays, so the guests don't pay themselves.",
       "capabilities": [
@@ -95,7 +95,7 @@
     {
       "id": "closing-the-day",
       "domain": "finance",
-      "file": "docs/product/domains/finance/features/closing-the-day.md",
+      "file": "docket/domains/finance/features/closing-the-day.md",
       "name": "Closing the day",
       "description": "Making each day's takings final, and handing them to the hotel's accounts.",
       "capabilities": [
@@ -110,7 +110,7 @@
     {
       "id": "front-desk",
       "domain": "billing",
-      "file": "docs/product/domains/billing/features/front-desk.md",
+      "file": "docket/domains/billing/features/front-desk.md",
       "name": "Front desk",
       "description": "Welcoming guests when they arrive and settling up when they leave.",
       "capabilities": [
@@ -124,7 +124,7 @@
   "personas": [
     {
       "id": "bookkeeper",
-      "file": "docs/product/personas/bookkeeper.md",
+      "file": "docket/personas/bookkeeper.md",
       "name": "Priya",
       "role": "Back office",
       "title": "Bookkeeper",
@@ -143,7 +143,7 @@
     },
     {
       "id": "front-desk-clerk",
-      "file": "docs/product/personas/front-desk-clerk.md",
+      "file": "docket/personas/front-desk-clerk.md",
       "name": "Maria",
       "role": "Front desk",
       "title": "Front desk clerk",
@@ -169,7 +169,7 @@
     },
     {
       "id": "guest",
-      "file": "docs/product/personas/guest.md",
+      "file": "docket/personas/guest.md",
       "name": "Sam",
       "role": "Guest",
       "title": null,
@@ -190,7 +190,7 @@
     },
     {
       "id": "manager",
-      "file": "docs/product/personas/manager.md",
+      "file": "docket/personas/manager.md",
       "name": "David",
       "role": "Manager",
       "title": "Hotel manager",
@@ -211,7 +211,7 @@
     },
     {
       "id": "night-auditor",
-      "file": "docs/product/personas/night-auditor.md",
+      "file": "docket/personas/night-auditor.md",
       "name": "Tom",
       "role": "Front desk",
       "title": "Night auditor",
@@ -230,7 +230,7 @@
     {
       "id": "extra-charges",
       "domain": "billing",
-      "file": "docs/product/domains/billing/capabilities/extra-charges.md",
+      "file": "docket/domains/billing/capabilities/extra-charges.md",
       "name": "Extra charges",
       "description": "Staff add extras such as breakfast, parking or the minibar to a guest's bill.",
       "stability": "ga",
@@ -258,7 +258,7 @@
     {
       "id": "city-tax",
       "domain": "billing",
-      "file": "docs/product/domains/billing/capabilities/city-tax.md",
+      "file": "docket/domains/billing/capabilities/city-tax.md",
       "name": "City tax",
       "description": "The software adds the city's tourist tax to each guest's bill, night by night.",
       "stability": "alpha",
@@ -290,7 +290,7 @@
     {
       "id": "split-bills",
       "domain": "billing",
-      "file": "docs/product/domains/billing/capabilities/split-bills.md",
+      "file": "docket/domains/billing/capabilities/split-bills.md",
       "name": "Split bills",
       "description": "Clerks split a bill between guests sharing a room, or move charges onto another guest's bill.",
       "stability": "prototype",
@@ -322,7 +322,7 @@
     {
       "id": "deposits",
       "domain": "billing",
-      "file": "docs/product/domains/billing/capabilities/deposits.md",
+      "file": "docket/domains/billing/capabilities/deposits.md",
       "name": "Deposits",
       "description": "The software takes a deposit on the guest's card when a stay is booked.",
       "stability": "beta",
@@ -369,7 +369,7 @@
     {
       "id": "pay-by-link",
       "domain": "billing",
-      "file": "docs/product/domains/billing/capabilities/pay-by-link.md",
+      "file": "docket/domains/billing/capabilities/pay-by-link.md",
       "name": "Pay by link",
       "description": "Guests pay their bill by card from a link the hotel sends them, without coming to the desk.",
       "stability": "alpha",
@@ -411,7 +411,7 @@
     {
       "id": "company-accounts",
       "domain": "finance",
-      "file": "docs/product/domains/finance/capabilities/company-accounts.md",
+      "file": "docket/domains/finance/capabilities/company-accounts.md",
       "name": "Company accounts",
       "description": "Bookkeepers set up companies that pay for their staff's stays, each with a credit limit.",
       "stability": "beta",
@@ -437,7 +437,7 @@
     {
       "id": "direct-billing",
       "domain": "finance",
-      "file": "docs/product/domains/finance/capabilities/direct-billing.md",
+      "file": "docket/domains/finance/capabilities/direct-billing.md",
       "name": "Direct billing",
       "description": "Clerks move a guest's bill to their company's account at check-out, so the guest leaves without paying.",
       "stability": "alpha",
@@ -468,7 +468,7 @@
     {
       "id": "invoices",
       "domain": "finance",
-      "file": "docs/product/domains/finance/capabilities/invoices.md",
+      "file": "docket/domains/finance/capabilities/invoices.md",
       "name": "Invoices",
       "description": "Bookkeepers invoice each company once a month for its staff's stays.",
       "stability": "alpha",
@@ -496,7 +496,7 @@
     {
       "id": "night-audit",
       "domain": "finance",
-      "file": "docs/product/domains/finance/capabilities/night-audit.md",
+      "file": "docket/domains/finance/capabilities/night-audit.md",
       "name": "Night audit",
       "description": "The software closes each business day overnight, charging every guest in the hotel for that night's room.",
       "stability": "ga",
@@ -527,7 +527,7 @@
     {
       "id": "daily-takings",
       "domain": "finance",
-      "file": "docs/product/domains/finance/capabilities/daily-takings.md",
+      "file": "docket/domains/finance/capabilities/daily-takings.md",
       "name": "Daily takings",
       "description": "Managers see each closed day's takings, for rooms, food and drink, and tax.",
       "stability": "beta",
@@ -554,7 +554,7 @@
     {
       "id": "accounting-export",
       "domain": "finance",
-      "file": "docs/product/domains/finance/capabilities/accounting-export.md",
+      "file": "docket/domains/finance/capabilities/accounting-export.md",
       "name": "Accounting export",
       "description": "Bookkeepers export each closed day's takings to the hotel's accounting software.",
       "stability": "alpha",
@@ -585,7 +585,7 @@
     {
       "id": "check-out",
       "domain": "billing",
-      "file": "docs/product/domains/billing/capabilities/check-out.md",
+      "file": "docket/domains/billing/capabilities/check-out.md",
       "name": "Check-out",
       "description": "Guests settle their bill as they leave, so nothing is left owing once they've gone.",
       "stability": "alpha",
@@ -618,7 +618,7 @@
     {
       "id": "refunds",
       "domain": "billing",
-      "file": "docs/product/domains/billing/capabilities/refunds.md",
+      "file": "docket/domains/billing/capabilities/refunds.md",
       "name": "Refunds",
       "description": "Clerks refund a guest what they've paid over their bill, before the bill closes.",
       "stability": "draft",
@@ -653,7 +653,7 @@
     {
       "id": "charges-are-never-changed",
       "domain": "billing",
-      "file": "docs/product/domains/billing/rules/bills/charges-are-never-changed.md",
+      "file": "docket/domains/billing/rules/bills/charges-are-never-changed.md",
       "name": "A charge is never changed or deleted",
       "capabilities": [
         "capability:extra-charges",
@@ -685,7 +685,7 @@
     {
       "id": "closed-bills-dont-change",
       "domain": "billing",
-      "file": "docs/product/domains/billing/rules/bills/closed-bills-dont-change.md",
+      "file": "docket/domains/billing/rules/bills/closed-bills-dont-change.md",
       "name": "A closed bill can't change",
       "capabilities": [
         "capability:extra-charges",
@@ -719,7 +719,7 @@
     {
       "id": "city-tax-per-guest-night",
       "domain": "billing",
-      "file": "docs/product/domains/billing/rules/tax/city-tax-per-guest-night.md",
+      "file": "docket/domains/billing/rules/tax/city-tax-per-guest-night.md",
       "name": "City tax is charged per guest, per night",
       "capabilities": [
         "capability:city-tax"
@@ -750,7 +750,7 @@
     {
       "id": "children-pay-no-city-tax",
       "domain": "billing",
-      "file": "docs/product/domains/billing/rules/tax/children-pay-no-city-tax.md",
+      "file": "docket/domains/billing/rules/tax/children-pay-no-city-tax.md",
       "name": "Children pay no city tax",
       "capabilities": [
         "capability:city-tax"
@@ -768,7 +768,7 @@
     {
       "id": "city-tax-stops-after-seven-nights",
       "domain": "billing",
-      "file": "docs/product/domains/billing/rules/tax/city-tax-stops-after-seven-nights.md",
+      "file": "docket/domains/billing/rules/tax/city-tax-stops-after-seven-nights.md",
       "name": "City tax stops after seven nights",
       "capabilities": [
         "capability:city-tax"
@@ -792,7 +792,7 @@
     {
       "id": "moving-charges-keeps-the-total",
       "domain": "billing",
-      "file": "docs/product/domains/billing/rules/bills/moving-charges-keeps-the-total.md",
+      "file": "docket/domains/billing/rules/bills/moving-charges-keeps-the-total.md",
       "name": "Moving charges keeps the total",
       "capabilities": [
         "capability:split-bills"
@@ -811,7 +811,7 @@
     {
       "id": "deposit-is-the-first-night",
       "domain": "billing",
-      "file": "docs/product/domains/billing/rules/payments/deposit-is-the-first-night.md",
+      "file": "docket/domains/billing/rules/payments/deposit-is-the-first-night.md",
       "name": "A deposit is the first night",
       "capabilities": [
         "capability:deposits"
@@ -841,7 +841,7 @@
     {
       "id": "deposit-counts-towards-the-bill",
       "domain": "billing",
-      "file": "docs/product/domains/billing/rules/payments/deposit-counts-towards-the-bill.md",
+      "file": "docket/domains/billing/rules/payments/deposit-counts-towards-the-bill.md",
       "name": "A deposit counts towards the bill",
       "capabilities": [
         "capability:deposits"
@@ -877,7 +877,7 @@
     {
       "id": "card-numbers-are-never-kept",
       "domain": "billing",
-      "file": "docs/product/domains/billing/rules/payments/card-numbers-are-never-kept.md",
+      "file": "docket/domains/billing/rules/payments/card-numbers-are-never-kept.md",
       "name": "Card numbers are never kept",
       "capabilities": [
         "capability:deposits",
@@ -913,7 +913,7 @@
     {
       "id": "credit-limit",
       "domain": "finance",
-      "file": "docs/product/domains/finance/rules/company-accounts/credit-limit.md",
+      "file": "docket/domains/finance/rules/company-accounts/credit-limit.md",
       "name": "A company can't go over its credit limit",
       "capabilities": [
         "capability:company-accounts",
@@ -945,7 +945,7 @@
     {
       "id": "only-named-guests",
       "domain": "finance",
-      "file": "docs/product/domains/finance/rules/company-accounts/only-named-guests.md",
+      "file": "docket/domains/finance/rules/company-accounts/only-named-guests.md",
       "name": "Only named guests' bills go to a company",
       "capabilities": [
         "capability:direct-billing"
@@ -970,7 +970,7 @@
     {
       "id": "invoice-numbers-run-in-sequence",
       "domain": "finance",
-      "file": "docs/product/domains/finance/rules/invoices/invoice-numbers-run-in-sequence.md",
+      "file": "docket/domains/finance/rules/invoices/invoice-numbers-run-in-sequence.md",
       "name": "Invoice numbers run in sequence",
       "capabilities": [
         "capability:invoices"
@@ -1000,7 +1000,7 @@
     {
       "id": "one-room-charge-per-night",
       "domain": "finance",
-      "file": "docs/product/domains/finance/rules/night-audit/one-room-charge-per-night.md",
+      "file": "docket/domains/finance/rules/night-audit/one-room-charge-per-night.md",
       "name": "A guest is charged once a night for their room",
       "capabilities": [
         "capability:night-audit"
@@ -1036,7 +1036,7 @@
     {
       "id": "closed-days-dont-change",
       "domain": "finance",
-      "file": "docs/product/domains/finance/rules/night-audit/closed-days-dont-change.md",
+      "file": "docket/domains/finance/rules/night-audit/closed-days-dont-change.md",
       "name": "A closed day can't change",
       "capabilities": [
         "capability:night-audit",
@@ -1069,7 +1069,7 @@
     {
       "id": "overpayments-are-refunded",
       "domain": "billing",
-      "file": "docs/product/domains/billing/rules/payments/overpayments-are-refunded.md",
+      "file": "docket/domains/billing/rules/payments/overpayments-are-refunded.md",
       "name": "Overpayments are refunded",
       "capabilities": [],
       "concepts": [
@@ -1088,7 +1088,7 @@
     {
       "id": "bill",
       "domain": "billing",
-      "file": "docs/product/domains/billing/concepts/bill.md",
+      "file": "docket/domains/billing/concepts/bill.md",
       "name": "Bill",
       "description": "Everything a guest owes for one stay, and everything they've paid towards it.",
       "capabilities": [
@@ -1123,7 +1123,7 @@
     {
       "id": "business-day",
       "domain": "finance",
-      "file": "docs/product/domains/finance/concepts/business-day.md",
+      "file": "docket/domains/finance/concepts/business-day.md",
       "name": "Business day",
       "description": "The hotel's day for its accounts, from one night audit to the next.",
       "capabilities": [
@@ -1141,7 +1141,7 @@
     {
       "id": "charge",
       "domain": "billing",
-      "file": "docs/product/domains/billing/concepts/charge.md",
+      "file": "docket/domains/billing/concepts/charge.md",
       "name": "Charge",
       "description": "One amount a guest owes, such as a night's room, a breakfast or a night's city tax.",
       "capabilities": [
@@ -1167,7 +1167,7 @@
     {
       "id": "company-account",
       "domain": "finance",
-      "file": "docs/product/domains/finance/concepts/company-account.md",
+      "file": "docket/domains/finance/concepts/company-account.md",
       "name": "Company account",
       "description": "A company that pays for its staff's stays, and what it owes the hotel.",
       "capabilities": [
@@ -1186,7 +1186,7 @@
     {
       "id": "payment",
       "domain": "billing",
-      "file": "docs/product/domains/billing/concepts/payment.md",
+      "file": "docket/domains/billing/concepts/payment.md",
       "name": "Payment",
       "description": "Money a guest has paid towards their bill, by card or in cash.",
       "capabilities": [
@@ -1206,7 +1206,7 @@
     {
       "id": "booking",
       "domain": "billing",
-      "file": "docs/product/domains/billing/concepts/booking.md",
+      "file": "docket/domains/billing/concepts/booking.md",
       "name": "Booking",
       "description": "What a guest is charged for a stay: its nights, at the rate agreed when it was booked.",
       "capabilities": [
@@ -1227,7 +1227,7 @@
   "components": [
     {
       "id": "ledger",
-      "file": "docs/technical/components/ledger.md",
+      "file": "docket/components/ledger.md",
       "name": "Ledger",
       "description": "Every amount a guest owes or pays, as lines on their bill that are only ever added, never changed.",
       "capabilities": [
@@ -1267,7 +1267,7 @@
     },
     {
       "id": "payments",
-      "file": "docs/technical/components/payments.md",
+      "file": "docket/components/payments.md",
       "name": "Payments",
       "description": "Taking card payments through the payment provider, for deposits and payment links.",
       "capabilities": [

@@ -1,8 +1,0 @@
----
-id: invitations-are-limited
-name: Invitations are limited
----
-
-A partnership can send at most 50 new invitations in a day, and revoking one
-doesn't free up another. Each invitation can be resent at most once a day. So
-nobody is flooded with email from Exalynt.

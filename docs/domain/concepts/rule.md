@@ -45,18 +45,20 @@ A rule belongs to the [domain](domain.md), not to a capability or a feature:
 
 ## In the spec
 
-A rule is one file in its domain's `rules/` folder, which can have folders of
-its own, such as one per topic. Its ID is its `id` field, such as
-`no-double-booking`, so it stays the same if the file moves between folders.
+A rule is one doc whose `docket` is `rule`, with its `domain`, and its file can
+be in folders of its own, such as one per topic. Its ID is its `id` field, such
+as `no-double-booking`, so it stays the same if the file moves between folders.
 Its `name` is the rule in a few words, and `why` says why it holds, so
 whoever meets a case it didn't foresee can judge it. It has no `description`: its
 body, if it has one, states the rule in full where the name doesn't, and gives
 examples or how it plays out.
-[`no-double-booking.md`](../../../spec/examples/hotel-bookings/docs/product/domains/guest-stays/rules/booking/no-double-booking.md):
+[`no-double-booking.md`](../../../spec/examples/hotel-bookings/docket/domains/guest-stays/rules/booking/no-double-booking.md):
 
 ```markdown
 ---
+docket: rule
 id: no-double-booking
+domain: guest-stays
 name: A room can't be double-booked
 concepts: [concept:booking, concept:room]
 ---
@@ -65,7 +67,7 @@ Two bookings for the same room can't share a night. A cancelled booking no
 longer holds its nights.
 ```
 
-[`late-cancellation-fee.md`](../../../spec/examples/hotel-bookings/docs/product/domains/guest-stays/rules/cancellations/late-cancellation-fee.md)
+[`late-cancellation-fee.md`](../../../spec/examples/hotel-bookings/docket/domains/guest-stays/rules/cancellations/late-cancellation-fee.md)
 says why:
 
 ```yaml

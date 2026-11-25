@@ -23,14 +23,15 @@ none.
 
 ## In the spec
 
-A component is a doc in `docs/technical/components/`, shaped as a mechanism's
+A component is a doc whose `docket` is `component`, shaped as a mechanism's
 is, with `capabilities` listing those that rely on it, and how it works as its body. Like a
 mechanism, it names no code: its entry points say
 `docket:implements component:bookings`.
-[`bookings.md`](../../../spec/examples/hotel-bookings/docs/technical/components/bookings.md):
+[`bookings.md`](../../../spec/examples/hotel-bookings/docket/components/bookings.md):
 
 ```markdown
 ---
+docket: component
 id: bookings
 name: Bookings
 description: >-

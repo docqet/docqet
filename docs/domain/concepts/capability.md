@@ -86,18 +86,20 @@ when someone decides to promote or demote it.
 
 ## In the spec
 
-A capability is a doc in its domain's `capabilities/` folder. Its name and
+A capability is a doc whose `docket` is `capability`, with its `domain`. Its name and
 description, its level and its links are frontmatter. It names no code: the
 mechanisms that apply to it and the components that list it say where it's
 built. Questions building
 it should answer are open decisions. Its body is for anything more about what
 it does, such as what else it includes or how we'll know it works, and can be
 left out.
-[`room-booking.md`](../../../spec/examples/hotel-bookings/docs/product/domains/guest-stays/capabilities/room-booking.md):
+[`room-booking.md`](../../../spec/examples/hotel-bookings/docket/domains/guest-stays/capabilities/room-booking.md):
 
 ```markdown
 ---
+docket: capability
 id: room-booking
+domain: guest-stays
 name: Room booking
 description: Clerks book a free room for a guest's stay.
 stability: beta
@@ -139,13 +141,15 @@ tradeoffs:
 ```
 
 A draft is written the same way, with `stability: draft`.
-[`waitlist.md`](../../../spec/examples/hotel-bookings/docs/product/domains/guest-stays/capabilities/waitlist.md)
+[`waitlist.md`](../../../spec/examples/hotel-bookings/docket/domains/guest-stays/capabilities/waitlist.md)
 has its people, its initiative, rules and an open decision before any code
 exists:
 
 ```markdown
 ---
+docket: capability
 id: waitlist
+domain: guest-stays
 name: Waitlist
 description: >-
   Clerks put a guest on a waitlist when every room is taken, and offer them

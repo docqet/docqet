@@ -54,8 +54,8 @@ platform:
 
 The `id` names it wherever several projects are shown together, and the `name`
 is what people see, named for the software, not for a domain. Which domains it
-works in is the domains whose folders are under `docs/product/domains/`, so
-nothing here says it. `platform` is optional, as the [platform](platform.md) says.
+works in is the domains it has domain docs for, so nothing here says it.
+`platform` is optional, as the [platform](platform.md) says.
 
 Its [state](state.md) starts with the same, the commit it describes, and a
 summary:

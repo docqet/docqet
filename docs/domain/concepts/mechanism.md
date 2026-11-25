@@ -35,18 +35,19 @@ only what the code can't show, and has no level or domain of its own.
 
 ## In the spec
 
-A mechanism is a doc in `docs/technical/mechanisms/`. Its frontmatter holds its
+A mechanism is a doc whose `docket` is `mechanism`. Its frontmatter holds its
 name and description, `applies`, `project` or `platform` and `project` when left
 out, and what tools compute with. It names neither code nor capabilities: the
 code points at it, and what it applies to is worked out, by the indexer for a
 project, and when projects are combined for a platform, since no one
 repository can see the others. Its body is how it works, in whatever shape explains it best, with no
 heading.
-[`deployment.md`](../../../spec/examples/hotel-bookings/docs/technical/mechanisms/deployment.md),
+[`deployment.md`](../../../spec/examples/hotel-bookings/docket/mechanisms/deployment.md),
 shortened:
 
 ```markdown
 ---
+docket: mechanism
 id: deployment
 name: Deployment
 description: >-

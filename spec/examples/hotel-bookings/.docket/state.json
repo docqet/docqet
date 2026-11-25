@@ -32,7 +32,7 @@
   "domains": [
     {
       "id": "guest-stays",
-      "file": "docs/product/domains/guest-stays/domain.md",
+      "file": "docket/domains/guest-stays/domain.md",
       "name": "Guest stays",
       "description": "Looking after guests from their booking to their check-out.",
       "decisions": [
@@ -45,7 +45,7 @@
     },
     {
       "id": "property",
-      "file": "docs/product/domains/property/domain.md",
+      "file": "docket/domains/property/domain.md",
       "name": "Property",
       "description": "Keeping the hotel ready for guests.",
       "decisions": [],
@@ -56,7 +56,7 @@
     {
       "id": "reservations",
       "domain": "guest-stays",
-      "file": "docs/product/domains/guest-stays/features/reservations.md",
+      "file": "docket/domains/guest-stays/features/reservations.md",
       "name": "Reservations",
       "description": "Taking bookings and handling changes to them, before the guest arrives.",
       "capabilities": [
@@ -74,7 +74,7 @@
     {
       "id": "front-desk",
       "domain": "guest-stays",
-      "file": "docs/product/domains/guest-stays/features/front-desk.md",
+      "file": "docket/domains/guest-stays/features/front-desk.md",
       "name": "Front desk",
       "description": "Welcoming guests when they arrive and settling up when they leave.",
       "capabilities": [
@@ -88,7 +88,7 @@
     {
       "id": "housekeeping",
       "domain": "property",
-      "file": "docs/product/domains/property/features/housekeeping.md",
+      "file": "docket/domains/property/features/housekeeping.md",
       "name": "Housekeeping",
       "description": "Keeping rooms ready for the next guest.",
       "capabilities": [
@@ -103,7 +103,7 @@
   "personas": [
     {
       "id": "front-desk-clerk",
-      "file": "docs/product/personas/front-desk-clerk.md",
+      "file": "docket/personas/front-desk-clerk.md",
       "name": "Maria",
       "role": "Front desk",
       "title": "Front desk clerk",
@@ -130,7 +130,7 @@
     },
     {
       "id": "housekeeper",
-      "file": "docs/product/personas/housekeeper.md",
+      "file": "docket/personas/housekeeper.md",
       "name": "Ana",
       "role": "Housekeeping",
       "title": "Housekeeper",
@@ -150,7 +150,7 @@
     },
     {
       "id": "manager",
-      "file": "docs/product/personas/manager.md",
+      "file": "docket/personas/manager.md",
       "name": "David",
       "role": "Manager",
       "title": "Hotel manager",
@@ -167,7 +167,7 @@
   "initiatives": [
     {
       "id": "busy-season",
-      "file": "docs/product/initiatives/busy-season.md",
+      "file": "docket/initiatives/busy-season.md",
       "name": "Busy season",
       "description": "Handling full nights: groups, a waitlist, and turning rooms over faster.",
       "capabilities": [
@@ -190,7 +190,7 @@
     {
       "id": "room-booking",
       "domain": "guest-stays",
-      "file": "docs/product/domains/guest-stays/capabilities/room-booking.md",
+      "file": "docket/domains/guest-stays/capabilities/room-booking.md",
       "name": "Room booking",
       "description": "Clerks book a free room for a guest's stay.",
       "stability": "beta",
@@ -236,7 +236,7 @@
     {
       "id": "cancellations",
       "domain": "guest-stays",
-      "file": "docs/product/domains/guest-stays/capabilities/cancellations.md",
+      "file": "docket/domains/guest-stays/capabilities/cancellations.md",
       "name": "Cancellations",
       "description": "Clerks cancel a booking when a guest's plans change, and the guest is refunded what the cancellation policy allows.",
       "stability": "alpha",
@@ -271,7 +271,7 @@
     {
       "id": "check-in",
       "domain": "guest-stays",
-      "file": "docs/product/domains/guest-stays/capabilities/check-in.md",
+      "file": "docket/domains/guest-stays/capabilities/check-in.md",
       "name": "Check-in",
       "description": "Clerks check guests in when they arrive and give them their room.",
       "stability": "beta",
@@ -299,7 +299,7 @@
     {
       "id": "check-out",
       "domain": "guest-stays",
-      "file": "docs/product/domains/guest-stays/capabilities/check-out.md",
+      "file": "docket/domains/guest-stays/capabilities/check-out.md",
       "name": "Check-out",
       "description": "Clerks check guests out on their departure day and take payment for anything still owed.",
       "stability": "ga",
@@ -324,7 +324,7 @@
     {
       "id": "cleaning-schedule",
       "domain": "property",
-      "file": "docs/product/domains/property/capabilities/cleaning-schedule.md",
+      "file": "docket/domains/property/capabilities/cleaning-schedule.md",
       "name": "Cleaning schedule",
       "description": "Housekeepers see which rooms to clean today, with early arrivals first.",
       "stability": "prototype",
@@ -354,7 +354,7 @@
     {
       "id": "group-bookings",
       "domain": "guest-stays",
-      "file": "docs/product/domains/guest-stays/capabilities/group-bookings.md",
+      "file": "docket/domains/guest-stays/capabilities/group-bookings.md",
       "name": "Group bookings",
       "description": "Clerks hold several rooms at once for a group travelling together, under one name.",
       "stability": "prototype",
@@ -389,7 +389,7 @@
     {
       "id": "rate-calendar",
       "domain": "guest-stays",
-      "file": "docs/product/domains/guest-stays/capabilities/rate-calendar.md",
+      "file": "docket/domains/guest-stays/capabilities/rate-calendar.md",
       "name": "Rate calendar",
       "description": "Managers set each room type's nightly rate, date by date.",
       "stability": "prototype",
@@ -417,7 +417,7 @@
     {
       "id": "room-status",
       "domain": "property",
-      "file": "docs/product/domains/property/capabilities/room-status.md",
+      "file": "docket/domains/property/capabilities/room-status.md",
       "name": "Room status",
       "description": "Housekeepers mark rooms clean or dirty, so the front desk knows which are ready.",
       "stability": "prototype",
@@ -450,7 +450,7 @@
     {
       "id": "waitlist",
       "domain": "guest-stays",
-      "file": "docs/product/domains/guest-stays/capabilities/waitlist.md",
+      "file": "docket/domains/guest-stays/capabilities/waitlist.md",
       "name": "Waitlist",
       "description": "Clerks put a guest on a waitlist when every room is taken, and offer them the first room that frees up for their stay.",
       "stability": "draft",
@@ -487,7 +487,7 @@
     {
       "id": "no-double-booking",
       "domain": "guest-stays",
-      "file": "docs/product/domains/guest-stays/rules/booking/no-double-booking.md",
+      "file": "docket/domains/guest-stays/rules/booking/no-double-booking.md",
       "name": "A room can't be double-booked",
       "capabilities": [
         "capability:room-booking",
@@ -540,7 +540,7 @@
     {
       "id": "minimum-stay",
       "domain": "guest-stays",
-      "file": "docs/product/domains/guest-stays/rules/booking/minimum-stay.md",
+      "file": "docket/domains/guest-stays/rules/booking/minimum-stay.md",
       "name": "A stay is at least one night",
       "capabilities": [
         "capability:room-booking",
@@ -571,7 +571,7 @@
     {
       "id": "same-day-turnover",
       "domain": "guest-stays",
-      "file": "docs/product/domains/guest-stays/rules/booking/same-day-turnover.md",
+      "file": "docket/domains/guest-stays/rules/booking/same-day-turnover.md",
       "name": "A stay can start on the day another ends",
       "capabilities": [
         "capability:room-booking"
@@ -596,7 +596,7 @@
     {
       "id": "free-cancellation-window",
       "domain": "guest-stays",
-      "file": "docs/product/domains/guest-stays/rules/cancellations/free-cancellation-window.md",
+      "file": "docket/domains/guest-stays/rules/cancellations/free-cancellation-window.md",
       "name": "Cancelling 48 hours ahead is free",
       "capabilities": [
         "capability:cancellations"
@@ -631,7 +631,7 @@
     {
       "id": "late-cancellation-fee",
       "domain": "guest-stays",
-      "file": "docs/product/domains/guest-stays/rules/cancellations/late-cancellation-fee.md",
+      "file": "docket/domains/guest-stays/rules/cancellations/late-cancellation-fee.md",
       "name": "A late cancellation costs the first night",
       "capabilities": [
         "capability:cancellations"
@@ -651,7 +651,7 @@
     {
       "id": "booking",
       "domain": "guest-stays",
-      "file": "docs/product/domains/guest-stays/concepts/booking.md",
+      "file": "docket/domains/guest-stays/concepts/booking.md",
       "name": "Booking",
       "description": "A guest's hold on one room for a stay, from a check-in date to a check-out date.",
       "capabilities": [
@@ -674,7 +674,7 @@
     {
       "id": "room",
       "domain": "guest-stays",
-      "file": "docs/product/domains/guest-stays/concepts/room.md",
+      "file": "docket/domains/guest-stays/concepts/room.md",
       "name": "Room",
       "description": "A room guests can stay in, known by its number.",
       "capabilities": [
@@ -694,7 +694,7 @@
   "mechanisms": [
     {
       "id": "deployment",
-      "file": "docs/technical/mechanisms/deployment.md",
+      "file": "docket/mechanisms/deployment.md",
       "name": "Deployment",
       "description": "How a change gets from the main branch to the hotel's server, and back off it again.",
       "applies": "project",
@@ -746,7 +746,7 @@
   "components": [
     {
       "id": "bookings",
-      "file": "docs/technical/components/bookings.md",
+      "file": "docket/components/bookings.md",
       "name": "Bookings",
       "description": "Where a room is held for a stay, and where no double-booking is enforced.",
       "capabilities": [

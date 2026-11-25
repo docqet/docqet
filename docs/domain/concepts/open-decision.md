@@ -52,7 +52,7 @@ component in the first place.
 
 An open decision is an item in the `decisions` frontmatter field of the doc
 it's on, with its `question` and, optionally, a `topic` of a few words. On the
-[Guest stays domain](../../../spec/examples/hotel-bookings/docs/product/domains/guest-stays/domain.md):
+[Guest stays domain](../../../spec/examples/hotel-bookings/docket/domains/guest-stays/domain.md):
 
 ```yaml
 decisions:
@@ -62,7 +62,7 @@ decisions:
       their stay start that day, or is the night before part of it?
 ```
 
-On the [waitlist](../../../spec/examples/hotel-bookings/docs/product/domains/guest-stays/capabilities/waitlist.md),
+On the [waitlist](../../../spec/examples/hotel-bookings/docket/domains/guest-stays/capabilities/waitlist.md),
 a draft capability:
 
 ```yaml
