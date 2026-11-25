@@ -1,7 +1,21 @@
 import { type ReactNode } from "react";
-import { Markdown, type Go } from "./design/markdown/Markdown";
-import { LeftItem, LeftList } from "./design/left/LeftMark";
-import { conceptLinked, type Contribution, type Decision } from "./state";
+import { InlineMarkdown, Markdown, plainText, type Go } from "./design/markdown/Markdown";
+import { LeftItem, LeftList, LeftMark } from "./design/left/LeftMark";
+import { GapRiskMark } from "./design/risk/RiskScore";
+import { STABILITY } from "./design/stability/stability";
+import { docHref, type DocKind } from "./routes";
+import {
+  affectedBy,
+  conceptLinked,
+  riskOf,
+  subjectOf,
+  type Affected,
+  type Contribution,
+  type Decision,
+  type DocketState,
+  type HeldDecision,
+  type Tradeoff,
+} from "./state";
 
 /*
  * What a doc says, as the spec splits it: its frontmatter fields, which have a
@@ -16,7 +30,12 @@ export function Text({ from, text, go }: { from: Contribution; text: string; go:
   return <Markdown text={text} from={from} go={go} className="markdown-field" />;
 }
 
-/* Open decisions, each its question under its topic. A decision has no risk: a question doesn't happen to anyone. */
+/*
+ * Open decisions, each its question under its topic, then what waits on its
+ * answer. A decision has no risk: a question doesn't happen to anyone. Where
+ * it affects gaps, the stakes are the riskiest of them: what's waiting on it,
+ * not a risk of its own.
+ */
 export function DecisionList({ from, decisions, go }: { from: Contribution; decisions: Decision[]; go: Go }) {
   return (
     <LeftList>
@@ -24,9 +43,114 @@ export function DecisionList({ from, decisions, go }: { from: Contribution; deci
         <LeftItem key={i} kind="decision">
           {d.topic ? <span className="decision-topic">{d.topic}</span> : null}
           <Text from={from} text={d.question} go={go} />
+          <DecisionAffects state={go.state} decision={d} />
         </LeftItem>
       ))}
     </LeftList>
+  );
+}
+
+/* What waits on a decision's answer, and, where that's gaps, the riskiest of their risks. */
+function DecisionAffects({ state, decision }: { state: DocketState; decision: Decision }) {
+  const affected = affectedBy(state, decision);
+  if (!affected.length) return null;
+  const riskiest = affected
+    .flatMap((a) => (a.kind === "gap" ? [riskOf(state, a.gap)] : []))
+    .filter((r) => r.score !== null)
+    .sort((a, b) => b.score! - a.score!)[0];
+  return (
+    <div className="gap-affects decision-affects">
+      <span className="gap-affects-label">Affects</span>
+      {affected.map((a, i) => (
+        <AffectedItem key={i} item={a} />
+      ))}
+      {riskiest ? (
+        <span className="gap-affect decision-stakes">
+          <span className="gap-affects-label">Stakes</span>
+          <GapRiskMark risk={riskiest} on={riskiest.on[0] ?? null} />
+        </span>
+      ) : null}
+    </div>
+  );
+}
+
+/* Where a tradeoff is shown: with what's decided, on the page of what it's on. */
+export const tradeoffHref = (t: Tradeoff) => {
+  const { type, id } = subjectOf(t);
+  return docHref(type as DocKind, id, "decided");
+};
+
+/*
+ * One thing a gap, tradeoff or decision affects, as a tag and what it is: a
+ * checklist outcome, with its quality and level; a rule; or a gap or
+ * tradeoff, by name, linked.
+ */
+export function AffectedItem({ item }: { item: Affected }) {
+  switch (item.kind) {
+    case "outcome":
+      return (
+        <span className="gap-affect">
+          <span className="explore-tag">
+            {item.quality.name} · {STABILITY[item.outcome.level].name}
+          </span>
+          {item.outcome.text}
+        </span>
+      );
+    case "rule":
+      return (
+        <span className="gap-affect">
+          <span className="explore-tag">Rule</span>
+          <a className="link" href={docHref("rule", item.rule.id)}>
+            {item.rule.name}
+          </a>
+        </span>
+      );
+    case "gap":
+      return (
+        <span className="gap-affect">
+          <span className="explore-tag">Gap</span>
+          <a className="link" href={docHref("gap", item.gap.id)}>
+            {plainText(item.gap.name)}
+          </a>
+        </span>
+      );
+    case "tradeoff":
+      return (
+        <span className="gap-affect">
+          <span className="explore-tag">Tradeoff</span>
+          <a className="link" href={tradeoffHref(item.tradeoff)}>
+            {plainText(item.tradeoff.name)}
+          </a>
+        </span>
+      );
+  }
+}
+
+/* Open decisions, as what a gap waits on or what reopened a tradeoff, one to a line. */
+export function HeldDecisions({ held }: { held: HeldDecision[] }) {
+  return (
+    <ul className="held-decisions">
+      {held.map((h, i) => (
+        <li key={i}>
+          <HeldDecisionLine held={h} />
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+/* An open decision, as what a gap waits on or what reopened a tradeoff: its question, and the doc it's held on, linked. */
+export function HeldDecisionLine({ held }: { held: HeldDecision }) {
+  return (
+    <span className="held-decision">
+      <LeftMark kind="decision" size={14} decorative />
+      <span className="held-decision-question">
+        <InlineMarkdown text={held.decision.question} />
+      </span>
+      <span className="held-decision-on">
+        on <a href={docHref(held.on.kind, held.on.doc.id, "left")}>{held.on.doc.name}</a>
+      </span>
+    </span>
   );
 }
 

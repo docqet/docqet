@@ -113,7 +113,7 @@ function Levels() {
         <div className="dp-levels">
           <article id="draft" className="dp-level">
             <h3 className="dp-level-draft">Draft</h3>
-            <p>Declared and not started. It has no level, so it promises nothing, claims nothing on the checklist, and counts toward no maturity or readiness.</p>
+            <p>Declared and not started. It has no level, so it makes no claims, on the checklist or anywhere else, and counts toward no maturity or readiness.</p>
           </article>
           {STABILITY_LEVEL_IDS.map((id) => {
             const level = STABILITY[id];
@@ -194,13 +194,13 @@ function Levels() {
       <Section id="exposure" title="Exposure" note={TERMS.exposure.means}>
         <p className="dp-note">
           Each gap has a risk on each capability it&rsquo;s on, from 0 to 100. A capability is exposed to its riskiest gap&rsquo;s share of the most it could
-          be: a certain, damaging gap reaching everyone that breaks its level&rsquo;s promise. Several capabilities, as in a feature, domain, project or what
+          be: a certain, damaging gap reaching everyone that breaks a claim its level makes. Several capabilities, as in a feature, domain, project or what
           serves a persona, count by their level, weighted as in maturity, so exposure on GA counts for most. Drafts don&rsquo;t count, and gaps with no impact
           rated add nothing. Only the riskiest gap on each capability counts, so closing a lesser one doesn&rsquo;t change it.
         </p>
         <p className="dp-note">
           It isn&rsquo;t stability: a level is declared, and exposure never changes it. Promoting a capability can raise its exposure, where its gaps break a
-          promise the new level makes.
+          claim the new level makes.
         </p>
         <h3 id="exposure-bands" className="dp-subhead">
           Bands

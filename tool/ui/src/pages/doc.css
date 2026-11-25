@@ -609,14 +609,19 @@
   min-width: 0;
 }
 
-.dp-risk-promise {
+.dp-risk-claims {
+  display: grid;
+  gap: 4px;
+}
+
+.dp-risk-claim {
   margin: 0;
   font-size: 13.5px;
   line-height: 1.5;
   color: var(--muted);
 }
 
-.dp-risk-promise[data-breaks] {
+.dp-risk-claim[data-breaks] {
   color: var(--warning);
 }
 

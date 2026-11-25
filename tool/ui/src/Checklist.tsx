@@ -7,6 +7,7 @@ import { DetailsCard, DetailsEyebrow, DetailsPopover, NoPopovers } from "./desig
 import { STABILITY, STABILITY_LEVEL_IDS } from "./design/stability/stability";
 import { StabilityMark } from "./design/stability/StabilityMark";
 import { LEFT_KINDS, LeftLabel, gapKind } from "./design/left/LeftMark";
+import { InlineMarkdown } from "./design/markdown/Markdown";
 import { StandingMark, type Standing } from "./design/standing/StandingMark";
 import { TechnicalLink, levelName, plural } from "./Explore";
 import {
@@ -30,9 +31,11 @@ import {
  * judge by, never to follow step by step.
  *
  * On a capability's page it opens at the capability's level. Each outcome
- * that level expects is not met where a gap names it, on the capability or on
- * what it's built on; met with evidence where a mechanism or component it's
- * built on says it meets it; and otherwise met on the level's word. Other
+ * that level expects is not met where a gap affects it, on the capability or
+ * on what it's built on; not met by choice where a tradeoff does; open where
+ * an open decision there is on whether to meet it; met with evidence where a
+ * mechanism or component it's built on says it meets it; and otherwise met
+ * on the level's word. Other
  * levels show what came before and what's next. A draft claims none.
  */
 
@@ -85,6 +88,7 @@ export function StabilityChecklist({ state, checklist, capability }: { state: Do
   const expected = sections.flatMap((s) => s.expected);
   const unmet = sections.filter((s) => s.expected.some((o) => standing(o) === "gap")).map((s) => s.quality.name);
   const byChoice = expected.filter((o) => standing(o) === "tradeoff").length;
+  const open = expected.filter((o) => standing(o) === "open").length;
   const name = STABILITY[level].name;
 
   return (
@@ -132,8 +136,9 @@ export function StabilityChecklist({ state, checklist, capability }: { state: Do
                 {expected.filter((o) => isMet(standing(o))).length} of {expected.length} {name} outcomes met
               </strong>
               {unmet.length ? ` · Not met in ${unmet.join(", ")}` : null}
-              {byChoice ? ` · ${byChoice} not met by choice` : null}. {expected.filter((o) => standing(o) === "evidence").length} with evidence from what
-              it's built on; anything a gap or tradeoff doesn't name counts as met.
+              {byChoice ? ` · ${byChoice} not met by choice` : null}
+              {open ? ` · ${open} open` : null}. {expected.filter((o) => standing(o) === "evidence").length} with evidence from what it's built on;
+              anything a gap, tradeoff or open decision doesn't name counts as met.
             </>
           ) : STABILITY_LEVEL_IDS.indexOf(level) > STABILITY_LEVEL_IDS.indexOf(own) ? (
             <>
@@ -214,7 +219,17 @@ export function StabilityChecklist({ state, checklist, capability }: { state: Do
                             {t.name}
                           </p>
                         ))}
-                        {appliesAt(o, own) && !of(o).gaps.length && !of(o).tradeoffs.length && of(o).by.length ? (
+                        {of(o).decisions.map((d, i) => (
+                          <p key={i} className="sc-gap" data-kind="decision">
+                            <span className="explore-gap-kind">
+                              <LeftLabel kind="decision" size={13}>
+                                Open
+                              </LeftLabel>
+                            </span>
+                            <InlineMarkdown text={d.question} />
+                          </p>
+                        ))}
+                        {appliesAt(o, own) && !of(o).gaps.length && !of(o).tradeoffs.length && !of(o).decisions.length && of(o).by.length ? (
                           <div className="sc-met-by">
                             <span className="sc-met-by-label">Met by</span>
                             {of(o).by.map((e) => (
@@ -253,10 +268,11 @@ const STANDING_LABELS: Record<Standing, string> = {
   trust: "Met, on its level's word",
   gap: "Not met",
   tradeoff: "Not met, by choice",
+  open: "Open: a decision on whether to meet it",
   "not-expected": "Not expected at its level",
 };
 
-/* Whether an outcome is met for this capability, with evidence or on trust, named by a gap or a tradeoff, or not expected at its level. */
+/* Whether an outcome is met for this capability, with evidence or on trust, named by a gap, a tradeoff or an open decision, or not expected at its level. */
 function StandingIcon({ standing }: { standing: Standing }) {
   return <StandingMark standing={standing} label={STANDING_LABELS[standing]} />;
 }

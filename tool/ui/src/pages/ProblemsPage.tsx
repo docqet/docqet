@@ -59,7 +59,7 @@ const TYPES: Record<string, { name: string; note: string }> = {
   "invalid-frontmatter": { name: "Invalid fields", note: "A required field is missing, or a value isn't allowed, such as a link of the wrong type." },
   "broken-link": { name: "Broken links", note: "A relative link in a doc's body or a text value doesn't resolve." },
   "unlinked-rule": { name: "Rules nothing follows", note: "No capability follows the rule." },
-  "unknown-outcome": { name: "Unknown outcomes", note: "A gap's or tradeoff's outcome, or one a mechanism or component says it meets, isn't in the checklist." },
+  "unknown-outcome": { name: "Unknown outcomes", note: "An outcome that a gap, tradeoff or decision affects, or that a mechanism or component says it meets, isn't in the checklist." },
 };
 
 /* Contradictions, and the problems that are contradictions too, before the rest. */

@@ -145,31 +145,33 @@ decisions and tradeoffs.
 - **Gaps** are listed one line each, by name, grouped by impact, worst first,
   with the milder impacts folded. A gap's page has its name, what it's in, and
   its risk profile, a section of its own: its risk, how it's worked out from
-  its impact, likelihood, reach and stability, whether it breaks a promise
-  and why, and its score on each capability it's on. Then its links: the rule
-  or checklist outcome it falls short of, what it shows on, and where the
-  code marks it.
+  its impact, likelihood, reach and stability, whether it breaks a claim
+  and why, and its score on each capability it's on. Then its links: the
+  rules and checklist outcomes it affects, the open decisions it waits on,
+  what it shows on, and where the code marks it.
 - **What's left** is the open decisions and the gaps, and nothing else:
   missing evidence is never something left to do. Counts of it show the gap
   and decision marks with how many, and the worst impact. Its page is for
   everything showing, or for one project, persona, domain, feature or
   capability, chosen at the top right, with each gap scored on that one's
   capabilities. Its tiles are the gaps, with their risk spread and how many
-  there are at each risk, and the open decisions. Gaps are a table showing
+  there are at each risk, and the open decisions, each with what it affects
+  and the risk of the riskiest gap waiting on it. Gaps are a table showing
   each one's risk, which opens how it's worked out, its impact, likelihood,
   reach, the stability of the capability it scores highest on, its kind, and
-  whether it breaks a promise. Impact, likelihood and reach are tags, each
+  whether it breaks a claim. Impact, likelihood and reach are tags, each
   value in its color, the same in the table, the filters and their popovers. Each of those is a filter, with counts given
   the others, and the gaps can be ordered by risk or grouped by any of them,
   or by what they're on, riskiest first within each. All of it is in the
   address.
 - **Tradeoffs** are listed by what they're on, with no risk, since each is
   chosen. Opening one shows its drawback, its benefit where one is written
-  down, and the checklist outcome it falls short of on purpose.
+  down, the checklist outcomes it falls short of on purpose, and any open
+  decision that reopens it.
 - **Drafts** show as the word Draft, with no mark, and count toward no
   maturity or readiness.
-- **The checklist** marks each outcome not met, not met by choice (a tradeoff
-  names it), met with evidence (a mechanism or component the capability is
+- **The checklist** marks each outcome not met (a gap affects it), not met by
+  choice (a tradeoff affects it), open (a decision affects it), met with evidence (a mechanism or component the capability is
   built on meets it), or met on its level's word.
 
 `npm run build` writes a static site to `dist/`. Put a `state.json` beside its

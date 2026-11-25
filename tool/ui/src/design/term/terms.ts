@@ -139,8 +139,8 @@ export const TERMS: Record<TermId, TermEntry> = {
   risk: {
     name: "Risk",
     means:
-      "What's at stake in leaving a gap open, from 0 to 100: what it could do, its impact times how likely it is and how many it reaches, weighed by how much people rely on each capability it's on, from its stability, and higher where it breaks the promise that level makes. Its verdict says whether that's acceptable (under 33), tolerable (33 to 66) or unacceptable (67 and up).",
-    more: "A certain damaging gap reaching everyone that breaks a promise on a GA capability is 100. Only possible, it's 76, still unacceptable; on a Beta capability, where it breaks no promise, 48, tolerable.",
+      "What's at stake in leaving a gap open, from 0 to 100: what it could do, its impact times how likely it is and how many it reaches, weighed by how much people rely on each capability it's on, from its stability, and higher where it breaks a claim that level makes, the more so the higher the level. Its verdict says whether that's acceptable (under 33), tolerable (33 to 66) or unacceptable (67 and up).",
+    more: "A certain damaging gap reaching everyone that breaks a claim on a GA capability is 100. Only possible, it's 76, still unacceptable; on a Beta capability, where it breaks no claim, 48, tolerable.",
   },
   spread: {
     name: "Spread",
@@ -152,7 +152,7 @@ export const TERMS: Record<TermId, TermEntry> = {
     name: "Exposure",
     means:
       "What the gaps still open on a feature, domain, project or what serves a persona put at stake together: how close its capabilities are to the worst their levels allow, as a percentage, in one of four bands: low, minor, moderate or high. It's to risk what maturity is to stability.",
-    more: "Each capability is exposed to its riskiest gap's share of the most it could be, a certain damaging gap reaching everyone that breaks its level's promise, and each counts by its level, GA most, as in maturity. Drafts don't count. Readiness is maturity less exposure.",
+    more: "Each capability is exposed to its riskiest gap's share of the most it could be, a certain damaging gap reaching everyone that breaks a claim its level makes, and each counts by its level, GA most, as in maturity. Drafts don't count. Readiness is maturity less exposure.",
   },
   evidence: {
     name: "Evidence",

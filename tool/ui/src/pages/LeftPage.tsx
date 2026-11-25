@@ -39,7 +39,7 @@ import { GapInitiatives } from "../GapRows";
  * on the Decided page. It's for everything showing, or for one project,
  * persona, domain, feature or capability, each gap scored on that one's
  * capabilities. Gaps can be filtered by each part of the risk model, its
- * verdict, impact, likelihood, reach, stability and whether it breaks a promise,
+ * verdict, impact, likelihood, reach, stability and whether it breaks a claim,
  * and by kind, and ordered by any of them, riskiest first within each. All of
  * it is in the address, so a view can be linked to.
  */
@@ -150,8 +150,8 @@ function valueName(part: PartId, value: string): string {
       return REACH_NAMES[value as keyof typeof REACH_NAMES].name;
     case "stability":
       return STABILITY[value as Level].name;
-    case "promise":
-      return value === "breaks" ? "Breaks a promise" : "Keeps its promises";
+    case "claim":
+      return value === "breaks" ? "Breaks a claim" : "Keeps its claims";
     case "kind":
       return value === "product" ? "Product" : "Technical";
   }
@@ -269,9 +269,9 @@ function FilterValue({ part, value }: { part: PartId; value: string }) {
       </span>
     );
   if (part === "impact" || part === "likelihood" || part === "reach") return <PartTag part={part} value={value === "none" ? null : value} />;
-  if (part === "promise")
+  if (part === "claim")
     return (
-      <span className="lf-promise-value" data-breaks={value === "breaks" || undefined}>
+      <span className="lf-claim-value" data-breaks={value === "breaks" || undefined}>
         {valueName(part, value)}
       </span>
     );
@@ -336,7 +336,7 @@ function GapGroup({ head, state, rows, here }: { head: ReactNode; state: DocketS
 /*
  * Gaps as a table: each one's risk there, opening how it's worked out, its
  * impact, likelihood and reach, the stability of the capability it scores
- * highest on, its kind and name, whether it breaks a promise, and what it's
+ * highest on, its kind and name, whether it breaks a claim, and what it's
  * on. The first `first`, then the rest on asking.
  */
 function GapTable({ state, rows, first, here }: { state: DocketState; rows: GapRow[]; first: number; here?: string }) {
@@ -392,7 +392,7 @@ function GapLine({ state, row: r, here }: { state: DocketState; row: GapRow; her
         </Tip>
         <span className="lf-gap-tags">
           <span>{r.kind === "technical" ? "Technical" : "Product"}</span>
-          {r.promise ? <span className="lf-promise">Breaks a promise</span> : null}
+          {r.claim ? <span className="lf-claim">Breaks a claim</span> : null}
         </span>
       </span>
       <span role="cell" className="lf-on">

@@ -20,14 +20,14 @@ import { ExposureMark, GapRiskMark, VERDICT_NAMES } from "./design/risk/RiskScor
 import { RiskWorkings } from "./design/risk/RiskWorkings";
 import { Term } from "./design/term/Term";
 import { InlineMarkdown, MoreAboutFold } from "./design/markdown/Markdown";
-import { DecisionList, Facets, facets } from "./Fields";
+import { AffectedItem, DecisionList, Facets, HeldDecisions, facets } from "./Fields";
 import { DomainIcon } from "./FeatureMap";
 import { PersonaAvatar, PersonaIcon, personaNameAndRole } from "./Personas";
 import { ReadinessMark } from "./Readiness";
 import { ProjectIcon } from "./ProductFilter";
 import {
-  
-  checklistOutcome,
+  affectedBy,
+  decisionsAffecting,
   openDecisions,
   
   outcomeStanding,
@@ -58,6 +58,7 @@ import {
   type Contribution,
   type TechnicalDoc,
   type TechnicalKind,
+  type Tradeoff,
   type EvidencePlace,
   type Doc,
   type DocketState,
@@ -429,7 +430,7 @@ export function Places({ state, places, label, detailed = false }: { state: Dock
 /*
  * A gap, as an item in a LeftList: something we know falls short and mean to
  * close, with its mark, labelled product or technical. With `detailed`, it says what it affects (the
- * checklist outcome it falls short of, the rule it doesn't hold to yet, the
+ * checklist outcomes it falls short of, the rules it doesn't hold to yet, the
  * mechanism or component it's in) and where it shows in the code. `on`, for a
  * technical gap, is the mechanism or component it's on.
  */
@@ -449,8 +450,8 @@ export function GapItem({
   detailed?: boolean;
   newTab?: boolean;
 }) {
-  const named = detailed && gap.outcome ? checklistOutcome(state.checklist, gap.outcome) : undefined;
-  const rule = gap.rule ? find(state.rules, gap.rule) : undefined;
+  const affected = affectedBy(state, gap);
+  const rules = affected.flatMap((a) => (a.kind === "rule" ? [a.rule] : []));
   /* How many capabilities a technical gap shows on, beyond the one it's shown under. */
   const reach = on ? riskOf(state, gap).capabilities : 0;
   const reachText = reach > 1 ? ` · on ${reach} capabilities` : "";
@@ -465,23 +466,12 @@ export function GapItem({
           <div className="left-item-text">
             <InlineMarkdown text={gap.name} />
           </div>
-          {named || rule || on ? (
+          {affected.length || on ? (
             <div className="gap-affects">
               <span className="gap-affects-label">Affects</span>
-              {named ? (
-                <span className="gap-affect">
-                  <span className="explore-tag">
-                    {named.quality.name} · {STABILITY[named.outcome.level].name}
-                  </span>
-                  {named.outcome.text}
-                </span>
-              ) : null}
-              {rule ? (
-                <span className="gap-affect">
-                  <span className="explore-tag">Rule</span>
-                  {rule.name}
-                </span>
-              ) : null}
+              {affected.map((a, i) => (
+                <AffectedItem key={i} item={a} />
+              ))}
               {on ? (
                 <span className="gap-affect">
                   <span className="explore-tag">In</span>
@@ -511,7 +501,7 @@ export function GapItem({
             {reachText}
           </span>
         ) : null}
-        {rule ? <span>Doesn't yet hold to: {rule.name}</span> : null}
+        {rules.length ? <span>Doesn't yet hold to: {rules.map((r) => r.name).join(", ")}</span> : null}
         <Places state={state} places={gap.places} label="Marked" />
       </span>
     </LeftItem>
@@ -525,7 +515,7 @@ export const spreadText = (risk: Risk) => risk.spread.map((e) => `${riskScore(e.
  * A gap's risk, for a risk popover: its score and verdict, how
  * it's worked out where it scores highest, each part and what it
  * contributes, then each capability it shows on, highest score first, with
- * its level, whether it breaks that level's promise, and its score there.
+ * its level, whether it breaks a claim that level makes, and its score there.
  */
 export function RiskSpread({ risk }: { risk: Risk }) {
   const n = risk.on.length;
@@ -536,11 +526,11 @@ export function RiskSpread({ risk }: { risk: Risk }) {
       {n > 1 ? <div className="risk-workings-group risk-on-head">On each capability</div> : null}
       {n > 1 || !rated ? (
         <ul className="risk-on">
-          {risk.on.map(({ capability: c, promise, score }) => (
+          {risk.on.map(({ capability: c, claim, score }) => (
             <li key={c.id}>
               <span>
                 {c.name}
-                {promise ? <span className="risk-on-promise"> &middot; breaks its promise</span> : null}
+                {claim ? <span className="risk-on-claim"> &middot; breaks a claim</span> : null}
               </span>
               <span className="risk-on-right">
                 <CapabilityStability level={c.stability} name={c.name} focusable={false} />
@@ -595,19 +585,28 @@ function TradeoffSide({ side, text }: { side: "benefits" | "drawbacks"; text: st
   );
 }
 
-/* The checklist outcome a tradeoff falls short of on purpose, if it names one, as a gap shows what it affects. */
-function FallsShortOf({ state, outcome }: { state: DocketState; outcome: string | null }) {
-  const named = outcome ? checklistOutcome(state.checklist, outcome) : undefined;
-  if (!named) return null;
+/* The checklist outcomes a tradeoff falls short of on purpose, if it names any, as a gap shows what it affects. */
+function FallsShortOf({ state, tradeoff }: { state: DocketState; tradeoff: Tradeoff }) {
+  const affected = affectedBy(state, tradeoff);
+  if (!affected.length) return null;
   return (
     <div className="gap-affects">
       <span className="gap-affects-label">Falls short of</span>
-      <span className="gap-affect">
-        <span className="explore-tag">
-          {named.quality.name} · {STABILITY[named.outcome.level].name}
-        </span>
-        {named.outcome.text}
-      </span>
+      {affected.map((a, i) => (
+        <AffectedItem key={i} item={a} />
+      ))}
+    </div>
+  );
+}
+
+/* The open decisions that reopen a tradeoff, if any: once one is answered, the choice may change. */
+function ReopenedBy({ state, tradeoff }: { state: DocketState; tradeoff: Tradeoff }) {
+  const held = decisionsAffecting(state, tradeoff.id);
+  if (!held.length) return null;
+  return (
+    <div className="gap-affects tradeoff-reopened">
+      <span className="gap-affects-label">Reopened by</span>
+      <HeldDecisions held={held} />
     </div>
   );
 }
@@ -649,7 +648,8 @@ export function Tradeoffs({
             <TradeoffSide side="benefits" text={t.benefit} />
             <TradeoffSide side="drawbacks" text={t.drawback} />
           </div>
-          <FallsShortOf state={state} outcome={t.outcome} />
+          <FallsShortOf state={state} tradeoff={t} />
+          <ReopenedBy state={state} tradeoff={t} />
           <Places state={state} places={t.places} label="Marked" detailed />
         </LeftItem>
       ))}
@@ -746,9 +746,10 @@ export function WhatsLeft({
       {counts ? (
         <p className="explore-left-checklist">
           <span>
-            {counts.count - counts.notMet - counts.byChoice} of {counts.count} {levelName(capability.stability)} checklist outcomes met
+            {counts.count - counts.notMet - counts.byChoice - counts.open} of {counts.count} {levelName(capability.stability)} checklist outcomes met
             {counts.evidence ? `, ${counts.evidence} with evidence` : ""}
-            {counts.byChoice ? `, ${counts.byChoice} not met by choice` : ""}.
+            {counts.byChoice ? `, ${counts.byChoice} not met by choice` : ""}
+            {counts.open ? `, ${counts.open} open` : ""}.
           </span>
           {checklist}
         </p>
@@ -920,7 +921,8 @@ export function LeftRollup({
 
 /*
  * How many outcomes a capability's level expects, how many of those a gap
- * says aren't met, how many a tradeoff says aren't met by choice, and how many
+ * says aren't met, how many a tradeoff says aren't met by choice, how many an
+ * open decision leaves open, and how many
  * a mechanism or component it's built on says it meets; or null with no
  * checklist, or for a draft, which claims none. An outcome nothing names counts
  * as met on its level's word.
@@ -932,7 +934,7 @@ export function checklistCounts(state: DocketState, capability: Capability) {
     .map((o) => outcomeStanding(state, capability, o).standing)
     .filter((s) => s !== "not-expected");
   const n = (standing: string) => standings.filter((s) => s === standing).length;
-  return { count: standings.length, notMet: n("gap"), byChoice: n("tradeoff"), evidence: n("evidence") };
+  return { count: standings.length, notMet: n("gap"), byChoice: n("tradeoff"), open: n("open"), evidence: n("evidence") };
 }
 
 

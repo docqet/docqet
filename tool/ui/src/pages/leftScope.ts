@@ -119,7 +119,7 @@ export type GapRow = {
   likelihood: Likelihood;
   reach: Reach;
   level: Level | null;
-  promise: boolean;
+  claim: boolean;
 };
 
 /* The gaps that show on the scope's capabilities, each scored there, riskiest first. */
@@ -146,7 +146,7 @@ export function rowsFor(state: DocketState, scope: Scope): GapRow[] {
         likelihood: risk.likelihood,
         reach: risk.reach,
         level: on?.capability.stability ?? null,
-        promise: on?.promise ?? false,
+        claim: on?.claim ?? false,
       };
     })
     .sort((a, b) => (b.score ?? -1) - (a.score ?? -1) || (b.on?.weight ?? 0) - (a.on?.weight ?? 0));
@@ -173,7 +173,7 @@ export const PARTS = {
   likelihood: { label: "Likelihood", values: [...LIKELIHOODS] as string[], of: (r: GapRow) => r.likelihood },
   reach: { label: "Reach", values: [...REACHES] as string[], of: (r: GapRow) => r.reach },
   stability: { label: "Stability", values: [...[...STABILITY_LEVEL_IDS].reverse(), "none"] as string[], of: (r: GapRow) => r.level ?? "none" },
-  promise: { label: "Promise", values: ["breaks", "keeps"], of: (r: GapRow) => (r.promise ? "breaks" : "keeps") },
+  claim: { label: "Claim", values: ["breaks", "keeps"], of: (r: GapRow) => (r.claim ? "breaks" : "keeps") },
   kind: { label: "Kind", values: ["product", "technical"], of: (r: GapRow) => r.kind },
 } as const;
 

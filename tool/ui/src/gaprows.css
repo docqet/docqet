@@ -223,9 +223,31 @@
   color: var(--ok);
 }
 
+.tr-sides dt[data-side="reopened"] {
+  color: var(--accent);
+}
+
 .tr-sides dd {
   margin: 0;
   line-height: 1.5;
+}
+
+/* What was chosen, then, where an open decision has reopened it, a mark saying so, in a decision's color. */
+.tr-summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tr-summary .markdown-excerpt {
+  min-width: 0;
+}
+
+.tr-reopened {
+  flex: none;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--accent);
 }
 
 .tr-sides dd a {

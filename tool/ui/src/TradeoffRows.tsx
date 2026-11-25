@@ -1,19 +1,21 @@
 import BoltOutlinedIcon from "@mui/icons-material/BoltOutlined";
 import WidgetsOutlinedIcon from "@mui/icons-material/WidgetsOutlined";
-import type { ReactNode } from "react";
+import { Fragment, type ReactNode } from "react";
 import { Excerpt, InlineMarkdown } from "./design/markdown/Markdown";
 import { STABILITY } from "./design/stability/stability";
 import { sectionHref, docHref } from "./routes";
-import { checklistOutcome, find, subjectOf, technicalDoc, type DocketState, type Tradeoff } from "./state";
+import { HeldDecisions } from "./Fields";
+import { checklistOutcome, decisionsAffecting, find, outcomesAffected, subjectOf, technicalDoc, type DocketState, type Tradeoff } from "./state";
 import "./gaprows.css";
 
 /*
  * Tradeoffs, easy to take in however many there are, the way GapRows shows
  * gaps: one line each, what was chosen, in the order given. A tradeoff has no
  * risk, since it's chosen. A line opens in place to show the drawback, the
- * benefit where one is written down and the checklist outcome it falls short
- * of on purpose. What it's on is named unless that's the page it's
- * shown on (`here`).
+ * benefit where one is written down and the checklist outcomes it falls
+ * short of on purpose. One an open decision affects is reopened: it's marked
+ * so, and opens to the question. What it's on is named unless that's the
+ * page it's shown on (`here`).
  */
 export function TradeoffRows({ state, tradeoffs, here }: { state: DocketState; tradeoffs: Tradeoff[]; here?: { id: string } }) {
   return (
@@ -27,14 +29,16 @@ export function TradeoffRows({ state, tradeoffs, here }: { state: DocketState; t
 
 function TradeoffLine({ state, tradeoff: t, here }: { state: DocketState; tradeoff: Tradeoff; here?: { id: string } }) {
   const { type } = subjectOf(t);
-  const named = t.outcome ? checklistOutcome(state.checklist, t.outcome) : undefined;
+  const named = outcomesAffected(t).flatMap((id) => checklistOutcome(state.checklist, id) ?? []);
+  const reopened = decisionsAffecting(state, t.id);
   return (
     <li>
       <details className="tr-item">
         <summary className="gr-row tr-row">
           <span className="gr-kind">{type === "feature" ? "Non-goal" : type === "capability" ? "Limit" : "Technical"}</span>
-          <span className="gr-summary">
+          <span className="gr-summary tr-summary">
             <Excerpt text={t.name} lines={1} />
+            {reopened.length ? <span className="tr-reopened">Reopened</span> : null}
           </span>
           <span className="gr-on">{onLink(state, t, here)}</span>
         </summary>
@@ -55,14 +59,22 @@ function TradeoffLine({ state, tradeoff: t, here }: { state: DocketState; tradeo
                 </dd>
               </>
             ) : null}
-            {named ? (
-              <>
+            {named.map((n) => (
+              <Fragment key={n.outcome.id}>
                 <dt>Falls short of</dt>
                 <dd>
-                  &ldquo;{named.outcome.text}&rdquo;{" "}
-                  <a href={`${sectionHref("glossary", { tab: "checklist" })}#${named.quality.id}`}>
-                    {named.quality.name} &middot; {STABILITY[named.outcome.level].name}
+                  &ldquo;{n.outcome.text}&rdquo;{" "}
+                  <a href={`${sectionHref("glossary", { tab: "checklist" })}#${n.quality.id}`}>
+                    {n.quality.name} &middot; {STABILITY[n.outcome.level].name}
                   </a>
+                </dd>
+              </Fragment>
+            ))}
+            {reopened.length ? (
+              <>
+                <dt data-side="reopened">Reopened by</dt>
+                <dd>
+                  <HeldDecisions held={reopened} />
                 </dd>
               </>
             ) : null}

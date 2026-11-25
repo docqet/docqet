@@ -9,12 +9,14 @@ import { Tip } from "../Tip";
  * outcome or a rule a capability follows. Not held, when a gap names it;
  * held with evidence, when something points at it; held on trust, when
  * nothing says either way, which is a lighter check, not a warning. An
- * outcome can also be not met by choice, when a tradeoff names it, or not
- * expected at a capability's level.
+ * outcome can also be not met by choice, when a tradeoff names it; open,
+ * when an open decision is on whether to meet it; or not expected at a
+ * capability's level.
  */
-export type Standing = "gap" | "tradeoff" | "evidence" | "trust" | "not-expected";
+export type Standing = "gap" | "tradeoff" | "open" | "evidence" | "trust" | "not-expected";
 
 const TradeoffIcon = LEFT_KINDS.tradeoff.Icon;
+const DecisionIcon = LEFT_KINDS.decision.Icon;
 
 export function StandingMark({ standing, label }: { standing: Standing; label: string }) {
   return (
@@ -28,6 +30,8 @@ export function StandingMark({ standing, label }: { standing: Standing; label: s
         <GapIcon sx={{ fontSize: 15 }} />
       ) : standing === "tradeoff" ? (
         <TradeoffIcon sx={{ fontSize: 15 }} />
+      ) : standing === "open" ? (
+        <DecisionIcon sx={{ fontSize: 15 }} />
       ) : (
         <RadioButtonUncheckedRoundedIcon sx={{ fontSize: 14 }} />
       )}

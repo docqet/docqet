@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import BoltOutlinedIcon from "@mui/icons-material/BoltOutlined";
 import CodeRoundedIcon from "@mui/icons-material/CodeRounded";
 import { TECHNICAL_NAMES } from "../Explore";
@@ -10,8 +10,11 @@ import { RiskWorkings } from "../design/risk/RiskWorkings";
 import { STABILITY } from "../design/stability/stability";
 import { docHref, sectionHref, type Route } from "../routes";
 import { View } from "../shell/layout";
+import { HeldDecisions } from "../Fields";
 import {
-  checklistOutcome,
+  affectedBy,
+  appliesAt,
+  decisionsAffecting,
   find,
   riskOf,
   riskScore,
@@ -29,9 +32,9 @@ import { InitiativeTags, initiativesOf } from "../Initiatives";
 /*
  * One gap's page. Its name comes first, as the heading, with what it's in
  * above it and what it says in full under it. Then its risk profile, its own
- * section: its risk, how it's worked out, whether it breaks a promise, and
- * its score on each capability it's on. Then only the links it has: the rule
- * or checklist outcome it falls short of, the open decision it waits on, and
+ * section: its risk, how it's worked out, which claims it breaks, and its
+ * score on each capability it's on. Then only the links it has: the rules and
+ * checklist outcomes it falls short of, the open decisions it waits on, and
  * where the code marks it.
  */
 export default function GapPage({ state, id }: { state: DocketState; id: string; route: Route }) {
@@ -46,8 +49,8 @@ const qualityHref = (quality: string) => `${sectionHref("glossary", { tab: "chec
 function GapView({ state, gap }: { state: DocketState; gap: Gap }) {
   const kind = gapKind(gap);
   const risk = riskOf(state, gap);
-  const rule = gap.rule ? find(state.rules, gap.rule) : undefined;
-  const named = gap.outcome ? checklistOutcome(state.checklist, gap.outcome) : undefined;
+  const affected = affectedBy(state, gap);
+  const waits = decisionsAffecting(state, gap.id);
 
   return (
     <View title={plainTitle(gap.name)}>
@@ -65,23 +68,32 @@ function GapView({ state, gap }: { state: DocketState; gap: Gap }) {
       <RiskProfile state={state} gap={gap} risk={risk} />
 
       <dl className="dp-links">
-        {rule ? (
-          <>
-            <dt>Doesn&rsquo;t hold to</dt>
-            <dd>
-              <a href={docHref("rule", rule.id)}>{rule.name}</a>
-            </dd>
-          </>
-        ) : null}
+        {affected.map((a) =>
+          a.kind === "rule" ? (
+            <Fragment key={a.rule.id}>
+              <dt>Doesn&rsquo;t hold to</dt>
+              <dd>
+                <a href={docHref("rule", a.rule.id)}>{a.rule.name}</a>
+              </dd>
+            </Fragment>
+          ) : a.kind === "outcome" ? (
+            <Fragment key={a.outcome.id}>
+              <dt>Falls short of</dt>
+              <dd className="dp-links-many">
+                <span>&ldquo;{a.outcome.text}&rdquo;</span>
+                <a className="dp-links-sub" href={qualityHref(a.quality.id)}>
+                  {a.quality.name} &middot; {STABILITY[a.outcome.level].name}
+                </a>
+              </dd>
+            </Fragment>
+          ) : null,
+        )}
 
-        {named ? (
+        {waits.length ? (
           <>
-            <dt>Falls short of</dt>
-            <dd className="dp-links-many">
-              <span>&ldquo;{named.outcome.text}&rdquo;</span>
-              <a className="dp-links-sub" href={qualityHref(named.quality.id)}>
-                {named.quality.name} &middot; {STABILITY[named.outcome.level].name}
-              </a>
+            <dt>Waits on</dt>
+            <dd>
+              <HeldDecisions held={waits} />
             </dd>
           </>
         ) : null}
@@ -103,22 +115,12 @@ function GapView({ state, gap }: { state: DocketState; gap: Gap }) {
  * A gap's risk profile, its own section: its risk and verdict, and what that
  * means; how it's worked out on the capability it scores highest on, each
  * part as its tag, opening what it means, with where it sits in its range
- * and what it contributes; whether it breaks a promise, and why; and, on
- * more than one capability, its score on each, highest first.
+ * and what it contributes; which claims it breaks, and why, or why it breaks
+ * none; and, on more than one capability, its score on each, highest first.
  */
 function RiskProfile({ state, gap, risk }: { state: DocketState; gap: Gap; risk: Risk }) {
   const top = risk.on[0];
-  const rule = gap.rule ? find(state.rules, gap.rule) : undefined;
-  const named = gap.outcome ? checklistOutcome(state.checklist, gap.outcome) : undefined;
-  const promise = rule
-    ? risk.promise
-      ? `It breaks a promise: a capability it's on follows “${rule.name}”, and it doesn't hold to it yet.`
-      : `It doesn't hold to “${rule.name}”, but no capability it's on with a level follows it, so it breaks no promise.`
-    : named
-      ? risk.promise
-        ? `It breaks a promise: ${STABILITY[named.outcome.level].name} expects “${named.outcome.text}”, and a capability it's on is at that level or above.`
-        : `It falls short of “${named.outcome.text}”, which no capability it's on is at ${STABILITY[named.outcome.level].name} yet to expect, so it breaks no promise.`
-      : "It names no rule or checklist outcome, so it breaks no promise.";
+  const claims = claimsOf(state, gap, risk);
   return (
     <section className="dp-risk" data-verdict={risk.verdict ?? "none"}>
       <h2 className="dp-risk-title">Risk</h2>
@@ -144,9 +146,13 @@ function RiskProfile({ state, gap, risk }: { state: DocketState; gap: Gap; risk:
         ) : (
           <p className="dp-faint">It isn't on any capability showing.</p>
         )}
-        <p className="dp-risk-promise" data-breaks={risk.promise || undefined}>
-          {promise}
-        </p>
+        <div className="dp-risk-claims">
+          {claims.map((c, i) => (
+            <p key={i} className="dp-risk-claim" data-breaks={c.breaks || undefined}>
+              {c.text}
+            </p>
+          ))}
+        </div>
       </div>
       {risk.on.length > 1 ? (
         <div className="dp-risk-on">
@@ -155,7 +161,7 @@ function RiskProfile({ state, gap, risk }: { state: DocketState; gap: Gap; risk:
             {risk.on.map((o) => (
               <li key={o.capability.id}>
                 <a href={docHref("capability", o.capability.id)}>{o.capability.name}</a>
-                {o.promise ? <span className="dp-risk-breaks">Breaks its promise</span> : null}
+                {o.claim ? <span className="dp-risk-breaks">Breaks a claim</span> : null}
                 <CapabilityStability level={o.capability.stability} name={o.capability.name} />
                 {risk.score !== null ? (
                   <span className="risk-on-score" data-verdict={verdictOf(o.score) ?? "none"}>
@@ -170,6 +176,45 @@ function RiskProfile({ state, gap, risk }: { state: DocketState; gap: Gap; risk:
     </section>
   );
 }
+
+/*
+ * For each rule and checklist outcome a gap affects, whether it breaks a
+ * claim, and why: a rule, where a capability it's on with a level follows
+ * it; an outcome, where a capability it's on is at a level that expects it.
+ * Affecting neither, it breaks none.
+ */
+function claimsOf(state: DocketState, gap: Gap, risk: Risk): { breaks: boolean; text: string }[] {
+  const started = risk.on.filter((o) => o.weight > 0).map((o) => o.capability);
+  const claims = affectedBy(state, gap).flatMap((a) => {
+    if (a.kind === "rule") {
+      const by = started.filter((c) => c.rules.includes(a.rule.id));
+      return [
+        by.length
+          ? { breaks: true, text: `It breaks a claim: ${names(by)} ${by.length === 1 ? "follows" : "follow"} “${a.rule.name}”, and it doesn't hold to it yet.` }
+          : { breaks: false, text: `It doesn't hold to “${a.rule.name}”, but no capability it's on with a level follows it, so it breaks no claim there.` },
+      ];
+    }
+    if (a.kind === "outcome") {
+      const level = STABILITY[a.outcome.level].name;
+      const by = started.filter((c) => appliesAt(a.outcome, c.stability));
+      return [
+        by.length
+          ? { breaks: true, text: `It breaks a claim: ${level} expects “${a.outcome.text}”, and ${names(by)} ${by.length === 1 ? "is" : "are"} at a level that does.` }
+          : { breaks: false, text: `It falls short of “${a.outcome.text}”, which ${level} expects, but no capability it's on is at a level that does, so it breaks no claim there.` },
+      ];
+    }
+    return [];
+  });
+  return claims.length ? claims : [{ breaks: false, text: "It affects no rule or checklist outcome, so it breaks no claim." }];
+}
+
+/* Capabilities by name: "A", "A and B", or, past three, how many. */
+const names = (capabilities: { name: string }[]) =>
+  capabilities.length > 3
+    ? `${capabilities.length} capabilities it's on`
+    : capabilities.length > 1
+      ? `${capabilities.slice(0, -1).map((c) => c.name).join(", ")} and ${capabilities[capabilities.length - 1].name}`
+      : capabilities[0].name;
 
 /* How long a description can be before it's cut to three lines, with a way to read all of it. */
 const CLAMP_FROM = 280;

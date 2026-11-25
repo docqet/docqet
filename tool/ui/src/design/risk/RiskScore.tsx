@@ -276,7 +276,7 @@ function ExposureDetails<T extends Gap>({ risk, exposure, of }: { risk: RiskAcro
         <DetailsWorkings>
           <div>
             Each capability is exposed to its riskiest gap&rsquo;s share of the most it could be: a certain, damaging gap reaching everyone that breaks
-            its level&rsquo;s promise.
+            a claim its level makes.
           </div>
           <div>
             Its {n} {n === 1 ? "capability" : "capabilities"} then count by their level, GA most, as in maturity. Drafts don&rsquo;t count

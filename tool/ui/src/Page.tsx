@@ -813,7 +813,7 @@ function CapabilityPage({ capability, route, ...go }: PageProps & { capability: 
   ];
   /* Older links to the checklist name it as a section, #checklist. */
   const tab = currentTab(!route.tab && window.location.hash === "#checklist" ? { ...route, tab: "stability" } : route, tabs);
-  const met = counts ? counts.count - counts.notMet - counts.byChoice : 0;
+  const met = counts ? counts.count - counts.notMet - counts.byChoice - counts.open : 0;
 
   return (
     <DocView title={capability.name} route={route}>
@@ -867,7 +867,7 @@ function CapabilityPage({ capability, route, ...go }: PageProps & { capability: 
               <Stat
                 label="Checklist" term="stability-checklist"
                 value={`${met} of ${counts.count}`}
-                note={`${levelName(level)} outcomes met${counts.byChoice ? `, ${counts.byChoice} not by choice` : ""}`}
+                note={`${levelName(level)} outcomes met${counts.byChoice ? `, ${counts.byChoice} not by choice` : ""}${counts.open ? `, ${counts.open} open` : ""}`}
                 tone={counts.notMet ? "warn" : "ok"}
                 href={tabHref("stability")}
               />

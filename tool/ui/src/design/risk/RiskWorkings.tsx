@@ -8,7 +8,8 @@ import { StabilityMark } from "../stability/StabilityMark";
  * How a risk is worked out, on one capability: each part, what it is and
  * the factor it contributes, in two groups, what the gap could do (impact,
  * likelihood, reach) and how much people rely on what it's in (level, and
- * whether it breaks that level's promise), then what they multiply to and
+ * whether it breaks a claim that level makes, which weighs more the higher
+ * the level), then what they multiply to and
  * where that falls on the 0 to 100 scale. Each part has a slider showing
  * where it sits in its range, from what adds least to risk on the left to
  * what adds most on the right.
@@ -101,16 +102,16 @@ export function RiskWorkings({ risk, on, interactive = false }: { risk: Risk; on
         label="Prototype, Alpha, Beta, GA"
       />
       <span className="risk-workings-factor">× {factor(on.weight)}</span>
-      <span className="risk-workings-label">Promise</span>
-      <span className="risk-workings-value">{on.promise ? "Breaks it" : "Keeps it"}</span>
-      <Slider stops={2} at={on.promise ? 1 : 0} label="Keeps it, breaks it" />
-      <span className="risk-workings-factor">× {on.promise ? "1.5" : "1"}</span>
+      <span className="risk-workings-label">Claims</span>
+      <span className="risk-workings-value">{on.claim ? "Breaks one" : "Keeps them"}</span>
+      <Slider stops={2} at={on.claim ? 1 : 0} label="Keeps them, breaks one" />
+      <span className="risk-workings-factor">× {String(on.claimFactor)}</span>
 
       {rated ? (
         <span className="risk-workings-total">
           <span className="risk-workings-total-line">
             <span className="risk-workings-sum">
-              {[on.impact, on.likelihood, on.reach, on.weight, on.promise ? 1.5 : 1].map(factor).join(" × ")} = {factor(on.raw)}
+              {[...[on.impact, on.likelihood, on.reach, on.weight].map(factor), String(on.claimFactor)].join(" × ")} = {factor(on.raw)}
             </span>
             <span className="risk-on-score" data-verdict={verdictOfScore(on.score)}>
               {on.score} of 100

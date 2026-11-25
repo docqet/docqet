@@ -189,7 +189,7 @@ a.lf-row-title:hover {
   margin-right: 0;
 }
 
-.lf-promise {
+.lf-claim {
   font-weight: 600;
   color: var(--warning);
 }
@@ -529,7 +529,7 @@ a.lf-row-title:hover {
   color: var(--faint);
 }
 
-.lf-gap-tags .lf-promise {
+.lf-gap-tags .lf-claim {
   color: var(--warning);
 }
 
@@ -741,7 +741,7 @@ a.lf-row-title:hover {
   color: var(--faint);
 }
 
-.lf-promise-value[data-breaks] {
+.lf-claim-value[data-breaks] {
   font-weight: 600;
   color: var(--warning);
 }

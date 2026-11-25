@@ -2893,6 +2893,59 @@ a.filter-toggle {
   flex-shrink: 0;
 }
 
+/* What waits on a decision's answer, under its question, and the stakes: the riskiest gap among them. */
+.decision-affects {
+  margin-top: 4px;
+}
+
+.decision-stakes {
+  align-items: center;
+}
+
+/* An open decision as what something waits on: its mark, its question, and the doc it's held on. */
+.held-decision {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 8px;
+  min-width: 0;
+}
+
+.held-decision .left-mark {
+  align-self: center;
+  color: var(--accent);
+}
+
+.held-decision-question {
+  min-width: 0;
+  color: var(--text);
+  font-weight: 400;
+}
+
+.held-decision-on {
+  font-size: 12.5px;
+  color: var(--muted);
+}
+
+.held-decision-on a {
+  color: var(--muted);
+  text-decoration: none;
+}
+
+.held-decision-on a:hover {
+  color: var(--accent);
+}
+
+/* A list of open decisions, each on its own line. */
+.held-decisions {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
 /*
  * A tradeoff, as on a detail page: what we chose, then its benefits and its
  * drawbacks side by side, each a list.
@@ -3423,6 +3476,11 @@ button.page-table-row:hover .page-table-name strong {
   color: var(--muted);
 }
 
+/* Open: a decision's color, since whether to meet it isn't settled. */
+.sc-standing[data-standing="open"] {
+  color: var(--accent);
+}
+
 .sc-standing[data-standing="not-expected"] {
   color: var(--faint);
 }
@@ -3648,6 +3706,12 @@ button.page-table-row:hover .page-table-name strong {
   background: color-mix(in srgb, var(--warning) 9%, transparent);
   border-left: 2px solid var(--warning);
   border-radius: 0 6px 6px 0;
+}
+
+/* An open decision on whether to meet it, in a decision's color. */
+.sc-gap[data-kind="decision"] {
+  background: color-mix(in srgb, var(--accent) 7%, transparent);
+  border-left-color: var(--accent);
 }
 
 @media (max-width: 640px) {
@@ -4818,7 +4882,7 @@ button.page-table-row:hover .page-table-name strong {
   font-variant-numeric: tabular-nums;
 }
 
-.risk-on-promise {
+.risk-on-claim {
   color: var(--muted);
   font-size: 0.92em;
 }
