@@ -217,7 +217,7 @@ left out, since the code already says it.
 - **They're in no domain.** They're written in the code's words, not a
   domain's.
 - **They're one across every project by ID**, as features are. A mechanism that
-  spans repositories has its whole picture in the one that owns it.
+  spans projects has its whole picture in the one that owns it.
 
 ## Where intention and reality differ
 

@@ -76,12 +76,14 @@ docket/                                  the docs, laid out as you like; this la
 frontmatter: its type in `docket`, its ID, and its domain, if it's in one (see
 [IDs](#ids)). A Markdown file is a Docket doc when its frontmatter has
 `docket`, wherever it is in the project, and every other file is left alone.
+A project is the folder with its `docket.yaml` (see [Config](#config)), so the
+layout above starts there.
 Files can be renamed, moved and put in folders of the author's own, and
 nothing breaks.
 
 The layout above is what we recommend, and what the examples use. A
-`docket/` folder at the root keeps the docs together, and apart from any other
-docs the repository has. It has no dot because people write it. `.docket/`,
+`docket/` folder beside `docket.yaml` keeps the docs together, and apart from
+any other docs the project has. It has no dot because people write it. `.docket/`,
 with a dot, holds only what tools write. Within `docket/`, a folder per type,
 and per domain, makes each doc easy to find. Group them differently where that
 suits the project better.

@@ -1,6 +1,9 @@
 # Bringing Docket to a repository
 
-A repository becomes a Docket project with a `docket.yaml` at its root:
+A folder becomes a Docket project with a `docket.yaml` in it. That's usually
+the repository's root. A repository holding several products, such as a
+monorepo, can have one in each product's folder instead, and each is a project
+of its own:
 
 ```yaml
 project:

@@ -17,15 +17,18 @@ would produce.
 
 ## In the spec
 
-Run at a repository's root:
+Run anywhere in a [project](project.md)'s folder, it indexes that project, the
+one whose `docket.yaml` is nearest above:
 
 ```sh
 docket index
 ```
 
-It reads `docket.yaml`, every Markdown file whose frontmatter has `docket`,
-wherever it is, and every file for annotations, and writes
-`.docket/state.json`, which is gitignored. Where a doc is tells it nothing:
+It reads `docket.yaml`, every Markdown file in the project whose frontmatter
+has `docket`, wherever it is, and every file in the project for annotations,
+leaving out folders inside it with a `docket.yaml` of their own. It writes
+`.docket/state.json` beside `docket.yaml`, which is gitignored. Where a doc is
+tells it nothing:
 
 ```text
 docket.yaml                    → the project's ID and name

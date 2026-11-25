@@ -51,9 +51,10 @@ in its header.
 
 ## Not to be confused with
 
-- [Project](project.md): one repository. A platform is one or more of them.
+- [Project](project.md): one source of state, such as a repository or a
+  package in one. A platform is one or more of them.
 - [Domain](domain.md): a part of the business and its language. A platform's
   projects work in domains, and a domain can be on several platforms, meaning
   something different on each.
 - [Mechanism](mechanism.md): how something works across a whole project, as a
-  technical doc says. A platform is a set of repositories, not a design.
+  technical doc says. A platform is a set of projects, not a design.

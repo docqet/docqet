@@ -1,23 +1,30 @@
 # Project
 
-A place where software is defined, and usually implemented: one repository,
-such as a GitHub repository, marked by a `docket.yaml` at its root that gives
-the project's ID and name. Its docs say what the software can do and the rules
-it follows, and its code and tests, when it has them, do it and prove it.
+A source of [state](state.md): a folder marked by a `docket.yaml` that gives
+the project's ID and name, with everything in it. It's where software is
+defined, and usually implemented. Its docs say what the software can do and
+the rules it follows, and its code and tests, when it has them, do it and
+prove it.
 
 ## Details
 
 Hotel Bookings is a project: the hotel's booking app, where guests' stays are
 booked, changed and checked in. Hotel Billing is another: the same hotel's
-billing service, in a repository of its own, where guests' bills are kept and
-paid.
+billing service, where guests' bills are kept and paid. They could be two
+repositories, or two folders in one.
 
 - **It's metadata, not a boundary.** It says where each part of the picture
   comes from, so you can see who said what and show only what some projects
   define. It doesn't decide what words mean, which is a
   [domain](domain.md)'s job, and it groups nothing for its own sake.
-- **Everything in its repository is its own**: every [doc](doc.md) and
-  [annotation](annotation.md).
+- **It isn't a repository.** A repository can hold one project, at its root,
+  or several, such as one per package of a monorepo, each in a folder with a
+  `docket.yaml` of its own. Each is indexed into a state of its own, and
+  shown, combined and sent to a server like a project in a repository of its
+  own.
+- **Everything in its folder is its own**: every [doc](doc.md) and
+  [annotation](annotation.md), except what's in a folder inside it with a
+  `docket.yaml` of its own, which is another project's.
 - **It works in one or more domains**, and contributes what it knows about
   each to the overall view. No project owns a domain, a feature or a
   capability. Docket puts every project's contributions together by ID. Hotel
@@ -25,9 +32,10 @@ paid.
   Finance. Both say something about check-out: bookings that clerks check
   guests out, billing that the guest's bill is settled as they go. Where they
   disagree, that's a [contradiction](contradiction.md).
-- **Moving docs between projects changes no product doc.** Splitting a service
-  out into a repository of its own makes a new project, but it creates,
-  removes or renames no domain, feature or capability.
+- **Moving docs between projects changes no product doc.** Giving a service a
+  `docket.yaml` of its own, or moving it to a repository of its own, makes a
+  new project, but it creates, removes or renames no domain, feature or
+  capability.
 - **It's part of one [platform](platform.md)**: the projects that make up one
   product together, shown and combined as one. Hotel Bookings and Hotel
   Billing are both on Hotel. A project that names no platform is a platform of
@@ -40,8 +48,8 @@ paid.
 
 ## In the spec
 
-[`docket.yaml`](../../../spec/examples/hotel-bookings/docket.yaml) at the
-repository root makes it a project:
+[`docket.yaml`](../../../spec/examples/hotel-bookings/docket.yaml) makes its
+folder a project, here the repository's root:
 
 ```yaml
 project:
@@ -73,6 +81,8 @@ summary:
 ## Not to be confused with
 
 - [Platform](platform.md): the projects that make up one product. A project is
-  one repository on it.
+  one source of state on it.
+- Repository: where the files are kept. A repository holds one project or
+  more, and a project is in one repository.
 - [Domain](domain.md): a part of the business and its language. A project
   works in domains, and several projects can work in the same one.

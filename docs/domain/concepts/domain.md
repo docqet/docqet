@@ -78,7 +78,7 @@ decisions:
 
 ## Not to be confused with
 
-- [Project](project.md): a repository. A project works in domains, but says
-  nothing about what words mean.
+- [Project](project.md): a source of state, such as a repository or a package
+  in one. A project works in domains, but says nothing about what words mean.
 - [Feature](feature.md): a job the product does. A domain is the part of the
   business whose language the job is described in.

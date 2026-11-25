@@ -51,7 +51,7 @@ the server are separate, since they aren't reads.
 
 | Command | What for | Kind |
 | --- | --- | --- |
-| [`docket init`](#docket-init) | Make a repository a Docket project | Setting up |
+| [`docket init`](#docket-init) | Make a folder a Docket project | Setting up |
 | [`docket kit`](#docket-kit) | Install or update the agent kit | Setting up |
 | [`docket index`](#docket-index) | Write the state for the working tree or a commit | Setting up |
 | [`docket check`](#docket-check) | Find problems in the docs, annotations and commit trailers | Read |
@@ -136,8 +136,10 @@ docket list gaps --remote --platform    # the whole platform as the server has i
 
 ### `docket init`
 
-Writes `docket.yaml`, asking for the project's ID and name, and the platform
-it's part of, or taking them as flags. It also adds `.docket/` to
+Writes `docket.yaml` in the current folder, making it a project: usually the
+repository's root, or a package's folder in a repository with several. It asks
+for the project's ID and name, and the platform it's part of, or takes them as
+flags. It also adds `.docket/` to
 `.gitignore`. It doesn't write any docs: the kit's `adopting.md` covers
 bringing Docket to existing code.
 
@@ -529,7 +531,7 @@ same whichever of these serves it.
 
 ### `docket ui`
 
-Serves the UI over this repository, as the [source flags](#where-a-read-comes-from)
+Serves the UI over this project, as the [source flags](#where-a-read-comes-from)
 choose, so anyone can see their branch the way the server will show it. It
 re-indexes as files change, so the page follows the working tree.
 
@@ -670,6 +672,9 @@ docket list decisions --platform hotel --initiative mvp
 - **No prompts unless it's run in a terminal.** Anything it would ask, it
   takes as a flag, and without one it fails with exit 2 and says which flag.
 - **`-C <dir>`** runs it in another directory, as git's does.
+- **It acts on one project**: the one whose `docket.yaml` is nearest above
+  the directory it's run in. In a repository with several projects, run it in
+  each one's folder, or point `-C` at it.
 - **References are written as everywhere else**: `<type>:<id>`, a rule or
   concept with `@<domain>`, a gap, tradeoff or decision with `#<key>`.
 - **Configuration** is `docket.yaml` for the project, `DOCKET_TOKEN` and
@@ -717,6 +722,3 @@ docket list decisions --platform hotel --initiative mvp
   Indexing every commit gives the finest history, and should be cheap, since
   indexing only reads docs and searches for annotations. If it isn't on a
   large repository, the head of each push and every commit's trailers would do.
-- **A repository with several projects.** `docket.yaml` is at the root, so a
-  repository is one project. A monorepo that's several products may need
-  more than one.
