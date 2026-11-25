@@ -19,18 +19,28 @@ project, whatever kind of software it is.
 
 Each outcome a capability's level expects is one of:
 
-- **Not met**: a gap names it, on the capability or on a mechanism or component
-  it relies on.
-- **Not met, by choice**: a [tradeoff](tradeoff.md) there names it instead.
+- **Not met**: a gap affects it, on the capability or on a mechanism or
+  component it relies on.
+- **Not met, by choice**: a [tradeoff](tradeoff.md) there affects it instead.
   We chose not to meet it, and the tradeoff says why. Ledger's balance, worked
   out every time it's asked for, falls short of "the work it does is bounded"
   on purpose.
+- **Open**: an [open decision](open-decision.md) there affects it: whether to
+  meet it, or whether it applies, isn't settled, so it's neither claimed nor
+  short. Hotel Bookings' deployment asks whether restoring the night before's
+  database is enough to undo a schema change, which leaves "recovering from a
+  bad release or a loss of data is known to work" open for check-out, at GA.
+  A gap there affects it too, and wins, so it shows as not met, with the
+  question beside it.
 - **Met, with evidence**: a [mechanism](mechanism.md) or [component](component.md)
   it relies on says it meets it, and that mechanism's [evidence](evidence.md) is
   the proof. Hotel Bookings' deployment meets "a bad release can be undone" for
   every capability it lists.
-- **Met, on trust**: nothing names it. Declaring a level claims what it
-  expects, except the gaps and tradeoffs written down.
+- **Met, on trust**: nothing affects it. Declaring a level claims what it
+  expects, except the gaps, tradeoffs and decisions written down.
+
+A gap wins over a tradeoff, a tradeoff over a decision, and all three over
+evidence.
 
 A draft claims none of it.
 
@@ -54,19 +64,27 @@ or changes it. An outcome, under its quality and level, shortened:
                 kinds: [web-app, http-api, background-job]
 ```
 
-Its full ID is `reliability/beta/undo-release`. A mechanism that meets it lists
+It's referred to as `outcome:reliability/beta/undo-release`: its quality,
+level and own ID. The level is part of it, so if the checklist moves an
+outcome to another level, every doc naming it shows a problem until someone
+looks at it again, since what it claims has changed. A mechanism that meets it lists
 it, as Hotel Bookings'
 [deployment](../../../spec/examples/hotel-bookings/docket/mechanisms/deployment.md)
 does:
 
 ```yaml
 meets:
-  - reliability/beta/undo-release
-  - observability/alpha/see-errors
+  - outcome:reliability/beta/undo-release
+  - outcome:observability/alpha/see-errors
 ```
 
-A gap that falls short of one names it, as
-`outcome: usability/beta/everyone` on room booking.
+A gap that falls short of one affects it, as room booking's calendar that
+needs a mouse does:
+
+```yaml
+affects:
+  - outcome:usability/beta/everyone
+```
 
 ## Not to be confused with
 

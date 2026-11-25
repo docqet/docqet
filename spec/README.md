@@ -220,6 +220,10 @@ name: Room booking
   `capability:room-booking#calendar-needs-a-mouse`,
   `feature:reservations#front-desk-bookings-only` or
   `component:ledger#balance-worked-out-on-read`.
+- **A [stability checklist](#stability-checklist) outcome's reference** is
+  `outcome:` and its quality, level and own ID: `outcome:usability/beta/everyone`.
+  The checklist is part of the spec, so it's the same in every project, and
+  it's in no domain.
 - **What an ID names depends on the type** (see [Domains](#domains)). A
   domain, feature, capability, persona, initiative, mechanism or component ID
   names one thing across every project. A rule or concept ID names one
@@ -367,7 +371,7 @@ The body column is a suggestion of what's worth writing, not a structure.
   [product](#config) serves. It's `project` when left out.
 - **`meets`** lists the [stability checklist](#stability-checklist) outcomes a
   mechanism or component meets for the capabilities it applies to, as
-  `<quality>/<level>/<id>`. Its evidence is the proof.
+  `outcome:<quality>/<level>/<id>`. Its evidence is the proof.
 - **`decisions`** lists the decisions on a domain, feature, capability,
   mechanism or component: questions about what's intended, including those that
   building it is meant to answer. A question goes on the doc it's about. Each
@@ -378,6 +382,8 @@ The body column is a suggestion of what's worth writing, not a structure.
   question. It stays on the decision's side: a decision on a domain, feature
   or capability becomes product docs, or their gaps or tradeoffs, and one on
   a mechanism or component becomes mechanisms or components, or theirs.
+  Optionally, its `affects` lists what's waiting on its answer (see
+  [Affects](#affects)).
 
 ```yaml
 decisions:
@@ -560,12 +566,13 @@ description: >-
   How a change gets from the main branch to the hotel's server, and back off
   it again.
 meets:
-  - reliability/beta/undo-release
-  - observability/alpha/see-errors
+  - outcome:reliability/beta/undo-release
+  - outcome:observability/alpha/see-errors
 gaps:
   - id: migrations-only-go-forward
     name: Migrations have no down step
-    outcome: reliability/ga/recovery
+    affects:
+      - outcome:reliability/ga/recovery
     impact: damaging
     likelihood: possible
     description: >-
@@ -618,8 +625,9 @@ feature                    → capabilities
 capability                 → personas, initiatives, rules, concepts
 rule                       → concepts
 concept                    → concepts                  (confused-with)
-gap                        → an outcome, a rule        (outcome, rule)
-tradeoff                   → an outcome                (outcome)
+gap                        → outcomes, rules           (affects)
+tradeoff                   → outcomes                  (affects)
+decision                   → outcomes, gaps, tradeoffs (affects)
 component                  → capabilities, outcomes    (meets)
 mechanism                  → outcomes                  (meets)
 annotation                 → rules, capabilities, mechanisms, components    (docket:verifies, docket:implements)
@@ -648,9 +656,10 @@ rule and the product:
   domain, like `rules/booking/`, but never one for a capability or a feature.
   The folders are for people and mean nothing to tools.
 - **Following a rule claims it holds.** For each capability that follows it,
-  a rule has a standing: not held, when one of the capability's gaps names it
-  in `rule`; held with evidence, when anything verifies or implements it; or
-  held on trust, when nothing names it. A gap wins over evidence.
+  a rule has a standing: not held, when one of the capability's gaps affects
+  it; held with evidence, when anything verifies or implements it; or
+  held on trust, when no gap affects it and nothing points at it. A gap wins
+  over evidence.
 
 Links in Markdown, in the body or in a frontmatter text value, are ordinary
 relative links, for readers. They're paths, so moving a file can break them,
@@ -682,8 +691,8 @@ capability's gap, and the technical doc explains the cause in How it works.
 
 A **gap** is something we intend to close. It has an `id`, a `name` saying in
 a few words what falls short, such as `Calendar needs a mouse`, a
-`description` of a sentence or two, and optionally the `outcome` or `rule` it
-falls short of, its `impact`, its `likelihood` and its `reach`. It doesn't say when or how it'll be closed:
+`description` of a sentence or two, and optionally the outcomes and rules it
+`affects`, its `impact`, its `likelihood` and its `reach`. It doesn't say when or how it'll be closed:
 Docket lists it so people know about it, and deciding that is up to them.
 A gap is what falls short in the thing itself, never what a level already
 says: relying on a capability at a lower level isn't one, and nor is being
@@ -698,7 +707,8 @@ can rely on.
 gaps:
   - id: calendar-needs-a-mouse
     name: Calendar needs a mouse
-    outcome: usability/beta/everyone
+    affects:
+      - outcome:usability/beta/everyone
     impact: blocking
     description: >-
       The room calendar can't be used from the keyboard, so clerks need a
@@ -756,19 +766,20 @@ gaps:
   | `some` | A real share of them, but not the usual case.      |
   | `few`  | A small group with a particular need or situation. |
 
-- **`outcome`** names the [stability checklist](#stability-checklist) outcome
-  it falls short of, as `<quality>/<level>/<id>`. Most gaps are limits on what
-  the capability does and match none.
-- **`rule`** names a rule the capability follows but doesn't hold to yet.
-  Readers show it on the rule too. A rule written before it's built is
-  followed with one of these on each capability that doesn't hold to it yet,
-  since following a rule otherwise claims it holds:
+- **`affects`** lists the claims it's the reason for not being true yet
+  (see [Affects](#affects)): a [stability checklist](#stability-checklist)
+  outcome it falls short of, or a rule the capability follows but doesn't
+  hold to yet. Most gaps are limits on what the capability does and affect
+  nothing. A rule written before it's built is followed with a gap affecting
+  it on each capability that doesn't hold to it yet, since following a rule
+  otherwise claims it holds:
 
 ```yaml
 gaps:
   - id: children-corrected-by-hand
     name: City tax charged for children
-    rule: rule:children-pay-no-city-tax
+    affects:
+      - rule:children-pay-no-city-tax
     impact: inconvenient
     description: >-
       Guests' ages aren't recorded, so city tax is added for every guest on a
@@ -785,10 +796,10 @@ give up or risk in return, each a sentence or two, and both what came with
 the choice. One tradeoff is one choice: when it has two drawbacks, its
 `drawback` says both. Readers show a tradeoff with no `benefit` as missing
 it, since a choice whose reason isn't written down can't be weighed against
-its drawback. A drawback that only bites in certain conditions says what they are. A tradeoff isn't rated and has no risk: someone weighed its drawback and chose to live with it. Optionally, its `outcome` names the
-[stability checklist](#stability-checklist) outcome it falls short of on
-purpose, as a gap's does, so the checklist shows it as not met by choice
-rather than met:
+its drawback. A drawback that only bites in certain conditions says what they are. A tradeoff isn't rated and has no risk: someone weighed its drawback and chose to live with it. Optionally, its `affects` lists the
+[stability checklist](#stability-checklist) outcomes it falls short of on
+purpose, so the checklist shows them as not met by choice rather than met
+(see [Affects](#affects)):
 
 ```yaml
 tradeoffs:
@@ -805,6 +816,58 @@ tradeoffs:
 A gap we decide never to close is deleted, and written as a tradeoff, with
 its drawback.
 
+### Affects
+
+The docs make claims by being written: declaring a level claims every
+outcome the [checklist](#stability-checklist) expects at it, and following a
+rule claims the rule holds. A gap, a tradeoff and an open decision are the
+three ways of saying "except here", and `affects` is how each says which
+claim, or which other item, it's about. What it means comes from what's
+doing the affecting:
+
+| `affects` → | An outcome | A rule | A gap | A tradeoff |
+| --- | --- | --- | --- | --- |
+| **Gap** | Not met yet | Not held yet | | |
+| **Tradeoff** | Not met, by choice | | | |
+| **Decision** | Open: neither claimed nor short | | Waits on it | Reopened |
+
+```yaml
+decisions:
+  - topic: Undoing a schema change
+    question: >-
+      Is restoring the night before's database enough to undo a release that
+      changed the schema, or does every migration need a down step?
+    affects:
+      - outcome:reliability/ga/recovery
+      - mechanism:deployment#migrations-only-go-forward
+```
+
+- **It's a list of references**: `outcome:<quality>/<level>/<id>`,
+  `rule:<id>`, with `@<domain>` for a rule in another domain, or a gap's or
+  tradeoff's ID. Any other target, such as a capability, a persona, or a
+  gap affecting a gap, is `invalid-frontmatter`: the doc an item is declared
+  on is already what it's about, and which gap to close first is for a task
+  tracker. A reference to something that doesn't exist is `unknown-id`, or
+  `unknown-outcome` for an outcome.
+- **A gap affecting a claim breaks it** where that claim is made: on each
+  capability it shows on whose level expects the outcome, or that follows the
+  rule. That raises its [risk](#risk) there.
+- **A tradeoff can't affect a rule.** A rule is a constraint of the business,
+  so not holding it can't be a choice: either the rule changes, or it's a gap.
+- **A decision has no risk of its own**, since a question doesn't happen to
+  anyone. A gap waiting on it keeps its own risk, and readers show a
+  decision with the riskiest gap waiting on it, so the questions with most at
+  stake can be asked first. A reopened tradeoff stays as it is, the current
+  choice, until the decision is answered.
+- **It stays on its side.** A product gap, tradeoff or decision affects
+  outcomes, rules and product gaps and tradeoffs; a technical one affects
+  outcomes and technical gaps and tradeoffs. Product docs never link to
+  technical docs.
+- **The link is held by what's deleted first.** Closing a gap, reversing a
+  tradeoff or answering a decision deletes it with its `affects`, and what it
+  affected goes back to how it was: an outcome to met, a gap or tradeoff to
+  waiting on nothing. Nothing links back to a question once it's answered.
+
 ## Stability levels
 
 Every capability that's been started is at one of four stability levels. The
@@ -814,7 +877,7 @@ on before they rely on it.
 A capability declared but not started is a **draft**, `stability: draft`, such
 as the [waitlist](examples/hotel-bookings/docket/domains/guest-stays/capabilities/waitlist.md)
 or [refunds](examples/hotel-billing/docket/domains/billing/capabilities/refunds.md).
-It isn't a level: it promises nothing, claims nothing on the checklist, and
+It isn't a level: it claims nothing, on the checklist or anywhere else, and
 counts toward no maturity or readiness. Readers show it as the word Draft,
 with no level's mark.
 
@@ -904,20 +967,26 @@ An entry without outcomes can still have `implementation` and
 
 How outcomes combine:
 
-- **An outcome that applies is met unless a gap or tradeoff names it.**
-  Declaring a level claims what that level expects, except the gaps and
-  tradeoffs written down, so only what isn't met is recorded. An outcome that doesn't apply, such as accessibility
+- **An outcome that applies is met unless a gap, tradeoff or decision
+  affects it.** Declaring a level claims what that level expects, except the
+  gaps, tradeoffs and decisions written down, so only what isn't met is
+  recorded. An outcome that doesn't apply, such as accessibility
   for an API with no screens, counts as met too.
 - **Each outcome a capability's level expects has a standing:** not met, when
-  a gap on the capability, or on a mechanism or component it relies on, names it;
-  not met by choice, when a tradeoff there names it; met with evidence, when a
-  mechanism or component it relies on `meets` it; or met on trust, when
-  nothing names it. A gap wins over a tradeoff, and both win over `meets`.
-- **An outcome's ID** is its quality, level and own ID, as
-  `<quality>/<level>/<id>`: `reliability/beta/data-kept`.
+  a gap on the capability, or on a mechanism or component it relies on,
+  affects it; not met by choice, when a tradeoff there affects it; open, when
+  an open decision there affects it; met with evidence, when a mechanism or
+  component it relies on `meets` it; or met on trust, when nothing affects
+  it. A gap wins over a tradeoff, a tradeoff over a decision, and all three
+  over `meets`.
+- **An outcome's reference** is `outcome:` and its quality, level and own ID:
+  `outcome:reliability/beta/data-kept`. Its level is in it, so moving an
+  outcome to another level changes its reference, and every doc naming it
+  shows as `unknown-outcome` until someone looks at it again: what it claims
+  has changed.
 - **A level includes every outcome the levels below it expect,** unless
   `until` names the last level an outcome applies to.
-  `compatibility/prototype/opt-in`, which keeps it to those who chose to try
+  `outcome:compatibility/prototype/opt-in`, which keeps it to those who chose to try
   it, applies through Alpha, and Beta's normal release replaces it.
 
 ## Features and maturity
@@ -1080,7 +1149,7 @@ readiness = maturity × (1 − exposure)
 ```
 
 Every gap lowers it, through the riskiest gap on each capability. Promoting
-a capability can lower it, where its gaps break a promise the new level
+a capability can lower it, where its gaps break a claim the new level
 makes.
 
 | Readiness of                | Counts                                 |
@@ -1120,14 +1189,16 @@ status at Prototype, so (60 × 4 + 60 × 4 + 35 × 3 + 100 × 6 + 15 × 2 + 15 �
 2) ÷ 21 ≈ 59% mature. Room booking's calendar needs a mouse (75% of the most
 it could be exposed to), cancellations refund late cancellations in full (100%),
 and the rest rely on the deployment, whose migrations have no down step
-(50% on check-out at GA, where it breaks a promise, and 33% on the others).
-Their exposure is (75 × 4 + 33 × 4 + 100 × 3 + 50 × 6 + 33 × 2 + 33 × 2) ÷ 21 ≈ 56%,
-so readiness is 59% × (1 − 56%) ≈ 26%, Partial. What's left:
+(50% on check-out at GA, where it breaks a claim, 40% on check-in at Beta,
+and 50% on the two at Prototype, where breaking a claim adds nothing).
+Their exposure is (75 × 4 + 40 × 4 + 100 × 3 + 50 × 6 + 50 × 2 + 50 × 2) ÷ 21 = 60%,
+so readiness is 59% × (1 − 60%) ≈ 24%, Partial. Late cancellations refunded
+in full scores 66 at Alpha, tolerable, so it lowers readiness but isn't left
+to do. What's left:
 
 ```text
 room booking    close capability:room-booking#calendar-needs-a-mouse
 cancellations   reach Beta, now Alpha
-                close capability:cancellations#late-cancellations-refunded-in-full
 check-out       close mechanism:deployment#migrations-only-go-forward
 group bookings  reach Beta, now Prototype
 room status     reach Beta, now Prototype
@@ -1154,7 +1225,7 @@ shows on, a gap scores what it could do, times how much people rely on what
 it's in:
 
 ```text
-impact step × likelihood × reach × level weight × 1.5 if it breaks that level's promise
+impact step × likelihood × reach × level weight × claim factor if it breaks a claim there
 ```
 
 1. **Its impact step**: `negligible` 1, `inconvenient` 2, `blocking` 3,
@@ -1166,13 +1237,17 @@ impact step × likelihood × reach × level weight × 1.5 if it breaks that leve
    [maturity](#how-maturity-is-worked-out): Prototype 2, Alpha 3, Beta 4,
    GA 6. It says how much people are entitled to rely on that capability,
    and how exposed they are to its gaps. A draft weighs 0.
-5. **Whether it breaks that level's promise**: it names a rule that
+5. **Whether it breaks a claim there**: it [affects](#affects) a rule that
    capability follows, or a checklist outcome that capability's level
-   expects, so that outcome shows as not met there. A draft makes no promise.
+   expects, so that outcome shows as not met there. If so, its score is
+   multiplied by that level's **claim factor**: Prototype 1, Alpha 1.125,
+   Beta 1.25, GA 1.5. A claim matters as much as people rely on it: nobody
+   relies on a Prototype's, which is opt-in and whose data may be fake,
+   while people have built on what GA says. A draft claims nothing.
 
 Each score is put on 0 to 100 by a log scale, from 2 (a certain negligible
 gap reaching all on a Prototype) to 36 (a certain damaging gap reaching all
-and breaking a promise on GA), rounded, and never below 0:
+and breaking a claim on GA), rounded, and never below 0:
 `100 × ln(raw ÷ 2) ÷ ln(18)`. A draft scores 0. A gap's risk is its highest score. A gap with no `impact` has no risk. Its **verdict** is
 the third its risk falls in: `acceptable` below 33, `tolerable` from 33, and
 `unacceptable` from 67. Its **spread** is how its scores spread: how many
@@ -1181,9 +1256,9 @@ spread, comparing the number of capabilities at each score from the
 highest down, then gaps with no impact.
 
 Hotel Bookings' deployment has `migrations-only-go-forward`, `damaging` and
-`possible`, reaching `all`, which names `reliability/ga/recovery`, an outcome
-only GA expects. Shown on its own, Hotel Bookings has check-out at GA, where
-it breaks that promise: 4 × ½ × 1 × 6 × 1.5 = 18, or 76. Deployment also
+`possible`, reaching `all`, which affects `outcome:reliability/ga/recovery`,
+an outcome only GA expects. Shown on its own, Hotel Bookings has check-out at
+GA, where it breaks that claim: 4 × ½ × 1 × 6 × 1.5 = 18, or 76. Deployment also
 serves room booking and check-in at Beta (48 each), cancellations at Alpha
 (38), and group bookings, room status, cleaning and the rate calendar at
 Prototype (24 each). Its risk is 76, `unacceptable`, and its spread
@@ -1192,7 +1267,7 @@ is Alpha, so its risk there is 48.
 
 The ledger's `corrections-of-corrections-untested` is `damaging`,
 `expected` and reaches `few`: 4 × ¾ × ¼ = 0.75 before its level. On extra
-charges at GA, where it breaks a promise, that's 6.75, or 42, `tolerable`;
+charges at GA, where it breaks a claim, that's 6.75, or 42, `tolerable`;
 on split bills at Prototype it's 1.5, below the least there is, so 0.
 
 Where several gaps are shown together, as for a capability, feature,
@@ -1201,7 +1276,9 @@ there, and readers show the highest risk and how many fall in each
 verdict.
 
 Tradeoffs and open decisions have no risk: a tradeoff is a drawback someone
-chose to live with, and a question doesn't happen to anyone.
+chose to live with, and a question doesn't happen to anyone. Readers show a
+decision with the risk of the riskiest gap waiting on it: deployment's
+question about undoing a schema change has 76 waiting on it.
 
 ### Exposure
 
@@ -1209,7 +1286,8 @@ For some capabilities, as of a feature, domain, project, persona or
 initiative, readers also work out their **exposure**: what the gaps still
 open on them put at stake together, from 0 to 100%. It's to risk what maturity is to stability.
 It isn't their stability, which is declared. The most a capability could be
-exposed to is 4 × its level weight × 1.5, and its exposure is its riskiest
+exposed to is a certain damaging gap reaching all that breaks a claim its
+level makes, 4 × its level weight × its claim factor, and its exposure is its riskiest
 gap's raw score ÷ that, its own or one on what it's built on. The exposure of
 several is the average of each started capability's, weighted by its level
 weight. Gaps with no `impact` add nothing; drafts don't count. Its band is
@@ -1218,10 +1296,10 @@ the quarter it falls in: `low` below 25%, `minor` from 25%,
 `moderate` while any gap is `unacceptable` on one of them. Readers draw
 it as maturity is, a ring, in its band's color.
 
-In Hotel Bookings, room booking at Beta is exposed to 75% of 24,
-cancellations at Alpha to 100% of 18, and group bookings at Prototype to 33%
-of 12, so Reservations' exposure is `(75% × 4 + 100% × 3 + 33% × 2) ÷ 9 ≈ 74%`,
-`moderate`.
+In Hotel Bookings, room booking at Beta is exposed to 75% of 20,
+cancellations at Alpha to 100% of 13.5, and group bookings at Prototype to 50%
+of 8, so Reservations' exposure is `(75% × 4 + 100% × 3 + 50% × 2) ÷ 9 ≈ 78%`,
+`high`.
 
 ## Evidence
 
@@ -1464,7 +1542,7 @@ and showing several projects together means reading each one's state.json.
 - **Fields are named in camel case**, as the rest of `state.json` is:
   `confused-with` is `confusedWith`. A field the doc leaves out is there
   anyway, as `[]` for a list and `null` otherwise, such as a rule's `why`
-  or a persona's `image`. Each decision is its `topic`, or `null`, and `question`. Each `confusedWith` is its
+  or a persona's `image`. Each decision is its `topic`, or `null`, its `question`, and its `affects`. Each `confusedWith` is its
   `concept` or `term`, the other `null`, and `summary`.
 - **`mechanisms`** and **`components`**: each with its ID, file, name,
   `description`, `capabilities`, `meets`, its `gaps` and
@@ -1481,12 +1559,12 @@ and showing several projects together means reading each one's state.json.
   [Annotations](annotations/#what-the-indexer-records) describes. Both are
   empty when it has none.
 - **`gaps`**: every gap from every doc, each with its ID, its `domain` when
-  it's a capability's, the `outcome` and `rule` it names or `null`, its
+  it's a capability's, the references it `affects` as written, its
   `impact`, `likelihood` and `reach` or `null`, its `name` and `description`, and `places`: where `docket:gap` annotations mark it, in the same
   shape as evidence.
 - **`tradeoffs`**: every tradeoff from every doc, each with its ID, its
-  `domain` when it's a feature's or capability's, the `outcome` it names or
-  `null`, `name`, `description`, `benefit`, or `null` where it has none, `drawback`, and
+  `domain` when it's a feature's or capability's, the outcomes it `affects`,
+  `name`, `description`, `benefit`, or `null` where it has none, `drawback`, and
   `places`, from `docket:tradeoff` annotations.
 - **`problems`**: everything the indexer found wrong, each about a doc with
   that doc's `domain`.
@@ -1495,7 +1573,7 @@ and showing several projects together means reading each one's state.json.
   `qualities`, each with its `levels` as a list in level order. Each level has
   its `level`, `summary` as `null` where it has none, and its `outcomes`,
   `implementation` and `overengineering`, each a list, empty where it has
-  none. Each outcome has its full `<quality>/<level>/<id>` ID, its `level`,
+  none. Each outcome has its reference, `outcome:<quality>/<level>/<id>`, as its ID, its `level`,
   `text`, `until` as `null` where it has none, and its own `implementation`
   and `overengineering`. Every example
   in either is its `text` and `kinds`, with `kinds` empty where it isn't
@@ -1505,7 +1583,7 @@ and showing several projects together means reading each one's state.json.
 
 | Type                  | Raised when                                                                                                      |
 | --------------------- | ---------------------------------------------------------------------------------------------------------------- |
-| `unknown-id`          | A link, annotation, `rule` or `domain` names a doc, gap or tradeoff that doesn't exist.                          |
+| `unknown-id`          | A link, annotation, `affects` or `domain` names a doc, gap or tradeoff that doesn't exist.                       |
 | `invalid-frontmatter` | A required field is missing, or a value isn't allowed, such as a link of the wrong type for its field, such as a `docket` that isn't a type, or a feature, capability, rule or concept with no `domain`. |
 | `duplicate-id`        | A project has two docs of one type with the same ID in one domain, or two domains, personas, initiatives, mechanisms or components with the same ID, or a doc has two gaps or tradeoffs with the same key across the projects and domains that write it. |
 | `broken-link`         | A relative link in a doc's body or a text value doesn't resolve.                                                 |
@@ -1513,7 +1591,7 @@ and showing several projects together means reading each one's state.json.
 | `in-two-features`     | More than one feature lists the same capability.                                                                 |
 | `contradiction`       | Contributions that should agree don't, as Domains describes.                                                     |
 | `invalid-annotation`  | An annotation names a rule without its domain.                                                                   |
-| `unknown-outcome`     | A gap's or tradeoff's `outcome`, or an entry in `meets`, isn't a checklist outcome.                              |
+| `unknown-outcome`     | An outcome in a gap's, tradeoff's or decision's `affects`, or in `meets`, isn't a checklist outcome.             |
 
 `in-two-features` is a contradiction too, when the listings
 are in different projects. Combining raises `contradiction` and
@@ -1523,12 +1601,12 @@ are in different projects. Combining raises `contradiction` and
 
 - **The stability checklist is fixed.** It becomes configurable once someone
   adopting Docket needs different outcomes.
-- **Met is mostly assumed.** An outcome counts as met unless a gap or tradeoff
-  names it.
+- **Met is mostly assumed.** An outcome counts as met unless a gap, tradeoff
+  or decision affects it.
   A mechanism or component that `meets` it adds evidence, but everything else is
   met on trust, so nothing says which outcomes someone actually looked at, and
   an outcome added to the checklist counts as met everywhere at once. A record
   of when someone last went through the list, and against which version of
   it, would show both. Outcomes not applicable, with why, and outcomes Docket
-  can work out itself, such as `functionality/alpha/main-path` from its rules'
+  can work out itself, such as `outcome:functionality/alpha/main-path` from its rules'
   evidence, would also make met mean more.

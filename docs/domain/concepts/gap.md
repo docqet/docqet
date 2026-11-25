@@ -23,14 +23,20 @@ When a gap has a visible effect and a technical cause, the effect is the
 product gap, and the technical doc's body explains the cause. It's never
 written as two gaps.
 
-- **It can name what it falls short of**: a
-  [stability checklist](stability-checklist.md) outcome, which then shows as
-  not met, or a [rule](rule.md) the capability doesn't hold to yet, which the
-  rule then shows. City tax is added for children, so it doesn't yet hold to
+- **It can say which claims it affects**: a
+  [stability checklist](stability-checklist.md) outcome it falls short of,
+  which then shows as not met, or a [rule](rule.md) the capability follows but
+  doesn't hold to yet, which the rule then shows. Declaring a level claims
+  what it expects, and following a rule claims it holds, so a gap affecting
+  one means people may be relying on something that isn't true yet, and its
+  [risk](risk.md) is higher where they are. City tax is added for children, so it doesn't yet hold to
   "children pay no city tax". When a gap is really about something that must
   always hold, and no rule says so, write the rule and name it: the rule is
-  what we intend, and the gap is the part not done yet. Several gaps can name
-  one rule, each a part of it.
+  what we intend, and the gap is the part not done yet. Several gaps can
+  affect one rule, each a part of it.
+- **It can wait on a decision.** When what's intended isn't settled, the
+  question is an [open decision](open-decision.md) that affects the gap, and
+  the gap can't be closed until it's answered.
 - **It says what's at stake**: its impact, how bad it is for those it
   reaches, from `negligible` to `damaging`; its likelihood, how likely it is
   to bite within a year, from `certain` to `unlikely`; and its reach, how many
@@ -68,15 +74,16 @@ drawback.
 
 Gaps are listed in the frontmatter of the doc they're on, each with an `id`
 unique in that doc, a `name` saying in a few words what falls short, a
-`description` of a sentence or two, and optionally the `outcome` or `rule` it
-falls short of, its `impact`, its `likelihood`, `certain` when left out, and
+`description` of a sentence or two, and optionally the outcomes and rules it
+`affects`, its `impact`, its `likelihood`, `certain` when left out, and
 its `reach`, `all` when left out. On [city tax](../../../spec/examples/hotel-billing/docket/domains/billing/capabilities/city-tax.md):
 
 ```yaml
 gaps:
   - id: children-corrected-by-hand
     name: City tax charged for children
-    rule: rule:children-pay-no-city-tax
+    affects:
+      - rule:children-pay-no-city-tax
     impact: inconvenient
     description: >-
       Guests' ages aren't recorded, so city tax is added for every guest on a
@@ -84,7 +91,7 @@ gaps:
 ```
 
 A technical gap on the [ledger](../../../spec/examples/hotel-billing/docket/components/ledger.md)
-names an outcome. It's `expected`, since someone is likely to change how
+affects an outcome. It's `expected`, since someone is likely to change how
 corrections work within a year, and reaches `few`, since only a
 twice-corrected charge is at stake:
 
@@ -92,7 +99,8 @@ twice-corrected charge is at stake:
 gaps:
   - id: corrections-of-corrections-untested
     name: Corrections of corrections untested
-    outcome: maintainability/ga/others-can-change
+    affects:
+      - outcome:maintainability/ga/others-can-change
     impact: damaging
     likelihood: expected
     reach: few

@@ -8,7 +8,8 @@ capabilities: [capability:room-booking, capability:group-bookings, capability:ch
 gaps:
   - id: clashes-logged-as-unknown
     name: Booking clashes logged as unknown errors
-    outcome: observability/beta/hears-of-errors
+    affects:
+      - outcome:observability/beta/hears-of-errors
     impact: inconvenient
     likelihood: possible
     description: >-

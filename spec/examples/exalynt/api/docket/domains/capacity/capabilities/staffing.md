@@ -41,7 +41,8 @@ concepts:
 gaps:
   - id: assignment-eligibility-unchecked
     name: Assignments not checked for eligibility
-    rule: rule:assignment-requires-eligibility
+    affects:
+      - rule:assignment-requires-eligibility
     impact: inconvenient
     likelihood: unlikely
     reach: few
@@ -51,7 +52,8 @@ gaps:
       block of a client their team doesn't support.
   - id: assignment-availability-unchecked
     name: Assignments not checked for availability
-    rule: rule:assignment-must-fit-availability
+    affects:
+      - rule:assignment-must-fit-availability
     impact: inconvenient
     likelihood: unlikely
     reach: few

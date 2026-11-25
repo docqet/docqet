@@ -8,7 +8,7 @@ description: >-
   How a provider plugs in is in the [provider boundary
   doc](../mechanisms/provider-boundary.md).
 capabilities: [capability:billing, capability:capacity-purchasing]
-meets: [reliability/beta/fails-clearly]
+meets: [outcome:reliability/beta/fails-clearly]
 tradeoffs:
   - id: provider-is-source-of-truth
     name: Payment provider is the source of truth

@@ -9,7 +9,8 @@ capabilities: [capability:deposits, capability:pay-by-link]
 gaps:
   - id: no-timeout-on-provider-calls
     name: No timeout on payment provider calls
-    outcome: reliability/beta/fails-clearly
+    affects:
+      - outcome:reliability/beta/fails-clearly
     impact: inconvenient
     likelihood: expected
     description: >-

@@ -472,11 +472,13 @@
       "decisions": [
         {
           "topic": null,
-          "question": "Is this the right way to choose notifications?"
+          "question": "Is this the right way to choose notifications?",
+          "affects": []
         },
         {
           "topic": null,
-          "question": "Which notifications do people want at all?"
+          "question": "Which notifications do people want at all?",
+          "affects": []
         }
       ],
       "body": "## Includes\n\n- Clients, engineers, admins and partners set up the channels their\n  notifications can go to, such as the verified email addresses on their\n  account.\n- Clients are notified when a payment fails, an invoice is issued, or an invited\n  member joins.",
@@ -590,7 +592,8 @@
       "decisions": [
         {
           "topic": "Keeping a closed organization's data",
-          "question": "How long is an organization's data kept after it closes?"
+          "question": "How long is an organization's data kept after it closes?",
+          "affects": []
         }
       ],
       "body": "## Includes\n\n- Clients log in.\n- The software gives a client an engineering team on signing up.\n- Clients accept an invitation to join an organization, signing up first if they\n  don't have an account yet.\n- Clients switch between the organizations they belong to, and create another.\n- Clients update the organization's details, and its billing information on the\n  payment provider's pages.\n- Clients see which partner referred the organization, by name, when one did.\n- Admins manage members, and give each one the Admin, Member, or Billing role.\n- Admins see the organization's pending invitations, with each one's email\n  address, role, and when it was sent.\n- Admins revoke a pending invitation.\n- Clients leave the organization.\n\n## Success\n\n- Not agreed with the client yet.",
@@ -753,7 +756,8 @@
       "decisions": [
         {
           "topic": "Changing shared definitions",
-          "question": "When a shared definition changes, how does that reach agreement versions that were already accepted?"
+          "question": "When a shared definition changes, how does that reach agreement versions that were already accepted?",
+          "affects": []
         }
       ],
       "body": "## Includes\n\n- Admins set the Commercial Terms of the Engineer Agreement when inviting\n  someone to the console.\n- Admins send an engineer a new Engineer Agreement on the terms chosen.\n- Admins send an Engineer Agreement with no terms, or no shares.\n- Admins see an engineer's Engineer Agreements, offered and accepted, and open\n  each accepted one as the PDF made when it was accepted.",
@@ -807,7 +811,8 @@
       "decisions": [
         {
           "topic": "Changing shared definitions",
-          "question": "When a shared definition changes, how does that reach agreement versions that were already accepted?"
+          "question": "When a shared definition changes, how does that reach agreement versions that were already accepted?",
+          "affects": []
         }
       ],
       "body": "## Includes\n\n- Members and Billing see that an Admin has to accept the Client Agreement\n  first, and switch to another organization meanwhile.\n- Everyone in the organization sees its accepted Client Agreements, who accepted\n  each and when, and opens each as the PDF made when it was accepted, to read,\n  print, or download.\n- Clients are told if another Admin accepted it while they were reading, or\n  their role changed so they no longer can, and see the organization as it is\n  now instead.\n\n## Success\n\n- Every organization working in the portal has a Client Agreement in effect,\n  accepted by one of its Admins without help, and everyone in it can open the\n  copy they accepted.",
@@ -861,7 +866,8 @@
       "decisions": [
         {
           "topic": "Changing shared definitions",
-          "question": "When a shared definition changes, how does that reach agreement versions that were already accepted?"
+          "question": "When a shared definition changes, how does that reach agreement versions that were already accepted?",
+          "affects": []
         }
       ],
       "body": "## Includes\n\n- Engineers see their accepted Engineer Agreements, which one is in effect, and\n  its terms, and open each accepted one as the PDF made when it was accepted, to\n  read, print, or download.\n- Engineers see a newer Engineer Agreement waiting for them, read it in full,\n  and accept it.\n- Engineers are told if the one they're accepting was replaced or already\n  accepted while they read it, and read what's waiting now instead.\n\n## Success\n\n- Every engineer working in the console has an Engineer Agreement in effect,\n  reads and accepts a new one without help, and is paid by the terms they\n  accepted.",
@@ -990,7 +996,8 @@
       "decisions": [
         {
           "topic": null,
-          "question": "Is a coupon for one client, taken off each block's price, forever or once, the shape Exalynt needs?"
+          "question": "Is a coupon for one client, taken off each block's price, forever or once, the shape Exalynt needs?",
+          "affects": []
         }
       ],
       "body": "## Includes\n\n- Admins end a coupon, and see a client's coupons, active, used up, and ended.\n- Admins see where each coupon was used, and what it took off.",
@@ -1083,15 +1090,18 @@
       "decisions": [
         {
           "topic": "Buying without a call",
-          "question": "The site says blocks are \"bought after a call, not from a card\", but clients can purchase in the app. Does a client's first block, or every block, follow a call? A client can buy before it has a team, and Exalynt contacts a new client before its first block starts, outside the product."
+          "question": "The site says blocks are \"bought after a call, not from a card\", but clients can purchase in the app. Does a client's first block, or every block, follow a call? A client can buy before it has a team, and Exalynt contacts a new client before its first block starts, outside the product.",
+          "affects": []
         },
         {
           "topic": "Refunds and cancellation",
-          "question": "We promise to fulfill or refund every block. When and how a refund happens, who can start one, and whether a client can cancel a block that hasn't been fulfilled are all still open. That includes what happens to unfulfilled blocks when a client closes their account, and whether a refunded first purchase still opens a partnership's earning window."
+          "question": "We promise to fulfill or refund every block. When and how a refund happens, who can start one, and whether a client can cancel a block that hasn't been fulfilled are all still open. That includes what happens to unfulfilled blocks when a client closes their account, and whether a refunded first purchase still opens a partnership's earning window.",
+          "affects": []
         },
         {
           "topic": "Who sees the payout basis",
-          "question": "Each type of block's Capacity Payout Basis is listed with its price for anyone signed in, clients included, so engineers can see what a block would earn them before claiming it. Whether clients should see it, beside the price they pay, is still to be decided."
+          "question": "Each type of block's Capacity Payout Basis is listed with its price for anyone signed in, clients included, so engineers can see what a block would earn them before claiming it. Whether clients should see it, beside the price they pay, is still to be decided.",
+          "affects": []
         }
       ],
       "body": "## Includes\n\n- Clients review an order with its tax, as the payment provider works it out,\n  before buying it for that total.\n- Clients buy more than one block for the same week, to move separate work\n  forward in parallel.\n- Clients see every block they've bought in one table, sorted by any column and\n  filtered by status, type, engineer, team, and when it was bought, each with\n  its type, size, who's on it, its week, when it was bought, and what it needs\n  from them next.\n- Clients open any block to see it on its own, with its invoice.",
@@ -1154,7 +1164,8 @@
       "decisions": [
         {
           "topic": "Unclaiming window",
-          "question": "An engineer can unclaim until a block's week starts, even hours before, leaving it with nobody as the week begins. Keep that, or stop unclaiming some days before the week starts?"
+          "question": "An engineer can unclaim until a block's week starts, even hours before, leaving it with nobody as the week begins. Keep that, or stop unclaiming some days before the week starts?",
+          "affects": []
         }
       ],
       "body": "## Includes\n\n- Engineers see their upcoming and current blocks, for any client.\n- Engineers see their weeks a month at a time, each with their availability and\n  the blocks they're on. What doesn't fit their availability shows too, greyed,\n  with why.\n- Engineers see what each block would earn them once it's fulfilled, by the\n  Engineer Share in their agreement and the block's payout basis.\n- Engineers see what's expected of them that week before claiming a block.\n- Engineers claim a block late, after its preferred week has started.\n- Before claiming, engineers see any other block that week the claim would leave\n  with nobody who can take it, and can claim anyway.\n- Engineers unclaim a block whether they claimed it or an admin put them on it.\n  It goes back to the client's shared queue.",
@@ -1327,7 +1338,8 @@
       "decisions": [
         {
           "topic": "Clients who can't join",
-          "question": "They're reached by email, outside the app. Whether anything should help with that is undecided."
+          "question": "They're reached by email, outside the app. Whether anything should help with that is undecided.",
+          "affects": []
         }
       ],
       "body": "## Includes\n\n- The app keeps who belongs where in step with the messaging provider, and\n  points at the conversations.\n- Clients join their organization's space once they're in the organization:\n  they're put in, or invited if the messaging provider requires it, without\n  asking.\n- Clients talk about any block from when it's bought.\n- Engineers join the space of every client their team supports, without asking.\n- Engineers see who is in a client's space: the client's people and Exalynt's,\n  which of them leads a team, who has yet to accept an invitation, and who can't\n  join and has to be emailed instead.\n- Engineers see a block's conversations, how many messages each has, when the\n  last came, and how many they haven't read, and open them: in the console with\n  Stream, or in Google Chat.\n- Team leads do everything an engineer can, for the clients their team supports.\n- Admins do everything an engineer can, for every client.",
@@ -1478,7 +1490,8 @@
       "decisions": [
         {
           "topic": "Asking for estimates and engineers",
-          "question": "Is asking for an estimate, or for a particular engineer, a flow of its own? _At MVP:_ no. Clients ask Exalynt outside the product."
+          "question": "Is asking for an estimate, or for a particular engineer, a flow of its own? _At MVP:_ no. Clients ask Exalynt outside the product.",
+          "affects": []
         }
       ],
       "body": "## Includes\n\n- Clients see the pace each focus of an estimate is planned at, and any\n  discounts off it.\n- Clients download an estimate as a PDF.\n- Engineers prepare and update estimates: focuses, such as new features or\n  improvements to an existing system, each sized, planned at a pace and still\n  priced on every block type, with an optional description and notes, and\n  discounts off the whole project.\n- Admins prepare and update estimates for any client organization, or for a\n  prospect that isn't a client yet, with discounts off the whole project.\n- Admins send a prospect their estimate as a PDF, and attach it to their\n  organization once they sign up.",
@@ -1599,35 +1612,43 @@
       "decisions": [
         {
           "topic": "Choosing who operates",
-          "question": "The client chooses how their software is operated and can decide any time before launch. Exalynt operates only software it built."
+          "question": "The client chooses how their software is operated and can decide any time before launch. Exalynt operates only software it built.",
+          "affects": []
         },
         {
           "topic": "Operations fee",
-          "question": "For software Exalynt operates, the operations fee starts only once it's in production use. Infrastructure is passed through at cost."
+          "question": "For software Exalynt operates, the operations fee starts only once it's in production use. Infrastructure is passed through at cost.",
+          "affects": []
         },
         {
           "topic": "Taking over",
-          "question": "A client can take over operations at any time. The handoff is one-way, and Exalynt doesn't take operations back."
+          "question": "A client can take over operations at any time. The handoff is one-way, and Exalynt doesn't take operations back.",
+          "affects": []
         },
         {
           "topic": "Ownership",
-          "question": "The client owns the custom software, its source code, and their data, and keeps them when they stop. Exalynt keeps its reusable libraries, tooling, and frameworks."
+          "question": "The client owns the custom software, its source code, and their data, and keeps them when they stop. Exalynt keeps its reusable libraries, tooling, and frameworks.",
+          "affects": []
         },
         {
           "topic": "Going live",
-          "question": "Who marks software as live in production, which starts the operations fee?"
+          "question": "Who marks software as live in production, which starts the operations fee?",
+          "affects": []
         },
         {
           "topic": "Takeover handoff",
-          "question": "Who carries out a takeover, and how are source code, data, and deployment and configuration artifacts handed over?"
+          "question": "Who carries out a takeover, and how are source code, data, and deployment and configuration artifacts handed over?",
+          "affects": []
         },
         {
           "topic": "Infrastructure charges",
-          "question": "Who records infrastructure pass-through charges, and how often are they billed?"
+          "question": "Who records infrastructure pass-through charges, and how often are they billed?",
+          "affects": []
         },
         {
           "topic": null,
-          "question": "Operations needs fleshing out as a whole. Client capabilities and rules are written, but Exalynt's side isn't decided yet."
+          "question": "Operations needs fleshing out as a whole. Client capabilities and rules are written, but Exalynt's side isn't decided yet.",
+          "affects": []
         }
       ],
       "body": "## Includes\n\n- Clients see whether each piece of their software is live in production, and\n  whether it's **Self Operated** or **Operated by Exalynt**.\n- Clients take over operations of software Exalynt operates, and receive its\n  source code, data, and deployment and configuration artifacts.\n- Clients get their source code and data at any time, including when they stop\n  working with Exalynt.\n- Clients see where their code lives and who has access to it.",
@@ -1686,15 +1707,18 @@
       "decisions": [
         {
           "topic": "Rescheduling window",
-          "question": "Until when can a client move or take back a scheduled block? Any time before its week starts, or only up to some point before it?"
+          "question": "Until when can a client move or take back a scheduled block? Any time before its week starts, or only up to some point before it?",
+          "affects": []
         },
         {
           "topic": "Unscheduled capacity",
-          "question": "Do clients get reminders to schedule? Can admins or leads schedule on a client's behalf? What happens to capacity that's never scheduled?"
+          "question": "Do clients get reminders to schedule? Can admins or leads schedule on a client's behalf? What happens to capacity that's never scheduled?",
+          "affects": []
         },
         {
           "topic": "Preferred-week moves",
-          "question": "Is a reason shown to the client? Should moving the week of a block that has an assigned engineer require someone to acknowledge coverage?"
+          "question": "Is a reason shown to the client? Should moving the week of a block that has an assigned engineer require someone to acknowledge coverage?",
+          "affects": []
         }
       ],
       "body": "## Includes\n\n- Clients see each block's preferred week, its assigned engineer if there is\n  one, and that engineer's team.\n- The software takes an engineer off a block the client takes back out of its\n  week.\n- Admins move a block's preferred week.",
@@ -1755,11 +1779,13 @@
       "decisions": [
         {
           "topic": "Cross-team handoff",
-          "question": "Do leads confirm a handoff in the product, or coordinate outside the product and have the current engineer release the block?"
+          "question": "Do leads confirm a handoff in the product, or coordinate outside the product and have the current engineer release the block?",
+          "affects": []
         },
         {
           "topic": "Urgent blocks",
-          "question": "Are there reminders before the preferred week starts, and who owns escalation once a block is urgent? Which channels carry release and urgent alerts?"
+          "question": "Are there reminders before the preferred week starts, and who owns escalation once a block is urgent? Which channels carry release and urgent alerts?",
+          "affects": []
         }
       ],
       "body": "## Includes\n\n- Admins see capacity purchases, and upcoming and current assignments, across\n  all clients and teams.\n- Admins spot overbooked blocks, and blocks that are scheduled but unassigned.\n- Admins reassign or unassign a scheduled block.",
@@ -2087,11 +2113,13 @@
       "decisions": [
         {
           "topic": "Referral codes over time",
-          "question": "Can a partner get a new code, for instance after sharing one too widely, and does the old one stop working?"
+          "question": "Can a partner get a new code, for instance after sharing one too widely, and does the old one stop working?",
+          "affects": []
         },
         {
           "topic": "Changing terms",
-          "question": "Terms are set when inviting a partnership. Can an admin change them afterwards, and if so, does a change reach clients already attributed or only those attributed after it?"
+          "question": "Terms are set when inviting a partnership. Can an admin change them afterwards, and if so, does a change reach clients already attributed or only those attributed after it?",
+          "affects": []
         }
       ],
       "body": "## Includes\n\n- Exalynt enrolls clients, engineers, or established external partners.\n- Clients sign up with a partner's referral code or link, and are told when\n  signing up that the partner may earn from it.\n- Partners accept Exalynt's invitation to the Partnership Program and its\n  Partner Agreement in one step, reading the agreement first.\n- Partners name the partnership after themselves or the business they partner\n  for, and rename it.\n- Partners see and copy the partnership's referral code and sign-up link, with a\n  reminder to tell the people they share it with that they may earn from it.\n- Partners see the partnership's terms: its share, what it's a share of, and how\n  long it earns on each client, or that it has no time limit.\n- Partners who manage several partnerships switch between them, viewing one at a\n  time.\n- Admins enroll a partner in the Partnership Program by inviting them by email,\n  including someone who already has an account as a client member or engineer,\n  and see any partnerships they already manage.\n- Admins set a partnership's terms when inviting it, as its Partner Agreement's\n  Commercial Terms, the same way as an engineer's: its Referral Share and its\n  Earning Window, how long it earns on each client, or no time limit, starting\n  from 5% of the engineering capacity referred clients purchase and have\n  fulfilled within 12 months. Inviting with no Referral Share, or no terms at\n  all, asks the admin to confirm first, since the partnership then earns\n  nothing.\n- Admins see pending partner invitations, with each one's email address, the\n  partnership it's for, and when it was sent, and revoke one.\n- Admins see the clients attributed to each partnership, with how each came to\n  it and since when.\n- Admins attribute a client to a partnership, which moves it from any other, and\n  remove a client's attribution.\n- Admins see each partnership's terms, and each of its clients' earning windows.\n- Admins see what a partnership has earned, in total and on each client, block\n  by block, and every payout sent to it.",
@@ -11838,7 +11866,7 @@
         "capability:payouts"
       ],
       "meets": [
-        "compatibility/prototype/marked"
+        "outcome:compatibility/prototype/marked"
       ],
       "gaps": [
         "mechanism:api-docs#no-release-notes"
@@ -12119,7 +12147,7 @@
         "capability:payouts"
       ],
       "meets": [
-        "observability/alpha/see-errors"
+        "outcome:observability/alpha/see-errors"
       ],
       "gaps": [],
       "tradeoffs": [],
@@ -12209,7 +12237,7 @@
         "capability:capacity-purchasing"
       ],
       "meets": [
-        "reliability/beta/fails-clearly"
+        "outcome:reliability/beta/fails-clearly"
       ],
       "gaps": [],
       "tradeoffs": [
@@ -12320,7 +12348,7 @@
         "capability:billing"
       ],
       "meets": [
-        "security/ga/sound"
+        "outcome:security/ga/sound"
       ],
       "gaps": [],
       "tradeoffs": [
@@ -12446,8 +12474,7 @@
     {
       "id": "capability:access-tokens#impersonators-can-create-tokens",
       "domain": "accounts",
-      "outcome": null,
-      "rule": null,
+      "affects": [],
       "impact": "damaging",
       "likelihood": "unlikely",
       "reach": null,
@@ -12458,8 +12485,9 @@
     {
       "id": "capability:access-tokens#bans-can-arrive-late",
       "domain": "accounts",
-      "outcome": null,
-      "rule": "rule:bans-suspend-a-persons-tokens",
+      "affects": [
+        "rule:bans-suspend-a-persons-tokens"
+      ],
       "impact": "damaging",
       "likelihood": "unlikely",
       "reach": null,
@@ -12470,8 +12498,7 @@
     {
       "id": "capability:organizations-and-members#invitations-never-expire",
       "domain": "accounts",
-      "outcome": null,
-      "rule": null,
+      "affects": [],
       "impact": "inconvenient",
       "likelihood": "possible",
       "reach": "few",
@@ -12482,8 +12509,9 @@
     {
       "id": "capability:organizations-and-members#sign-up-shows-the-team",
       "domain": "accounts",
-      "outcome": "security/beta/misuse",
-      "rule": null,
+      "affects": [
+        "outcome:security/beta/misuse"
+      ],
       "impact": "inconvenient",
       "likelihood": "unlikely",
       "reach": null,
@@ -12494,8 +12522,9 @@
     {
       "id": "capability:organizations-and-members#retention-not-decided",
       "domain": "accounts",
-      "outcome": "security/beta/duties",
-      "rule": null,
+      "affects": [
+        "outcome:security/beta/duties"
+      ],
       "impact": "damaging",
       "likelihood": "unlikely",
       "reach": null,
@@ -12506,8 +12535,9 @@
     {
       "id": "capability:organizations-and-members#no-privacy-notice",
       "domain": "accounts",
-      "outcome": "security/beta/duties",
-      "rule": null,
+      "affects": [
+        "outcome:security/beta/duties"
+      ],
       "impact": "damaging",
       "likelihood": "unlikely",
       "reach": null,
@@ -12518,8 +12548,7 @@
     {
       "id": "capability:roles#one-scope-per-permission",
       "domain": "accounts",
-      "outcome": null,
-      "rule": null,
+      "affects": [],
       "impact": "inconvenient",
       "likelihood": "possible",
       "reach": "few",
@@ -12530,8 +12559,7 @@
     {
       "id": "capability:roles#deploys-restore-built-in-roles",
       "domain": "accounts",
-      "outcome": null,
-      "rule": null,
+      "affects": [],
       "impact": "damaging",
       "likelihood": "unlikely",
       "reach": null,
@@ -12542,8 +12570,7 @@
     {
       "id": "capability:agreements#no-preview-before-sending",
       "domain": "agreements",
-      "outcome": null,
-      "rule": null,
+      "affects": [],
       "impact": "inconvenient",
       "likelihood": "possible",
       "reach": "few",
@@ -12554,8 +12581,7 @@
     {
       "id": "capability:client-agreements#new-versions-not-offered",
       "domain": "agreements",
-      "outcome": null,
-      "rule": null,
+      "affects": [],
       "impact": "inconvenient",
       "likelihood": "possible",
       "reach": "some",
@@ -12566,8 +12592,9 @@
     {
       "id": "capability:client-agreements#names-outside-western-european-alphabets",
       "domain": "agreements",
-      "outcome": "usability/beta/everyone",
-      "rule": null,
+      "affects": [
+        "outcome:usability/beta/everyone"
+      ],
       "impact": "inconvenient",
       "likelihood": "unlikely",
       "reach": "few",
@@ -12578,8 +12605,7 @@
     {
       "id": "capability:client-agreements#shared-definitions-changed-in-place",
       "domain": "agreements",
-      "outcome": null,
-      "rule": null,
+      "affects": [],
       "impact": "damaging",
       "likelihood": "unlikely",
       "reach": null,
@@ -12590,8 +12616,7 @@
     {
       "id": "capability:engineer-agreements#new-versions-not-offered",
       "domain": "agreements",
-      "outcome": null,
-      "rule": null,
+      "affects": [],
       "impact": "inconvenient",
       "likelihood": "possible",
       "reach": "few",
@@ -12602,8 +12627,9 @@
     {
       "id": "capability:engineer-agreements#names-outside-western-european-alphabets",
       "domain": "agreements",
-      "outcome": "usability/beta/everyone",
-      "rule": null,
+      "affects": [
+        "outcome:usability/beta/everyone"
+      ],
       "impact": "inconvenient",
       "likelihood": "possible",
       "reach": "few",
@@ -12614,8 +12640,7 @@
     {
       "id": "capability:engineer-agreements#shared-definitions-changed-in-place",
       "domain": "agreements",
-      "outcome": null,
-      "rule": null,
+      "affects": [],
       "impact": "inconvenient",
       "likelihood": "unlikely",
       "reach": null,
@@ -12626,8 +12651,9 @@
     {
       "id": "capability:partner-agreements#names-outside-western-european-alphabets",
       "domain": "agreements",
-      "outcome": "usability/beta/everyone",
-      "rule": null,
+      "affects": [
+        "outcome:usability/beta/everyone"
+      ],
       "impact": "inconvenient",
       "likelihood": "unlikely",
       "reach": "few",
@@ -12638,8 +12664,7 @@
     {
       "id": "capability:billing#no-fees-or-infrastructure-charges",
       "domain": "billing",
-      "outcome": null,
-      "rule": null,
+      "affects": [],
       "impact": "inconvenient",
       "likelihood": "possible",
       "reach": "some",
@@ -12650,8 +12675,7 @@
     {
       "id": "capability:billing#charged-but-unrecorded-purchases",
       "domain": "billing",
-      "outcome": null,
-      "rule": null,
+      "affects": [],
       "impact": "inconvenient",
       "likelihood": "unlikely",
       "reach": "few",
@@ -12662,8 +12686,9 @@
     {
       "id": "capability:capacity-purchasing#unknown-outcome-retry-while-open",
       "domain": "capacity",
-      "outcome": null,
-      "rule": "rule:retrying-a-purchase-never-charges-twice",
+      "affects": [
+        "rule:retrying-a-purchase-never-charges-twice"
+      ],
       "impact": "inconvenient",
       "likelihood": "unlikely",
       "reach": "few",
@@ -12674,8 +12699,9 @@
     {
       "id": "capability:capacity-purchasing#touch-and-screen-readers-untried",
       "domain": "capacity",
-      "outcome": "usability/beta/everyone",
-      "rule": null,
+      "affects": [
+        "outcome:usability/beta/everyone"
+      ],
       "impact": "inconvenient",
       "likelihood": "possible",
       "reach": "few",
@@ -12686,8 +12712,7 @@
     {
       "id": "capability:claiming-blocks#taken-off-untold",
       "domain": "capacity",
-      "outcome": null,
-      "rule": null,
+      "affects": [],
       "impact": "inconvenient",
       "likelihood": "possible",
       "reach": "few",
@@ -12698,8 +12723,7 @@
     {
       "id": "capability:claiming-blocks#stranded-block-client-untold",
       "domain": "capacity",
-      "outcome": null,
-      "rule": null,
+      "affects": [],
       "impact": "inconvenient",
       "likelihood": "unlikely",
       "reach": "few",
@@ -12710,8 +12734,7 @@
     {
       "id": "capability:claiming-blocks#clicking-unclaims",
       "domain": "capacity",
-      "outcome": null,
-      "rule": null,
+      "affects": [],
       "impact": "inconvenient",
       "likelihood": null,
       "reach": "some",
@@ -12722,8 +12745,7 @@
     {
       "id": "capability:conversation-spaces#stream-messages-final",
       "domain": "capacity",
-      "outcome": null,
-      "rule": null,
+      "affects": [],
       "impact": "inconvenient",
       "likelihood": "possible",
       "reach": "few",
@@ -12734,8 +12756,7 @@
     {
       "id": "capability:conversation-spaces#nothing-retried",
       "domain": "capacity",
-      "outcome": null,
-      "rule": null,
+      "affects": [],
       "impact": "damaging",
       "likelihood": "unlikely",
       "reach": null,
@@ -12746,8 +12767,7 @@
     {
       "id": "capability:estimates#pdf-leaves-out-planned-pace",
       "domain": "capacity",
-      "outcome": null,
-      "rule": null,
+      "affects": [],
       "impact": "inconvenient",
       "likelihood": "possible",
       "reach": "few",
@@ -12758,8 +12778,7 @@
     {
       "id": "capability:fulfillment#departed-engineers-blocks-stuck",
       "domain": "capacity",
-      "outcome": null,
-      "rule": null,
+      "affects": [],
       "impact": "inconvenient",
       "likelihood": "possible",
       "reach": "few",
@@ -12770,8 +12789,7 @@
     {
       "id": "capability:scheduling#no-moving-in-the-admin-app",
       "domain": "capacity",
-      "outcome": null,
-      "rule": null,
+      "affects": [],
       "impact": "inconvenient",
       "likelihood": "possible",
       "reach": "few",
@@ -12782,8 +12800,7 @@
     {
       "id": "capability:scheduling#moving-takes-the-engineer-off",
       "domain": "capacity",
-      "outcome": null,
-      "rule": null,
+      "affects": [],
       "impact": "inconvenient",
       "likelihood": "expected",
       "reach": "some",
@@ -12794,8 +12811,7 @@
     {
       "id": "capability:scheduling#room-counts-the-whole-team",
       "domain": "capacity",
-      "outcome": null,
-      "rule": null,
+      "affects": [],
       "impact": "inconvenient",
       "likelihood": "unlikely",
       "reach": "few",
@@ -12806,8 +12822,9 @@
     {
       "id": "capability:scheduling#team-changes-can-overbook",
       "domain": "capacity",
-      "outcome": null,
-      "rule": "rule:weeks-are-never-overbooked",
+      "affects": [
+        "rule:weeks-are-never-overbooked"
+      ],
       "impact": "inconvenient",
       "likelihood": "unlikely",
       "reach": "few",
@@ -12818,8 +12835,7 @@
     {
       "id": "capability:scheduling#unscheduled-by-reduction-untold",
       "domain": "capacity",
-      "outcome": null,
-      "rule": null,
+      "affects": [],
       "impact": "inconvenient",
       "likelihood": "possible",
       "reach": "few",
@@ -12830,8 +12846,9 @@
     {
       "id": "capability:staffing#assignment-eligibility-unchecked",
       "domain": "capacity",
-      "outcome": null,
-      "rule": "rule:assignment-requires-eligibility",
+      "affects": [
+        "rule:assignment-requires-eligibility"
+      ],
       "impact": "inconvenient",
       "likelihood": "unlikely",
       "reach": "few",
@@ -12842,8 +12859,9 @@
     {
       "id": "capability:staffing#assignment-availability-unchecked",
       "domain": "capacity",
-      "outcome": null,
-      "rule": "rule:assignment-must-fit-availability",
+      "affects": [
+        "rule:assignment-must-fit-availability"
+      ],
       "impact": "inconvenient",
       "likelihood": "unlikely",
       "reach": "few",
@@ -12854,8 +12872,7 @@
     {
       "id": "capability:teams#names-can-name-clients",
       "domain": "capacity",
-      "outcome": null,
-      "rule": null,
+      "affects": [],
       "impact": "damaging",
       "likelihood": "unlikely",
       "reach": null,
@@ -12866,8 +12883,7 @@
     {
       "id": "capability:teams#terms-from-the-apps-copy",
       "domain": "capacity",
-      "outcome": null,
-      "rule": null,
+      "affects": [],
       "impact": "damaging",
       "likelihood": "unlikely",
       "reach": null,
@@ -12878,8 +12894,7 @@
     {
       "id": "capability:teams#invitations-dont-expire",
       "domain": "capacity",
-      "outcome": null,
-      "rule": null,
+      "affects": [],
       "impact": "damaging",
       "likelihood": "unlikely",
       "reach": null,
@@ -12890,8 +12905,7 @@
     {
       "id": "capability:client-invitations#existing-clients-spotted-by-name-only",
       "domain": "partnerships",
-      "outcome": null,
-      "rule": null,
+      "affects": [],
       "impact": "inconvenient",
       "likelihood": "unlikely",
       "reach": "few",
@@ -12902,8 +12916,9 @@
     {
       "id": "capability:client-invitations#email-law-not-reviewed",
       "domain": "partnerships",
-      "outcome": "security/beta/duties",
-      "rule": null,
+      "affects": [
+        "outcome:security/beta/duties"
+      ],
       "impact": "damaging",
       "likelihood": "unlikely",
       "reach": null,
@@ -12914,8 +12929,7 @@
     {
       "id": "capability:partner-clients#moving-restarts-since",
       "domain": "partnerships",
-      "outcome": null,
-      "rule": null,
+      "affects": [],
       "impact": "inconvenient",
       "likelihood": "unlikely",
       "reach": "few",
@@ -12926,8 +12940,7 @@
     {
       "id": "capability:partner-clients#phone-hides-how-and-window",
       "domain": "partnerships",
-      "outcome": null,
-      "rule": null,
+      "affects": [],
       "impact": "inconvenient",
       "likelihood": "expected",
       "reach": "few",
@@ -12938,8 +12951,7 @@
     {
       "id": "capability:partnerships#existing-clients-spotted-by-name-only",
       "domain": "partnerships",
-      "outcome": null,
-      "rule": null,
+      "affects": [],
       "impact": "inconvenient",
       "likelihood": "unlikely",
       "reach": "few",
@@ -12950,8 +12962,7 @@
     {
       "id": "capability:partnerships#no-handover-or-new-terms",
       "domain": "partnerships",
-      "outcome": null,
-      "rule": null,
+      "affects": [],
       "impact": "inconvenient",
       "likelihood": "possible",
       "reach": "few",
@@ -12962,8 +12973,9 @@
     {
       "id": "capability:earnings#upcoming-shares-can-change",
       "domain": "pay",
-      "outcome": null,
-      "rule": "rule:when-basis-and-percentages-are-fixed",
+      "affects": [
+        "rule:when-basis-and-percentages-are-fixed"
+      ],
       "impact": "inconvenient",
       "likelihood": "possible",
       "reach": "some",
@@ -12974,8 +12986,7 @@
     {
       "id": "capability:earnings#expected-pay-not-on-the-block",
       "domain": "pay",
-      "outcome": null,
-      "rule": null,
+      "affects": [],
       "impact": "inconvenient",
       "likelihood": "possible",
       "reach": "some",
@@ -12986,8 +12997,7 @@
     {
       "id": "capability:earnings#earnings-go-with-a-deleted-user",
       "domain": "pay",
-      "outcome": null,
-      "rule": null,
+      "affects": [],
       "impact": "damaging",
       "likelihood": "unlikely",
       "reach": "few",
@@ -12998,8 +13008,7 @@
     {
       "id": "capability:payout-accounts#one-account-one-country",
       "domain": "pay",
-      "outcome": null,
-      "rule": null,
+      "affects": [],
       "impact": "inconvenient",
       "likelihood": "unlikely",
       "reach": "few",
@@ -13010,8 +13019,7 @@
     {
       "id": "capability:payout-accounts#no-payouts-to-mexico",
       "domain": "pay",
-      "outcome": null,
-      "rule": null,
+      "affects": [],
       "impact": "blocking",
       "likelihood": "unlikely",
       "reach": "few",
@@ -13022,8 +13030,7 @@
     {
       "id": "capability:payout-accounts#form-asks-for-business-details",
       "domain": "pay",
-      "outcome": null,
-      "rule": null,
+      "affects": [],
       "impact": "inconvenient",
       "likelihood": "expected",
       "reach": "some",
@@ -13034,8 +13041,7 @@
     {
       "id": "capability:payout-accounts#changes-made-in-the-partners-dashboard",
       "domain": "pay",
-      "outcome": null,
-      "rule": null,
+      "affects": [],
       "impact": "inconvenient",
       "likelihood": "possible",
       "reach": "few",
@@ -13046,8 +13052,7 @@
     {
       "id": "capability:payout-accounts#removing-closes-the-account",
       "domain": "pay",
-      "outcome": null,
-      "rule": null,
+      "affects": [],
       "impact": "inconvenient",
       "likelihood": "unlikely",
       "reach": "few",
@@ -13058,8 +13063,7 @@
     {
       "id": "capability:payouts#nothing-held-back-from-a-release",
       "domain": "pay",
-      "outcome": null,
-      "rule": null,
+      "affects": [],
       "impact": "inconvenient",
       "likelihood": "possible",
       "reach": "few",
@@ -13069,8 +13073,9 @@
     },
     {
       "id": "mechanism:api-docs#no-release-notes",
-      "outcome": "compatibility/beta/changes-heard",
-      "rule": null,
+      "affects": [
+        "outcome:compatibility/beta/changes-heard"
+      ],
       "impact": "inconvenient",
       "likelihood": "unlikely",
       "reach": "few",
@@ -13080,8 +13085,7 @@
     },
     {
       "id": "mechanism:row-level-security#no-organization-runs-on-platform",
-      "outcome": null,
-      "rule": null,
+      "affects": [],
       "impact": "damaging",
       "likelihood": "unlikely",
       "reach": null,
@@ -13091,8 +13095,7 @@
     },
     {
       "id": "mechanism:row-level-security#shared-tables-unprotected",
-      "outcome": null,
-      "rule": null,
+      "affects": [],
       "impact": "damaging",
       "likelihood": "unlikely",
       "reach": null,
@@ -13102,8 +13105,7 @@
     },
     {
       "id": "component:spaces#sync-users-has-no-hook",
-      "outcome": null,
-      "rule": null,
+      "affects": [],
       "impact": "damaging",
       "likelihood": "unlikely",
       "reach": null,
@@ -13116,7 +13118,7 @@
     {
       "id": "capability:access-tokens#no-scopes",
       "domain": "accounts",
-      "outcome": null,
+      "affects": [],
       "name": "Tokens have no scopes",
       "description": "A token can do everything its user can, wherever it works: there are no scopes.",
       "benefit": null,
@@ -13126,7 +13128,7 @@
     {
       "id": "capability:access-tokens#managing-tokens-needs-a-session",
       "domain": "accounts",
-      "outcome": null,
+      "affects": [],
       "name": "Managing tokens needs a session, not a token",
       "description": "Managing tokens needs a session: a token can't list, create, or revoke tokens.",
       "benefit": null,
@@ -13136,7 +13138,7 @@
     {
       "id": "capability:access-tokens#limited-tokens-reach-their-users-record",
       "domain": "accounts",
-      "outcome": null,
+      "affects": [],
       "name": "Limited tokens still reach their user's record",
       "description": "A limited token still reaches its user's own record: it can read and change their profile, including updating it from the sign-in provider, and sees their platform role and applications.",
       "benefit": null,
@@ -13146,7 +13148,7 @@
     {
       "id": "capability:access-tokens#limited-tokens-can-leave",
       "domain": "accounts",
-      "outcome": null,
+      "affects": [],
       "name": "Limited tokens can leave an organization",
       "description": "A limited token can remove its user from one of its organizations, as their own session can.",
       "benefit": null,
@@ -13156,7 +13158,7 @@
     {
       "id": "capability:access-tokens#failed-authentication-not-rate-limited",
       "domain": "accounts",
-      "outcome": null,
+      "affects": [],
       "name": "Failed authentication isn't rate limited",
       "description": "Requests that fail to authenticate aren't rate limited.",
       "benefit": null,
@@ -13166,7 +13168,7 @@
     {
       "id": "capability:notifications#no-email-on-scheduling",
       "domain": "accounts",
-      "outcome": null,
+      "affects": [],
       "name": "No client email on scheduling or availability",
       "description": "Clients aren't emailed when a block is scheduled, or when an availability change affects their capacity: the client scheduled the block themselves, and an availability change that matters reaches them as a moved preferred week.",
       "benefit": null,
@@ -13176,7 +13178,7 @@
     {
       "id": "capability:notifications#one-set-of-choices",
       "domain": "accounts",
-      "outcome": null,
+      "affects": [],
       "name": "One set of choices for all organizations",
       "description": "One set of choices covers every organization someone belongs to, and each notification is to name the one it's about.",
       "benefit": null,
@@ -13186,7 +13188,7 @@
     {
       "id": "capability:notifications#last-channel-stays",
       "domain": "accounts",
-      "outcome": null,
+      "affects": [],
       "name": "Last channel can't be removed",
       "description": "The last channel can't be removed, as what's always on needs somewhere to go. Being always on means at least one channel, not all of them.",
       "benefit": null,
@@ -13196,7 +13198,7 @@
     {
       "id": "capability:organizations-and-members#closing-by-email",
       "domain": "accounts",
-      "outcome": null,
+      "affects": [],
       "name": "Closing the account by email",
       "description": "Closing the account is a conversation with Exalynt, by email from the Organization page.",
       "benefit": null,
@@ -13206,7 +13208,7 @@
     {
       "id": "capability:organizations-and-members#fifty-invitations-a-day",
       "domain": "accounts",
-      "outcome": null,
+      "affects": [],
       "name": "Fifty invitations a day",
       "description": "An organization, and each person, can send 50 invitations a day.",
       "benefit": null,
@@ -13216,7 +13218,7 @@
     {
       "id": "capability:organizations-and-members#last-save-wins",
       "domain": "accounts",
-      "outcome": null,
+      "affects": [],
       "name": "Last save wins on names and roles",
       "description": "The last save wins on the organization's name and on member roles: nothing checks what the person last read.",
       "benefit": null,
@@ -13226,7 +13228,7 @@
     {
       "id": "capability:organizations-and-members#any-role-from-member-management",
       "domain": "accounts",
-      "outcome": null,
+      "affects": [],
       "name": "Member managers can give any role",
       "description": "Whoever can manage members can give anyone any role, Admin included.",
       "benefit": null,
@@ -13236,7 +13238,7 @@
     {
       "id": "capability:client-agreements#every-member-sees-agreements",
       "domain": "agreements",
-      "outcome": null,
+      "affects": [],
       "name": "Agreements visible to every member",
       "description": "Every member of an organization sees its agreements, whatever their role.",
       "benefit": null,
@@ -13246,7 +13248,7 @@
     {
       "id": "capability:billing#prices-listed-before-tax",
       "domain": "billing",
-      "outcome": null,
+      "affects": [],
       "name": "Prices listed before tax",
       "description": "Prices are listed before tax everywhere, such as on estimates and when choosing blocks.",
       "benefit": null,
@@ -13256,7 +13258,7 @@
     {
       "id": "capability:client-directory#no-primary-contact",
       "domain": "capacity",
-      "outcome": null,
+      "affects": [],
       "name": "Client members not shown to staff",
       "description": "A client's members aren't shown, since staff can't see them.",
       "benefit": null,
@@ -13266,7 +13268,7 @@
     {
       "id": "capability:client-home#status-not-work",
       "domain": "capacity",
-      "outcome": null,
+      "affects": [],
       "name": "Block status, not the work done",
       "description": "A block shows who's on it and where it stands, not what was done on it.",
       "benefit": null,
@@ -13276,7 +13278,7 @@
     {
       "id": "capability:conversation-spaces#stream-shows-gravatar",
       "domain": "capacity",
-      "outcome": null,
+      "affects": [],
       "name": "Gravatar as the fallback photo on Stream",
       "description": "With Stream, someone without an uploaded photo shows their Gravatar, as they do everywhere else in the app.",
       "benefit": null,
@@ -13286,7 +13288,7 @@
     {
       "id": "capability:engineers#written-for-administrators",
       "domain": "capacity",
-      "outcome": null,
+      "affects": [],
       "name": "Written for administrators, not narrower roles",
       "description": "It's written for administrators: without full reads of people, teams, capacity and clients the list doesn't load, and with narrower reach it shows only what that reaches.",
       "benefit": null,
@@ -13296,7 +13298,7 @@
     {
       "id": "capability:estimates#last-save-wins",
       "domain": "capacity",
-      "outcome": null,
+      "affects": [],
       "name": "Last save wins, without a warning",
       "description": "When two people edit one estimate at once, the later save replaces the earlier one, without a warning.",
       "benefit": null,
@@ -13306,7 +13308,9 @@
     {
       "id": "capability:estimates#deleting-is-permanent",
       "domain": "capacity",
-      "outcome": "usability/beta/recover",
+      "affects": [
+        "outcome:usability/beta/recover"
+      ],
       "name": "Deleting an estimate is permanent",
       "description": "Deleting an estimate is permanent.",
       "benefit": null,
@@ -13316,7 +13320,9 @@
     {
       "id": "capability:fulfillment#fulfilled-cant-be-reopened",
       "domain": "capacity",
-      "outcome": "usability/beta/recover",
+      "affects": [
+        "outcome:usability/beta/recover"
+      ],
       "name": "Fulfilled is final, no reopening",
       "description": "Marking a block fulfilled is final.",
       "benefit": null,
@@ -13326,7 +13332,7 @@
     {
       "id": "capability:teams#names-unique-across-all-teams",
       "domain": "capacity",
-      "outcome": null,
+      "affects": [],
       "name": "Names unique across teams, not per client",
       "description": "Team names are unique across all teams, not per client.",
       "benefit": null,
@@ -13336,7 +13342,7 @@
     {
       "id": "capability:client-invitations#revoked-links-still-attribute",
       "domain": "partnerships",
-      "outcome": null,
+      "affects": [],
       "name": "Revoking leaves the emailed link working",
       "description": "Revoking an invitation doesn't stop its link: the email still has the link with the partnership's referral code.",
       "benefit": null,
@@ -13346,7 +13352,7 @@
     {
       "id": "capability:partner-earnings#nothing-before-partnership-earnings",
       "domain": "pay",
-      "outcome": null,
+      "affects": [],
       "name": "Earnings start from launch, not backdated",
       "description": "Partnerships earn only on blocks fulfilled since partnership earnings existed.",
       "benefit": null,
@@ -13356,7 +13362,7 @@
     {
       "id": "capability:partner-earnings#earlier-blocks-count-after-attribution",
       "domain": "pay",
-      "outcome": null,
+      "affects": [],
       "name": "Earlier blocks count only after attribution",
       "description": "Blocks a client bought before this was built count as bought for the partnership only if they were bought after the client was attributed to it.",
       "benefit": null,
@@ -13366,7 +13372,7 @@
     {
       "id": "capability:partner-payout-accounts#one-account-per-partnership-checked-each-time",
       "domain": "pay",
-      "outcome": null,
+      "affects": [],
       "name": "Each partnership has its own account",
       "description": "Each partnership has its own payout account, even when several are paid to the same bank account.",
       "benefit": null,
@@ -13376,7 +13382,7 @@
     {
       "id": "capability:partner-payout-accounts#one-account-one-country",
       "domain": "pay",
-      "outcome": null,
+      "affects": [],
       "name": "One country per account, fixed once chosen",
       "description": "There's one account per partnership, and its country is fixed once it's chosen, as the payments partner's form holds one and verifies it for one country.",
       "benefit": null,
@@ -13386,7 +13392,7 @@
     {
       "id": "capability:partner-payout-accounts#no-payouts-to-mexico",
       "domain": "pay",
-      "outcome": null,
+      "affects": [],
       "name": "Mexico not offered as a country",
       "description": "Mexico isn't offered as a country, since the payments partner can't send there.",
       "benefit": null,
@@ -13396,7 +13402,7 @@
     {
       "id": "capability:partner-payout-accounts#form-asks-for-business-details",
       "domain": "pay",
-      "outcome": null,
+      "affects": [],
       "name": "Payments partner's form used as it is",
       "description": "Accounts are set up on the payments partner's form as it is.",
       "benefit": null,
@@ -13406,7 +13412,7 @@
     {
       "id": "capability:partner-payout-accounts#changes-made-in-the-partners-dashboard",
       "domain": "pay",
-      "outcome": null,
+      "affects": [],
       "name": "Changes made in the payments partner's dashboard",
       "description": "Once an account is set up, changing it happens in the payments partner's own dashboard rather than its form.",
       "benefit": null,
@@ -13416,7 +13422,7 @@
     {
       "id": "capability:partner-payout-accounts#removing-closes-the-account",
       "domain": "pay",
-      "outcome": null,
+      "affects": [],
       "name": "Removing an account closes it",
       "description": "Removing an account closes it with the payments partner.",
       "benefit": null,
@@ -13426,7 +13432,7 @@
     {
       "id": "capability:partner-payouts#pre-production-payouts-say-paid",
       "domain": "pay",
-      "outcome": null,
+      "affects": [],
       "name": "Pre-production payouts left saying Paid",
       "description": "Payouts released before production sent money through the payments partner are left saying Paid.",
       "benefit": null,
@@ -13436,7 +13442,7 @@
     {
       "id": "capability:partner-payouts#paid-means-reached-the-balance",
       "domain": "pay",
-      "outcome": null,
+      "affects": [],
       "name": "Paid means in the balance, not the bank",
       "description": "Paid means the money has reached the partnership's balance with the payments partner, not its bank.",
       "benefit": null,
@@ -13445,7 +13451,7 @@
     },
     {
       "id": "mechanism:authorization#application-access-not-enforced",
-      "outcome": null,
+      "affects": [],
       "name": "Application access enforced only by the front ends",
       "description": "Which applications someone is offered is `application_access`, held per user and not by role, and only the front ends act on it: they decide what to show by it, and the API keeps checking permissions.",
       "benefit": null,
@@ -13454,7 +13460,7 @@
     },
     {
       "id": "mechanism:row-level-security#setting-per-transaction",
-      "outcome": null,
+      "affects": [],
       "name": "Tenant set per transaction, not per connection",
       "description": "The organization or partnership is set with `SET LOCAL` in a transaction around each statement, a `UnitOfWork`'s or a short one of its own, rather than on a connection kept for the request.",
       "benefit": null,
@@ -13463,7 +13469,7 @@
     },
     {
       "id": "component:agreements#apps-hold-people-to-agreements",
-      "outcome": null,
+      "affects": [],
       "name": "Agreements enforced in the apps, not the API",
       "description": "The apps hold people to an agreement, not the API: the portal's, console's and hub's gates keep someone out until one is in effect, and the API answers what their role allows regardless.",
       "benefit": null,
@@ -13472,7 +13478,7 @@
     },
     {
       "id": "component:agreements#pdf-laid-out-in-go",
-      "outcome": null,
+      "affects": [],
       "name": "PDFs drawn in Go without Unicode fonts",
       "description": "The PDF is laid out in Go with fpdf's Helvetica, not a browser or a Unicode font, so there's no headless browser to run or font to ship.",
       "benefit": null,
@@ -13481,7 +13487,7 @@
     },
     {
       "id": "component:agreements#accepted-agreements-outlive-their-user",
-      "outcome": null,
+      "affects": [],
       "name": "Accepted agreements kept after their user is deleted",
       "description": "Accepted agreements outlive their user: deleting a user clears `user_id` on their accepted ones (migration 91) and keeps their PDFs, since the PDF is the record of what was agreed.",
       "benefit": null,
@@ -13490,7 +13496,7 @@
     },
     {
       "id": "component:availability#recurrence-rules-not-weeks",
-      "outcome": null,
+      "affects": [],
       "name": "Recurrence rules kept, not a weeks column",
       "description": "Availability is stored as recurrence rules, not a `weeks` column. A column would do, as the rules are only ever `FREQ=WEEKLY` with an optional `COUNT`, but moving off them is an expand/contract migration on a table Capacity reads, with nothing to gain for now.",
       "benefit": null,
@@ -13499,7 +13505,7 @@
     },
     {
       "id": "component:billing#provider-is-source-of-truth",
-      "outcome": null,
+      "affects": [],
       "name": "Payment provider is the source of truth",
       "description": "The provider is the source of truth for invoices and billing details, and our row only links to it: we keep the least needed to find an invoice and relate its blocks.",
       "benefit": null,
@@ -13508,7 +13514,7 @@
     },
     {
       "id": "component:billing#tax-inside-payments-provider",
-      "outcome": null,
+      "affects": [],
       "name": "Tax handled by the payments provider, not its own",
       "description": "Tax is part of the payments provider, not a provider of its own: the provider already holds the billing address tax is worked out from, and issues the invoice the tax goes on, so a separate tax provider would pull billing details out of it and push tax lines back in.",
       "benefit": null,
@@ -13517,7 +13523,7 @@
     },
     {
       "id": "component:capacity#combined-room",
-      "outcome": null,
+      "affects": [],
       "name": "Week's room combined, not per engineer",
       "description": "A week's room is combined, not per engineer: a block fits if the total covers it, even if no one engineer could do it alone, as the preferred week is a target and not a guarantee.",
       "benefit": null,
@@ -13526,7 +13532,7 @@
     },
     {
       "id": "component:estimates#prices-copied-onto-estimate",
-      "outcome": null,
+      "affects": [],
       "name": "Prices copied onto the estimate when made",
       "description": "Prices are copied onto the estimate when it's made, so a client's estimate doesn't change when prices do. Every response returns the copy as `capacity_prices`, and the console and portal price from it.",
       "benefit": null,
@@ -13535,7 +13541,7 @@
     },
     {
       "id": "component:estimates#unindexed-search",
-      "outcome": null,
+      "affects": [],
       "name": "Unindexed ILIKE search over estimates",
       "description": "Search is `ILIKE '%word%'` over four columns, with no index: at 2,000 estimates that's a few milliseconds, measured against the local stack on 2026-10-23.",
       "benefit": null,
@@ -13544,7 +13550,9 @@
     },
     {
       "id": "component:organizations#lists-returned-whole",
-      "outcome": "efficiency/beta/bounded",
+      "affects": [
+        "outcome:efficiency/beta/bounded"
+      ],
       "name": "Lists returned whole, not paged",
       "description": "Members, invitations, and `GET /v1/clients` are returned whole, not paged: an organization is sized for tens of members and Exalynt for tens to hundreds of clients.",
       "benefit": null,
@@ -13553,7 +13561,7 @@
     },
     {
       "id": "component:organizations#shared-invitation-routes",
-      "outcome": null,
+      "affects": [],
       "name": "Invitation routes shared, with stable copies beside",
       "description": "`GET /invitations` and `POST /invitations/{id}/accept` stay shared, with stable organization-only copies beside them: they also serve invitations to work with Exalynt and to manage a partnership, whose shape is still settling, so the stable contract for organizations is `/users/me/organization-invitations`.",
       "benefit": null,
@@ -13562,7 +13570,7 @@
     },
     {
       "id": "component:partnerships#limits-counted-from-invitations",
-      "outcome": null,
+      "affects": [],
       "name": "Sending limits counted from invitation rows",
       "description": "Sending limits are counted from the invitations themselves, not a limiter or a log of sends: the day's new invitations are a count of `client_invitations` rows created in the last 24 hours, revoked ones included, and a resend compares the row's `sent_at`, so nothing else is stored or run. That's why revoking sets `revoked_at` and blanks the address rather than deleting (migration 95): a deleted row would free up a slot, and the count needs no address.",
       "benefit": null,
@@ -13571,7 +13579,7 @@
     },
     {
       "id": "component:payouts#waiting-worked-out-on-read",
-      "outcome": null,
+      "affects": [],
       "name": "Waiting payouts worked out on read, not stored",
       "description": "What's waiting is worked out on read, not stored as a run: there's no scheduler or draft to keep in step, and a week nobody released rolls into the next.",
       "benefit": null,
@@ -13652,7 +13660,7 @@
             "summary": "Just enough for someone to judge the idea.",
             "outcomes": [
               {
-                "id": "utility/prototype/judged",
+                "id": "outcome:utility/prototype/judged",
                 "level": "prototype",
                 "text": "Those judging the idea can try it, or watch it run, enough to tell whether it's worth doing and whether this is the way to do it.",
                 "until": null,
@@ -13757,7 +13765,7 @@
             "summary": "Real use on the real system, to learn what it should become.",
             "outcomes": [
               {
-                "id": "utility/alpha/end-to-end",
+                "id": "outcome:utility/alpha/end-to-end",
                 "level": "alpha",
                 "text": "It works end to end on the real system.",
                 "until": null,
@@ -13779,7 +13787,7 @@
                 "overengineering": []
               },
               {
-                "id": "utility/alpha/real-use",
+                "id": "outcome:utility/alpha/real-use",
                 "level": "alpha",
                 "text": "It's used for real.",
                 "until": null,
@@ -13820,7 +13828,7 @@
                 ]
               },
               {
-                "id": "utility/alpha/learning",
+                "id": "outcome:utility/alpha/learning",
                 "level": "alpha",
                 "text": "What's learned from using it shapes what comes next.",
                 "until": null,
@@ -13846,7 +13854,7 @@
             "summary": "Confidence that the need is real and the approach is right. From here, it's refinement.",
             "outcomes": [
               {
-                "id": "utility/beta/confirmed",
+                "id": "outcome:utility/beta/confirmed",
                 "level": "beta",
                 "text": "The need and the solution are confirmed, so what changes from here is refinement.",
                 "until": null,
@@ -13866,7 +13874,7 @@
                 "overengineering": []
               },
               {
-                "id": "utility/beta/success-agreed",
+                "id": "outcome:utility/beta/success-agreed",
                 "level": "beta",
                 "text": "What success looks like is agreed.",
                 "until": null,
@@ -13909,7 +13917,7 @@
             "summary": "Proof, from real use, that it delivers what it's for.",
             "outcomes": [
               {
-                "id": "utility/ga/delivers",
+                "id": "outcome:utility/ga/delivers",
                 "level": "ga",
                 "text": "It's shown to deliver what it's for in real use.",
                 "until": null,
@@ -14005,7 +14013,7 @@
             "summary": "The main path makes sense without the builder explaining it.",
             "outcomes": [
               {
-                "id": "usability/alpha/main-path",
+                "id": "outcome:usability/alpha/main-path",
                 "level": "alpha",
                 "text": "Those trying it can use its main path without help from whoever built it.",
                 "until": null,
@@ -14083,7 +14091,7 @@
             "summary": "People can use all of it on their own, mistakes included.",
             "outcomes": [
               {
-                "id": "usability/beta/self-serve",
+                "id": "outcome:usability/beta/self-serve",
                 "level": "beta",
                 "text": "Its users can learn and use it on their own.",
                 "until": null,
@@ -14154,7 +14162,7 @@
                 ]
               },
               {
-                "id": "usability/beta/clear-results",
+                "id": "outcome:usability/beta/clear-results",
                 "level": "beta",
                 "text": "Its users can tell what happened after everything they do, and what to do next.",
                 "until": null,
@@ -14222,7 +14230,7 @@
                 "overengineering": []
               },
               {
-                "id": "usability/beta/recover",
+                "id": "outcome:usability/beta/recover",
                 "level": "beta",
                 "text": "Its users can recover from mistakes.",
                 "until": null,
@@ -14253,7 +14261,7 @@
                 "overengineering": []
               },
               {
-                "id": "usability/beta/everyone",
+                "id": "outcome:usability/beta/everyone",
                 "level": "beta",
                 "text": "It works for everyone it's meant for.",
                 "until": null,
@@ -14314,7 +14322,7 @@
             "summary": "Polished and consistent everywhere, for everyone it's meant for.",
             "outcomes": [
               {
-                "id": "usability/ga/all-learnable",
+                "id": "outcome:usability/ga/all-learnable",
                 "level": "ga",
                 "text": "Everything it does can be learned without asking anyone.",
                 "until": null,
@@ -14378,7 +14386,7 @@
                 ]
               },
               {
-                "id": "usability/ga/consistent",
+                "id": "outcome:usability/ga/consistent",
                 "level": "ga",
                 "text": "It behaves consistently across its whole interface.",
                 "until": null,
@@ -14441,7 +14449,7 @@
                 ]
               },
               {
-                "id": "usability/ga/all-accessible",
+                "id": "outcome:usability/ga/all-accessible",
                 "level": "ga",
                 "text": "All of it works for everyone it's meant for.",
                 "until": null,
@@ -14544,7 +14552,7 @@
             "summary": "The main path is checked, so a change can't quietly break it.",
             "outcomes": [
               {
-                "id": "functionality/alpha/main-path",
+                "id": "outcome:functionality/alpha/main-path",
                 "level": "alpha",
                 "text": "The main path is known to work after every change.",
                 "until": null,
@@ -14648,7 +14656,7 @@
                 ]
               },
               {
-                "id": "functionality/alpha/errors-visible",
+                "id": "outcome:functionality/alpha/errors-visible",
                 "level": "alpha",
                 "text": "Errors are visible, never silent.",
                 "until": null,
@@ -14708,7 +14716,7 @@
             "summary": "Edge cases and errors are handled, and checked too.",
             "outcomes": [
               {
-                "id": "functionality/beta/unusual-input",
+                "id": "outcome:functionality/beta/unusual-input",
                 "level": "beta",
                 "text": "Unusual input and error paths are handled correctly.",
                 "until": null,
@@ -14785,7 +14793,7 @@
                 ]
               },
               {
-                "id": "functionality/beta/stays-correct",
+                "id": "outcome:functionality/beta/stays-correct",
                 "level": "beta",
                 "text": "How it handles unusual input and errors is known to keep working as it changes.",
                 "until": null,
@@ -14866,7 +14874,7 @@
             "summary": "Everything critical is checked on every change.",
             "outcomes": [
               {
-                "id": "functionality/ga/critical-workflows",
+                "id": "outcome:functionality/ga/critical-workflows",
                 "level": "ga",
                 "text": "Every critical workflow is known to work after every change.",
                 "until": null,
@@ -14917,7 +14925,7 @@
                 ]
               },
               {
-                "id": "functionality/ga/bugs-stay-fixed",
+                "id": "outcome:functionality/ga/bugs-stay-fixed",
                 "level": "ga",
                 "text": "A fixed bug stays fixed.",
                 "until": null,
@@ -15069,7 +15077,7 @@
             "summary": "Enough that people's data is safe and a bad release can be undone.",
             "outcomes": [
               {
-                "id": "reliability/beta/data-kept",
+                "id": "outcome:reliability/beta/data-kept",
                 "level": "beta",
                 "text": "Data that people or systems put in is kept across changes.",
                 "until": null,
@@ -15151,7 +15159,7 @@
                 ]
               },
               {
-                "id": "reliability/beta/undo-release",
+                "id": "outcome:reliability/beta/undo-release",
                 "level": "beta",
                 "text": "A bad release can be undone.",
                 "until": null,
@@ -15248,7 +15256,7 @@
                 ]
               },
               {
-                "id": "reliability/beta/fails-clearly",
+                "id": "outcome:reliability/beta/fails-clearly",
                 "level": "beta",
                 "text": "When something it depends on is slow or down, it fails clearly or degrades gracefully instead of hanging.",
                 "until": null,
@@ -15336,7 +15344,7 @@
             "summary": "Enough to depend on: it rides out failures, and recovery is proven.",
             "outcomes": [
               {
-                "id": "reliability/ga/holds-up",
+                "id": "outcome:reliability/ga/holds-up",
                 "level": "ga",
                 "text": "It holds up under overlapping runs, partial failures, and retries.",
                 "until": null,
@@ -15411,7 +15419,7 @@
                 ]
               },
               {
-                "id": "reliability/ga/availability",
+                "id": "outcome:reliability/ga/availability",
                 "level": "ga",
                 "text": "It meets its availability target.",
                 "until": null,
@@ -15480,7 +15488,7 @@
                 ]
               },
               {
-                "id": "reliability/ga/recovery",
+                "id": "outcome:reliability/ga/recovery",
                 "level": "ga",
                 "text": "Recovering from a bad release or a loss of data is known to work.",
                 "until": null,
@@ -15692,7 +15700,7 @@
             "summary": "Fine at realistic volumes, with no runaway work.",
             "outcomes": [
               {
-                "id": "efficiency/beta/realistic-volumes",
+                "id": "outcome:efficiency/beta/realistic-volumes",
                 "level": "beta",
                 "text": "It works at realistic volumes.",
                 "until": null,
@@ -15759,7 +15767,7 @@
                 ]
               },
               {
-                "id": "efficiency/beta/bounded",
+                "id": "outcome:efficiency/beta/bounded",
                 "level": "beta",
                 "text": "The work it does is bounded.",
                 "until": null,
@@ -15818,7 +15826,7 @@
             "summary": "Targets for speed and cost are set, and met with room to spare.",
             "outcomes": [
               {
-                "id": "efficiency/ga/speed-targets",
+                "id": "outcome:efficiency/ga/speed-targets",
                 "level": "ga",
                 "text": "It meets agreed speed targets at peak load, with headroom.",
                 "until": null,
@@ -15894,7 +15902,7 @@
                 ]
               },
               {
-                "id": "efficiency/ga/cost",
+                "id": "outcome:efficiency/ga/cost",
                 "level": "ga",
                 "text": "What it costs to run is known and acceptable.",
                 "until": null,
@@ -15941,7 +15949,7 @@
                 ]
               },
               {
-                "id": "efficiency/ga/limits-known",
+                "id": "outcome:efficiency/ga/limits-known",
                 "level": "ga",
                 "text": "Its limits are known.",
                 "until": null,
@@ -15992,7 +16000,7 @@
             "summary": "Trying it out puts nothing real at risk.",
             "outcomes": [
               {
-                "id": "security/prototype/secrets",
+                "id": "outcome:security/prototype/secrets",
                 "level": "prototype",
                 "text": "Secrets stay out of code, version control, and anything it ships.",
                 "until": null,
@@ -16056,7 +16064,7 @@
                 ]
               },
               {
-                "id": "security/prototype/real-data",
+                "id": "outcome:security/prototype/real-data",
                 "level": "prototype",
                 "text": "It uses made-up data. Real data isn't copied into it, and isn't left open through it.",
                 "until": null,
@@ -16114,7 +16122,7 @@
             "summary": "Real people and their data are safe with it.",
             "outcomes": [
               {
-                "id": "security/alpha/access",
+                "id": "outcome:security/alpha/access",
                 "level": "alpha",
                 "text": "Only those allowed can reach real systems or data, and one tenant or account never sees or changes another's.",
                 "until": null,
@@ -16297,7 +16305,7 @@
                 ]
               },
               {
-                "id": "security/alpha/untrusted-input",
+                "id": "outcome:security/alpha/untrusted-input",
                 "level": "alpha",
                 "text": "Untrusted input can't run as code or commands.",
                 "until": null,
@@ -16398,7 +16406,7 @@
                 ]
               },
               {
-                "id": "security/alpha/stable-dependencies",
+                "id": "outcome:security/alpha/stable-dependencies",
                 "level": "alpha",
                 "text": "It depends on nothing less stable than itself.",
                 "until": null,
@@ -16431,7 +16439,7 @@
             "summary": "Protected against misuse, and follows the rules that apply.",
             "outcomes": [
               {
-                "id": "security/beta/misuse",
+                "id": "outcome:security/beta/misuse",
                 "level": "beta",
                 "text": "It's protected against misuse at the level it's exposed.",
                 "until": null,
@@ -16567,7 +16575,7 @@
                 ]
               },
               {
-                "id": "security/beta/duties",
+                "id": "outcome:security/beta/duties",
                 "level": "beta",
                 "text": "The legal and regulatory duties that apply to it are known and met.",
                 "until": null,
@@ -16631,7 +16639,7 @@
                 ]
               },
               {
-                "id": "security/beta/personal-data",
+                "id": "outcome:security/beta/personal-data",
                 "level": "beta",
                 "text": "Personal data is collected only where it's needed.",
                 "until": null,
@@ -16688,7 +16696,7 @@
                 "overengineering": []
               },
               {
-                "id": "security/beta/maintained-dependencies",
+                "id": "outcome:security/beta/maintained-dependencies",
                 "level": "beta",
                 "text": "Its dependencies are maintained, and licensed for how it's used.",
                 "until": null,
@@ -16746,7 +16754,7 @@
             "summary": "Its sensitive parts are reviewed, and actions can be traced.",
             "outcomes": [
               {
-                "id": "security/ga/sound",
+                "id": "outcome:security/ga/sound",
                 "level": "ga",
                 "text": "Its handling of credentials, payments, personal data, and permissions is known to be sound.",
                 "until": null,
@@ -16834,7 +16842,7 @@
                 ]
               },
               {
-                "id": "security/ga/least-access",
+                "id": "outcome:security/ga/least-access",
                 "level": "ga",
                 "text": "Each part has only the access it needs.",
                 "until": null,
@@ -16889,7 +16897,7 @@
                 "overengineering": []
               },
               {
-                "id": "security/ga/traceable",
+                "id": "outcome:security/ga/traceable",
                 "level": "ga",
                 "text": "Sensitive actions can be traced to who did them.",
                 "until": null,
@@ -16971,7 +16979,7 @@
             "summary": "Kept apart, so it can't affect anything people rely on.",
             "outcomes": [
               {
-                "id": "compatibility/prototype/opt-in",
+                "id": "outcome:compatibility/prototype/opt-in",
                 "level": "prototype",
                 "text": "It reaches only those who chose to try it, and from Alpha, the people the client has agreed it can reach.",
                 "until": "alpha",
@@ -17100,7 +17108,7 @@
                 ]
               },
               {
-                "id": "compatibility/prototype/marked",
+                "id": "outcome:compatibility/prototype/marked",
                 "level": "prototype",
                 "text": "It's marked with its stability level wherever it's used.",
                 "until": "beta",
@@ -17158,7 +17166,7 @@
                 "overengineering": []
               },
               {
-                "id": "compatibility/prototype/removable",
+                "id": "outcome:compatibility/prototype/removable",
                 "level": "prototype",
                 "text": "It can be removed without affecting anything people rely on.",
                 "until": "alpha",
@@ -17250,7 +17258,7 @@
             "summary": "Breaking changes are fine, as long as those trying it hear about them.",
             "outcomes": [
               {
-                "id": "compatibility/alpha/standards",
+                "id": "outcome:compatibility/alpha/standards",
                 "level": "alpha",
                 "text": "Its interfaces follow the common standards for what it does, so others can work with it without surprises.",
                 "until": null,
@@ -17326,7 +17334,7 @@
                 ]
               },
               {
-                "id": "compatibility/alpha/told-of-changes",
+                "id": "outcome:compatibility/alpha/told-of-changes",
                 "level": "alpha",
                 "text": "Those trying it are told about breaking changes, which can still be made freely.",
                 "until": "alpha",
@@ -17388,7 +17396,7 @@
             "summary": "Breaking changes are rare, and announced.",
             "outcomes": [
               {
-                "id": "compatibility/beta/available",
+                "id": "outcome:compatibility/beta/available",
                 "level": "beta",
                 "text": "It's available to everyone it's meant for, without opting in, on the platforms and environments it supports.",
                 "until": null,
@@ -17468,7 +17476,7 @@
                 ]
               },
               {
-                "id": "compatibility/beta/changes-heard",
+                "id": "outcome:compatibility/beta/changes-heard",
                 "level": "beta",
                 "text": "Those depending on it hear about changes.",
                 "until": null,
@@ -17498,7 +17506,7 @@
                 "overengineering": []
               },
               {
-                "id": "compatibility/beta/breaking-rare",
+                "id": "outcome:compatibility/beta/breaking-rare",
                 "level": "beta",
                 "text": "Breaking changes are rare, and announced ahead of time where possible.",
                 "until": "beta",
@@ -17599,7 +17607,7 @@
             "summary": "Stable: a breaking change is a new version, with time to move over.",
             "outcomes": [
               {
-                "id": "compatibility/ga/stable-interface",
+                "id": "outcome:compatibility/ga/stable-interface",
                 "level": "ga",
                 "text": "Its interface is stable: a breaking change comes as a new version, and the old one keeps working for a set time.",
                 "until": null,
@@ -17746,7 +17754,7 @@
                 ]
               },
               {
-                "id": "compatibility/ga/every-platform",
+                "id": "outcome:compatibility/ga/every-platform",
                 "level": "ga",
                 "text": "It's known to work on every platform it supports.",
                 "until": null,
@@ -17876,7 +17884,7 @@
             "summary": "Someone who looks can see what went wrong.",
             "outcomes": [
               {
-                "id": "observability/alpha/see-errors",
+                "id": "outcome:observability/alpha/see-errors",
                 "level": "alpha",
                 "text": "When an error happens, someone looking can see what happened.",
                 "until": null,
@@ -17981,7 +17989,7 @@
             "summary": "Errors reach whoever runs it, without looking.",
             "outcomes": [
               {
-                "id": "observability/beta/healthy",
+                "id": "outcome:observability/beta/healthy",
                 "level": "beta",
                 "text": "Whoever runs it can tell it's healthy.",
                 "until": null,
@@ -18084,7 +18092,7 @@
                 ]
               },
               {
-                "id": "observability/beta/hears-of-errors",
+                "id": "outcome:observability/beta/hears-of-errors",
                 "level": "beta",
                 "text": "Whoever runs it hears about errors, and failed or missed runs, without searching for them.",
                 "until": null,
@@ -18153,7 +18161,7 @@
             "summary": "Problems are caught before users report them, with a plan for each.",
             "outcomes": [
               {
-                "id": "observability/ga/finds-out-first",
+                "id": "outcome:observability/ga/finds-out-first",
                 "level": "ga",
                 "text": "Whoever runs it finds out about failures that matter to its users before they're reported.",
                 "until": null,
@@ -18292,7 +18300,7 @@
                 ]
               },
               {
-                "id": "observability/ga/knows-what-to-do",
+                "id": "outcome:observability/ga/knows-what-to-do",
                 "level": "ga",
                 "text": "Whoever runs it knows what to do about each failure.",
                 "until": null,
@@ -18412,7 +18420,7 @@
             "summary": "It follows the project's conventions.",
             "outcomes": [
               {
-                "id": "maintainability/alpha/project-way",
+                "id": "outcome:maintainability/alpha/project-way",
                 "level": "alpha",
                 "text": "It's built the way the rest of the project is, so anyone who knows the project can follow it.",
                 "until": null,
@@ -18510,7 +18518,7 @@
             "summary": "Its structure fits the shape it settled on, and shortcuts are cleaned up.",
             "outcomes": [
               {
-                "id": "maintainability/beta/structure",
+                "id": "outcome:maintainability/beta/structure",
                 "level": "beta",
                 "text": "Its structure matches the shape it settled on, with clear boundaries, so what a change affects is easy to see.",
                 "until": null,
@@ -18559,7 +18567,7 @@
                 ]
               },
               {
-                "id": "maintainability/beta/shortcuts",
+                "id": "outcome:maintainability/beta/shortcuts",
                 "level": "beta",
                 "text": "Earlier shortcuts are removed or tracked.",
                 "until": null,
@@ -18576,7 +18584,7 @@
                 "overengineering": []
               },
               {
-                "id": "maintainability/beta/needed-complexity",
+                "id": "outcome:maintainability/beta/needed-complexity",
                 "level": "beta",
                 "text": "Every piece of complexity has a reason it needs now.",
                 "until": null,
@@ -18628,7 +18636,7 @@
             "summary": "Anyone on the team can change it confidently.",
             "outcomes": [
               {
-                "id": "maintainability/ga/others-can-change",
+                "id": "outcome:maintainability/ga/others-can-change",
                 "level": "ga",
                 "text": "Another engineer can change it confidently without the author, and tell what a change will affect.",
                 "until": null,
@@ -18649,7 +18657,7 @@
                 "overengineering": []
               },
               {
-                "id": "maintainability/ga/clean",
+                "id": "outcome:maintainability/ga/clean",
                 "level": "ga",
                 "text": "There's no dead code, untracked TODOs, or unexplained complexity.",
                 "until": null,
@@ -18715,7 +18723,7 @@
             "summary": "Someone owns it, and problems get written down.",
             "outcomes": [
               {
-                "id": "supportability/alpha/owner",
+                "id": "outcome:supportability/alpha/owner",
                 "level": "alpha",
                 "text": "It has an owner who decides its direction.",
                 "until": null,
@@ -18733,7 +18741,7 @@
                 ]
               },
               {
-                "id": "supportability/alpha/reporting",
+                "id": "outcome:supportability/alpha/reporting",
                 "level": "alpha",
                 "text": "Problems can be reported, and aren't lost.",
                 "until": null,
@@ -18777,7 +18785,7 @@
             "summary": "Known problems get fixed, and people can see them.",
             "outcomes": [
               {
-                "id": "supportability/beta/fixed",
+                "id": "outcome:supportability/beta/fixed",
                 "level": "beta",
                 "text": "Known problems are fixed as they're found.",
                 "until": null,
@@ -18795,7 +18803,7 @@
                 ]
               },
               {
-                "id": "supportability/beta/visible",
+                "id": "outcome:supportability/beta/visible",
                 "level": "beta",
                 "text": "Known problems are visible to those depending on it.",
                 "until": null,
@@ -18816,7 +18824,7 @@
             "summary": "Long-term ownership, with clear ways to get help.",
             "outcomes": [
               {
-                "id": "supportability/ga/long-term",
+                "id": "outcome:supportability/ga/long-term",
                 "level": "ga",
                 "text": "The owner is responsible for it long term.",
                 "until": null,
@@ -18875,7 +18883,7 @@
                 ]
               },
               {
-                "id": "supportability/ga/help",
+                "id": "outcome:supportability/ga/help",
                 "level": "ga",
                 "text": "Those depending on it know where to get help, and what response to expect.",
                 "until": null,
@@ -18935,7 +18943,7 @@
                 ]
               },
               {
-                "id": "supportability/ga/not-only-author",
+                "id": "outcome:supportability/ga/not-only-author",
                 "level": "ga",
                 "text": "Someone other than the author can change and operate it.",
                 "until": null,

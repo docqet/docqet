@@ -56,7 +56,8 @@ gaps:
       token for them, which outlasts the impersonation.
   - id: bans-can-arrive-late
     name: Bans can arrive late or out of order
-    rule: rule:bans-suspend-a-persons-tokens
+    affects:
+      - rule:bans-suspend-a-persons-tokens
     impact: damaging
     likelihood: unlikely
     description: >-

@@ -54,12 +54,13 @@ description: >-
   How a change gets from the main branch to the hotel's server, and back off
   it again.
 meets:
-  - reliability/beta/undo-release
-  - observability/alpha/see-errors
+  - outcome:reliability/beta/undo-release
+  - outcome:observability/alpha/see-errors
 gaps:
   - id: migrations-only-go-forward
     name: Migrations have no down step
-    outcome: reliability/ga/recovery
+    affects:
+      - outcome:reliability/ga/recovery
     description: >-
       Migrations have no down step, so undoing a release that changed the
       schema means restoring the database from the night before.
@@ -73,7 +74,7 @@ The deploy workflow points back at it, `# docket:implements
 mechanism:deployment` on its deploy job and `# docket:verifies
 mechanism:deployment` on its rollback job. That says where it is, where to
 start reading, and is the evidence that it meets
-`reliability/beta/undo-release`.
+`outcome:reliability/beta/undo-release`.
 
 ## Not to be confused with
 

@@ -16,7 +16,8 @@ concepts: [concept:bill, concept:charge]
 gaps:
   - id: children-corrected-by-hand
     name: City tax charged for children
-    rule: rule:children-pay-no-city-tax
+    affects:
+      - rule:children-pay-no-city-tax
     impact: inconvenient
     description: >-
       Guests' ages aren't recorded, so city tax is added for every guest on a

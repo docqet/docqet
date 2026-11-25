@@ -22,8 +22,8 @@ it. When and how it's closed is up to them, so a gap never says.
 gaps:
   - id: calendar-needs-a-mouse        # unique on this doc, in every project and domain that writes it
     name: Calendar needs a mouse      # what falls short, in a few words
-    outcome: usability/beta/everyone  # optional: the checklist outcome it falls short of
-    rule: rule:minimum-stay           # optional: a rule the capability follows but doesn't hold yet
+    affects:                          # optional: the claims it's why aren't true yet, see below
+      - outcome:usability/beta/everyone
     impact: blocking                  # see below: how bad it is for those it reaches
     likelihood: possible              # optional, `certain` when left out
     reach: few                        # optional, `all` when left out
@@ -39,13 +39,12 @@ one doc, so check the keys it already has before choosing one:
 `docket show <reference> --product` lists its gaps and tradeoffs from every
 project.
 
-- **Most gaps name no outcome.** They're limits on what the capability does.
-  Name an outcome only when the gap is the reason the capability's level falls
-  short of it. `docket checklist` lists the IDs, as
-  `<quality>/<level>/<id>`.
+- **Most gaps affect nothing.** They're limits on what the capability does.
+  A gap affects an outcome only when it's the reason the capability's level
+  falls short of it, or a rule only when the capability follows it and
+  doesn't hold to it yet. See [What `affects` says](#what-affects-says).
 - **A rule written before it's built** is followed by its capabilities, each
-  with a gap naming it in `rule`, since following a rule otherwise claims it
-  holds.
+  with a gap affecting it, since following a rule otherwise claims it holds.
 - **When a gap has a visible effect and a technical cause**, the gap goes on
   the capability, and the component's body explains the cause. A gap is never
   in both.
@@ -127,7 +126,7 @@ the business really has, and anyone able to do what they shouldn't, are
 always `all`.
 
 `docket` orders gaps by risk, worked out from the three ratings, the level of
-each capability the gap is on, and whether it breaks that level's promise.
+each capability the gap is on, and whether it breaks a claim made there.
 `docket show` and `docket list gaps --sort risk` show it. Rate each gap you
 add, and say in your report how you rated it, so a person can correct it.
 
@@ -140,7 +139,8 @@ tradeoff is one choice.
 tradeoffs:
   - id: constraint-not-lock
     name: Database constraint, not an app lock   # what we chose, in a few words
-    outcome: reliability/beta/data-kept          # optional: an outcome it falls short of on purpose
+    affects:                                     # optional: outcomes it falls short of on purpose
+      - outcome:reliability/beta/data-kept
     description: >-
       The database refuses overlapping bookings with an exclusion constraint,
       rather than the app locking the room while it checks.
@@ -162,8 +162,8 @@ tradeoffs:
   record it once a person has made it.
 - **A tradeoff isn't rated.** It carries no risk: someone already weighed its
   drawback and chose to live with it. A drawback that's worth worrying about
-  means the choice isn't settled: record an open decision on it, or turn it
-  back into a gap.
+  means the choice isn't settled: record an open decision that affects it,
+  which reopens it, or turn it back into a gap.
 
 ## Decisions
 
@@ -177,6 +177,8 @@ decisions:
     question: >-
       Is a guest who never arrives treated as a late cancellation, or charged
       for the whole stay?
+    affects:                          # optional: what's waiting on the answer
+      - capability:cancellations#no-shows-charged-nothing
 ```
 
 - **Every decision written down is open**, and counts as what's left.
@@ -191,3 +193,37 @@ decisions:
 - **Stay on the decision's side.** A decision on a domain, feature or
   capability becomes product docs, or their gaps or tradeoffs. One on a
   mechanism or component becomes technical docs, or theirs.
+
+## What `affects` says
+
+Declaring a level claims every outcome the checklist expects at it, and
+following a rule claims the rule holds. A gap, a tradeoff and a decision are
+the three ways of saying "except here", and `affects` says which claim, or
+which other item, each is about. Its meaning comes from what's doing the
+affecting:
+
+| `affects` → | An outcome | A rule | A gap | A tradeoff |
+| --- | --- | --- | --- | --- |
+| **Gap** | Not met yet | Not held yet | | |
+| **Tradeoff** | Not met, by choice | | | |
+| **Decision** | Open: neither claimed nor short | | Waits on its answer | Reopened |
+
+- **Write references**: `outcome:<quality>/<level>/<id>` (`docket checklist`
+  lists them), `rule:<id>`, with `@<domain>` for another domain's, or a gap's
+  or tradeoff's ID.
+- **Never anything else.** The doc an item is on is already what it's about,
+  so it never affects a capability, feature or persona. A gap never affects a
+  gap: which to close first is for a task tracker. A tradeoff never affects a
+  rule: a rule can't be broken by choice, so either the rule changes or it's
+  a gap.
+- **A gap affecting a claim raises its risk** on each capability where the
+  claim is made: one whose level expects the outcome, or that follows the
+  rule. It raises it more the higher the level, and not at all on a
+  Prototype.
+- **A gap that's really an unsettled question** is written as both: the
+  consequence as the gap, and the question as a decision that affects it.
+- **Stay on its side.** Product items affect product gaps and tradeoffs;
+  technical ones affect technical gaps and tradeoffs. Both can affect
+  outcomes.
+- **Closing, reversing or answering** deletes the item with its `affects`, so
+  nothing is left pointing anywhere.

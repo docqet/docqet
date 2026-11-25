@@ -49,7 +49,8 @@ gaps:
       same name, so one signing up under another name counts as new.
   - id: email-law-not-reviewed
     name: Email law not reviewed, and no opt-out
-    outcome: security/beta/duties
+    affects:
+      - outcome:security/beta/duties
     impact: damaging
     likelihood: unlikely
     description: >-

@@ -51,7 +51,8 @@ tradeoffs:
       two people editing one estimate at once.
   - id: deleting-is-permanent
     name: Deleting an estimate is permanent
-    outcome: usability/beta/recover
+    affects:
+      - outcome:usability/beta/recover
     description: Deleting an estimate is permanent.
     drawback: >-
       Getting one back means restoring a backup. That matters when someone

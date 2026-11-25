@@ -14,7 +14,8 @@ concepts: [concept:booking, concept:room]
 gaps:
   - id: calendar-needs-a-mouse
     name: Calendar needs a mouse
-    outcome: usability/beta/everyone
+    affects:
+      - outcome:usability/beta/everyone
     impact: blocking
     description: >-
       The room calendar can't be used from the keyboard, so clerks need a

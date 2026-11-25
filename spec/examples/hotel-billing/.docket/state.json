@@ -308,7 +308,8 @@
       "decisions": [
         {
           "topic": null,
-          "question": "Do guests split evenly, or charge by charge?"
+          "question": "Do guests split evenly, or charge by charge?",
+          "affects": []
         }
       ],
       "body": "",
@@ -343,7 +344,8 @@
       "decisions": [
         {
           "topic": "Long stays",
-          "question": "Is a week's stay still secured by one night's deposit?"
+          "question": "Is a week's stay still secured by one night's deposit?",
+          "affects": []
         }
       ],
       "body": "## Includes\n\n- Clerks see whether a stay's deposit has been paid.\n- Clerks take a deposit again when the guest's card was declined.",
@@ -389,7 +391,8 @@
       "decisions": [
         {
           "topic": null,
-          "question": "Do guests pay before they leave, or wait until they're home?"
+          "question": "Do guests pay before they leave, or wait until they're home?",
+          "affects": []
         }
       ],
       "body": "## Includes\n\n- Clerks send a guest a link to pay what they owe.",
@@ -571,7 +574,8 @@
       "decisions": [
         {
           "topic": null,
-          "question": "Is a day at a time what the accountant wants, or one export a month?"
+          "question": "Is a day at a time what the accountant wants, or one export a month?",
+          "affects": []
         }
       ],
       "body": "",
@@ -604,7 +608,8 @@
       "decisions": [
         {
           "topic": null,
-          "question": "Do guests want their bill emailed as they leave, or printed at the desk?"
+          "question": "Do guests want their bill emailed as they leave, or printed at the desk?",
+          "affects": []
         }
       ],
       "body": "## Includes\n\n- Clerks see a departing guest's bill, with every night and charge on it.\n- Clerks take payment for the balance, and close the bill.",
@@ -642,7 +647,8 @@
       "decisions": [
         {
           "topic": "Where the money goes",
-          "question": "Always back to the card it came from, or to whichever card the guest has with them?"
+          "question": "Always back to the card it came from, or to whichever card the guest has with them?",
+          "affects": []
         }
       ],
       "body": "",
@@ -1238,7 +1244,7 @@
         "capability:direct-billing"
       ],
       "meets": [
-        "reliability/beta/data-kept"
+        "outcome:reliability/beta/data-kept"
       ],
       "gaps": [
         "component:ledger#corrections-of-corrections-untested"
@@ -1262,7 +1268,15 @@
           }
         ]
       },
-      "decisions": [],
+      "decisions": [
+        {
+          "topic": "Long company stays",
+          "question": "Now that company stays of several months are being booked, should a bill's balance be stored and kept in step as lines are added, rather than summed every time?",
+          "affects": [
+            "component:ledger#balance-worked-out-on-read"
+          ]
+        }
+      ],
       "body": "Everything that changes what a guest owes goes through `post`: room nights,\nextras, deposits, payments and corrections. A correction is a new line for\nthe opposite amount, pointing at the line it corrects with `corrects`.\n\nAmounts are whole cents, never fractions of a unit, so totals add up exactly.\nThey're converted at the edges, when reading input and showing amounts.\n\n`post` refuses a closed bill, so anything that closes a bill posts everything\nfirst, deposits included."
     },
     {
@@ -1299,8 +1313,9 @@
     {
       "id": "capability:city-tax#children-corrected-by-hand",
       "domain": "billing",
-      "outcome": null,
-      "rule": "rule:children-pay-no-city-tax",
+      "affects": [
+        "rule:children-pay-no-city-tax"
+      ],
       "impact": "inconvenient",
       "likelihood": null,
       "reach": null,
@@ -1311,8 +1326,7 @@
     {
       "id": "capability:invoices#no-payment-reminders",
       "domain": "finance",
-      "outcome": null,
-      "rule": null,
+      "affects": [],
       "impact": "inconvenient",
       "likelihood": null,
       "reach": null,
@@ -1322,8 +1336,9 @@
     },
     {
       "id": "component:ledger#corrections-of-corrections-untested",
-      "outcome": "maintainability/ga/others-can-change",
-      "rule": null,
+      "affects": [
+        "outcome:maintainability/ga/others-can-change"
+      ],
       "impact": "damaging",
       "likelihood": "expected",
       "reach": "few",
@@ -1339,8 +1354,9 @@
     },
     {
       "id": "component:payments#no-timeout-on-provider-calls",
-      "outcome": "reliability/beta/fails-clearly",
-      "rule": null,
+      "affects": [
+        "outcome:reliability/beta/fails-clearly"
+      ],
       "impact": "inconvenient",
       "likelihood": "expected",
       "reach": null,
@@ -1359,7 +1375,7 @@
     {
       "id": "capability:pay-by-link#hotels-currency-only",
       "domain": "billing",
-      "outcome": null,
+      "affects": [],
       "name": "Hotel's currency only",
       "description": "Guests pay in the hotel's currency, not their own.",
       "benefit": "The bill, the payment and the hotel's books are all in one currency, with no exchange rates to keep.",
@@ -1369,7 +1385,7 @@
     {
       "id": "capability:direct-billing#whole-bill-moves",
       "domain": "finance",
-      "outcome": null,
+      "affects": [],
       "name": "Whole bills move, not single charges",
       "description": "A bill moves to a company's account whole, not charge by charge.",
       "benefit": "Clerks move a bill in one step at check-out, and a company's account only ever holds whole bills.",
@@ -1378,7 +1394,9 @@
     },
     {
       "id": "component:ledger#balance-worked-out-on-read",
-      "outcome": "efficiency/beta/bounded",
+      "affects": [
+        "outcome:efficiency/beta/bounded"
+      ],
       "name": "Balance summed on read, not stored",
       "description": "A bill's balance is added up from its lines every time it's asked for, not stored on the bill.",
       "benefit": "The balance can never disagree with the lines, and there's nothing to keep in step when a line is added.",
@@ -1393,7 +1411,7 @@
     },
     {
       "id": "component:payments#providers-card-form",
-      "outcome": null,
+      "affects": [],
       "name": "Provider's hosted card form, not our own",
       "description": "Guests type their card into the provider's hosted form, not one of ours.",
       "benefit": "Card numbers never reach our servers, so the hotel stays out of most card-security rules.",
@@ -1445,7 +1463,7 @@
             "summary": "Just enough for someone to judge the idea.",
             "outcomes": [
               {
-                "id": "utility/prototype/judged",
+                "id": "outcome:utility/prototype/judged",
                 "level": "prototype",
                 "text": "Those judging the idea can try it, or watch it run, enough to tell whether it's worth doing and whether this is the way to do it.",
                 "until": null,
@@ -1550,7 +1568,7 @@
             "summary": "Real use on the real system, to learn what it should become.",
             "outcomes": [
               {
-                "id": "utility/alpha/end-to-end",
+                "id": "outcome:utility/alpha/end-to-end",
                 "level": "alpha",
                 "text": "It works end to end on the real system.",
                 "until": null,
@@ -1572,7 +1590,7 @@
                 "overengineering": []
               },
               {
-                "id": "utility/alpha/real-use",
+                "id": "outcome:utility/alpha/real-use",
                 "level": "alpha",
                 "text": "It's used for real.",
                 "until": null,
@@ -1613,7 +1631,7 @@
                 ]
               },
               {
-                "id": "utility/alpha/learning",
+                "id": "outcome:utility/alpha/learning",
                 "level": "alpha",
                 "text": "What's learned from using it shapes what comes next.",
                 "until": null,
@@ -1639,7 +1657,7 @@
             "summary": "Confidence that the need is real and the approach is right. From here, it's refinement.",
             "outcomes": [
               {
-                "id": "utility/beta/confirmed",
+                "id": "outcome:utility/beta/confirmed",
                 "level": "beta",
                 "text": "The need and the solution are confirmed, so what changes from here is refinement.",
                 "until": null,
@@ -1659,7 +1677,7 @@
                 "overengineering": []
               },
               {
-                "id": "utility/beta/success-agreed",
+                "id": "outcome:utility/beta/success-agreed",
                 "level": "beta",
                 "text": "What success looks like is agreed.",
                 "until": null,
@@ -1702,7 +1720,7 @@
             "summary": "Proof, from real use, that it delivers what it's for.",
             "outcomes": [
               {
-                "id": "utility/ga/delivers",
+                "id": "outcome:utility/ga/delivers",
                 "level": "ga",
                 "text": "It's shown to deliver what it's for in real use.",
                 "until": null,
@@ -1798,7 +1816,7 @@
             "summary": "The main path makes sense without the builder explaining it.",
             "outcomes": [
               {
-                "id": "usability/alpha/main-path",
+                "id": "outcome:usability/alpha/main-path",
                 "level": "alpha",
                 "text": "Those trying it can use its main path without help from whoever built it.",
                 "until": null,
@@ -1876,7 +1894,7 @@
             "summary": "People can use all of it on their own, mistakes included.",
             "outcomes": [
               {
-                "id": "usability/beta/self-serve",
+                "id": "outcome:usability/beta/self-serve",
                 "level": "beta",
                 "text": "Its users can learn and use it on their own.",
                 "until": null,
@@ -1947,7 +1965,7 @@
                 ]
               },
               {
-                "id": "usability/beta/clear-results",
+                "id": "outcome:usability/beta/clear-results",
                 "level": "beta",
                 "text": "Its users can tell what happened after everything they do, and what to do next.",
                 "until": null,
@@ -2015,7 +2033,7 @@
                 "overengineering": []
               },
               {
-                "id": "usability/beta/recover",
+                "id": "outcome:usability/beta/recover",
                 "level": "beta",
                 "text": "Its users can recover from mistakes.",
                 "until": null,
@@ -2046,7 +2064,7 @@
                 "overengineering": []
               },
               {
-                "id": "usability/beta/everyone",
+                "id": "outcome:usability/beta/everyone",
                 "level": "beta",
                 "text": "It works for everyone it's meant for.",
                 "until": null,
@@ -2107,7 +2125,7 @@
             "summary": "Polished and consistent everywhere, for everyone it's meant for.",
             "outcomes": [
               {
-                "id": "usability/ga/all-learnable",
+                "id": "outcome:usability/ga/all-learnable",
                 "level": "ga",
                 "text": "Everything it does can be learned without asking anyone.",
                 "until": null,
@@ -2171,7 +2189,7 @@
                 ]
               },
               {
-                "id": "usability/ga/consistent",
+                "id": "outcome:usability/ga/consistent",
                 "level": "ga",
                 "text": "It behaves consistently across its whole interface.",
                 "until": null,
@@ -2234,7 +2252,7 @@
                 ]
               },
               {
-                "id": "usability/ga/all-accessible",
+                "id": "outcome:usability/ga/all-accessible",
                 "level": "ga",
                 "text": "All of it works for everyone it's meant for.",
                 "until": null,
@@ -2337,7 +2355,7 @@
             "summary": "The main path is checked, so a change can't quietly break it.",
             "outcomes": [
               {
-                "id": "functionality/alpha/main-path",
+                "id": "outcome:functionality/alpha/main-path",
                 "level": "alpha",
                 "text": "The main path is known to work after every change.",
                 "until": null,
@@ -2441,7 +2459,7 @@
                 ]
               },
               {
-                "id": "functionality/alpha/errors-visible",
+                "id": "outcome:functionality/alpha/errors-visible",
                 "level": "alpha",
                 "text": "Errors are visible, never silent.",
                 "until": null,
@@ -2501,7 +2519,7 @@
             "summary": "Edge cases and errors are handled, and checked too.",
             "outcomes": [
               {
-                "id": "functionality/beta/unusual-input",
+                "id": "outcome:functionality/beta/unusual-input",
                 "level": "beta",
                 "text": "Unusual input and error paths are handled correctly.",
                 "until": null,
@@ -2578,7 +2596,7 @@
                 ]
               },
               {
-                "id": "functionality/beta/stays-correct",
+                "id": "outcome:functionality/beta/stays-correct",
                 "level": "beta",
                 "text": "How it handles unusual input and errors is known to keep working as it changes.",
                 "until": null,
@@ -2659,7 +2677,7 @@
             "summary": "Everything critical is checked on every change.",
             "outcomes": [
               {
-                "id": "functionality/ga/critical-workflows",
+                "id": "outcome:functionality/ga/critical-workflows",
                 "level": "ga",
                 "text": "Every critical workflow is known to work after every change.",
                 "until": null,
@@ -2710,7 +2728,7 @@
                 ]
               },
               {
-                "id": "functionality/ga/bugs-stay-fixed",
+                "id": "outcome:functionality/ga/bugs-stay-fixed",
                 "level": "ga",
                 "text": "A fixed bug stays fixed.",
                 "until": null,
@@ -2862,7 +2880,7 @@
             "summary": "Enough that people's data is safe and a bad release can be undone.",
             "outcomes": [
               {
-                "id": "reliability/beta/data-kept",
+                "id": "outcome:reliability/beta/data-kept",
                 "level": "beta",
                 "text": "Data that people or systems put in is kept across changes.",
                 "until": null,
@@ -2944,7 +2962,7 @@
                 ]
               },
               {
-                "id": "reliability/beta/undo-release",
+                "id": "outcome:reliability/beta/undo-release",
                 "level": "beta",
                 "text": "A bad release can be undone.",
                 "until": null,
@@ -3041,7 +3059,7 @@
                 ]
               },
               {
-                "id": "reliability/beta/fails-clearly",
+                "id": "outcome:reliability/beta/fails-clearly",
                 "level": "beta",
                 "text": "When something it depends on is slow or down, it fails clearly or degrades gracefully instead of hanging.",
                 "until": null,
@@ -3129,7 +3147,7 @@
             "summary": "Enough to depend on: it rides out failures, and recovery is proven.",
             "outcomes": [
               {
-                "id": "reliability/ga/holds-up",
+                "id": "outcome:reliability/ga/holds-up",
                 "level": "ga",
                 "text": "It holds up under overlapping runs, partial failures, and retries.",
                 "until": null,
@@ -3204,7 +3222,7 @@
                 ]
               },
               {
-                "id": "reliability/ga/availability",
+                "id": "outcome:reliability/ga/availability",
                 "level": "ga",
                 "text": "It meets its availability target.",
                 "until": null,
@@ -3273,7 +3291,7 @@
                 ]
               },
               {
-                "id": "reliability/ga/recovery",
+                "id": "outcome:reliability/ga/recovery",
                 "level": "ga",
                 "text": "Recovering from a bad release or a loss of data is known to work.",
                 "until": null,
@@ -3485,7 +3503,7 @@
             "summary": "Fine at realistic volumes, with no runaway work.",
             "outcomes": [
               {
-                "id": "efficiency/beta/realistic-volumes",
+                "id": "outcome:efficiency/beta/realistic-volumes",
                 "level": "beta",
                 "text": "It works at realistic volumes.",
                 "until": null,
@@ -3552,7 +3570,7 @@
                 ]
               },
               {
-                "id": "efficiency/beta/bounded",
+                "id": "outcome:efficiency/beta/bounded",
                 "level": "beta",
                 "text": "The work it does is bounded.",
                 "until": null,
@@ -3611,7 +3629,7 @@
             "summary": "Targets for speed and cost are set, and met with room to spare.",
             "outcomes": [
               {
-                "id": "efficiency/ga/speed-targets",
+                "id": "outcome:efficiency/ga/speed-targets",
                 "level": "ga",
                 "text": "It meets agreed speed targets at peak load, with headroom.",
                 "until": null,
@@ -3687,7 +3705,7 @@
                 ]
               },
               {
-                "id": "efficiency/ga/cost",
+                "id": "outcome:efficiency/ga/cost",
                 "level": "ga",
                 "text": "What it costs to run is known and acceptable.",
                 "until": null,
@@ -3734,7 +3752,7 @@
                 ]
               },
               {
-                "id": "efficiency/ga/limits-known",
+                "id": "outcome:efficiency/ga/limits-known",
                 "level": "ga",
                 "text": "Its limits are known.",
                 "until": null,
@@ -3785,7 +3803,7 @@
             "summary": "Trying it out puts nothing real at risk.",
             "outcomes": [
               {
-                "id": "security/prototype/secrets",
+                "id": "outcome:security/prototype/secrets",
                 "level": "prototype",
                 "text": "Secrets stay out of code, version control, and anything it ships.",
                 "until": null,
@@ -3849,7 +3867,7 @@
                 ]
               },
               {
-                "id": "security/prototype/real-data",
+                "id": "outcome:security/prototype/real-data",
                 "level": "prototype",
                 "text": "It uses made-up data. Real data isn't copied into it, and isn't left open through it.",
                 "until": null,
@@ -3907,7 +3925,7 @@
             "summary": "Real people and their data are safe with it.",
             "outcomes": [
               {
-                "id": "security/alpha/access",
+                "id": "outcome:security/alpha/access",
                 "level": "alpha",
                 "text": "Only those allowed can reach real systems or data, and one tenant or account never sees or changes another's.",
                 "until": null,
@@ -4090,7 +4108,7 @@
                 ]
               },
               {
-                "id": "security/alpha/untrusted-input",
+                "id": "outcome:security/alpha/untrusted-input",
                 "level": "alpha",
                 "text": "Untrusted input can't run as code or commands.",
                 "until": null,
@@ -4191,7 +4209,7 @@
                 ]
               },
               {
-                "id": "security/alpha/stable-dependencies",
+                "id": "outcome:security/alpha/stable-dependencies",
                 "level": "alpha",
                 "text": "It depends on nothing less stable than itself.",
                 "until": null,
@@ -4224,7 +4242,7 @@
             "summary": "Protected against misuse, and follows the rules that apply.",
             "outcomes": [
               {
-                "id": "security/beta/misuse",
+                "id": "outcome:security/beta/misuse",
                 "level": "beta",
                 "text": "It's protected against misuse at the level it's exposed.",
                 "until": null,
@@ -4360,7 +4378,7 @@
                 ]
               },
               {
-                "id": "security/beta/duties",
+                "id": "outcome:security/beta/duties",
                 "level": "beta",
                 "text": "The legal and regulatory duties that apply to it are known and met.",
                 "until": null,
@@ -4424,7 +4442,7 @@
                 ]
               },
               {
-                "id": "security/beta/personal-data",
+                "id": "outcome:security/beta/personal-data",
                 "level": "beta",
                 "text": "Personal data is collected only where it's needed.",
                 "until": null,
@@ -4481,7 +4499,7 @@
                 "overengineering": []
               },
               {
-                "id": "security/beta/maintained-dependencies",
+                "id": "outcome:security/beta/maintained-dependencies",
                 "level": "beta",
                 "text": "Its dependencies are maintained, and licensed for how it's used.",
                 "until": null,
@@ -4539,7 +4557,7 @@
             "summary": "Its sensitive parts are reviewed, and actions can be traced.",
             "outcomes": [
               {
-                "id": "security/ga/sound",
+                "id": "outcome:security/ga/sound",
                 "level": "ga",
                 "text": "Its handling of credentials, payments, personal data, and permissions is known to be sound.",
                 "until": null,
@@ -4627,7 +4645,7 @@
                 ]
               },
               {
-                "id": "security/ga/least-access",
+                "id": "outcome:security/ga/least-access",
                 "level": "ga",
                 "text": "Each part has only the access it needs.",
                 "until": null,
@@ -4682,7 +4700,7 @@
                 "overengineering": []
               },
               {
-                "id": "security/ga/traceable",
+                "id": "outcome:security/ga/traceable",
                 "level": "ga",
                 "text": "Sensitive actions can be traced to who did them.",
                 "until": null,
@@ -4764,7 +4782,7 @@
             "summary": "Kept apart, so it can't affect anything people rely on.",
             "outcomes": [
               {
-                "id": "compatibility/prototype/opt-in",
+                "id": "outcome:compatibility/prototype/opt-in",
                 "level": "prototype",
                 "text": "It reaches only those who chose to try it, and from Alpha, the people the client has agreed it can reach.",
                 "until": "alpha",
@@ -4893,7 +4911,7 @@
                 ]
               },
               {
-                "id": "compatibility/prototype/marked",
+                "id": "outcome:compatibility/prototype/marked",
                 "level": "prototype",
                 "text": "It's marked with its stability level wherever it's used.",
                 "until": "beta",
@@ -4951,7 +4969,7 @@
                 "overengineering": []
               },
               {
-                "id": "compatibility/prototype/removable",
+                "id": "outcome:compatibility/prototype/removable",
                 "level": "prototype",
                 "text": "It can be removed without affecting anything people rely on.",
                 "until": "alpha",
@@ -5043,7 +5061,7 @@
             "summary": "Breaking changes are fine, as long as those trying it hear about them.",
             "outcomes": [
               {
-                "id": "compatibility/alpha/standards",
+                "id": "outcome:compatibility/alpha/standards",
                 "level": "alpha",
                 "text": "Its interfaces follow the common standards for what it does, so others can work with it without surprises.",
                 "until": null,
@@ -5119,7 +5137,7 @@
                 ]
               },
               {
-                "id": "compatibility/alpha/told-of-changes",
+                "id": "outcome:compatibility/alpha/told-of-changes",
                 "level": "alpha",
                 "text": "Those trying it are told about breaking changes, which can still be made freely.",
                 "until": "alpha",
@@ -5181,7 +5199,7 @@
             "summary": "Breaking changes are rare, and announced.",
             "outcomes": [
               {
-                "id": "compatibility/beta/available",
+                "id": "outcome:compatibility/beta/available",
                 "level": "beta",
                 "text": "It's available to everyone it's meant for, without opting in, on the platforms and environments it supports.",
                 "until": null,
@@ -5261,7 +5279,7 @@
                 ]
               },
               {
-                "id": "compatibility/beta/changes-heard",
+                "id": "outcome:compatibility/beta/changes-heard",
                 "level": "beta",
                 "text": "Those depending on it hear about changes.",
                 "until": null,
@@ -5291,7 +5309,7 @@
                 "overengineering": []
               },
               {
-                "id": "compatibility/beta/breaking-rare",
+                "id": "outcome:compatibility/beta/breaking-rare",
                 "level": "beta",
                 "text": "Breaking changes are rare, and announced ahead of time where possible.",
                 "until": "beta",
@@ -5392,7 +5410,7 @@
             "summary": "Stable: a breaking change is a new version, with time to move over.",
             "outcomes": [
               {
-                "id": "compatibility/ga/stable-interface",
+                "id": "outcome:compatibility/ga/stable-interface",
                 "level": "ga",
                 "text": "Its interface is stable: a breaking change comes as a new version, and the old one keeps working for a set time.",
                 "until": null,
@@ -5539,7 +5557,7 @@
                 ]
               },
               {
-                "id": "compatibility/ga/every-platform",
+                "id": "outcome:compatibility/ga/every-platform",
                 "level": "ga",
                 "text": "It's known to work on every platform it supports.",
                 "until": null,
@@ -5669,7 +5687,7 @@
             "summary": "Someone who looks can see what went wrong.",
             "outcomes": [
               {
-                "id": "observability/alpha/see-errors",
+                "id": "outcome:observability/alpha/see-errors",
                 "level": "alpha",
                 "text": "When an error happens, someone looking can see what happened.",
                 "until": null,
@@ -5774,7 +5792,7 @@
             "summary": "Errors reach whoever runs it, without looking.",
             "outcomes": [
               {
-                "id": "observability/beta/healthy",
+                "id": "outcome:observability/beta/healthy",
                 "level": "beta",
                 "text": "Whoever runs it can tell it's healthy.",
                 "until": null,
@@ -5877,7 +5895,7 @@
                 ]
               },
               {
-                "id": "observability/beta/hears-of-errors",
+                "id": "outcome:observability/beta/hears-of-errors",
                 "level": "beta",
                 "text": "Whoever runs it hears about errors, and failed or missed runs, without searching for them.",
                 "until": null,
@@ -5946,7 +5964,7 @@
             "summary": "Problems are caught before users report them, with a plan for each.",
             "outcomes": [
               {
-                "id": "observability/ga/finds-out-first",
+                "id": "outcome:observability/ga/finds-out-first",
                 "level": "ga",
                 "text": "Whoever runs it finds out about failures that matter to its users before they're reported.",
                 "until": null,
@@ -6085,7 +6103,7 @@
                 ]
               },
               {
-                "id": "observability/ga/knows-what-to-do",
+                "id": "outcome:observability/ga/knows-what-to-do",
                 "level": "ga",
                 "text": "Whoever runs it knows what to do about each failure.",
                 "until": null,
@@ -6205,7 +6223,7 @@
             "summary": "It follows the project's conventions.",
             "outcomes": [
               {
-                "id": "maintainability/alpha/project-way",
+                "id": "outcome:maintainability/alpha/project-way",
                 "level": "alpha",
                 "text": "It's built the way the rest of the project is, so anyone who knows the project can follow it.",
                 "until": null,
@@ -6303,7 +6321,7 @@
             "summary": "Its structure fits the shape it settled on, and shortcuts are cleaned up.",
             "outcomes": [
               {
-                "id": "maintainability/beta/structure",
+                "id": "outcome:maintainability/beta/structure",
                 "level": "beta",
                 "text": "Its structure matches the shape it settled on, with clear boundaries, so what a change affects is easy to see.",
                 "until": null,
@@ -6352,7 +6370,7 @@
                 ]
               },
               {
-                "id": "maintainability/beta/shortcuts",
+                "id": "outcome:maintainability/beta/shortcuts",
                 "level": "beta",
                 "text": "Earlier shortcuts are removed or tracked.",
                 "until": null,
@@ -6369,7 +6387,7 @@
                 "overengineering": []
               },
               {
-                "id": "maintainability/beta/needed-complexity",
+                "id": "outcome:maintainability/beta/needed-complexity",
                 "level": "beta",
                 "text": "Every piece of complexity has a reason it needs now.",
                 "until": null,
@@ -6421,7 +6439,7 @@
             "summary": "Anyone on the team can change it confidently.",
             "outcomes": [
               {
-                "id": "maintainability/ga/others-can-change",
+                "id": "outcome:maintainability/ga/others-can-change",
                 "level": "ga",
                 "text": "Another engineer can change it confidently without the author, and tell what a change will affect.",
                 "until": null,
@@ -6442,7 +6460,7 @@
                 "overengineering": []
               },
               {
-                "id": "maintainability/ga/clean",
+                "id": "outcome:maintainability/ga/clean",
                 "level": "ga",
                 "text": "There's no dead code, untracked TODOs, or unexplained complexity.",
                 "until": null,
@@ -6508,7 +6526,7 @@
             "summary": "Someone owns it, and problems get written down.",
             "outcomes": [
               {
-                "id": "supportability/alpha/owner",
+                "id": "outcome:supportability/alpha/owner",
                 "level": "alpha",
                 "text": "It has an owner who decides its direction.",
                 "until": null,
@@ -6526,7 +6544,7 @@
                 ]
               },
               {
-                "id": "supportability/alpha/reporting",
+                "id": "outcome:supportability/alpha/reporting",
                 "level": "alpha",
                 "text": "Problems can be reported, and aren't lost.",
                 "until": null,
@@ -6570,7 +6588,7 @@
             "summary": "Known problems get fixed, and people can see them.",
             "outcomes": [
               {
-                "id": "supportability/beta/fixed",
+                "id": "outcome:supportability/beta/fixed",
                 "level": "beta",
                 "text": "Known problems are fixed as they're found.",
                 "until": null,
@@ -6588,7 +6606,7 @@
                 ]
               },
               {
-                "id": "supportability/beta/visible",
+                "id": "outcome:supportability/beta/visible",
                 "level": "beta",
                 "text": "Known problems are visible to those depending on it.",
                 "until": null,
@@ -6609,7 +6627,7 @@
             "summary": "Long-term ownership, with clear ways to get help.",
             "outcomes": [
               {
-                "id": "supportability/ga/long-term",
+                "id": "outcome:supportability/ga/long-term",
                 "level": "ga",
                 "text": "The owner is responsible for it long term.",
                 "until": null,
@@ -6668,7 +6686,7 @@
                 ]
               },
               {
-                "id": "supportability/ga/help",
+                "id": "outcome:supportability/ga/help",
                 "level": "ga",
                 "text": "Those depending on it know where to get help, and what response to expect.",
                 "until": null,
@@ -6728,7 +6746,7 @@
                 ]
               },
               {
-                "id": "supportability/ga/not-only-author",
+                "id": "outcome:supportability/ga/not-only-author",
                 "level": "ga",
                 "text": "Someone other than the author can change and operate it.",
                 "until": null,

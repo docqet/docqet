@@ -39,9 +39,9 @@
 #   level.
 # - A level includes every outcome the levels below it expect, unless `until`
 #   names the last level an outcome applies to.
-# - An outcome's ID is `<quality>/<level>/<id>`, such as
-#   `reliability/beta/data-kept`. A gap names the outcome it falls short of by
-#   that ID.
+# - An outcome is referred to as `outcome:<quality>/<level>/<id>`, such as
+#   `outcome:reliability/beta/data-kept`. A gap, tradeoff or decision names
+#   the outcomes it affects that way.
 # - "Users" means whatever uses it: people, other programs, or schedulers.
 #
 # The qualities draw on ISO/IEC 25010, Kubernetes' feature graduation and

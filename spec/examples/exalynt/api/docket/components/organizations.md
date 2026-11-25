@@ -6,11 +6,12 @@ description: >-
   Client organizations, their members, invitations, payment customer, and
   logo.
 capabilities: [capability:organizations-and-members, capability:client-directory, capability:billing]
-meets: [security/ga/sound]
+meets: [outcome:security/ga/sound]
 tradeoffs:
   - id: lists-returned-whole
     name: Lists returned whole, not paged
-    outcome: efficiency/beta/bounded
+    affects:
+      - outcome:efficiency/beta/bounded
     description: >-
       Members, invitations, and `GET /v1/clients` are returned whole, not
       paged: an organization is sized for tens of members and Exalynt for tens

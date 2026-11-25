@@ -64,7 +64,8 @@ gaps:
       in.
   - id: team-changes-can-overbook
     name: Team changes can overbook a week
-    rule: rule:weeks-are-never-overbooked
+    affects:
+      - rule:weeks-are-never-overbooked
     impact: inconvenient
     likelihood: unlikely
     reach: few

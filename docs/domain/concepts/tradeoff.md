@@ -20,9 +20,10 @@ against its benefit and chose to live with it. Its drawback says what was
 accepted, in words. A choice that's fine until something changes, such as a
 quicker design that slows down as bills grow, says so in its drawback, which
 is also when it's worth looking at again. A drawback that starts to worry
-someone means the choice isn't settled any more: it's reopened as an
-[open decision](open-decision.md), or turned back into a gap, which is
-scored.
+someone means the choice isn't settled any more: an
+[open decision](open-decision.md) that affects it reopens it, and it stays
+the current choice until that's answered. Or it's turned back into a gap,
+which is scored.
 
 It's on the thing the choice was made about:
 
@@ -36,9 +37,11 @@ It's on the thing the choice was made about:
 A tradeoff answers the question code can't: is this deliberate? Code that
 looks wrong on purpose points at its tradeoff, so neither a person nor an
 agent "fixes" it. When the choice means falling short of a
-[stability checklist](stability-checklist.md) outcome, the tradeoff names it,
-and the checklist shows that outcome as not met by choice, so it's neither
-claimed nor taken for a gap.
+[stability checklist](stability-checklist.md) outcome, the tradeoff affects
+it, and the checklist shows that outcome as not met by choice, so it's
+neither claimed nor taken for a gap. A tradeoff never affects a
+[rule](rule.md): a rule is a constraint of the business, so not holding it
+can't be a choice. Either the rule changes, or it's a gap.
 
 A tradeoff we reverse is deleted, or replaced by the new one.
 
@@ -47,14 +50,15 @@ A tradeoff we reverse is deleted, or replaced by the new one.
 Tradeoffs are listed in the frontmatter of the doc they're on, each with an
 `id`, a `name` saying in a few words what we chose, a `description` saying
 what we chose and not what, its `benefit`, and its
-`drawback`. Optionally, as a gap does, its `outcome` names the checklist
-outcome it falls short of. On the [ledger](../../../spec/examples/hotel-billing/docket/components/ledger.md):
+`drawback`. Optionally, its `affects` lists the checklist outcomes it falls
+short of. On the [ledger](../../../spec/examples/hotel-billing/docket/components/ledger.md):
 
 ```yaml
 tradeoffs:
   - id: balance-worked-out-on-read
     name: Balance summed on read, not stored
-    outcome: efficiency/beta/bounded
+    affects:
+      - outcome:efficiency/beta/bounded
     description: >-
       A bill's balance is added up from its lines every time it's asked for,
       not stored on the bill.

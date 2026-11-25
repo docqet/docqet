@@ -52,7 +52,8 @@ concepts:
 gaps:
   - id: upcoming-shares-can-change
     name: Upcoming lead and support shares can change
-    rule: rule:when-basis-and-percentages-are-fixed
+    affects:
+      - rule:when-basis-and-percentages-are-fixed
     impact: inconvenient
     likelihood: possible
     reach: some

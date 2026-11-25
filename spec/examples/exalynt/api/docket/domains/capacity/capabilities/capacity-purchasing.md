@@ -24,7 +24,8 @@ concepts: [concept:capacity-block, concept:capacity-unit, concept:invoice@billin
 gaps:
   - id: unknown-outcome-retry-while-open
     name: Unclear purchase retry safe only while open
-    rule: rule:retrying-a-purchase-never-charges-twice
+    affects:
+      - rule:retrying-a-purchase-never-charges-twice
     impact: inconvenient
     likelihood: unlikely
     reach: few
@@ -34,7 +35,8 @@ gaps:
       still open. Closing it, or reloading, starts a new purchase.
   - id: touch-and-screen-readers-untried
     name: Touch screens and screen readers untried
-    outcome: usability/beta/everyone
+    affects:
+      - outcome:usability/beta/everyone
     impact: inconvenient
     likelihood: possible
     reach: few

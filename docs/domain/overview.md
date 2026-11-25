@@ -69,7 +69,7 @@ one's evidence and any problems. Readers work out each feature's, domain's,
 project's, persona's and initiative's **[maturity](concepts/maturity.md)**,
 how far along it is, and score gaps by **[risk](concepts/risk.md)**, from the
 impact, likelihood and reach each declares, the level of each capability it's
-on, and whether it breaks that level's promise. From levels and risk they work
+on, and whether it breaks a claim made there. From levels and risk they work
 out **[readiness](concepts/readiness.md)**: how ready people can rely on each
 capability, feature, domain, project, persona and initiative being, as a
 recommendation, with what's left. It's maturity less their
@@ -139,15 +139,18 @@ flowchart TB
   capability -- "holds" --> differ
   technical -- "holds" --> differ
 
-  gap -- "falls short of" --> outcome
-  gap -- "doesn't yet hold to" --> rule
+  gap -- "affects: not met yet" --> outcome
+  gap -- "affects: not held yet" --> rule
+  tradeoff -- "affects: not met, by choice" --> outcome
+  decision -- "affects: open" --> outcome
+  decision -- "affects: waits on it, reopens" --> gap & tradeoff
 
   annotation -- "verifies, implements" --> rule & capability & technical
   annotation -- "marks where it shows" --> gap & tradeoff
 
   annotation -.-> evidence
   gap -. "impact, likelihood, reach" .-> risk
-  level -. "weight and promise" .-> risk
+  level -. "weight and claim factor" .-> risk
   level -. "of capabilities" .-> maturity
   risk -. "riskiest on each capability" .-> exposure
   level -. "weight" .-> exposure
@@ -253,16 +256,19 @@ that says a capability doesn't hold to a rule yet is the capability's.
 What's left is the open decisions and the gaps, and nothing else. Everything
 declared, such as what a capability does, each rule it follows, and each
 checklist outcome its level expects, is a claim, and each claim is in one of
-three standings:
+these standings:
 
 | Standing | When |
 | --- | --- |
-| **Not held** | A gap names it, for all of it or a part |
-| **Not held, by choice** | A tradeoff names it: only a checklist outcome |
+| **Not held** | A gap affects it, for all of it or a part |
+| **Not held, by choice** | A tradeoff affects it: only a checklist outcome |
+| **Open** | An open decision affects it: only a checklist outcome |
 | **Held, with evidence** | Something in the repository points at it as [evidence](concepts/evidence.md) |
-| **Held, on trust** | Nothing names it, which is the usual case |
+| **Held, on trust** | Nothing affects it, which is the usual case |
 
-A gap wins over a tradeoff, and both win over evidence. Evidence is always optional: it shows how we know
+A gap wins over a tradeoff, a tradeoff over a decision, and all three over
+evidence. A decision can also affect a gap, which then waits on its answer,
+or a tradeoff, which it reopens. Evidence is always optional: it shows how we know
 something holds, and its absence is never something left to do. A draft
 capability claims nothing yet.
 
@@ -327,8 +333,8 @@ Some things are never features or capabilities:
 - [Gap](concepts/gap.md): something we intend to close.
 - [Tradeoff](concepts/tradeoff.md): something we chose, knowing its benefit and drawback.
 - [Risk](concepts/risk.md): what's at stake in a gap, scored from its impact,
-  the level of each capability it's on, and whether it breaks that level's
-  promise, and its spread, how that spreads across them.
+  the level of each capability it's on, and whether it breaks a claim made
+  there, and its spread, how that spreads across them.
 - [Exposure](concepts/exposure.md): what the gaps open on some capabilities
   put at stake together: to risk what maturity is to stability.
 

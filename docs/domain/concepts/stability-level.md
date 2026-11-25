@@ -14,8 +14,8 @@ promote or demote it.
 | GA        | Stable     | Keeps working as it does today. Breaking changes are rare and come with time.  |
 
 A capability declared but not started yet is a **draft**. It has no level, so
-it promises nothing, claims nothing on the
-[checklist](stability-checklist.md), and counts toward no
+it claims nothing, on the [checklist](stability-checklist.md) or anywhere
+else, and counts toward no
 [maturity](maturity.md) or [readiness](readiness.md). It shows as Draft, with
 no level's mark.
 

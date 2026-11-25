@@ -21,7 +21,7 @@ the same capabilities, each at its level in short, its lowest across the
 domains that build it, with the same weights, so readiness can be read from
 the two numbers shown beside it.
 
-Impact, likelihood, reach, stability and broken promises all come in through
+Impact, likelihood, reach, stability and broken claims all come in through
 exposure, through the riskiest gap on each capability, so a tolerable
 gap still lowers readiness a little, and an unacceptable one a lot.
 
@@ -57,7 +57,7 @@ readiness. It falls in a quarter of its own:
   without the one capability whose gaps put most at stake can start using
   the rest. That's for people to judge.
 - **Promoting can lower it.** A capability's level counts for more once
-  promoted, but where its gaps break a promise the new level makes, its
+  promoted, but where its gaps break a claim the new level makes, its
   exposure goes up too, and can outweigh it. That's what's at stake going
   up.
 - **New work lowers it a little.** A new capability at Prototype weighs
@@ -77,30 +77,30 @@ status at Prototype, so what serves them is 59% mature. Each capability is
 exposed to its riskiest gap's share of the most it could be exposed to:
 
 ```text
-room booking    75%  calendar needs a mouse, blocking, breaks Beta's promise
+room booking    75%  calendar needs a mouse, blocking, breaks Beta's claim
 cancellations  100%  late cancellations refunded in full, damaging, breaks a rule
-check-in        33%  deployment's migrations go only forward, damaging, possible
-check-out       50%  the same, which breaks GA's promise of recovery
-group bookings  33%  the same
-room status     33%  the same
+check-in        40%  deployment's migrations go only forward, damaging, possible
+check-out       50%  the same, which breaks GA's claim of recovery
+group bookings  50%  the same
+room status     50%  the same
 
-exposure        (75 × 4 + 33 × 4 + 100 × 3 + 50 × 6 + 33 × 2 + 33 × 2) ÷ 21 ≈ 56%
-readiness       59% × (1 − 56%) ≈ 26%
+exposure        (75 × 4 + 40 × 4 + 100 × 3 + 50 × 6 + 50 × 2 + 50 × 2) ÷ 21 = 60%
+readiness       59% × (1 − 60%) ≈ 24%
 ```
 
-That's Partial, and what's left is:
+That's Partial. Late cancellations refunded in full scores 66 at Alpha,
+tolerable, so it lowers readiness but isn't left to do. What's left is:
 
 ```text
 room booking    close capability:room-booking#calendar-needs-a-mouse
 cancellations   reach Beta, now Alpha
-                close capability:cancellations#late-cancellations-refunded-in-full
 check-out       close mechanism:deployment#migrations-only-go-forward
 group bookings  reach Beta, now Prototype
 room status     reach Beta, now Prototype
 ```
 
-Closing those three gaps would leave 11% exposure, from the bookings
-component's unknown clashes, and make it 53%, Viable. In Hotel
+Closing those two gaps would leave 26% exposure, mostly from late
+cancellations, and make it 44%, still Partial. In Hotel
 Billing, the manager has city tax at Alpha, deposits and daily takings at
 Beta, and night audit at GA: 70% mature, with 18% exposure, from city tax's
 children corrected by hand and deposits' provider calls with no timeout, so

@@ -6,12 +6,13 @@ description: >-
   How a change gets from the main branch to the hotel's server, and back off
   it again.
 meets:
-  - reliability/beta/undo-release
-  - observability/alpha/see-errors
+  - outcome:reliability/beta/undo-release
+  - outcome:observability/alpha/see-errors
 gaps:
   - id: migrations-only-go-forward
     name: Migrations have no down step
-    outcome: reliability/ga/recovery
+    affects:
+      - outcome:reliability/ga/recovery
     impact: damaging
     likelihood: possible
     description: >-
@@ -33,6 +34,13 @@ decisions:
     question: >-
       Once there's a second server, do releases switch over all at once,
       or one server at a time?
+  - topic: Undoing a schema change
+    question: >-
+      Is restoring the night before's database enough to undo a release that
+      changed the schema, or does every migration need a down step?
+    affects:
+      - outcome:reliability/ga/recovery
+      - mechanism:deployment#migrations-only-go-forward
 ---
 
 Every merge to `main` builds one container image, tagged with the commit, and

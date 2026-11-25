@@ -6,11 +6,12 @@ description: >-
   Every amount a guest owes or pays, as lines on their bill that are only ever
   added, never changed.
 capabilities: [capability:extra-charges, capability:split-bills, capability:deposits, capability:check-out, capability:direct-billing]
-meets: [reliability/beta/data-kept]
+meets: [outcome:reliability/beta/data-kept]
 gaps:
   - id: corrections-of-corrections-untested
     name: Corrections of corrections untested
-    outcome: maintainability/ga/others-can-change
+    affects:
+      - outcome:maintainability/ga/others-can-change
     impact: damaging
     likelihood: expected
     reach: few
@@ -21,7 +22,8 @@ gaps:
 tradeoffs:
   - id: balance-worked-out-on-read
     name: Balance summed on read, not stored
-    outcome: efficiency/beta/bounded
+    affects:
+      - outcome:efficiency/beta/bounded
     description: >-
       A bill's balance is added up from its lines every time it's asked for,
       not stored on the bill.
@@ -31,6 +33,14 @@ tradeoffs:
     drawback: >-
       Opening a bill gets slower as lines are added to it, which shows once a
       bill grows to thousands of lines, as on a long company stay.
+decisions:
+  - topic: Long company stays
+    question: >-
+      Now that company stays of several months are being booked, should a
+      bill's balance be stored and kept in step as lines are added, rather
+      than summed every time?
+    affects:
+      - component:ledger#balance-worked-out-on-read
 ---
 
 Everything that changes what a guest owes goes through `post`: room nights,

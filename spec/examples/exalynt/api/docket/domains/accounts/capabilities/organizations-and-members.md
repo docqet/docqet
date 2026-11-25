@@ -93,7 +93,8 @@ gaps:
       invites the same address again.
   - id: sign-up-shows-the-team
     name: Sign-up reveals a team's contact details
-    outcome: security/beta/misuse
+    affects:
+      - outcome:security/beta/misuse
     impact: inconvenient
     likelihood: unlikely
     description: >-
@@ -103,7 +104,8 @@ gaps:
       show more than one team.
   - id: retention-not-decided
     name: Closed organizations' data never deleted
-    outcome: security/beta/duties
+    affects:
+      - outcome:security/beta/duties
     impact: damaging
     likelihood: unlikely
     description: >-
@@ -111,7 +113,8 @@ gaps:
       request.
   - id: no-privacy-notice
     name: No privacy notice at sign-up
-    outcome: security/beta/duties
+    affects:
+      - outcome:security/beta/duties
     impact: damaging
     likelihood: unlikely
     description: >-

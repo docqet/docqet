@@ -239,7 +239,7 @@ description: >-
   it again.
 applies: project     # or product: every capability any project in the product serves
 meets:               # checklist outcomes it meets for those capabilities
-  - reliability/beta/undo-release
+  - outcome:reliability/beta/undo-release
 gaps: []
 tradeoffs: []
 decisions: []

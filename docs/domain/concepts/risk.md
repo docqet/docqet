@@ -3,8 +3,8 @@
 What's at stake in leaving a [gap](gap.md) open: a score from 0 to 100,
 worked out from what the gap could do (its impact, how likely it is and how
 many it reaches) and from how much people rely on each capability it shows
-on (its [stability level](stability-level.md), and whether the gap breaks the
-promise that level makes), with a verdict on whether that's acceptable. Gaps
+on (its [stability level](stability-level.md), and whether the gap breaks a
+claim made there), with a verdict on whether that's acceptable. Gaps
 are ordered by it, riskiest first. Nobody writes it down. Across some
 capabilities, what their gaps put at stake is their
 [exposure](exposure.md).
@@ -28,11 +28,14 @@ Two are about what it's in, and worked out:
   entitled to rely on that capability, and how much its gaps can cost them:
   a Prototype is opt-in and its data may be fake, while people have built on
   a GA capability with real data.
-- **Whether it breaks that level's promise**, for each capability: it names a
+- **Whether it breaks a claim there**, for each capability: it affects a
   [rule](rule.md) that capability follows, or a
   [stability checklist](stability-checklist.md) outcome that capability's
-  level expects. People depending on that level are relying on something
-  that isn't true yet.
+  level expects. Following a rule claims it holds, and declaring a level
+  claims what it expects, so people depending on that capability are
+  relying on something that isn't true yet. How much that matters grows with
+  the level: nobody relies on a Prototype's claims, which is opt-in and
+  whose data may be fake, while people have built on what GA says.
 
 The gap's three ratings describe the gap, so they never change when its
 capability is promoted. Only what it's in changes, so the same gap's risk
@@ -41,20 +44,23 @@ grows as its capability moves up, and nobody re-rates it.
 On each capability it shows on, a gap scores:
 
 ```text
-impact × likelihood × reach  ×  level weight × 1.5 if it breaks that level's promise
-└── what the gap could do ─┘    └──── how much people rely on what it's in ────┘
+impact × likelihood × reach  ×  level weight × claim factor if it breaks a claim there
+└── what the gap could do ─┘    └───── how much people rely on what it's in ─────┘
 ```
 
-| Impact         | Step |     | Likelihood | Factor |     | Reach  | Factor |     | Level     | Weight |
-| -------------- | ---- | --- | ---------- | ------ | --- | ------ | ------ | --- | --------- | ------ |
-| `negligible`   | 1    |     | `certain`  | 1      |     | `all`  | 1      |     | Prototype | 2      |
-| `inconvenient` | 2    |     | `expected` | ¾      |     | `most` | ¾      |     | Alpha     | 3      |
-| `blocking`     | 3    |     | `possible` | ½      |     | `some` | ½      |     | Beta      | 4      |
-| `damaging`     | 4    |     | `unlikely` | ¼      |     | `few`  | ¼      |     | GA        | 6      |
+| Impact         | Step |     | Likelihood | Factor |     | Reach  | Factor |     | Level     | Weight | Claim factor |
+| -------------- | ---- | --- | ---------- | ------ | --- | ------ | ------ | --- | --------- | ------ | ------------ |
+| `negligible`   | 1    |     | `certain`  | 1      |     | `all`  | 1      |     | Prototype | 2      | 1            |
+| `inconvenient` | 2    |     | `expected` | ¾      |     | `most` | ¾      |     | Alpha     | 3      | 1.125        |
+| `blocking`     | 3    |     | `possible` | ½      |     | `some` | ½      |     | Beta      | 4      | 1.25         |
+| `damaging`     | 4    |     | `unlikely` | ¼      |     | `few`  | ¼      |     | GA        | 6      | 1.5          |
+
+Breaking a claim adds nothing on a Prototype, and more at each level after
+it, up to half as much again on GA.
 
 It's put on 0 to 100 by a log scale and rounded to a whole number. 0 is a
 certain negligible gap reaching everyone on a Prototype, 1 × 2 = 2, and 100 a
-certain damaging gap reaching everyone that breaks a promise on GA,
+certain damaging gap reaching everyone that breaks a claim on GA,
 4 × 6 × 1.5 = 36:
 
 ```text
@@ -63,12 +69,12 @@ score = 100 × ln(raw ÷ 2) ÷ ln(36 ÷ 2), and never below 0
 
 Since the raw score multiplies its parts, the log scale makes each of them
 add a steady amount instead: each step of impact or level, and breaking a
-promise, moves the score the same way wherever it starts. A gap that's less
+claim at a given level, moves the score the same way wherever it starts. A gap that's less
 likely, or reaches fewer, scores lower, down to 0. A certain gap reaching
 everyone, which is what a gap is when it says neither, scores as impact and
 level alone.
 
-A draft weighs nothing, since it promises nothing, so a gap scores 0 there.
+A draft weighs nothing, since it claims nothing, so a gap scores 0 there.
 The gap's **risk** is its highest score: what's at stake where it matters
 most. A gap with no impact rated has no risk, and comes after every gap
 that's rated.
@@ -92,14 +98,14 @@ capability is left to close before that capability is
 | `unacceptable` | 67 to 100 | Not OK to leave open at the level it's at.       |
 
 Every score for a certain gap reaching everyone, with the score where it
-breaks that level's promise after it:
+breaks a claim there after it:
 
 | Impact         | Prototype | Alpha   | Beta    | GA       |
 | -------------- | --------- | ------- | ------- | -------- |
-| `damaging`     | 48 / 62   | 62 / 76 | 72 / 86 | 86 / 100 |
-| `blocking`     | 38 / 52   | 52 / 66 | 62 / 76 | 76 / 90  |
-| `inconvenient` | 24 / 38   | 38 / 52 | 48 / 62 | 62 / 76  |
-| `negligible`   | 0 / 14    | 14 / 28 | 24 / 38 | 38 / 52  |
+| `damaging`     | 48 / 48   | 62 / 66 | 72 / 80 | 86 / 100 |
+| `blocking`     | 38 / 38   | 52 / 56 | 62 / 70 | 76 / 90  |
+| `inconvenient` | 24 / 24   | 38 / 42 | 48 / 56 | 62 / 76  |
+| `negligible`   | 0 / 0     | 14 / 18 | 24 / 32 | 38 / 52  |
 
 Each step down in likelihood or reach takes off 10 for `expected` or `most`,
 24 for `possible` or `some`, and 48 for `unlikely` or `few`, never going below
@@ -215,7 +221,10 @@ A [tradeoff](tradeoff.md) has no risk. Risk asks whether it's OK to leave a
 gap open, and a tradeoff is someone's answer: they weighed its drawback and
 chose to live with it. An [open decision](open-decision.md) has none either,
 since a question doesn't happen to anyone: whatever the software does while
-it's open is a gap, rated on its own.
+it's open is a gap, rated on its own. A decision is shown with the risk of
+the riskiest gap waiting on it, the gaps it affects, so the questions with
+most at stake can be asked first: deployment's question about undoing a
+schema change has 76 waiting on it.
 
 ## In the spec
 
@@ -224,13 +233,13 @@ Bookings' [deployment](../../../spec/examples/hotel-bookings/docket/mechanisms/d
 has migrations with no down step, so undoing a release that changed the
 schema means restoring last night's database. That's `damaging`, `possible`,
 since a release like that seldom needs undoing, and it reaches everyone. It
-names `reliability/ga/recovery`, which only GA expects. Shown on its own,
+affects `outcome:reliability/ga/recovery`, which only GA expects. Shown on its own,
 Hotel Bookings relies on deployment for check-out at GA, room booking and
 check-in at Beta, cancellations at Alpha, and four capabilities at
 Prototype, so it scores:
 
 ```text
-check-out       GA, breaks its promise   4 × ½ × 1 × 6 × 1.5 = 18  → 76
+check-out       GA, breaks a claim       4 × ½ × 1 × 6 × 1.5 = 18  → 76
 room booking    Beta                     4 × ½ × 1 × 4       =  8  → 48
 check-in        Beta                     4 × ½ × 1 × 4       =  8  → 48
 cancellations   Alpha                    4 × ½ × 1 × 3       =  6  → 38
@@ -249,12 +258,13 @@ twice-corrected charge is at stake, so they reach `few`, and they're
 ¼ × 6 × 1.5 = 6.75 on extra charges at GA, or 42, tolerable.
 
 City tax's children corrected by hand are `inconvenient` and happening now,
-so `certain`, reach every clerk, name a rule city tax follows, and show only
-on city tax, at Alpha: 2 × 3 × 1.5 = 9, or 52, tolerable. It comes before the
-ledger's gap.
+so `certain`, reach every clerk, affect a rule city tax follows, and show
+only on city tax, at Alpha: 2 × 3 × 1.125 = 6.75, or 42, tolerable. That's
+the ledger's risk too, and the ledger's gap comes first, since it spreads
+further: `42 on 1 · 14 on 1 · 4 on 2`, to city tax's `42 on 1`.
 
 Together, the gaps on Reservations' capabilities give it an exposure of
-74%, `moderate`: [exposure](exposure.md#in-the-spec) shows how.
+78%, `high`: [exposure](exposure.md#in-the-spec) shows how.
 
 Readers work out risk once projects are put together, since a mechanism that
 applies across a product shows on every project's capabilities. Nothing is

@@ -41,7 +41,8 @@ gaps:
       published.
   - id: names-outside-western-european-alphabets
     name: Names outside Western alphabets lost in PDFs
-    outcome: usability/beta/everyone
+    affects:
+      - outcome:usability/beta/everyone
     impact: inconvenient
     likelihood: unlikely
     reach: few

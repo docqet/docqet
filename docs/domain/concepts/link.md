@@ -32,8 +32,9 @@ feature                    → capabilities
 capability                 → personas, initiatives, rules, concepts
 rule                       → concepts
 concept                    → concepts                  (confused-with)
-gap                        → an outcome, a rule        (outcome, rule)
-tradeoff                   → an outcome                (outcome)
+gap                        → outcomes, rules           (affects)
+tradeoff                   → outcomes                  (affects)
+decision                   → outcomes, gaps, tradeoffs (affects)
 component                  → capabilities, outcomes    (meets)
 mechanism                  → outcomes                  (meets)
 annotation                 → rules, capabilities, mechanisms, components    (docket:verifies, docket:implements)

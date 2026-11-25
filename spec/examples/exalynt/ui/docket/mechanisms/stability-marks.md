@@ -5,7 +5,7 @@ name: Stability marks
 description: >-
   How every app page shows its stability level, from one record of every
   feature in every app.
-meets: [compatibility/prototype/marked]
+meets: [outcome:compatibility/prototype/marked]
 tradeoffs:
   - id: levels-kept-in-the-ui
     name: Page levels declared in the UI, apart from the docs

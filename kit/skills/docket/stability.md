@@ -5,7 +5,7 @@ how much people can depend on it right now, not how good it is.
 
 | Level     | Value       | How stable  | What it means                                                                                             |
 | --------- | ----------- | ----------- | --------------------------------------------------------------------------------------------------------- |
-| Draft     | `draft`     | Not started | Declared, with no work started. Not a level: it promises nothing, and claims nothing.                     |
+| Draft     | `draft`     | Not started | Declared, with no work started. Not a level: it claims nothing.                                           |
 | Prototype | `prototype` | Exploring   | Explores an idea so we can choose a direction. Data may be fake. May change completely or be thrown away. |
 | Alpha     | `alpha`     | Developing  | Works, but still taking shape. Frequent breaking changes and bugs.                                        |
 | Beta      | `beta`      | Refining    | Settled enough for real use. Occasional breaking changes and bugs, announced ahead when we can.           |
@@ -47,13 +47,15 @@ qualities, each a question someone asks before depending on the work.
 with its examples. It's part of the spec, built into `docket`, and the same
 for every project.
 Each level includes the outcomes below it, unless an outcome's `until` names
-the last level it applies to. Each outcome's ID is `<quality>/<level>/<id>`,
-such as `reliability/beta/data-kept`.
+the last level it applies to. Each outcome is referred to as
+`outcome:<quality>/<level>/<id>`, such as `outcome:reliability/beta/data-kept`.
 
 - **It's a guideline, not a gate.** Work can be called a level, GA included,
-  with outcomes unmet. What's unmet is a gap naming the outcome, or a tradeoff
-  if it's unmet on purpose.
-- **An outcome that applies is met unless a gap or tradeoff names it.**
+  with outcomes unmet. What's unmet is a gap that affects the outcome, or a
+  tradeoff if it's unmet on purpose. Whether to meet one at all, when nobody
+  has decided, is an open decision that affects it.
+- **An outcome that applies is met unless a gap, tradeoff or decision
+  affects it.**
   Declaring a level claims everything that level expects, except what's
   written down. An outcome that doesn't apply, such as accessibility for an
   API with no screens, counts as met.
@@ -74,10 +76,11 @@ Only when a person tells you to. Then:
    Prototype to Beta, covers each level in between.
 2. Run `docket checklist --for capability:<id> --to <level>`. It lists what
    the target expects that the current level doesn't, and for each outcome
-   the gaps and tradeoffs that name it and the mechanisms and components that
-   meet it, on the capability and on what it relies on. Go through each
-   outcome nothing names against the code, since declaring the level claims
-   it.
+   the gaps, tradeoffs and decisions that affect it and the mechanisms and
+   components that meet it, on the capability and on what it relies on. Go
+   through each outcome nothing affects against the code, since declaring the
+   level claims it. A gap affecting one the target expects will score higher
+   once it's promoted.
 3. Before changing anything, present the delta: what has to change and which
    outcome each meets, what you propose to record as gaps instead, and what
    you're deliberately not doing yet because it belongs to a later level.

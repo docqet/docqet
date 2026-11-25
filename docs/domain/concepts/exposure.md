@@ -11,13 +11,14 @@ gap's risk, is about a part, and maturity and exposure are about the whole.
 ## Details
 
 The most a capability could be exposed to is a certain damaging gap,
-reaching everyone, that breaks its level's promise: 4 × level weight × 1.5.
+reaching everyone, that breaks a claim its level makes: 4 × level weight ×
+its level's claim factor, from 1 on a Prototype to 1.5 on GA.
 A capability is exposed to its riskiest gap's share of that, its own or one
 on what it's built on. Each capability then counts with its level weight, as
 in maturity, so exposure on GA counts for more than on a Prototype:
 
 ```text
-a capability's exposure = its riskiest gap's raw score ÷ (4 × level weight × 1.5)
+a capability's exposure = its riskiest gap's raw score ÷ (4 × level weight × claim factor)
 exposure                = Σ (level weight × each capability's exposure) ÷ Σ level weight
 ```
 
@@ -48,9 +49,9 @@ It falls in a quarter, its band:
   much people can depend on it. Exposure takes the level as given, weighing
   each gap by it, and says what the gaps still open against it put at stake.
   It never changes the level: a GA capability with high exposure is still
-  GA, with gaps against its promise.
+  GA, with gaps against what it claims.
 - **It's measured against the worst case.** 100% would be every capability
-  carrying a certain damaging gap that breaks its promise, so most software
+  carrying a certain damaging gap that breaks a claim, so most software
   sits well below that, and `high` is rare.
 - **Only the riskiest gap on each capability counts.** Closing a lesser one
   doesn't change it until the riskiest is closed too. Counting every gap
@@ -58,7 +59,7 @@ It falls in a quarter, its band:
   product mechanism, outweigh everything else.
 - **It counts gaps the score puts at 0.** A score below the least there is
   shows as 0, but its share of the most isn't nothing.
-- **Promoting can raise it.** Where a gap breaks a promise the new level
+- **Promoting can raise it.** Where a gap breaks a claim the new level
   makes, what's at stake goes up with the level.
 
 [Readiness](readiness.md) takes it off maturity:
@@ -73,18 +74,17 @@ readers work it out once projects are put together, since a mechanism that
 applies across a product shows on every project's capabilities.
 
 In Hotel Bookings, Reservations' room booking at Beta could be exposed to
-4 × 4 × 1.5 = 24, and its riskiest gap, its calendar needing a mouse, is 18
+4 × 4 × 1.25 = 20, and its riskiest gap, its calendar needing a mouse, is 15
 of that, 75%. Cancellations, at Alpha, is at 100%, since late cancellations
 refunded in full is the most it could be exposed to, and group bookings, at
-Prototype, 4 of 12 from deployment's migrations, 33%. Weighted as in
+Prototype, 4 of 8 from deployment's migrations, 50%. Weighted as in
 maturity:
 
 ```text
-(75% × 4 + 100% × 3 + 33% × 2) ÷ (4 + 3 + 2) ≈ 74%
+(75% × 4 + 100% × 3 + 50% × 2) ÷ (4 + 3 + 2) ≈ 78%
 ```
 
-That's `moderate`, and it would be even without its unacceptable gaps.
-Shown with Hotel Billing, Finance's exposure is 6%, `low`.
+That's `high`. Shown with Hotel Billing, Finance's exposure is 8%, `low`.
 
 ## Not to be confused with
 

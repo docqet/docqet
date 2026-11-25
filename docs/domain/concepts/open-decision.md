@@ -24,7 +24,20 @@ A question doesn't happen to anyone, so a decision has no impact and no
 [risk](risk.md). What does happen is whatever the software does while it's
 open, and that's a [gap](gap.md), rated on its own. A gap that's really an
 unsettled question is written as both: the consequence as the gap, and the
-question as the decision.
+question as the decision, which affects the gap.
+
+What a decision affects is what's waiting on its answer:
+
+- **A gap** waits on it: it can't be closed until it's answered. Docket shows
+  the decision with the risk of the riskiest gap waiting on it, so the
+  questions with most at stake can be asked first.
+- **A [tradeoff](tradeoff.md)** is reopened by it: the choice is in question
+  again, and stays the current one until it's answered.
+- **A [stability checklist](stability-checklist.md) outcome** is open:
+  whether to meet it, or whether it applies, isn't settled, so it's neither
+  claimed nor short.
+
+A decision affects nothing else: the doc it's on is already what it's about.
 
 ## Lifecycle
 
@@ -51,7 +64,8 @@ component in the first place.
 ## In the spec
 
 An open decision is an item in the `decisions` frontmatter field of the doc
-it's on, with its `question` and, optionally, a `topic` of a few words. On the
+it's on, with its `question` and, optionally, a `topic` of a few words and
+what it `affects`. On the
 [Guest stays domain](../../../spec/examples/hotel-bookings/docket/domains/guest-stays/domain.md):
 
 ```yaml
@@ -70,6 +84,23 @@ decisions:
   - topic: Who goes first
     question: Whoever asked first, or whoever's stay fits the free nights best?
 ```
+
+On [deployment](../../../spec/examples/hotel-bookings/docket/mechanisms/deployment.md),
+a question that a gap waits on, and that leaves an outcome open:
+
+```yaml
+decisions:
+  - topic: Undoing a schema change
+    question: >-
+      Is restoring the night before's database enough to undo a release that
+      changed the schema, or does every migration need a down step?
+    affects:
+      - outcome:reliability/ga/recovery
+      - mechanism:deployment#migrations-only-go-forward
+```
+
+If restoring is enough, the gap becomes a tradeoff that affects the outcome.
+If not, the gap stays, and the decision is deleted.
 
 It's in frontmatter so readers can find, count and show it on every persona,
 initiative, feature and domain it touches. A question written in a doc's body isn't

@@ -5,7 +5,7 @@ name: Error reporting
 description: >-
   How the apps report unexpected failures from the browser, so someone looking
   can see what went wrong.
-meets: [observability/alpha/see-errors]
+meets: [outcome:observability/alpha/see-errors]
 tradeoffs:
   - id: errors-only
     name: Only errors collected, no page views

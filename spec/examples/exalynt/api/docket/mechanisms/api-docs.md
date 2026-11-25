@@ -6,11 +6,12 @@ description: >-
   The reference at `GET /docs/api`: the OpenAPI spec bundled into one
   document, rendered by Scalar, with each endpoint's stability and each
   group's maturity drawn on top by our own script.
-meets: [compatibility/prototype/marked]
+meets: [outcome:compatibility/prototype/marked]
 gaps:
   - id: no-release-notes
     name: No release notes for the API or apps
-    outcome: compatibility/beta/changes-heard
+    affects:
+      - outcome:compatibility/beta/changes-heard
     impact: inconvenient
     likelihood: unlikely
     reach: few

@@ -7,7 +7,7 @@ description: >-
   collector `OTEL_EXPORTER_OTLP_ENDPOINT` names, which in the cluster is the
   Grafana Alloy collector the exalynt/collector repo deploys, forwarding to
   Grafana Cloud. The README's Configuration section covers the settings.
-meets: [observability/alpha/see-errors]
+meets: [outcome:observability/alpha/see-errors]
 ---
 
 Every request gets a SERVER span named for its route template, with a CLIENT

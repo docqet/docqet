@@ -303,29 +303,30 @@ The [stability checklist](../../spec/README.md#stability-checklist): what
 each level expects of the work, quality by quality, with each outcome's
 examples. It's part of the spec, so it's built into the binary and is the
 same for every project. Agents read it here, and `check` uses it to validate
-every `outcome`.
+every outcome named in `affects` and `meets`.
 
 ```sh
 docket checklist                                  # every quality, level and outcome
 docket checklist --level beta                     # everything Beta expects, including what it carries up
-docket checklist reliability/beta/data-kept       # one outcome, with its examples
+docket checklist outcome:reliability/beta/data-kept   # one outcome, with its examples
 docket checklist --for capability:room-booking --to ga   # what promoting it needs
 ```
 
 With `--for` and `--to`, it's the first step of promoting a capability: each
 outcome the target level expects that the current one doesn't, and, for each,
-what already names it, from the capability and the mechanisms and components
-it relies on:
+what already affects or meets it, from the capability and the mechanisms and
+components it relies on:
 
 ```text
 hotel-bookings · working tree (4f2c9e1)
 
 capability:room-booking   Beta → GA in Guest stays
 
-reliability/ga/recovery        gap   component:bookings#no-restore-drill (blocking, possible, all)
-usability/ga/all-accessible    gap   capability:room-booking#calendar-needs-a-mouse (blocking, certain, few)
-security/ga/traceable          met   mechanism:audit-log
-compatibility/ga/stable-interface  —  nothing names it, so promoting claims it's met
+outcome:reliability/ga/recovery        gap       component:bookings#no-restore-drill (blocking, possible, all)
+outcome:usability/ga/all-accessible    gap       capability:room-booking#calendar-needs-a-mouse (blocking, certain, few)
+outcome:efficiency/ga/speed-targets    open      decision on capability:room-booking: "Does the calendar need to open in under a second?"
+outcome:security/ga/traceable          met       mechanism:audit-log
+outcome:compatibility/ga/stable-interface  —     nothing affects it, so promoting claims it's met
 ```
 
 Only `--for` reads the project, so only then does it take the

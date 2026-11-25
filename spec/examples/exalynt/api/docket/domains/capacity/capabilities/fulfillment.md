@@ -76,7 +76,8 @@ gaps:
 tradeoffs:
   - id: fulfilled-cant-be-reopened
     name: Fulfilled is final, no reopening
-    outcome: usability/beta/recover
+    affects:
+      - outcome:usability/beta/recover
     description: Marking a block fulfilled is final.
     drawback: >-
       A fulfilled block can't be reopened, even when it was marked fulfilled
