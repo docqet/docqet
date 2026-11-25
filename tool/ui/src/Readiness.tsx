@@ -2,33 +2,38 @@ import type { CSSProperties } from "react";
 import Box from "@mui/material/Box";
 import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
 import BoltOutlinedIcon from "@mui/icons-material/BoltOutlined";
-import { DetailsCard, DetailsEyebrow, DetailsPopover } from "./design/DetailsPopover";
+import { DetailsCard, DetailsEyebrow, DetailsPopover, DetailsWorkings } from "./design/DetailsPopover";
 import { LeftMark, gapKind } from "./design/left/LeftMark";
 import NorthRoundedIcon from "@mui/icons-material/NorthRounded";
 import { InlineMarkdown } from "./design/markdown/Markdown";
-import { STABILITY } from "./design/stability/stability";
+import { STABILITY, levelColor } from "./design/stability/stability";
+import { LevelSpread } from "./design/stability/StabilitySpread";
+import { RingGlyph } from "./design/maturity/RingGlyph";
+import { MATURITY_BANDS, maturityBand } from "./design/maturity/maturity";
+import { RiskRing } from "./design/risk/RiskRing";
+import { VerdictSpread } from "./design/risk/RiskScore";
 import { CapabilityStability } from "./design/catalog/CapabilityLabel";
 import { Tip } from "./design/Tip";
 import { docHref } from "./routes";
-import { READINESS_BANDS, carriedText, readinessBand, startedOf, type NotReady, type Readiness } from "./state";
+import { READINESS_BANDS, exposureText, readinessBand, startedOf, type NotReady, type Readiness } from "./state";
 
 /*
  * Readiness: how ready people can rely on it being, as a recommendation for
  * them to judge, and what it still needs. It's the maturity of its
- * capabilities less the risk they carry. It's never in a level's color,
+ * capabilities less their exposure. It's never in a level's color,
  * since it isn't a level, and never a ring, since that's maturity's: a short straight bar filled as far as its
  * percentage, in --ok in the Ready quarter, and in the text's own color below.
  */
 
 const plural = (n: number, one: string, many: string) => `${n} ${n === 1 ? one : many}`;
 
-/* Readiness in a few words: "Mostly ready · 59%", or null with nothing started. */
+/* Readiness in a few words: "Viable · 59%", or null with nothing started. */
 export function readinessLabel(r: Readiness): string | null {
   const band = readinessBand(r);
   return band ? `${band.name} · ${r.percent}%` : null;
 }
 
-/* A readiness in words, its percentage in its bar's color: "Mostly ready · 59%". Null with nothing started. */
+/* A readiness in words, its percentage in its bar's color: "Viable · 59%". Null with nothing started. */
 export function ReadinessText({ readiness }: { readiness: Readiness }) {
   const band = readinessBand(readiness);
   if (!band) return null;
@@ -51,48 +56,6 @@ export function needsLine(n: NotReady): string {
   return parts.charAt(0).toUpperCase() + parts.slice(1);
 }
 
-/*
- * What a capability with something left still needs, as marks by kind, so
- * reaching Beta, product and technical gaps, and open decisions read apart:
- * "↑ Beta · now Alpha   ◌ 3 product gaps   ◌ 8 technical gaps   ? 1 open
- * decision". Only the unacceptable gaps are counted; decisions don't count
- * toward readiness, but are shown as left to settle.
- */
-export function NeedsChips({ needs }: { needs: NotReady }) {
-  const product = needs.gaps.filter((g) => gapKind(g) === "product-gap").length;
-  const technical = needs.gaps.length - product;
-  return (
-    <span className="needs-chips">
-      {needs.belowBeta ? (
-        <span className="needs-chip">
-          <span className="needs-mark level" aria-hidden>
-            <NorthRoundedIcon sx={{ fontSize: 13 }} />
-          </span>
-          Beta <span className="needs-faint">· now {needs.capability.stability ? STABILITY[needs.capability.stability].name : "a draft"}</span>
-        </span>
-      ) : null}
-      {product ? (
-        <span className="needs-chip">
-          <LeftMark kind="product-gap" size={13} decorative />
-          {plural(product, "product gap", "product gaps")}
-        </span>
-      ) : null}
-      {technical ? (
-        <span className="needs-chip">
-          <LeftMark kind="technical-gap" size={13} decorative />
-          {plural(technical, "technical gap", "technical gaps")}
-        </span>
-      ) : null}
-      {needs.decisions.length ? (
-        <span className="needs-chip aside">
-          <LeftMark kind="decision" size={13} decorative />
-          {plural(needs.decisions.length, "open decision", "open decisions")}
-        </span>
-      ) : null}
-    </span>
-  );
-}
-
 /* Readiness's color: from grey, not ready at all, to green, ready, blended by how ready. */
 export const readinessColor = (percent: number) => `color-mix(in oklch, var(--ready-high) ${Math.min(Math.max(percent, 0), 100)}%, var(--ready-low))`;
 
@@ -112,7 +75,7 @@ function ReadinessBar({ percent, size = "small" }: { percent: number; size?: "sm
 
 /*
  * How ready something is, beside its name or in a row: its quarter and
- * percentage, "Mostly ready · 59%", with its bar; large, as at the top of a
+ * percentage, "Viable · 59%", with its bar; large, as at the top of a
  * page, the quarter in bold; `bare`, as on the map, just the bar and the
  * percentage, since the popover and side panel name the quarter. Its popover (hover, focus, or tap) breaks it down. With
  * nothing started, it says so. `of` says whose it is in the popover:
@@ -170,18 +133,19 @@ export function ReadinessMark({
   );
 }
 
-/* How many of a list a popover names before saying how many more. */
-const SHOWN = 5;
-
 /*
- * Readiness for its popover: its quarter and percentage, what that
- * recommends, how it's worked out from maturity and risk carried, what it's
- * worked out from, what each capability with something
- * left still needs, the drafts, and what readiness is.
+ * Readiness for its popover, laid out as maturity's and exposure's are:
+ * its quarter, percentage and bar, what that recommends, then why it's
+ * there: the maturity and exposure it's worked out from, each as its
+ * ring, and how its capabilities spread across the levels and its gaps
+ * across the verdicts. Then what readiness is, and how it's worked out.
+ * What each capability still needs is on the page, not here.
  */
 function ReadinessDetails({ readiness, of }: { readiness: Readiness; of: string }) {
   const started = startedOf(readiness);
-  const section = { mt: 1.5, pt: 1.5, borderTop: 1, borderColor: "divider" } as const;
+  const { exposure, levels, gaps } = readiness;
+  const maturity = Math.round(readiness.maturity!);
+  const band = maturityBand(maturity);
   return (
     <DetailsCard card width={320}>
       <DetailsEyebrow>{of}</DetailsEyebrow>
@@ -201,42 +165,51 @@ function ReadinessDetails({ readiness, of }: { readiness: Readiness; of: string 
           ))}
         </span>
       </Box>
-      <Box sx={{ mt: 0.75, color: "text.secondary" }}>{readinessBand(readiness)!.says}</Box>
-      <Box sx={{ mt: 1, fontSize: "0.92em", fontVariantNumeric: "tabular-nums" }}>
-        {Math.round(readiness.maturity!)}% mature × (1 − {carriedText(readiness.risk.percent ?? 0)} risk carried) = {readiness.percent}%
-      </Box>
-      <Box sx={{ mt: 0.75, color: "text.secondary" }}>
-        From {plural(started, "started capability", "started capabilities")}, {readiness.ready.length} with nothing left
-        {readiness.notStarted.length ? `, and ${plural(readiness.notStarted.length, "draft", "drafts")} not started` : ""}
-      </Box>
-      {readiness.notReady.length ? (
-        <Box sx={section}>
-          <Box sx={{ fontWeight: 600 }}>Still needs</Box>
-          <Box sx={{ color: "text.secondary", fontSize: "0.92em" }}>Gaps counted are the unacceptable ones.</Box>
-          <Box component="ul" sx={{ listStyle: "none", m: 0, p: 0 }}>
-            {readiness.notReady.slice(0, SHOWN).map((n) => (
-              <Box key={n.capability.id} component="li" sx={{ py: 0.5 }}>
-                <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 2 }}>
-                  <span>{n.capability.name}</span>
-                  <CapabilityStability level={n.capability.stability} name={n.capability.name} focusable={false} />
-                </Box>
-                <NeedsChips needs={n} />
+      <Box sx={{ mt: 1.25 }}>{readinessBand(readiness)!.says}</Box>
+      <div className="readiness-factors">
+        <div className="readiness-factor">
+          <RingGlyph progress={maturity} size={40} />
+          <div>
+            <div className="readiness-factor-name">Maturity</div>
+            <Box component="strong" sx={levelColor(band)}>
+              {MATURITY_BANDS[band]}
+            </Box>
+          </div>
+        </div>
+        {exposure.percent !== null && exposure.band ? (
+          <div className="readiness-factor" data-risk-band={exposure.band.id}>
+            <RiskRing percent={exposure.percent} size={40} />
+            <div>
+              <div className="readiness-factor-name">Exposure</div>
+              <Box component="strong" sx={{ color: "var(--risk-band)" }}>
+                {exposure.band.name}
               </Box>
-            ))}
-          </Box>
-          {readiness.notReady.length > SHOWN ? <Box sx={{ color: "text.secondary" }}>and {readiness.notReady.length - SHOWN} more</Box> : null}
-        </Box>
+            </div>
+          </div>
+        ) : null}
+      </div>
+      <div className="risk-details-head">{plural(levels.length, "capability", "capabilities")} by level</div>
+      <LevelSpread levels={levels} />
+      {gaps.items.length ? (
+        <>
+          <div className="risk-details-head">{plural(gaps.items.length, "gap", "gaps")} by risk</div>
+          <VerdictSpread risk={gaps} />
+        </>
       ) : null}
-      {readiness.notStarted.length ? (
-        <Box sx={[section, { color: "text.secondary" }]}>
-          Not started: {readiness.notStarted.slice(0, SHOWN).map((c) => c.name).join(", ")}
-          {readiness.notStarted.length > SHOWN ? ` and ${readiness.notStarted.length - SHOWN} more` : ""}
-        </Box>
-      ) : null}
-      <Box sx={[section, { fontSize: "0.92em", color: "text.secondary" }]}>
+      <Box sx={{ mt: 1.25, color: "text.secondary", fontSize: "0.92em" }}>
         Our view of how ready this is to serve people in production, from the stability levels, gaps and impacts written down, for you
-        to judge. It&rsquo;s maturity, less the share of risk its open gaps carry, and drafts don&rsquo;t count.
+        to judge.
       </Box>
+      <DetailsWorkings>
+        <div className="details-workings-sum">
+          {maturity}% mature × (1 − {exposureText(exposure.percent ?? 0)} exposure) = {readiness.percent}%
+        </div>
+        <div>
+          Its maturity, less the share of the most its open gaps could put at stake, both from its{" "}
+          {plural(started, "started capability", "started capabilities")}. Drafts don&rsquo;t count.
+        </div>
+        <div>Each quarter is a band: unready, partial, viable and ready.</div>
+      </DetailsWorkings>
     </DetailsCard>
   );
 }

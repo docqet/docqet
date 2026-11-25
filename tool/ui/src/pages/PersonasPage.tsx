@@ -3,7 +3,7 @@ import { PersonaAvatar, personaNameAndRole, personaReadiness } from "../Personas
 import { ReadinessMark } from "../Readiness";
 import { docHref, type Route } from "../routes";
 import { Empty, PageHeader, View } from "../shell/layout";
-import { find, gapsById, readyShare, riskAcross, type DocketState, type Persona } from "../state";
+import { find, gapsById, readyShare, type DocketState, type Persona } from "../state";
 import { GapsCell, Num } from "./indexParts";
 
 /*
@@ -65,7 +65,7 @@ function PersonaRow({ state, persona }: { state: DocketState; persona: Persona }
         <Num n={capabilities.length} />
       </td>
       <td>
-        <GapsCell gaps={gaps} risk={riskAcross(state, gaps, capabilities)} kind="product-gap" of={`what serves ${name}`} href={docHref("persona", persona.id, "left")} />
+        <GapsCell gaps={gaps} exposure={{ state, capabilities }} kind="product-gap" of={`what serves ${name}`} href={docHref("persona", persona.id, "left")} />
       </td>
     </tr>
   );

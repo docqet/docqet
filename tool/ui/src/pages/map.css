@@ -98,7 +98,7 @@
 
 /*
  * Each view shows only its own marks on the canvas: stability marks and
- * maturity, or the risk gaps carry. The peek shows them all, and a
+ * maturity, or exposure. The peek shows them all, and a
  * persona's readiness always shows on their card.
  */
 .canvas:not([data-lens="stability"]) .lens-stability,
@@ -106,10 +106,15 @@
   display: none !important;
 }
 
+/* Nothing to show, such as no gaps or only drafts: no room taken. */
+.lens-risk:empty {
+  display: none;
+}
+
 /*
- * The gaps lens tints rows, and the cards of capabilities in no feature, from
- * what each carries: data-risk-band, the band of the risk its gaps carry.
- * Low risk gets the bar alone. Tinted under the card's own background, and at
+ * The risk lens tints rows, and the cards of capabilities in no feature, from
+ * each one's exposure: data-risk-band, the band of the exposure its gaps give it.
+ * Low exposure gets the bar alone. Tinted under the card's own background, and at
  * a lower specificity than hovering or what the peek has open, which stay on
  * top.
  */

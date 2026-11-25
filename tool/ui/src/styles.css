@@ -26,7 +26,7 @@
   /* Personas: a blue of their own, apart from concepts, features and capabilities. */
   --persona: #1d4ed8;
   --persona-soft: rgb(29 78 216 / 0.08);
-  /* Readiness: from a quiet grey, not ready, to green, ready. */
+  /* Readiness: from a quiet grey, unready, to green, ready. */
   --ready-low: #6f6982;
   --ready-high: #047857;
   /* Areas: a faint violet wash behind their features, darker than the canvas, lighter than a card. */
@@ -875,21 +875,6 @@ kbd {
 
 .area-marks {
   display: contents;
-}
-
-/* An area's features in its maturity's popover. */
-.maturity-breakdown {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.maturity-breakdown li {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  padding: 4px 0;
 }
 
 /* A card, and a row in it, just brought into view by search. */
@@ -2252,33 +2237,6 @@ kbd {
 /* Open decisions are left to settle, but don't count toward readiness: shown quieter. */
 .needs-what li.needs-aside {
   color: var(--muted);
-}
-
-/* What one capability still needs, by kind, in a row of marks: in a popover. */
-.needs-chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 2px 12px;
-  margin-top: 2px;
-  font-size: 0.92em;
-  color: var(--muted);
-}
-
-.needs-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  white-space: nowrap;
-  font-variant-numeric: tabular-nums;
-}
-
-.needs-chip .left-mark,
-.needs-chip .needs-mark {
-  margin-top: 0;
-}
-
-.needs-chip.aside {
-  color: var(--faint);
 }
 
 .needs-ready {
@@ -4289,7 +4247,7 @@ button.page-table-row:hover .page-table-name strong {
 }
 
 /*
- * Risk carried's band as a color, --risk-band, set by `data-risk-band`, on
+ * Exposure's band as a color, --risk-band, set by `data-risk-band`, on
  * the same scale as impact: low neutral, some the soft yellow, moderate
  * orange, and high the alarm color.
  */
@@ -4297,7 +4255,7 @@ button.page-table-row:hover .page-table-name strong {
   --risk-band: var(--faint);
 }
 
-[data-risk-band="some"] {
+[data-risk-band="minor"] {
   --risk-band: var(--inconvenient);
 }
 
@@ -4309,41 +4267,31 @@ button.page-table-row:hover .page-table-name strong {
   --risk-band: var(--bad);
 }
 
-/* Risk carried where it's shown: its pie and percentage, in its band's color, opening what it means. */
-.risk-carried {
+/* Exposure where it's shown: its ring and percentage, in its band's color, opening what it means. */
+.exposure-mark {
   flex: none;
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  font-size: 12px;
-  font-weight: 650;
-  line-height: 16px;
-  white-space: nowrap;
-  font-variant-numeric: tabular-nums;
-  color: var(--risk-band);
-  border-radius: 4px;
+  vertical-align: middle;
+  border-radius: 999px;
   cursor: help;
 }
 
-.risk-carried[tabindex]:focus-visible {
+.exposure-mark[tabindex]:focus-visible {
   outline: 2px solid currentColor;
   outline-offset: 2px;
 }
 
-.risk-pie {
-  flex: none;
-  display: block;
+/* Exposure with its band named after it, as maturity's is (.explore-level). */
+.exposure-named {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13.5px;
+  color: var(--risk-band);
 }
 
-.risk-pie-whole {
-  fill: color-mix(in srgb, var(--risk-band) 22%, transparent);
-}
-
-.risk-pie-fill {
-  fill: var(--risk-band);
-}
-
-.risk-carried-band {
+.exposure-band {
   font-size: 1.12em;
   font-weight: 700;
   color: var(--risk-band);
@@ -4918,4 +4866,53 @@ button.page-table-row:hover .page-table-name strong {
 .concept-row-summary .risk-score {
   margin-right: 8px;
   vertical-align: middle;
+}
+
+/* How a figure in a popover is worked out: a soft panel closing it (see DetailsWorkings). */
+.details-workings {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 14px;
+  padding: 10px 12px;
+  font-size: 0.92em;
+  color: var(--muted);
+  background: color-mix(in srgb, var(--text) 5%, transparent);
+  border-radius: 8px;
+}
+
+.details-workings-head {
+  font-size: 0.84em;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
+/* A worked figure inside it, such as readiness's sum. */
+.details-workings-sum {
+  color: var(--text);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+/* In readiness's popover, the maturity and exposure it's worked out from, side by side, each with its ring. */
+.readiness-factors {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.readiness-factor {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  line-height: 1.3;
+}
+
+.readiness-factor-name {
+  font-size: 0.92em;
+  color: var(--muted);
 }

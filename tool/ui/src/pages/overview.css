@@ -40,20 +40,6 @@
   font-weight: 650;
 }
 
-.ov-breakdown {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.ov-breakdown li {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  padding: 4px 0;
-}
-
 /* ——— Stability by domain ——— */
 
 .ov-domains {

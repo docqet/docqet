@@ -4,12 +4,11 @@ import { GROUP_HEAD, GROUP_PAD, type CanvasGroup, type CanvasItem, type Pos, typ
 import { CapabilityCard } from "./design/catalog/CapabilityCard";
 import { FeatureCard } from "./design/catalog/FeatureCard";
 import { MaturityRing } from "./design/maturity/MaturityRing";
-import { RingGlyph } from "./design/maturity/RingGlyph";
 import { ContradictionHint } from "./CapabilityHints";
 import { ConceptChips, ConceptIcon } from "./Concepts";
 import { PersonaCard } from "./Personas";
 import { ProjectIcon } from "./PlatformFilter";
-import { RiskScore } from "./design/risk/RiskScore";
+import { ExposureMark, RiskScore } from "./design/risk/RiskScore";
 import {
   capabilitiesById,
   capabilityCard,
@@ -25,7 +24,7 @@ import {
   projectName,
   partOf,
   riskAcross,
-  riskCarried,
+  exposureOf,
   type Capability,
   type Doc,
   type DocketState,
@@ -44,10 +43,13 @@ const SLOT = 320;
 const PERSONA_SLOT = 240;
 const GAP = 28;
 
+/* A row's risk ring: as tall as the row's line, so switching between the map's views doesn't change its height. */
+const ROW_RING = 22;
+
 /*
  * A capability's line on a card in a domain: its name, any contradiction, the
- * risk its gaps carry, and its level in that domain. `data` is what the map's
- * gaps lens colors its row or card by: that risk's band, as map.css reads it.
+ * exposure from its gaps, and its level in that domain. `data` is what the map's
+ * risk lens colors its row or card by: that risk's band, as map.css reads it.
  * Clicking it opens it in the peek.
  */
 function line(state: DocketState, c: Capability, domain: string) {
@@ -55,7 +57,7 @@ function line(state: DocketState, c: Capability, domain: string) {
   const contradictions = contradictionsOf(state, "capability", c.id).map((p) => p.message);
   const gaps = gapsOn(state, c);
   const risk = riskAcross(state, gaps, [c]);
-  const carried = riskCarried(state, [c]);
+  const exposure = exposureOf(state, [c]);
   return {
     name: c.name,
     level: here,
@@ -63,12 +65,12 @@ function line(state: DocketState, c: Capability, domain: string) {
       <>
         <ContradictionHint messages={contradictions} />
         <span className="lens-risk">
-          <RiskScore risk={risk} carried={carried} of={c.name} inButton />
+          <RiskScore risk={risk} exposure={exposure} of={c.name} size={ROW_RING} inButton />
         </span>
       </>
     ),
     data: {
-      "data-risk-band": gaps.length ? carried.band?.id : undefined,
+      "data-risk-band": gaps.length ? exposure.band?.id : undefined,
     },
   };
 }
@@ -242,7 +244,7 @@ export function mapGroups(state: DocketState, onOpen: (pick: Pick) => void): Can
                 count={parts.length}
                 label={`${domain.name} maturity`}
                 size={24}
-                breakdown={<PartBreakdown parts={parts} />}
+                spread={domain.features.map((id) => partOf(find(state.features, id), domain.id)?.band ?? null)}
               />
             </span>
           ) : null}
@@ -254,35 +256,14 @@ export function mapGroups(state: DocketState, onOpen: (pick: Pick) => void): Can
 
 /*
  * What the map shows about a feature's or domain's capabilities beyond
- * maturity, each only in its view: the risk they carry, from every gap on
+ * maturity, each only in its view: their exposure, from every gap on
  * them, their own and those of what they're built on, each scored on them.
  */
 function AreaMarks({ state, capabilities, of }: { state: DocketState; capabilities: Capability[]; of: string }) {
-  const gaps = [...new Set(capabilities.flatMap((c) => gapsOn(state, c)))];
   return (
-    <>
-      {gaps.length ? (
-        <span className="lens-risk">
-          <RiskScore risk={riskAcross(state, gaps, capabilities)} carried={riskCarried(state, capabilities)} of={of} inButton />
-        </span>
-      ) : null}
-    </>
-  );
-}
-
-/* A domain's parts of features in its maturity's popover, most mature first. */
-function PartBreakdown({ parts }: { parts: { id: string; name: string; maturity: number }[] }) {
-  return (
-    <ul className="maturity-breakdown">
-      {[...parts]
-        .sort((a, b) => b.maturity - a.maturity)
-        .map((p) => (
-          <li key={p.id}>
-            <span>{p.name}</span>
-            <RingGlyph progress={p.maturity} size={20} />
-          </li>
-        ))}
-    </ul>
+    <span className="lens-risk">
+      <ExposureMark state={state} capabilities={capabilities} of={of} size={24} inButton />
+    </span>
   );
 }
 

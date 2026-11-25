@@ -16,9 +16,8 @@ import { STABILITY, levelColor } from "./design/stability/stability";
 import { CapabilityStability } from "./design/catalog/CapabilityLabel";
 import { GapFilter, GapKindTag, LeftCounts, LeftItem, LeftLabel, LeftList, gapKind, type GapShow, type LeftKind } from "./design/left/LeftMark";
 import { RiskSection } from "./design/risk/ImpactBadge";
-import { GapRiskMark, RiskScore, VERDICT_NAMES } from "./design/risk/RiskScore";
+import { ExposureMark, GapRiskMark, VERDICT_NAMES } from "./design/risk/RiskScore";
 import { RiskWorkings } from "./design/risk/RiskWorkings";
-import { StabilitySpread } from "./design/stability/StabilitySpread";
 import { Term } from "./design/term/Term";
 import { InlineMarkdown, MoreAboutFold } from "./design/markdown/Markdown";
 import { DecisionList, Facets, facets } from "./Fields";
@@ -266,40 +265,36 @@ function FoldChevron() {
 
 /*
  * Maturity in short, beside a name: its ring, with the percentage, and its
- * band; or why there's none. With `levels`, its stability spread after it,
- * what it's worked out from, `spreadOf` naming what they're in.
+ * band; or why there's none. What it's worked out from, `spread`, is in the
+ * ring's popover, never beside it.
  */
 export function Maturity({
   value,
   of,
   subject = "feature",
   count,
-  levels,
-  spreadOf,
+  spread,
 }: {
   value: number | null;
   of: string;
   subject?: MaturitySubject;
   count?: number;
-  levels?: CapabilityLevel[];
-  spreadOf?: string;
+  /* What it's worked out from, for its ring's popover (see MaturityRing). */
+  spread?: CapabilityLevel[];
 }) {
-  const spread = levels?.length ? <StabilitySpread levels={levels} of={spreadOf ?? "these"} /> : null;
   if (value === null)
     return (
       <span className="explore-level">
         <Tip title={`No maturity yet: ${of}`}>
           <span className="faint">No maturity yet</span>
         </Tip>
-        {spread}
       </span>
     );
   const band = maturityBand(value);
   return (
     <Box component="span" className="explore-level" sx={levelColor(band)}>
-      <MaturityRing progress={value} subject={subject} count={count} size={22} />
+      <MaturityRing progress={value} subject={subject} count={count} size={22} spread={spread} />
       <strong>{MATURITY_BANDS[band]}</strong>
-      {spread}
     </Box>
   );
 }
@@ -523,7 +518,7 @@ export function GapItem({
 }
 
 /* How a risk's scores spread across the capabilities: "36 on 2 · 12 on 1". */
-export const exposureText = (risk: Risk) => risk.exposure.map((e) => `${riskScore(e.score)} on ${e.capabilities}`).join(" · ");
+export const spreadText = (risk: Risk) => risk.spread.map((e) => `${riskScore(e.score)} on ${e.capabilities}`).join(" · ");
 
 /*
  * A gap's risk, for a risk popover: its score and verdict, how
@@ -531,7 +526,7 @@ export const exposureText = (risk: Risk) => risk.exposure.map((e) => `${riskScor
  * contributes, then each capability it shows on, highest score first, with
  * its level, whether it breaks that level's promise, and its score there.
  */
-export function RiskExposure({ risk }: { risk: Risk }) {
+export function RiskSpread({ risk }: { risk: Risk }) {
   const n = risk.on.length;
   const rated = risk.score !== null;
   return (
@@ -899,14 +894,14 @@ export function LeftRollup({
         ))
       ) : (
         <ul>
-          {open.map(({ capability, left, risk }) => (
+          {open.map(({ capability, left }) => (
             <li key={capability.id}>
               <Row
                 icon={NAMES.capability.icon}
                 name={capability.name}
                 summary={
                   <>
-                    <RiskScore risk={risk} of={capability.name} inButton />
+                    <ExposureMark state={state} capabilities={[capability]} of={capability.name} inButton />
                     <LeftSummary left={left} />
                   </>
                 }

@@ -1,8 +1,8 @@
 /*
  * What each of Docket's own words means, for the popover a Term opens. Taken
  * from Docket's concept docs (docs/domain/concepts), shortened to what someone
- * looking at the page needs. Stability and maturity have popovers of their
- * own, so they aren't here.
+ * looking at the page needs. Stability and maturity also have popovers of
+ * their own, on their marks; these are for where they label something.
  */
 export type TermId =
   | "project"
@@ -21,9 +21,12 @@ export type TermId =
   | "tradeoff"
   | "open-decision"
   | "risk"
+  | "spread"
   | "exposure"
   | "evidence"
   | "readiness"
+  | "stability"
+  | "maturity"
   | "stability-checklist"
   | "contradiction";
 
@@ -131,9 +134,17 @@ export const TERMS: Record<TermId, TermEntry> = {
       "What's at stake in leaving a gap open, from 0 to 100: what it could do, its impact times how likely it is and how many it reaches, weighed by how much people rely on each capability it's on, from its stability, and higher where it breaks the promise that level makes. Its verdict says whether that's acceptable (under 33), tolerable (33 to 66) or unacceptable (67 and up).",
     more: "A certain damaging gap reaching everyone that breaks a promise on a GA capability is 100. Only possible, it's 76, still unacceptable; on a Beta capability, where it breaks no promise, 48, tolerable.",
   },
+  spread: {
+    name: "Spread",
+    means:
+      "How one gap's risk spreads across the capabilities it's on: how many have each score, highest first, such as “76 on 1 · 48 on 2”. Of two gaps with the same risk, the one on more capabilities at that score comes first.",
+    more: "A gap in something many capabilities rely on, such as a platform mechanism, spreads further than one on a single capability. It orders gaps; it isn't a total. What the gaps on some capabilities put at stake together is their exposure.",
+  },
   exposure: {
     name: "Exposure",
-    means: "How a gap's risk spreads across the capabilities it's on: its score on each. Of two gaps with the same risk, the one on more capabilities at that score comes first.",
+    means:
+      "What the gaps still open on a feature, domain, project or what serves a persona put at stake together: how close its capabilities are to the worst their levels allow, as a percentage, in one of four bands: low, minor, moderate or high. It's to risk what maturity is to stability.",
+    more: "Each capability is exposed to its riskiest gap's share of the most it could be, a certain damaging gap reaching everyone that breaks its level's promise, and each counts by its level, GA most, as in maturity. Drafts don't count. Readiness is maturity less exposure.",
   },
   evidence: {
     name: "Evidence",
@@ -144,7 +155,19 @@ export const TERMS: Record<TermId, TermEntry> = {
     name: "Readiness",
     means:
       "Our view of how ready the software is to serve people in production, from the engineering judgement written down beside it: each capability's stability level, and its gaps and their risk. It's a recommendation, and you're the judge.",
-    more: "It's maturity less the risk carried: maturity × (1 − risk carried), and it always comes with what's left to do. A persona at 70% is Mostly ready: most of what they need can be relied on day to day.",
+    more: "It's maturity less the exposure: maturity × (1 − exposure), and it always comes with what's left to do. A persona at 70% is Viable: most of what they need can be relied on day to day.",
+  },
+  stability: {
+    name: "Stability",
+    means:
+      "How much people can depend on a capability right now: Prototype, Alpha, Beta or GA. It's declared by the people building it, and only changes when someone promotes or demotes it. A capability not started yet is a draft, with no level.",
+    more: "Beta is the bar for real use: settled enough to rely on. A level is about dependability, not quality. Only capabilities have one; features, domains and projects have a maturity instead.",
+  },
+  maturity: {
+    name: "Maturity",
+    means:
+      "How far along a feature, domain or project is: how much of the work under way is stable and supported, as a percentage worked out from its capabilities' stability. Stable capabilities count for more, and drafts don't count. It falls in one of four bands.",
+    more: "It's about the whole, not each part, and starting new work lowers it without anything getting worse. It doesn't say whether people can rely on it: that's readiness.",
   },
   "stability-checklist": {
     name: "Stability checklist",

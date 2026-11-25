@@ -21,7 +21,10 @@ import {
   type Pick,
   type Target,
 } from "../state";
-import { RiskPie } from "../design/risk/RiskPie";
+import { Ring } from "../design/ring/Ring";
+import { MATURITY_BANDS } from "../design/maturity/maturity";
+import { RiskRing } from "../design/risk/RiskRing";
+import { STABILITY_LEVEL_IDS, levelColor } from "../design/stability/stability";
 import { Tip } from "../design/Tip";
 import "./map.css";
 
@@ -33,8 +36,8 @@ import "./map.css";
  */
 type Lens = "stability" | "risk";
 const LENSES: { id: Lens; label: string; tip: string }[] = [
-  { id: "stability", label: "Stability", tip: "Each capability's stability level, and each feature's and domain's maturity" },
-  { id: "risk", label: "Gaps", tip: "What the open gaps on each capability, feature and domain put at stake: the risk they carry" },
+  { id: "stability", label: "Maturity", tip: "Each capability's stability level, and each feature's and domain's maturity" },
+  { id: "risk", label: "Exposure", tip: "What the open gaps on each capability, feature and domain put at stake: their exposure" },
 ];
 
 /*
@@ -198,6 +201,9 @@ function isPick(state: DocketState, pick: Pick): boolean {
   return pickList(state, pick.kind).some((d) => d.id === pick.id);
 }
 
+/* The rings in a lens's legend, each filled to the top of its band. */
+const LEGEND_RING = 14;
+
 /*
  * What the map shows, floating over the top left of the canvas: one view at
  * a time, with what each color means beside it.
@@ -219,12 +225,21 @@ function LensBar({ lens, onLens }: { lens: Lens; onLens: (lens: Lens) => void })
         <span className="lens-legend">
           {RISK_BANDS.map((b) => (
             <span key={b.id} data-risk-band={b.id}>
-              <RiskPie percent={b.from + 25} size={11} />
+              <RiskRing percent={b.from + 25} size={LEGEND_RING} figure={false} />
               {b.name}
             </span>
           ))}
         </span>
-      ) : null}
+      ) : (
+        <span className="lens-legend">
+          {STABILITY_LEVEL_IDS.map((id, n) => (
+            <span key={id}>
+              <Ring percent={(n + 1) * 25} size={LEGEND_RING} sx={levelColor(id)} />
+              {MATURITY_BANDS[id]}
+            </span>
+          ))}
+        </span>
+      )}
     </div>
   );
 }

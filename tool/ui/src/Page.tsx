@@ -33,7 +33,7 @@ import {
 } from "./Explore";
 import { DomainIcon } from "./FeatureMap";
 import { PersonaAvatar, personaNameAndRole, personaReadiness } from "./Personas";
-import { ReadinessMark, ReadinessText, StillNeeds, needsLine } from "./Readiness";
+import { ReadinessMark, StillNeeds, needsLine } from "./Readiness";
 import { ProjectIcon } from "./PlatformFilter";
 import {
   bareId,
@@ -87,6 +87,7 @@ import {
 } from "./state";
 import { Tip } from "./design/Tip";
 import { GapRows, LeftFigure } from "./GapRows";
+import { ExposureStat } from "./pages/indexParts";
 import { TradeoffRows } from "./TradeoffRows";
 import { docHref, navigate, sectionHref, withParam, type Route } from "./routes";
 import { Empty, PageHeader, Section, Stat, Tabs, View, currentTab, type TabDef } from "./shell/layout";
@@ -390,7 +391,7 @@ function MaturityStat({ maturity, levels, of, href }: { maturity: number | null;
      
       value={
         <Box component="span" className="page-stat-maturity" sx={levelColor(band)}>
-          <MaturityRing progress={maturity} subject="persona" count={levels.filter(Boolean).length} size={22} focusable={false} label={`Maturity of ${of}`} />
+          <MaturityRing progress={maturity} subject="persona" count={levels.filter(Boolean).length} size={22} focusable={false} label={`Maturity of ${of}`} spread={levels} />
           {MATURITY_BANDS[band]}
         </Box>
       }
@@ -420,8 +421,8 @@ function Avatars({ personas }: { personas: Persona[] }) {
 
 /* ——— Readiness ——— */
 
-/* How ready it is, as a figure in the header, linking to what it still needs on its first tab. */
-function ReadinessStat({ readiness, tab }: { readiness: Readiness; tab: string }) {
+/* How ready it is, as a figure in the header, as its bar, linking to what it still needs on its first tab. `of` heads its popover. */
+function ReadinessStat({ readiness, tab, of }: { readiness: Readiness; tab: string; of: string }) {
   const ready = isReady(readiness);
   const note = [
     ...(readiness.notReady.length ? [`${readiness.notReady.length} with something left`] : []),
@@ -431,7 +432,7 @@ function ReadinessStat({ readiness, tab }: { readiness: Readiness; tab: string }
     <Stat
       label="Readiness"
       term="readiness"
-      value={readiness.percent === null ? "Nothing started" : <ReadinessText readiness={readiness} />}
+      value={readiness.percent === null ? "Nothing started" : <ReadinessMark readiness={readiness} of={of} inButton />}
       note={note || (readiness.percent === null ? "Drafts don't count" : "Nothing left on any capability")}
       tone={ready ? "ok" : undefined}
       href={`${tabHref(tab)}#still-needs`}
@@ -850,11 +851,12 @@ function CapabilityPage({ capability, route, ...go }: PageProps & { capability: 
             <Stat
               label="Readiness"
               term="readiness"
-              value={readiness.percent === null ? "Not started" : <ReadinessText readiness={readiness} />}
+              value={readiness.percent === null ? "Not started" : <ReadinessMark readiness={readiness} of={`Readiness of ${capability.name}`} inButton />}
               note={!needs ? "A draft doesn't count" : ready ? "Nothing left: at Beta or above, with no unacceptable gap" : needsLine(needs)}
               tone={isReady(readiness) ? "ok" : undefined}
               href={needs?.gaps.length ? tabHref("left") : undefined}
             />
+            <ExposureStat state={state} capabilities={[capability]} of={capability.name} />
             <LeftStat left={left} of={capability.name} />
             <Stat
               label="Rules" term="rule"
@@ -1009,11 +1011,12 @@ function FeaturePage({ feature, route, ...go }: PageProps & { feature: Feature }
         kind="feature"
         doc={feature}
         trail={<DomainTrail state={state} domains={feature.parts.map((p) => p.domain)} />}
-        marks={<Maturity value={feature.maturity} subject="feature" count={feature.capabilities.length} of="none of its capabilities has a level yet" />}
+        marks={<Maturity value={feature.maturity} subject="feature" count={feature.capabilities.length} of="none of its capabilities has a level yet" spread={capabilities.map((c) => c.stability)} />}
         stats={
           <>
             <Stat label="Capabilities" term="capability" value={capabilities.length || "None"} note={<StabilitySpread levels={capabilities.map((c) => c.stability)} of={feature.name} inButton />} href={tabHref("capabilities")} />
-            <ReadinessStat readiness={readiness} tab="overview" />
+            <ReadinessStat readiness={readiness} tab="overview" of={`Readiness of ${feature.name}`} />
+            <ExposureStat state={state} capabilities={capabilities} of={feature.name} />
             <LeftStat left={left} of={feature.name} />
             <Stat
               label="Serves"
@@ -1041,8 +1044,7 @@ function FeaturePage({ feature, route, ...go }: PageProps & { feature: Feature }
                       value={p.maturity}
                       subject="feature"
                       of="none of its capabilities here has a level yet"
-                      levels={partLevels(state, p.capabilities, p.domain)}
-                      spreadOf={`${feature.name} in ${domainName(state, p.domain)}`}
+                      spread={partLevels(state, p.capabilities, p.domain)}
                     />
                     <span className="faint">{plural(p.capabilities.length, "capability", "capabilities")}</span>
                   </li>
@@ -1076,8 +1078,7 @@ function FeaturePage({ feature, route, ...go }: PageProps & { feature: Feature }
                     value={part.maturity}
                     subject="feature"
                     of="none of its capabilities here has a level yet"
-                    levels={partLevels(state, part.capabilities, part.domain)}
-                    spreadOf={`${feature.name} in ${domainName(state, part.domain)}`}
+                    spread={partLevels(state, part.capabilities, part.domain)}
                   />
                 ) : undefined
               }
@@ -1140,7 +1141,13 @@ function DomainPage({ domain, route, ...go }: PageProps & { domain: Domain }) {
         kind="domain"
         doc={domain}
         marks={
-          <Maturity value={domain.maturity} subject="domain" count={domain.features.length} of="none of its features has a level yet" />
+          <Maturity
+            value={domain.maturity}
+            subject="domain"
+            count={domain.features.length}
+            of="none of its features has a level yet"
+            spread={domain.features.map((id) => partOf(find(state.features, id), domain.id)?.band ?? null)}
+          />
         }
         stats={
           <>
@@ -1151,7 +1158,8 @@ function DomainPage({ domain, route, ...go }: PageProps & { domain: Domain }) {
               href={tabHref("features")}
             />
             <Stat label="Capabilities" term="capability" value={capabilities.length || "None"} note={<StabilitySpread levels={capabilities.map((c) => levelInDomain(c, domain.id))} of={domain.name} inButton />} href={tabHref("features")} />
-            <ReadinessStat readiness={readiness} tab="overview" />
+            <ReadinessStat readiness={readiness} tab="overview" of={`Readiness of ${domain.name}`} />
+            <ExposureStat state={state} capabilities={capabilities} of={domain.name} />
             <Stat
               label="Language" term="concept"
               value={plural(concepts.length, "concept", "concepts")}
@@ -1190,7 +1198,15 @@ function DomainPage({ domain, route, ...go }: PageProps & { domain: Domain }) {
                       <span className="page-feature-head">
                         {NAMES.feature.icon}
                         <strong>{f.name}</strong>
-                        {part?.maturity != null ? <MaturityRing progress={part.maturity} subject="feature" size={22} focusable={false} /> : null}
+                        {part?.maturity != null ? (
+                          <MaturityRing
+                            progress={part.maturity}
+                            subject="feature"
+                            size={22}
+                            focusable={false}
+                            spread={caps.map((c) => c.levels.find((l) => l.domain === domain.id)?.level ?? c.stability)}
+                          />
+                        ) : null}
                       </span>
                       {f.description ? <span className="page-feature-summary">{f.description}</span> : null}
                       <ul>
@@ -1300,6 +1316,7 @@ function PersonaPage({ persona, route, ...go }: PageProps & { persona: Persona }
               of={`what serves ${persona.name}`}
               href={tabHref("serves")}
             />
+            <ExposureStat state={state} capabilities={capabilities} of={`what serves ${persona.name}`} />
             <LeftStat left={left} of={`what serves ${persona.name}`} />
           </>
         }

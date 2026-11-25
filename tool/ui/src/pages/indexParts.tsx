@@ -12,8 +12,9 @@ import { PersonaAvatar, PersonaIcon } from "../Personas";
 import { GapIcon, LEFT_KINDS, LeftMark, type LeftKind } from "../design/left/LeftMark";
 import { Tip } from "../design/Tip";
 import { docHref, type DocKind } from "../routes";
-import { bareId, type CapabilityLevel, type Gap, type Persona, type RiskAcross } from "../state";
-import { RiskScore } from "../design/risk/RiskScore";
+import { bareId, exposureOf, gapsOn, type Capability, type CapabilityLevel, type DocketState, type Gap, type Persona, type RiskAcross } from "../state";
+import { ExposureMark, RiskScore } from "../design/risk/RiskScore";
+import { Stat } from "../shell/layout";
 import "./index.css";
 
 /* The pieces the index pages share: each kind's mark, counts of what's left, a level, personas, and a filter box. */
@@ -52,13 +53,18 @@ export function DocLink({ kind, id, name, icon = true }: { kind: DocKind; id: st
   );
 }
 
-/* How many of one kind of what's left, as its mark and the number, naming it on hover. Nothing with none. */
-export function MiniCount({ kind, n }: { kind: LeftKind; n: number }) {
+/*
+ * How many of one kind of what's left, as its mark and the number, naming it
+ * on hover. "gap" is gaps of both kinds, product and technical, which share a
+ * mark. Nothing with none.
+ */
+export function MiniCount({ kind, n }: { kind: LeftKind | "gap"; n: number }) {
   if (!n) return null;
+  const name = kind === "gap" ? (n === 1 ? "gap" : "gaps") : (n === 1 ? LEFT_KINDS[kind].one : LEFT_KINDS[kind].many).toLowerCase();
   return (
-    <Tip title={`${n} ${(n === 1 ? LEFT_KINDS[kind].one : LEFT_KINDS[kind].many).toLowerCase()}`}>
+    <Tip title={`${n} ${name}`}>
       <span className="ix-mini">
-        <LeftMark kind={kind} size={13} decorative />
+        <LeftMark kind={kind === "gap" ? "product-gap" : kind} size={13} decorative />
         {n}
       </span>
     </Tip>
@@ -66,23 +72,28 @@ export function MiniCount({ kind, n }: { kind: LeftKind; n: number }) {
 }
 
 /*
- * Gaps in short: how many, with the highest risk among them, worked out by
- * whoever passes it, whose popover says how the rest spread. `of` names what
- * they're in, for the popover. "None" when there are none. Open decisions,
- * when given, count beside them.
+ * Gaps in short: how many, with the highest risk among them when `risk` is
+ * given, worked out by whoever passes it, whose popover says how the rest
+ * spread. `of` names what they're in, for the popover. "None" when there are
+ * none. Open decisions, when given, count beside them.
  */
 export function GapsCell({
   gaps,
   risk,
+  exposure,
   kind,
   of,
   decisions = 0,
   href,
 }: {
   gaps: Gap[];
-  risk: RiskAcross<Gap>;
-  kind: "product-gap" | "technical-gap";
-  of: string;
+  /* How the gaps spread across the verdicts, for gaps on no capabilities, such as a component's. */
+  risk?: RiskAcross<Gap>;
+  /* The capabilities they're on, to show their exposure instead, as aggregated risk is everywhere. */
+  exposure?: { state: DocketState; capabilities: Capability[] };
+  /* Which gaps they are: product, technical, or "gap" for both. */
+  kind: "product-gap" | "technical-gap" | "gap";
+  of?: string;
   decisions?: number;
   href?: string;
 }) {
@@ -96,7 +107,11 @@ export function GapsCell({
   return (
     <span className="ix-gaps">
       {href ? <a className="ix-gaps-link" href={href}>{counts}</a> : counts}
-      {gaps.length ? <RiskScore risk={risk} of={of} /> : null}
+      {gaps.length && exposure ? (
+        <ExposureMark state={exposure.state} capabilities={exposure.capabilities} of={of ?? "these"} />
+      ) : gaps.length && risk ? (
+        <RiskScore risk={risk} of={of ?? "these"} />
+      ) : null}
     </span>
   );
 }
@@ -147,3 +162,29 @@ export function Num({ n, children }: { n: number; children?: ReactNode }) {
 
 /* By name, A to Z. */
 export const byName = (a: { name: string }, b: { name: string }) => a.name.localeCompare(b.name);
+
+/*
+ * The exposure of some capabilities, as a figure in a page's header: its
+ * ring and band, opening the spread of their gaps by risk and how it's
+ * worked out. It's how aggregated risk shows in every header, as maturity is
+ * how aggregated stability does. `of` names what it's of, as a phrase.
+ */
+export function ExposureStat({ state, capabilities, of }: { state: DocketState; capabilities: Capability[]; of: string }) {
+  const exposure = exposureOf(state, capabilities);
+  const atRisk = exposure.percent !== null && capabilities.some((c) => gapsOn(state, c).length);
+  return (
+    <Stat
+      label="Exposure"
+      term="exposure"
+      value={atRisk ? <ExposureMark state={state} capabilities={capabilities} of={of} named /> : "None"}
+      tone={atRisk ? undefined : "ok"}
+      note={
+        exposure.percent === null
+          ? "Nothing started yet"
+          : atRisk
+            ? `Across ${exposure.capabilities === 1 ? "1 capability" : `${exposure.capabilities} capabilities`}`
+            : "No gaps on its capabilities"
+      }
+    />
+  );
+}

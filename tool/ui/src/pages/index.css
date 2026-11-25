@@ -207,6 +207,17 @@
   width: 110px;
 }
 
+.ix-cap-risk {
+  flex: none;
+  width: 80px;
+}
+
+.ix-cap-level,
+.ix-cap-risk {
+  display: inline-flex;
+  align-items: center;
+}
+
 .ix-cap-left {
   flex: none;
   width: 230px;
@@ -420,4 +431,10 @@
 
 .ix-gaps-link:hover {
   color: var(--accent) !important;
+}
+
+/* Maturity and exposure as a stat card's figure: at the card's size. */
+.stat-tile-value > .explore-level,
+.stat-tile-value > .exposure-named {
+  font-size: inherit;
 }

@@ -33,12 +33,6 @@ export function maturityBand(progress: number): StabilityLevelId {
   return STABILITY_LEVEL_IDS[Math.min(Math.floor(clampMaturity(progress) / 25), 3)];
 }
 
-/** How far a maturity reaches into each level's quarter, 0 to 1, Prototype first. */
-export function maturityFills(progress: number): number[] {
-  const value = clampMaturity(progress);
-  return STABILITY_LEVEL_IDS.map((_, index) => Math.min(Math.max((value - index * 25) / 25, 0), 1));
-}
-
 /**
  * What a Capability at each level adds to its Feature's maturity: its score,
  * and how much weight that score carries in the average. Higher levels weigh

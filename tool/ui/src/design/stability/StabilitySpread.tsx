@@ -2,7 +2,8 @@ import Box from "@mui/material/Box";
 import type { Theme } from "@mui/material/styles";
 import type { CapabilityLevel, Level } from "../../state";
 import { DetailsCard, DetailsEyebrow, DetailsPopover } from "../DetailsPopover";
-import { STABILITY, STABILITY_LEVEL_IDS } from "./stability";
+import { MATURITY_BANDS } from "../maturity/maturity";
+import { STABILITY, STABILITY_LEVEL_IDS, levelColor } from "./stability";
 import { StabilityTrack } from "./StabilityTrack";
 
 /*
@@ -94,5 +95,30 @@ function StabilitySpreadDetails({ levels, of }: { levels: CapabilityLevel[]; of:
         How many capabilities are at each level, counted once each at their level in short. Maturity is worked out from it; drafts don&rsquo;t count there.
       </Box>
     </DetailsCard>
+  );
+}
+
+/*
+ * How several spread across the levels, for a popover, as risk's spread
+ * across the verdicts is drawn: the wide bar, with each count under it in
+ * its level's color, most dependable first. With `bands`, they're features'
+ * maturity bands, named for them, and null is one not started; otherwise
+ * null is a draft.
+ */
+export function LevelSpread({ levels, bands = false }: { levels: CapabilityLevel[]; bands?: boolean }) {
+  return (
+    <div className="verdict-spread">
+      <StabilitySpreadBar levels={levels} wide />
+      <span className="verdict-spread-counts">
+        {[...spreadOf(levels)].reverse().map(({ level, n }) => (
+          <span key={level ?? "none"}>
+            <Box component="strong" sx={level ? levelColor(level) : { color: "text.primary" }}>
+              {n}
+            </Box>{" "}
+            {level ? (bands ? MATURITY_BANDS[level].toLowerCase() : levelName(level)) : bands ? "not started" : n === 1 ? "draft" : "drafts"}
+          </span>
+        ))}
+      </span>
+    </div>
   );
 }

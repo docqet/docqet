@@ -111,3 +111,17 @@ export function DetailsEyebrow({ children }: DetailsEyebrowProps) {
     </Box>
   );
 }
+
+/*
+ * How a figure in a popover is worked out, closing it: a soft panel headed
+ * "How it's worked out", in small type. Maturity's, exposure's and
+ * readiness's popovers each end with one, so they read alike.
+ */
+export function DetailsWorkings({ children }: { children: ReactNode }) {
+  return (
+    <div className="details-workings">
+      <div className="details-workings-head">How it&rsquo;s worked out</div>
+      {children}
+    </div>
+  );
+}

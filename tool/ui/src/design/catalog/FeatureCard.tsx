@@ -5,11 +5,11 @@ import Tooltip from "@mui/material/Tooltip";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import WidgetsOutlinedIcon from "@mui/icons-material/WidgetsOutlined";
 import type { ReactNode } from "react";
-import { CapabilityLabel, CapabilityStability } from "./CapabilityLabel";
+import { CapabilityLabel } from "./CapabilityLabel";
 import { Grip } from "../Grip";
 import { featureMaturity } from "../maturity/maturity";
 import { MaturityRing } from "../maturity/MaturityRing";
-import { STABILITY_LEVEL_IDS, type StabilityLevelId } from "../stability/stability";
+import type { StabilityLevelId } from "../stability/stability";
 
 export type FeatureCapability = {
   /** Keeps its row when names repeat or change. Its name without one. */
@@ -49,8 +49,6 @@ export type FeatureCardProps = {
   /** Something small after its name, such as how many open decisions it has. */
   hint?: ReactNode;
 };
-
-const rank = (level: StabilityLevelId | null) => (level ? STABILITY_LEVEL_IDS.indexOf(level) : -1);
 
 /*
  * A Feature with its Capabilities, as one card: its icon, its name, cut
@@ -122,32 +120,7 @@ export function FeatureCard({
                   count={capabilities.filter((capability) => capability.level !== null).length}
                   label={name}
                   size={24}
-                  breakdown={
-                    <Box component="ul" sx={{ listStyle: "none", m: 0, p: 0 }}>
-                      {[...capabilities]
-                        .sort((a, b) => rank(b.level) - rank(a.level))
-                        .map((capability) => (
-                          <Box
-                            key={capability.id ?? capability.name}
-                            component="li"
-                            sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
-                              gap: 2,
-                              py: 0.5,
-                            }}
-                          >
-                            <span>{capability.name}</span>
-                            <CapabilityStability
-                              name={capability.name}
-                              level={capability.level}
-                              focusable={false}
-                            />
-                          </Box>
-                        ))}
-                    </Box>
-                  }
+                  spread={capabilities.map((capability) => capability.level)}
                 />
               </Box>
             )}

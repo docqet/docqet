@@ -1097,7 +1097,7 @@ export function showsOn(state: DocketState, item: { id: string }): Capability[] 
  * reaching all and breaking a promise on GA. Less likely or reaching fewer,
  * it scores lower, and never below 0. A draft weighs nothing, and scores 0.
  * Its risk is the highest of those, or null with no impact rated; its
- * verdict, the third of the scale that falls in; its exposure, how its
+ * verdict, the third of the scale that falls in; its spread, how its
  * scores spread across the capabilities, highest first. A tradeoff has none:
  * it's chosen.
  */
@@ -1143,8 +1143,8 @@ export type Risk = {
   /* Each capability it shows on, highest score first, then most stable. */
   on: RiskOn[];
   capabilities: number;
-  /* How many capabilities carry each score, highest first: "36 on 2 · 12 on 1". */
-  exposure: { score: number; capabilities: number }[];
+  /* How many capabilities have each score, highest first: "36 on 2 · 12 on 1". */
+  spread: { score: number; capabilities: number }[];
 };
 
 /* How a gap scores on one capability, as riskOf works it out. */
@@ -1167,11 +1167,11 @@ export function riskOf(state: DocketState, item: Gap): Risk {
     .map(riskOn(state, item))
     .sort((a, b) => b.score - a.score || b.weight - a.weight);
   const rated = item.impact !== null;
-  const exposure: Risk["exposure"] = [];
+  const spread: Risk["spread"] = [];
   for (const o of on) {
-    const last = exposure[exposure.length - 1];
+    const last = spread[spread.length - 1];
     if (last?.score === o.score) last.capabilities++;
-    else exposure.push({ score: o.score, capabilities: 1 });
+    else spread.push({ score: o.score, capabilities: 1 });
   }
   return {
     impact: item.impact,
@@ -1182,7 +1182,7 @@ export function riskOf(state: DocketState, item: Gap): Risk {
     promise: on.some((o) => o.promise),
     on,
     capabilities: on.length,
-    exposure: rated ? exposure : [],
+    spread: rated ? spread : [],
   };
 }
 
@@ -1214,23 +1214,29 @@ export function needsOf(state: DocketState, capability: Capability): NotReady {
 /*
  * The readiness of some capabilities, as of a feature, domain, persona or
  * project: a recommendation, 0 to 100, for people to judge by. It's their
- * maturity, each at its level in short, less the risk they carry:
- * maturity × (1 − risk carried). With it, the two it's worked out from,
+ * maturity, each at its level in short, less their exposure:
+ * maturity × (1 − exposure). With it, the two it's worked out from,
  * those with nothing left, those that still need something and what, and the
  * drafts, not started, which never count. Nothing started, it's null.
  */
 export type Readiness = {
   percent: number | null;
   maturity: number | null;
-  risk: RiskCarried;
+  exposure: Exposure;
+  /* Each capability's level, null for a draft: what its maturity is worked out from. */
+  levels: CapabilityLevel[];
+  /* Every gap on them, their own and those of what they're built on, each scored on them: what the exposure is worked out from. */
+  gaps: RiskAcross<Gap>;
   ready: Capability[];
   notReady: NotReady[];
   notStarted: Capability[];
 };
 
 export function readinessOf(state: DocketState, capabilities: Capability[]): Readiness {
-  const risk = riskCarried(state, capabilities);
-  const readiness: Readiness = { percent: null, maturity: null, risk, ready: [], notReady: [], notStarted: [] };
+  const exposure = exposureOf(state, capabilities);
+  const gaps = riskAcross(state, [...new Set(capabilities.flatMap((c) => gapsOn(state, c)))], capabilities);
+  const levels = capabilities.map((c) => c.stability);
+  const readiness: Readiness = { percent: null, maturity: null, exposure, levels, gaps, ready: [], notReady: [], notStarted: [] };
   let total = 0;
   let weights = 0;
   for (const c of capabilities) {
@@ -1247,7 +1253,7 @@ export function readinessOf(state: DocketState, capabilities: Capability[]): Rea
   }
   if (weights) {
     readiness.maturity = total / weights;
-    readiness.percent = Math.round(readiness.maturity * (1 - (risk.percent ?? 0) / 100));
+    readiness.percent = Math.round(readiness.maturity * (1 - (exposure.percent ?? 0) / 100));
   }
   return readiness;
 }
@@ -1257,9 +1263,9 @@ export const startedOf = (r: Readiness) => r.ready.length + r.notReady.length;
 
 /* Readiness's quarters, named for what they recommend, from the lowest. */
 export const READINESS_BANDS = [
-  { from: 0, name: "Not ready", says: "Most of what they need is still being explored, or its gaps put a lot at stake." },
-  { from: 25, name: "Partly ready", says: "Some of it can be used, but much of what they need is still taking shape." },
-  { from: 50, name: "Mostly ready", says: "Enough is settled for them to rely on day to day." },
+  { from: 0, name: "Unready", says: "Most of what they need is still being explored, or its gaps put a lot at stake." },
+  { from: 25, name: "Partial", says: "Some of it can be used, but much of what they need is still taking shape." },
+  { from: 50, name: "Viable", says: "Enough is settled for them to rely on day to day." },
   { from: 75, name: "Ready", says: "What they need is mostly stable, with nothing unacceptable left open." },
 ] as const;
 
@@ -1310,29 +1316,31 @@ export function riskAcross<T extends Gap>(state: DocketState, items: T[], within
 }
 
 /*
- * The risk some capabilities carry, as of a feature, domain or persona: how
- * much of the most they could carry their riskiest gaps are, 0 to 100. The
- * most a capability could carry is a certain damaging gap reaching all that
- * breaks its level's promise. It carries its riskiest gap's raw score's share
- * of that, its own or one on what it's built on, and counts with its level's
- * weight in risk. Gaps with no impact rated carry nothing, and drafts don't
+ * The exposure of some capabilities, as of a feature, domain, project or
+ * persona: what the gaps still open on them put at stake together, as how
+ * much of the most they could be exposed to their riskiest gaps are, 0 to
+ * 100. It's to risk what maturity is to stability. The most a capability
+ * could be exposed to is a certain damaging gap reaching all that breaks its
+ * level's promise. Its exposure is its riskiest gap's raw score's share of
+ * that, its own or one on what it's built on, and it counts with its level's
+ * weight in risk. Gaps with no impact rated add nothing, and drafts don't
  * count. Nothing started, it's null. Its band, the quarter it falls in,
  * says how much the gaps still open on them put at stake, and is at least
  * moderate while any gap is unacceptable on one of them. It isn't their
  * stability: that's declared, and says how much people can depend on them.
  */
 export const RISK_BANDS = [
-  { id: "low", from: 0, name: "Low risk", says: "Little is at stake in its open gaps." },
-  { id: "some", from: 25, name: "Some risk", says: "Its open gaps could cost people a little, or seldom." },
-  { id: "moderate", from: 50, name: "Moderate risk", says: "Some of its open gaps could cost people if they bite." },
-  { id: "high", from: 75, name: "High risk", says: "Its open gaps are likely to cost people, or to cost them a lot." },
+  { id: "low", from: 0, name: "Low", says: "Little is at stake in its open gaps." },
+  { id: "minor", from: 25, name: "Minor", says: "Its open gaps could cost people a little, or seldom." },
+  { id: "moderate", from: 50, name: "Moderate", says: "Some of its open gaps could cost people if they bite." },
+  { id: "high", from: 75, name: "High", says: "Its open gaps are likely to cost people, or to cost them a lot." },
 ] as const;
 export type RiskBand = (typeof RISK_BANDS)[number];
 
-export type RiskCarried = { percent: number | null; capabilities: number; band: RiskBand | null; unacceptable: boolean };
+export type Exposure = { percent: number | null; capabilities: number; band: RiskBand | null; unacceptable: boolean };
 
-export function riskCarried(state: DocketState, capabilities: Capability[]): RiskCarried {
-  let carried = 0;
+export function exposureOf(state: DocketState, capabilities: Capability[]): Exposure {
+  let exposed = 0;
   let weights = 0;
   let started = 0;
   let unacceptable = false;
@@ -1345,18 +1353,18 @@ export function riskCarried(state: DocketState, capabilities: Capability[]): Ris
       return !top || on.raw > top.raw ? on : top;
     }, null);
     if (riskiest && verdictOf(riskiest.score) === "unacceptable" && riskiest.raw > 0) unacceptable = true;
-    carried += weight * ((riskiest?.raw ?? 0) / most);
+    exposed += weight * ((riskiest?.raw ?? 0) / most);
     weights += weight;
     started++;
   }
-  const percent = weights ? (carried / weights) * 100 : null;
+  const percent = weights ? (exposed / weights) * 100 : null;
   const byShare = percent === null ? null : [...RISK_BANDS].reverse().find((b) => percent >= b.from)!;
   const band = byShare && unacceptable && byShare.from < RISK_BANDS[2].from ? RISK_BANDS[2] : byShare;
   return { percent, capabilities: started, band, unacceptable };
 }
 
-/* A share of risk carried as written: whole percents, and "<1%" for a little that rounds to none. */
-export const carriedText = (percent: number) => (percent > 0 && percent < 0.5 ? "<1%" : `${Math.round(percent)}%`);
+/* An exposure as written: whole percents, and "<1%" for a little that rounds to none. */
+export const exposureText = (percent: number) => (percent > 0 && percent < 0.5 ? "<1%" : `${Math.round(percent)}%`);
 
 /* A risk score as written. */
 export const riskScore = (score: number) => String(score);
@@ -1364,7 +1372,7 @@ export const riskScore = (score: number) => String(score);
 /* An impact's place, worst first, with none after every one. */
 export const impactRank = (impact: Impact | null) => (impact ? IMPACTS.indexOf(impact) : IMPACTS.length);
 
-/* Riskiest first: by score, none rated last, then by exposure, comparing each capability's score in turn, highest first. */
+/* Riskiest first: by score, none rated last, then by spread, comparing each capability's score in turn, highest first. */
 export function byRisk(a: Risk, b: Risk): number {
   if (a.score === null || b.score === null) return Number(a.score === null) - Number(b.score === null);
   for (let i = 0; i < Math.max(a.on.length, b.on.length); i++) {

@@ -3,13 +3,12 @@ import type { Theme } from "@mui/material/styles";
 import { useMemo } from "react";
 import { Maturity, NAMES, TECHNICAL_NAMES, plural } from "../Explore";
 import { StabilitySpread } from "../design/stability/StabilitySpread";
-import { GapsCell } from "./indexParts";
+import { GapsCell, ExposureStat } from "./indexParts";
 import { LeftFigure } from "../GapRows";
 import { PersonaAvatar, personaReadiness } from "../Personas";
-import { ReadinessMark, ReadinessText, StillNeeds } from "../Readiness";
+import { ReadinessMark, StillNeeds } from "../Readiness";
 import { InlineMarkdown } from "../design/markdown/Markdown";
 import { MaturityRing } from "../design/maturity/MaturityRing";
-import { RingGlyph } from "../design/maturity/RingGlyph";
 import { MATURITY_BANDS, maturityBand } from "../design/maturity/maturity";
 import { GapRiskMark } from "../design/risk/RiskScore";
 import { STABILITY, STABILITY_LEVEL_IDS, levelColor } from "../design/stability/stability";
@@ -19,11 +18,12 @@ import { Empty, PageHeader, Section, Stat, View } from "../shell/layout";
 import {
   domainCapabilities,
   find,
+  partOf,
   isReady,
   readinessOf,
   readyShare,
   startedOf,
-  gapsById,
+  gapsOn,
   inRiskOrder,
   riskAcross,
   riskOf,
@@ -79,26 +79,13 @@ export default function OverviewPage({ state }: { state: DocketState; route: Rou
         marks={maturity !== null ? <MaturityMark state={state} maturity={maturity} /> : null}
         stats={
           <>
-            <Stat
-              label="Maturity"
-              href={sectionHref("features")}
-              value={
-                maturity === null ? (
-                  <span className="ov-faint">None yet</span>
-                ) : (
-                  <Box component="span" sx={levelColor(maturityBand(maturity))}>
-                    {MATURITY_BANDS[maturityBand(maturity)]} · {maturity}%
-                  </Box>
-                )
-              }
-              note={maturity === null ? "No capability has a level yet" : several ? "Across projects, from their features" : "From its features' capabilities"}
-            />
+            <ExposureStat state={state} capabilities={state.capabilities} of={several ? "every project showing" : "this project"} />
             <Stat
               label="Readiness"
               term="readiness"
               href="#still-needs"
               tone={isReady(readiness) ? "ok" : undefined}
-              value={readiness.percent === null ? <span className="ov-faint">Nothing started</span> : <ReadinessText readiness={readiness} />}
+              value={readiness.percent === null ? <span className="ov-faint">Nothing started</span> : <ReadinessMark readiness={readiness} of="Readiness" inButton />}
               note={
                 startedOf(readiness)
                   ? `A recommendation, from ${plural(startedOf(readiness), "started capability", "started capabilities")}${readiness.notStarted.length ? `, ${readiness.notStarted.length} not started` : ""}`
@@ -115,7 +102,7 @@ export default function OverviewPage({ state }: { state: DocketState; route: Rou
                     <span className="ov-ellipsis">{leastReady.persona.name}</span>
                   </>
                 }
-                note={<ReadinessText readiness={leastReady.readiness} />}
+                note={<ReadinessMark readiness={leastReady.readiness} of={`Readiness for ${leastReady.persona.name}`} inButton />}
               />
             ) : null}
             <Stat label="What's left" term="gap" href={sectionHref("left")} value={<LeftFigure gaps={state.gaps} decisions={decisions} risk={riskAcross(state, state.gaps)} of="everything" />} />
@@ -141,7 +128,7 @@ export default function OverviewPage({ state }: { state: DocketState; route: Rou
         <StillNeeds readiness={readiness} readyText="Ready: every started capability is at Beta or above, with no unacceptable gap." />
       </Section>
 
-      <Section title={<>Where each <Term id="domain">domain</Term> stands</>} count={state.domains.length} note="Its capabilities' stability, beside what's left on them, least mature first.">
+      <Section title={<>Where each <Term id="domain">domain</Term> stands</>} count={state.domains.length} note="Its maturity and its capabilities' stability, beside what's left on them and their exposure, least mature first.">
         {state.domains.length ? <DomainStability state={state} /> : <Empty>No domains yet.</Empty>}
       </Section>
 
@@ -224,31 +211,17 @@ function Lede({ state }: { state: DocketState }) {
 /* The overall maturity beside the name: its ring, whose popover breaks it down by project or by part of a feature, and its band. */
 function MaturityMark({ state, maturity }: { state: DocketState; maturity: number }) {
   const several = state.projects.length > 1;
-  const parts = state.features.flatMap((f) => f.parts.filter((p) => p.maturity !== null).map((p) => ({ key: `${f.id}@${p.domain}`, name: f.name, maturity: p.maturity! })));
-  const breakdown = several
-    ? state.projects.filter((p) => p.maturity !== null).map((p) => ({ key: p.id, name: p.name, maturity: p.maturity! }))
-    : parts;
+  const started = state.features.filter((f) => f.maturity !== null);
   const band = maturityBand(maturity);
   return (
     <span className="ov-maturity">
       <MaturityRing
         progress={maturity}
         subject="project"
-        count={parts.length}
+        count={started.length}
         label={several ? "Maturity across projects" : undefined}
         size={40}
-        breakdown={
-          <ul className="ov-breakdown">
-            {[...breakdown]
-              .sort((a, b) => b.maturity - a.maturity)
-              .map((x) => (
-                <li key={x.key}>
-                  <span>{x.name}</span>
-                  <RingGlyph progress={x.maturity} size={20} />
-                </li>
-              ))}
-          </ul>
-        }
+        spread={state.features.map((f) => f.band)}
       />
       <Box component="span" className="ov-band" sx={levelColor(band)}>
         {MATURITY_BANDS[band]}
@@ -285,27 +258,33 @@ function DomainStability({ state }: { state: DocketState }) {
     .map((domain) => {
       const capabilities = domainCapabilities(state, domain);
       const levels = levelIn(state, domain);
-      const gaps = capabilities.flatMap((c) => gapsById(state, c.gaps));
+      const gaps = [...new Set(capabilities.flatMap((c) => gapsOn(state, c)))];
       const decisions = capabilities.reduce((n, c) => n + openDecisions(c).length, openDecisions(domain).length);
-      return { domain, levels, gaps, decisions, risk: riskAcross(state, gaps, capabilities) };
+      return { domain, capabilities, levels, gaps, decisions };
     })
     .sort((a, b) => (a.domain.maturity ?? -1) - (b.domain.maturity ?? -1));
   return (
     <>
       <ul className="ov-domains">
-        {rows.map(({ domain, levels, gaps, decisions, risk }) => {
+        {rows.map(({ domain, capabilities, levels, gaps, decisions }) => {
           return (
             <li key={domain.id}>
               <a className="ov-link ov-ellipsis" href={docHref("domain", domain.id)}>
                 {domain.name}
               </a>
-              <Maturity value={domain.maturity} subject="domain" count={domain.features.length} of="none of its capabilities has a level yet" />
+              <Maturity
+                value={domain.maturity}
+                subject="domain"
+                count={domain.features.length}
+                of="none of its capabilities has a level yet"
+                spread={domain.features.map((id) => partOf(find(state.features, id), domain.id)?.band ?? null)}
+              />
               <span className="ov-bar-cell">
                 {levels.length ? <StabilitySpread levels={levels} of={domain.name} wide /> : <span className="ov-faint">No capabilities</span>}
                 <span className="ov-count">{levels.length}</span>
               </span>
               <span className="ov-left">
-                <GapsCell gaps={gaps} risk={risk} kind="product-gap" decisions={decisions} of={domain.name} href={docHref("domain", domain.id, "left")} />
+                <GapsCell gaps={gaps} exposure={{ state, capabilities }} kind="gap" decisions={decisions} of={domain.name} href={docHref("domain", domain.id, "left")} />
               </span>
             </li>
           );

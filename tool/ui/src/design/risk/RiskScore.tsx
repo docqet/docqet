@@ -1,8 +1,24 @@
 import Box from "@mui/material/Box";
-import { VERDICTS, carriedText, riskScore, verdictOf, type Gap, type Risk, type RiskAcross, type RiskCarried, type RiskOn, type Verdict } from "../../state";
-import { DetailsCard, DetailsEyebrow, DetailsPopover } from "../DetailsPopover";
+import {
+  VERDICTS,
+  exposureOf,
+  exposureText,
+  gapsOn,
+  riskAcross,
+  riskScore,
+  verdictOf,
+  type Capability,
+  type DocketState,
+  type Gap,
+  type Risk,
+  type RiskAcross,
+  type Exposure,
+  type RiskOn,
+  type Verdict,
+} from "../../state";
+import { DetailsCard, DetailsEyebrow, DetailsPopover, DetailsWorkings } from "../DetailsPopover";
 import { plainText } from "../markdown/Markdown";
-import { RiskPie } from "./RiskPie";
+import { RiskRing } from "./RiskRing";
 import { RiskWorkings } from "./RiskWorkings";
 
 /*
@@ -56,9 +72,9 @@ export function RiskBars({ verdict, size }: { verdict: Verdict | null; size: "sm
  * verdict, with no number, since no one score stands for them all. One alone
  * shows its own score, with its verdict when `verdict` is set. Its popover
  * shows the spread with counts and names the riskiest few. Given what
- * they're on `carried`, as for a feature, domain or persona, it shows the
- * risk carried instead, as a pie filling up to its percentage in the color
- * of its band, whose popover names the band and shows the spread and how
+ * they're on `exposure`, as for a feature, domain or persona, it shows their
+ * exposure instead, as a ring filling up to its percentage in the color
+ * of its band, drawn and sized as maturity is, whose popover names the band and shows the spread and how
  * it's worked out. Inside
  * something clickable, `inButton` opens it on hover only.
  */
@@ -68,7 +84,8 @@ export function RiskScore<T extends Gap>({
   verdict = false,
   inButton = false,
   wide = false,
-  carried,
+  exposure,
+  size = 24,
 }: {
   risk: RiskAcross<T>;
   /* What they're in, for the popover: "Risk in Scheduling". */
@@ -77,24 +94,25 @@ export function RiskScore<T extends Gap>({
   inButton?: boolean;
   /* Several, as a wider bar, where there's room. */
   wide?: boolean;
-  /* The risk the capabilities they're on carry, to show instead. */
-  carried?: RiskCarried;
+  /* The exposure of the capabilities they're on, to show instead. */
+  exposure?: Exposure;
+  /* The exposure ring's diameter: 24, as maturity's on a card, by default. */
+  size?: number;
 }) {
   if (!risk.items.length) return null;
   const name = risk.verdict ? VERDICT_NAMES[risk.verdict].name : "Not rated";
-  if (carried && carried.percent !== null && carried.band) {
-    const text = carriedText(carried.percent);
+  if (exposure && exposure.percent !== null && exposure.band) {
+    const text = exposureText(exposure.percent);
     return (
-      <DetailsPopover hoverOnly={inButton} title={<CarriedDetails risk={risk} carried={carried} of={of} />}>
+      <DetailsPopover hoverOnly={inButton} title={<ExposureDetails risk={risk} exposure={exposure} of={of} />}>
         <span
-          className="risk-carried"
-          data-risk-band={carried.band.id}
+          className="exposure-mark"
+          data-risk-band={exposure.band.id}
           role="img"
-          aria-label={`${carried.band.name}: ${text} carried`}
+          aria-label={`Exposure ${text}, ${exposure.band.name.toLowerCase()}`}
           tabIndex={inButton ? undefined : 0}
         >
-          <RiskPie percent={carried.percent} size={14} />
-          <span>{text}</span>
+          <RiskRing percent={exposure.percent} size={size} />
         </span>
       </DetailsPopover>
     );
@@ -187,43 +205,84 @@ function RiskDetails<T extends Gap>({ risk, of }: { risk: RiskAcross<T>; of: str
 }
 
 /*
- * The risk some capabilities carry, for its popover: its band and what that
- * puts at stake, the share, how the gaps on them spread across the
- * verdicts, how it's worked out, and that it isn't their stability.
+ * The exposure of some capabilities, as the map shows it: its ring, from every
+ * gap on them, their own and those of what they're built on, each scored on
+ * them, whose popover has the spread. Nothing when there are no gaps or none
+ * of them is started, since drafts aren't exposed to anything. `named` adds the band's
+ * name after it, in its color, as maturity's band follows its ring.
  */
-function CarriedDetails<T extends Gap>({ risk, carried, of }: { risk: RiskAcross<T>; carried: RiskCarried; of: string }) {
-  const band = carried.band!;
-  const n = carried.capabilities;
+export function ExposureMark({
+  state,
+  capabilities,
+  of,
+  size = 22,
+  inButton = false,
+  named = false,
+}: {
+  state: DocketState;
+  capabilities: Capability[];
+  of: string;
+  size?: number;
+  inButton?: boolean;
+  named?: boolean;
+}) {
+  const gaps = [...new Set(capabilities.flatMap((c) => gapsOn(state, c)))];
+  const exposure = exposureOf(state, capabilities);
+  if (!gaps.length || exposure.percent === null || !exposure.band) return null;
+  const ring = <RiskScore risk={riskAcross(state, gaps, capabilities)} exposure={exposure} of={of} size={size} inButton={inButton} />;
+  if (!named) return ring;
+  return (
+    <span className="exposure-named" data-risk-band={exposure.band.id}>
+      {ring}
+      <strong>{exposure.band.name}</strong>
+    </span>
+  );
+}
+
+/*
+ * The exposure of some capabilities, for its popover: its band and what that
+ * puts at stake, the share, how the gaps on them spread across the
+ * verdicts, how it's worked out, and that it isn't their stability. `of`
+ * names what it's of, as a phrase: "Scheduling", "what serves Mira".
+ */
+function ExposureDetails<T extends Gap>({ risk, exposure, of }: { risk: RiskAcross<T>; exposure: Exposure; of: string }) {
+  const band = exposure.band!;
+  const n = exposure.capabilities;
   return (
     <DetailsCard card width={320}>
-      <div className="risk-carried-details" data-risk-band={band.id}>
-        <DetailsEyebrow>Risk carried in {of}</DetailsEyebrow>
+      <div className="exposure-details" data-risk-band={band.id}>
+        <DetailsEyebrow>Exposure of {of}</DetailsEyebrow>
         <Box sx={{ mt: 1.25, display: "flex", alignItems: "center", gap: 1.5 }}>
-          <RiskPie percent={carried.percent!} size={40} />
+          <RiskRing percent={exposure.percent!} size={56} />
           <div>
-            <div className="risk-carried-band">{band.name}</div>
-            <Box sx={{ color: "text.secondary", fontVariantNumeric: "tabular-nums" }}>{carriedText(carried.percent!)} of the most it could carry</Box>
+            <div className="exposure-band">{band.name}</div>
+            <Box sx={{ color: "text.secondary", fontVariantNumeric: "tabular-nums" }}>{exposureText(exposure.percent!)} of the most it could be exposed to</Box>
           </div>
         </Box>
         <Box sx={{ mt: 1.25 }}>{band.says}</Box>
-        {carried.unacceptable ? (
+        {exposure.unacceptable ? (
           <Box sx={{ mt: 1 }}>
-            {risk.counts.unacceptable === 1 ? "A gap here is" : "Gaps here are"} unacceptable, so it&rsquo;s at least moderate risk, whatever the share.
+            {risk.counts.unacceptable === 1 ? "A gap here is" : "Gaps here are"} unacceptable, so it&rsquo;s at least moderate, whatever the share.
           </Box>
         ) : null}
         <div className="risk-details-head">
-          {risk.items.length} {risk.items.length === 1 ? "gap" : "gaps"} by verdict
+          {risk.items.length} {risk.items.length === 1 ? "gap" : "gaps"} by risk
         </div>
         <VerdictSpread risk={risk} />
         <Box sx={{ mt: 1.25, color: "text.secondary", fontSize: "0.92em" }}>
-          Each capability carries its riskiest gap&rsquo;s share of the most it could carry: a certain, damaging gap reaching everyone that breaks its
-          level&rsquo;s promise. Its {n} {n === 1 ? "capability" : "capabilities"} then count by their level, GA most, as in maturity. Drafts don&rsquo;t
-          count{risk.unrated ? ", and gaps not rated carry nothing" : ""}. Each quarter is a band: low, some, moderate and high risk.
+          Exposure is to risk what maturity is to stability: one figure for the whole. It isn&rsquo;t stability. Each capability&rsquo;s level is declared,
+          and says how much people can depend on it; this is what the gaps still open against those levels put at stake.
         </Box>
-        <Box sx={{ mt: 1, color: "text.secondary", fontSize: "0.92em" }}>
-          It isn&rsquo;t stability. Each capability&rsquo;s level is declared, and says how much people can depend on it; this is what the gaps still open
-          against those levels put at stake.
-        </Box>
+        <DetailsWorkings>
+          <div>
+            Each capability is exposed to its riskiest gap&rsquo;s share of the most it could be: a certain, damaging gap reaching everyone that breaks
+            its level&rsquo;s promise.
+          </div>
+          <div>
+            Its {n} {n === 1 ? "capability" : "capabilities"} then count by their level, GA most, as in maturity. Drafts don&rsquo;t count
+            {risk.unrated ? ", and gaps not rated add nothing" : ""}. Each quarter is a band: low, minor, moderate and high.
+          </div>
+        </DetailsWorkings>
       </div>
     </DetailsCard>
   );
@@ -245,7 +304,7 @@ export function RiskSpreadBar({ risk, wide = false }: { risk: RiskAcross<unknown
 }
 
 /* How several spread across the verdicts: the bar, with the counts under it. */
-function VerdictSpread({ risk }: { risk: RiskAcross<unknown> }) {
+export function VerdictSpread({ risk }: { risk: RiskAcross<unknown> }) {
   const parts = spreadOf(risk);
   return (
     <div className="verdict-spread">

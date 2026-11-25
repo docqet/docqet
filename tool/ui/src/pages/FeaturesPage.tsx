@@ -1,53 +1,80 @@
 import type { ReactNode } from "react";
 import ExpandMoreRoundedIcon from "@mui/icons-material/ExpandMoreRounded";
 import { Maturity, plural } from "../Explore";
+import { MaturityRing } from "../design/maturity/MaturityRing";
+import { ExposureMark } from "../design/risk/RiskScore";
 import { STABILITY, STABILITY_LEVEL_IDS } from "../design/stability/stability";
 import { Term } from "../design/term/Term";
 import { docHref, withParam, type Route } from "../routes";
-import { Empty, PageHeader, Section, View } from "../shell/layout";
+import { Empty, PageHeader, Section, Stat, View } from "../shell/layout";
 import {
   domainCapabilities,
   domainName,
   levelInDomain,
   find,
-  gapsById,
+  gapsOn,
   maturityOf,
   openDecisions,
   partOf,
+  RISK_BANDS,
+  exposureOf,
   type Capability,
   type CapabilityLevel,
-  riskAcross,
   type DocketState,
   type Domain,
   type Feature,
 } from "../state";
-import { DocLink, GapsCell, LevelMark, PersonaFaces } from "./indexParts";
+import { DocLink, GapsCell, LevelMark, PersonaFaces, ExposureStat } from "./indexParts";
 
-type Group = "domain" | "stability";
+type Group = "domain" | "stability" | "exposure";
+const GROUPS: Group[] = ["domain", "stability", "exposure"];
 
 /*
  * Every domain, feature and capability, and how far along each is. By
  * default a tree: each domain, the features it has a part in, and the
- * capabilities of that part, each with its level in that domain, what's left
- * and who it serves. Grouped by stability level instead, every capability
- * under its level, least stable first. Which grouping is in `&group=`.
+ * capabilities of that part, each with its level in that domain, the risk it
+ * is exposed to, what's left and who it serves. Domains and features show
+ * their maturity and exposure in the same columns, as rings, as the map does;
+ * what either is worked out from is in its popover. Grouped by stability
+ * instead, every capability under its level, least stable first; grouped by
+ * exposure, under the band of its exposure, most exposed first. Which grouping
+ * is in `&group=`. Above it, cards for the maturity and risk of every feature
+ * showing, and how many capabilities there are.
  */
 export default function FeaturesPage({ state }: { state: DocketState; route: Route }) {
-  const group: Group = new URLSearchParams(window.location.search).get("group") === "stability" ? "stability" : "domain";
+  const asked = new URLSearchParams(window.location.search).get("group") as Group | null;
+  const group: Group = asked && GROUPS.includes(asked) ? asked : "domain";
   const overall = maturityOf(state);
+  const inFeatures = state.capabilities.filter((c) => c.feature);
   return (
     <View title="Features" wide>
       <PageHeader
         title="Features"
         lede="What can it do? Every domain, the features it has a part in, and their capabilities, with how far along each is."
-        marks={
-          <Maturity
-            value={overall}
-            subject="project"
-            of="nothing showing has a capability in a feature yet"
-            levels={state.capabilities.filter((c) => c.feature).map((c) => c.stability)}
-            spreadOf="every feature showing"
-          />
+        stats={
+          <>
+            <Stat
+              label="Maturity"
+              term="maturity"
+              value={
+                <Maturity
+                  value={overall}
+                  subject="project"
+                  count={state.features.length}
+                  of="nothing showing has a capability in a feature yet"
+                  spread={state.features.map((f) => f.band)}
+                />
+              }
+              note={`Across ${plural(state.features.length, "feature", "features")}`}
+            />
+            <ExposureStat state={state} capabilities={inFeatures} of="every feature showing" />
+            <Stat
+              label="Capabilities"
+              term="capability"
+              value={state.capabilities.length || "None"}
+              note={`${plural(state.features.length, "feature", "features")} · ${plural(state.domains.length, "domain", "domains")}`}
+            />
+          </>
         }
         actions={<GroupToggle group={group} />}
       />
@@ -55,24 +82,27 @@ export default function FeaturesPage({ state }: { state: DocketState; route: Rou
         <Empty>No domains, features or capabilities are written down yet.</Empty>
       ) : group === "domain" ? (
         <DomainTree state={state} />
-      ) : (
+      ) : group === "stability" ? (
         <ByStability state={state} />
+      ) : (
+        <ByExposure state={state} />
       )}
     </View>
   );
 }
 
-/* Group by domain, or by stability level, as two links that change `&group=`. */
+const GROUP_NAMES: Record<Group, string> = { domain: "Domain", stability: "Stability", exposure: "Exposure" };
+
+/* Group by domain, stability or risk, as links that change `&group=`. */
 function GroupToggle({ group }: { group: Group }) {
   return (
     <div className="ix-toggle" role="group" aria-label="Group by">
       <span className="ix-toggle-label">Group by</span>
-      <a href={withParam("group", null)} aria-current={group === "domain" ? "true" : undefined}>
-        Domain
-      </a>
-      <a href={withParam("group", "stability")} aria-current={group === "stability" ? "true" : undefined}>
-        Stability level
-      </a>
+      {GROUPS.map((g) => (
+        <a key={g} href={withParam("group", g === "domain" ? null : g)} aria-current={group === g ? "true" : undefined}>
+          {GROUP_NAMES[g]}
+        </a>
+      ))}
     </div>
   );
 }
@@ -80,9 +110,14 @@ function GroupToggle({ group }: { group: Group }) {
 /* The names of the columns every capability row has, once, at the top. */
 function ColumnHeads({ first }: { first: ReactNode }) {
   return (
-    <div className="ix-cap ix-cap-head" aria-hidden>
+    <div className="ix-cap ix-cap-head">
       <span className="ix-cap-name">{first}</span>
-      <span className="ix-cap-level">Stability</span>
+      <span className="ix-cap-level">
+        <Term id="stability" />
+      </span>
+      <span className="ix-cap-risk">
+        <Term id="exposure" />
+      </span>
       <span className="ix-cap-left">What's left</span>
       <span className="ix-cap-who">Serves</span>
     </div>
@@ -94,8 +129,9 @@ const levelIn = (c: Capability, domain?: string): CapabilityLevel => (domain && 
 /*
  * A capability's row: its name, linking to its page, and `where` it is when
  * that isn't plain from where the row sits; its level, in `domain` when
- * that's given; its open decisions and product gaps, with the worst gap's
- * impact; and the personas it serves.
+ * that's given; its exposure; what's left, its open decisions and
+ * every gap on it, its own and those of what it's built on; and the personas
+ * it serves.
  */
 function CapabilityRow({ state, capability, domain, where }: { state: DocketState; capability: Capability; domain?: string; where?: ReactNode }) {
   const personas = capability.personas.flatMap((id) => find(state.personas, id) ?? []);
@@ -108,8 +144,11 @@ function CapabilityRow({ state, capability, domain, where }: { state: DocketStat
       <span className="ix-cap-level">
         <LevelMark name={capability.name} level={levelIn(capability, domain)} />
       </span>
+      <span className="ix-cap-risk">
+        <ExposureMark state={state} capabilities={[capability]} of={capability.name} />
+      </span>
       <span className="ix-cap-left">
-        <GapsCell gaps={gapsById(state, capability.gaps)} risk={riskAcross(state, gapsById(state, capability.gaps), [capability])} kind="product-gap" decisions={openDecisions(capability).length} of={capability.name} href={docHref("capability", capability.id, "left")} />
+        <GapsCell gaps={[...new Set(gapsOn(state, capability))]} kind="gap" decisions={openDecisions(capability).length} href={docHref("capability", capability.id, "left")} />
       </span>
       <span className="ix-cap-who">
         <PersonaFaces personas={personas} />
@@ -118,13 +157,21 @@ function CapabilityRow({ state, capability, domain, where }: { state: DocketStat
   );
 }
 
-/* A row that folds what's under it, open to begin with. */
-function FoldRow({ className, head, children }: { className: string; head: ReactNode; children: ReactNode }) {
+/*
+ * A row that folds what's under it, open to begin with: its `head`, then its
+ * maturity and exposure under the capability rows' Stability and Exposure
+ * columns.
+ */
+function FoldRow({ className, head, maturity, exposure, children }: { className: string; head: ReactNode; maturity: ReactNode; exposure: ReactNode; children: ReactNode }) {
   return (
     <details className={`ix-fold ${className}`} open>
       <summary>
         <ExpandMoreRoundedIcon className="ix-chev" sx={{ fontSize: 18 }} />
-        {head}
+        <span className="ix-cap-name">{head}</span>
+        <span className="ix-cap-level">{maturity}</span>
+        <span className="ix-cap-risk">{exposure}</span>
+        <span className="ix-cap-left" />
+        <span className="ix-cap-who" />
       </summary>
       <div className="ix-fold-body">{children}</div>
     </details>
@@ -146,25 +193,24 @@ function DomainTree({ state }: { state: DocketState }) {
 function DomainBranch({ state, domain }: { state: DocketState; domain: Domain }) {
   const features = domain.features.flatMap((id) => find(state.features, id) ?? []);
   const loose = domain.capabilities.flatMap((id) => find(state.capabilities, id) ?? []);
-  const capabilities = new Set([...features.flatMap((f) => partOf(f, domain.id)?.capabilities ?? []), ...loose.map((c) => c.id)]).size;
+  const parts = features.map((f) => partOf(f, domain.id));
   return (
     <FoldRow
       className="ix-domain"
-      head={
-        <>
-          <DocLink kind="domain" id={domain.id} name={domain.name} />
-          <Maturity
-            value={domain.maturity}
+      maturity={
+        domain.maturity === null ? null : (
+          <MaturityRing
+            progress={domain.maturity}
             subject="domain"
-            of="it builds no capability in a feature yet"
-            levels={domainCapabilities(state, domain).map((c) => levelInDomain(c, domain.id))}
-            spreadOf={domain.name}
+            count={parts.filter((p) => p?.maturity != null).length}
+            label={`${domain.name} maturity`}
+            size={22}
+            spread={parts.map((p) => p?.band ?? null)}
           />
-          <span className="ix-meta">
-            {plural(features.length, "feature", "features")} · {plural(capabilities, "capability", "capabilities")}
-          </span>
-        </>
+        )
       }
+      exposure={<ExposureMark state={state} capabilities={domainCapabilities(state, domain)} of={domain.name} />}
+      head={<DocLink kind="domain" id={domain.id} name={domain.name} />}
     >
       {!features.length && !loose.length ? <p className="ix-empty">A part of the business the software doesn't serve yet.</p> : null}
       {features.map((f) => (
@@ -186,37 +232,35 @@ function DomainBranch({ state, domain }: { state: DocketState; domain: Domain })
   );
 }
 
-/* A feature's part in one domain: its maturity there, how many capabilities, where else it is, and those capabilities. */
+/* A feature's part in one domain: its maturity and risk there, where else it is, and those capabilities. */
 function FeatureBranch({ state, feature, domain }: { state: DocketState; feature: Feature; domain: string }) {
   const part = partOf(feature, domain);
   const capabilities = (part?.capabilities ?? []).flatMap((id) => find(state.capabilities, id) ?? []);
   const elsewhere = feature.parts.filter((p) => p.domain !== domain);
+  const levels = capabilities.map((c) => levelInDomain(c, domain));
   return (
     <FoldRow
       className="ix-feature"
+      maturity={
+        part?.maturity == null ? null : (
+          <MaturityRing progress={part.maturity} subject="feature" count={levels.filter(Boolean).length} label={`${feature.name} maturity`} size={22} spread={levels} />
+        )
+      }
+      exposure={<ExposureMark state={state} capabilities={capabilities} of={feature.name} />}
       head={
         <>
           <DocLink kind="feature" id={feature.id} name={feature.name} />
-          <Maturity
-            value={part?.maturity ?? null}
-            of="it has no capabilities here yet"
-            levels={capabilities.map((c) => levelInDomain(c, domain))}
-            spreadOf={feature.name}
-          />
-          <span className="ix-meta">
-            {plural(capabilities.length, "capability", "capabilities")}
-            {elsewhere.length ? (
-              <>
-                {" · Also in "}
-                {elsewhere.map((p, i) => (
-                  <span key={p.domain}>
-                    {i ? ", " : null}
-                    <a href={docHref("domain", p.domain)}>{domainName(state, p.domain)}</a>
-                  </span>
-                ))}
-              </>
-            ) : null}
-          </span>
+          {elsewhere.length ? (
+            <span className="ix-meta">
+              {"Also in "}
+              {elsewhere.map((p, i) => (
+                <span key={p.domain}>
+                  {i ? ", " : null}
+                  <a href={docHref("domain", p.domain)}>{domainName(state, p.domain)}</a>
+                </span>
+              ))}
+            </span>
+          ) : null}
         </>
       }
     >
@@ -259,6 +303,42 @@ function ByStability({ state }: { state: DocketState }) {
           </Section>
         );
       })}
+    </>
+  );
+}
+
+/*
+ * Every capability under the band of its exposure, most exposed first,
+ * and riskiest first within each; then those with no gaps, then drafts,
+ * which aren't exposed to anything. Each says where it is, as grouped by stability.
+ */
+function ByExposure({ state }: { state: DocketState }) {
+  const scored = state.capabilities.map((c) => ({ c, exposure: exposureOf(state, [c]), gaps: gapsOn(state, c).length }));
+  const groups = [
+    ...[...RISK_BANDS].reverse().map((band) => ({
+      key: band.id,
+      title: band.name,
+      rows: scored.filter((s) => s.gaps && s.exposure.band?.id === band.id).sort((a, b) => (b.exposure.percent ?? 0) - (a.exposure.percent ?? 0)),
+    })),
+    { key: "none", title: "No gaps", rows: scored.filter((s) => !s.gaps && s.c.stability) },
+    { key: "draft", title: "Draft", rows: scored.filter((s) => !s.c.stability) },
+  ];
+  return (
+    <>
+      {groups.map(({ key, title, rows }) =>
+        rows.length ? (
+          <Section key={key} title={title} count={rows.length}>
+            <div className="ix-tree">
+              <ColumnHeads first="Capability" />
+              <ul className="ix-caps">
+                {rows.map(({ c }) => (
+                  <CapabilityRow key={c.id} state={state} capability={c} where={whereIs(state, c)} />
+                ))}
+              </ul>
+            </div>
+          </Section>
+        ) : null,
+      )}
     </>
   );
 }

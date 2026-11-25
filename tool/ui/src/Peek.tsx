@@ -16,12 +16,12 @@ import { StabilityMark } from "./design/stability/StabilityMark";
 import { Term } from "./design/term/Term";
 import {
   domainCapabilities,
-  levelInDomain,
+  partOf,
   domainName,
   find,
   gapsById,
   riskAcross,
-  riskCarried,
+  exposureOf,
   leftCount,
   leftIn,
   openDecisions,
@@ -46,8 +46,12 @@ export const PICK_KINDS: Record<Pick["kind"], { one: string; icon: (size: number
 type Figure = { label: string; value: ReactNode; tab: string };
 
 /* What the peek says about one thing: its mark, three figures, and the gaps it has, riskiest first. */
-/* `within`: the capabilities its gaps are scored on, for its risk; none for a concept, whose gaps keep their risk anywhere. */
-type Summary = { name: string; picture?: ReactNode; role?: string | null; where?: string; mark: ReactNode; figures: Figure[]; gaps: Gap[]; within?: Capability[] };
+/*
+ * `within`: the capabilities its gaps are scored on, for its risk; none for a
+ * concept, whose gaps keep their risk anywhere. `of`: what its exposure is
+ * of, as a phrase, where that isn't its name, as for a persona.
+ */
+type Summary = { name: string; of?: string; picture?: ReactNode; role?: string | null; where?: string; mark: ReactNode; figures: Figure[]; gaps: Gap[]; within?: Capability[] };
 
 /* Each gap once, as several capabilities can share one through what they're built on. */
 const unique = (gaps: Gap[]) => [...new Map(gaps.map((g) => [g.id, g])).values()];
@@ -89,7 +93,7 @@ function summarize(state: DocketState, at: Pick): Summary | null {
     const { left, gaps } = across(state, capabilities);
     return {
       name: f.name,
-      mark: <Maturity value={f.maturity} of="none of its capabilities has a level" levels={capabilities.map((c) => c.stability)} spreadOf={f.name} />,
+      mark: <Maturity value={f.maturity} of="none of its capabilities has a level" spread={capabilities.map((c) => c.stability)} />,
       figures: [
         { label: "Capabilities", value: capabilities.length, tab: "capabilities" },
         { label: "What's left", value: openDecisions(f).length + left, tab: "left" },
@@ -111,8 +115,8 @@ function summarize(state: DocketState, at: Pick): Summary | null {
           value={d.maturity}
           subject="domain"
           of="none of its features has a level"
-          levels={capabilities.map((c) => levelInDomain(c, d.id))}
-          spreadOf={d.name}
+          count={d.features.length}
+          spread={d.features.map((id) => partOf(find(state.features, id), d.id)?.band ?? null)}
         />
       ),
       figures: [
@@ -150,6 +154,7 @@ function summarize(state: DocketState, at: Pick): Summary | null {
   const { name, role } = personaNameAndRole(p);
   return {
     name,
+    of: `what serves ${name}`,
     role,
     picture: <PersonaAvatar persona={p} size={40} />,
     mark: <ReadinessMark readiness={personaReadiness(state, p)} of={`Readiness for ${name}`} large />,
@@ -242,7 +247,7 @@ export default function Peek({
         <section className="peek-gaps">
           <h3>
             Riskiest <Term id="gap">gaps</Term>
-            <RiskScore risk={risk} carried={s.within ? riskCarried(state, s.within) : undefined} of={s.name} />
+            <RiskScore risk={risk} exposure={s.within ? exposureOf(state, s.within) : undefined} of={s.of ?? s.name} />
           </h3>
           <ul>
             {riskiest.map(({ item: g, risk: r, on }) => (

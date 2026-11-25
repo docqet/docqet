@@ -1,6 +1,6 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import type { ReactNode } from "react";
+import type { CapabilityLevel } from "../../state";
 import { DetailsPopover } from "../DetailsPopover";
 import { MaturityDetails, SUBJECT_NAMES, fromCapabilities, type MaturitySubject } from "./MaturityDetails";
 import { MATURITY_BANDS, clampMaturity, maturityBand } from "./maturity";
@@ -23,11 +23,10 @@ export type MaturityRingProps = {
   /** Show "Maturity" and the count beside the ring, as at the top of a project's page. */
   labelled?: boolean;
   /**
-   * What it's made of, for the popover: each Capability with its
-   * StabilityMark, or each Feature with a small MaturityRing, most mature
-   * first, drafts last.
+   * What it's worked out from, for the popover's spread: each Capability's
+   * level, null for a draft, or each Feature's band, null for one not started.
    */
-  breakdown?: ReactNode;
+  spread?: CapabilityLevel[];
   /**
    * Let the ring take keyboard focus, so its popover opens from the keyboard.
    * Pass `false` inside a button or link, such as a project's card.
@@ -52,7 +51,7 @@ export function MaturityRing({
   label,
   size = 52,
   labelled = false,
-  breakdown,
+  spread,
   focusable = true,
 }: MaturityRingProps) {
   const value = clampMaturity(progress);
@@ -68,7 +67,7 @@ export function MaturityRing({
           progress={value}
           subject={subject}
           count={count}
-          breakdown={breakdown}
+          spread={spread}
         />
       }
     >

@@ -1,20 +1,21 @@
 import { useEffect } from "react";
 import Box from "@mui/material/Box";
 import { RingGlyph } from "../design/maturity/RingGlyph";
+import { RiskRing } from "../design/risk/RiskRing";
 import { MATURITY_BANDS, MATURITY_LEVELS } from "../design/maturity/maturity";
 import { STABILITY, STABILITY_LEVEL_IDS, levelColor, type StabilityLevelId } from "../design/stability/stability";
 import { StabilityMark } from "../design/stability/StabilityMark";
 import { TERMS, type TermId } from "../design/term/terms";
 import { sectionHref, type Route } from "../routes";
 import { Empty, PageHeader, Section, Tabs, View, currentTab, type TabDef } from "../shell/layout";
-import { READINESS_BANDS, type ChecklistExample, type ChecklistKind, type ChecklistLevel, type DocketState } from "../state";
+import { READINESS_BANDS, RISK_BANDS, type ChecklistExample, type ChecklistKind, type ChecklistLevel, type DocketState } from "../state";
 import "./doc.css";
 
 /*
  * What Docket's own words mean, in one place, so a Term's popover isn't the
  * only way to find out: every term, grouped as the domain overview groups
- * them; the stability levels, with maturity and readiness, which are worked
- * out from them; and the stability checklist as a plain reference. Each term
+ * them; the stability levels, with maturity, exposure and readiness, which
+ * are worked out from them; and the stability checklist as a plain reference. Each term
  * is anchored by its ID, as `?view=glossary#gap`, so anything can link to it.
  */
 export default function GlossaryPage({ state, route }: { state: DocketState; route: Route }) {
@@ -49,12 +50,19 @@ export default function GlossaryPage({ state, route }: { state: DocketState; rou
 const GROUPS: { title: string; ids: TermId[] }[] = [
   { title: "The product", ids: ["platform", "project", "contradiction", "domain", "feature", "capability", "rule", "concept", "persona"] },
   { title: "How it's built", ids: ["mechanism", "component"] },
-  { title: "Where intention and reality differ", ids: ["open-decision", "gap", "product-gap", "technical-gap", "tradeoff", "risk", "exposure"] },
-  { title: "Stability and readiness", ids: ["stability-checklist", "readiness"] },
+  { title: "Where intention and reality differ", ids: ["open-decision", "gap", "product-gap", "technical-gap", "tradeoff", "risk", "spread"] },
+  { title: "Stability and readiness", ids: ["stability", "maturity", "exposure", "stability-checklist", "readiness"] },
   { title: "Evidence", ids: ["evidence"] },
 ];
 
 const levelsHref = (hash: string) => `${sectionHref("glossary", { tab: "levels" })}#${hash}`;
+
+/* Terms with more on the Stability levels tab, and where. */
+const LEVELS_LINKS: Partial<Record<TermId, { hash: string; text: string }>> = {
+  stability: { hash: "levels", text: "Each level, and what to expect from it" },
+  maturity: { hash: "maturity", text: "How it's worked out, and its bands" },
+  exposure: { hash: "exposure", text: "How it's worked out, and its bands" },
+};
 
 function Terms() {
   const grouped = new Set(GROUPS.flatMap((g) => g.ids));
@@ -70,32 +78,13 @@ function Terms() {
                 <h3>{TERMS[id].name}</h3>
                 <p>{TERMS[id].means}</p>
                 {TERMS[id].more ? <p className="dp-term-more">{TERMS[id].more}</p> : null}
+                {LEVELS_LINKS[id] ? (
+                  <p className="dp-term-more">
+                    <a href={levelsHref(LEVELS_LINKS[id].hash)}>{LEVELS_LINKS[id].text}</a>
+                  </p>
+                ) : null}
               </article>
             ))}
-            {g.title === "Stability and readiness" ? (
-              <>
-                <article id="stability-level" className="dp-term">
-                  <h3>Stability level</h3>
-                  <p>
-                    How much people can depend on a capability right now: Prototype, Alpha, Beta or GA, or a draft, not started, with none. Beta is the bar for
-                    real use: settled enough to rely on.
-                  </p>
-                  <p className="dp-term-more">
-                    <a href={levelsHref("levels")}>Each level, and what to expect from it</a>
-                  </p>
-                </article>
-                <article id="maturity" className="dp-term">
-                  <h3>Maturity</h3>
-                  <p>
-                    How far along the work on a feature, domain or project is, for planning: a weighted average of its capabilities' levels, in one of four bands.
-                    It doesn't say whether people can use it: that's readiness.
-                  </p>
-                  <p className="dp-term-more">
-                    <a href={levelsHref("maturity")}>How it's worked out, and its bands</a>
-                  </p>
-                </article>
-              </>
-            ) : null}
           </div>
         </Section>
       ))}
@@ -196,6 +185,39 @@ function Levels() {
                   {i * 25}–{i === 3 ? 100 : i * 25 + 24}% · named for {STABILITY[id].name}
                 </span>
                 <p>{BAND_SUMMARIES[id]}</p>
+              </div>
+            </article>
+          ))}
+        </div>
+      </Section>
+
+      <Section id="exposure" title="Exposure" note={TERMS.exposure.means}>
+        <p className="dp-note">
+          Each gap has a risk on each capability it&rsquo;s on, from 0 to 100. A capability is exposed to its riskiest gap&rsquo;s share of the most it could
+          be: a certain, damaging gap reaching everyone that breaks its level&rsquo;s promise. Several capabilities, as in a feature, domain, project or what
+          serves a persona, count by their level, weighted as in maturity, so exposure on GA counts for most. Drafts don&rsquo;t count, and gaps with no impact
+          rated add nothing. Only the riskiest gap on each capability counts, so closing a lesser one doesn&rsquo;t change it.
+        </p>
+        <p className="dp-note">
+          It isn&rsquo;t stability: a level is declared, and exposure never changes it. Promoting a capability can raise its exposure, where its gaps break a
+          promise the new level makes.
+        </p>
+        <h3 id="exposure-bands" className="dp-subhead">
+          Bands
+        </h3>
+        <p className="dp-note">Each quarter of the scale is a band. An unacceptable gap on any of its capabilities makes it at least moderate, whatever the share.</p>
+        <div className="dp-bands">
+          {RISK_BANDS.map((b, i) => (
+            <article key={b.id} className="dp-band" data-risk-band={b.id}>
+              <RiskRing percent={i * 25 + 12} size={44} />
+              <div>
+                <Box component="h3" sx={{ color: "var(--risk-band)" }}>
+                  {b.name}
+                </Box>
+                <span className="dp-band-range">
+                  {b.from}–{i === 3 ? 100 : b.from + 24}%
+                </span>
+                <p>{b.says}</p>
               </div>
             </article>
           ))}
