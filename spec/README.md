@@ -4,6 +4,13 @@ The Docket format: how a repository records the state of its software so that
 people, agents and tools can all read it. The spec belongs to no particular
 tool. Anyone can adopt the format or write their own indexer for it.
 
+This README is most of it. Two parts have their own:
+
+- **[Annotations](annotations/)**: the comments in code, tests and config
+  that say what a place is about.
+- **[Trailers](trailers/)**: git trailers on commits that say what
+  something a commit removed became, so history can follow it.
+
 **Status: draft for review.** Nothing implements it yet. Each example in
 [`examples/`](examples/) is laid out as its own repository root, with the
 `state.json` an indexer would produce from it:
@@ -134,7 +141,7 @@ Technical docs are forge's `engineering-docs` skill's, with these changes:
 - Links, gaps, tradeoffs and open decisions are frontmatter, not sections.
   How it works is the body.
 - The `**Code:**` line is gone. The code points at the doc instead, with
-  `docket:implements` (see [Evidence](#evidence)).
+  `docket:implements` (see [Annotations](annotations/)).
 - Forge's Gotchas section is gone. A gotcha that's a choice with a drawback is a
   tradeoff, one we mean to fix is a gap, and the rest is in the body.
 - A gap has no `Until`, and gains an `impact`, a `likelihood` and a `reach`.
@@ -193,8 +200,10 @@ name: Room booking
   That's a convention: nothing reads a file's name.
 - **Changing an ID is a breaking change.** Everything that names it, in its
   project and in others on its platform, has to change with it, and the
-  indexer reports each one left dangling. Readers show the `name`, so a doc
-  can be renamed for people without changing its ID.
+  indexer reports each one left dangling. The commit that changes it says so
+  with a [trailer](trailers/), or history sees the old one removed and an
+  unrelated one added. Readers show the `name`, so a doc can be renamed for
+  people without changing its ID.
 - **A reference names its type**, as `<type>:<id>`, such as
   `rule:no-double-booking`, everywhere one is written: frontmatter links,
   annotations, and `state.json`. A reference reads
@@ -348,7 +357,8 @@ The body column is a suggestion of what's worth writing, not a structure.
   has none: it applies to every capability its project serves (see
   [Mechanisms and components](#mechanisms-and-components)).
 - **No doc names its code.** A mechanism or component is found in the code by
-  its `docket:implements` annotations (see [Evidence](#evidence)), and a
+  its `docket:implements` annotations (see
+  [Annotations](annotations/#mechanisms-and-components)), and a
   capability through the mechanisms that apply to it and the components that
   list it, since product docs never name their implementation.
 - **`applies`** says what a mechanism applies to: `project`, every capability
@@ -1222,80 +1232,57 @@ else, or what language or framework it's in, and it doesn't run anything. It
 shows where the evidence is, so a reader can go from what's intended to
 what's about it.
 
-A place gives evidence, or marks a gap or tradeoff, with an annotation,
-written in a comment, the same in every language:
-
-```text
-docket:<verb> <type>:<id> [<type>:<id> ...]
-```
-
-- **`<verb>`** is one of four:
-  - **`verifies`** says this place checks that the rule holds, the capability
-    works, or the mechanism or component does what it says, such as
-    [a unit test](examples/hotel-bookings/src/booking/stay.test.ts),
-    [a Gherkin `Rule:`](examples/hotel-bookings/features/booking.feature) or
-    [the rollback job](examples/hotel-bookings/.github/workflows/deploy.yml)
-    in a deploy workflow.
-  - **`implements`** says this place makes it so, such as
-    [`assertRoomFree`](examples/hotel-bookings/src/booking/availability.ts), or
-    the [constraint](examples/hotel-bookings/db/migrations/001_bookings.sql)
-    in a database migration.
-  - **`gap`** says this is where a gap shows in the code: tracked technical
-    debt, in place of a bare TODO.
-  - **`tradeoff`** says this code is deliberate, though it may look wrong, so
-    nobody "fixes" it.
-- **`<type>:<id>`** is a `rule`, `capability`, `mechanism` or `component` for
-  `verifies` and `implements`, and a gap's or tradeoff's ID for `gap` and
-  `tradeoff`. A rule always names its domain, as `rule:<id>@<domain>`. An
-  annotation can name several, of any of its types:
-  `docket:implements capability:room-booking component:bookings`.
+A place gives evidence with an **annotation**: a comment above it naming what
+it verifies or implements, the same in every language. Annotations also mark
+where a gap or tradeoff shows in the code. [Annotations](annotations/) is the
+whole format.
 
 ```ts
 // docket:verifies rule:minimum-stay@guest-stays
 it("rejects a stay that ends the day it starts", () => {
 ```
 
-```gherkin
-  # docket:verifies rule:no-double-booking@guest-stays
-  Rule: A room can't be double-booked
-```
-
-```ts
-// docket:tradeoff component:ledger#balance-worked-out-on-read
-export function balance(bill: Bill): number {
-```
-
-- **The indexer doesn't parse anything.** It looks for the four verbs in every
-  file in the repository that isn't a Docket doc, in whatever comment syntax
-  the file uses.
-- **An annotation is on the first line below it** that isn't blank or another
-  annotation. The indexer records the file, the annotation's line, and that
-  line's text as written, every time it runs. Nobody writes a line number
-  down, and readers can tell what it's on without knowing the language.
+- **There are two kinds**: `verifies`, a place that checks that the rule
+  holds, the capability works, or the mechanism or component does what it
+  says, and `implements`, a place that makes it so.
 - **None isn't a warning.** A rule or capability with nothing verifying or
   implementing it holds on trust, unless a gap says it doesn't. It's neither a
   problem nor something left to do, and readers say so plainly, without a
-  warning. A gap or tradeoff with no annotation is fine.
-- **A mechanism's or component's `implements` places are where it is in the
-  code.** Its doc lists no paths. Annotate its entry points, where someone
-  changing it should start reading, and whatever else is part of it, such as
-  [`assertRoomFree`](examples/hotel-bookings/src/booking/availability.ts) and
-  `saveBooking` for bookings. One at the top of a file stands for the whole
-  file. Where only part of a file is its, such as one function in a file
-  that's mostly another component's, only that part is annotated.
+  warning.
+- **A rule's evidence is about every capability that follows it.**
 - **A mechanism's or component's evidence** is also the evidence for the
   checklist outcomes it `meets`.
 
-Annotations are claims. The indexer catches one that names something that
-doesn't exist, such as a gap left behind after it closed. It can't catch a
-missing annotation, or one left behind on something that's no longer about
-what it names.
+## History
+
+How a project's docs changed is worked out by comparing its state at one
+commit with its state at the next. A reference names the same thing at every
+commit, so a capability promoted, a gap added or closed, or a rule gaining
+evidence shows on its own.
+
+What comparing can't show is that something removed became something else: a
+doc whose ID changed, a decision answered by a rule, or a gap accepted as a
+tradeoff under a new key. The commit says so with a `Docket-Became` trailer in
+its message, and nothing is ever guessed. [Trailers](trailers/) is the whole
+format.
+
+```text
+Docket-Became: capability:early-arrival -> capability:early-check-in
+```
 
 ## Config
 
-[`docket.yaml`](examples/hotel-bookings/docket.yaml) at the repository root
-marks the repository as a Docket **project**: a place where software is
-defined, and usually implemented.
+[`docket.yaml`](examples/hotel-bookings/docket.yaml) marks the folder it's in
+as a Docket **project**: a source of state, where software is defined, and
+usually implemented. The project is that folder and everything in it, except
+folders with a `docket.yaml` of their own, which are projects of their own.
+
+A project isn't a repository. A repository can hold one project, at its root,
+as each example does, or several, such as one per package of a monorepo, and
+needn't have one at its root. A project's docs and annotations are those in
+its folder, and its state is written beside its `docket.yaml`. Every project in a
+repository is indexed at the same commits, and is shown, combined and sent to
+a server as it would be from a repository of its own.
 
 ```yaml
 project:
@@ -1485,7 +1472,8 @@ and showing several projects together means reading each one's state.json.
   adds the rest. They're in no domain, so they have no `domain`.
 - **Evidence**: each rule's, capability's, mechanism's and component's entry also
   has `evidence`, with `verifies` and `implements` lists of each place's
-  `file`, `line` and `text`, as [Evidence](#evidence) describes. Both are
+  `file`, `line` and `text`, as
+  [Annotations](annotations/#what-the-indexer-records) describes. Both are
   empty when it has none.
 - **`gaps`**: every gap from every doc, each with its ID, its `domain` when
   it's a capability's, the `outcome` and `rule` it names or `null`, its

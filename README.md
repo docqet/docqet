@@ -419,9 +419,9 @@ Things we haven't decided, to settle as the prototype answers them:
 
 ## Layout
 
-| Directory        | What's in it                                                                                    |
-| ---------------- | ----------------------------------------------------------------------------------------------- |
-| [`docs/`](docs/) | Docket's own docs, starting with [an overview of its concepts](docs/domain/overview.md)         |
-| [`spec/`](spec/) | The format: doc types, frontmatter, IDs, code and test annotations, and the `state.json` schema |
-| [`kit/`](kit/)   | The agent development kit: skills and rules that keep docs and annotations current              |
-| [`tool/`](tool/) | `docket`, the Go program that's the CLI and the server, and the UI it serves                    |
+| Directory        | What's in it                                                                                                     |
+| ---------------- | ---------------------------------------------------------------------------------------------------------------- |
+| [`docs/`](docs/) | Docket's own docs, starting with [an overview of its concepts](docs/domain/overview.md)                          |
+| [`spec/`](spec/) | The format: doc types, frontmatter, IDs, code and test annotations, commit trailers, and the `state.json` schema |
+| [`kit/`](kit/)   | The agent development kit: skills and rules that keep docs and annotations current                               |
+| [`tool/`](tool/) | `docket`, the Go program that's the CLI and the server, and the UI it serves                                     |
