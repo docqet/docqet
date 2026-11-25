@@ -31,6 +31,7 @@ import {
 import { PARTS, PART_IDS, filtersFrom, holdersIn, passes, rowsFor, scopeOf, type Filters, type GapRow, type PartId, type Scope, type ScopeKind } from "./leftScope";
 import { ScopePicker } from "./ScopePicker";
 import "./left.css";
+import { GapInitiatives } from "../GapRows";
 
 /*
  * What's left to do, and what matters most: the gaps to close and the
@@ -127,6 +128,7 @@ const SCOPE_KINDS: Record<ScopeKind, string> = {
   all: "Everything",
   project: "Project",
   persona: "Persona",
+  initiative: "Initiative",
   domain: "Domain",
   feature: "Feature",
   capability: "Capability",
@@ -395,6 +397,7 @@ function GapLine({ state, row: r, here }: { state: DocketState; row: GapRow; her
       </span>
       <span role="cell" className="lf-on">
         {here === id ? null : <SubjectLink state={state} type={type} id={id} />}
+        <GapInitiatives state={state} gap={r.gap} />
       </span>
     </div>
   );

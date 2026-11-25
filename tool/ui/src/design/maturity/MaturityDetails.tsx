@@ -11,15 +11,15 @@ import { LevelSpread } from "../stability/StabilitySpread";
  * of features, and a project's from its features. A persona's is of what
  * serves them, from the capabilities that list them, as a feature's is.
  */
-export type MaturitySubject = "feature" | "domain" | "project" | "persona";
+export type MaturitySubject = "feature" | "domain" | "project" | "persona" | "initiative";
 
-export const SUBJECT_NAMES: Record<MaturitySubject, string> = { feature: "Feature", domain: "Domain", project: "Project", persona: "Persona" };
+export const SUBJECT_NAMES: Record<MaturitySubject, string> = { feature: "Feature", domain: "Domain", project: "Project", persona: "Persona", initiative: "Initiative" };
 
 /* What the work is on, in a sentence: "this feature", or "what serves them". */
 export const subjectPhrase = (subject: MaturitySubject) => (subject === "persona" ? "what serves them" : `this ${subject}`);
 
 /* Whether it's worked out from capabilities, rather than from features. */
-export const fromCapabilities = (subject: MaturitySubject) => subject === "feature" || subject === "persona";
+export const fromCapabilities = (subject: MaturitySubject) => subject === "feature" || subject === "persona" || subject === "initiative";
 
 export type MaturityDetailsProps = {
   /** 0 to 100; anything outside is clamped, and fractions rounded. */

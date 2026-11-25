@@ -9,6 +9,7 @@ import { STABILITY, levelColor } from "./design/stability/stability";
 import { StabilityTrack } from "./design/stability/StabilityTrack";
 import { ConceptIcon } from "./Concepts";
 import { PersonaIcon } from "./Personas";
+import { InitiativeIcon } from "./ScopeFilter";
 import { DomainIcon } from "./FeatureMap";
 import { ProjectIcon } from "./PlatformFilter";
 import {
@@ -31,9 +32,9 @@ import {
  * What choosing a result does: opens a domain, feature, capability, concept,
  * persona or rule on its page, or shows only that project.
  */
-export type Selection = { pick: Pick } | { rule: string } | { project: string };
+export type Selection = { pick: Pick | { kind: "initiative"; id: string } } | { rule: string } | { project: string };
 
-type Kind = "project" | "domain" | "feature" | "capability" | "rule" | "concept" | "persona";
+type Kind = "project" | "domain" | "feature" | "capability" | "rule" | "concept" | "persona" | "initiative";
 
 type Entry = {
   key: string;
@@ -58,6 +59,7 @@ const GROUPS: { kind: Kind; label: string }[] = [
   { kind: "rule", label: "Rules" },
   { kind: "concept", label: "Concepts" },
   { kind: "persona", label: "Personas" },
+  { kind: "initiative", label: "Initiatives" },
 ];
 
 /* How many results each group shows at most. */
@@ -169,6 +171,15 @@ function entries(state: DocketState): (Entry & { projects: string[] })[] {
       context: p.description ?? plural(p.capabilities.length, "capability", "capabilities"),
       target: { pick: { kind: "persona" as const, id: p.id } },
       projects: docProjects(p),
+    })),
+    ...state.initiatives.map((i) => ({
+      key: `initiative:${i.id}`,
+      kind: "initiative" as const,
+      title: i.name,
+      text: `${i.description ?? ""} ${i.id} ${i.from.map((f) => f.body).join(" ")}`,
+      context: i.description ?? plural(i.capabilities.length, "capability", "capabilities"),
+      target: { pick: { kind: "initiative" as const, id: i.id } },
+      projects: docProjects(i),
     })),
   ];
 }
@@ -404,6 +415,7 @@ function KindIcon({ kind }: { kind: Kind }) {
   if (kind === "capability") return <BoltOutlinedIcon sx={{ ...sx, color: "primary.main" }} />;
   if (kind === "concept") return <ConceptIcon />;
   if (kind === "persona") return <PersonaIcon />;
+  if (kind === "initiative") return <InitiativeIcon />;
   return <RuleRoundedIcon sx={{ ...sx, color: "text.secondary" }} />;
 }
 

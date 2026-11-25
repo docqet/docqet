@@ -114,6 +114,8 @@ export type Feature = Doc & {
 export type Capability = Doc & {
   /* The personas it serves: who does it, or who it's done for. */
   personas: string[];
+  /* The initiatives it's part of. In none, it shows only when everything does. */
+  initiatives: string[];
   /* Its level in short: the lowest of `levels`, a draft lowest of all. */
   stability: CapabilityLevel;
   /* Its level in each domain that builds part of it, and the project that says so. */
@@ -194,6 +196,21 @@ export type Persona = Doc & {
   /* Every capability that lists it, and the features those are in. */
   capabilities: string[];
   features: string[];
+  /* The initiatives it's part of: whose work they're for. In none, it shows only when everything does. */
+  initiatives: string[];
+};
+
+/*
+ * A body of work, such as the MVP or what comes after it, one across every
+ * domain and project. What it relates to is worked out from the capabilities
+ * and personas that list it.
+ */
+export type Initiative = Doc & {
+  /* Every capability that lists it, and the features those are in. */
+  capabilities: string[];
+  features: string[];
+  /* Every persona that lists it: who its work is for. */
+  personas: string[];
 };
 
 /*
@@ -304,6 +321,7 @@ export type DocketState = {
   rules: Rule[];
   concepts: Concept[];
   personas: Persona[];
+  initiatives: Initiative[];
   mechanisms: TechnicalDoc[];
   components: TechnicalDoc[];
   gaps: Gap[];
@@ -343,11 +361,15 @@ export type StateFile = {
   /* `tradeoffs` is missing from state written before tradeoffs. */
   features: (Omit<Raw<Feature>, "tradeoffs"> & { tradeoffs?: string[] })[];
   /* A draft's `stability` is "draft". */
-  capabilities: (Omit<Raw<Capability>, "stability" | "tradeoffs"> & { stability: Level | "draft"; tradeoffs?: string[] })[];
+  /* `initiatives` is missing from state written before initiatives. */
+  capabilities: (Omit<Raw<Capability>, "stability" | "tradeoffs" | "initiatives"> & { stability: Level | "draft"; tradeoffs?: string[]; initiatives?: string[] })[];
   rules: Omit<Raw<Rule>, "gaps">[];
   concepts: Raw<Concept>[];
   /* Personas aren't in a domain, so these have no `domain`. Missing from state written before personas. */
-  personas?: Omit<Raw<Persona>, "domain">[];
+  /* A persona's `initiatives` is missing from state written before them. */
+  personas?: (Omit<Raw<Persona>, "domain" | "initiatives"> & { initiatives?: string[] })[];
+  /* Initiatives aren't in a domain either. Missing from state written before initiatives. */
+  initiatives?: Omit<Raw<Initiative>, "domain">[];
   /* Technical docs aren't in a domain either. Missing from state written before them, as is `tradeoffs`. */
   /* `applies` is missing from state written before it, meaning "project". */
   mechanisms?: (Omit<Raw<TechnicalDoc>, "domain" | "kind" | "applies"> & { applies?: "project" | "platform" })[];
@@ -411,8 +433,9 @@ function linksById(file: StateFile): StateFile {
   return {
     ...file,
     features: file.features.map(capabilities),
-    capabilities: file.capabilities.map((c) => ({ ...c, personas: ids(c.personas), rules: ids(c.rules), concepts: ids(c.concepts) })),
+    capabilities: file.capabilities.map((c) => ({ ...c, personas: ids(c.personas), initiatives: ids(c.initiatives), rules: ids(c.rules), concepts: ids(c.concepts) })),
     rules: file.rules.map((r) => ({ ...r, concepts: ids(r.concepts) })),
+    personas: file.personas?.map((p) => ({ ...p, initiatives: ids(p.initiatives) })),
     concepts: file.concepts.map((c) => (c.confusedWith ? { ...c, confusedWith: c.confusedWith.map((w) => ({ ...w, concept: w.concept && idOf(w.concept) })) } : c)),
     mechanisms: file.mechanisms?.map(capabilities),
     components: file.components?.map(capabilities),
@@ -460,6 +483,7 @@ export function combine(files: StateFile[]): DocketState {
     rules: [],
     concepts: [],
     personas: [],
+    initiatives: [],
     mechanisms: [],
     components: [],
     gaps: [],
@@ -525,6 +549,7 @@ export function combine(files: StateFile[]): DocketState {
       const capability = contribute(state.capabilities, c.id, project, c, (base) => ({
         ...base,
         personas: [],
+        initiatives: [],
         stability: level,
         levels: [],
         feature: null,
@@ -538,6 +563,7 @@ export function combine(files: StateFile[]): DocketState {
       addEvidence(capability.evidence, c.evidence, project);
       capability.levels.push({ project, domain: c.domain, level });
       union(capability.personas, c.personas ?? []);
+      union(capability.initiatives, c.initiatives ?? []);
       union(capability.gaps, own(c.gaps));
       union(capability.tradeoffs, own(c.tradeoffs));
       pending.push({ from: capability, domain: c.domain, rules: c.rules, concepts: c.concepts });
@@ -558,14 +584,20 @@ export function combine(files: StateFile[]): DocketState {
     }
     /* A persona is in no domain; its contributions are told apart by project, as a domain's are. */
     for (const p of file.personas ?? []) {
-      contribute(state.personas, p.id, project, { ...p, domain: "" }, (base) => ({
+      const persona = contribute(state.personas, p.id, project, { ...p, domain: "" }, (base) => ({
         ...base,
         role: p.role ?? null,
         title: p.title ?? null,
         image: p.image ?? null,
         capabilities: [],
         features: [],
+        initiatives: [],
       }));
+      union(persona.initiatives, p.initiatives ?? []);
+    }
+    /* An initiative is in no domain either. */
+    for (const i of file.initiatives ?? []) {
+      contribute(state.initiatives, i.id, project, { ...i, domain: "" }, (base) => ({ ...base, capabilities: [], features: [], personas: [] }));
     }
     /* Mechanisms and components are in no domain; their contributions are told apart by project, as a persona's are. */
     for (const kind of ["mechanism", "component"] as const) {
@@ -703,6 +735,12 @@ export function combine(files: StateFile[]): DocketState {
   for (const p of state.personas) {
     union(p.features, state.features.filter((f) => p.capabilities.some((id) => f.capabilities.includes(id))).map((f) => f.id));
   }
+  /* Each initiative's capabilities, and the features those are in. */
+  for (const c of state.capabilities) for (const id of c.initiatives) union(find(state.initiatives, id)?.capabilities ?? [], [c.id]);
+  for (const p of state.personas) for (const id of p.initiatives) union(find(state.initiatives, id)?.personas ?? [], [p.id]);
+  for (const i of state.initiatives) {
+    union(i.features, state.features.filter((f) => i.capabilities.some((id) => f.capabilities.includes(id))).map((f) => f.id));
+  }
   for (const d of state.domains) {
     d.maturity = projectMaturity(d.features.map((id) => partOf(find(state.features, id), d.id)?.maturity ?? null));
     d.band = band(d.maturity);
@@ -733,6 +771,7 @@ export function combine(files: StateFile[]): DocketState {
   differing("rule", state.rules);
   differing("concept", state.concepts);
   differing("persona", state.personas);
+  differing("initiative", state.initiatives);
   differing("mechanism", state.mechanisms);
   differing("component", state.components);
 
@@ -1395,15 +1434,15 @@ export const worstImpact = (impacts: (Impact | null)[]): Impact | null =>
 /* ——— Detail pages ——— */
 
 /* What a detail page can show: a doc of the product, a mechanism or component, or every gap and tradeoff at once. */
-export type PageAt = Pick | { kind: TechnicalKind; id: string } | { kind: "gaps"; id: "" };
+export type PageAt = Pick | { kind: TechnicalKind | "initiative"; id: string } | { kind: "gaps"; id: "" };
 
-const PAGE_KINDS: Exclude<PageAt["kind"], "gaps">[] = ["domain", "feature", "capability", "concept", "persona", "mechanism", "component"];
+const PAGE_KINDS: Exclude<PageAt["kind"], "gaps">[] = ["domain", "feature", "capability", "concept", "persona", "initiative", "mechanism", "component"];
 
-/* The platform and projects showing, as the address has them, carried over to the pages it links to. */
+/* The platform, projects and scope showing, as the address has them, carried over to the pages it links to. */
 function showingParams(): URLSearchParams {
   const now = new URLSearchParams(window.location.search);
   const params = new URLSearchParams();
-  for (const key of ["platform", "project"]) {
+  for (const key of ["platform", "project", "scope"]) {
     const value = now.get(key);
     if (value) params.set(key, value);
   }

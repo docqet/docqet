@@ -12,6 +12,8 @@ import { Tip } from "../design/Tip";
 import Logo from "../Logo";
 import { PersonaIcon } from "../Personas";
 import PlatformFilter, { type PlatformChoice } from "../PlatformFilter";
+import ScopeFilter, { InitiativeIcon } from "../ScopeFilter";
+import type { Scope } from "../scope";
 import { followLink, navigate, sectionHref, sectionOf, docHref, type Route, type Section } from "../routes";
 import Search, { type Selection } from "../Search";
 import { openDecisions, pageHref, type DocketState, type Platform } from "../state";
@@ -28,6 +30,7 @@ export default function Shell({
   state,
   platform,
   platforms,
+  scope,
   route,
   onPlatform,
   onProjects,
@@ -36,6 +39,7 @@ export default function Shell({
   state: DocketState;
   platform: Platform;
   platforms: PlatformChoice[];
+  scope: Scope;
   route: Route;
   onPlatform: (id: string) => void;
   onProjects: (ids: string[]) => void;
@@ -60,6 +64,7 @@ export default function Shell({
           onPlatform={onPlatform}
           onProjects={onProjects}
         />
+        <ScopeFilter scope={scope} initiatives={state.initiatives} />
         <div className="shell-search">
           <Search state={state} all={platform.projects} onSelect={select} />
         </div>
@@ -99,6 +104,9 @@ function SideNav({ state, at }: { state: DocketState; at: Section }) {
       items: [
         { section: "features", label: "Features", icon: <WidgetsOutlinedIcon />, question: "What can it do? Domains, features and capabilities", count: state.features.length },
         { section: "personas", label: "Personas", icon: <PersonaIcon size={20} />, question: "Who it serves, and how ready it is for them", count: state.personas.length },
+        ...(state.initiatives.length
+          ? [{ section: "initiatives" as const, label: "Initiatives", icon: <InitiativeIcon size={20} />, question: "Bodies of work, such as the MVP, and how ready each is", count: state.initiatives.length }]
+          : []),
         { section: "language", label: "Language", icon: <ConceptIcon size={20} />, question: "What the words mean, and the rules that must hold", count: state.concepts.length + state.rules.length },
       ],
     },

@@ -10,13 +10,15 @@ import LanguagePage from "./pages/LanguagePage";
 import LeftPage from "./pages/LeftPage";
 import MapPage from "./pages/MapPage";
 import OverviewPage from "./pages/OverviewPage";
+import InitiativesPage from "./pages/InitiativesPage";
 import PersonasPage from "./pages/PersonasPage";
 import ProblemsPage from "./pages/ProblemsPage";
 import RulePage from "./pages/RulePage";
 import type { PlatformChoice } from "./PlatformFilter";
 import { navigate, routeOf, useSearch, type Route } from "./routes";
+import { scopeFiles, scopeOf } from "./scope";
 import Shell from "./shell/Shell";
-import { combine, loadProjects, loadState, maturityOf, platformsOf, type DocketState, type PageAt, type StateFile } from "./state";
+import { combine, loadProjects, loadState, platformsOf, projectOf, type DocketState, type PageAt, type StateFile } from "./state";
 
 /* The platform and projects named in the address, as `?platform=<id>&project=<id>,<id>`. */
 const showingIn = (search: string) => {
@@ -36,6 +38,7 @@ export default function App() {
   const search = useSearch();
   const wanted = useMemo(() => showingIn(search), [search]);
   const route = useMemo(() => routeOf(search), [search]);
+  const scope = useMemo(() => scopeOf(search), [search]);
 
   useEffect(() => {
     loadProjects()
@@ -43,17 +46,10 @@ export default function App() {
       .then(setFiles, (e: unknown) => setError(String(e)));
   }, []);
 
-  /* Each project, with its maturity, worked out from it alone. */
-  const all = useMemo(() => (files ?? []).map((f) => combine([f]).projects[0]), [files]);
-  /* Each platform, with the maturity of all its projects together. */
-  const platforms: PlatformChoice[] = useMemo(
-    () =>
-      platformsOf(all).map((p) => {
-        const ids = p.projects.map((x) => x.id);
-        return { ...p, maturity: maturityOf(combine((files ?? []).filter((f) => ids.includes(f.project.id)))) };
-      }),
-    [all, files],
-  );
+  /* Each project's state with only the capabilities in scope, so everything below, maturity included, counts only those. */
+  const scoped = useMemo(() => scopeFiles(files ?? [], scope), [files, scope]);
+  /* Each platform, and its projects, to choose from. */
+  const platforms: PlatformChoice[] = useMemo(() => platformsOf((files ?? []).map(projectOf)), [files]);
   /*
    * The platform showing: the one the address names, or else the one its
    * first named project is in, or else the first. And its projects showing:
@@ -68,7 +64,7 @@ export default function App() {
     const named = wanted.projects.filter((id) => known.includes(id));
     return named.length ? named : known;
   }, [platform, wanted]);
-  const state = useMemo(() => files && combine(files.filter((f) => chosen.includes(f.project.id))), [files, chosen]);
+  const state = useMemo(() => files && combine(scoped.filter((f) => chosen.includes(f.project.id))), [files, scoped, chosen]);
 
   /*
    * Show a platform, and some of its projects, or all of them with none
@@ -111,6 +107,7 @@ export default function App() {
       state={state}
       platform={platform}
       platforms={platforms}
+      scope={scope}
       route={route}
       onPlatform={(id) => choose(id)}
       onProjects={(ids) => choose(platform.id, ids)}
@@ -138,6 +135,8 @@ function content(state: DocketState, route: Route, layoutKey: string): ReactNode
       return <FeaturesPage state={state} route={route} />;
     case "personas":
       return <PersonasPage state={state} route={route} />;
+    case "initiatives":
+      return <InitiativesPage state={state} route={route} />;
     case "language":
       return <LanguagePage state={state} route={route} />;
     case "built":

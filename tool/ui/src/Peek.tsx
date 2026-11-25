@@ -32,6 +32,7 @@ import {
   type Gap,
   type Pick,
 } from "./state";
+import { InitiativeTags, initiativesOf } from "./Initiatives";
 
 /* Each kind's icon and name, as the peek and the map's filter bar say them. */
 export const PICK_KINDS: Record<Pick["kind"], { one: string; icon: (size: number) => ReactNode }> = {
@@ -51,7 +52,8 @@ type Figure = { label: string; value: ReactNode; tab: string };
  * concept, whose gaps keep their risk anywhere. `of`: what its exposure is
  * of, as a phrase, where that isn't its name, as for a persona.
  */
-type Summary = { name: string; of?: string; picture?: ReactNode; role?: string | null; where?: string; mark: ReactNode; figures: Figure[]; gaps: Gap[]; within?: Capability[] };
+/* `initiatives`: those it says it's part of; left out, those its capabilities (`within`) are part of. */
+type Summary = { name: string; of?: string; picture?: ReactNode; role?: string | null; where?: string; mark: ReactNode; figures: Figure[]; gaps: Gap[]; within?: Capability[]; initiatives?: string[] };
 
 /* Each gap once, as several capabilities can share one through what they're built on. */
 const unique = (gaps: Gap[]) => [...new Map(gaps.map((g) => [g.id, g])).values()];
@@ -76,6 +78,7 @@ function summarize(state: DocketState, at: Pick): Summary | null {
     const held = rules.filter((r) => ruleStanding(c, r) !== "gap").length;
     return {
       name: c.name,
+      initiatives: c.initiatives,
       mark: c.stability ? <StabilityMark level={c.stability} feature={c.name} size="extra-long" /> : <span className="faint">Draft</span>,
       figures: [
         { label: "What's left", value: leftCount(left), tab: "left" },
@@ -157,6 +160,7 @@ function summarize(state: DocketState, at: Pick): Summary | null {
     of: `what serves ${name}`,
     role,
     picture: <PersonaAvatar persona={p} size={40} />,
+    initiatives: p.initiatives,
     mark: <ReadinessMark readiness={personaReadiness(state, p)} of={`Readiness for ${name}`} />,
     figures: [
       { label: "Capabilities", value: capabilities.length, tab: "serves" },
@@ -227,6 +231,7 @@ export default function Peek({
           {s.role ? <div className="peek-role">{s.role}</div> : null}
         </div>
       </div>
+      <InitiativeTags state={state} ids={s.initiatives ?? initiativesOf(state, s.within ?? [])} block />
       {s.mark ? <div className="peek-mark">{s.mark}</div> : null}
       {doc?.description ? (
         <p className="peek-description">

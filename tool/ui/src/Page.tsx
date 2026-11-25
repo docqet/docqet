@@ -34,6 +34,8 @@ import { DomainIcon } from "./FeatureMap";
 import { PersonaAvatar, personaNameAndRole, personaReadiness } from "./Personas";
 import { ReadinessMark, StillNeeds, needsLine } from "./Readiness";
 import { ProjectIcon } from "./PlatformFilter";
+import { InitiativeIcon } from "./ScopeFilter";
+import { InitiativeTags, initiativesOf } from "./Initiatives";
 import {
   bareId,
   builtOn,
@@ -79,6 +81,8 @@ import {
   type PageAt,
   levelInDomain,
   type Persona,
+  type Initiative,
+  capabilitiesById,
   type Pick,
   type Rule,
   ruleStanding,
@@ -105,7 +109,9 @@ export default function DetailPage({ state, page, route }: { state: DocketState;
       ? undefined
       : page.kind === "mechanism" || page.kind === "component"
         ? find(page.kind === "mechanism" ? state.mechanisms : state.components, page.id)
-        : find(pickList(state, page.kind), page.id);
+        : page.kind === "initiative"
+          ? find(state.initiatives, page.id)
+          : find(pickList(state, page.kind), page.id);
 
   const links: Go = {
     state,
@@ -135,6 +141,8 @@ export default function DetailPage({ state, page, route }: { state: DocketState;
       return <DomainPage domain={doc as Domain} {...props} />;
     case "persona":
       return <PersonaPage persona={doc as Persona} {...props} />;
+    case "initiative":
+      return <InitiativePage initiative={doc as Initiative} {...props} />;
     case "mechanism":
     case "component":
       return <TechnicalPage doc={doc as TechnicalDoc} {...props} />;
@@ -154,9 +162,10 @@ type PageProps = Go & { route: Route };
 
 /* ——— Layout ——— */
 
-const KIND_NAMES: Record<Pick["kind"] | TechnicalKind, { one: string; icon: ReactNode }> = {
+const KIND_NAMES: Record<Pick["kind"] | TechnicalKind | "initiative", { one: string; icon: ReactNode }> = {
   ...NAMES,
   concept: { one: "Concept", icon: <ConceptIcon size={18} /> },
+  initiative: { one: "Initiative", icon: <InitiativeIcon size={18} /> },
   ...TECHNICAL_NAMES,
 };
 
@@ -195,15 +204,18 @@ function DocHeader({
   title = doc.name,
   kindNote,
   trail,
+  initiatives = [],
   marks,
   stats,
 }: {
   state: DocketState;
-  kind: Pick["kind"] | TechnicalKind;
+  kind: Pick["kind"] | TechnicalKind | "initiative";
   doc: Doc;
   title?: ReactNode;
   kindNote?: ReactNode;
   trail?: ReactNode;
+  /* The initiatives it's part of, its own or its capabilities', as tags at the end of the trail. */
+  initiatives?: string[];
   marks?: ReactNode;
   stats: ReactNode;
 }) {
@@ -214,7 +226,7 @@ function DocHeader({
     <>
       <PageHeader
         trail={
-          trail || project ? (
+          trail || project || initiatives.length ? (
             <>
               {trail}
               {trail && project ? <span className="faint">·</span> : null}
@@ -224,6 +236,7 @@ function DocHeader({
                   {project}
                 </span>
               ) : null}
+              <InitiativeTags state={state} ids={initiatives} />
             </>
           ) : undefined
         }
@@ -620,6 +633,7 @@ function CapabilityTable({
               <tr key={c.id}>
                 <td>
                   <a href={docHref("capability", c.id)}>{c.name}</a>
+                  <InitiativeTags state={state} ids={c.initiatives} />
                   {compact ? null : <Excerpt text={c.description} lines={1} className="page-cell-sub" />}
                 </td>
                 <td>
@@ -807,6 +821,7 @@ function CapabilityPage({ capability, route, ...go }: PageProps & { capability: 
         state={state}
         kind="capability"
         doc={capability}
+        initiatives={capability.initiatives}
         trail={
           <>
             <DomainTrail state={state} domains={docDomains(capability)} />
@@ -985,6 +1000,7 @@ function FeaturePage({ feature, route, ...go }: PageProps & { feature: Feature }
         state={state}
         kind="feature"
         doc={feature}
+        initiatives={initiativesOf(state, capabilities)}
         trail={<DomainTrail state={state} domains={feature.parts.map((p) => p.domain)} />}
         stats={
           <>
@@ -1121,6 +1137,7 @@ function DomainPage({ domain, route, ...go }: PageProps & { domain: Domain }) {
         state={state}
         kind="domain"
         doc={domain}
+        initiatives={initiativesOf(state, capabilities)}
         stats={
           <>
             <Stat
@@ -1267,6 +1284,7 @@ function PersonaPage({ persona, route, ...go }: PageProps & { persona: Persona }
         state={state}
         kind="persona"
         doc={persona}
+        initiatives={persona.initiatives}
         kindNote={role}
         title={
           <span className="page-title-picture">
@@ -1359,6 +1377,138 @@ function PersonaPage({ persona, route, ...go }: PageProps & { persona: Persona }
 }
 
 /*
+ * An initiative: how ready its work is, and what it still needs, then its
+ * capabilities, by feature, what's left in them, and its body. Like a
+ * persona's page, everything on it counts only its capabilities.
+ */
+function InitiativePage({ initiative, route, ...go }: PageProps & { initiative: Initiative }) {
+  const { state } = go;
+  const capabilities = capabilitiesById(state, initiative.capabilities);
+  const features = initiative.features.flatMap((id) => find(state.features, id) ?? []);
+  const loose = capabilities.filter((c) => !c.feature);
+  const domains = [...new Set(capabilities.flatMap((c) => docDomains(c)))];
+  const left = leftAcross(state, capabilities, undefined, false);
+  const readiness = readinessOf(state, capabilities);
+  const inFeature = (f: Feature) => capabilitiesById(state, f.capabilities.filter((id) => initiative.capabilities.includes(id)));
+  const personas = initiative.personas.flatMap((id) => find(state.personas, id) ?? []);
+  const name = initiative.name;
+  const tabs: TabDef[] = [
+    { id: "readiness", label: "Readiness", term: "readiness" as const },
+    { id: "capabilities", label: "Capabilities", term: "capability" as const, count: capabilities.length },
+    { id: "left", label: "What's left in it", term: "gap" as const, count: leftTotal(left) || undefined },
+    ...(hasBody(initiative) ? [{ id: "about", label: "About" }] : []),
+  ];
+  const tab = currentTab(route, tabs);
+  return (
+    <DocView title={name} route={route}>
+      <DocHeader
+        state={state}
+        kind="initiative"
+        doc={initiative}
+        trail={domains.length ? <DomainTrail state={state} domains={domains} /> : undefined}
+        stats={
+          <>
+            <Stat
+              label="Capabilities"
+              term="capability"
+              value={capabilities.length || "None"}
+              note={capabilities.length ? <StabilitySpread levels={capabilities.map((c) => c.stability)} of={name} inButton /> : "in it, in this scope"}
+              href={tabHref("capabilities")}
+            />
+            <MaturityStat
+              maturity={featureMaturity(capabilities.map((c) => c.stability))}
+              subject="initiative"
+              count={capabilities.filter((c) => c.stability).length}
+              spread={capabilities.map((c) => c.stability)}
+              of={name}
+            />
+            <ExposureStat state={state} capabilities={capabilities} of={name} />
+            <ReadinessStat readiness={readiness} tab="readiness" of={`Readiness of ${name}`} />
+            <LeftStat left={left} of={name} />
+          </>
+        }
+      />
+      <Tabs tabs={tabs} current={tab} />
+      {tab === "readiness" ? (
+        <>
+          <StillNeedsSection readiness={readiness} readyText={`${name} is ready: everything started in it is at Beta or above, with no unacceptable gap.`} />
+          <Section title="Who it's for" term="persona" count={personas.length} note="How ready it is for each, from its capabilities that serve them.">
+            {personas.length ? (
+              <ul className="page-levels">
+                {personas.map((p) => (
+                  <li key={p.id}>
+                    <a className="page-crumb" href={docHref("persona", p.id)}>
+                      <PersonaAvatar persona={p} size={22} />
+                      {p.name}
+                    </a>
+                    <ReadinessMark
+                      readiness={readinessOf(state, capabilities.filter((c) => c.personas.includes(p.id)))}
+                      of={`${name}'s readiness for ${p.name}`}
+                    />
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="page-line">No persona says it's part of {name}.</p>
+            )}
+          </Section>
+          <Section title="By feature" count={features.length} note="How ready each feature's part of it is, from its capabilities in it.">
+            {features.length ? (
+              <ul className="page-levels">
+                {features.map((f) => (
+                  <li key={f.id}>
+                    <a className="page-crumb" href={docHref("feature", f.id)}>
+                      {NAMES.feature.icon}
+                      {f.name}
+                    </a>
+                    <ReadinessMark readiness={readinessOf(state, inFeature(f))} of={`${f.name}'s readiness in ${name}`} />
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="page-line">None of its capabilities is in a feature.</p>
+            )}
+          </Section>
+          <TopGaps state={state} left={left} />
+        </>
+      ) : tab === "capabilities" ? (
+        <>
+          {features.map((f) => {
+            const ready = readinessOf(state, inFeature(f));
+            return (
+              <Section
+                key={f.id}
+                title={
+                  <a className="page-crumb page-section-link" href={docHref("feature", f.id)}>
+                    {NAMES.feature.icon}
+                    {f.name}
+                  </a>
+                }
+                aside={startedOf(ready) ? <ReadinessMark readiness={ready} of={`${f.name}'s readiness in ${name}`} /> : undefined}
+              >
+                <CapabilityTable state={state} capabilities={capabilities.filter((c) => c.feature === f.id)} technical={false} />
+              </Section>
+            );
+          })}
+          {loose.length ? (
+            <Section title={<><Term id="capability">Capabilities</Term> in no <Term id="feature">feature</Term></>} count={loose.length}>
+              <CapabilityTable state={state} capabilities={loose} technical={false} />
+            </Section>
+          ) : null}
+          {!capabilities.length ? <Empty>None of its capabilities is in the scope showing.</Empty> : null}
+        </>
+      ) : tab === "left" ? (
+        <LeftTab {...go} left={left} nothing="Nothing left in it: no open decisions or product gaps are written down on its capabilities." />
+      ) : (
+        <Section title={MORE_ABOUT}>
+          <Bodies {...go} doc={initiative} />
+        </Section>
+      )}
+    </DocView>
+  );
+}
+
+/*
  * A concept: what it means, then the capabilities that use it, the rules
  * that refer to it, and the same word in other domains. A concept is small,
  * so a tab with nothing in it is left out.
@@ -1383,6 +1533,7 @@ function ConceptPage({ concept, route, ...go }: PageProps & { concept: Concept }
         state={state}
         kind="concept"
         doc={concept}
+        initiatives={initiativesOf(state, capabilitiesById(state, concept.capabilities))}
         trail={<DomainCrumb state={state} id={concept.domain} />}
         stats={
           <>
@@ -1490,6 +1641,7 @@ function TechnicalPage({ doc, route, ...go }: PageProps & { doc: TechnicalDoc })
         state={state}
         kind={doc.kind}
         doc={doc}
+        initiatives={initiativesOf(state, capabilities)}
         trail={<a href={sectionHref("built")}>How it's built</a>}
         stats={
           <>

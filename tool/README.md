@@ -27,8 +27,8 @@ DOCKET_STATE=a/state.json:b/state.json npm run dev   # several, separated as in 
 ### How it's laid out
 
 A bar across the top says where you are and finds anything: the platform and
-its projects, search, and the glossary of Docket's words. A nav down the side
-picks which question you're asking:
+its projects, the initiative showing, search, and the glossary of Docket's
+words. A nav down the side picks which question you're asking:
 
 | Section | Answers | Address |
 | --- | --- | --- |
@@ -36,19 +36,28 @@ picks which question you're asking:
 | Map | How does it fit together? Domains, features and capabilities on a canvas, with their personas | `?view=map` |
 | Features | What can it do? Domains, features and capabilities as a tree | `?view=features` |
 | Personas | Who it serves, and how ready it is for each | `?view=personas` |
+| Initiatives | Bodies of work, such as the MVP, and how ready each is | `?view=initiatives` |
 | Language | What the words mean: concepts, and the rules that must hold | `?view=language` |
 | How it's built | Mechanisms and components | `?view=built` |
-| What's left | Gaps and open decisions, for everything or one project, persona, domain, feature or capability, filtered and ordered by any part of risk | `?view=left&for=persona:<id>` |
+| What's left | Gaps and open decisions, for everything or one project, persona, initiative, domain, feature or capability, filtered and ordered by any part of risk | `?view=left&for=persona:<id>` |
 | Decided | Tradeoffs and non-goals | `?view=decided` |
 | Doc problems | Contradictions and mistakes in the docs | `?view=problems` |
 
-Every domain, feature, capability, persona, concept, rule, mechanism,
-component and gap has a page of its own, such as `?capability=deposits`: a
-header saying what it is and how it's doing, then tabs, each answering one
-question about it, kept in the address as `&tab=left`. A count in a header
-links to the tab that lists what it counts. Every link opens in the same tab,
-so back returns, and the platform and projects showing ride along in the
-address.
+Every domain, feature, capability, persona, initiative, concept, rule,
+mechanism, component and gap has a page of its own, such as
+`?capability=deposits`: a header saying what it is and how it's doing, then
+tabs, each answering one question about it, kept in the address as
+`&tab=left`. A count in a header links to the tab that lists what it counts.
+Every link opens in the same tab, so back returns, and the platform, the
+projects and the initiative showing ride along in the address.
+
+Initiative, in the top bar, shows Everything or one initiative. It's hidden
+when the platform has none. Showing one initiative, every page shows only its
+capabilities and personas, every number counts only those, and
+`?scope=<initiative-id>` in the address says which. Switching platform goes
+back to Everything. Wherever a capability or persona is shown, tags name the
+initiatives it's part of, and a feature, domain, rule, concept, mechanism,
+component or gap shows those of its capabilities.
 
 On the map, clicking something opens a small peek beside the canvas: what it
 is, three figures, its riskiest gaps and a link to its page, all of it

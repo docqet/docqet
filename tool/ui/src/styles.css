@@ -4866,3 +4866,52 @@ button.page-table-row:hover .page-table-name strong {
   align-items: center;
   gap: 8px;
 }
+
+/* The initiatives something is part of, as small tags beside its name. */
+.initiative-tags {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+
+.initiative-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 16px;
+  padding: 0 6px;
+  color: var(--muted);
+  background: var(--accent-soft);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+a.initiative-tag:hover {
+  color: var(--text);
+  border-color: var(--border-strong);
+}
+
+/* On a line of its own, as under a name or in a header's trail. */
+.initiative-tags.block {
+  display: flex;
+  margin: 4px 0 0;
+}
+
+/* Under what a gap is on, in a column aligned to the right. */
+.gr-on .initiative-tags,
+.lf-on .initiative-tags,
+.ov-gap-on .initiative-tags {
+  justify-content: flex-end;
+}
+
+.ov-gap-on {
+  min-width: 0;
+  text-align: right;
+}

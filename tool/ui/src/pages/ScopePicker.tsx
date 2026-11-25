@@ -6,6 +6,7 @@ import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 import Popover from "@mui/material/Popover";
 import { NAMES } from "../Explore";
 import { DomainIcon } from "../FeatureMap";
+import { InitiativeIcon } from "../ScopeFilter";
 import { withParam } from "../routes";
 import type { DocketState } from "../state";
 import { scopeChoices, type Scope, type ScopeChoice, type ScopeKind } from "./leftScope";
@@ -22,12 +23,13 @@ const KINDS: { kind: ScopeKind | "any"; name: string }[] = [
   { kind: "any", name: "All" },
   { kind: "project", name: "Projects" },
   { kind: "persona", name: "Personas" },
+  { kind: "initiative", name: "Initiatives" },
   { kind: "domain", name: "Domains" },
   { kind: "feature", name: "Features" },
   { kind: "capability", name: "Capabilities" },
 ];
 
-const ONE: Record<ScopeKind, string> = { all: "", project: "Project", persona: "Persona", domain: "Domain", feature: "Feature", capability: "Capability" };
+const ONE: Record<ScopeKind, string> = { all: "", project: "Project", persona: "Persona", initiative: "Initiative", domain: "Domain", feature: "Feature", capability: "Capability" };
 
 /* With no search and every kind, each kind shows its first few, with how many more under the kind's tab. */
 const FEW = 4;
@@ -36,6 +38,7 @@ function KindIcon({ kind }: { kind: ScopeKind }) {
   if (kind === "all") return <LayersOutlinedIcon sx={{ fontSize: 18, color: "text.secondary" }} />;
   if (kind === "project") return <FolderOutlinedIcon sx={{ fontSize: 18, color: "text.secondary" }} />;
   if (kind === "domain") return <DomainIcon size={18} />;
+  if (kind === "initiative") return <InitiativeIcon size={18} />;
   return <>{NAMES[kind].icon}</>;
 }
 

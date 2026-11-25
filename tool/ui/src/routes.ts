@@ -5,9 +5,9 @@ import type { PageAt } from "./state";
  * Where the reader is, all of it in the address so any view can be linked to
  * and back and forward work: a section of the side nav, as `?view=features`,
  * or one doc's page, as `?capability=deposits`, either with `&tab=rules` for
- * one of its tabs. The platform and projects showing ride along as
- * `?platform=<id>&project=<id>,<id>`. With no view or doc named, it's the
- * overview.
+ * one of its tabs. The platform, projects and scope showing ride along as
+ * `?platform=<id>&project=<id>,<id>&scope=<initiative id>`.
+ * With no view or doc named, it's the overview.
  *
  * Every link in the app is a plain `<a href="?…">`. The shell catches clicks
  * on them and moves here without reloading, so a link opens in the same tab,
@@ -15,12 +15,12 @@ import type { PageAt } from "./state";
  */
 
 /* The side nav's sections, in its order, and the glossary from the top nav. */
-export const SECTIONS = ["overview", "map", "features", "personas", "language", "built", "left", "decided", "problems", "glossary"] as const;
+export const SECTIONS = ["overview", "map", "features", "personas", "initiatives", "language", "built", "left", "decided", "problems", "glossary"] as const;
 export type Section = (typeof SECTIONS)[number];
 
 /* What can have a page of its own. */
 export type DocKind = Exclude<PageAt["kind"], "gaps"> | "rule" | "gap";
-export const DOC_KINDS: DocKind[] = ["domain", "feature", "capability", "concept", "persona", "mechanism", "component", "rule", "gap"];
+export const DOC_KINDS: DocKind[] = ["domain", "feature", "capability", "concept", "persona", "initiative", "mechanism", "component", "rule", "gap"];
 
 export type Route =
   | { kind: "section"; section: Section; tab: string | null }
@@ -32,6 +32,7 @@ const SECTION_OF_DOC: Record<DocKind, Section> = {
   feature: "features",
   capability: "features",
   persona: "personas",
+  initiative: "initiatives",
   concept: "language",
   rule: "language",
   mechanism: "built",
@@ -56,11 +57,11 @@ export function routeOf(search: string): Route {
   return { kind: "section", section, tab };
 }
 
-/* The platform and projects showing now, to carry over to wherever a link goes. */
+/* The platform, projects and scope showing now, to carry over to wherever a link goes. */
 export function showingParams(search = window.location.search): URLSearchParams {
   const now = new URLSearchParams(search);
   const params = new URLSearchParams();
-  for (const key of ["platform", "project"]) {
+  for (const key of ["platform", "project", "scope"]) {
     const value = now.get(key);
     if (value) params.set(key, value);
   }

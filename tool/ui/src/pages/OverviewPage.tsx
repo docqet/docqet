@@ -39,6 +39,7 @@ import {
   
 } from "../state";
 import "./overview.css";
+import { GapInitiatives } from "../GapRows";
 
 /*
  * How the platform is doing, at a glance, with no panning: its maturity, how
@@ -319,7 +320,10 @@ function GapRow({ state, gap }: { state: DocketState; gap: Gap }) {
       <a className="ov-gap-summary" href={docHref("gap", gap.id)}>
         <InlineMarkdown text={gap.name} />
       </a>
-      <GapOn state={state} gap={gap} />
+      <span className="ov-gap-on">
+        <GapOn state={state} gap={gap} />
+        <GapInitiatives state={state} gap={gap} />
+      </span>
     </li>
   );
 }

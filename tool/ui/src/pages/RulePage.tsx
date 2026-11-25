@@ -27,6 +27,7 @@ import {
   type Rule,
 } from "../state";
 import "./doc.css";
+import { InitiativeTags, initiativesOf } from "../Initiatives";
 
 /*
  * One rule's page: what must always hold, and does it? Its header says what
@@ -84,7 +85,12 @@ function RuleView({ state, rule, route }: { state: DocketState; rule: Rule; rout
   return (
     <View title={rule.name}>
       <PageHeader
-        trail={<a href={docHref("domain", rule.domain)}>{domainName(state, rule.domain)}</a>}
+        trail={
+          <>
+            <a href={docHref("domain", rule.domain)}>{domainName(state, rule.domain)}</a>
+            <InitiativeTags state={state} ids={initiativesOf(state, following)} />
+          </>
+        }
         kind={
           <>
             <RuleRoundedIcon sx={{ fontSize: 18, color: "text.secondary" }} />
@@ -216,6 +222,7 @@ function Follower({ state, rule, capability }: { state: DocketState; rule: Rule;
             {capability.name}
           </a>
           <CapabilityStability level={capability.stability} name={capability.name} />
+          <InitiativeTags state={state} ids={capability.initiatives} />
         </span>
         <span className="dp-row-note">{RULE_STANDING_LABELS[standing]}</span>
         {gaps.map((g) => (

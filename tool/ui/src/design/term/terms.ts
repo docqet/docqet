@@ -13,6 +13,7 @@ export type TermId =
   | "rule"
   | "concept"
   | "persona"
+  | "initiative"
   | "mechanism"
   | "component"
   | "gap"
@@ -85,6 +86,12 @@ export const TERMS: Record<TermId, TermEntry> = {
     means:
       "A type of person the software serves, written as one invented person so it's easy to picture: who they are, what they need, and what they care about.",
     more: "Maria, front desk clerk, who takes bookings and checks guests in and out.",
+  },
+  initiative: {
+    name: "Initiative",
+    means:
+      "A named body of work, such as the MVP or what comes after it. Capabilities and personas say which initiatives they're part of. Choosing a scope shows everything, or one initiative, and every number counts only what's showing.",
+    more: "Busy season, in Hotel Bookings: group bookings, the waitlist and room status, across two features. Unlike a feature, it's a stretch of work, not a lasting job.",
   },
   mechanism: {
     name: "Mechanism",

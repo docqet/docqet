@@ -5,6 +5,7 @@ import { docHref, type Route } from "../routes";
 import { Empty, PageHeader, View } from "../shell/layout";
 import { find, gapsById, readyShare, type DocketState, type Persona } from "../state";
 import { GapsCell, Num } from "./indexParts";
+import { InitiativeTags } from "../Initiatives";
 
 /*
  * Who the software serves, and how ready it is for each of them: a row per
@@ -57,6 +58,7 @@ function PersonaRow({ state, persona }: { state: DocketState; persona: Persona }
             {role ? <span className="ix-persona-role">{role}</span> : null}
           </span>
         </a>
+        <InitiativeTags state={state} ids={persona.initiatives} block />
       </td>
       <td>
         <ReadinessMark readiness={personaReadiness(state, persona)} of={`Readiness for ${name}`} />

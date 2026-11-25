@@ -33,7 +33,7 @@ import { STABILITY_LEVEL_IDS } from "../design/stability/stability";
  * order by any of them.
  */
 
-export type ScopeKind = "all" | "project" | "persona" | "domain" | "feature" | "capability";
+export type ScopeKind = "all" | "project" | "persona" | "initiative" | "domain" | "feature" | "capability";
 
 /*
  * What the page is for: everything showing, or one project, persona,
@@ -59,6 +59,10 @@ export function scopeOf(state: DocketState, value: string | null): Scope {
   if (kind === "persona") {
     const p = find(state.personas, id);
     return p ? { key: value, kind, name: personaNameAndRole(p).name, capabilities: capabilitiesById(state, p.capabilities) } : EVERYTHING;
+  }
+  if (kind === "initiative") {
+    const i = find(state.initiatives, id);
+    return i ? { key: value, kind, name: i.name, capabilities: capabilitiesById(state, i.capabilities) } : EVERYTHING;
   }
   if (kind === "domain") {
     const d = find(state.domains, id);
@@ -86,6 +90,7 @@ export function scopeChoices(state: DocketState): ScopeChoice[] {
     { kind: "all", key: "all", name: EVERYTHING.name, note: plural(state.projects.length, "project") },
     ...state.projects.map((p) => ({ kind: "project" as const, key: `project:${p.id}`, name: p.name, note: null })),
     ...byName(state.personas.map((p) => ({ kind: "persona" as const, key: `persona:${p.id}`, ...personaNameAndRole(p) })).map(({ role, ...c }) => ({ ...c, note: role }))),
+    ...byName(state.initiatives.map((i) => ({ kind: "initiative" as const, key: `initiative:${i.id}`, name: i.name, note: null }))),
     ...byName(state.domains.map((d) => ({ kind: "domain" as const, key: `domain:${d.id}`, name: d.name, note: null }))),
     ...byName(state.features.map((f) => ({ kind: "feature" as const, key: `feature:${f.id}`, name: f.name, note: domains(f.parts.map((p) => p.domain)) }))),
     ...byName(

@@ -95,6 +95,8 @@ function docsOf(state: DocketState, kind: DocKind): Doc[] {
       return state.concepts;
     case "persona":
       return state.personas;
+    case "initiative":
+      return state.initiatives;
     case "mechanism":
       return state.mechanisms;
     case "component":

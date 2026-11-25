@@ -74,6 +74,7 @@ import {
   type Target,
 } from "./state";
 import { Tip } from "./design/Tip";
+import { InitiativeTags } from "./Initiatives";
 
 /* What the panel can show: the product's parts, each as a list or one of them. */
 export type ExploreKind = "domain" | "feature" | "capability" | "persona";
@@ -950,7 +951,12 @@ export function PersonaRows({ state, personas, feature, onOpen }: { state: Docke
         const readiness = feature ? readinessOf(state, personaCapabilitiesIn(state, p, feature)) : null;
         return (
           <li key={p.id}>
-            <Row icon={<PersonaAvatar persona={p} size={28} />} {...rowName(p)} onClick={() => onOpen("persona", p.id)}>
+            <Row
+              icon={<PersonaAvatar persona={p} size={28} />}
+              {...rowName(p)}
+              tags={<InitiativeTags state={state} ids={p.initiatives} plain />}
+              onClick={() => onOpen("persona", p.id)}
+            >
               {readiness && feature && startedOf(readiness) ? (
                 <ReadinessMark readiness={readiness} of={`${feature.name}'s readiness for ${personaNameAndRole(p).name}`} inButton />
               ) : null}
@@ -966,12 +972,15 @@ export function Row({
   icon,
   name,
   summary,
+  tags,
   onClick,
   children,
 }: {
   icon: ReactNode;
   name: string;
   summary?: ReactNode;
+  /* What it's part of, such as its initiatives, under its name. */
+  tags?: ReactNode;
   onClick: () => void;
   children?: ReactNode;
 }) {
@@ -981,6 +990,7 @@ export function Row({
       <span className="concept-row-text">
         <span className="concept-row-name">{name}</span>
         {summary ? <span className="concept-row-summary">{summary}</span> : null}
+        {tags}
       </span>
       {children}
     </button>

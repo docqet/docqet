@@ -8,6 +8,7 @@ import { docHref } from "./routes";
 import { VERDICTS, find, riskOf, subjectOf, technicalDoc, type DocketState, type Gap, type Risk, type RiskAcross, type TechnicalDoc, type Verdict } from "./state";
 import { GapRiskMark, RiskBars, RiskScore, VERDICT_NAMES } from "./design/risk/RiskScore";
 import "./gaprows.css";
+import { InitiativeTags } from "./Initiatives";
 
 export type GapRow = { gap: Gap; on?: TechnicalDoc };
 
@@ -87,9 +88,19 @@ function GapLine({ state, row, risk, here }: { state: DocketState; row: GapRow; 
           <Excerpt text={gap.name} lines={1} />
         </a>
       </Tip>
-      <span className="gr-on">{onLink(state, row, here)}</span>
+      <span className="gr-on">
+        {onLink(state, row, here)}
+        <GapInitiatives state={state} gap={gap} />
+      </span>
     </li>
   );
+}
+
+/* The initiatives a product gap's capability is part of. A technical gap shows on too many capabilities to say. */
+export function GapInitiatives({ state, gap }: { state: DocketState; gap: Gap }) {
+  const { type, id } = subjectOf(gap);
+  const capability = type === "capability" ? find(state.capabilities, id) : undefined;
+  return capability ? <InitiativeTags state={state} ids={capability.initiatives} block /> : null;
 }
 
 /* What a gap is on, as a link, unless it's the page it's shown on. */

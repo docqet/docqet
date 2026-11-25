@@ -25,6 +25,7 @@ import {
   type Feature,
 } from "../state";
 import { DocLink, GapsCell, LevelMark, PersonaFaces, ExposureStat } from "./indexParts";
+import { InitiativeTags, initiativesOf } from "../Initiatives";
 
 type Group = "domain" | "stability" | "exposure";
 const GROUPS: Group[] = ["domain", "stability", "exposure"];
@@ -139,6 +140,7 @@ function CapabilityRow({ state, capability, domain, where }: { state: DocketStat
     <li className="ix-cap">
       <span className="ix-cap-name">
         <DocLink kind="capability" id={capability.id} name={capability.name} />
+        <InitiativeTags state={state} ids={capability.initiatives} />
         {where ? <span className="ix-where">{where}</span> : null}
       </span>
       <span className="ix-cap-level">
@@ -250,6 +252,7 @@ function FeatureBranch({ state, feature, domain }: { state: DocketState; feature
       head={
         <>
           <DocLink kind="feature" id={feature.id} name={feature.name} />
+          <InitiativeTags state={state} ids={initiativesOf(state, capabilities)} />
           {elsewhere.length ? (
             <span className="ix-meta">
               {"Also in "}

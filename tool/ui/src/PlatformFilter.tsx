@@ -7,7 +7,6 @@ import RadioButtonUncheckedRoundedIcon from "@mui/icons-material/RadioButtonUnch
 import UnfoldMoreRoundedIcon from "@mui/icons-material/UnfoldMoreRounded";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import { RingGlyph } from "./design/maturity/RingGlyph";
 import type { Platform, Project } from "./state";
 
 /* A project's mark, wherever one is named. */
@@ -15,8 +14,8 @@ export function ProjectIcon({ size = 14 }: { size?: number }) {
   return <FolderOutlinedIcon sx={{ fontSize: size, flex: "none", color: "text.secondary" }} />;
 }
 
-/* A platform to choose in the header, with the maturity of all its projects together. */
-export type PlatformChoice = Platform & { maturity: number | null };
+/* A platform to choose in the header. */
+export type PlatformChoice = Platform;
 
 const indexed = (p: Project) =>
   new Date(p.indexedAt).toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short" });
@@ -38,7 +37,7 @@ const count = (n: number) => `${n} project${n === 1 ? "" : "s"}`;
  * the project's name and the commit it was indexed at. Otherwise it names the
  * platform and which of its projects are showing, and opens a list: every
  * platform to switch to, when there's more than one, then the platform's
- * projects to tick, each with its commit and maturity. Switching platform
+ * projects to tick, each with its commit. Switching platform
  * shows all its projects and keeps the list open, so some can be unticked
  * straight away. At least one project stays ticked.
  */
@@ -127,7 +126,6 @@ export default function PlatformFilter({
                     <span className="project-option-name">{p.name}</span>
                     <span className="faint">{count(p.projects.length)}</span>
                   </span>
-                  {p.maturity !== null ? <RingGlyph progress={p.maturity} size={18} /> : null}
                 </MenuItem>
               );
             })
@@ -160,7 +158,6 @@ export default function PlatformFilter({
                 <span className="project-option-name">{p.name}</span>
                 <Indexed project={p} />
               </span>
-              {p.maturity !== null ? <RingGlyph progress={p.maturity} size={18} /> : null}
             </MenuItem>
           );
         })}

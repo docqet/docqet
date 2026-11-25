@@ -9,6 +9,7 @@ import WidgetsOutlinedIcon from "@mui/icons-material/WidgetsOutlined";
 import { ConceptIcon } from "../Concepts";
 import { DomainIcon } from "../FeatureMap";
 import { PersonaAvatar, PersonaIcon } from "../Personas";
+import { InitiativeIcon } from "../ScopeFilter";
 import { GapIcon, LEFT_KINDS, LeftMark, type LeftKind } from "../design/left/LeftMark";
 import { Tip } from "../design/Tip";
 import { docHref, type DocKind } from "../routes";
@@ -37,6 +38,8 @@ export function KindIcon({ kind, size = 15 }: { kind: DocKind; size?: number }) 
       return <ConceptIcon size={size} />;
     case "persona":
       return <PersonaIcon size={size} />;
+    case "initiative":
+      return <InitiativeIcon size={size} />;
     case "rule":
       return <RuleRoundedIcon sx={{ fontSize: size, flex: "none", color: "text.secondary" }} />;
     case "mechanism":

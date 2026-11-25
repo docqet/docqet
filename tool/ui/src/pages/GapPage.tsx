@@ -24,6 +24,7 @@ import {
 } from "../state";
 import { EvidenceList, Missing } from "./RulePage";
 import "./doc.css";
+import { InitiativeTags, initiativesOf } from "../Initiatives";
 
 /*
  * One gap's page. Its name comes first, as the heading, with what it's in
@@ -55,6 +56,7 @@ function GapView({ state, gap }: { state: DocketState; gap: Gap }) {
           <LeftLabel kind={kind}>{LEFT_KINDS[kind].one}</LeftLabel>
           <span className="dp-faint">in</span>
           <Subject state={state} gap={gap} />
+          <InitiativeTags state={state} ids={initiativesOf(state, risk.on.map((o) => o.capability))} />
         </div>
         <h1 className="dp-gap-title">{gap.name}</h1>
         <Clamped text={gap.description} />
