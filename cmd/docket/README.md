@@ -1,7 +1,11 @@
 # The `docket` command
 
-_A draft of what we'll build. None of it exists yet, and every command here
-may change or be dropped._
+_A draft of what we'll build. Every command here may change or be dropped.
+Each is scaffolded in [`internal/commands`](../../internal/commands/) with the
+flags drafted here, and the global `--json` and `-C`, but answers that it isn't
+built yet and exits 2. So far only [`serve`](#docket-serve) and
+[`ui`](#docket-ui) do anything, and `ui` shows a project's
+`.docket/state.json` as written, without re-indexing._
 
 One command for everything Docket does with a repository: setting it up,
 indexing and checking its docs, answering questions about it, following how
@@ -91,6 +95,12 @@ decide which, each with its own flag, and every read takes both.
 | --- | --- |
 | _(none)_ | This project alone |
 | `--product` | This project, combined with every other project in its product, as the server last applied them |
+| `--product=<id>` | The same, naming the product. Outside a repository it's how to say which; inside one it must be the product `docket.yaml` names |
+| `--project=<id>` | Outside a repository, one project as the server has it |
+
+`--product` means the whole product wherever it's used. Its ID is only ever
+given after `=`, as git's `--color[=when]` is, since without one it's a switch:
+`--product hotel` would read `hotel` as an argument, and says so.
 
 So the same command answers different questions:
 
@@ -105,8 +115,8 @@ docket list gaps --remote --product    # the whole product as the server has it:
 - **Inside a repository, the working tree is the default**, since it's what
   engineers and agents want nearly every time.
 - **Outside one, the server is the only source**, so `--remote` is implied,
-  and `--product <id>` or `--project <id>` says which. Someone with no clone
-  can still ask: `docket list gaps --product hotel`.
+  and `--product=<id>` or `--project=<id>` says which. Someone with no clone
+  can still ask: `docket list gaps --product=hotel`.
 - **Nothing is selected and remembered.** No `docket use server`, no current
   context. What a command reads is in the command, so an agent checking its
   own change can never be shown the server's state by something run earlier,
@@ -777,8 +787,8 @@ directly. Outside a repository, `--remote` is implied.
 ```sh
 export DOCKET_SERVER=https://docket.example.com
 docket login
-docket status --product hotel --for persona:front-desk-clerk
-docket list decisions --product hotel --initiative mvp
+docket status --product=hotel --for persona:front-desk-clerk
+docket list decisions --product=hotel --initiative mvp
 ```
 
 ## Conventions

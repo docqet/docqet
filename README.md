@@ -403,7 +403,7 @@ always be rebuilt from the repository.
 | Part                  | Today                                                                                                                                                                 |
 | --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Spec                  | A draft for review, with example projects laid out as repositories in [`examples/`](examples/). See [`spec/`](spec/).                                                |
-| `docket`              | Not built. Its commands are drafted in [`cmd/docket/`](cmd/docket/). The examples' `state.json` files are written by hand to show what indexing would produce.        |
+| `docket`              | Scaffolded: every command drafted in [`cmd/docket/`](cmd/docket/) exists with its flags, but only `serve` and `ui` do anything yet. The examples' `state.json` files are written by hand to show what indexing would produce. |
 | UI                    | An early UI in TypeScript that reads `state.json` files directly and works out maturity, readiness and risk itself, until `docket` serves them. See [`ui/`](ui/).     |
 | Agent development kit | A first draft for any agent: an `AGENTS.md` block and a `docket` skill, written for `docket` as drafted, so it can't be installed or used until `docket` is built. See [`kit/`](kit/). |
 
@@ -442,6 +442,22 @@ make run        # or run it on this machine, on localhost:8080
 make ui         # the UI's dev server, over examples/
 make help       # everything else
 ```
+
+`docket ui` shows the built UI over one project's `.docket/state.json`, on
+http://127.0.0.1:4100:
+
+```sh
+make ui-build
+go run ./cmd/docket -C examples/hotel-bookings ui
+```
+
+`docket serve` reads these, each also a flag:
+
+| Variable     | Flag           | Default | What it does                                     |
+| ------------ | -------------- | ------- | ------------------------------------------------ |
+| `PORT`       | `--port`       | `8080`  | The port it listens on                           |
+| `LOG_LEVEL`  | `--log-level`  | `info`  | The lowest level logged: debug, info, warn, error |
+| `LOG_FORMAT` | `--log-format` | `json`  | `json` for log pipelines, `text` for reading     |
 
 `go build` embeds the UI from `ui/dist`, so run `make ui-build` first to
 serve the real UI. Docker always builds it.
