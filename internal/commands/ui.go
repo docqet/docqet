@@ -10,7 +10,6 @@ import (
 
 	"github.com/exalynt/docket/internal/logs"
 	"github.com/exalynt/docket/internal/project"
-	"github.com/exalynt/docket/internal/server"
 )
 
 // uiAddr is where `docket ui` listens. It's loopback only, and can't be
@@ -51,11 +50,11 @@ func UICommand() *cli.Command {
 			logger := logs.New(os.Stderr, "info", "text")
 			logger.InfoContext(ctx, "showing the project's state as it is, without re-indexing", "state", state, "url", "http://"+uiAddr)
 
-			handler, err := server.Handler([]string{state})
+			handler, err := router([]string{state})
 			if err != nil {
 				return err
 			}
-			return server.Serve(ctx, logger, uiAddr, handler)
+			return run(ctx, logger, uiAddr, handler)
 		},
 	}
 }
