@@ -40,7 +40,7 @@ export function DomainIcon({ size = 14 }: { size?: number }) {
 
 /* A card's width, and the room between cards, as tidy lays them out. A persona's card is narrower. */
 const SLOT = 320;
-const PERSONA_SLOT = 240;
+const PERSONA_SLOT = 280;
 const GAP = 28;
 
 /* A row's risk ring: as tall as the row's line, so switching between the map's views doesn't change its height. */

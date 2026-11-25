@@ -33,7 +33,7 @@ export function personaNameAndRole(persona: Persona): { name: string; role: stri
   return { name: persona.name, role: under || null };
 }
 
-/* A persona on the map: their picture, name and role, and how ready the software is for them. Clicking it opens the rest in the side panel. */
+/* A persona on the map: their picture, name and role, and at its right how ready the software is for them, as a feature card has its maturity at its right. Clicking it opens the rest in the side panel. */
 export function PersonaCard({ state, persona }: { state: DocketState; persona: Persona }) {
   const { name, role } = personaNameAndRole(persona);
   const readiness = personaReadiness(state, persona);
@@ -55,17 +55,13 @@ export function PersonaCard({ state, persona }: { state: DocketState; persona: P
     >
       <Grip />
       <PersonaAvatar persona={persona} size={40} />
-      <Box sx={{ minWidth: 0 }}>
+      <Box sx={{ flex: 1, minWidth: 0 }}>
         <Box component="h3" sx={{ m: 0, typography: "subtitle1", fontWeight: 700, lineHeight: 1.3 }}>
           {name}
         </Box>
         {role ? <Box sx={{ typography: "body2", color: "text.secondary", lineHeight: 1.35 }}>{role}</Box> : null}
-        {startedOf(readiness) ? (
-          <Box sx={{ mt: 0.5 }}>
-            <ReadinessMark readiness={readiness} of={`Readiness for ${name}`} inButton bare />
-          </Box>
-        ) : null}
       </Box>
+      {startedOf(readiness) ? <ReadinessMark readiness={readiness} of={`Readiness for ${name}`} inButton bare size={24} /> : null}
     </Card>
   );
 }

@@ -2018,9 +2018,9 @@ kbd {
   margin-top: 0;
 }
 
-/* A persona's card on the map: their picture, name and role, and their readiness. */
+/* A persona's card on the map: their picture, name and role, and their readiness at the right. As PERSONA_SLOT in FeatureMap.tsx. */
 .slot.persona-slot {
-  width: 240px;
+  width: 280px;
 }
 
 /* A persona's role, under their name in the side panel. */
