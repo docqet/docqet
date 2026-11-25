@@ -432,3 +432,16 @@ Things we haven't decided, to settle as the prototype answers them:
 | [`cmd/docket/`](cmd/docket/) | `docket`, the Go program that's the CLI and the server, with the draft of its commands                           |
 | `internal/`                  | `docket`'s code                                                                                                  |
 | [`ui/`](ui/)                 | The UI `docket` serves, built into the binary                                                                    |
+
+## Developing
+
+```sh
+cp compose.override.example.yml compose.override.yml   # publishes the server on localhost:8090
+make build      # build and start the server in Docker
+make run        # or run it on this machine, on localhost:8080
+make ui         # the UI's dev server, over examples/
+make help       # everything else
+```
+
+`go build` embeds the UI from `ui/dist`, so run `make ui-build` first to
+serve the real UI. Docker always builds it.

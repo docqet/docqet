@@ -1,0 +1,20 @@
+# Version control and CI config: not needed to build or run the image.
+.git/
+.github/
+
+# Local compose overrides.
+compose.override.yml
+
+# Build and coverage output.
+/bin/
+/docket
+coverage.*
+
+# The UI's dependencies and build, which the image installs and builds itself.
+ui/node_modules/
+ui/dist/
+
+# Docs and examples: not part of the image.
+docs/
+examples/
+spec/

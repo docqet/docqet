@@ -1,0 +1,18 @@
+# Test binaries, built with `go test -c`, and coverage profiles.
+*.test
+*.out
+coverage.*
+
+# Go workspace files.
+go.work
+go.work.sum
+
+# env file
+.env
+
+# Local compose override
+compose.override.yml
+
+# Build output
+/bin/
+/docket

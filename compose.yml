@@ -1,0 +1,33 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runner
+    command: ["docket", "serve"]
+    environment:
+      PORT: "8080"
+    # The server's SQLite database lives on the docket-data volume, so it
+    # survives restarts; `docker compose down -v` wipes it.
+    volumes:
+      - docket-data:/var/lib/docket
+    # Lets the app reach services published on the host as
+    # host.docker.internal, on Linux too.
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    expose:
+      - "8080"
+    healthcheck:
+      # 127.0.0.1, not localhost: localhost can resolve to ::1 first and an
+      # IPv4-only listener then fails the probe.
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1:8080/readyz"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      # Probed every 2s while starting, so `docker compose up --wait` doesn't
+      # sit out the first 30s interval.
+      start_period: 30s
+      start_interval: 2s
+
+volumes:
+  docket-data:

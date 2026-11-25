@@ -1,0 +1,10 @@
+# Copy to compose.override.yml for local development.
+#
+# Publishes the server's port 8080 on host port 8090, so you can open the UI
+# and curl the server directly. 8090 rather than 8080 so it runs beside the
+# api's local stack (8080 and 8081) and flags (8070). Change the left-hand
+# number to use a different host port.
+services:
+  app:
+    ports:
+      - "8090:8080"
