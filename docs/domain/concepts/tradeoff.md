@@ -51,7 +51,7 @@ Tradeoffs are listed in the frontmatter of the doc they're on, each with an
 `id`, a `name` saying in a few words what we chose, a `description` saying
 what we chose and not what, its `benefit`, and its
 `drawback`. Optionally, its `affects` lists the checklist outcomes it falls
-short of. On the [ledger](../../../spec/examples/hotel-billing/docket/components/ledger.md):
+short of. On the [ledger](../../../examples/hotel-billing/docket/components/ledger.md):
 
 ```yaml
 tradeoffs:
@@ -78,7 +78,7 @@ export function balance(bill: Bill): number {
 ```
 
 A feature's tradeoff is written the same way, on
-[Reservations](../../../spec/examples/hotel-bookings/docket/domains/guest-stays/features/reservations.md):
+[Reservations](../../../examples/hotel-bookings/docket/domains/guest-stays/features/reservations.md):
 
 ```yaml
 tradeoffs:

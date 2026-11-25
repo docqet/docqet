@@ -66,7 +66,7 @@ component in the first place.
 An open decision is an item in the `decisions` frontmatter field of the doc
 it's on, with its `question` and, optionally, a `topic` of a few words and
 what it `affects`. On the
-[Guest stays domain](../../../spec/examples/hotel-bookings/docket/domains/guest-stays/domain.md):
+[Guest stays domain](../../../examples/hotel-bookings/docket/domains/guest-stays/domain.md):
 
 ```yaml
 decisions:
@@ -76,7 +76,7 @@ decisions:
       their stay start that day, or is the night before part of it?
 ```
 
-On the [waitlist](../../../spec/examples/hotel-bookings/docket/domains/guest-stays/capabilities/waitlist.md),
+On the [waitlist](../../../examples/hotel-bookings/docket/domains/guest-stays/capabilities/waitlist.md),
 a draft capability:
 
 ```yaml
@@ -85,7 +85,7 @@ decisions:
     question: Whoever asked first, or whoever's stay fits the free nights best?
 ```
 
-On [deployment](../../../spec/examples/hotel-bookings/docket/mechanisms/deployment.md),
+On [deployment](../../../examples/hotel-bookings/docket/mechanisms/deployment.md),
 a question that a gap waits on, and that leaves an outcome open:
 
 ```yaml

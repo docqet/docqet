@@ -58,7 +58,7 @@ docket/domains/guest-stays/
 └── concepts/booking.md
 ```
 
-Its [`domain.md`](../../../spec/examples/hotel-bookings/docket/domains/guest-stays/domain.md)
+Its [`domain.md`](../../../examples/hotel-bookings/docket/domains/guest-stays/domain.md)
 gives its name, description and open decisions in frontmatter, and anything more
 worth saying about it in its body:
 

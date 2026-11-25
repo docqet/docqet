@@ -35,7 +35,7 @@ Whether some work is a feature, a capability or neither is set out in the
 
 A feature is a doc whose `docket` is `feature`, with its `domain`. It lists its
 capabilities, in the order to show them, and its tradeoffs.
-[`reservations.md`](../../../spec/examples/hotel-bookings/docket/domains/guest-stays/features/reservations.md):
+[`reservations.md`](../../../examples/hotel-bookings/docket/domains/guest-stays/features/reservations.md):
 
 ```markdown
 ---

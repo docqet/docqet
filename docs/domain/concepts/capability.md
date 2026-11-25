@@ -93,7 +93,7 @@ built. Questions building
 it should answer are open decisions. Its body is for anything more about what
 it does, such as what else it includes or how we'll know it works, and can be
 left out.
-[`room-booking.md`](../../../spec/examples/hotel-bookings/docket/domains/guest-stays/capabilities/room-booking.md):
+[`room-booking.md`](../../../examples/hotel-bookings/docket/domains/guest-stays/capabilities/room-booking.md):
 
 ```markdown
 ---
@@ -142,7 +142,7 @@ tradeoffs:
 ```
 
 A draft is written the same way, with `stability: draft`.
-[`waitlist.md`](../../../spec/examples/hotel-bookings/docket/domains/guest-stays/capabilities/waitlist.md)
+[`waitlist.md`](../../../examples/hotel-bookings/docket/domains/guest-stays/capabilities/waitlist.md)
 has its people, its initiative, rules and an open decision before any code
 exists:
 

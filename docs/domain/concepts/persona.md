@@ -37,7 +37,7 @@ it's part of are frontmatter.
 Without a picture, readers show their initials. Its body is for anything more
 about who they are, such as what they need, what they know, their context, the
 words and tools they expect, and what they care about, and can be left out.
-[`front-desk-clerk.md`](../../../spec/examples/hotel-bookings/docket/personas/front-desk-clerk.md),
+[`front-desk-clerk.md`](../../../examples/hotel-bookings/docket/personas/front-desk-clerk.md),
 shortened:
 
 ```markdown

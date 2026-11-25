@@ -23,7 +23,7 @@ Guest stays from Hotel Bookings and a part in Billing from Hotel Billing.
 - **A project without one is its own.** A project whose `docket.yaml` names
   no product is a product of one project, named after it.
 - **It isn't a repository either.** Its projects can be in one repository or
-  many: [Exalynt](../../../spec/examples/exalynt/)'s API and UI are two
+  many: [Exalynt](../../../examples/exalynt/)'s API and UI are two
   projects in one repository, and Hotel's are in two.
 - **It's declared by its projects, not on its own.** There's no product file:
   the product is every project that names its ID. Adding a project to a
@@ -37,7 +37,7 @@ Guest stays from Hotel Bookings and a part in Billing from Hotel Billing.
 
 ## In the spec
 
-[`docket.yaml`](../../../spec/examples/hotel-bookings/docket.yaml) names the
+[`docket.yaml`](../../../examples/hotel-bookings/docket.yaml) names the
 product beside the project:
 
 ```yaml

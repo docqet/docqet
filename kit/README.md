@@ -6,7 +6,7 @@ to keep the docs and annotations current in the same change, and to leave
 decisions about intention with people, asking when it matters and recording an
 open decision when it doesn't.
 
-It needs the [`docket` command](../tool/cli/). Agents use it for everything
+It needs the [`docket` command](../cmd/docket/). Agents use it for everything
 the skill asks of them: `docket touches` before a change, to see what it's
 about and what its level allows, `docket show` and `docket list` to read docs,
 `docket rename` to change an ID, `docket check --changed` before finishing,

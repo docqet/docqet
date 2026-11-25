@@ -229,7 +229,7 @@ schema change has 76 waiting on it.
 ## In the spec
 
 Each gap's `impact`, `likelihood` and `reach` are in its doc. Hotel
-Bookings' [deployment](../../../spec/examples/hotel-bookings/docket/mechanisms/deployment.md)
+Bookings' [deployment](../../../examples/hotel-bookings/docket/mechanisms/deployment.md)
 has migrations with no down step, so undoing a release that changed the
 schema means restoring last night's database. That's `damaging`, `possible`,
 since a release like that seldom needs undoing, and it reaches everyone. It
@@ -251,7 +251,7 @@ Its risk is 76, unacceptable, and its spread
 is Alpha, the lowest across the domains that build it, so its risk there is
 48, tolerable.
 
-The [ledger](../../../spec/examples/hotel-billing/docket/components/ledger.md)'s
+The [ledger](../../../examples/hotel-billing/docket/components/ledger.md)'s
 untested corrections of corrections are `damaging` too, but only a
 twice-corrected charge is at stake, so they reach `few`, and they're
 `expected`, since someone is likely to change how corrections work: 4 × ¾ ×

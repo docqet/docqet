@@ -53,7 +53,7 @@ its root, with a folder per type and per domain:
 Every doc is shaped the same way: YAML frontmatter with its `docket`, `id`,
 `domain` if it's in one, `name`, `description` and its type's other fields,
 then an optional body.
-[`cancellations.md`](../../../spec/examples/hotel-bookings/docket/domains/guest-stays/capabilities/cancellations.md),
+[`cancellations.md`](../../../examples/hotel-bookings/docket/domains/guest-stays/capabilities/cancellations.md),
 shortened, has no body at all:
 
 ```markdown

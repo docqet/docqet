@@ -54,11 +54,11 @@ it("rejects a stay that ends the day it starts", () => {
 | `tradeoff` | This is deliberate, though it may look wrong, so nobody "fixes" it | A tradeoff's ID |
 
 `verifies` and `implements` give evidence. Docket doesn't care what a place
-is, whether [a unit test](../examples/hotel-bookings/src/booking/stay.test.ts),
-[a Gherkin `Rule:`](../examples/hotel-bookings/features/booking.feature),
-[a function](../examples/hotel-bookings/src/booking/availability.ts),
-[a database constraint](../examples/hotel-bookings/db/migrations/001_bookings.sql)
-or [a deploy job](../examples/hotel-bookings/.github/workflows/deploy.yml), or
+is, whether [a unit test](../../examples/hotel-bookings/src/booking/stay.test.ts),
+[a Gherkin `Rule:`](../../examples/hotel-bookings/features/booking.feature),
+[a function](../../examples/hotel-bookings/src/booking/availability.ts),
+[a database constraint](../../examples/hotel-bookings/db/migrations/001_bookings.sql)
+or [a deploy job](../../examples/hotel-bookings/.github/workflows/deploy.yml), or
 what language it's in.
 
 `gap` and `tradeoff` show where something declared on a doc can be seen in the
@@ -79,7 +79,7 @@ something else, only that part is annotated.
 **A mechanism's or component's `implements` places are where it is in the
 code.** Its doc lists no paths. Annotate its entry points, where someone
 changing it should start reading, and whatever else is part of it, such as
-[`assertRoomFree`](../examples/hotel-bookings/src/booking/availability.ts) and
+[`assertRoomFree`](../../examples/hotel-bookings/src/booking/availability.ts) and
 `saveBooking` for bookings, or a migration or a workflow.
 
 ## What the indexer records

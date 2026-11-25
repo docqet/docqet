@@ -69,7 +69,7 @@ level and own ID. The level is part of it, so if the checklist moves an
 outcome to another level, every doc naming it shows a problem until someone
 looks at it again, since what it claims has changed. A mechanism that meets it lists
 it, as Hotel Bookings'
-[deployment](../../../spec/examples/hotel-bookings/docket/mechanisms/deployment.md)
+[deployment](../../../examples/hotel-bookings/docket/mechanisms/deployment.md)
 does:
 
 ```yaml

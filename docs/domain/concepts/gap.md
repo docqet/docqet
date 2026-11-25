@@ -76,7 +76,7 @@ Gaps are listed in the frontmatter of the doc they're on, each with an `id`
 unique in that doc, a `name` saying in a few words what falls short, a
 `description` of a sentence or two, and optionally the outcomes and rules it
 `affects`, its `impact`, its `likelihood`, `certain` when left out, and
-its `reach`, `all` when left out. On [city tax](../../../spec/examples/hotel-billing/docket/domains/billing/capabilities/city-tax.md):
+its `reach`, `all` when left out. On [city tax](../../../examples/hotel-billing/docket/domains/billing/capabilities/city-tax.md):
 
 ```yaml
 gaps:
@@ -90,7 +90,7 @@ gaps:
       stay, and clerks correct it by hand for children.
 ```
 
-A technical gap on the [ledger](../../../spec/examples/hotel-billing/docket/components/ledger.md)
+A technical gap on the [ledger](../../../examples/hotel-billing/docket/components/ledger.md)
 affects an outcome. It's `expected`, since someone is likely to change how
 corrections work within a year, and reaches `few`, since only a
 twice-corrected charge is at stake:

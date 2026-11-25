@@ -42,7 +42,7 @@ code points at it, and what it applies to is worked out, by the indexer for a
 project, and when projects are combined for a product, since no one
 repository can see the others. Its body is how it works, in whatever shape explains it best, with no
 heading.
-[`deployment.md`](../../../spec/examples/hotel-bookings/docket/mechanisms/deployment.md),
+[`deployment.md`](../../../examples/hotel-bookings/docket/mechanisms/deployment.md),
 shortened:
 
 ```markdown

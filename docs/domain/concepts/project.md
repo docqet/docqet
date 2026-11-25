@@ -50,7 +50,7 @@ repositories, or two folders in one.
 
 ## In the spec
 
-[`docket.yaml`](../../../spec/examples/hotel-bookings/docket.yaml) makes its
+[`docket.yaml`](../../../examples/hotel-bookings/docket.yaml) makes its
 folder a project, here the repository's root:
 
 ```yaml

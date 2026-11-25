@@ -27,7 +27,7 @@ A component is a doc whose `docket` is `component`, shaped as a mechanism's
 is, with `capabilities` listing those that rely on it, and how it works as its body. Like a
 mechanism, it names no code: its entry points say
 `docket:implements component:bookings`.
-[`bookings.md`](../../../spec/examples/hotel-bookings/docket/components/bookings.md):
+[`bookings.md`](../../../examples/hotel-bookings/docket/components/bookings.md):
 
 ```markdown
 ---

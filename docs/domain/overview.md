@@ -7,7 +7,7 @@ intend, and the other one is wrong.
 Each concept has a doc of its own in [`concepts/`](concepts/), with an example
 of how it's written down. The [spec](../../spec/README.md) has the whole
 format: file layout, frontmatter, IDs and the `state.json` schema. Examples
-come from the spec's [examples](../../spec/examples/): a hotel's booking app
+come from the spec's [examples](../../examples/): a hotel's booking app
 and its billing service.
 
 ## The big picture

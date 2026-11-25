@@ -6,11 +6,11 @@ import { defineConfig, type Connect, type Plugin } from "vite";
 /*
  * The UI reads `projects.json` from beside its own page, and each project's
  * `state.json` from where that lists. While developing, both are served from
- * here: every one of the spec's examples, or the state.json files
+ * here: every project in examples/, or the state.json files
  * DOCKET_STATE names, separated as in PATH. They're read on every request, so
  * re-indexing shows on reload.
  */
-const examples = resolve(import.meta.dirname, "../../spec/examples");
+const examples = resolve(import.meta.dirname, "../examples");
 
 function statePaths(): string[] {
   if (process.env.DOCKET_STATE) {

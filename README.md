@@ -354,7 +354,7 @@ the server, and what serves the UI.
   changed over time, and send states and test and QA results to the server.
   It works on any repository host and in any CI. Every read can come from the
   working tree, a commit or the server, for one project or the whole
-  product. Its commands are drafted in [`tool/cli/`](tool/cli/).
+  product. Its commands are drafted in [`cmd/docket/`](cmd/docket/).
 - **As the server**, with `docket serve`, it's the central place where
   projects come together. It:
   - **Holds each project's applied state** at every commit on its main
@@ -364,8 +364,10 @@ the server, and what serves the UI.
     software's state, now and at any commit, instead of reading every
     repository.
   - **Serves the UI.**
-  - **Controls access**, so one client never sees another's projects. It
-    won't start without its storage and sign-in set up.
+  - **Serves one client.** Each client gets a Docket server of their own,
+    so one never holds another's projects. It keeps what it holds in SQLite.
+    It has no sign-in yet, so a server holding a client's real projects must
+    only be reachable by that client's people, such as on a private network.
 - **As a local viewer**, with `docket ui`, it serves the same UI over a
   repository's working tree, so anyone can see their branch the way the
   server will show it. It's only reachable from the machine it runs on, and
@@ -400,9 +402,9 @@ always be rebuilt from the repository.
 
 | Part                  | Today                                                                                                                                                                 |
 | --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Spec                  | A draft for review, with two example projects laid out as repositories. See [`spec/`](spec/).                                                                         |
-| `docket`              | Not built. Its commands are drafted in [`tool/cli/`](tool/cli/). The examples' `state.json` files are written by hand to show what indexing would produce.            |
-| UI                    | An early UI in TypeScript that reads `state.json` files directly and works out maturity, readiness and risk itself, until `docket` serves them. See [`tool/`](tool/). |
+| Spec                  | A draft for review, with example projects laid out as repositories in [`examples/`](examples/). See [`spec/`](spec/).                                                |
+| `docket`              | Not built. Its commands are drafted in [`cmd/docket/`](cmd/docket/). The examples' `state.json` files are written by hand to show what indexing would produce.        |
+| UI                    | An early UI in TypeScript that reads `state.json` files directly and works out maturity, readiness and risk itself, until `docket` serves them. See [`ui/`](ui/).     |
 | Agent development kit | A first draft for any agent: an `AGENTS.md` block and a `docket` skill, written for `docket` as drafted, so it can't be installed or used until `docket` is built. See [`kit/`](kit/). |
 
 ## Open questions
@@ -410,7 +412,7 @@ always be rebuilt from the repository.
 Things we haven't decided, to settle as the prototype answers them:
 
 - **What to call the spec.**
-- **How projects and clients map onto access control** on the server.
+- **How people sign in** to a server, and what each may see once they have.
 - **How unconfirmed intention is marked in the spec**, so intention an agent
   wrote from existing code isn't counted as declared until a person confirms
   it. It's not a draft capability, which a person has declared and nobody has
@@ -421,9 +423,12 @@ Things we haven't decided, to settle as the prototype answers them:
 
 ## Layout
 
-| Directory        | What's in it                                                                                                     |
-| ---------------- | ---------------------------------------------------------------------------------------------------------------- |
-| [`docs/`](docs/) | Docket's own docs, starting with [an overview of its concepts](docs/domain/overview.md)                          |
-| [`spec/`](spec/) | The format: doc types, frontmatter, IDs, code and test annotations, commit trailers, and the `state.json` schema |
-| [`kit/`](kit/)   | The agent development kit: skills and rules that keep docs and annotations current                               |
-| [`tool/`](tool/) | `docket`, the Go program that's the CLI and the server, and the UI it serves                                     |
+| Directory                    | What's in it                                                                                                     |
+| ---------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| [`docs/`](docs/)             | Docket's own docs, starting with [an overview of its concepts](docs/domain/overview.md)                          |
+| [`spec/`](spec/)             | The format: doc types, frontmatter, IDs, code and test annotations, commit trailers, and the `state.json` schema |
+| [`examples/`](examples/)     | Example projects laid out as repositories, each with the `state.json` indexing would produce                     |
+| [`kit/`](kit/)               | The agent development kit: skills and rules that keep docs and annotations current                               |
+| [`cmd/docket/`](cmd/docket/) | `docket`, the Go program that's the CLI and the server, with the draft of its commands                           |
+| `internal/`                  | `docket`'s code                                                                                                  |
+| [`ui/`](ui/)                 | The UI `docket` serves, built into the binary                                                                    |

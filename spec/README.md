@@ -12,23 +12,23 @@ This README is most of it. Two parts have their own:
   something a commit removed became, so history can follow it.
 
 **Status: draft for review.** Nothing implements it yet. Each example in
-[`examples/`](examples/) is laid out as its own repository root, with the
+[`examples/`](../examples/) is laid out as its own repository root, with the
 `state.json` an indexer would produce for each project in it:
 
-- **[`hotel-bookings`](examples/hotel-bookings/)** is a small hotel-booking app
+- **[`hotel-bookings`](../examples/hotel-bookings/)** is a small hotel-booking app
   that uses every part of the spec, code and tests included. The examples
   below come from it.
-- **[`hotel-billing`](examples/hotel-billing/)** is the same hotel's billing
+- **[`hotel-billing`](../examples/hotel-billing/)** is the same hotel's billing
   service, in a repository of its own: guest bills, payments, company accounts
   and closing the day. It's a second project to show beside the first. It works
   in the Billing and Finance domains, and contributes Billing's part of Front
   desk, a feature that's mostly Guest stays'. Both are part of the Hotel
   product.
-- **[`exalynt`](examples/exalynt/)** is a real product, Exalynt, at full
+- **[`exalynt`](../examples/exalynt/)** is a real product, Exalynt, at full
   size, translated from forge's docs: six domains, 36 capabilities and 368
   rules. It's one repository holding two projects, each in a folder with a
-  `docket.yaml` of its own: [`api/`](examples/exalynt/api/), Exalynt API, and
-  [`ui/`](examples/exalynt/ui/), Exalynt UI. The API holds the product docs
+  `docket.yaml` of its own: [`api/`](../examples/exalynt/api/), Exalynt API, and
+  [`ui/`](../examples/exalynt/ui/), Exalynt UI. The API holds the product docs
   for both, so the UI contributes technical docs only, for its four apps, and
   links them to the API's capabilities. The example carries the docs and the
   API's acceptance tests, annotated with `docket:verifies`, but not the code.
@@ -335,15 +335,15 @@ two that is the thing itself.
 
 | Type | Frontmatter, in order | Its body, if it has one | Example |
 | --- | --- | --- | --- |
-| domain | `docket`, `id`, `name`, `description`, `decisions` | Anything more about the part of the business | [guest-stays](examples/hotel-bookings/docket/domains/guest-stays/domain.md) |
-| feature | `docket`, `id`, `domain`, `name`, `description`, `capabilities` (required), `tradeoffs`, `decisions` | Anything more about the job | [reservations](examples/hotel-bookings/docket/domains/guest-stays/features/reservations.md) |
-| capability | `docket`, `id`, `domain`, `name`, `description`, `stability` (required), `personas`, `initiatives`, `rules`, `concepts`, `gaps`, `tradeoffs`, `decisions` | Anything more about what it does, such as what else it includes, or how we'll know it's working | [room-booking](examples/hotel-bookings/docket/domains/guest-stays/capabilities/room-booking.md) |
-| rule | `docket`, `id`, `domain`, `name`, `concepts`, `why` | The rule in full, where its name doesn't say it all, and examples or how it plays out | [same-day-turnover](examples/hotel-bookings/docket/domains/guest-stays/rules/booking/same-day-turnover.md) |
-| concept | `docket`, `id`, `domain`, `name`, `description`, `confused-with` | Its details: what it's made of, how it relates to other concepts, and the states it moves through | [booking](examples/hotel-bookings/docket/domains/guest-stays/concepts/booking.md) |
-| persona | `docket`, `id`, `name`, `description`, `role`, `title`, `image`, `initiatives` | Anything more about who they are, such as what they need, what they know, their context, what they expect, and what they care about | [front-desk-clerk](examples/hotel-bookings/docket/personas/front-desk-clerk.md) |
-| initiative | `docket`, `id`, `name`, `description` | Anything more about the work, such as what's in it and why | [busy-season](examples/hotel-bookings/docket/initiatives/busy-season.md) |
-| mechanism | `docket`, `id`, `name`, `description`, `applies`, `meets`, `gaps`, `tradeoffs`, `decisions` | How it works | [deployment](examples/hotel-bookings/docket/mechanisms/deployment.md) |
-| component | `docket`, `id`, `name`, `description`, `capabilities`, `meets`, `gaps`, `tradeoffs`, `decisions` | How it works | [bookings](examples/hotel-bookings/docket/components/bookings.md) |
+| domain | `docket`, `id`, `name`, `description`, `decisions` | Anything more about the part of the business | [guest-stays](../examples/hotel-bookings/docket/domains/guest-stays/domain.md) |
+| feature | `docket`, `id`, `domain`, `name`, `description`, `capabilities` (required), `tradeoffs`, `decisions` | Anything more about the job | [reservations](../examples/hotel-bookings/docket/domains/guest-stays/features/reservations.md) |
+| capability | `docket`, `id`, `domain`, `name`, `description`, `stability` (required), `personas`, `initiatives`, `rules`, `concepts`, `gaps`, `tradeoffs`, `decisions` | Anything more about what it does, such as what else it includes, or how we'll know it's working | [room-booking](../examples/hotel-bookings/docket/domains/guest-stays/capabilities/room-booking.md) |
+| rule | `docket`, `id`, `domain`, `name`, `concepts`, `why` | The rule in full, where its name doesn't say it all, and examples or how it plays out | [same-day-turnover](../examples/hotel-bookings/docket/domains/guest-stays/rules/booking/same-day-turnover.md) |
+| concept | `docket`, `id`, `domain`, `name`, `description`, `confused-with` | Its details: what it's made of, how it relates to other concepts, and the states it moves through | [booking](../examples/hotel-bookings/docket/domains/guest-stays/concepts/booking.md) |
+| persona | `docket`, `id`, `name`, `description`, `role`, `title`, `image`, `initiatives` | Anything more about who they are, such as what they need, what they know, their context, what they expect, and what they care about | [front-desk-clerk](../examples/hotel-bookings/docket/personas/front-desk-clerk.md) |
+| initiative | `docket`, `id`, `name`, `description` | Anything more about the work, such as what's in it and why | [busy-season](../examples/hotel-bookings/docket/initiatives/busy-season.md) |
+| mechanism | `docket`, `id`, `name`, `description`, `applies`, `meets`, `gaps`, `tradeoffs`, `decisions` | How it works | [deployment](../examples/hotel-bookings/docket/mechanisms/deployment.md) |
+| component | `docket`, `id`, `name`, `description`, `capabilities`, `meets`, `gaps`, `tradeoffs`, `decisions` | How it works | [bookings](../examples/hotel-bookings/docket/components/bookings.md) |
 
 The body column is a suggestion of what's worth writing, not a structure.
 
@@ -549,12 +549,12 @@ initiatives: [initiative:busy-season]
 A mechanism or component says how part of the software is built, in the code's
 words, for the engineer or agent about to change it. A **mechanism** is how
 something works across the whole project, such as Hotel Bookings'
-[deployment](examples/hotel-bookings/docket/mechanisms/deployment.md)
+[deployment](../examples/hotel-bookings/docket/mechanisms/deployment.md)
 or Exalynt's authentication. It says how something works, not a convention
 or standard to follow. A **component** is one area of the code, named as the
 code names it, such as Hotel Bookings'
-[bookings](examples/hotel-bookings/docket/components/bookings.md) or
-Hotel Billing's [ledger](examples/hotel-billing/docket/components/ledger.md),
+[bookings](../examples/hotel-bookings/docket/components/bookings.md) or
+Hotel Billing's [ledger](../examples/hotel-billing/docket/components/ledger.md),
 however many capabilities rely on it.
 
 ```markdown
@@ -605,7 +605,7 @@ new image starts, from `db/migrations/`, in filename order.
   what every project in the product serves, worked out the same way. It's
   for something one project runs for all of them, such as authentication
   in an API gateway that every service sits behind. Exalynt's
-  [authentication](examples/exalynt/api/docket/mechanisms/authentication.md)
+  [authentication](../examples/exalynt/api/docket/mechanisms/authentication.md)
   applies to its product, since every app's requests go through it.
 - **Only what the code can't say.** Leave out what a competent reader learns
   from the code in a few minutes, such as lists of endpoints, tables or
@@ -875,8 +875,8 @@ level says how stable the work is right now, so people know what they can rely
 on before they rely on it.
 
 A capability declared but not started is a **draft**, `stability: draft`, such
-as the [waitlist](examples/hotel-bookings/docket/domains/guest-stays/capabilities/waitlist.md)
-or [refunds](examples/hotel-billing/docket/domains/billing/capabilities/refunds.md).
+as the [waitlist](../examples/hotel-bookings/docket/domains/guest-stays/capabilities/waitlist.md)
+or [refunds](../examples/hotel-billing/docket/domains/billing/capabilities/refunds.md).
 It isn't a level: it claims nothing, on the checklist or anywhere else, and
 counts toward no maturity or readiness. Readers show it as the word Draft,
 with no level's mark.
@@ -1351,7 +1351,7 @@ Docket-Became: capability:early-arrival -> capability:early-check-in
 
 ## Config
 
-[`docket.yaml`](examples/hotel-bookings/docket.yaml) marks the folder it's in
+[`docket.yaml`](../examples/hotel-bookings/docket.yaml) marks the folder it's in
 as a Docket **project**: a source of state, where software is defined, and
 usually implemented. The project is that folder and everything in it, except
 folders with a `docket.yaml` of their own, which are projects of their own.
@@ -1507,7 +1507,7 @@ different things in each:
 
 ## Index output
 
-`docket index` writes `.docket/state.json` ([example](examples/hotel-bookings/.docket/state.json)).
+`docket index` writes `.docket/state.json` ([example](../examples/hotel-bookings/.docket/state.json)).
 It holds everything the UI needs, so the UI never reads the repository itself,
 and showing several projects together means reading each one's state.json.
 

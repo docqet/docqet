@@ -550,8 +550,13 @@ Where the server is goes in `docket.yaml`, since it's not a secret:
 server: https://docket.example.com
 ```
 
-Outside a repository, `DOCKET_SERVER` says where it is. There are two kinds
-of credentials, and neither is ever written into the repository:
+Outside a repository, `DOCKET_SERVER` says where it is.
+
+**The first server has no sign-in.** Each client gets a server of their own,
+reachable only by that client's people, such as on a private network, so
+neither credential below exists yet. They're drafted for when sign-in comes.
+There are two kinds of credentials, and neither is ever written into the
+repository:
 
 - **A project token** lets CI apply state and send results for one project,
   and nothing else. It's made on the server and kept in the CI's secrets as
@@ -669,8 +674,12 @@ people allowed to see each project.
 docket serve --config /etc/docket/server.yaml
 ```
 
-- **It won't start without its storage and sign-in set up**, so a server is
-  never running open by mistake.
+- **It keeps what it holds in SQLite**, in one file, so it runs with nothing
+  else beside it. A deployment that needs more can bring Postgres when it
+  does.
+- **It serves one client.** Each client gets a server of their own, so one
+  never holds another's projects. It has no sign-in yet, so it must only be
+  reachable by that client's people, such as on a private network.
 - **It's what the image runs** unless told to run another command. The same
   image runs any other command too, such as `docker run <image> apply` in a
   CI that works in containers.
@@ -816,12 +825,12 @@ docket list decisions --product hotel --initiative mvp
   edit a persona or a gap on the server, and won't be: intention changes in
   the repository.
 - **Watching for changes**, an editor plugin, or a language server.
+- **Signing in**, project tokens and `docket login`, for now. A server serves
+  one client and is kept off the open internet instead (see
+  [Signing in](#signing-in)).
 
 ## Open questions
 
-- **Where the server keeps what it holds.** SQLite would let `docket serve`
-  run with nothing else beside it. A deployment that needs more can bring
-  Postgres when it does.
 - **Decisions need keys** before `rename`, a trailer or `log` can name one.
   It's a spec change, an open decision in the
   [spec's trailers](../../spec/trailers/#open-decisions).

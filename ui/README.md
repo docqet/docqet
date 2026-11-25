@@ -1,32 +1,24 @@
-# Tool
+# UI
 
-`docket` and the UI it serves.
+How Docket shows things. Once [`docket`](../cmd/docket/) exists, the UI gets
+everything from `docket`'s API and works nothing out itself, and is built into
+the binary. Until then, it reads `state.json` files directly and works out
+maturity, readiness and risk itself, as described below. It answers, at a
+glance: what the software can do, who it serves and how far along it is for
+each of them, how stable each capability is, the rules each follows, and what
+the gaps are. A rule shows the code and tests that point at it.
 
-- **[`docket`](cli/)** is one Go program, shipped as a binary and as a
-  container image. As a CLI it indexes and checks a project's docs,
-  answers questions about them, follows how they change across commits, and
-  sends state and test results to a Docket server. With `docket serve` it is
-  that server, and with `docket ui` it shows the UI over a working tree. It
-  works out everything Docket derives. Not built yet: its README is a draft of
-  what we'll build.
-- **[The UI](ui/)** is how Docket shows things. Once `docket` exists, it gets
-  everything from `docket`'s API and works nothing out itself. Until then, it
-  reads `state.json` files directly and works out maturity, readiness and risk
-  itself, as described below. It answers, at a glance: what the
-  software can do, who it serves and how far along it is for each of them, how
-  stable each capability is, the rules each follows, and what the gaps
-  are. A rule shows the code and tests that point at it.
-
-The UI shows several projects together, each from its own `state.json`. Before
-a view shows projects belonging to different clients, it needs access control,
-so one client never sees another's projects.
+The UI shows several projects together, each from its own `state.json`. One
+Docket server serves one client, so every project it shows belongs to that
+client, and there's no sign-in yet. See
+[the proposed architecture](../README.md#3-docket).
 
 ## Running the UI
 
 ```sh
-cd tool/ui
+cd ui
 npm install
-npm run dev                                   # every project in spec/examples
+npm run dev                                   # every project in examples/
 DOCKET_STATE=path/to/state.json npm run dev   # any other state.json
 DOCKET_STATE=a/state.json:b/state.json npm run dev   # several, separated as in PATH
 ```

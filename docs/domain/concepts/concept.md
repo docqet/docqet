@@ -22,7 +22,7 @@ it means what it says in. Besides those, its frontmatter has only its name, its
 `description`, which defines it, and `confused-with`, what it's easily
 mistaken for. Everything else is its body, in whatever shape suits it: what it's made of, how it relates to other concepts, and the states it
 moves through.
-[`booking.md`](../../../spec/examples/hotel-bookings/docket/domains/guest-stays/concepts/booking.md)
+[`booking.md`](../../../examples/hotel-bookings/docket/domains/guest-stays/concepts/booking.md)
 in Guest stays:
 
 ```markdown
@@ -51,7 +51,7 @@ A confirmed booking can instead be Cancelled, any time before check-in.
 Each item in `confused-with` has a `summary` saying how they differ, and either
 `concept`, a [link](link.md) to that concept written as any concept link is,
 or `term`, for a word that isn't a concept in the docs. Billing's
-[bill](../../../spec/examples/hotel-billing/docket/domains/billing/concepts/bill.md)
+[bill](../../../examples/hotel-billing/docket/domains/billing/concepts/bill.md)
 isn't an invoice:
 
 ```yaml

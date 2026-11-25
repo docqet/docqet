@@ -25,7 +25,7 @@ on its main branch, so how anything changed is worked out by comparing them.
 ## In the spec
 
 `.docket/state.json`, one per project, beside its `docket.yaml`.
-[Hotel Bookings'](../../../spec/examples/hotel-bookings/.docket/state.json),
+[Hotel Bookings'](../../../examples/hotel-bookings/.docket/state.json),
 with each list cut down to its keys:
 
 ```json

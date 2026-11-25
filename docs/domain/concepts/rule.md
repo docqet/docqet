@@ -52,7 +52,7 @@ Its `name` is the rule in a few words, and `why` says why it holds, so
 whoever meets a case it didn't foresee can judge it. It has no `description`: its
 body, if it has one, states the rule in full where the name doesn't, and gives
 examples or how it plays out.
-[`no-double-booking.md`](../../../spec/examples/hotel-bookings/docket/domains/guest-stays/rules/booking/no-double-booking.md):
+[`no-double-booking.md`](../../../examples/hotel-bookings/docket/domains/guest-stays/rules/booking/no-double-booking.md):
 
 ```markdown
 ---
@@ -67,7 +67,7 @@ Two bookings for the same room can't share a night. A cancelled booking no
 longer holds its nights.
 ```
 
-[`late-cancellation-fee.md`](../../../spec/examples/hotel-bookings/docket/domains/guest-stays/rules/cancellations/late-cancellation-fee.md)
+[`late-cancellation-fee.md`](../../../examples/hotel-bookings/docket/domains/guest-stays/rules/cancellations/late-cancellation-fee.md)
 says why:
 
 ```yaml
