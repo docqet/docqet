@@ -19,9 +19,10 @@ The sentence can add a condition that limits it, or to what end, when that
 helps: "Clerks move a guest's bill to their company's account at check-out, so
 the guest leaves without paying." It names the people the business's way, and
 the capability links the [personas](persona.md) it serves: who does it, or who
-it's done for. What it doesn't do is said elsewhere. What must always or never
-happen is a [rule](rule.md) it follows, what's missing for now is a known
-[gap](gap.md), and what's limited by choice is a [tradeoff](tradeoff.md).
+it's done for, and any [initiatives](initiative.md) it's part of. What it
+doesn't do is said elsewhere. What must always or never happen is a
+[rule](rule.md) it follows, what's missing for now is a known [gap](gap.md),
+and what's limited by choice is a [tradeoff](tradeoff.md).
 The other things people do with it, or the software does for them, when the
 sentence doesn't show them, can be said in its body, each a sentence of its
 own: "Clerks move a booking to new dates." Each is something this capability
@@ -139,7 +140,8 @@ tradeoffs:
 
 A draft is written the same way, with `stability: draft`.
 [`waitlist.md`](../../../spec/examples/hotel-bookings/docs/product/domains/guest-stays/capabilities/waitlist.md)
-has its people, rules and an open decision before any code exists:
+has its people, its initiative, rules and an open decision before any code
+exists:
 
 ```markdown
 ---
@@ -150,6 +152,7 @@ description: >-
   the first room that frees up for their stay.
 stability: draft
 personas: [persona:front-desk-clerk]
+initiatives: [initiative:busy-season]
 rules: [rule:no-double-booking]
 concepts: [concept:booking, concept:room]
 decisions:

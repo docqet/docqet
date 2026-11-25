@@ -21,8 +21,9 @@ no level's mark.
 
 - **Beta is the bar for real use.** A capability below it still needs to
   reach it, in what [readiness](readiness.md) says is left.
-- **Only capabilities have one.** Features, domains and projects have a
-  maturity and a readiness instead, and personas a readiness.
+- **Only capabilities have one.** Features, domains, projects and
+  initiatives have a maturity and a readiness instead, and personas a
+  readiness.
 - **A capability has one in each domain that builds part of it.** Where they
   differ, its level in short is the lowest, since that's what you can count on
   everywhere.

@@ -36,9 +36,9 @@ never name the implementation.
 ### Domain: `docs/product/domains/<domain>/domain.md`
 
 A part of the business with a language of its own. Every product doc but a
-persona is in one: the one whose `domain.md` is in its folder. The folder's
-name means nothing. Projects working in the same part of the business use the
-same domain ID.
+persona or an initiative is in one: the one whose `domain.md` is in its
+folder. The folder's name means nothing. Projects working in the same part of
+the business use the same domain ID.
 
 ```yaml
 ---
@@ -86,6 +86,7 @@ name: Room booking
 description: Clerks book a free room for a guest's stay.
 stability: beta      # required: draft, prototype, alpha, beta or ga
 personas: [persona:front-desk-clerk]
+initiatives: []
 rules: [rule:no-double-booking, rule:minimum-stay]
 concepts: [concept:booking]
 gaps: []
@@ -163,12 +164,38 @@ description: Runs the front desk: takes bookings, and checks guests in and out.
 role: Front desk                   # how they use the software; null if none
 title: Front desk clerk            # their job title; null if none
 image: https://randomuser.me/api/portraits/women/68.jpg   # optional
+initiatives: [initiative:busy-season]   # the initiatives whose work is for them
 ---
 ```
 
 The body says what they need and why, what they know, their context, and what
 makes them trust the software or give up on it. Never base a persona on a real
 person's details.
+
+### Initiative: `docs/product/initiatives/`
+
+A body of work, so it can be seen on its own, such as the MVP or what comes
+after it. It's for the whole project rather than per domain, and cuts across
+features.
+
+```yaml
+---
+id: busy-season
+name: Busy season
+description: >-
+  Handling full nights: groups, a waitlist, and turning rooms over faster.
+---
+```
+
+The body is optional, and can say more, such as what the work is and why.
+Capabilities link to it in `initiatives`, and so do the personas its work is
+for; it lists neither. It has no level, gaps, tradeoffs or decisions, and no
+dates or order. A capability or persona in no initiative shows only when
+everything does.
+
+An initiative is a person's call: ask before creating one or adding a
+capability or persona to one. Once the work no longer needs seeing on its
+own, remove the link from its capabilities and personas and delete the doc.
 
 ## Technical docs
 
@@ -230,7 +257,8 @@ Every link points one way, and is written once:
 
 ```text
 feature    → capabilities
-capability → personas, rules, concepts
+capability → personas, initiatives, rules, concepts
+persona    → initiatives
 rule       → concepts
 concept    → concepts                      (confused-with)
 component  → capabilities, outcomes        (meets)
@@ -253,8 +281,8 @@ link to it and the code that points at it.
 ## Several projects
 
 Projects on the same platform, named in `docket.yaml`, contribute to one
-picture of the product. A domain, feature, capability, persona, mechanism or
-component with the same ID in two projects is one thing: its name and
+picture of the product. A domain, feature, capability, persona, initiative,
+mechanism or component with the same ID in two projects is one thing: its name and
 description must match, its links are combined, and a capability's level is
 per domain. Before creating one, check whether another project on the
 platform already has it, if the project's instructions say where they are.

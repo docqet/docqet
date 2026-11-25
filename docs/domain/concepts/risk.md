@@ -107,7 +107,7 @@ Each step down in likelihood or reach takes off 10 for `expected` or `most`,
 possible and 24 when unlikely.
 
 Where there's more than one gap, as in a capability, feature, domain,
-persona or component, each is scored on the capabilities there, and they're
+persona, initiative or component, each is scored on the capabilities there, and they're
 shown as their highest risk and how many fall in each verdict.
 
 ### Spread
@@ -122,9 +122,9 @@ rely on spreads further than one on a single capability.
 ### Exposure
 
 What the gaps still open on some capabilities put at stake, as in a
-feature, a domain, a project or what serves a persona, is their
-[exposure](exposure.md): a percentage of the most they could be exposed to,
-from the riskiest gap on each, with a band that says what it means.
+feature, a domain, a project, an initiative or what serves a persona, is
+their [exposure](exposure.md): a percentage of the most they could be exposed
+to, from the riskiest gap on each, with a band that says what it means.
 
 ### Rating a gap
 

@@ -59,6 +59,7 @@ docket.yaml                              config: the project's ID and name
 docs/
 └── product/
     ├── personas/                        who the software serves, across every domain
+    ├── initiatives/                     bodies of work, across every domain
     └── domains/
         └── <domain>/                    one folder per domain the project works in
             ├── domain.md                the domain's ID, name and summary
@@ -83,7 +84,7 @@ these changes:
   `domains/`. Forge's single `domain/` folder of rules and concepts becomes
   one of these per domain.
 - Each folder directly under `docs/product/` holds one kind of thing:
-  `personas/`, which span domains, and `domains/`.
+  `personas/` and `initiatives/`, which span domains, and `domains/`.
 - What tools depend on is a frontmatter field: its name and description,
   bold-label lines such as `**Stability:** Alpha`, Why and Open decisions.
   Everything else, such as a persona's needs, what a capability includes and
@@ -97,6 +98,10 @@ these changes:
 - Personas have a name, role, title and an optional image, and no Based on.
   What they need is in the body, with anything else about them. Capabilities link to them, so each persona's capabilities, features and
   readiness can be worked out.
+- Initiatives are new. An initiative is a body of work, such as the MVP or
+  what comes after it. Capabilities and personas link to the initiatives
+  they're part of, so readers can show the whole product, or one initiative
+  alone.
 - A rule no longer links to its acceptance test. Whatever verifies or
   implements it, a test or not, points at it instead, and can point at a
   capability too.
@@ -145,6 +150,7 @@ and renaming or moving a file within its type's folder breaks nothing.
 | rule       | `docs/product/domains/<domain>/rules/`        | `no-double-booking` |
 | concept    | `docs/product/domains/<domain>/concepts/`     | `booking`           |
 | persona    | `docs/product/personas/`                      | `front-desk-clerk`  |
+| initiative | `docs/product/initiatives/`                   | `busy-season`       |
 | mechanism  | `docs/technical/mechanisms/`                  | `deployment`        |
 | component  | `docs/technical/components/`                  | `bookings`          |
 
@@ -152,8 +158,8 @@ and renaming or moving a file within its type's folder breaks nothing.
   as `room-booking`, `not-decided` or `ga`. Tools show values with their own
   labels, such as GA for `ga`.
 - **A project has one doc of each type with a given ID in each domain**, and
-  one domain, persona, mechanism or component with a given ID in all. A
-  second is a `duplicate-id` problem. The same ID in another domain, or in
+  one domain, persona, initiative, mechanism or component with a given ID in
+  all. A second is a `duplicate-id` problem. The same ID in another domain, or in
   another project, is a contribution or another definition, as
   [Domains](#domains) describes.
 - **Name the file after its ID**, as the examples do, so it's easy to find.
@@ -178,9 +184,9 @@ and renaming or moving a file within its type's folder breaks nothing.
   `feature:reservations#front-desk-bookings-only` or
   `component:ledger#balance-worked-out-on-read`.
 - **What an ID names depends on the type** (see [Domains](#domains)). A
-  domain, feature, capability, persona, mechanism or component ID names one
-  thing across every project. A rule or concept ID names one definition
-  within a domain.
+  domain, feature, capability, persona, initiative, mechanism or component ID
+  names one thing across every project. A rule or concept ID names one
+  definition within a domain.
 - **A reference to a rule or concept names its domain** as `@<domain>`,
   unless it's from a doc in the same domain: `concepts:
   [concept:booking@guest-stays]`. An annotation has no domain of its own, so
@@ -287,10 +293,11 @@ two that is the thing itself.
 | --- | --- | --- | --- |
 | domain | `id`, `name`, `description`, `decisions` | Anything more about the part of the business | [guest-stays](examples/hotel-bookings/docs/product/domains/guest-stays/domain.md) |
 | feature | `id`, `name`, `description`, `capabilities` (required), `tradeoffs`, `decisions` | Anything more about the job | [reservations](examples/hotel-bookings/docs/product/domains/guest-stays/features/reservations.md) |
-| capability | `id`, `name`, `description`, `stability` (required), `personas`, `rules`, `concepts`, `gaps`, `tradeoffs`, `decisions` | Anything more about what it does, such as what else it includes, or how we'll know it's working | [room-booking](examples/hotel-bookings/docs/product/domains/guest-stays/capabilities/room-booking.md) |
+| capability | `id`, `name`, `description`, `stability` (required), `personas`, `initiatives`, `rules`, `concepts`, `gaps`, `tradeoffs`, `decisions` | Anything more about what it does, such as what else it includes, or how we'll know it's working | [room-booking](examples/hotel-bookings/docs/product/domains/guest-stays/capabilities/room-booking.md) |
 | rule | `id`, `name`, `concepts`, `why` | The rule in full, where its name doesn't say it all, and examples or how it plays out | [same-day-turnover](examples/hotel-bookings/docs/product/domains/guest-stays/rules/booking/same-day-turnover.md) |
 | concept | `id`, `name`, `description`, `confused-with` | Its details: what it's made of, how it relates to other concepts, and the states it moves through | [booking](examples/hotel-bookings/docs/product/domains/guest-stays/concepts/booking.md) |
-| persona | `id`, `name`, `description`, `role`, `title`, `image` | Anything more about who they are, such as what they need, what they know, their context, what they expect, and what they care about | [front-desk-clerk](examples/hotel-bookings/docs/product/personas/front-desk-clerk.md) |
+| persona | `id`, `name`, `description`, `role`, `title`, `image`, `initiatives` | Anything more about who they are, such as what they need, what they know, their context, what they expect, and what they care about | [front-desk-clerk](examples/hotel-bookings/docs/product/personas/front-desk-clerk.md) |
+| initiative | `id`, `name`, `description` | Anything more about the work, such as what's in it and why | [busy-season](examples/hotel-bookings/docs/product/initiatives/busy-season.md) |
 | mechanism | `id`, `name`, `description`, `applies`, `meets`, `gaps`, `tradeoffs`, `decisions` | How it works | [deployment](examples/hotel-bookings/docs/technical/mechanisms/deployment.md) |
 | component | `id`, `name`, `description`, `capabilities`, `meets`, `gaps`, `tradeoffs`, `decisions` | How it works | [bookings](examples/hotel-bookings/docs/technical/components/bookings.md) |
 
@@ -298,11 +305,14 @@ The body column is a suggestion of what's worth writing, not a structure.
 
 - **`stability`** is `draft`, `prototype`, `alpha`, `beta` or `ga`, which
   tools show as Draft, Prototype, Alpha, Beta and GA. Only capabilities have
-  one. A feature's, domain's, project's and persona's maturity, and their
-  [readiness](#readiness), are worked out from their capabilities' (see
-  [Features and maturity](#features-and-maturity)).
+  one. A feature's, domain's, project's, persona's and initiative's maturity,
+  and their [readiness](#readiness), are worked out from their capabilities'
+  (see [Features and maturity](#features-and-maturity)).
 - **`personas`** lists the personas a capability serves: who does it, or who
   it's done for when the software does it.
+- **`initiatives`** lists the initiatives a capability is part of, or on a
+  persona, the initiatives whose work is for them (see
+  [Initiatives](#initiatives)).
 - **`capabilities`** on a component lists the capabilities that rely on it.
   It's the only link between the technical docs and the product. A mechanism
   has none: it applies to every capability its project serves (see
@@ -404,6 +414,7 @@ description: Runs the front desk: takes bookings, and checks guests in and out.
 role: Front desk
 title: Front desk clerk
 image: https://randomuser.me/api/portraits/women/68.jpg
+initiatives: [initiative:busy-season]
 ---
 
 ## Needs
@@ -432,12 +443,55 @@ most of the time.
 - **`image`**, optional, is the URL of their picture. Any image a browser can
   show works. The examples use randomuser.me's free placeholder portraits.
   Readers show their initials without one.
+- **`initiatives`**, optional, lists the [initiatives](#initiatives) whose
+  work is for them.
 - **Its body** is where to say more about who they are, such as what they
   need the software to do for them and why it matters to them, their domain
   knowledge and technical skill, their device and how often and under what
   pressure they do the work, the words and tools they already know, and what
   makes them trust the software or give up on it. The examples use headings of
   their own for these; nothing reads them.
+
+### Initiatives
+
+An initiative is a named body of work the product is taking on, so it can be
+seen on its own, such as the MVP or what comes after it.
+Like personas, initiatives are written once for the whole project, not per
+domain, since the work cuts across domains and features.
+
+```markdown
+---
+id: busy-season
+name: Busy season
+description: >-
+  Handling full nights: groups, a waitlist, and turning rooms over faster.
+---
+```
+
+A capability says which initiatives it's part of, and so does each persona
+the work is for:
+
+```yaml
+initiatives: [initiative:busy-season]
+```
+
+- **`name`** and **`description`** say what the work is. Its body, optional,
+  can say more, such as what's in it and why.
+- **Capabilities and personas link to it**, and it lists neither. Its
+  features, domains, rules and gaps are worked out from its capabilities. A
+  capability or persona can be part of several initiatives, or none.
+- **Readers show everything, or one initiative.** Showing one, only its
+  capabilities and personas show, and every number counts only those, the
+  way showing only some projects does. A persona's readiness there counts
+  only the initiative's capabilities that serve them. A capability or persona
+  in no initiative shows only when everything does.
+- **No stability level, no gaps, tradeoffs or decisions.** It has a maturity,
+  an exposure and a readiness, worked out from its capabilities. It doesn't
+  say when the work happens, or in what order.
+- **It isn't a flag.** Being behind a flag is what Prototype and Alpha mean.
+  An initiative says what body of work a capability belongs to.
+- **Once the work no longer needs seeing on its own**, its capabilities and
+  personas drop the link and the doc is deleted.
 
 ### Mechanisms and components
 
@@ -515,7 +569,7 @@ Every link points one way and is written once:
 
 ```text
 feature                    → capabilities
-capability                 → personas, rules, concepts
+capability                 → personas, initiatives, rules, concepts
 rule                       → concepts
 concept                    → concepts                  (confused-with)
 gap                        → an outcome, a rule        (outcome, rule)
@@ -573,10 +627,10 @@ a `duplicate-id` problem.
 | Feature | None: a capability it lacks is a draft capability | Non-goals: capabilities we've decided never to build |
 | Mechanism or component | What only someone working on the code would notice | Technical choices |
 
-Domains, rules, concepts and personas have neither. A limit across a whole
-domain is a rule, or a tradeoff on the mechanism that causes it. When a gap has a
-visible effect and a technical cause, the effect is the capability's gap, and
-the technical doc explains the cause in How it works.
+Domains, rules, concepts, personas and initiatives have neither. A limit
+across a whole domain is a rule, or a tradeoff on the mechanism that causes
+it. When a gap has a visible effect and a technical cause, the effect is the
+capability's gap, and the technical doc explains the cause in How it works.
 
 ### Gaps
 
@@ -946,7 +1000,11 @@ maturity from the capabilities those projects declare.
 
 A **persona's maturity** is that of what serves them: worked out as a
 feature's is, from the capabilities that list them, each once at its level in
-short.
+short. An **initiative's maturity** is worked out the same way, from the
+capabilities that list it.
+
+Showing one initiative works out every maturity from its capabilities alone,
+as showing only some projects does.
 
 Maturity isn't a finish line, and 100% isn't the goal. It means everything
 under way is GA. Software that keeps growing usually has newer parts settling
@@ -985,6 +1043,10 @@ makes.
 | A project, or several shown | Every capability showing               |
 | A persona                   | Every capability that lists them       |
 | A feature, for a persona    | The capabilities in it that serve them |
+| An initiative               | Every capability that lists it         |
+
+Showing one initiative narrows every capability showing to its own, as
+showing only some projects does, so every readiness counts only those.
 
 Something with no started capabilities has no readiness. It falls in a quarter
 of its own, so it's never mistaken for maturity, and readers draw it as a
@@ -1086,7 +1148,7 @@ charges at GA, where it breaks a promise, that's 6.75, or 42, `tolerable`;
 on split bills at Prototype it's 1.5, below the least there is, so 0.
 
 Where several gaps are shown together, as for a capability, feature,
-domain, persona or component, each is scored only on the capabilities
+domain, persona, initiative or component, each is scored only on the capabilities
 there, and readers show the highest risk and how many fall in each
 verdict.
 
@@ -1095,9 +1157,9 @@ chose to live with, and a question doesn't happen to anyone.
 
 ### Exposure
 
-For some capabilities, as of a feature, domain, project or persona, readers
-also work out their **exposure**: what the gaps still open on them put at
-stake together, from 0 to 100%. It's to risk what maturity is to stability.
+For some capabilities, as of a feature, domain, project, persona or
+initiative, readers also work out their **exposure**: what the gaps still
+open on them put at stake together, from 0 to 100%. It's to risk what maturity is to stability.
 It isn't their stability, which is declared. The most a capability could be
 exposed to is 4 × its level weight × 1.5, and its exposure is its riskiest
 gap's raw score ÷ that, its own or one on what it's built on. The exposure of
@@ -1234,11 +1296,12 @@ moves it to that domain. Both hotel examples work in two domains each.
 ## Domains
 
 A **domain** is a part of the business with a language of its own: a business
-area and a bounded context, in domain-driven design's terms, as one. Every doc
-but a persona is written in exactly one domain, the one whose folder it's in.
-A project works in as many domains as it has folders under
-`docs/product/domains/`, and projects
-that work in the same part of the business use the same domain ID.
+area and a bounded context, in domain-driven design's terms, as one. Every
+product doc but a persona or an initiative is written in exactly one domain,
+the one whose folder it's in. Mechanisms and components are in no domain
+either. A project works in as many domains as it has folders under
+`docs/product/domains/`, and projects that work in the same part of the
+business use the same domain ID.
 
 A domain's `domain.md` gives its name and description, any open decisions, and
 anything more worth saying about it in its body:
@@ -1259,7 +1322,7 @@ is put together with others of the same ID depends on its type:
 
 | Type | Is one across | The same ID elsewhere |
 | --- | --- | --- |
-| domain, feature, capability, persona, mechanism, component | everything | A contribution to the same one. Its links are put together, and its name and description should match. |
+| domain, feature, capability, persona, initiative, mechanism, component | everything | A contribution to the same one. Its links are put together, and its name and description should match. |
 | rule, concept | its domain | Another definition, shown beside this one. Within the same domain, it's a contribution, as above. |
 
 Putting contributions together:
@@ -1268,10 +1331,10 @@ Putting contributions together:
   in several domains is in each of them. Each domain's part is the
   capabilities that domain builds.
 - **Links are combined**: a feature's capabilities and tradeoffs, a
-  capability's personas, rules, concepts, gaps and tradeoffs, a mechanism's
-  or component's capabilities, outcomes, gaps and tradeoffs, and
-  everything's evidence. Each
-  contribution's order is kept, in the order the projects are read.
+  capability's personas, initiatives, rules, concepts, gaps and tradeoffs, a
+  mechanism's or component's capabilities, outcomes, gaps and tradeoffs, and
+  everything's evidence. Each contribution's order is kept, in the order the
+  projects are read.
 - **What a contribution says is its own**: its body, and its frontmatter
   fields that aren't links, such as `decisions` or a rule's `why`. Readers show each, labelled with its project and domain.
   Its name and description, and a persona's role and title, should match the
@@ -1302,8 +1365,9 @@ has no `room` of its own.
 Two contributions that should agree and don't are a **contradiction**, shown
 as a problem naming the projects involved:
 
-- **A domain's, feature's, capability's, persona's, mechanism's or component's
-  name or description differs** between projects, or a persona's role or title.
+- **A domain's, feature's, capability's, persona's, initiative's, mechanism's
+  or component's name or description differs** between projects, or a
+  persona's role or title.
 - **A capability is in two features**, whichever projects list them.
 - **A rule or concept differs within one domain**, when more than one project
   declares it there.
@@ -1346,9 +1410,9 @@ and showing several projects together means reading each one's state.json.
 
 - **Header**: the `project` (its ID and name), its `platform` (ID and name)
   when `docket.yaml` declares one, and the commit indexed.
-- **`summary`**: how many domains and features there are, capabilities per
-  level with `draft` among them, how many rules, gaps, tradeoffs, mechanisms,
-  components and problems. This is the at-a-glance view.
+- **`summary`**: how many domains, features, personas and initiatives there
+  are, capabilities per level with `draft` among them, how many rules, gaps,
+  tradeoffs, mechanisms, components and problems. This is the at-a-glance view.
 - **`domains`**: each of the project's `domain.md` files.
 - **`features`**: each with its capabilities and its `tradeoffs`. Each
   capability names the feature it's in, as a reference, or `null`,
@@ -1356,8 +1420,12 @@ and showing several projects together means reading each one's state.json.
   `"draft"`.
 - **`personas`**: each with its `name`, `role` and `title`, `role` and
   `title` as `null` where it has none, the capabilities that list them, the features
-  those are in. Personas aren't in a domain, so
-  these have no `domain`.
+  those are in, and the `initiatives` it lists, as references. Personas
+  aren't in a domain, so these have no `domain`.
+- **`initiatives`**: each with its ID, file, `name`, `description`, the
+  capabilities that list it, the features those are in, the personas that
+  list it, and its body. Like personas, they have no `domain`. Each capability lists its `initiatives`,
+  as references.
 - **One list per doc type**: each entry has its ID, its `domain`, file, name,
   description, and links, in both directions, its type's other frontmatter fields,
   and its `body` as Markdown, exactly as written, or `""` with none. A doc
@@ -1410,7 +1478,7 @@ and showing several projects together means reading each one's state.json.
 | --------------------- | ---------------------------------------------------------------------------------------------------------------- |
 | `unknown-id`          | A link, annotation or `rule` names a doc, gap or tradeoff that doesn't exist.                                    |
 | `invalid-frontmatter` | A required field is missing, or a value isn't allowed, such as a link of the wrong type for its field, or a domain folder has no `domain.md` to give its ID. |
-| `duplicate-id`        | A project has two docs of one type with the same ID in one domain, or two domains, personas, mechanisms or components with the same ID, or a doc has two gaps or tradeoffs with the same key across the projects and domains that write it. |
+| `duplicate-id`        | A project has two docs of one type with the same ID in one domain, or two domains, personas, initiatives, mechanisms or components with the same ID, or a doc has two gaps or tradeoffs with the same key across the projects and domains that write it. |
 | `broken-link`         | A relative link in a doc's body or a text value doesn't resolve.                                                 |
 | `unlinked-rule`       | No capability follows a rule.                                                                                    |
 | `in-two-features`     | More than one feature lists the same capability.                                                                 |

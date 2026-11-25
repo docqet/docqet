@@ -12,8 +12,8 @@ can be fixed.
 
 What should agree:
 
-- **A domain's, feature's, capability's, persona's, mechanism's or component's
-  name and description**, in every project that declares it. What else each
+- **A domain's, feature's, capability's, persona's, initiative's, mechanism's
+  or component's name and description**, in every project that declares it. What else each
   contribution says is its own: its body, and its frontmatter fields that
   aren't links, such as `decisions` or a rule's
   `why`. Those are shown side by side, labelled with their project and

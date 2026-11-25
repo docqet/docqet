@@ -1,7 +1,7 @@
 # Doc
 
 One Markdown file describing one thing: a domain, feature, capability, rule,
-concept, persona, mechanism or component.
+concept, persona, initiative, mechanism or component.
 
 ## Details
 
@@ -23,8 +23,8 @@ renamed or moved, or the doc's name changes. Everything else names the doc by
 **reference**, its type and ID, such as `rule:no-double-booking`, in docs and
 code alike. What an ID identifies depends on the doc's type:
 
-- **Domains, features, capabilities, personas, mechanisms and components**: one
-  thing across every project. The same ID anywhere is a contribution to the
+- **Domains, features, capabilities, personas, initiatives, mechanisms and
+  components**: one thing across every project. The same ID anywhere is a contribution to the
   same one.
 - **Rules and concepts**: one definition within a domain. The same ID in two
   domains is two definitions.
@@ -43,6 +43,7 @@ the doc's `id` field:
 | rule | `docs/product/domains/<domain>/rules/` | `no-double-booking` |
 | concept | `docs/product/domains/<domain>/concepts/` | `booking` |
 | persona | `docs/product/personas/` | `front-desk-clerk` |
+| initiative | `docs/product/initiatives/` | `busy-season` |
 | mechanism | `docs/technical/mechanisms/` | `deployment` |
 | component | `docs/technical/components/` | `bookings` |
 

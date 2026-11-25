@@ -16,8 +16,9 @@ A [rule](rule.md) never holds one: a rule is decided once its doc exists.
 Something the business hasn't committed to yet is an open decision, not a
 rule.
 
-Open decisions on a capability show on every persona it serves, and on its
-feature and domain, but they're declared once.
+Open decisions on a capability show on every persona it serves, every
+initiative it's part of, and on its feature and domain, but they're declared
+once.
 
 A question doesn't happen to anyone, so a decision has no impact and no
 [risk](risk.md). What does happen is whatever the software does while it's
@@ -71,7 +72,7 @@ decisions:
 ```
 
 It's in frontmatter so readers can find, count and show it on every persona,
-feature and domain it touches. A question written in a doc's body isn't
+initiative, feature and domain it touches. A question written in a doc's body isn't
 counted as one.
 
 ## Not to be confused with

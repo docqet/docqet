@@ -32,7 +32,8 @@ about.
 ## In the spec
 
 A persona is a doc in `docs/product/personas/`, outside any domain. Its name
-and description, its role and title, and an optional picture are frontmatter.
+and description, its role and title, an optional picture and the initiatives
+it's part of are frontmatter.
 Without a picture, readers show their initials. Its body is for anything more
 about who they are, such as what they need, what they know, their context, the
 words and tools they expect, and what they care about, and can be left out.
@@ -48,6 +49,7 @@ description: >-
 role: Front desk
 title: Front desk clerk
 image: https://randomuser.me/api/portraits/women/68.jpg
+initiatives: [initiative:busy-season]
 ---
 
 ## Needs
@@ -65,7 +67,9 @@ At the desk all shift, on a shared desktop, with a guest or the phone waiting
 most of the time.
 ```
 
-A capability links them with `personas: [front-desk-clerk]`.
+A capability links them with `personas: [persona:front-desk-clerk]`. A
+persona lists the [initiatives](initiative.md) whose work is for them, so
+showing one initiative shows only its people.
 
 ## Not to be confused with
 

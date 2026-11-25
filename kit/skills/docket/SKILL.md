@@ -1,6 +1,6 @@
 ---
 name: docket
-description: How to read and keep current a repository's Docket docs (capabilities, features, rules, concepts, personas, domains, mechanisms, components, gaps, tradeoffs, open decisions, stability levels) and its docket:implements, verifies, gap and tradeoff annotations. Use in any repository with a docket.yaml, before changing its code, tests or docs, to learn what the change touches and what it must keep; while changing them, to update the docs and annotations in the same change; when a product decision is needed that nobody has made; and when bringing Docket to a repository that doesn't have it yet.
+description: How to read and keep current a repository's Docket docs (capabilities, features, rules, concepts, personas, initiatives, domains, mechanisms, components, gaps, tradeoffs, open decisions, stability levels) and its docket:implements, verifies, gap and tradeoff annotations. Use in any repository with a docket.yaml, before changing its code, tests or docs, to learn what the change touches and what it must keep; while changing them, to update the docs and annotations in the same change; when a product decision is needed that nobody has made; and when bringing Docket to a repository that doesn't have it yet.
 ---
 
 # Docket
@@ -18,6 +18,7 @@ leave decisions about intention with people.
 docket.yaml                                 the project's id and name, and its platform
 docs/product/                               what it should do, in the domain's words
 ├── personas/                               who it serves, across every domain
+├── initiatives/                            bodies of work, such as the MVP, across every domain
 └── domains/<domain>/
     ├── domain.md                           a part of the business with its own language
     ├── features/                           a job the product does, listing its capabilities
@@ -85,6 +86,7 @@ changed, not docs to fill in the structure.
 | A new area of code has something the code can't say                        | A component, with `docket:implements` on its entry points. Most code needs no doc                                                         |
 | How something already documented works has changed                         | Its body, so it no longer says something untrue                                                                                           |
 | A domain word is used in a new sense, or a new one appears                 | A concept, or a change to it                                                                                                              |
+| Work was grouped into an initiative, or taken out of one                   | The capability's or persona's `initiatives` link, added or removed, and a doc for a new initiative, deleted once nothing links it          |
 | A doc's ID changed                                                         | Every link and annotation to its old ID, in this project and any other on the platform                                                    |
 | Code that an annotation names was deleted or moved                         | Move or remove the annotation with it                                                                                                     |
 
@@ -104,7 +106,7 @@ person has stated or confirmed it.
 
 | Who decides | What                                                                                                                                                                            |
 | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| A person    | What the software should do, its rules, who it serves, each capability's level, which feature a capability is in, whether a gap is closed later or accepted as a tradeoff       |
+| A person    | What the software should do, its rules, who it serves, each capability's level, which feature a capability is in, which initiatives it's part of, whether a gap is closed later or accepted as a tradeoff |
 | You         | Annotations, what a technical doc says about how the code works, gaps you found or left and each one's impact, likelihood and reach, and tradeoffs in how you built something, all listed in your report |
 
 - **The user's request is a decision.** When they say what the software should

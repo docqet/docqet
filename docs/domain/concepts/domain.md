@@ -18,8 +18,8 @@ guest is charged for a stay in Billing. Both are right, each in its domain.
   [projects](project.md) can work in one domain, and one project can work in
   several. Repackaging the software, or reorganizing the teams that build it,
   never creates, removes or splits a domain.
-- **Every product doc but a persona is written in exactly one domain**: the
-  one whose words it uses. A project's docs for each domain are in a folder of
+- **Every product doc but a persona or an initiative is written in exactly
+  one domain**: the one whose words it uses. A project's docs for each domain are in a folder of
   their own.
 - **Domains are shared by ID.** Projects that work in the same part of the
   business use the same domain ID, and their contributions to it are one

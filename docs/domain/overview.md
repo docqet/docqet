@@ -19,8 +19,8 @@ as the booking app and the billing service, are a
 **[platform](concepts/platform.md)**, and Docket shows one platform at a
 time. Each project works in one or more
 **[domains](concepts/domain.md)**: parts of the business, each with its own
-language, such as Guest stays or Billing. Every doc but a persona, a mechanism or
-a component is written in exactly one domain. Every project contributes what it
+language, such as Guest stays or Billing. Every doc but a persona, an
+initiative, a mechanism or a component is written in exactly one domain. Every project contributes what it
 knows to one picture of the whole product, and where two of them say different
 things, Docket shows the **[contradiction](concepts/contradiction.md)** rather
 than picking one.
@@ -39,6 +39,12 @@ A **[persona](concepts/persona.md)** is a type of person the software serves,
 such as a front desk clerk. Each capability says which personas it serves, so
 Docket can show, for each of them, what the software does for them and how
 ready it is for them.
+
+An **[initiative](concepts/initiative.md)** is a body of work, such as the
+MVP or the hotel's busy season. Each capability, and each persona the work is
+for, says which initiatives it's part of, so Docket can show the whole
+product or one initiative alone, and every number counts only what's
+showing.
 
 How the software is meant to be built is written down beside that, in the
 code's words: **[mechanisms](concepts/mechanism.md)**, each how something
@@ -59,14 +65,13 @@ component with an **[annotation](concepts/annotation.md)**, as evidence that it
 verifies or implements it, or mark where a gap or tradeoff shows in the code.
 The **[indexer](concepts/indexer.md)** reads all of it, and works out each
 one's evidence and any problems. Readers work out each feature's, domain's,
-project's and persona's **[maturity](concepts/maturity.md)**, how far along it
-is, and
-score gaps by **[risk](concepts/risk.md)**, from the impact, likelihood and
-reach each declares, the level of each capability it's on, and whether it
-breaks that level's promise. From levels and risk they work out
-**[readiness](concepts/readiness.md)**: how ready people can rely on each
-capability, feature, domain, project and persona being, as a recommendation,
-with what's left. It's maturity less their
+project's, persona's and initiative's **[maturity](concepts/maturity.md)**,
+how far along it is, and score gaps by **[risk](concepts/risk.md)**, from the
+impact, likelihood and reach each declares, the level of each capability it's
+on, and whether it breaks that level's promise. From levels and risk they work
+out **[readiness](concepts/readiness.md)**: how ready people can rely on each
+capability, feature, domain, project, persona and initiative being, as a
+recommendation, with what's left. It's maturity less their
 **[exposure](concepts/exposure.md)**, what their gaps put at stake together.
 
 ```mermaid
@@ -78,6 +83,7 @@ flowchart TB
     feature["Feature<br/>a job the product does"]
     capability["Capability<br/>one result of value"]
     persona["Persona<br/>who it serves"]
+    initiative["Initiative<br/>a body of work, such as the MVP"]
     rule["Rule<br/>must always or never happen"]
     concept["Concept<br/>what a word means"]
   end
@@ -114,6 +120,8 @@ flowchart TB
   domain -- "defines" --> rule & concept
   feature -- "groups" --> capability
   capability -- "serves" --> persona
+  capability -- "part of" --> initiative
+  persona -- "part of" --> initiative
   capability -- "follows" --> rule
   capability -- "uses" --> concept
   rule -- "refers to" --> concept
@@ -226,7 +234,8 @@ can be shown the same way and nothing is hidden:
 Each declared one is written on the thing it's about, once, and shown on
 everything it affects. When one seems to belong to two things, it's about
 something they share, such as a rule they follow or a mechanism they rely on.
-Nothing is declared on a project or a persona: theirs are worked out.
+Nothing is declared on a project, a persona or an initiative: theirs are
+worked out.
 
 | Declared on | Open decisions | Gaps | Tradeoffs |
 | --- | --- | --- | --- |
@@ -301,6 +310,8 @@ Some things are never features or capabilities:
 - [Rule](concepts/rule.md): what must always be true, or must never happen.
 - [Concept](concepts/concept.md): what a word means in a domain.
 - [Persona](concepts/persona.md): a type of person the software serves.
+- [Initiative](concepts/initiative.md): a body of work, such as the MVP, so it
+  can be seen on its own.
 
 **How it's built**
 
@@ -326,7 +337,7 @@ Some things are never features or capabilities:
 - [Stability checklist](concepts/stability-checklist.md): what each level
   generally expects.
 - [Maturity](concepts/maturity.md): how far along a feature, domain, project,
-  or what serves a persona, is.
+  initiative, or what serves a persona, is.
 - [Band](concepts/band.md): the quarter of the maturity scale something is in.
 - [Readiness](concepts/readiness.md): how ready people can rely on the
   software being, as a recommendation, with what it still needs.

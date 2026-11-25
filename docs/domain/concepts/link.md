@@ -29,7 +29,7 @@ Every link the spec has, and the direction it's written in:
 
 ```text
 feature                    → capabilities
-capability                 → personas, rules, concepts
+capability                 → personas, initiatives, rules, concepts
 rule                       → concepts
 concept                    → concepts                  (confused-with)
 gap                        → an outcome, a rule        (outcome, rule)

@@ -122,7 +122,7 @@ unconfirmed, and a person confirms each part before it counts as declared.
 
 [The overview of Docket's concepts](docs/domain/overview.md) shows how they
 fit together: domains, features, capabilities, rules, concepts, personas,
-mechanisms and components, open decisions, gaps and tradeoffs, stability levels,
+initiatives, mechanisms and components, open decisions, gaps and tradeoffs, stability levels,
 maturity, readiness and evidence. Each has [a doc of its own](docs/domain/concepts/) that
 defines it precisely, with an example of how it's written down.
 

@@ -1,7 +1,7 @@
 # Exposure
 
 How much is at stake in the gaps still open on a feature, a domain, a
-project, or what serves a persona: how close its capabilities are to the
+project, an initiative, or what serves a persona: how close its capabilities are to the
 worst their levels allow. It's a percentage, derived from each gap's
 [risk](risk.md) and each capability's [stability level](stability-level.md),
 and nobody writes it down. It's to [risk](risk.md) what
@@ -29,6 +29,9 @@ impact rated add nothing.
 - **A domain's** comes from every capability with a part in it.
 - **A project's**, or a platform's, comes from every capability showing.
 - **What serves a persona** comes from the capabilities that list them.
+- **An [initiative's](initiative.md)** comes from the capabilities that list
+  it. Showing one narrows every capability showing to its own, the way
+  choosing projects does.
 
 It falls in a quarter, its band:
 

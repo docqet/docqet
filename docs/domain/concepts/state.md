@@ -33,9 +33,9 @@ with each list cut down to its keys:
     "tradeoffs": 3,
     "problems": 0
   },
-  "domains": [], "features": [], "personas": [], "capabilities": [],
-  "rules": [], "concepts": [], "mechanisms": [], "components": [],
-  "gaps": [], "tradeoffs": [], "problems": [],
+  "domains": [], "features": [], "personas": [], "initiatives": [],
+  "capabilities": [], "rules": [], "concepts": [], "mechanisms": [],
+  "components": [], "gaps": [], "tradeoffs": [], "problems": [],
   "checklist": {}
 }
 ```

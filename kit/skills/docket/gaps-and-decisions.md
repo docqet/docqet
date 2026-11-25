@@ -10,8 +10,8 @@ the one doc it's about:
 | Domain                 | None                                               | None                                   | Yes       |
 | Mechanism or component | What only someone working on the code would notice | Technical choices                      | Yes       |
 
-Rules, concepts and personas have none of them. A limit across a whole domain
-is a rule, or a tradeoff on the mechanism that causes it.
+Rules, concepts, personas and initiatives have none of them. A limit across a
+whole domain is a rule, or a tradeoff on the mechanism that causes it.
 
 ## Gaps
 

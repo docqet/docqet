@@ -1,7 +1,7 @@
 # Maturity
 
-How far along a feature, a domain, a project, or what serves a persona is: how much of the work under
-way is stable and supported. It's a percentage, derived from capabilities'
+How far along a feature, a domain, a project, an initiative, or what serves a
+persona is: how much of the work under way is stable and supported. It's a percentage, derived from capabilities'
 [stability levels](stability-level.md), and nobody writes it down. It's for
 seeing where the work is heading. How ready people can rely on it being,
 with gaps taken into account, is [readiness](readiness.md).
@@ -18,6 +18,11 @@ all, since no work has started on them.
 - **A project's**, or a platform's, comes from its features.
 - **What serves a persona** comes from the capabilities that list them, as a
   feature's does, each counted once at its level in short.
+- **An [initiative's](initiative.md)** comes from the capabilities that list
+  it, the same way.
+
+Showing one initiative narrows every capability showing to its own, the way
+choosing projects does, so every maturity counts only those.
 
 Each maturity falls in a [band](band.md).
 

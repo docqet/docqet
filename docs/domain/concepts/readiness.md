@@ -33,6 +33,10 @@ gap still lowers readiness a little, and an unacceptable one a lot.
 | A project, or a platform | Every capability showing               |
 | A persona                | Every capability that lists them       |
 | A feature, for a persona | The capabilities in it that serve them |
+| An initiative            | Its capabilities                       |
+
+Showing one [initiative](initiative.md) narrows every capability showing to
+its own, the way choosing projects does, so each readiness counts only those.
 
 Drafts don't count, and something with no started capabilities has no
 readiness. It falls in a quarter of its own:
