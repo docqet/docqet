@@ -2,9 +2,10 @@
 
 The `docket` command and the UI.
 
-- **`docket index`** reads the docs, scans the code and tests for
-  annotations, and writes `state.json`, stamped with the commit it describes.
-  Not built yet.
+- **[The `docket` command](cli/)** indexes and checks a repository's docs,
+  answers questions about them, follows how they change across commits, and
+  sends state and test results to a Docket server. Not built yet: its README
+  is a draft of what we'll build.
 - **[The UI](ui/)** reads only `state.json`. It answers, at a glance: what the
   software can do, who it serves and how far along it is for each of them, how
   stable each capability is, the rules each follows, and what the gaps
