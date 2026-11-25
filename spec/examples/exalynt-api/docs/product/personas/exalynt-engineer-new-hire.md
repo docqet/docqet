@@ -8,6 +8,7 @@ description: >-
 role: Exalynt Engineer
 title: Full-stack engineer
 image: https://randomuser.me/api/portraits/men/14.jpg
+initiatives: [initiative:mvp]
 ---
 
 ## Needs

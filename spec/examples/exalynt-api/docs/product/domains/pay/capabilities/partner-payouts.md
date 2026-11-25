@@ -6,6 +6,7 @@ description: >-
   its manager's, once an admin releases it, and its manager sees each payout.
 stability: beta
 personas: [persona:partner]
+initiatives: [initiative:mvp]
 rules:
   - rule:expected-pay-visible-from-assignment
   - rule:people-see-only-their-own-earnings

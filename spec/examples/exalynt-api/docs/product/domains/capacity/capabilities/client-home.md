@@ -6,6 +6,7 @@ description: >-
   what's waiting on them.
 stability: beta
 personas: [persona:client-admin-founder, persona:client-admin-operations, persona:client-member]
+initiatives: [initiative:mvp]
 rules:
   - rule:exalynt-can-move-lapsed-blocks
   - rule:the-preferred-week-is-a-target

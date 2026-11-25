@@ -9,6 +9,7 @@ personas:
   - persona:exalynt-engineer-new-hire
   - persona:exalynt-engineer-1
   - persona:exalynt-engineer-2
+initiatives: [initiative:mvp]
 rules:
   - rule:engineer-agreement-follows-the-invitations-terms
   - rule:an-engineer-agreement-can-have-no-commercial-terms

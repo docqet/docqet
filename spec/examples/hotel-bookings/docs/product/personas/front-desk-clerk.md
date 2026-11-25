@@ -6,6 +6,7 @@ description: >-
 role: Front desk
 title: Front desk clerk
 image: https://randomuser.me/api/portraits/women/68.jpg
+initiatives: [initiative:busy-season]
 ---
 
 ## Needs

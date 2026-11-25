@@ -7,6 +7,7 @@ description: >-
 role: Exalynt Engineer
 title: Senior full-stack engineer
 image: https://randomuser.me/api/portraits/women/33.jpg
+initiatives: [initiative:mvp, initiative:notifications, initiative:conversation-spaces]
 ---
 
 ## Needs

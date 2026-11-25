@@ -7,6 +7,7 @@ description: >-
   the console, and a Partner Agreement for a partnership.
 stability: alpha
 personas: [persona:exalynt-admin]
+initiatives: [initiative:mvp]
 rules:
   - rule:engineer-agreement-follows-the-invitations-terms
   - rule:an-engineer-agreement-can-have-no-commercial-terms

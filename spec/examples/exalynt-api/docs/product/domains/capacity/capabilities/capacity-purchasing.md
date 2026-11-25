@@ -7,6 +7,7 @@ description: >-
   later.
 stability: beta
 personas: [persona:client-admin-founder, persona:client-admin-operations]
+initiatives: [initiative:mvp]
 rules:
   - rule:blocks-stay-within-their-organization
   - rule:capacity-types-listed-smallest-first

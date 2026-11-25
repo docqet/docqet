@@ -6,6 +6,7 @@ description: >-
   names one, since nobody signs up as an engineer on their own.
 stability: alpha
 personas: [persona:exalynt-engineer-new-hire]
+initiatives: [initiative:mvp]
 rules:
   - rule:engineers-join-by-invitation-only
   - rule:existing-accounts-gain-the-engineer-role

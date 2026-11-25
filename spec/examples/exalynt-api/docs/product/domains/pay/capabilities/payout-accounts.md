@@ -6,6 +6,7 @@ description: >-
   which they add, change, fix, remove, and see whether it can be paid.
 stability: alpha
 personas: [persona:exalynt-engineer-1, persona:exalynt-engineer-2, persona:partner]
+initiatives: [initiative:mvp]
 rules:
   - rule:one-payout-account-per-person
   - rule:a-partnerships-payout-account-is-its-own

@@ -10,6 +10,7 @@ personas:
   - persona:client-admin-operations
   - persona:client-member
   - persona:client-billing
+initiatives: [initiative:mvp]
 rules:
   - rule:engineer-agreement-follows-the-invitations-terms
   - rule:an-engineer-agreement-can-have-no-commercial-terms

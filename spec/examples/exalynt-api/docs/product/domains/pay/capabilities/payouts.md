@@ -11,6 +11,7 @@ personas:
   - persona:exalynt-team-lead
   - persona:exalynt-admin
   - persona:partner
+initiatives: [initiative:mvp]
 rules:
   - rule:expected-pay-visible-from-assignment
   - rule:people-see-only-their-own-earnings

@@ -7,6 +7,7 @@ description: >-
 role: Client Admin
 title: Founder
 image: https://randomuser.me/api/portraits/men/45.jpg
+initiatives: [initiative:mvp, initiative:notifications, initiative:conversation-spaces, initiative:operations-and-ownership]
 ---
 
 ## Needs

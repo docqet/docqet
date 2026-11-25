@@ -7,6 +7,7 @@ description: >-
   or an admin assigns it.
 stability: alpha
 personas: [persona:exalynt-admin]
+initiatives: [initiative:mvp]
 rules:
   - rule:listing-an-engineers-blocks
   - rule:claiming-staffs-the-block-directly

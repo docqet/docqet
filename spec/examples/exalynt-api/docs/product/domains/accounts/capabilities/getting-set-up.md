@@ -11,6 +11,7 @@ personas:
   - persona:client-admin-operations
   - persona:exalynt-engineer-new-hire
   - persona:partner
+initiatives: [initiative:mvp]
 rules:
   - rule:engineers-join-by-invitation-only
   - rule:existing-accounts-gain-the-engineer-role

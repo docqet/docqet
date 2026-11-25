@@ -6,6 +6,7 @@ description: >-
   it has brought in, how to bring in more, and how it earns.
 stability: alpha
 personas: [persona:partner]
+initiatives: [initiative:mvp]
 rules:
   - rule:inviting-creates-the-partnership
   - rule:accepting-makes-the-invitee-manager

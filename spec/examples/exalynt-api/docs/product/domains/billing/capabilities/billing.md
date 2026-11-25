@@ -10,6 +10,7 @@ personas:
   - persona:client-admin-operations
   - persona:client-billing
   - persona:exalynt-admin
+initiatives: [initiative:mvp]
 rules:
   - rule:who-manages-billing
   - rule:buying-requires-a-payment-method

@@ -14,6 +14,7 @@ personas:
   - persona:exalynt-engineer-new-hire
   - persona:exalynt-team-lead
   - persona:exalynt-admin
+initiatives: [initiative:mvp]
 rules:
   - rule:only-exalynt-makes-teams
   - rule:team-names-are-unique

@@ -11,6 +11,7 @@ personas:
   - persona:exalynt-engineer-2
   - persona:exalynt-team-lead
   - persona:exalynt-admin
+initiatives: [initiative:mvp]
 rules:
   - rule:how-a-weeks-availability-is-decided
   - rule:reductions-need-no-approval

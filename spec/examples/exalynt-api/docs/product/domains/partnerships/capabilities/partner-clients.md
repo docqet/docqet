@@ -6,6 +6,7 @@ description: >-
   each came to it, since when, and how long the partnership earns on each.
 stability: beta
 personas: [persona:partner]
+initiatives: [initiative:mvp]
 rules:
   - rule:inviting-creates-the-partnership
   - rule:accepting-makes-the-invitee-manager

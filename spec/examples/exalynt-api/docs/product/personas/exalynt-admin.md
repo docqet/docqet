@@ -7,6 +7,7 @@ description: >-
 role: Exalynt Admin
 title: Founder-operator
 image: https://randomuser.me/api/portraits/women/12.jpg
+initiatives: [initiative:mvp, initiative:notifications, initiative:conversation-spaces]
 ---
 
 ## Needs

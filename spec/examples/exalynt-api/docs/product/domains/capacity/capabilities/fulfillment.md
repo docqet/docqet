@@ -13,6 +13,7 @@ personas:
   - persona:client-admin-founder
   - persona:client-admin-operations
   - persona:client-member
+initiatives: [initiative:mvp]
 rules:
   - rule:engineers-start-their-blocks-from-the-start-of-the-week
   - rule:engineers-mark-their-blocks-fulfilled

@@ -13,6 +13,7 @@ personas:
   - persona:exalynt-engineer-1
   - persona:exalynt-engineer-2
   - persona:exalynt-admin
+initiatives: [initiative:mvp]
 rules:
   - rule:focus-sizes-and-block-prices
   - rule:each-focus-has-its-own-pace

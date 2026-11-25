@@ -11,6 +11,7 @@ personas:
   - persona:client-admin-operations
   - persona:partner
   - persona:exalynt-admin
+initiatives: [initiative:mvp]
 rules:
   - rule:inviting-creates-the-partnership
   - rule:accepting-makes-the-invitee-manager

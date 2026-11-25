@@ -6,6 +6,7 @@ description: >-
   name.
 stability: prototype
 personas: [persona:front-desk-clerk]
+initiatives: [initiative:busy-season]
 rules:
   - rule:no-double-booking
   - rule:minimum-stay

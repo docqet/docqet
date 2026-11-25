@@ -8,6 +8,7 @@ description: >-
 role: Partner
 title: Independent consultant
 image: https://randomuser.me/api/portraits/women/79.jpg
+initiatives: [initiative:mvp, initiative:notifications]
 ---
 
 ## Needs

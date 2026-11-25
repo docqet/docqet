@@ -7,6 +7,7 @@ description: >-
   availability, or unclaim one until its week starts.
 stability: beta
 personas: [persona:exalynt-engineer-1, persona:exalynt-engineer-2]
+initiatives: [initiative:mvp]
 rules:
   - rule:listing-an-engineers-blocks
   - rule:claiming-staffs-the-block-directly

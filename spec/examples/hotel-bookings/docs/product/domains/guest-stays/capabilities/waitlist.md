@@ -6,6 +6,7 @@ description: >-
   the first room that frees up for their stay.
 stability: draft
 personas: [persona:front-desk-clerk]
+initiatives: [initiative:busy-season]
 rules: [rule:no-double-booking]
 concepts: [concept:booking, concept:room]
 decisions:

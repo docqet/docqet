@@ -11,6 +11,7 @@ personas:
   - persona:client-admin-operations
   - persona:client-member
   - persona:exalynt-admin
+initiatives: [initiative:mvp]
 rules:
   - rule:scheduling-comes-before-work
   - rule:unscheduled-blocks-reserve-no-room

@@ -6,6 +6,7 @@ description: >-
   manage is paid to, its own apart from theirs and any other partnership's.
 stability: beta
 personas: [persona:partner]
+initiatives: [initiative:mvp]
 rules:
   - rule:one-payout-account-per-person
   - rule:a-partnerships-payout-account-is-its-own

@@ -6,6 +6,7 @@ description: >-
   and how far the work has got, and assign the teams that serve it.
 stability: alpha
 personas: [persona:exalynt-admin]
+initiatives: [initiative:mvp]
 rules:
   - rule:logos-stay-within-their-organization@accounts
   - rule:anyone-can-create-an-organization@accounts

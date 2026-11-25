@@ -7,6 +7,7 @@ description: >-
   organizations' members.
 stability: alpha
 personas: [persona:exalynt-admin]
+initiatives: [initiative:mvp]
 rules:
   - rule:permissions-follow-where-someone-acts
   - rule:no-platform-role-means-no-permissions

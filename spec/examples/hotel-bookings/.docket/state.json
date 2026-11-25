@@ -14,6 +14,7 @@
     "domains": 2,
     "features": 3,
     "personas": 3,
+    "initiatives": 1,
     "capabilities": {
       "draft": 1,
       "prototype": 4,
@@ -122,6 +123,9 @@
         "feature:front-desk",
         "feature:housekeeping"
       ],
+      "initiatives": [
+        "initiative:busy-season"
+      ],
       "body": "## Needs\n\n- To tell a guest at once whether a room is free for their dates, and hold it\n  for them, without ever giving the same room to two guests.\n- To check guests in and out quickly, so nobody waits at the desk.\n- To know which rooms are ready before a guest arrives, without phoning\n  housekeeping.\n\n## Knows\n\nEvery room in the hotel, the regulars, and the cancellation policy by heart.\nComfortable with a computer, but has learned the system on the job, not from a\nmanual.\n\n## Context\n\nAt the desk all shift, on a shared desktop, with a guest or the phone waiting\nmost of the time. Interrupted constantly, so anything they start may be finished\nminutes later.\n\n## Expects\n\nThe paper diary's view of the hotel: rooms down the side, nights across the top.\nTalks about stays, rooms and arrivals, not reservations or inventory.\n\n## Cares about\n\nNever having to tell a guest standing in front of them that their room was given\naway. They'll go back to the paper diary the first time the app gets that wrong."
     },
     {
@@ -139,6 +143,9 @@
       "features": [
         "feature:housekeeping"
       ],
+      "initiatives": [
+        "initiative:busy-season"
+      ],
       "body": "## Needs\n\n- To know which rooms to clean first, so arriving guests don't wait for a room.\n- To tell the front desk a room is ready without walking back down to say so.\n\n## Knows\n\nThe building, floor by floor, and how long each kind of room takes. Uses a phone\nevery day, but rarely for work.\n\n## Context\n\nOn their feet, moving from room to room with a trolley, a phone in their pocket.\nGloves on much of the time, so anything they do has to take a tap or two.\n\n## Expects\n\nA list of rooms, in the order they'll do them. Talks about rooms being clean,\ndirty or ready.\n\n## Cares about\n\nNot being rushed by the front desk for a room they didn't know was urgent."
     },
     {
@@ -153,7 +160,30 @@
         "capability:rate-calendar"
       ],
       "features": [],
+      "initiatives": [],
       "body": "## Needs\n\n- To set what each room costs, night by night, so busy dates earn more.\n\n## Knows\n\nThe local market and the hotel's busy seasons. Reads a spreadsheet well, and\nexpects software to do the arithmetic for them.\n\n## Context\n\nAt a desk in the back office, a few times a week, in between everything else\nrunning a hotel brings.\n\n## Expects\n\nA calendar of rates, like the one they keep in a spreadsheet today.\n\n## Cares about\n\nRates they can change in a minute when a big event is announced, and being sure\nthe front desk is quoting them."
+    }
+  ],
+  "initiatives": [
+    {
+      "id": "busy-season",
+      "file": "docs/product/initiatives/busy-season.md",
+      "name": "Busy season",
+      "description": "Handling full nights: groups, a waitlist, and turning rooms over faster.",
+      "capabilities": [
+        "capability:group-bookings",
+        "capability:room-status",
+        "capability:waitlist"
+      ],
+      "features": [
+        "feature:reservations",
+        "feature:housekeeping"
+      ],
+      "personas": [
+        "persona:front-desk-clerk",
+        "persona:housekeeper"
+      ],
+      "body": "Set apart until the hotel's first summer on the app, so the front desk can\nrely on what it does every day before taking on the nights when every room is\ntaken."
     }
   ],
   "capabilities": [
@@ -167,6 +197,7 @@
       "personas": [
         "persona:front-desk-clerk"
       ],
+      "initiatives": [],
       "rules": [
         "rule:no-double-booking",
         "rule:minimum-stay",
@@ -212,6 +243,7 @@
       "personas": [
         "persona:front-desk-clerk"
       ],
+      "initiatives": [],
       "rules": [
         "rule:free-cancellation-window",
         "rule:late-cancellation-fee"
@@ -246,6 +278,7 @@
       "personas": [
         "persona:front-desk-clerk"
       ],
+      "initiatives": [],
       "rules": [
         "rule:no-double-booking"
       ],
@@ -273,6 +306,7 @@
       "personas": [
         "persona:front-desk-clerk"
       ],
+      "initiatives": [],
       "rules": [],
       "concepts": [
         "concept:booking"
@@ -297,6 +331,7 @@
       "personas": [
         "persona:housekeeper"
       ],
+      "initiatives": [],
       "rules": [],
       "concepts": [
         "concept:room@guest-stays"
@@ -325,6 +360,9 @@
       "stability": "prototype",
       "personas": [
         "persona:front-desk-clerk"
+      ],
+      "initiatives": [
+        "initiative:busy-season"
       ],
       "rules": [
         "rule:no-double-booking",
@@ -358,6 +396,7 @@
       "personas": [
         "persona:manager"
       ],
+      "initiatives": [],
       "rules": [],
       "concepts": [],
       "gaps": [],
@@ -385,6 +424,9 @@
       "personas": [
         "persona:housekeeper",
         "persona:front-desk-clerk"
+      ],
+      "initiatives": [
+        "initiative:busy-season"
       ],
       "rules": [],
       "concepts": [
@@ -414,6 +456,9 @@
       "stability": "draft",
       "personas": [
         "persona:front-desk-clerk"
+      ],
+      "initiatives": [
+        "initiative:busy-season"
       ],
       "rules": [
         "rule:no-double-booking"

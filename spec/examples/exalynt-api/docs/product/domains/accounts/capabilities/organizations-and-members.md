@@ -10,6 +10,7 @@ personas:
   - persona:client-admin-operations
   - persona:client-member
   - persona:client-billing
+initiatives: [initiative:mvp]
 rules:
   - rule:logos-stay-within-their-organization
   - rule:anyone-can-create-an-organization

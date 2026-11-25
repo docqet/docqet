@@ -7,6 +7,7 @@ description: >-
 role: Client Member
 title: Customer service manager
 image: https://randomuser.me/api/portraits/women/57.jpg
+initiatives: [initiative:mvp, initiative:notifications, initiative:conversation-spaces]
 ---
 
 ## Needs

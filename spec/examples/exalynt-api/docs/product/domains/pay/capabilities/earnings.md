@@ -6,6 +6,7 @@ description: >-
   it's fulfilled.
 stability: alpha
 personas: [persona:exalynt-engineer-1, persona:exalynt-engineer-2, persona:exalynt-team-lead]
+initiatives: [initiative:mvp]
 rules:
   - rule:shares-earned-at-fulfillment
   - rule:payout-basis-per-capacity-unit

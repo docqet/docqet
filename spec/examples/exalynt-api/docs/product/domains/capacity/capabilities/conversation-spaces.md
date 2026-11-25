@@ -15,6 +15,7 @@ personas:
   - persona:exalynt-engineer-2
   - persona:exalynt-team-lead
   - persona:exalynt-admin
+initiatives: [initiative:conversation-spaces]
 rules:
   - rule:every-organization-has-a-space
   - rule:joining-an-organization-puts-you-in-its-space

@@ -17,6 +17,7 @@ personas:
   - persona:exalynt-engineer-new-hire
   - persona:exalynt-team-lead
   - persona:partner
+initiatives: [initiative:mvp]
 rules:
   - rule:tokens-carry-their-creators-access
   - rule:role-changes-apply-at-once

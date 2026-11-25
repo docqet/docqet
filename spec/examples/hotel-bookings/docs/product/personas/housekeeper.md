@@ -5,6 +5,7 @@ description: Cleans and readies the rooms between guests.
 role: Housekeeping
 title: Housekeeper
 image: https://randomuser.me/api/portraits/women/26.jpg
+initiatives: [initiative:busy-season]
 ---
 
 ## Needs

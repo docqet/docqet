@@ -13,6 +13,7 @@ personas:
   - persona:exalynt-team-lead
   - persona:exalynt-admin
   - persona:partner
+initiatives: [initiative:notifications]
 rules:
   - rule:each-app-offers-its-own-notifications
   - rule:nobody-hears-of-their-own-actions

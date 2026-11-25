@@ -6,6 +6,7 @@ description: >-
   each one who signs up as a new client is attributed to their partnership.
 stability: beta
 personas: [persona:partner, persona:client-admin-founder, persona:client-admin-operations]
+initiatives: [initiative:mvp]
 rules:
   - rule:inviting-creates-the-partnership
   - rule:accepting-makes-the-invitee-manager

@@ -6,6 +6,7 @@ description: >-
   ready.
 stability: prototype
 personas: [persona:housekeeper, persona:front-desk-clerk]
+initiatives: [initiative:busy-season]
 concepts: [concept:room@guest-stays]
 decisions:
   - question: >-

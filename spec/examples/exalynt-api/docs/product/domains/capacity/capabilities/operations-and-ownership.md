@@ -6,6 +6,7 @@ description: >-
   for them, and keep what they own.
 stability: prototype
 personas: [persona:client-admin-founder, persona:client-admin-operations]
+initiatives: [initiative:operations-and-ownership]
 decisions:
   - topic: Choosing who operates
     question: >-

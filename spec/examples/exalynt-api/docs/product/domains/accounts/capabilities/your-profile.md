@@ -17,6 +17,7 @@ personas:
   - persona:exalynt-engineer-new-hire
   - persona:exalynt-team-lead
   - persona:partner
+initiatives: [initiative:mvp]
 rules:
   - rule:everyone-sees-the-name-given
   - rule:invitations-follow-the-primary-address

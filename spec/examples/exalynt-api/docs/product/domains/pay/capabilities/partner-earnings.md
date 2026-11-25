@@ -7,6 +7,7 @@ description: >-
   has left, and what's waiting to be paid.
 stability: beta
 personas: [persona:partner]
+initiatives: [initiative:mvp]
 rules:
   - rule:shares-earned-at-fulfillment
   - rule:payout-basis-per-capacity-unit

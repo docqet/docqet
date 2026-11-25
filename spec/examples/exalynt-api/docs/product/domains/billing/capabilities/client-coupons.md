@@ -6,6 +6,7 @@ description: >-
   amount off each block they buy, either forever or on their next purchase.
 stability: prototype
 personas: [persona:exalynt-admin]
+initiatives: [initiative:mvp]
 concepts: [concept:organization@accounts]
 decisions:
   - question: >-

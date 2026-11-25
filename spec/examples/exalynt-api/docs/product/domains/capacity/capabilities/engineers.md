@@ -6,6 +6,7 @@ description: >-
   they're working on, and whether they're ready for client work.
 stability: alpha
 personas: [persona:exalynt-admin]
+initiatives: [initiative:mvp]
 rules:
   - rule:permissions-follow-where-someone-acts@accounts
   - rule:no-platform-role-means-no-permissions@accounts
