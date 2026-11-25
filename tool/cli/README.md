@@ -15,7 +15,7 @@ the UI (see [the proposed architecture](../../README.md#proposed-architecture)).
 Everything Docket works out is worked out in Go, once, so the command, the
 server and the UI never disagree.
 
-**Contents:** [Principles](#principles) · [Commands at a glance](#commands-at-a-glance) · [Where a read comes from](#where-a-read-comes-from) · [Setting up](#setting-up) · [Reading](#reading) · [History](#history) · [Acting on the server](#acting-on-the-server) · [Serving](#serving) · [How clients use it](#how-clients-use-it) · [Conventions](#conventions) · [Left out for now](#left-out-for-now) · [Open questions](#open-questions)
+**Contents:** [Principles](#principles) · [Commands at a glance](#commands-at-a-glance) · [Where a read comes from](#where-a-read-comes-from) · [Setting up](#setting-up) · [Reading](#reading) · [Renaming](#renaming) · [History](#history) · [Acting on the server](#acting-on-the-server) · [Serving](#serving) · [How clients use it](#how-clients-use-it) · [Conventions](#conventions) · [Left out for now](#left-out-for-now) · [Open questions](#open-questions)
 
 ## Principles
 
@@ -59,6 +59,7 @@ the server are separate, since they aren't reads.
 | [`docket show`](#docket-show) | One doc, with everything derived about it | Read |
 | [`docket list`](#docket-list) | Docs, gaps, decisions or tradeoffs, filtered and ordered | Read |
 | [`docket status`](#docket-status) | Maturity, readiness and what's left, at a glance | Read |
+| [`docket rename`](#docket-rename) | Change an ID everywhere in the project, and say so in history | Changing |
 | [`docket diff`](#docket-diff) | What changed in Docket between two points | Read |
 | [`docket log`](#docket-log) | How one thing changed over time | Read |
 | [`docket history`](#docket-history) | Index every commit on a branch, for history offline | Setting up |
@@ -202,7 +203,8 @@ docket check --platform               # with the rest of the platform
   repository that already has problems. The main branch is `origin/HEAD`
   unless `--base` says otherwise.
 - **`--commits`** checks every [trailer](#trailers) in a range: that each
-  names something that existed before, and something that exists after.
+  names something that existed before, and something that exists after, and
+  that none is left in a message's body where git won't read it.
 - **`--platform`** resolves a link to a rule another project defines, and
   finds contradictions with other projects. Without it, a link into another
   project is reported as `unknown-id`, with a note that it may be defined
@@ -285,6 +287,60 @@ the command is a reader too. It's the same Go code the server uses, and the UI
 shows only what that code works out, so `docket status` and the UI always
 agree.
 
+## Renaming
+
+### `docket rename`
+
+Changes an ID, and every reference to it in the project, and prints the
+[trailer](#trailers) that tells history it's the same thing. Changing an ID is
+a breaking change, and history only follows one that a commit says it should,
+so renaming is always done on purpose, with this command.
+
+```sh
+docket rename <old> <new>
+```
+
+```sh
+docket rename capability:early-arrival capability:early-check-in
+docket rename rule:same-day-turnover@guest-stays rule:same-day-turnover@property   # to another domain
+docket rename capability:room-booking#needs-mouse capability:room-booking#calendar-needs-a-mouse
+docket rename capability:early-arrival capability:early-check-in --dry-run          # what would change
+docket rename capability:early-arrival capability:early-check-in --platform         # also list other projects' references
+```
+
+```text
+hotel-bookings · working tree (4f2c9e1)
+
+docket/domains/guest-stays/capabilities/early-arrival.md
+  → docket/domains/guest-stays/capabilities/early-check-in.md     id
+docket/domains/guest-stays/features/front-desk.md                 capabilities
+docket/components/bookings.md                                     capabilities
+src/booking/arrival.ts:12                                         docket:implements
+features/arrival.feature:3                                        docket:verifies
+
+Its gaps and tradeoffs follow it: capability:early-check-in#no-room-ready-alert
+
+Add this trailer when you commit:
+  git commit --trailer "Docket-Became: capability:early-arrival -> capability:early-check-in"
+```
+
+- **It changes the doc itself**: its `id`, or its `domain` for a rule or
+  concept moving to another domain, or a gap's or tradeoff's key. A doc's
+  file is renamed with it when the file is named after the old ID, as the
+  spec recommends, and left alone otherwise.
+- **It changes every reference to it in the project**: links in every doc's
+  frontmatter, every annotation, and the IDs of the doc's own gaps and
+  tradeoffs, which follow it under the same trailer.
+- **It doesn't change what people wrote in a doc's body**, since nothing reads
+  it, and doesn't change other projects. With `--platform`, it lists the
+  references in other projects on the platform, from the server, so they can
+  be changed there, each in a commit of its own, with no trailer.
+- **It refuses** when the new ID is already taken, since that would make two
+  things one, or when the old one doesn't exist.
+- **It doesn't commit.** It prints the trailer as a `git commit --trailer`
+  argument, and with `--json` returns it as `trailer`, for whoever commits to
+  add, with git's own `--trailer` or by hand.
+
 ## History
 
 How each thing changed is worked out from the states of successive commits.
@@ -326,23 +382,31 @@ hotel-bookings · last commit (9b1e004) → working tree
 
 capability:early-arrival     alpha → beta
 gap closed                   capability:room-booking#calendar-needs-a-mouse
-decision answered            capability:refunds#where-the-money-goes
-  became                     rule:refund-to-original-card@billing        (Docket-Became trailer)
-  became                     capability:refunds#no-split-refunds         (gap, guessed)
+gap removed                  component:ledger#slow-balances
+tradeoff added               component:ledger#balance-worked-out-on-read
 rule:minimum-stay@guest-stays  +1 verifies (src/booking/stay.test.ts:14)
+
+Removed with no trailer yet. If any became something, say so in the commit message:
+  component:ledger#slow-balances
 ```
 
-A **transition** is something removed that became something else. `diff`
-finds them two ways:
+Between commits, it shows what a removed thing became only where a commit's
+`Docket-Became` [trailer](#trailers) says so, and never guesses:
 
-- **Trailers** say so outright, and are trusted. See [Trailers](#trailers).
-- **Guesses** fill in the rest: something removed, and something added on the
-  same doc in the same commit, probably became it. A gap that keeps its key
-  and turns into a tradeoff is the same thing with a new kind. Guesses are
-  marked as guessed.
+```text
+hotel-billing · v1.3 → v1.4
 
-When `diff --staged` guesses a transition, it prints the trailer that would
-confirm it, so an agent can put it in the commit message when it's right.
+decision answered            capability:refunds#where-the-money-goes
+  became                     rule:refund-to-original-card@billing
+  became                     capability:refunds#no-split-refunds
+capability renamed           capability:early-arrival → capability:early-check-in
+```
+
+Anything removed without one is shown as removed, and anything added as
+added. For a change that isn't committed yet, there's no message to read, so
+it lists what the change removes instead, for its author to say in a trailer
+what any of it became. [`docket rename`](#docket-rename) prints the trailer
+for a rename itself.
 
 With `--platform`, it also shows what only the rest of the platform shows: a
 contradiction with another project, a link to another project's doc resolving
@@ -387,27 +451,28 @@ docket history --branch release
 
 ### Trailers
 
-A commit says what an answered decision or a removed gap became with a
-`Docket-Became` trailer in its message:
+A commit says what something it removed became with a `Docket-Became`
+trailer, one of git's own trailers, beside any others such as `Signed-off-by`.
+The [spec's trailers](../../spec/trailers/) are the whole format.
 
 ```text
 Settle refunds to the original card
 
-Docket-Became: capability:refunds#where-the-money-goes -> rule:refund-to-original-card@billing, capability:refunds#no-split-refunds
+Docket-Became: capability:refunds#where-the-money-goes -> rule:refund-to-original-card@billing
+Docket-Became: capability:refunds#where-the-money-goes -> capability:refunds#no-split-refunds
 ```
 
-- **One trailer per thing removed**, naming everything it became, separated
-  by commas. A trailer is only needed where the guess would be wrong or
-  missing.
-- **History is in git, not in the docs.** The docs keep no link back to what
-  they replaced, as the spec intends, and the link survives anyway.
-- **They're found anywhere in the message**, not only in its last paragraph,
-  since squash merges put each squashed commit's message into the body.
-- **`docket check --commits` validates them**, and CI can run it on a branch
-  before it merges.
+Git writes and reads them itself, with `git commit --trailer` and
+`%(trailers:key=Docket-Became)`, and the command reads them the way git does,
+from each message's trailer block. How it uses them:
 
-Naming a decision this way needs decisions to have keys, the way gaps and
-tradeoffs do. See [Open questions](#open-questions).
+- **`diff` and `log` read them** to show what became what, and show nothing as
+  having become anything without one.
+- **`rename` prints the one for its rename**, as a `--trailer` argument.
+- **`check --commits` validates them** over a range, and CI runs it on a
+  branch before it merges.
+- **`apply` sends them** with each commit's state, so the server's history has
+  them, including those from commits a merge brought in.
 
 ### `docket preview`
 
@@ -594,8 +659,11 @@ docket check --changed --json          # before finishing: anything broken
 docket diff --json                     # what the change does to Docket, for its report
 ```
 
-When `diff` guesses a transition, the agent puts the suggested trailer in the
-commit message if it's right, and asks if it isn't sure.
+When `diff` lists something the change removed, the agent says what it
+became, if it became anything, with a trailer on the commit: a decision it
+answered, or a gap it turned into a tradeoff. It asks when it isn't sure. When
+it renamed something, it uses `docket rename`, and passes the `--trailer` that
+prints to `git commit`.
 
 ### An engineer's pre-commit hook
 
@@ -690,8 +758,10 @@ docket list decisions --platform hotel --initiative mvp
 - **Writing docs.** No `docket new capability`. Agents write docs directly
   from the kit's `docs.md`, and people copy one. We'll add it if writing them
   by hand turns out to be slow.
-- **Changing an ID everywhere.** No `docket rename` yet, though the kit has
-  agents do it by hand, and it's the likeliest next addition.
+- **Remembering trailers.** `rename` prints its trailer, and nothing keeps it
+  for the commit, since nothing a command did earlier changes what another
+  does. A `prepare-commit-msg` hook that adds it can come later, if renames
+  committed without one turn out to be common.
 - **Branch history on the server.** Only the main branch's commits are
   applied. A branch is shown by `preview`, not stored.
 - **Integrations with hosts or CI services.** No GitHub App, no GitLab
@@ -706,14 +776,13 @@ docket list decisions --platform hotel --initiative mvp
 - **Where the server keeps what it holds.** SQLite would let `docket serve`
   run with nothing else beside it. A deployment that needs more can bring
   Postgres when it does.
-- **Decisions need keys.** A decision is a `topic` and a `question` today,
-  with nothing that names it. To be named in a trailer or followed by `log`,
-  each needs a key like a gap's, such as
-  `capability:refunds#where-the-money-goes`. That's a spec change.
-- **What else trailers should say.** `Docket-Became` covers what was removed
-  and became something. A gap that was deleted because it was never real,
-  rather than closed by work, looks the same as one that was closed. We'll
-  add a trailer for that if the difference turns out to matter.
+- **Decisions need keys** before `rename`, a trailer or `log` can name one.
+  It's a spec change, an open decision in the
+  [spec's trailers](../../spec/trailers/#open-decisions).
+- **A trailer left out can't be added later.** A rename committed without its
+  trailer reads in history as one thing removed and another added, and the
+  only way to fix it is to rewrite that commit. If that happens often, a later
+  commit could be allowed to say what an earlier one's removal became.
 - **How well test cases can be matched to evidence.** JUnit names a test by
   its class or file and its name, while an annotation is on a file and line.
   We'll find out how rough the match is on real projects before making it
