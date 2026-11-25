@@ -47,7 +47,6 @@ import {
   riskAcross,
   openDecisions,
   domainCapabilities,
-  isReady,
   needsOf,
   personaCapabilitiesIn,
   readinessOf,
@@ -400,9 +399,8 @@ function Avatars({ personas }: { personas: Persona[] }) {
 
 /* ——— Readiness ——— */
 
-/* How ready it is, as a figure in the header, as its bar, linking to what it still needs on its first tab. `of` heads its popover. */
+/* How ready it is, as a figure in the header, as its pie, linking to what it still needs on its first tab. `of` heads its popover. */
 function ReadinessStat({ readiness, tab, of }: { readiness: Readiness; tab: string; of: string }) {
-  const ready = isReady(readiness);
   const note = [
     ...(readiness.notReady.length ? [`${readiness.notReady.length} with something left`] : []),
     ...(readiness.notStarted.length ? [`${readiness.notStarted.length} not started`] : []),
@@ -413,7 +411,6 @@ function ReadinessStat({ readiness, tab, of }: { readiness: Readiness; tab: stri
       term="readiness"
       value={readiness.percent === null ? "Nothing started" : <ReadinessMark readiness={readiness} of={of} inButton />}
       note={note || (readiness.percent === null ? "Drafts don't count" : "Nothing left on any capability")}
-      tone={ready ? "ok" : undefined}
       href={`${tabHref(tab)}#still-needs`}
     />
   );
@@ -832,7 +829,6 @@ function CapabilityPage({ capability, route, ...go }: PageProps & { capability: 
               term="readiness"
               value={readiness.percent === null ? "Not started" : <ReadinessMark readiness={readiness} of={`Readiness of ${capability.name}`} inButton />}
               note={!needs ? "A draft doesn't count" : ready ? "Nothing left: at Beta or above, with no unacceptable gap" : needsLine(needs)}
-              tone={isReady(readiness) ? "ok" : undefined}
               href={needs?.gaps.length ? tabHref("left") : undefined}
             />
             <ExposureStat state={state} capabilities={[capability]} of={capability.name} />

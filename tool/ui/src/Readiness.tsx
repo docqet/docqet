@@ -1,4 +1,3 @@
-import type { CSSProperties } from "react";
 import Box from "@mui/material/Box";
 import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
 import BoltOutlinedIcon from "@mui/icons-material/BoltOutlined";
@@ -14,37 +13,28 @@ import { RiskRing } from "./design/risk/RiskRing";
 import { VerdictSpread } from "./design/risk/RiskScore";
 import { CapabilityStability } from "./design/catalog/CapabilityLabel";
 import { Tip } from "./design/Tip";
+import { Pie } from "./design/ring/Pie";
 import { docHref } from "./routes";
-import { READINESS_BANDS, exposureText, readinessBand, startedOf, type NotReady, type Readiness } from "./state";
+import { exposureText, readinessBand, startedOf, type NotReady, type Readiness } from "./state";
 
 /*
  * Readiness: how ready people can rely on it being, as a recommendation for
  * them to judge, and what it still needs. It's the maturity of its
- * capabilities less their exposure. It's never in a level's color,
- * since it isn't a level, and never a ring, since that's maturity's: a short straight bar filled as far as its
- * percentage, in --ok in the Ready quarter, and in the text's own color below.
+ * capabilities less their exposure. It's drawn as maturity and exposure
+ * are, at their sizes, but as a pie (see Pie) rather than a ring, in its
+ * own color scale (readinessColor) rather than a band's: it isn't a level.
+ * Its band's name takes the same color, as maturity's and exposure's take theirs.
  */
 
 const plural = (n: number, one: string, many: string) => `${n} ${n === 1 ? one : many}`;
+
+/* Readiness's color, for its pie and percentage: from grey, not ready at all, toward --ready-high, blended by how ready. */
+export const readinessColor = (percent: number) => `color-mix(in oklch, var(--ready-high) ${Math.min(Math.max(percent, 0), 100)}%, var(--ready-low))`;
 
 /* Readiness in a few words: "Viable · 59%", or null with nothing started. */
 export function readinessLabel(r: Readiness): string | null {
   const band = readinessBand(r);
   return band ? `${band.name} · ${r.percent}%` : null;
-}
-
-/* A readiness in words, its percentage in its bar's color: "Viable · 59%". Null with nothing started. */
-export function ReadinessText({ readiness }: { readiness: Readiness }) {
-  const band = readinessBand(readiness);
-  if (!band) return null;
-  return (
-    <>
-      {band.name} ·{" "}
-      <span className="readiness-percent" style={{ color: readinessColor(readiness.percent!) }}>
-        {readiness.percent}%
-      </span>
-    </>
-  );
 }
 
 /* What a not-ready capability still needs, in a line: "Reach Beta (now Alpha) · close 2 unacceptable gaps". */
@@ -56,44 +46,28 @@ export function needsLine(n: NotReady): string {
   return parts.charAt(0).toUpperCase() + parts.slice(1);
 }
 
-/* Readiness's color: from grey, not ready at all, to green, ready, blended by how ready. */
-export const readinessColor = (percent: number) => `color-mix(in oklch, var(--ready-high) ${Math.min(Math.max(percent, 0), 100)}%, var(--ready-low))`;
-
 /*
- * A straight bar, filled as far as `percent`, from grey to its color. Decorative.
- * A bar, never a ring: the ring is maturity's. `wide` spans its popover, notched
- * at each quarter.
- */
-function ReadinessBar({ percent, size = "small" }: { percent: number; size?: "small" | "large" | "wide" }) {
-  const p = Math.min(Math.max(percent, 0), 100);
-  return (
-    <span className={`readiness-bar${size === "small" ? "" : ` ${size}`}`} aria-hidden style={{ "--ready": readinessColor(p) } as CSSProperties}>
-      <span className="readiness-bar-fill" style={{ width: `${p}%` }} />
-    </span>
-  );
-}
-
-/*
- * How ready something is, beside its name or in a row: its quarter and
- * percentage, "Viable · 59%", with its bar; large, as at the top of a
- * page, the quarter in bold; `bare`, as on the map, just the bar and the
- * percentage, since the popover and side panel name the quarter. Its popover (hover, focus, or tap) breaks it down. With
- * nothing started, it says so. `of` says whose it is in the popover:
- * "Readiness for Maria". Inside something clickable, `inButton` opens the
- * popover on hover only, so a tap still reaches what it's in.
+ * How ready something is, beside its name or in a row, as maturity and
+ * exposure are: its pie, with the percentage beside it, then its band, "75%
+ * Ready"; `bare`, as on a persona's card on the map, just the pie and the
+ * percentage. `size` is the pie's diameter, 22 by default, as theirs is
+ * beside a name. Its popover (hover, focus, or tap) breaks it down. With
+ * nothing started, it says so. `of` heads the popover: "Readiness for
+ * Maria". Inside something clickable, `inButton` opens the popover on hover
+ * only, so a tap still reaches what it's in.
  */
 export function ReadinessMark({
   readiness,
   of,
-  large = false,
   inButton = false,
   bare = false,
+  size = 22,
 }: {
   readiness: Readiness;
   of: string;
-  large?: boolean;
   inButton?: boolean;
   bare?: boolean;
+  size?: number;
 }) {
   const started = startedOf(readiness);
   if (!started || readiness.percent === null)
@@ -105,29 +79,9 @@ export function ReadinessMark({
   const label = readinessLabel(readiness)!;
   return (
     <DetailsPopover hoverOnly={inButton} title={<ReadinessDetails readiness={readiness} of={of} />}>
-      <span
-        className={`readiness${large ? " large" : ""}`}
-        role="img"
-        aria-label={`${of}: ${label}`}
-        tabIndex={inButton ? undefined : 0}
-      >
-        <ReadinessBar percent={readiness.percent} size={large ? "large" : "small"} />
-        {large ? (
-          <>
-            <strong>{readinessBand(readiness)!.name}</strong>
-            <span className="readiness-count" style={{ color: readinessColor(readiness.percent) }}>
-              {readiness.percent}%
-            </span>
-          </>
-        ) : bare ? (
-          <span className="readiness-count" style={{ color: readinessColor(readiness.percent), fontWeight: 600 }}>
-            {readiness.percent}%
-          </span>
-        ) : (
-          <span>
-            <ReadinessText readiness={readiness} />
-          </span>
-        )}
+      <span className="readiness" role="img" aria-label={`${of}: ${label}`} tabIndex={inButton ? undefined : 0}>
+        <Pie percent={readiness.percent} size={size} figure={`${readiness.percent}%`} sx={{ color: readinessColor(readiness.percent) }} />
+        {bare ? null : <strong style={{ color: readinessColor(readiness.percent) }}>{readinessBand(readiness)!.name}</strong>}
       </span>
     </DetailsPopover>
   );
@@ -149,21 +103,12 @@ function ReadinessDetails({ readiness, of }: { readiness: Readiness; of: string 
   return (
     <DetailsCard card width={320}>
       <DetailsEyebrow>{of}</DetailsEyebrow>
-      <Box sx={{ mt: 1, display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: 1 }}>
-        <Box className="readiness-details-name" sx={{ fontSize: "1.12em", fontWeight: 700 }}>
-          {readinessBand(readiness)!.name}
-        </Box>
-        <Box sx={{ fontWeight: 600, fontVariantNumeric: "tabular-nums" }} style={{ color: readinessColor(readiness.percent!) }}>
-          {readiness.percent}%
-        </Box>
-      </Box>
-      <Box sx={{ mt: 1 }}>
-        <ReadinessBar percent={readiness.percent!} size="wide" />
-        <span className="readiness-bar-scale" aria-hidden>
-          {READINESS_BANDS.map((b) => (
-            <span key={b.name}>{b.name}</span>
-          ))}
-        </span>
+      <Box sx={{ mt: 1.25, display: "flex", alignItems: "center", gap: 1.5 }}>
+        <Pie percent={readiness.percent!} size={56} sx={{ color: readinessColor(readiness.percent!) }} />
+        <div>
+          <Box sx={{ fontSize: "1.12em", fontWeight: 700 }}>{readinessBand(readiness)!.name}</Box>
+          <Box sx={{ color: "text.secondary", fontVariantNumeric: "tabular-nums" }}>{readiness.percent}%</Box>
+        </div>
       </Box>
       <Box sx={{ mt: 1.25 }}>{readinessBand(readiness)!.says}</Box>
       <div className="readiness-factors">

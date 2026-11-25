@@ -157,7 +157,7 @@ function summarize(state: DocketState, at: Pick): Summary | null {
     of: `what serves ${name}`,
     role,
     picture: <PersonaAvatar persona={p} size={40} />,
-    mark: <ReadinessMark readiness={personaReadiness(state, p)} of={`Readiness for ${name}`} large />,
+    mark: <ReadinessMark readiness={personaReadiness(state, p)} of={`Readiness for ${name}`} />,
     figures: [
       { label: "Capabilities", value: capabilities.length, tab: "serves" },
       { label: "Features", value: p.features.length, tab: "readiness" },
