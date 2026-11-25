@@ -4720,11 +4720,6 @@ button.page-table-row:hover .page-table-name strong {
   outline-offset: 2px;
 }
 
-.verdict-spread-bar > span[data-verdict="acceptable"],
-.verdict-spread-bar > span[data-verdict="none"] {
-  background: color-mix(in srgb, var(--text) 18%, transparent);
-}
-
 .verdict-spread-counts {
   display: flex;
   flex-wrap: wrap;
@@ -4733,14 +4728,43 @@ button.page-table-row:hover .page-table-name strong {
   color: var(--muted);
 }
 
-.verdict-spread-counts strong {
-  color: var(--risk);
+/* Each count: its part's swatch, then its number in the part's color (--level or --risk), then its name. */
+.spread-count {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.verdict-spread-counts strong,
+.stability-spread-n {
+  color: var(--level, var(--text));
   font-weight: 650;
 }
 
-.verdict-spread-counts [data-verdict="acceptable"] strong,
-.verdict-spread-counts [data-verdict="none"] strong {
-  color: var(--text);
+.verdict-spread-counts [data-verdict] > strong {
+  color: var(--risk);
+}
+
+/* A part's color beside its count: exactly its part of the bar. */
+.spread-swatch {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  background: var(--level);
+}
+
+[data-verdict] > .spread-swatch {
+  background: var(--risk);
+}
+
+.spread-swatch.draft {
+  background: repeating-linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--faint) 70%, transparent) 0 2px,
+    transparent 2px 4px
+  );
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--faint) 45%, transparent);
 }
 
 /* The riskiest few: each name and score on a line, its parts under it. */

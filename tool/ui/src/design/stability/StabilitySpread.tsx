@@ -3,7 +3,7 @@ import type { Theme } from "@mui/material/styles";
 import type { CapabilityLevel, Level } from "../../state";
 import { DetailsCard, DetailsEyebrow, DetailsPopover } from "../DetailsPopover";
 import { MATURITY_BANDS } from "../maturity/maturity";
-import { STABILITY, STABILITY_LEVEL_IDS, levelColor } from "./stability";
+import { STABILITY, STABILITY_LEVEL_IDS } from "./stability";
 import { StabilityTrack } from "./StabilityTrack";
 
 /*
@@ -77,18 +77,15 @@ function StabilitySpreadDetails({ levels, of }: { levels: CapabilityLevel[]; of:
         <StabilitySpreadBar levels={levels} wide />
       </Box>
       <ul className="stability-spread-counts">
-        {[...spreadOf(levels)].reverse().map(({ level, n }) => (
-          <li key={level ?? "draft"}>
-            {level ? (
-              <Box component="span" sx={levelVar(level)} className="stability-spread-name">
-                <StabilityTrack level={level} />
-                {levelName(level)}
-              </Box>
-            ) : (
-              <span className="stability-spread-name">Draft</span>
-            )}
+        {spreadOf(levels).map(({ level, n }) => (
+          <Box component="li" key={level ?? "draft"} sx={level ? levelVar(level) : undefined}>
+            <span className="stability-spread-name">
+              <SpreadSwatch draft={!level} />
+              {level ? <StabilityTrack level={level} /> : null}
+              {levelName(level)}
+            </span>
             <span className="stability-spread-n">{n}</span>
-          </li>
+          </Box>
         ))}
       </ul>
       <Box sx={{ mt: 1, color: "text.secondary", fontSize: "0.92em" }}>
@@ -98,25 +95,29 @@ function StabilitySpreadDetails({ levels, of }: { levels: CapabilityLevel[]; of:
   );
 }
 
+/* A part's color, as a small square beside its count, the same as its part of the bar: the level's (--level), or a draft's hatch. */
+export function SpreadSwatch({ draft = false }: { draft?: boolean }) {
+  return <span className={draft ? "spread-swatch draft" : "spread-swatch"} aria-hidden />;
+}
+
 /*
  * How several spread across the levels, for a popover, as risk's spread
  * across the verdicts is drawn: the wide bar, with each count under it in
- * its level's color, most dependable first. With `bands`, they're features'
- * maturity bands, named for them, and null is one not started; otherwise
- * null is a draft.
+ * the bar's order, each with its part's swatch and its number in that
+ * color. With `bands`, they're features' maturity bands, named for them,
+ * and null is one not started; otherwise null is a draft.
  */
 export function LevelSpread({ levels, bands = false }: { levels: CapabilityLevel[]; bands?: boolean }) {
   return (
     <div className="verdict-spread">
       <StabilitySpreadBar levels={levels} wide />
       <span className="verdict-spread-counts">
-        {[...spreadOf(levels)].reverse().map(({ level, n }) => (
-          <span key={level ?? "none"}>
-            <Box component="strong" sx={level ? levelColor(level) : { color: "text.primary" }}>
-              {n}
-            </Box>{" "}
+        {spreadOf(levels).map(({ level, n }) => (
+          <Box component="span" key={level ?? "none"} className="spread-count" sx={level ? levelVar(level) : undefined}>
+            <SpreadSwatch draft={!level} />
+            <strong>{n}</strong>
             {level ? (bands ? MATURITY_BANDS[level].toLowerCase() : levelName(level)) : bands ? "not started" : n === 1 ? "draft" : "drafts"}
-          </span>
+          </Box>
         ))}
       </span>
     </div>

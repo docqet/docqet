@@ -792,7 +792,3 @@ a.lf-row-title:hover {
   color: var(--risk);
 }
 
-.lf-gap-spread-counts a[data-verdict="acceptable"] strong,
-.lf-gap-spread-counts a[data-verdict="none"] strong {
-  color: var(--text);
-}

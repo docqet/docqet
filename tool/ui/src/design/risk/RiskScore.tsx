@@ -303,7 +303,7 @@ export function RiskSpreadBar({ risk, wide = false }: { risk: RiskAcross<unknown
   );
 }
 
-/* How several spread across the verdicts: the bar, with the counts under it. */
+/* How several spread across the verdicts: the bar, with the counts under it in its order, each with its part's swatch and its number in that color. */
 export function VerdictSpread({ risk }: { risk: RiskAcross<unknown> }) {
   const parts = spreadOf(risk);
   return (
@@ -311,8 +311,10 @@ export function VerdictSpread({ risk }: { risk: RiskAcross<unknown> }) {
       <RiskSpreadBar risk={risk} wide />
       <span className="verdict-spread-counts">
         {parts.map((p) => (
-          <span key={p.key} data-verdict={p.key}>
-            <strong>{p.n}</strong> {p.name}
+          <span key={p.key} data-verdict={p.key} className="spread-count">
+            <span className="spread-swatch" aria-hidden />
+            <strong>{p.n}</strong>
+            {p.name}
           </span>
         ))}
       </span>
