@@ -1,9 +1,9 @@
 # Bringing Docket to a repository
 
-A folder becomes a Docket project with a `docket.yaml` in it. That's usually
-the repository's root. A repository holding several pieces of software, such
-as a monorepo, can have one in each one's folder instead, and each is a
-project of its own:
+A folder becomes a Docket project with a `docket.yaml` in it, which
+`docket init` writes. That's usually the repository's root. A repository
+holding several pieces of software, such as a monorepo, can have one in each
+one's folder instead, and each is a project of its own:
 
 ```yaml
 project:
@@ -14,7 +14,13 @@ product:                  # optional: the software product it's part of, with it
   name: Hotel             # named for the product
 ```
 
-Add `.docket/state.json` to `.gitignore`.
+```sh
+docket init --id hotel-bookings --name "Hotel Bookings" --product hotel
+docket kit
+```
+
+`docket init` also adds `.docket/` to `.gitignore`, and `docket kit` installs
+this kit, if it isn't already there.
 
 ## Intention read from code isn't declared
 
@@ -52,6 +58,9 @@ repository:
 
 Technical docs come last and only where the code can't say something. Most of
 the code needs none.
+
+Run `docket check` after each batch, and `docket status` to show the person
+what Docket now says about their software.
 
 If the project already keeps any of this somewhere else, such as a wiki,
 tickets or another docs folder, offer to bring it into Docket and leave a

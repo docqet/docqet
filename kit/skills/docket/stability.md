@@ -15,7 +15,8 @@ how much people can depend on it right now, not how good it is.
 
 1. **The user's word** wins. If it differs from the capability's `stability`,
    say so, and offer to update the doc.
-2. **The capability's `stability`**, in the domain the change is in.
+2. **The capability's `stability`**, in the domain the change is in, as
+   `docket touches` or `docket show` reports it.
 3. **Otherwise, infer it** from what the repository shows, tell the user the
    level and what it rests on, and offer to record it. Don't write an inferred
    level as declared.
@@ -40,8 +41,11 @@ run.
 
 ## The stability checklist
 
-[checklist.yml](checklist.yml) describes what each level generally expects,
-in ten qualities, each a question someone asks before depending on the work.
+`docket checklist` describes what each level generally expects, in ten
+qualities, each a question someone asks before depending on the work.
+`--level beta` shows what one level expects, and `<outcome ID>` one outcome
+with its examples. It's part of the spec, built into `docket`, and the same
+for every project.
 Each level includes the outcomes below it, unless an outcome's `until` names
 the last level it applies to. Each outcome's ID is `<quality>/<level>/<id>`,
 such as `reliability/beta/data-kept`.
@@ -68,10 +72,12 @@ Only when a person tells you to. Then:
 
 1. Confirm the capability, its current level and the target. A skip, such as
    Prototype to Beta, covers each level in between.
-2. Go through what the target expects that the current level doesn't, in
-   [checklist.yml](checklist.yml), against the capability and the mechanisms
-   and components it relies on. Look at the gaps already on them that name an
-   outcome the target expects.
+2. Run `docket checklist --for capability:<id> --to <level>`. It lists what
+   the target expects that the current level doesn't, and for each outcome
+   the gaps and tradeoffs that name it and the mechanisms and components that
+   meet it, on the capability and on what it relies on. Go through each
+   outcome nothing names against the code, since declaring the level claims
+   it.
 3. Before changing anything, present the delta: what has to change and which
    outcome each meets, what you propose to record as gaps instead, and what
    you're deliberately not doing yet because it belongs to a later level.

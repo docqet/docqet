@@ -59,6 +59,7 @@ the server are separate, since they aren't reads.
 | [`docket show`](#docket-show) | One doc, with everything derived about it | Read |
 | [`docket list`](#docket-list) | Docs, gaps, decisions or tradeoffs, filtered and ordered | Read |
 | [`docket status`](#docket-status) | Maturity, readiness and what's left, at a glance | Read |
+| [`docket checklist`](#docket-checklist) | What each stability level expects, or what a promotion needs | Read |
 | [`docket rename`](#docket-rename) | Change an ID everywhere in the project, and say so in history | Changing |
 | [`docket diff`](#docket-diff) | What changed in Docket between two points | Read |
 | [`docket log`](#docket-log) | How one thing changed over time | Read |
@@ -150,16 +151,25 @@ docket init --id hotel-bookings --name "Hotel Bookings" --product hotel
 
 ### `docket kit`
 
-Installs the agent kit into the project, or updates it: the skill under
-`.agents/skills/docket/`, the link from `.claude/skills/docket`, the block in
-`AGENTS.md`, and the import in `CLAUDE.md`. It does what
-[`kit/install.sh`](../../kit/install.sh) does today, and replaces it, so the
-kit's version follows the command's.
+Installs the [agent kit](../../kit/) into the project, or updates it: the
+skill under `.agents/skills/docket/`, the link from `.claude/skills/docket`,
+the block in `AGENTS.md`, and the import in `CLAUDE.md`. The kit is built into
+the binary, so it's always the one written for this version's commands.
 
 ```sh
 docket kit           # install or update; safe to re-run
-docket kit --check   # exit 1 if the project's copy is out of date, for CI
+docket kit --check   # exit 1 if the project's copy isn't this version's kit, for CI
 ```
+
+- **It owns the skill's folder and the block, and nothing else.** It makes
+  `.agents/skills/docket/` match the kit exactly, removing files the kit no
+  longer has, and replaces only what's between the `docket-kit:start` and
+  `docket-kit:end` markers in `AGENTS.md`. The rest of `AGENTS.md` and
+  `CLAUDE.md` is the project's, and it only ever adds to them.
+- **It reports each file** as `added`, `updated`, `removed` or `ok`.
+- **It stops at what it can't safely change**, such as a
+  `.claude/skills/docket` that isn't its link, or a start marker with no end,
+  and exits 1 saying what to fix.
 
 ### `docket index`
 
@@ -188,8 +198,8 @@ examples show the ones each is most often used with.
 ### `docket check`
 
 Reports every [problem](../../spec/README.md#problems), with the file and line,
-and exits 1 if there are any. It's what the kit's "Before you finish" list
-asks agents to check by hand today.
+and exits 1 if there are any. Agents run it with `--changed` before they
+finish, as the kit tells them to.
 
 ```sh
 docket check                          # everything in the working tree
@@ -286,6 +296,41 @@ Maturity, readiness and risk are worked out by readers, not the indexer, so
 the command is a reader too. It's the same Go code the server uses, and the UI
 shows only what that code works out, so `docket status` and the UI always
 agree.
+
+### `docket checklist`
+
+The [stability checklist](../../spec/README.md#stability-checklist): what
+each level expects of the work, quality by quality, with each outcome's
+examples. It's part of the spec, so it's built into the binary and is the
+same for every project. Agents read it here, and `check` uses it to validate
+every `outcome`.
+
+```sh
+docket checklist                                  # every quality, level and outcome
+docket checklist --level beta                     # everything Beta expects, including what it carries up
+docket checklist reliability/beta/data-kept       # one outcome, with its examples
+docket checklist --for capability:room-booking --to ga   # what promoting it needs
+```
+
+With `--for` and `--to`, it's the first step of promoting a capability: each
+outcome the target level expects that the current one doesn't, and, for each,
+what already names it, from the capability and the mechanisms and components
+it relies on:
+
+```text
+hotel-bookings · working tree (4f2c9e1)
+
+capability:room-booking   Beta → GA in Guest stays
+
+reliability/ga/recovery        gap   component:bookings#no-restore-drill (blocking, possible, all)
+usability/ga/all-accessible    gap   capability:room-booking#calendar-needs-a-mouse (blocking, certain, few)
+security/ga/traceable          met   mechanism:audit-log
+compatibility/ga/stable-interface  —  nothing names it, so promoting claims it's met
+```
+
+Only `--for` reads the project, so only then does it take the
+[source flags](#where-a-read-comes-from). It never changes a level: that's a
+person's call, made in the capability's doc.
 
 ## Renaming
 

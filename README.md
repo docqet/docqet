@@ -325,9 +325,11 @@ made.
 
 It's optional. Docket works without agents, and the kit is how they make the
 most of it. It's written for any agent, as an `AGENTS.md` block and an Agent
-Skills skill, and each project adds its own instructions beside it.
-`docket kit` installs it into a project and keeps it up to date. See
-[`kit/`](kit/).
+Skills skill, and each project adds its own instructions beside it. Agents do
+the work through the `docket` command, so the kit needs it: it tells them
+which command answers each question, rather than how to answer it by hand.
+The kit is built into `docket`, and `docket kit` installs it into a project
+and keeps it up to date. See [`kit/`](kit/).
 
 ### 2. Spec
 
@@ -401,7 +403,7 @@ always be rebuilt from the repository.
 | Spec                  | A draft for review, with two example projects laid out as repositories. See [`spec/`](spec/).                                                                         |
 | `docket`              | Not built. Its commands are drafted in [`tool/cli/`](tool/cli/). The examples' `state.json` files are written by hand to show what indexing would produce.            |
 | UI                    | An early UI in TypeScript that reads `state.json` files directly and works out maturity, readiness and risk itself, until `docket` serves them. See [`tool/`](tool/). |
-| Agent development kit | A first draft for any agent: an `AGENTS.md` block and a `docket` skill. See [`kit/`](kit/).                                                                           |
+| Agent development kit | A first draft for any agent: an `AGENTS.md` block and a `docket` skill, written for `docket` as drafted, so it can't be installed or used until `docket` is built. See [`kit/`](kit/). |
 
 ## Open questions
 

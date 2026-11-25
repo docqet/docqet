@@ -35,12 +35,14 @@ gaps:
 A gap's ID is its doc's reference plus its key:
 `capability:room-booking#calendar-needs-a-mouse`.
 A doc written in several domains or projects, such as a capability, is still
-one doc, so check its other files before choosing a key.
+one doc, so check the keys it already has before choosing one:
+`docket show <reference> --product` lists its gaps and tradeoffs from every
+project.
 
 - **Most gaps name no outcome.** They're limits on what the capability does.
   Name an outcome only when the gap is the reason the capability's level falls
-  short of it. IDs are in
-  [checklist.yml](checklist.yml), as `<quality>/<level>/<id>`.
+  short of it. `docket checklist` lists the IDs, as
+  `<quality>/<level>/<id>`.
 - **A rule written before it's built** is followed by its capabilities, each
   with a gap naming it in `rule`, since following a rule otherwise claims it
   holds.
@@ -63,10 +65,13 @@ one doc, so check its other files before choosing a key.
   soon and changes what people can rely on.
 - **Mark where it shows in the code** with `docket:gap <gap ID>` when there's
   a clear place, instead of a bare TODO.
-- **Closing a gap** removes it and its `docket:gap` annotations.
+- **Closing a gap** removes it and its `docket:gap` annotations, which
+  `docket show <gap ID>` lists.
 - **A gap we decide never to close** becomes a tradeoff, with its drawback.
-  That's a person's decision. The gap is deleted, with nothing linking the
-  two.
+  That's a person's decision. Under the same key, it's the same thing, now a
+  tradeoff. Under another key, nothing in the docs links the two, and the
+  commit says what the gap became with a `Docket-Became` trailer (see
+  [SKILL.md](SKILL.md#committing)).
 
 ### Rating impact, likelihood and reach
 
@@ -121,10 +126,10 @@ can reach differently in different software. Legal or contractual exposure
 the business really has, and anyone able to do what they shouldn't, are
 always `all`.
 
-Readers order gaps by risk, worked out from the three ratings, the level of
+`docket` orders gaps by risk, worked out from the three ratings, the level of
 each capability the gap is on, and whether it breaks that level's promise.
-Rate each gap you add, and say in your report how you rated it, so a person
-can correct it.
+`docket show` and `docket list gaps --sort risk` show it. Rate each gap you
+add, and say in your report how you rated it, so a person can correct it.
 
 ## Tradeoffs
 

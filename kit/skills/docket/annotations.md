@@ -48,18 +48,21 @@ export async function saveBooking(db: Pool, booking: Booking): Promise<void> {
   code.** Annotate its entry points, where someone changing it should start
   reading, and anything else that's part of it, such as a migration or a
   workflow. Where only part of a file is its, annotate only that part.
-- **Annotations go in code, tests and config, never in a Docket doc.** The
-  indexer doesn't look in docs for them.
+- **Annotations go in code, tests and config, never in a Docket doc.**
+  `docket` doesn't look in docs for them.
+- **`docket touches <file>`** shows what each annotation in a file names, and
+  where it lands, so you can see it's on what you meant.
 
 ## Keeping them true
 
-The indexer will catch an annotation naming something that doesn't exist. It
-can't catch one that's missing, or one left on code that's no longer about
-what it names. So whenever you:
+`docket check` catches an annotation naming something that doesn't exist, or
+a rule without its domain. It can't catch one that's missing, or one left on
+code that's no longer about what it names. So whenever you:
 
 - **write code that enforces a rule, or a test that checks one**, annotate it;
 - **move or delete annotated code**, move or delete its annotation with it;
 - **change what annotated code does**, check the annotation is still true;
-- **change a doc's ID**, update every annotation naming its old ID
-  (`grep -rn "<type>:<old-id>"`);
-- **close a gap**, remove its `docket:gap` annotations.
+- **change a doc's ID**, use `docket rename`, which updates every annotation
+  naming its old ID;
+- **close a gap**, remove its `docket:gap` annotations, which
+  `docket show <gap ID>` lists.

@@ -20,7 +20,8 @@
   `docket/initiatives/`, `docket/mechanisms/` and `docket/components/`. The name is what it's called. The description says what it is, usually in a
   sentence, and for a concept a definition in as many sentences as that takes.
 - **Fields go in the order below.** Leave out any that aren't required and
-  have nothing to say.
+  have nothing to say. `docket check` reports a missing required field, an
+  unknown one, or a value the spec doesn't allow.
 - **Field names, IDs and values are kebab case**: `room-booking`,
   `confused-with`, `ga`. A link is a reference, `<type>:<id>`:
   `rule:no-double-booking`.
@@ -293,9 +294,9 @@ One in another domain always adds `@<domain>`, even when no other domain has
 that ID: `concepts: [concept:booking@guest-stays]`. That way a link's meaning
 never changes when another domain adds a rule or concept with the same ID.
 
-To go the other way, such as finding which capabilities follow a rule, search
-for its reference: `grep -rn "rule:no-double-booking"` finds the docs that
-link to it and the code that points at it.
+To go the other way, such as finding which capabilities follow a rule, use
+`docket show rule:no-double-booking`: it lists the docs that link to it and
+the code that points at it.
 
 ## Several projects
 
@@ -304,5 +305,6 @@ picture of the product. A domain, feature, capability, persona, initiative,
 mechanism or component with the same ID in two projects is one thing: its name and
 description must match, its links are combined, and a capability's level is
 per domain. Before creating one, check whether another project in the
-product already has it, if the project's instructions say where they are.
-Reuse its ID, name and description rather than writing a second.
+product already has it, with `docket list <type> --product`. Reuse its ID,
+name and description rather than writing a second. `docket check --product`
+reports where two projects disagree.
