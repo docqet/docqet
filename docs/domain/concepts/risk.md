@@ -5,7 +5,9 @@ worked out from what the gap could do (its impact, how likely it is and how
 many it reaches) and from how much people rely on each capability it shows
 on (its [stability level](stability-level.md), and whether the gap breaks the
 promise that level makes), with a verdict on whether that's acceptable. Gaps
-are ordered by it, riskiest first. Nobody writes it down.
+are ordered by it, riskiest first. Nobody writes it down. Across some
+capabilities, what their gaps put at stake is their
+[exposure](exposure.md).
 
 ## Details
 
@@ -23,7 +25,7 @@ Two are about what it's in, and worked out:
 - **Stability**: the level of each capability it shows on. A product gap
   shows on its capability, and a technical gap on every capability that
   relies on its mechanism or component. The level says how much people are
-  entitled to rely on that capability, and how exposed they are to its gaps:
+  entitled to rely on that capability, and how much its gaps can cost them:
   a Prototype is opt-in and its data may be fake, while people have built on
   a GA capability with real data.
 - **Whether it breaks that level's promise**, for each capability: it names a
@@ -108,61 +110,21 @@ Where there's more than one gap, as in a capability, feature, domain,
 persona or component, each is scored on the capabilities there, and they're
 shown as their highest risk and how many fall in each verdict.
 
-### Exposure
+### Spread
 
-A gap's **exposure** is how its risk spreads across the capabilities it
-shows on: how many carry each score, highest first, such as
+A gap's **spread** is how its risk spreads across the capabilities it shows
+on: how many have each score, highest first, such as
 `76 on 1 · 48 on 2 · 38 on 1`. Of two gaps with the same risk, the one with
 more capabilities at that score comes first; if they're level there, the one
 with more at the next score, and so on. A gap in something many capabilities
-rely on is more exposed than one on a single capability.
+rely on spreads further than one on a single capability.
 
-### Risk carried
+### Exposure
 
 What the gaps still open on some capabilities put at stake, as in a
-feature, a domain or what serves a persona: a percentage of the most they
-could carry, and a band that says what it means. It's one number for where
-things stand, beside [maturity](maturity.md) and
-[readiness](readiness.md).
-
-The most a capability could carry is a certain damaging gap reaching
-everyone that breaks its level's promise: 4 × level weight × 1.5. A
-capability carries its riskiest gap's share of that, its own or one on what
-it's built on, and each counts with its level weight, as in maturity, so
-what's carried on GA counts for more than on a Prototype:
-
-```text
-carried by a capability = its riskiest gap's raw score ÷ (4 × level weight × 1.5)
-risk carried            = Σ (level weight × carried by each) ÷ Σ level weight
-```
-
-A capability with no gaps carries none. Drafts don't count, and gaps with no
-impact rated carry nothing. It falls in a quarter, its band:
-
-| Band            | From | What it means                                                   |
-| --------------- | ---- | --------------------------------------------------------------- |
-| `low risk`      | 0%   | Little is at stake in its open gaps.                            |
-| `some risk`     | 25%  | Its open gaps could cost people a little, or seldom.            |
-| `moderate risk` | 50%  | Some of its open gaps could cost people if they bite.           |
-| `high risk`     | 75%  | Its open gaps are likely to cost people, or to cost them a lot. |
-
-- **It isn't stability.** A capability's level is declared, and says how
-  much people can depend on it. Risk carried takes the level as given,
-  weighing each gap by it, and says what the gaps still open against it put
-  at stake. It never changes the level: a GA capability carrying high risk
-  is still GA, with gaps against its promise.
-- **An unacceptable gap makes it at least `moderate risk`.** One among many
-  capabilities with none is a small share, but it's not OK to leave open.
-- **It's measured against the worst case.** 100% would be every capability
-  carrying a certain damaging gap that breaks its promise, so most software
-  sits well below that, and `high risk` is rare: most of it carrying close
-  to the worst its levels allow.
-- **Only the riskiest gap on each capability counts.** Closing a lesser one
-  doesn't change it until the riskiest is closed too. Counting every gap
-  would make a gap in something every capability relies on, such as a
-  platform mechanism, outweigh everything else.
-- **It counts gaps the score puts at 0.** A score below the least there is
-  shows as 0, but its share of the most isn't nothing.
+feature, a domain, a project or what serves a persona, is their
+[exposure](exposure.md): a percentage of the most they could be exposed to,
+from the riskiest gap on each, with a band that says what it means.
 
 ### Rating a gap
 
@@ -275,7 +237,7 @@ cancellations   Alpha                    4 × ½ × 1 × 3       =  6  → 38
 four more       Prototype                4 × ½ × 1 × 2       =  4  → 24
 ```
 
-Its risk is 76, unacceptable, and its exposure
+Its risk is 76, unacceptable, and its spread
 `76 on 1 · 48 on 2 · 38 on 1 · 24 on 4`. Shown with Hotel Billing, check-out
 is Alpha, the lowest across the domains that build it, so its risk there is
 48, tolerable.
@@ -291,19 +253,8 @@ so `certain`, reach every clerk, name a rule city tax follows, and show only
 on city tax, at Alpha: 2 × 3 × 1.5 = 9, or 52, tolerable. It comes before the
 ledger's gap.
 
-Risk carried, in Hotel Bookings: Reservations' room booking at Beta could
-carry 4 × 4 × 1.5 = 24, and its riskiest gap, its calendar needing a mouse,
-is 18 of that, 75%. Cancellations, at Alpha, carries 100%, since late
-cancellations refunded in full is the most it could carry, and group
-bookings, at Prototype, 4 of 12 from deployment's migrations, 33%. Weighted
-as in maturity:
-
-```text
-(75% × 4 + 100% × 3 + 33% × 2) ÷ 9 ≈ 74%
-```
-
-That's `moderate risk`, and it would be even without its unacceptable
-gaps. Shown with Hotel Billing, Finance carries 6%, `low risk`.
+Together, the gaps on Reservations' capabilities give it an exposure of
+74%, `moderate`: [exposure](exposure.md#in-the-spec) shows how.
 
 Readers work out risk once projects are put together, since a mechanism that
 applies across a platform shows on every project's capabilities. Nothing is
@@ -312,10 +263,12 @@ written for it in [state](state.md). The spec has
 
 ## Not to be confused with
 
+- [Exposure](exposure.md): what the gaps on some capabilities put at stake
+  together, as a percentage. Risk is one gap's.
 - [Stability level](stability-level.md): how much you can depend on a
-  capability, as declared. Risk, and the risk carried, say what's at stake
-  in the gaps still open against it, and never change it.
+  capability, as declared. Risk, and exposure, say what's at stake in the
+  gaps still open against it, and never change it.
 - [Readiness](readiness.md): how ready people can rely on the software
-  being. It's maturity less the risk carried.
+  being. It's maturity less the exposure.
 - A priority: Docket doesn't say when a gap is closed. Risk says what's at
   stake; deciding what to do first is up to the people doing it.

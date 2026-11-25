@@ -66,7 +66,8 @@ reach each declares, the level of each capability it's on, and whether it
 breaks that level's promise. From levels and risk they work out
 **[readiness](concepts/readiness.md)**: how ready people can rely on each
 capability, feature, domain, project and persona being, as a recommendation,
-with what's left. It's maturity less the risk their gaps carry.
+with what's left. It's maturity less their
+**[exposure](concepts/exposure.md)**, what their gaps put at stake together.
 
 ```mermaid
 flowchart TB
@@ -104,6 +105,7 @@ flowchart TB
     maturity["Maturity and band"]
     readiness["Readiness"]
     risk["Risk"]
+    exposure["Exposure"]
     problem["Problem"]
   end
 
@@ -138,12 +140,14 @@ flowchart TB
   gap -. "impact, likelihood, reach" .-> risk
   level -. "weight and promise" .-> risk
   level -. "of capabilities" .-> maturity
-  maturity -. "less risk carried" .-> readiness
-  risk -. "risk carried" .-> readiness
+  risk -. "riskiest on each capability" .-> exposure
+  level -. "weight" .-> exposure
+  maturity -. "less exposure" .-> readiness
+  exposure -.-> readiness
   project -. "its docs" .-> problem
 
   classDef derivedNode stroke-dasharray: 4 3
-  class evidence,maturity,readiness,risk,problem derivedNode
+  class evidence,maturity,readiness,risk,exposure,problem derivedNode
 ```
 
 Solid arrows are [declared](concepts/declared-and-derived.md): written in a
@@ -311,8 +315,9 @@ Some things are never features or capabilities:
 - [Tradeoff](concepts/tradeoff.md): something we chose, knowing its benefit and drawback.
 - [Risk](concepts/risk.md): what's at stake in a gap, scored from its impact,
   the level of each capability it's on, and whether it breaks that level's
-  promise, and its exposure, how that spreads across them; and the risk
-  carried by some capabilities, what their open gaps put at stake.
+  promise, and its spread, how that spreads across them.
+- [Exposure](concepts/exposure.md): what the gaps open on some capabilities
+  put at stake together: to risk what maturity is to stability.
 
 **Stability, maturity and readiness**
 

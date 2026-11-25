@@ -60,5 +60,7 @@ and check-out at GA in Guest stays but Alpha in Billing, so Alpha in short:
 
 - [Stability level](stability-level.md): how much you can depend on one
   capability. Maturity is about the whole.
-- [Readiness](readiness.md): maturity less the risk the same capabilities'
-  gaps carry, with what's left.
+- [Exposure](exposure.md): what the gaps open on the same capabilities put
+  at stake. It's to risk what maturity is to stability.
+- [Readiness](readiness.md): maturity less the same capabilities' exposure,
+  with what's left.

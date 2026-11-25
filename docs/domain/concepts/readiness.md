@@ -8,21 +8,21 @@ a recommendation: people judge. Nobody writes it down.
 
 ## Details
 
-Readiness is [maturity](maturity.md) less the [risk carried](risk.md#risk-carried)
-by the same capabilities: how far along the work is, less what the gaps still
-open on it put at stake.
+Readiness is [maturity](maturity.md) less the [exposure](exposure.md) of the
+same capabilities: how far along the work is, less what the gaps still open
+on it put at stake.
 
 ```text
-readiness = maturity × (1 − risk carried)
+readiness = maturity × (1 − exposure)
 ```
 
-A feature 60% mature carrying 20% risk is 48% ready. Both are worked out from
+A feature 60% mature with 20% exposure is 48% ready. Both are worked out from
 the same capabilities, each at its level in short, its lowest across the
 domains that build it, with the same weights, so readiness can be read from
 the two numbers shown beside it.
 
 Impact, likelihood, reach, stability and broken promises all come in through
-risk carried, through the riskiest gap on each capability, so a tolerable
+exposure, through the riskiest gap on each capability, so a tolerable
 gap still lowers readiness a little, and an unacceptable one a lot.
 
 | Readiness of             | Counts                                 |
@@ -39,9 +39,9 @@ readiness. It falls in a quarter of its own:
 
 | Readiness     | From | What it recommends                                                                   |
 | ------------- | ---- | ------------------------------------------------------------------------------------ |
-| Not ready     | 0%   | Most of what they need is still being explored, or its gaps put a lot at stake.      |
-| Partly ready  | 25%  | Some of it can be used, but much of what they need is still taking shape.            |
-| Mostly ready  | 50%  | Enough is settled for them to rely on day to day.                                    |
+| Unready       | 0%   | Most of what they need is still being explored, or its gaps put a lot at stake.      |
+| Partial       | 25%  | Some of it can be used, but much of what they need is still taking shape.            |
+| Viable        | 50%  | Enough is settled for them to rely on day to day.                                    |
 | Ready         | 75%  | What they need is mostly stable, with nothing unacceptable left open.                |
 
 - **It comes with what's left.** Each capability below Beta, the first level
@@ -53,8 +53,8 @@ readiness. It falls in a quarter of its own:
   without the one capability whose gaps put most at stake can start using
   the rest. That's for people to judge.
 - **Promoting can lower it.** A capability's level counts for more once
-  promoted, but where its gaps break a promise the new level makes, the risk
-  they carry goes up too, and can outweigh it. That's what's at stake going
+  promoted, but where its gaps break a promise the new level makes, its
+  exposure goes up too, and can outweigh it. That's what's at stake going
   up.
 - **New work lowers it a little.** A new capability at Prototype weighs
   least, so starting one lowers readiness slightly without taking it away.
@@ -69,8 +69,8 @@ capability's level across domains.
 
 In Hotel Bookings, the front desk clerk has room booking and check-in at
 Beta, cancellations at Alpha, check-out at GA, and group bookings and room
-status at Prototype, so what serves them is 59% mature. Each capability
-carries its riskiest gap's share of the most it could carry:
+status at Prototype, so what serves them is 59% mature. Each capability is
+exposed to its riskiest gap's share of the most it could be exposed to:
 
 ```text
 room booking    75%  calendar needs a mouse, blocking, breaks Beta's promise
@@ -80,11 +80,11 @@ check-out       50%  the same, which breaks GA's promise of recovery
 group bookings  33%  the same
 room status     33%  the same
 
-risk carried    (75 × 4 + 33 × 4 + 100 × 3 + 50 × 6 + 33 × 2 + 33 × 2) ÷ 21 ≈ 56%
+exposure        (75 × 4 + 33 × 4 + 100 × 3 + 50 × 6 + 33 × 2 + 33 × 2) ÷ 21 ≈ 56%
 readiness       59% × (1 − 56%) ≈ 26%
 ```
 
-That's Partly ready, and what's left is:
+That's Partial, and what's left is:
 
 ```text
 room booking    close capability:room-booking#calendar-needs-a-mouse
@@ -95,12 +95,12 @@ group bookings  reach Beta, now Prototype
 room status     reach Beta, now Prototype
 ```
 
-Closing those three gaps would leave 11% risk carried, from the bookings
-component's unknown clashes, and make it 53%, Mostly ready. In Hotel
+Closing those three gaps would leave 11% exposure, from the bookings
+component's unknown clashes, and make it 53%, Viable. In Hotel
 Billing, the manager has city tax at Alpha, deposits and daily takings at
-Beta, and night audit at GA: 70% mature, carrying 18%, from city tax's
+Beta, and night audit at GA: 70% mature, with 18% exposure, from city tax's
 children corrected by hand and deposits' provider calls with no timeout, so
-57%, Mostly ready, with only city tax left to reach Beta. The night auditor
+57%, Viable, with only city tax left to reach Beta. The night auditor
 has only night audit, at GA, with no gaps, so they're 100%, Ready.
 
 The spec has [how it's worked out](../../../spec/README.md#readiness).
@@ -108,8 +108,8 @@ The spec has [how it's worked out](../../../spec/README.md#readiness).
 ## Not to be confused with
 
 - [Maturity](maturity.md): how far along the work is, for planning.
-  Readiness is maturity less the risk carried.
+  Readiness is maturity less the exposure.
 - [Stability level](stability-level.md): how much people can depend on one
   capability, declared.
-- [Risk carried](risk.md#risk-carried): what the open gaps put at stake.
+- [Exposure](exposure.md): what the open gaps put at stake.
   Readiness takes it off maturity.

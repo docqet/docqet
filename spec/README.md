@@ -966,11 +966,11 @@ judge. Nothing is written for it, and it isn't in `state.json`: it depends on
 put together.
 
 Readiness is the [maturity](#how-maturity-is-worked-out) of some
-capabilities less the [risk carried](#risk) by them, each counted once, at
-its level in short, drafts left out:
+capabilities less their [exposure](#exposure), each counted once, at its
+level in short, drafts left out:
 
 ```text
-readiness = maturity × (1 − risk carried)
+readiness = maturity × (1 − exposure)
 ```
 
 Every gap lowers it, through the riskiest gap on each capability. Promoting
@@ -993,9 +993,9 @@ level's color:
 
 | Readiness     | From | What it recommends                                                                   |
 | ------------- | ---- | ------------------------------------------------------------------------------------ |
-| Not ready     | 0%   | Most of what they need is still being explored, or its gaps put a lot at stake.      |
-| Partly ready  | 25%  | Some of it can be used, but much of what they need is still taking shape.            |
-| Mostly ready  | 50%  | Enough is settled for them to rely on day to day.                                    |
+| Unready       | 0%   | Most of what they need is still being explored, or its gaps put a lot at stake.      |
+| Partial       | 25%  | Some of it can be used, but much of what they need is still taking shape.            |
+| Viable        | 50%  | Enough is settled for them to rely on day to day.                                    |
 | Ready         | 75%  | What they need is mostly stable, with nothing unacceptable left open.                |
 
 Readers show **what it still needs** with it: each started capability below
@@ -1008,11 +1008,11 @@ In Hotel Bookings, the front desk clerk has room booking and check-in at
 Beta, cancellations at Alpha, check-out at GA, and group bookings and room
 status at Prototype, so (60 × 4 + 60 × 4 + 35 × 3 + 100 × 6 + 15 × 2 + 15 ×
 2) ÷ 21 ≈ 59% mature. Room booking's calendar needs a mouse (75% of the most
-it could carry), cancellations refund late cancellations in full (100%),
+it could be exposed to), cancellations refund late cancellations in full (100%),
 and the rest rely on the deployment, whose migrations have no down step
 (50% on check-out at GA, where it breaks a promise, and 33% on the others).
-They carry (75 × 4 + 33 × 4 + 100 × 3 + 50 × 6 + 33 × 2 + 33 × 2) ÷ 21 ≈ 56%,
-so readiness is 59% × (1 − 56%) ≈ 26%, Partly ready. What's left:
+Their exposure is (75 × 4 + 33 × 4 + 100 × 3 + 50 × 6 + 33 × 2 + 33 × 2) ÷ 21 ≈ 56%,
+so readiness is 59% × (1 − 56%) ≈ 26%, Partial. What's left:
 
 ```text
 room booking    close capability:room-booking#calendar-needs-a-mouse
@@ -1024,8 +1024,8 @@ room status     reach Beta, now Prototype
 ```
 
 In Hotel Billing, the manager has city tax at Alpha, deposits and daily
-takings at Beta, and night audit at GA: 1185 ÷ 17 ≈ 70% mature, carrying
-18%, so they're 57%, Mostly ready. The night auditor has only night audit,
+takings at Beta, and night audit at GA: 1185 ÷ 17 ≈ 70% mature, with 18%
+exposure, so they're 57%, Viable. The night auditor has only night audit,
 at GA, with no gaps, so they're 100%, Ready.
 
 Starting new work lowers readiness a little, since a Prototype weighs least:
@@ -1065,9 +1065,9 @@ gap reaching all on a Prototype) to 36 (a certain damaging gap reaching all
 and breaking a promise on GA), rounded, and never below 0:
 `100 × ln(raw ÷ 2) ÷ ln(18)`. A draft scores 0. A gap's risk is its highest score. A gap with no `impact` has no risk. Its **verdict** is
 the third its risk falls in: `acceptable` below 33, `tolerable` from 33, and
-`unacceptable` from 67. Its **exposure** is how its scores spread: how many
-capabilities carry each score, highest first. Readers order gaps by risk, highest first, then by
-exposure, comparing the number of capabilities at each score from the
+`unacceptable` from 67. Its **spread** is how its scores spread: how many
+capabilities have each score, highest first. Readers order gaps by risk, highest first, then by
+spread, comparing the number of capabilities at each score from the
 highest down, then gaps with no impact.
 
 Hotel Bookings' deployment has `migrations-only-go-forward`, `damaging` and
@@ -1076,7 +1076,7 @@ only GA expects. Shown on its own, Hotel Bookings has check-out at GA, where
 it breaks that promise: 4 × ½ × 1 × 6 × 1.5 = 18, or 76. Deployment also
 serves room booking and check-in at Beta (48 each), cancellations at Alpha
 (38), and group bookings, room status, cleaning and the rate calendar at
-Prototype (24 each). Its risk is 76, `unacceptable`, and its exposure
+Prototype (24 each). Its risk is 76, `unacceptable`, and its spread
 `76 on 1 · 48 on 2 · 38 on 1 · 24 on 4`. Shown with Hotel Billing, check-out
 is Alpha, so its risk there is 48.
 
@@ -1090,22 +1090,28 @@ domain, persona or component, each is scored only on the capabilities
 there, and readers show the highest risk and how many fall in each
 verdict.
 
-For some capabilities, as of a feature, domain or persona, readers also
-work out the **risk carried**: what the gaps still open on them put at
-stake, from 0 to 100%. It isn't their stability, which is declared. The most a capability could carry is 4 × its level weight × 1.5,
-and it carries its riskiest gap's raw score ÷ that, its own or one on what
-it's built on. The risk carried is the average of what each started
-capability carries, weighted by its level weight. Gaps with no `impact`
-carry nothing; drafts don't count. Its band is the quarter it falls in:
-`low risk` below 25%, `some risk` from 25%, `moderate risk` from 50% and
-`high risk` from 75%, and at least `moderate risk` while any gap is
-`unacceptable` on one of them. In Hotel Bookings, room booking at Beta carries 75% of 24,
-cancellations at Alpha 100% of 18, and group bookings at Prototype 33% of
-12, so together they carry `(75% × 4 + 100% × 3 + 33% × 2) ÷ 9 ≈ 74%`,
-`moderate risk`.
-
 Tradeoffs and open decisions have no risk: a tradeoff is a drawback someone
 chose to live with, and a question doesn't happen to anyone.
+
+### Exposure
+
+For some capabilities, as of a feature, domain, project or persona, readers
+also work out their **exposure**: what the gaps still open on them put at
+stake together, from 0 to 100%. It's to risk what maturity is to stability.
+It isn't their stability, which is declared. The most a capability could be
+exposed to is 4 × its level weight × 1.5, and its exposure is its riskiest
+gap's raw score ÷ that, its own or one on what it's built on. The exposure of
+several is the average of each started capability's, weighted by its level
+weight. Gaps with no `impact` add nothing; drafts don't count. Its band is
+the quarter it falls in: `low` below 25%, `minor` from 25%,
+`moderate` from 50% and `high` from 75%, and at least
+`moderate` while any gap is `unacceptable` on one of them. Readers draw
+it as maturity is, a ring, in its band's color.
+
+In Hotel Bookings, room booking at Beta is exposed to 75% of 24,
+cancellations at Alpha to 100% of 18, and group bookings at Prototype to 33%
+of 12, so Reservations' exposure is `(75% × 4 + 100% × 3 + 33% × 2) ÷ 9 ≈ 74%`,
+`moderate`.
 
 ## Evidence
 
