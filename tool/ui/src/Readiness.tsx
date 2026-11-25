@@ -106,8 +106,8 @@ function ReadinessDetails({ readiness, of }: { readiness: Readiness; of: string 
       <Box sx={{ mt: 1.25, display: "flex", alignItems: "center", gap: 1.5 }}>
         <Pie percent={readiness.percent!} size={56} sx={{ color: readinessColor(readiness.percent!) }} />
         <div>
-          <Box sx={{ fontSize: "1.12em", fontWeight: 700 }}>{readinessBand(readiness)!.name}</Box>
-          <Box sx={{ color: "text.secondary", fontVariantNumeric: "tabular-nums" }}>{readiness.percent}%</Box>
+          <Box sx={{ fontSize: "1.12em", fontWeight: 700, color: readinessColor(readiness.percent!) }}>{readinessBand(readiness)!.name}</Box>
+          <Box sx={{ color: readinessColor(readiness.percent!), fontWeight: 600, fontVariantNumeric: "tabular-nums" }}>{readiness.percent}%</Box>
         </div>
       </Box>
       <Box sx={{ mt: 1.25 }}>{readinessBand(readiness)!.says}</Box>
