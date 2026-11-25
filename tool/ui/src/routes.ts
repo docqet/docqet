@@ -5,8 +5,8 @@ import type { PageAt } from "./state";
  * Where the reader is, all of it in the address so any view can be linked to
  * and back and forward work: a section of the side nav, as `?view=features`,
  * or one doc's page, as `?capability=deposits`, either with `&tab=rules` for
- * one of its tabs. The platform, projects and scope showing ride along as
- * `?platform=<id>&project=<id>,<id>&scope=<initiative id>`.
+ * one of its tabs. The product, projects and scope showing ride along as
+ * `?product=<id>&project=<id>,<id>&scope=<initiative id>`.
  * With no view or doc named, it's the overview.
  *
  * Every link in the app is a plain `<a href="?…">`. The shell catches clicks
@@ -57,11 +57,11 @@ export function routeOf(search: string): Route {
   return { kind: "section", section, tab };
 }
 
-/* The platform, projects and scope showing now, to carry over to wherever a link goes. */
+/* The product, projects and scope showing now, to carry over to wherever a link goes. */
 export function showingParams(search = window.location.search): URLSearchParams {
   const now = new URLSearchParams(search);
   const params = new URLSearchParams();
-  for (const key of ["platform", "project", "scope"]) {
+  for (const key of ["product", "project", "scope"]) {
     const value = now.get(key);
     if (value) params.set(key, value);
   }

@@ -20,7 +20,7 @@ Docs can be anywhere in the repository, so find them by that field
 them in the recommended layout:
 
 ```text
-docket.yaml                                 the project's id and name, and its platform
+docket.yaml                                 the project's id and name, and its product
 docket/
 ├── personas/                               who it serves, across every domain
 ├── initiatives/                            bodies of work, such as the MVP, across every domain
@@ -96,7 +96,7 @@ changed, not docs to fill in the structure.
 | How something already documented works has changed                         | Its body, so it no longer says something untrue                                                                                           |
 | A domain word is used in a new sense, or a new one appears                 | A concept, or a change to it                                                                                                              |
 | Work was grouped into an initiative, or taken out of one                   | The capability's or persona's `initiatives` link, added or removed, and a doc for a new initiative, deleted once nothing links it          |
-| A doc's ID changed                                                         | Every link and annotation to its old ID, in this project and any other on the platform                                                    |
+| A doc's ID changed                                                         | Every link and annotation to its old ID, in this project and any other in the product                                                    |
 | Code that an annotation names was deleted or moved                         | Move or remove the annotation with it                                                                                                     |
 
 [gaps-and-decisions.md](gaps-and-decisions.md) covers gaps, tradeoffs and

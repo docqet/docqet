@@ -4,7 +4,7 @@
     "id": "exalynt-api",
     "name": "Exalynt API"
   },
-  "platform": {
+  "product": {
     "id": "exalynt",
     "name": "Exalynt"
   },
@@ -11856,7 +11856,7 @@
       "file": "docket/mechanisms/authentication.md",
       "name": "Authentication",
       "description": "Decides who is calling each request, and puts the `authz.Principal` the rest of the API works from on the context. Clerk only signs people in: users are copied to our database, and organizations, memberships, and roles are the API's own.",
-      "applies": "platform",
+      "applies": "product",
       "capabilities": [
         "capability:access-tokens",
         "capability:engineer-onboarding",

@@ -1,15 +1,15 @@
 # Bringing Docket to a repository
 
 A folder becomes a Docket project with a `docket.yaml` in it. That's usually
-the repository's root. A repository holding several products, such as a
-monorepo, can have one in each product's folder instead, and each is a project
-of its own:
+the repository's root. A repository holding several pieces of software, such
+as a monorepo, can have one in each one's folder instead, and each is a
+project of its own:
 
 ```yaml
 project:
-  id: hotel-bookings      # kebab case, unique among the platform's projects
+  id: hotel-bookings      # kebab case, unique among the product's projects
   name: Hotel Bookings    # named for the software
-platform:                 # optional: the projects that make up one product together
+product:                  # optional: the software product it's part of, with its other projects
   id: hotel
   name: Hotel             # named for the product
 ```
@@ -61,5 +61,5 @@ pointer behind, rather than keeping two copies.
 
 Anything this project does differently from the kit goes in its own agent
 instructions, outside the kit's block in `AGENTS.md`. Write it down there
-when it's settled, such as which repository holds the product docs for a
-platform, or what the project's domains are.
+when it's settled, such as which project holds the product docs for the
+product, or what the project's domains are.

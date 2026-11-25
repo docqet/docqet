@@ -42,7 +42,7 @@ import "./overview.css";
 import { GapInitiatives } from "../GapRows";
 
 /*
- * How the platform is doing, at a glance, with no panning: its maturity, how
+ * How the product is doing, at a glance, with no panning: its maturity, how
  * far along the work is, its readiness, whether people can use it, who it's
  * least ready for, what's left and what's wrong in the docs, as tiles that
  * each link to where they're explained; then what it still needs to be
@@ -52,7 +52,7 @@ import { GapInitiatives } from "../GapRows";
  */
 export default function OverviewPage({ state }: { state: DocketState; route: Route }) {
   const several = state.projects.length > 1;
-  const name = several ? (state.projects[0]?.platform.name ?? "Platform") : (state.projects[0]?.name ?? "Project");
+  const name = several ? (state.projects[0]?.product.name ?? "Product") : (state.projects[0]?.name ?? "Project");
   const maturity = maturityOf(state);
 
   const readiness = useMemo(() => readinessOf(state, state.capabilities), [state]);
@@ -74,7 +74,7 @@ export default function OverviewPage({ state }: { state: DocketState; route: Rou
   return (
     <View title={name}>
       <PageHeader
-        kind={several ? <Term id="platform">Platform</Term> : <Term id="project">Project</Term>}
+        kind={several ? <Term id="product">Product</Term> : <Term id="project">Project</Term>}
         title={name}
         lede={<Lede state={state} />}
         stats={

@@ -1,8 +1,0 @@
-# Marks this repository as a Docket project. Its docs are in docket/.
-project:
-  id: exalynt-api
-  name: Exalynt API
-# The platform it's part of, with Exalynt's apps.
-platform:
-  id: exalynt
-  name: Exalynt

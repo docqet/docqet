@@ -23,7 +23,7 @@ only what the code can't show, and has no level or domain of its own.
   [components](component.md) list. It lists none itself, so a new capability
   is covered as soon as it's declared. Its technical gaps show on each of
   them, under the hood.
-- **Or to every capability its [platform](platform.md) serves**, when one
+- **Or to every capability its [product](product.md) serves**, when one
   repository runs it for all of them, such as authentication in an API gateway
   every service sits behind. Exalynt's authentication is one: every app's
   requests go through it.
@@ -36,10 +36,10 @@ only what the code can't show, and has no level or domain of its own.
 ## In the spec
 
 A mechanism is a doc whose `docket` is `mechanism`. Its frontmatter holds its
-name and description, `applies`, `project` or `platform` and `project` when left
+name and description, `applies`, `project` or `product` and `project` when left
 out, and what tools compute with. It names neither code nor capabilities: the
 code points at it, and what it applies to is worked out, by the indexer for a
-project, and when projects are combined for a platform, since no one
+project, and when projects are combined for a product, since no one
 repository can see the others. Its body is how it works, in whatever shape explains it best, with no
 heading.
 [`deployment.md`](../../../spec/examples/hotel-bookings/docket/mechanisms/deployment.md),

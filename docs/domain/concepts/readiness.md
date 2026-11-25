@@ -30,7 +30,7 @@ gap still lowers readiness a little, and an unacceptable one a lot.
 | A capability             | Itself                                 |
 | A feature                | Its capabilities                       |
 | A domain                 | Every capability with a part in it     |
-| A project, or a platform | Every capability showing               |
+| A project, or a product | Every capability showing               |
 | A persona                | Every capability that lists them       |
 | A feature, for a persona | The capabilities in it that serve them |
 | An initiative            | Its capabilities                       |

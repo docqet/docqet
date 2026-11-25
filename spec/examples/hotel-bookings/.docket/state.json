@@ -4,7 +4,7 @@
     "id": "hotel-bookings",
     "name": "Hotel Bookings"
   },
-  "platform": {
+  "product": {
     "id": "hotel",
     "name": "Hotel"
   },

@@ -13,7 +13,7 @@ This README is most of it. Two parts have their own:
 
 **Status: draft for review.** Nothing implements it yet. Each example in
 [`examples/`](examples/) is laid out as its own repository root, with the
-`state.json` an indexer would produce from it:
+`state.json` an indexer would produce for each project in it:
 
 - **[`hotel-bookings`](examples/hotel-bookings/)** is a small hotel-booking app
   that uses every part of the spec, code and tests included. The examples
@@ -23,15 +23,16 @@ This README is most of it. Two parts have their own:
   and closing the day. It's a second project to show beside the first. It works
   in the Billing and Finance domains, and contributes Billing's part of Front
   desk, a feature that's mostly Guest stays'. Both are part of the Hotel
-  platform.
-- **[`exalynt-api`](examples/exalynt-api/)** and
-  **[`exalynt-ui`](examples/exalynt-ui/)** are a real product, Exalynt, at
-  full size, translated from forge's docs: six domains, 36 capabilities and
-  368 rules. The API's repository holds the product docs for both, so
-  `exalynt-ui` contributes technical docs only, for its four apps, and links
-  them to the API's capabilities. The examples carry the docs and the API's
-  acceptance tests, annotated with `docket:verifies`, but not the code. Both
-  are part of the Exalynt platform.
+  product.
+- **[`exalynt`](examples/exalynt/)** is a real product, Exalynt, at full
+  size, translated from forge's docs: six domains, 36 capabilities and 368
+  rules. It's one repository holding two projects, each in a folder with a
+  `docket.yaml` of its own: [`api/`](examples/exalynt/api/), Exalynt API, and
+  [`ui/`](examples/exalynt/ui/), Exalynt UI. The API holds the product docs
+  for both, so the UI contributes technical docs only, for its four apps, and
+  links them to the API's capabilities. The example carries the docs and the
+  API's acceptance tests, annotated with `docket:verifies`, but not the code.
+  Both projects are part of the Exalynt product.
 
 ## Principles
 
@@ -55,7 +56,7 @@ This README is most of it. Two parts have their own:
   free Markdown for anything more worth saying, with no structure anyone can
   rely on. No fact is in both (see
   [Frontmatter and body](#frontmatter-and-body)).
-- **Contradictions are shown, not resolved.** Each repository contributes what
+- **Contradictions are shown, not resolved.** Each project contributes what
   it knows to one picture of the product. Where two contributions disagree,
   readers see both and a problem, not a winner.
 
@@ -199,7 +200,7 @@ name: Room booking
 - **Name the file after its ID**, as the examples do, so it's easy to find.
   That's a convention: nothing reads a file's name.
 - **Changing an ID is a breaking change.** Everything that names it, in its
-  project and in others on its platform, has to change with it, and the
+  project and in others in its product, has to change with it, and the
   indexer reports each one left dangling. The commit that changes it says so
   with a [trailer](trailers/), or history sees the old one removed and an
   unrelated one added. Readers show the `name`, so a doc can be renamed for
@@ -362,8 +363,8 @@ The body column is a suggestion of what's worth writing, not a structure.
   capability through the mechanisms that apply to it and the components that
   list it, since product docs never name their implementation.
 - **`applies`** says what a mechanism applies to: `project`, every capability
-  its project serves, or `platform`, every capability any project on its
-  [platform](#config) serves. It's `project` when left out.
+  its project serves, or `product`, every capability any project on its
+  [product](#config) serves. It's `project` when left out.
 - **`meets`** lists the [stability checklist](#stability-checklist) outcomes a
   mechanism or component meets for the capabilities it applies to, as
   `<quality>/<level>/<id>`. Its evidence is the proof.
@@ -593,12 +594,12 @@ new image starts, from `db/migrations/`, in filename order.
   It lists none, so a new capability is covered as soon as it's declared, and
   its gaps and the outcomes it meets show on each. A component lists the
   capabilities that rely on it, in `capabilities`.
-- **Or to every capability its platform serves**, with `applies: platform`:
-  what every project on the platform serves, worked out the same way. It's
-  for something one repository runs for all of them, such as authentication
+- **Or to every capability its product serves**, with `applies: product`:
+  what every project in the product serves, worked out the same way. It's
+  for something one project runs for all of them, such as authentication
   in an API gateway that every service sits behind. Exalynt's
-  [authentication](examples/exalynt-api/docket/mechanisms/authentication.md)
-  applies to its platform, since every app's requests go through it.
+  [authentication](examples/exalynt/api/docket/mechanisms/authentication.md)
+  applies to its product, since every app's requests go through it.
 - **Only what the code can't say.** Leave out what a competent reader learns
   from the code in a few minutes, such as lists of endpoints, tables or
   functions. Most code has no doc.
@@ -1146,7 +1147,7 @@ capability counting in full, and readiness is as good as what's written down.
 Readers score each gap's **risk**: what's at stake in it, so the ones that
 matter are read first. Nothing is written for it, and it isn't in
 `state.json`: readers work it out once projects are put together, since a
-mechanism that applies across a platform shows on every project's
+mechanism that applies across a product shows on every project's
 capabilities. A product gap shows on its capability; a technical gap on
 every capability its mechanism or component serves. On each capability it
 shows on, a gap scores what it could do, times how much people rely on what
@@ -1288,7 +1289,7 @@ a server as it would be from a repository of its own.
 project:
   id: hotel-bookings
   name: Hotel Bookings
-platform:
+product:
   id: hotel
   name: Hotel
 ```
@@ -1300,16 +1301,17 @@ platform:
     unique among them. It's lowercase, with hyphens, like a doc's ID.
   - **`name`** is what people see, named for the software: Hotel Bookings,
     not Guest stays.
-- **`platform`**, optional, says which **platform** the project is part of:
-  the projects that make up one product together, such as its web, mobile and
-  desktop apps, or the services behind it. Projects with the same platform
-  `id` are shown together and their docs combined; projects on different
-  platforms never are. A project that names no platform is a platform of its
+- **`product`**, optional, says which **software product** the project is
+  part of: the end result of one or more pieces of software working together
+  to accomplish a high-level goal, such as a web app, a mobile app and the API
+  behind them. Each piece is a project. Projects with the same product
+  `id` are shown together and their docs combined; projects in different
+  products never are. A project that names no product is a product of its
   own.
-  - **`id`** is lowercase, with hyphens, and the same in every project on the
-    platform.
+  - **`id`** is lowercase, with hyphens, and the same in every project in the
+    product.
   - **`name`** is what people see, named for the product: Hotel, not Hotel
-    Bookings. Every project on the platform should give the same one; readers
+    Bookings. Every project in the product should give the same one; readers
     use the first project's.
 
 A project works in the domains it has domain docs for, so nothing here says
@@ -1408,15 +1410,15 @@ GA in Guest stays and Alpha in Billing, so it's Alpha in short.
 ### Combining
 
 Each project's `state.json` is indexed from its own repository, so it only
-knows its own contributions. Showing several projects of one platform
-together **combines** their states. Projects on different platforms are never
+knows its own contributions. Showing several projects of one product
+together **combines** their states. Projects in different products are never
 combined, since they're different products and the same ID can mean
 different things in each:
 
 1. Put each doc's contributions together by type and ID, as above.
 2. Resolve links to rules and concepts named in other projects' domains.
-3. Give each mechanism that applies to its platform every capability the
-   platform's projects serve: each project's declared capabilities, other
+3. Give each mechanism that applies to its product every capability the
+   product's projects serve: each project's declared capabilities, other
    than drafts, and the ones its components list.
 4. Work out the reverse links again across everything, and each
    capability's level in short, the lowest across the domains that build it.
@@ -1431,8 +1433,11 @@ different things in each:
 It holds everything the UI needs, so the UI never reads the repository itself,
 and showing several projects together means reading each one's state.json.
 
-- **Header**: the `project` (its ID and name), its `platform` (ID and name)
+- **Header**: the `project` (its ID and name), its `product` (ID and name)
   when `docket.yaml` declares one, and the commit indexed.
+- **Every `file` is from the project's folder**, the one with its
+  `docket.yaml`, such as `docket/domains/billing/concepts/bill.md`, not from
+  the repository's root, so a project reads the same wherever it is.
 - **`summary`**: how many domains, features, personas and initiatives there
   are, capabilities per level with `draft` among them, how many rules, gaps,
   tradeoffs, mechanisms, components and problems. This is the at-a-glance view.
@@ -1467,7 +1472,7 @@ and showing several projects together means reading each one's state.json.
   component's `capabilities` are as it lists them. A mechanism also has
   `applies`, and its `capabilities` are worked out: every capability the
   project declares, other than drafts, then every one its components list
-  that isn't already there. For one that applies to its platform, that's
+  that isn't already there. For one that applies to its product, that's
   only this project's part, since the indexer can't see the others: combining
   adds the rest. They're in no domain, so they have no `domain`.
 - **Evidence**: each rule's, capability's, mechanism's and component's entry also

@@ -236,7 +236,7 @@ name: Deployment
 description: >-
   How a change gets from the main branch to the hotel's server, and back off
   it again.
-applies: project     # or platform: every capability any project on the platform serves
+applies: project     # or product: every capability any project in the product serves
 meets:               # checklist outcomes it meets for those capabilities
   - reliability/beta/undo-release
 gaps: []
@@ -299,10 +299,10 @@ link to it and the code that points at it.
 
 ## Several projects
 
-Projects on the same platform, named in `docket.yaml`, contribute to one
+Projects in the same product, named in `docket.yaml`, contribute to one
 picture of the product. A domain, feature, capability, persona, initiative,
 mechanism or component with the same ID in two projects is one thing: its name and
 description must match, its links are combined, and a capability's level is
-per domain. Before creating one, check whether another project on the
-platform already has it, if the project's instructions say where they are.
+per domain. Before creating one, check whether another project in the
+product already has it, if the project's instructions say where they are.
 Reuse its ID, name and description rather than writing a second.

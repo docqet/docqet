@@ -46,7 +46,7 @@ const LENSES: { id: Lens; label: string; tip: string }[] = [
  * fits together. Clicking something peeks at it in a slim panel, which leads
  * to its page; the filters set there show across the top, beside what the
  * cards are colored by. Where the cards sit is this browser's own, for each
- * platform, under `layoutKey`.
+ * product, under `layoutKey`.
  */
 export default function MapPage({ state, layoutKey }: { state: DocketState; layoutKey: string }) {
   const header = useRef<HTMLDivElement>(null);

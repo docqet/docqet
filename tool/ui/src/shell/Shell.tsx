@@ -11,37 +11,37 @@ import { GapIcon } from "../design/left/LeftMark";
 import { Tip } from "../design/Tip";
 import Logo from "../Logo";
 import { PersonaIcon } from "../Personas";
-import PlatformFilter, { type PlatformChoice } from "../PlatformFilter";
+import ProductFilter, { type ProductChoice } from "../ProductFilter";
 import ScopeFilter, { InitiativeIcon } from "../ScopeFilter";
 import type { Scope } from "../scope";
 import { followLink, navigate, sectionHref, sectionOf, docHref, type Route, type Section } from "../routes";
 import Search, { type Selection } from "../Search";
-import { openDecisions, pageHref, type DocketState, type Platform } from "../state";
+import { openDecisions, pageHref, type DocketState, type Product } from "../state";
 import "./shell.css";
 
 /*
  * Every view's frame: a bar across the top that says where the reader is and
- * lets them find anything (the platform and its projects, search, the
+ * lets them find anything (the product and its projects, search, the
  * glossary), a nav down the side for which question they're asking, and the
  * view itself filling the rest. Clicks on in-app links anywhere inside move
  * without reloading.
  */
 export default function Shell({
   state,
-  platform,
-  platforms,
+  product,
+  products,
   scope,
   route,
-  onPlatform,
+  onProduct,
   onProjects,
   children,
 }: {
   state: DocketState;
-  platform: Platform;
-  platforms: PlatformChoice[];
+  product: Product;
+  products: ProductChoice[];
   scope: Scope;
   route: Route;
-  onPlatform: (id: string) => void;
+  onProduct: (id: string) => void;
   onProjects: (ids: string[]) => void;
   children: ReactNode;
 }) {
@@ -57,16 +57,16 @@ export default function Shell({
           <Logo />
         </a>
         <span className="shell-divider" aria-hidden />
-        <PlatformFilter
+        <ProductFilter
           showing={state.projects}
-          platform={platform}
-          platforms={platforms}
-          onPlatform={onPlatform}
+          product={product}
+          products={products}
+          onProduct={onProduct}
           onProjects={onProjects}
         />
         <ScopeFilter scope={scope} initiatives={state.initiatives} />
         <div className="shell-search">
-          <Search state={state} all={platform.projects} onSelect={select} />
+          <Search state={state} all={product.projects} onSelect={select} />
         </div>
         <Tip title="What Docket's words mean">
           <a

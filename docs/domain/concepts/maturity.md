@@ -15,7 +15,7 @@ all, since no work has started on them.
   in short: the lowest across the domains that build it.
 - **A domain's** comes from its parts of features, each from the capabilities
   that domain builds, at their levels there.
-- **A project's**, or a platform's, comes from its features.
+- **A project's**, or a product's, comes from its features.
 - **What serves a persona** comes from the capabilities that list them, as a
   feature's does, each counted once at its level in short.
 - **An [initiative's](initiative.md)** comes from the capabilities that list

@@ -33,7 +33,7 @@ import {
 import { DomainIcon } from "./FeatureMap";
 import { PersonaAvatar, personaNameAndRole, personaReadiness } from "./Personas";
 import { ReadinessMark, StillNeeds, needsLine } from "./Readiness";
-import { ProjectIcon } from "./PlatformFilter";
+import { ProjectIcon } from "./ProductFilter";
 import { InitiativeIcon } from "./ScopeFilter";
 import { InitiativeTags, initiativesOf } from "./Initiatives";
 import {
@@ -1651,7 +1651,7 @@ function TechnicalPage({ doc, route, ...go }: PageProps & { doc: TechnicalDoc })
             <Stat
               label={reliedLabel}
               value={plural(capabilities.length, "capability", "capabilities")}
-              note={doc.kind === "mechanism" ? (doc.applies === "platform" ? "Across its platform" : "Across its project") : undefined}
+              note={doc.kind === "mechanism" ? (doc.applies === "product" ? "Across its product" : "Across its project") : undefined}
               href={capabilities.length ? tabHref("relied") : undefined}
             />
           </>
@@ -1700,7 +1700,7 @@ function TechnicalPage({ doc, route, ...go }: PageProps & { doc: TechnicalDoc })
         </Section>
       ) : (
         <Section
-          title={doc.kind === "component" ? "Capabilities that rely on it" : doc.applies === "platform" ? "Applies across the platform" : "Applies to"}
+          title={doc.kind === "component" ? "Capabilities that rely on it" : doc.applies === "product" ? "Applies across the product" : "Applies to"}
           count={capabilities.length}
         >
           <CapabilityTable state={state} capabilities={capabilities} />

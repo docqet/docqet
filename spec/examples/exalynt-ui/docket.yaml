@@ -1,9 +1,0 @@
-# Marks this repository as a Docket project. Its product docs are the
-# API's: this one has technical docs only.
-project:
-  id: exalynt-ui
-  name: Exalynt UI
-# The platform it's part of, with the API.
-platform:
-  id: exalynt
-  name: Exalynt

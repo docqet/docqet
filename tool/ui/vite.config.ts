@@ -18,10 +18,20 @@ function statePaths(): string[] {
       .filter(Boolean)
       .map((p) => resolve(p));
   }
-  return readdirSync(examples)
-    .sort()
-    .map((dir) => join(examples, dir, ".docket/state.json"))
+  return projectsIn(examples)
+    .map((dir) => join(dir, ".docket/state.json"))
     .filter((p) => existsSync(p));
+}
+
+/* Every project in a folder: each folder with a docket.yaml, however deep, since one repository can hold several. */
+function projectsIn(dir: string): string[] {
+  const here = existsSync(join(dir, "docket.yaml")) ? [dir] : [];
+  const below = readdirSync(dir, { withFileTypes: true })
+    .filter((e) => e.isDirectory() && !e.name.startsWith(".") && e.name !== "node_modules")
+    .map((e) => e.name)
+    .sort()
+    .flatMap((name) => projectsIn(join(dir, name)));
+  return [...here, ...below];
 }
 
 const serveState: Connect.NextHandleFunction = (req, res, next) => {

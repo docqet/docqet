@@ -48,7 +48,7 @@ export default function GlossaryPage({ state, route }: { state: DocketState; rou
 
 /* The terms in groups, as the domain overview's "Every concept" has them. Any not named here go last. */
 const GROUPS: { title: string; ids: TermId[] }[] = [
-  { title: "The product", ids: ["platform", "project", "contradiction", "domain", "feature", "capability", "rule", "concept", "persona"] },
+  { title: "The product", ids: ["product", "project", "contradiction", "domain", "feature", "capability", "rule", "concept", "persona"] },
   { title: "How it's built", ids: ["mechanism", "component"] },
   { title: "Where intention and reality differ", ids: ["open-decision", "gap", "product-gap", "technical-gap", "tradeoff", "risk", "spread"] },
   { title: "Stability and readiness", ids: ["stability", "maturity", "exposure", "stability-checklist", "readiness"] },

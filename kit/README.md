@@ -75,9 +75,9 @@ Some things a project might say:
 ```markdown
 ## Docket in this project
 
-- Product docs for the Exalynt platform are in the exalynt-api repository.
-  This repository has technical docs only, and its components list that
-  repository's capabilities.
+- Product docs for the Exalynt product are in the API project, `api/`. This
+  project has technical docs only, and its components list the API's
+  capabilities.
 - Our domains are accounts, agreements, billing and capacity. Ask before
   adding another.
 - Each acceptance test's Gherkin `Rule:` gets a `docket:verifies` for the rule

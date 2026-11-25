@@ -1,0 +1,9 @@
+# Marks this folder as a Docket project: one of two in Exalynt's repository,
+# beside api/. Its product docs are the API's: this one has technical docs only.
+project:
+  id: exalynt-ui
+  name: Exalynt UI
+# The product it's part of, with the API.
+product:
+  id: exalynt
+  name: Exalynt

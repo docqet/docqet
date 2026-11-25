@@ -2,7 +2,7 @@
 project:
   id: hotel-billing
   name: Hotel Billing
-# The platform it's part of, with the hotel's other projects.
-platform:
+# The product it's part of, with the hotel's other projects.
+product:
   id: hotel
   name: Hotel

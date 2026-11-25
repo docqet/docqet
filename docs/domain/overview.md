@@ -12,12 +12,13 @@ and its billing service.
 
 ## The big picture
 
-A **[project](concepts/project.md)** is a place where software is defined in
-**[docs](concepts/doc.md)**, and usually implemented, such as the hotel's
-booking app: one repository. Projects that make up one product together, such
-as the booking app and the billing service, are a
-**[platform](concepts/platform.md)**, and Docket shows one platform at a
-time. Each project works in one or more
+A **[software product](concepts/product.md)** is the end result of one or
+more pieces of software working together to accomplish a high-level goal,
+such as a hotel's booking app and billing service. Each piece is a
+**[project](concepts/project.md)**: a folder marked by a `docket.yaml`, where
+software is defined in **[docs](concepts/doc.md)**, and usually implemented.
+A project is often a whole repository, and can be one package of several in
+one. Docket shows one product at a time. Each project works in one or more
 **[domains](concepts/domain.md)**: parts of the business, each with its own
 language, such as Guest stays or Billing. Every doc but a persona, an
 initiative, a mechanism or a component is written in exactly one domain. Every project contributes what it
@@ -50,7 +51,7 @@ How the software is meant to be built is written down beside that, in the
 code's words: **[mechanisms](concepts/mechanism.md)**, each how something
 works across the whole project, and **[components](concepts/component.md)**,
 each one area of the code. A component lists the capabilities that rely on it;
-a mechanism applies to every capability its project, or its whole platform,
+a mechanism applies to every capability its project, or its whole product,
 serves.
 
 Intention and reality differ in a few named ways:
@@ -76,9 +77,9 @@ recommendation, with what's left. It's maturity less their
 
 ```mermaid
 flowchart TB
-  project(["Project<br/>one repository"])
+  project(["Project<br/>a folder with a docket.yaml"])
 
-  subgraph product ["Product: what it's meant to do, in the domain's words"]
+  subgraph product ["Product docs: what it's meant to do, in the domain's words"]
     domain["Domain<br/>a part of the business"]
     feature["Feature<br/>a job the product does"]
     capability["Capability<br/>one result of value"]
@@ -88,7 +89,7 @@ flowchart TB
     concept["Concept<br/>what a word means"]
   end
 
-  subgraph technical ["Technical: how it's meant to be built, in the code's words"]
+  subgraph technical ["Technical docs: how it's meant to be built, in the code's words"]
     mechanism["Mechanism<br/>how something works across the project"]
     component["Component<br/>one area of the code"]
   end
@@ -210,7 +211,7 @@ left out, since the code already says it.
 
 - **They link to the capabilities they serve**, never the other way, so
   product docs stay the same whatever the implementation. A component lists
-  them; a mechanism applies to every capability its project, or its platform,
+  them; a mechanism applies to every capability its project, or its product,
   serves.
 - **They have no stability level.** One can serve capabilities at different
   levels, so a level always names its capability.
@@ -297,9 +298,10 @@ Some things are never features or capabilities:
 
 **The product**
 
-- [Platform](concepts/platform.md): the projects that make up one product,
-  shown together.
-- [Project](concepts/project.md): where software is defined, one repository.
+- [Software product](concepts/product.md): the end result of one or more
+  pieces of software working together to accomplish a high-level goal.
+- [Project](concepts/project.md): one piece of a product, a folder with a
+  `docket.yaml`, where software is defined.
 - [Contradiction](concepts/contradiction.md): two projects saying different
   things that should agree.
 - [Domain](concepts/domain.md): a part of the business, with a language of its

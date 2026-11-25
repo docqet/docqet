@@ -7,7 +7,7 @@ import { MaturityRing } from "./design/maturity/MaturityRing";
 import { ContradictionHint } from "./CapabilityHints";
 import { ConceptChips, ConceptIcon } from "./Concepts";
 import { PersonaCard } from "./Personas";
-import { ProjectIcon } from "./PlatformFilter";
+import { ProjectIcon } from "./ProductFilter";
 import { ExposureMark, RiskScore } from "./design/risk/RiskScore";
 import {
   capabilitiesById,

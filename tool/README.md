@@ -3,7 +3,7 @@
 `docket` and the UI it serves.
 
 - **[`docket`](cli/)** is one Go program, shipped as a binary and as a
-  container image. As a CLI it indexes and checks a repository's docs,
+  container image. As a CLI it indexes and checks a project's docs,
   answers questions about them, follows how they change across commits, and
   sends state and test results to a Docket server. With `docket serve` it is
   that server, and with `docket ui` it shows the UI over a working tree. It
@@ -33,7 +33,7 @@ DOCKET_STATE=a/state.json:b/state.json npm run dev   # several, separated as in 
 
 ### How it's laid out
 
-A bar across the top says where you are and finds anything: the platform and
+A bar across the top says where you are and finds anything: the product and
 its projects, the initiative showing, search, and the glossary of Docket's
 words. A nav down the side picks which question you're asking:
 
@@ -55,13 +55,13 @@ mechanism, component and gap has a page of its own, such as
 `?capability=deposits`: a header saying what it is and how it's doing, then
 tabs, each answering one question about it, kept in the address as
 `&tab=left`. A count in a header links to the tab that lists what it counts.
-Every link opens in the same tab, so back returns, and the platform, the
+Every link opens in the same tab, so back returns, and the product, the
 projects and the initiative showing ride along in the address.
 
 Initiative, in the top bar, shows Everything or one initiative. It's hidden
-when the platform has none. Showing one initiative, every page shows only its
+when the product has none. Showing one initiative, every page shows only its
 capabilities and personas, every number counts only those, and
-`?scope=<initiative-id>` in the address says which. Switching platform goes
+`?scope=<initiative-id>` in the address says which. Switching product goes
 back to Everything. Wherever a capability or persona is shown, tags name the
 initiatives it's part of, and a feature, domain, rule, concept, mechanism,
 component or gap shows those of its capabilities.
@@ -75,16 +75,16 @@ with rows tinted by risk) or Evidence (the evidence spread of each, how
 their rules hold, tinted the same way). Each shows only its own marks, at
 the right of each card and row. A persona's readiness always shows on their
 card. Where
-the cards sit is this browser's own, for each platform.
+the cards sit is this browser's own, for each product.
 
 ### Several projects
 
-- **Platforms**: the UI shows one platform at a time, the projects whose
-  `docket.yaml` names the same platform. The platform's name in the top bar
-  opens a list of every platform to switch to, each with its maturity, then
-  the platform's projects to tick, some or all of them. Everything then covers
-  only those, and `?platform=<id>&project=<id>,<id>` in the address says which
-  are showing. With no platform named, it's the first, and with no projects
+- **Products**: the UI shows one product at a time, the projects whose
+  `docket.yaml` names the same product. The product's name in the top bar
+  opens a list of every product to switch to, each with its maturity, then
+  the product's projects to tick, some or all of them. Everything then covers
+  only those, and `?product=<id>&project=<id>,<id>` in the address says which
+  are showing. With no product named, it's the first, and with no projects
   named, all of its projects are.
 - **Seeing them**: a doc's page and each search result say which projects
   define it. On the map, each domain is one region holding every project's

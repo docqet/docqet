@@ -52,7 +52,7 @@ export function fieldsText(f: Fields): string {
 
 /* What one project says about a doc, in one domain: each doc has one from every project and domain that declares it. */
 export type Contribution = Fields & {
-  /* Where it's defined, and its file in that project's repository. */
+  /* Where it's defined, and its file, from that project's folder. */
   project: string;
   /* The domain it's written in, which says what its rule and concept links mean. */
   domain: string;
@@ -139,15 +139,15 @@ export type Capability = Doc & {
  * tradeoffs and open decisions about it. A component lists the capabilities
  * that rely on it; a mechanism applies to every capability its project serves,
  * which the indexer writes as its `capabilities`, or, applying to its
- * platform, to every capability any project on the platform serves, which
+ * product, to every capability any project in the product serves, which
  * combining adds. Projects that declare the same one contribute to it, as with
  * features.
  */
 export type TechnicalKind = "mechanism" | "component";
 export type TechnicalDoc = Doc & {
   kind: TechnicalKind;
-  /* What a mechanism applies to: its project's capabilities, or its platform's. A component's is always "project", and means nothing. */
-  applies: "project" | "platform";
+  /* What a mechanism applies to: its project's capabilities, or its product's. A component's is always "project", and means nothing. */
+  applies: "project" | "product";
   capabilities: string[];
   /* The checklist outcomes it meets for the capabilities it serves, as `<quality>/<level>/<id>`. */
   meets: string[];
@@ -335,8 +335,8 @@ export type DocketState = {
 export type Project = {
   id: string;
   name: string;
-  /* The platform it's part of: the one its docket.yaml declares, or else a platform of its own, named for it. */
-  platform: { id: string; name: string };
+  /* The product it's part of: the one its docket.yaml declares, or else a product of its own, named for it. */
+  product: { id: string; name: string };
   commit: string;
   indexedAt: string;
   maturity: number | null;
@@ -350,8 +350,8 @@ type Raw<T extends Doc> = Omit<T, "from" | "levels" | "parts" | "project" | "bui
 export type StateFile = {
   docket: string;
   project: { id: string; name: string };
-  /* Missing when the project declares no platform, and from state written before platforms. */
-  platform?: { id: string; name: string };
+  /* Missing when the project declares no product, and from state written before products. */
+  product?: { id: string; name: string };
   commit: string;
   indexedAt: string;
   /* Its counts, such as capabilities at each level. The page works out its own, so it reads none of them. */
@@ -372,7 +372,7 @@ export type StateFile = {
   initiatives?: Omit<Raw<Initiative>, "domain">[];
   /* Technical docs aren't in a domain either. Missing from state written before them, as is `tradeoffs`. */
   /* `applies` is missing from state written before it, meaning "project". */
-  mechanisms?: (Omit<Raw<TechnicalDoc>, "domain" | "kind" | "applies"> & { applies?: "project" | "platform" })[];
+  mechanisms?: (Omit<Raw<TechnicalDoc>, "domain" | "kind" | "applies"> & { applies?: "project" | "product" })[];
   components?: Omit<Raw<TechnicalDoc>, "domain" | "kind" | "applies">[];
   /* `impact`, `likelihood` and `reach` are missing from state written before them. */
   gaps: (Omit<Gap, "impact" | "likelihood" | "reach"> & Partial<Gap>)[];
@@ -386,25 +386,25 @@ export type StateFile = {
 /* A project's header, from its state.json. Its maturity is worked out once its features are put together (see combine). */
 export const projectOf = (file: StateFile): Project => ({
   ...file.project,
-  platform: file.platform ?? file.project,
+  product: file.product ?? file.project,
   commit: file.commit,
   indexedAt: file.indexedAt,
   maturity: null,
   band: null,
 });
 
-/* Projects that are shown together, as one product: those that declare the same platform. */
-export type Platform = { id: string; name: string; projects: Project[] };
+/* Projects that are shown together, as one product: those that declare the same product. */
+export type Product = { id: string; name: string; projects: Project[] };
 
-/* Every platform, in the order their first projects are read, each with its projects in order. Its name is its first project's to say. */
-export function platformsOf(all: Project[]): Platform[] {
-  const platforms: Platform[] = [];
+/* Every product, in the order their first projects are read, each with its projects in order. Its name is its first project's to say. */
+export function productsOf(all: Project[]): Product[] {
+  const products: Product[] = [];
   for (const p of all) {
-    const platform = platforms.find((x) => x.id === p.platform.id);
-    if (platform) platform.projects.push(p);
-    else platforms.push({ ...p.platform, projects: [p] });
+    const product = products.find((x) => x.id === p.product.id);
+    if (product) product.projects.push(p);
+    else products.push({ ...p.product, projects: [p] });
   }
-  return platforms;
+  return products;
 }
 
 const LEVEL_ORDER: readonly Level[] = STABILITY_LEVEL_IDS;
@@ -499,9 +499,9 @@ export function combine(files: StateFile[]): DocketState {
     listings.set(child, [...(listings.get(child) ?? []), { parent, project }]);
   /* Which capabilities each domain lists in each feature. */
   const featureLists = new Map<string, { domain: string; capabilities: string[] }[]>();
-  /* What each platform's projects serve, and the mechanisms that apply across one, to put together once every project is in. */
-  const platformServes = new Map<string, string[]>();
-  const acrossPlatform: { doc: TechnicalDoc; platform: string }[] = [];
+  /* What each product's projects serve, and the mechanisms that apply across one, to put together once every project is in. */
+  const productServes = new Map<string, string[]>();
+  const acrossProduct: { doc: TechnicalDoc; product: string }[] = [];
 
   /* Add one project's contribution to the doc with this ID, making it if it's the first. */
   function contribute<T extends Doc>(list: T[], id: string, project: string, raw: Omit<Raw<Doc>, "domain"> & { domain: string }, make: (base: Doc) => T): T {
@@ -527,13 +527,13 @@ export function combine(files: StateFile[]): DocketState {
 
   for (const file of files.map(linksById)) {
     const project = file.project.id;
-    const platform = projectOf(file).platform.id;
+    const product = projectOf(file).product.id;
     state.projects.push(projectOf(file));
     /* What a project serves, as a mechanism's `capabilities` are worked out: what it declares, other than drafts, and what its components list. */
-    const serves = platformServes.get(platform) ?? [];
+    const serves = productServes.get(product) ?? [];
     union(serves, file.capabilities.filter((c) => c.stability !== "draft").map((c) => c.id));
     for (const c of file.components ?? []) union(serves, c.capabilities);
-    platformServes.set(platform, serves);
+    productServes.set(product, serves);
     for (const d of file.domains) contribute(state.domains, d.id, project, { ...d, domain: d.id }, newDomain);
     /* A gap's or tradeoff's ID is its project's, as the docs' lists below name them. */
     const own = (ids: string[] | undefined) => (ids ?? []).map((id) => `${id}@${project}`);
@@ -617,9 +617,9 @@ export function combine(files: StateFile[]): DocketState {
           evidence: { implements: [], verifies: [] },
         }));
         union(doc.capabilities, e.capabilities);
-        if (e.applies === "platform") {
-          doc.applies = "platform";
-          acrossPlatform.push({ doc, platform });
+        if (e.applies === "product") {
+          doc.applies = "product";
+          acrossProduct.push({ doc, product });
         }
         union(doc.meets, e.meets);
         union(doc.gaps, own(e.gaps));
@@ -669,8 +669,8 @@ export function combine(files: StateFile[]): DocketState {
     union(p.from.concepts, p.concepts.flatMap((l) => resolve(state.concepts, l)));
   }
 
-  /* A mechanism that applies across its platform applies to what every project on it serves, which no one project's indexer can see. */
-  for (const { doc, platform } of acrossPlatform) union(doc.capabilities, platformServes.get(platform) ?? []);
+  /* A mechanism that applies across its product applies to what every project on it serves, which no one project's indexer can see. */
+  for (const { doc, product } of acrossProduct) union(doc.capabilities, productServes.get(product) ?? []);
 
   /* Reverse links, worked out again across everything. */
   for (const c of state.capabilities) {
@@ -1438,18 +1438,18 @@ export type PageAt = Pick | { kind: TechnicalKind | "initiative"; id: string } |
 
 const PAGE_KINDS: Exclude<PageAt["kind"], "gaps">[] = ["domain", "feature", "capability", "concept", "persona", "initiative", "mechanism", "component"];
 
-/* The platform, projects and scope showing, as the address has them, carried over to the pages it links to. */
+/* The product, projects and scope showing, as the address has them, carried over to the pages it links to. */
 function showingParams(): URLSearchParams {
   const now = new URLSearchParams(window.location.search);
   const params = new URLSearchParams();
-  for (const key of ["platform", "project", "scope"]) {
+  for (const key of ["product", "project", "scope"]) {
     const value = now.get(key);
     if (value) params.set(key, value);
   }
   return params;
 }
 
-/* A detail page, as `?capability=deposits` or `?view=gaps`, showing the same platform and projects as this page. */
+/* A detail page, as `?capability=deposits` or `?view=gaps`, showing the same product and projects as this page. */
 export function pageHref(pick: PageAt, section?: string): string {
   const params = showingParams();
   if (pick.kind === "gaps") params.set("view", "left");
@@ -1458,7 +1458,7 @@ export function pageHref(pick: PageAt, section?: string): string {
 }
 
 /*
- * The map, showing the same platform and projects as this page. Given
+ * The map, showing the same product and projects as this page. Given
  * something on the map, it opens with that in the side panel and in view, as
  * `?show=<kind>:<id>`.
  */

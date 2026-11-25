@@ -24,7 +24,7 @@ import { DecisionList, Facets, facets } from "./Fields";
 import { DomainIcon } from "./FeatureMap";
 import { PersonaAvatar, PersonaIcon, personaNameAndRole } from "./Personas";
 import { ReadinessMark } from "./Readiness";
-import { ProjectIcon } from "./PlatformFilter";
+import { ProjectIcon } from "./ProductFilter";
 import {
   
   checklistOutcome,

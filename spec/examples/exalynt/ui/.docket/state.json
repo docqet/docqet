@@ -4,7 +4,7 @@
     "id": "exalynt-ui",
     "name": "Exalynt UI"
   },
-  "platform": {
+  "product": {
     "id": "exalynt",
     "name": "Exalynt"
   },

@@ -27,7 +27,7 @@ impact rated add nothing.
 - **A feature's** comes from its capabilities, each counted once, at its level
   in short: the lowest across the domains that build it.
 - **A domain's** comes from every capability with a part in it.
-- **A project's**, or a platform's, comes from every capability showing.
+- **A project's**, or a product's, comes from every capability showing.
 - **What serves a persona** comes from the capabilities that list them.
 - **An [initiative's](initiative.md)** comes from the capabilities that list
   it. Showing one narrows every capability showing to its own, the way
@@ -55,7 +55,7 @@ It falls in a quarter, its band:
 - **Only the riskiest gap on each capability counts.** Closing a lesser one
   doesn't change it until the riskiest is closed too. Counting every gap
   would make a gap in something every capability relies on, such as a
-  platform mechanism, outweigh everything else.
+  product mechanism, outweigh everything else.
 - **It counts gaps the score puts at 0.** A score below the least there is
   shows as 0, but its share of the most isn't nothing.
 - **Promoting can raise it.** Where a gap breaks a promise the new level
@@ -70,7 +70,7 @@ The spec has [how it's worked out](../../../spec/README.md#exposure).
 
 Nothing is written for it in a doc, and it isn't in [state](state.md):
 readers work it out once projects are put together, since a mechanism that
-applies across a platform shows on every project's capabilities.
+applies across a product shows on every project's capabilities.
 
 In Hotel Bookings, Reservations' room booking at Beta could be exposed to
 4 × 4 × 1.5 = 24, and its riskiest gap, its calendar needing a mouse, is 18

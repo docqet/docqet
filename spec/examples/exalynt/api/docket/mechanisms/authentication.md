@@ -7,7 +7,7 @@ description: >-
   of the API works from on the context. Clerk only signs people in: users are
   copied to our database, and organizations, memberships, and roles are the
   API's own.
-applies: platform
+applies: product
 ---
 
 ```text

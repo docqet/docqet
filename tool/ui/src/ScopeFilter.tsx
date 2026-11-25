@@ -19,7 +19,7 @@ export const scopeName = (scope: Scope, initiatives: Initiative[]) =>
   scope.kind === "all" ? "Everything" : (initiatives.find((i) => i.id === scope.id)?.name ?? scope.id);
 
 /*
- * Which initiative the page shows, in the header beside the platform, named
+ * Which initiative the page shows, in the header beside the product, named
  * "Initiative":
  * everything, or one initiative's capabilities and personas. Every page and
  * number follows it. With no initiatives there's nothing to choose,

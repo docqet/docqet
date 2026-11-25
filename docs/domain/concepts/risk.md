@@ -257,7 +257,7 @@ Together, the gaps on Reservations' capabilities give it an exposure of
 74%, `moderate`: [exposure](exposure.md#in-the-spec) shows how.
 
 Readers work out risk once projects are put together, since a mechanism that
-applies across a platform shows on every project's capabilities. Nothing is
+applies across a product shows on every project's capabilities. Nothing is
 written for it in [state](state.md). The spec has
 [how it's worked out](../../../spec/README.md#risk).
 

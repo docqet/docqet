@@ -7,15 +7,15 @@ import RadioButtonUncheckedRoundedIcon from "@mui/icons-material/RadioButtonUnch
 import UnfoldMoreRoundedIcon from "@mui/icons-material/UnfoldMoreRounded";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import type { Platform, Project } from "./state";
+import type { Product, Project } from "./state";
 
 /* A project's mark, wherever one is named. */
 export function ProjectIcon({ size = 14 }: { size?: number }) {
   return <FolderOutlinedIcon sx={{ fontSize: size, flex: "none", color: "text.secondary" }} />;
 }
 
-/* A platform to choose in the header. */
-export type PlatformChoice = Platform;
+/* A product to choose in the header. */
+export type ProductChoice = Product;
 
 const indexed = (p: Project) =>
   new Date(p.indexedAt).toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short" });
@@ -32,33 +32,33 @@ function Indexed({ project }: { project: Project }) {
 const count = (n: number) => `${n} project${n === 1 ? "" : "s"}`;
 
 /*
- * Which platform the page shows, and which of its projects, in the header.
- * With one platform of one project there is nothing to choose, so it's just
+ * Which product the page shows, and which of its projects, in the header.
+ * With one product of one project there is nothing to choose, so it's just
  * the project's name and the commit it was indexed at. Otherwise it names the
- * platform and which of its projects are showing, and opens a list: every
- * platform to switch to, when there's more than one, then the platform's
- * projects to tick, each with its commit. Switching platform
+ * product and which of its projects are showing, and opens a list: every
+ * product to switch to, when there's more than one, then the product's
+ * projects to tick, each with its commit. Switching product
  * shows all its projects and keeps the list open, so some can be unticked
  * straight away. At least one project stays ticked.
  */
-export default function PlatformFilter({
+export default function ProductFilter({
   showing,
-  platform,
-  platforms,
-  onPlatform,
+  product,
+  products,
+  onProduct,
   onProjects,
 }: {
   showing: Project[];
-  platform: Platform;
-  platforms: PlatformChoice[];
-  onPlatform: (id: string) => void;
+  product: Product;
+  products: ProductChoice[];
+  onProduct: (id: string) => void;
   onProjects: (ids: string[]) => void;
 }) {
   const [anchor, setAnchor] = useState<HTMLElement | null>(null);
-  const all = platform.projects;
+  const all = product.projects;
   const ids = showing.map((p) => p.id);
 
-  if (platforms.length < 2 && all.length < 2) {
+  if (products.length < 2 && all.length < 2) {
     return (
       <div className="project">
         <strong>{all[0].name}</strong>
@@ -80,7 +80,7 @@ export default function PlatformFilter({
         aria-expanded={anchor ? true : undefined}
         onClick={(e) => setAnchor(e.currentTarget.closest<HTMLElement>(".project"))}
       >
-        <strong>{platform.name}</strong>
+        <strong>{product.name}</strong>
         <UnfoldMoreRoundedIcon aria-hidden sx={{ fontSize: 16 }} />
       </button>
       {all.length === 1 ? (
@@ -100,14 +100,14 @@ export default function PlatformFilter({
           list: { className: "project-menu-list" },
         }}
       >
-        {platforms.length > 1 ? (
+        {products.length > 1 ? (
           <li className="project-menu-group" role="presentation">
-            Platforms
+            Products
           </li>
         ) : null}
-        {platforms.length > 1
-          ? platforms.map((p) => {
-              const on = p.id === platform.id;
+        {products.length > 1
+          ? products.map((p) => {
+              const on = p.id === product.id;
               return (
                 <MenuItem
                   key={p.id}
@@ -115,7 +115,7 @@ export default function PlatformFilter({
                   role="menuitemradio"
                   aria-checked={on}
                   selected={on}
-                  onClick={() => (on ? null : onPlatform(p.id))}
+                  onClick={() => (on ? null : onProduct(p.id))}
                 >
                   {on ? (
                     <RadioButtonCheckedRoundedIcon aria-hidden sx={{ fontSize: 18, flex: "none", color: "var(--accent)" }} />
@@ -131,7 +131,7 @@ export default function PlatformFilter({
             })
           : null}
         <li className="project-menu-group" role="presentation">
-          {platforms.length > 1 ? `Projects in ${platform.name}` : "Projects"}
+          {products.length > 1 ? `Projects in ${product.name}` : "Projects"}
         </li>
         {all.length > 1 ? (
           <MenuItem className="project-menu-item" onClick={() => onProjects(all.map((p) => p.id))}>

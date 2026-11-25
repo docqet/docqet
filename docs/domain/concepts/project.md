@@ -1,10 +1,12 @@
 # Project
 
-A source of [state](state.md): a folder marked by a `docket.yaml` that gives
+One piece of software that describes itself to Docket, as part of a
+[software product](product.md): a folder marked by a `docket.yaml` that gives
 the project's ID and name, with everything in it. It's where software is
 defined, and usually implemented. Its docs say what the software can do and
 the rules it follows, and its code and tests, when it has them, do it and
-prove it.
+prove it. To Docket, it's a source of [state](state.md): each project is
+indexed on its own.
 
 ## Details
 
@@ -36,9 +38,9 @@ repositories, or two folders in one.
   `docket.yaml` of its own, or moving it to a repository of its own, makes a
   new project, but it creates, removes or renames no domain, feature or
   capability.
-- **It's part of one [platform](platform.md)**: the projects that make up one
-  product together, shown and combined as one. Hotel Bookings and Hotel
-  Billing are both on Hotel. A project that names no platform is a platform of
+- **It's part of one [software product](product.md)**: the end result of its
+  projects working together, shown and combined as one. Hotel Bookings and
+  Hotel Billing are both part of Hotel. A project that names no product is a product of
   its own.
 - **It has no stability level.** It has a [maturity](maturity.md), worked
   out from its features, and a [readiness](readiness.md), from every
@@ -55,7 +57,7 @@ folder a project, here the repository's root:
 project:
   id: hotel-bookings
   name: Hotel Bookings
-platform:
+product:
   id: hotel
   name: Hotel
 ```
@@ -63,7 +65,7 @@ platform:
 The `id` names it wherever several projects are shown together, and the `name`
 is what people see, named for the software, not for a domain. Which domains it
 works in is the domains it has domain docs for, so nothing here says it.
-`platform` is optional, as the [platform](platform.md) says.
+`product` is optional, as the [product](product.md) says.
 
 Its [state](state.md) starts with the same, the commit it describes, and a
 summary:
@@ -72,7 +74,7 @@ summary:
 {
   "docket": "0.1",
   "project": { "id": "hotel-bookings", "name": "Hotel Bookings" },
-  "platform": { "id": "hotel", "name": "Hotel" },
+  "product": { "id": "hotel", "name": "Hotel" },
   "commit": "4f2c9e1",
   "summary": { "domains": 2, "features": 3 }
 }
@@ -80,7 +82,7 @@ summary:
 
 ## Not to be confused with
 
-- [Platform](platform.md): the projects that make up one product. A project is
+- [Product](product.md): the projects that make up one product. A project is
   one source of state on it.
 - Repository: where the files are kept. A repository holds one project or
   more, and a project is in one repository.

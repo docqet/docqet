@@ -352,7 +352,7 @@ the server, and what serves the UI.
   changed over time, and send states and test and QA results to the server.
   It works on any repository host and in any CI. Every read can come from the
   working tree, a commit or the server, for one project or the whole
-  platform. Its commands are drafted in [`tool/cli/`](tool/cli/).
+  product. Its commands are drafted in [`tool/cli/`](tool/cli/).
 - **As the server**, with `docket serve`, it's the central place where
   projects come together. It:
   - **Holds each project's applied state** at every commit on its main
@@ -379,7 +379,7 @@ the server, and what serves the UI.
   deploys the server and runs `docket apply` in a CI that works in
   containers. The binary is also released on its own, for laptops and CI.
 
-The CLI reconciles each repository with the server, much as infrastructure as
+The CLI reconciles each project with the server, much as infrastructure as
 code does:
 
 - **Preview** shows what merging a branch would change on the server:

@@ -31,14 +31,14 @@ server and the UI never disagree.
 - **A read is the same wherever its states come from.** Listing gaps, showing
   a capability or working out readiness is one computation over some states.
   Which states, the working tree's, a commit's, the server's, this project's
-  or the whole platform's, is chosen with flags on that command, never by
+  or the whole product's, is chosen with flags on that command, never by
   something selected earlier. See [Where a read comes from](#where-a-read-comes-from).
 - **It doesn't care where the repository is hosted.** It talks only to git
   and to the Docket server over HTTP. It never calls GitHub's, GitLab's or
   anyone else's API. Posting a comment on a pull request is the CI's job, and
   the command gives it the text.
 - **Everything local works without a server.** Indexing, checking, reading
-  and history all work offline. A server adds the rest of the platform and a
+  and history all work offline. A server adds the rest of the product and a
   shared timeline.
 - **It's written for agents as much as for people.** Every command takes
   `--json`, says what it's showing, prompts only in a terminal, and uses the
@@ -63,7 +63,7 @@ the server are separate, since they aren't reads.
 | [`docket diff`](#docket-diff) | What changed in Docket between two points | Read |
 | [`docket log`](#docket-log) | How one thing changed over time | Read |
 | [`docket history`](#docket-history) | Index every commit on a branch, for history offline | Setting up |
-| [`docket preview`](#docket-preview) | `diff --remote --platform`, for CI | Read |
+| [`docket preview`](#docket-preview) | `diff --remote --product`, for CI | Read |
 | [`docket login`](#docket-login) | Sign in to a server, as a person | Server |
 | [`docket apply`](#docket-apply) | Send the main branch's new commits to the server | Server |
 | [`docket results`](#docket-results) | Send test or QA results for a commit | Server |
@@ -84,12 +84,12 @@ decide which, each with its own flag, and every read takes both.
 | `--remote` | The server's latest applied state for this project | The server |
 | `--remote --at <rev>` | What the server applied at that commit | The server |
 
-**Which projects:** this one, or the whole platform.
+**Which projects:** this one, or the whole product.
 
 | Flag | Reads |
 | --- | --- |
 | _(none)_ | This project alone |
-| `--platform` | This project, combined with every other project on its platform, as the server last applied them |
+| `--product` | This project, combined with every other project in its product, as the server last applied them |
 
 So the same command answers different questions:
 
@@ -97,28 +97,28 @@ So the same command answers different questions:
 docket list gaps                        # this project, as it is on my machine
 docket list gaps --at v1.4              # this project, at a release
 docket list gaps --remote               # this project, as the server has it
-docket list gaps --platform             # my working tree, among the rest of the platform
-docket list gaps --remote --platform    # the whole platform as the server has it: what the UI shows
+docket list gaps --product             # my working tree, among the rest of the product
+docket list gaps --remote --product    # the whole product as the server has it: what the UI shows
 ```
 
 - **Inside a repository, the working tree is the default**, since it's what
   engineers and agents want nearly every time.
 - **Outside one, the server is the only source**, so `--remote` is implied,
-  and `--platform <id>` or `--project <id>` says which. Someone with no clone
-  can still ask: `docket list gaps --platform hotel`.
+  and `--product <id>` or `--project <id>` says which. Someone with no clone
+  can still ask: `docket list gaps --product hotel`.
 - **Nothing is selected and remembered.** No `docket use server`, no current
   context. What a command reads is in the command, so an agent checking its
   own change can never be shown the server's state by something run earlier,
   and a script means the same thing every time it's run.
-- **The other projects in `--platform` always come from the server**, since
+- **The other projects in `--product` always come from the server**, since
   their repositories aren't here. They're fetched when needed and kept in
-  `.docket/platform/`, gitignored. When the server can't be reached, the
+  `.docket/product/`, gitignored. When the server can't be reached, the
   copies kept there are used, and the output says how old they are.
-- **With `--at` and `--platform`**, the other projects are as the server had
+- **With `--at` and `--product`**, the other projects are as the server had
   them at that commit's time.
 - **Every read says what it's showing.** Its first line, such as
   `hotel-bookings · working tree (4f2c9e1 + uncommitted)` or
-  `hotel platform · server, applied 2026-11-20 15:04`, and a `source` field
+  `hotel product · server, applied 2026-11-20 15:04`, and a `source` field
   in its JSON:
 
   ```json
@@ -139,13 +139,13 @@ docket list gaps --remote --platform    # the whole platform as the server has i
 
 Writes `docket.yaml` in the current folder, making it a project: usually the
 repository's root, or a package's folder in a repository with several. It asks
-for the project's ID and name, and the platform it's part of, or takes them as
+for the project's ID and name, and the product it's part of, or takes them as
 flags. It also adds `.docket/` to
 `.gitignore`. It doesn't write any docs: the kit's `adopting.md` covers
 bringing Docket to existing code.
 
 ```sh
-docket init --id hotel-bookings --name "Hotel Bookings" --platform hotel
+docket init --id hotel-bookings --name "Hotel Bookings" --product hotel
 ```
 
 ### `docket kit`
@@ -196,7 +196,7 @@ docket check                          # everything in the working tree
 docket check --changed                # only problems in files changed since the main branch
 docket check --changed --base v1.4    # changed since some other point
 docket check --commits origin/main..HEAD   # also check the Docket trailers in these commits
-docket check --platform               # with the rest of the platform
+docket check --product               # with the rest of the product
 ```
 
 - **`--changed`** keeps hooks and agents focused on their own change in a
@@ -205,7 +205,7 @@ docket check --platform               # with the rest of the platform
 - **`--commits`** checks every [trailer](#trailers) in a range: that each
   names something that existed before, and something that exists after, and
   that none is left in a message's body where git won't read it.
-- **`--platform`** resolves a link to a rule another project defines, and
+- **`--product`** resolves a link to a rule another project defines, and
   finds contradictions with other projects. Without it, a link into another
   project is reported as `unknown-id`, with a note that it may be defined
   elsewhere.
@@ -221,7 +221,7 @@ decisions. It's the kit's "Find what the change touches" step as one call.
 docket touches src/booking/                  # files or folders
 docket touches --staged                      # what's staged
 docket touches --base origin/main            # everything the branch changes
-docket touches src/billing/ --platform --json   # with capabilities other projects declare
+docket touches src/billing/ --product --json   # with capabilities other projects declare
 ```
 
 ```text
@@ -264,7 +264,7 @@ the UI's views have.
 
 ```sh
 docket list capabilities --stability alpha
-docket list gaps --initiative mvp --sort risk --platform
+docket list gaps --initiative mvp --sort risk --product
 docket list gaps --for persona:front-desk-clerk --impact damaging,blocking
 docket list decisions --domain guest-stays --remote
 docket list tradeoffs --on component:ledger
@@ -278,7 +278,7 @@ problems. `--initiative` and `--for` narrow it as the UI does.
 
 ```sh
 docket status
-docket status --remote --platform --initiative mvp
+docket status --remote --product --initiative mvp
 docket status --for persona:front-desk-clerk --json
 ```
 
@@ -305,7 +305,7 @@ docket rename capability:early-arrival capability:early-check-in
 docket rename rule:same-day-turnover@guest-stays rule:same-day-turnover@property   # to another domain
 docket rename capability:room-booking#needs-mouse capability:room-booking#calendar-needs-a-mouse
 docket rename capability:early-arrival capability:early-check-in --dry-run          # what would change
-docket rename capability:early-arrival capability:early-check-in --platform         # also list other projects' references
+docket rename capability:early-arrival capability:early-check-in --product         # also list other projects' references
 ```
 
 ```text
@@ -332,8 +332,8 @@ Add this trailer when you commit:
   frontmatter, every annotation, and the IDs of the doc's own gaps and
   tradeoffs, which follow it under the same trailer.
 - **It doesn't change what people wrote in a doc's body**, since nothing reads
-  it, and doesn't change other projects. With `--platform`, it lists the
-  references in other projects on the platform, from the server, so they can
+  it, and doesn't change other projects. With `--product`, it lists the
+  references in other projects in the product, from the server, so they can
   be changed there, each in a commit of its own, with no trailer.
 - **It refuses** when the new ID is already taken, since that would make two
   things one, or when the old one doesn't exist.
@@ -408,7 +408,7 @@ it lists what the change removes instead, for its author to say in a trailer
 what any of it became. [`docket rename`](#docket-rename) prints the trailer
 for a rename itself.
 
-With `--platform`, it also shows what only the rest of the platform shows: a
+With `--product`, it also shows what only the rest of the product shows: a
 contradiction with another project, a link to another project's doc resolving
 or breaking, or readiness changing for a persona another project also serves.
 
@@ -420,7 +420,7 @@ and date.
 ```sh
 docket log capability:room-booking
 docket log capability:room-booking --remote
-docket log gaps --initiative mvp --since 2026-09-01 --remote --platform
+docket log gaps --initiative mvp --since 2026-09-01 --remote --product
 ```
 
 ```text
@@ -476,8 +476,8 @@ from each message's trailer block. How it uses them:
 
 ### `docket preview`
 
-The same as `docket diff --remote --platform`: what merging the working tree's
-branch would change on the server, across the platform. It's a name of its
+The same as `docket diff --remote --product`: what merging the working tree's
+branch would change on the server, across the product. It's a name of its
 own because it's what CI runs on every pull request, and `--format markdown`
 gives it text to post there.
 
@@ -492,7 +492,7 @@ branch, and says so.
 ## Acting on the server
 
 The server holds each project's applied state at every commit on its main
-branch, each commit's test and QA results, and the platform those projects
+branch, each commit's test and QA results, and the product those projects
 make up. These commands are how anything gets there. They aren't reads, so
 they take no source flags.
 
@@ -511,7 +511,7 @@ of credentials, and neither is ever written into the repository:
   and nothing else. It's made on the server and kept in the CI's secrets as
   `DOCKET_TOKEN`.
 - **A person's sign-in** lets them read the projects they're allowed to see,
-  from `docket login`. Every `--remote` and `--platform` read uses it, and
+  from `docket login`. Every `--remote` and `--product` read uses it, and
   shows only what they're allowed to see.
 
 #### `docket login`
@@ -602,7 +602,7 @@ re-indexes as files change, so the page follows the working tree.
 
 ```sh
 docket ui                       # the working tree, at http://127.0.0.1:4100
-docket ui --platform            # among the rest of the platform, from the server
+docket ui --product            # among the rest of the product, from the server
 docket ui --at v1.4             # a release
 ```
 
@@ -616,7 +616,7 @@ docket ui --at v1.4             # a release
 ### `docket serve`
 
 Runs the Docket server: it takes applied states and results from `apply` and
-`results`, answers `--remote` and `--platform` reads, and serves the UI to the
+`results`, answers `--remote` and `--product` reads, and serves the UI to the
 people allowed to see each project.
 
 ```sh
@@ -638,7 +638,7 @@ commands that talk to it settle.
 ### Bringing Docket to a repository
 
 ```sh
-docket init --id hotel-bookings --name "Hotel Bookings" --platform hotel
+docket init --id hotel-bookings --name "Hotel Bookings" --product hotel
 docket kit
 # write the first docs, with an agent following the kit's adopting.md
 docket check
@@ -679,7 +679,7 @@ and the CI does that with whatever tool it already has.
 
 ```sh
 # On every pull request or merge request
-docket check --platform --commits "$BASE_SHA..HEAD"
+docket check --product --commits "$BASE_SHA..HEAD"
 docket preview --format markdown > docket-preview.md
 # post docket-preview.md as a comment: gh, glab, the Bitbucket API, ...
 
@@ -704,14 +704,14 @@ docket apply --from "$(git log --format=%H --diff-filter=A -- docket.yaml | tail
 ```sh
 docket log capability:room-booking --remote     # when did it reach Beta, and what was left then?
 docket diff v1.3 v1.4                           # what did this release change, in Docket's words?
-docket log gaps --initiative mvp --since 2026-09-01 --remote --platform   # what did the MVP close this quarter?
+docket log gaps --initiative mvp --since 2026-09-01 --remote --product   # what did the MVP close this quarter?
 ```
 
 ### Checking readiness before a release
 
 ```sh
-docket status --remote --platform --initiative mvp
-docket list gaps --remote --platform --initiative mvp --sort risk
+docket status --remote --product --initiative mvp
+docket list gaps --remote --product --initiative mvp --sort risk
 ```
 
 ### Asking without the repository
@@ -722,8 +722,8 @@ directly. Outside a repository, `--remote` is implied.
 ```sh
 export DOCKET_SERVER=https://docket.example.com
 docket login
-docket status --platform hotel --for persona:front-desk-clerk
-docket list decisions --platform hotel --initiative mvp
+docket status --product hotel --for persona:front-desk-clerk
+docket list decisions --product hotel --initiative mvp
 ```
 
 ## Conventions

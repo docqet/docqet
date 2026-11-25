@@ -14,23 +14,23 @@ import InitiativesPage from "./pages/InitiativesPage";
 import PersonasPage from "./pages/PersonasPage";
 import ProblemsPage from "./pages/ProblemsPage";
 import RulePage from "./pages/RulePage";
-import type { PlatformChoice } from "./PlatformFilter";
+import type { ProductChoice } from "./ProductFilter";
 import { navigate, routeOf, useSearch, type Route } from "./routes";
 import { scopeFiles, scopeOf } from "./scope";
 import Shell from "./shell/Shell";
-import { combine, loadProjects, loadState, platformsOf, projectOf, type DocketState, type PageAt, type StateFile } from "./state";
+import { combine, loadProjects, loadState, productsOf, projectOf, type DocketState, type PageAt, type StateFile } from "./state";
 
-/* The platform and projects named in the address, as `?platform=<id>&project=<id>,<id>`. */
+/* The product and projects named in the address, as `?product=<id>&project=<id>,<id>`. */
 const showingIn = (search: string) => {
   const params = new URLSearchParams(search);
-  return { platform: params.get("platform"), projects: (params.get("project") ?? "").split(",").filter(Boolean) };
+  return { product: params.get("product"), projects: (params.get("project") ?? "").split(",").filter(Boolean) };
 };
 
 /*
- * Docket: one platform's projects at a time, in the shell's frame, at the view
+ * Docket: one product's projects at a time, in the shell's frame, at the view
  * or doc page the address names. `projects.json` lists the projects' state,
  * or else there's the one `state.json`. The page can be filtered to some of
- * the platform's projects; the address says which.
+ * the product's projects; the address says which.
  */
 export default function App() {
   const [files, setFiles] = useState<StateFile[] | null>(null);
@@ -48,39 +48,39 @@ export default function App() {
 
   /* Each project's state with only the capabilities in scope, so everything below, maturity included, counts only those. */
   const scoped = useMemo(() => scopeFiles(files ?? [], scope), [files, scope]);
-  /* Each platform, and its projects, to choose from. */
-  const platforms: PlatformChoice[] = useMemo(() => platformsOf((files ?? []).map(projectOf)), [files]);
+  /* Each product, and its projects, to choose from. */
+  const products: ProductChoice[] = useMemo(() => productsOf((files ?? []).map(projectOf)), [files]);
   /*
-   * The platform showing: the one the address names, or else the one its
+   * The product showing: the one the address names, or else the one its
    * first named project is in, or else the first. And its projects showing:
    * those the address names, or else all of them.
    */
-  const platform = useMemo(() => {
-    const named = platforms.find((p) => p.id === wanted.platform) ?? platforms.find((p) => p.projects.some((x) => x.id === wanted.projects[0]));
-    return named ?? platforms[0];
-  }, [platforms, wanted]);
+  const product = useMemo(() => {
+    const named = products.find((p) => p.id === wanted.product) ?? products.find((p) => p.projects.some((x) => x.id === wanted.projects[0]));
+    return named ?? products[0];
+  }, [products, wanted]);
   const chosen = useMemo(() => {
-    const known = platform?.projects.map((p) => p.id) ?? [];
+    const known = product?.projects.map((p) => p.id) ?? [];
     const named = wanted.projects.filter((id) => known.includes(id));
     return named.length ? named : known;
-  }, [platform, wanted]);
+  }, [product, wanted]);
   const state = useMemo(() => files && combine(scoped.filter((f) => chosen.includes(f.project.id))), [files, scoped, chosen]);
 
   /*
-   * Show a platform, and some of its projects, or all of them with none
-   * named, staying on the same view. The address names the platform only
-   * when there's a choice of them. Another platform has different docs, so
+   * Show a product, and some of its projects, or all of them with none
+   * named, staying on the same view. The address names the product only
+   * when there's a choice of them. Another product has different docs, so
    * a doc's page goes back to the overview.
    */
-  const choose = (platformId: string, ids: string[] = []) => {
-    const of = platforms.find((p) => p.id === platformId);
+  const choose = (productId: string, ids: string[] = []) => {
+    const of = products.find((p) => p.id === productId);
     if (!of) return;
     const projects = ids.length === of.projects.length ? [] : ids;
     const params = new URLSearchParams(window.location.search);
-    if (platformId !== platform?.id) for (const key of [...params.keys()]) if (key !== "view") params.delete(key);
-    params.delete("platform");
+    if (productId !== product?.id) for (const key of [...params.keys()]) if (key !== "view") params.delete(key);
+    params.delete("product");
     params.delete("project");
-    if (platforms.length > 1) params.set("platform", platformId);
+    if (products.length > 1) params.set("product", productId);
     if (projects.length) params.set("project", projects.join(","));
     navigate(params.size ? `?${params}` : window.location.pathname);
   };
@@ -98,19 +98,19 @@ export default function App() {
       </div>
     );
   }
-  if (!state || !files || !platform) return <div className="message faint">Loading…</div>;
+  if (!state || !files || !product) return <div className="message faint">Loading…</div>;
 
-  /* Keyed by the platform's projects, so each platform has a canvas of its own and a different set starts it afresh. */
-  const layoutKey = platform.projects.map((p) => p.id).join(",");
+  /* Keyed by the product's projects, so each product has a canvas of its own and a different set starts it afresh. */
+  const layoutKey = product.projects.map((p) => p.id).join(",");
   return (
     <Shell
       state={state}
-      platform={platform}
-      platforms={platforms}
+      product={product}
+      products={products}
       scope={scope}
       route={route}
-      onPlatform={(id) => choose(id)}
-      onProjects={(ids) => choose(platform.id, ids)}
+      onProduct={(id) => choose(id)}
+      onProjects={(ids) => choose(product.id, ids)}
     >
       {content(state, route, layoutKey)}
     </Shell>

@@ -6,7 +6,7 @@
  */
 export type TermId =
   | "project"
-  | "platform"
+  | "product"
   | "domain"
   | "feature"
   | "capability"
@@ -43,13 +43,14 @@ export const TERMS: Record<TermId, TermEntry> = {
   project: {
     name: "Project",
     means:
-      "A place where software is defined, and usually built: one repository, marked by a docket.yaml at its root. Its docs say what the software can do and the rules it follows; its code and tests do it and prove it.",
-    more: "A hotel's booking app is one project; its billing service, in a repository of its own, is another.",
+      "One piece of software that describes itself to Docket: a folder marked by a docket.yaml, often a repository, or one package in a repository with several. Its docs say what the software can do and the rules it follows; its code and tests do it and prove it.",
+    more: "A hotel's booking app is one project; its billing service is another. Each is indexed on its own, then shown together as their product.",
   },
-  platform: {
-    name: "Platform",
+  product: {
+    name: "Software product",
     means:
-      "The projects that make up one product together, such as a web and mobile app for the same service, or the services behind it. Docket shows a platform's projects together, as one picture.",
+      "The end result of one or more pieces of software working together to accomplish a high-level goal, such as a web app, a mobile app and the API behind them. Each piece is a project, and Docket shows a product's projects together, as one picture.",
+    more: "A hotel's booking app and its billing service make one product, Hotel.",
   },
   domain: {
     name: "Domain",
@@ -145,7 +146,7 @@ export const TERMS: Record<TermId, TermEntry> = {
     name: "Spread",
     means:
       "How one gap's risk spreads across the capabilities it's on: how many have each score, highest first, such as “76 on 1 · 48 on 2”. Of two gaps with the same risk, the one on more capabilities at that score comes first.",
-    more: "A gap in something many capabilities rely on, such as a platform mechanism, spreads further than one on a single capability. It orders gaps; it isn't a total. What the gaps on some capabilities put at stake together is their exposure.",
+    more: "A gap in something many capabilities rely on, such as a product mechanism, spreads further than one on a single capability. It orders gaps; it isn't a total. What the gaps on some capabilities put at stake together is their exposure.",
   },
   exposure: {
     name: "Exposure",
