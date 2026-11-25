@@ -10,7 +10,12 @@ Engineers use it at the terminal and in hooks, agents use it while they work,
 CI uses it on every push, and people without the repository use it to ask
 the server.
 
-**Contents:** [Principles](#principles) · [Commands at a glance](#commands-at-a-glance) · [Where a read comes from](#where-a-read-comes-from) · [Setting up](#setting-up) · [Reading](#reading) · [History](#history) · [Acting on the server](#acting-on-the-server) · [How clients use it](#how-clients-use-it) · [Conventions](#conventions) · [Left out for now](#left-out-for-now) · [Open questions](#open-questions)
+It's a Go program, and the same binary is also the Docket server and serves
+the UI (see [the proposed architecture](../../README.md#proposed-architecture)).
+Everything Docket works out is worked out in Go, once, so the command, the
+server and the UI never disagree.
+
+**Contents:** [Principles](#principles) · [Commands at a glance](#commands-at-a-glance) · [Where a read comes from](#where-a-read-comes-from) · [Setting up](#setting-up) · [Reading](#reading) · [History](#history) · [Acting on the server](#acting-on-the-server) · [Serving](#serving) · [How clients use it](#how-clients-use-it) · [Conventions](#conventions) · [Left out for now](#left-out-for-now) · [Open questions](#open-questions)
 
 ## Principles
 
@@ -61,6 +66,8 @@ the server are separate, since they aren't reads.
 | [`docket login`](#docket-login) | Sign in to a server, as a person | Server |
 | [`docket apply`](#docket-apply) | Send the main branch's new commits to the server | Server |
 | [`docket results`](#docket-results) | Send test or QA results for a commit | Server |
+| [`docket ui`](#docket-ui) | Show the UI over the working tree, on this machine | Serving |
+| [`docket serve`](#docket-serve) | Run the Docket server | Serving |
 
 ## Where a read comes from
 
@@ -272,8 +279,9 @@ docket status --for persona:front-desk-clerk --json
 ```
 
 Maturity, readiness and risk are worked out by readers, not the indexer, so
-the command is a reader too. It uses the same code as the UI and the server
-(see [Open questions](#open-questions)).
+the command is a reader too. It's the same Go code the server uses, and the UI
+shows only what that code works out, so `docket status` and the UI always
+agree.
 
 ## History
 
@@ -513,6 +521,51 @@ docket results junit reports/*.xml --commit 9b1e004
 
 Results for a commit that's never applied are kept, and shown once it is.
 
+## Serving
+
+The UI is a web app built into the binary. It shows only what `docket` gives
+it through its API, and works nothing out itself, so it looks and counts the
+same whichever of these serves it.
+
+### `docket ui`
+
+Serves the UI over this repository, as the [source flags](#where-a-read-comes-from)
+choose, so anyone can see their branch the way the server will show it. It
+re-indexes as files change, so the page follows the working tree.
+
+```sh
+docket ui                       # the working tree, at http://127.0.0.1:4100
+docket ui --platform            # among the rest of the platform, from the server
+docket ui --at v1.4             # a release
+```
+
+- **It's only reachable from this machine.** It listens on `127.0.0.1`,
+  needs no sign-in, and can't be told to listen anywhere else, so it can never
+  be deployed as the server by mistake.
+- **It only reads.** It never writes to the repository or the server.
+- **It replaces the UI's own dev server** for anyone looking at their docs.
+  Working on the UI itself still uses Vite, against `docket ui`'s API.
+
+### `docket serve`
+
+Runs the Docket server: it takes applied states and results from `apply` and
+`results`, answers `--remote` and `--platform` reads, and serves the UI to the
+people allowed to see each project.
+
+```sh
+docket serve --config /etc/docket/server.yaml
+```
+
+- **It won't start without its storage and sign-in set up**, so a server is
+  never running open by mistake.
+- **It's what the image runs** unless told to run another command. The same
+  image runs any other command too, such as `docker run <image> apply` in a
+  CI that works in containers.
+- **It never reads a repository.** Everything it holds was sent to it.
+
+How it's configured, and what its API looks like, will be drafted once the
+commands that talk to it settle.
+
 ## How clients use it
 
 ### Bringing Docket to a repository
@@ -645,11 +698,9 @@ docket list decisions --platform hotel --initiative mvp
 
 ## Open questions
 
-- **What it's written in, and how it's shipped.** The UI is TypeScript, and
-  maturity, readiness, risk and combining must be worked out the same way in
-  the UI, the command and the server, so one TypeScript library for all three
-  is the simplest. CI shouldn't need Node installed, so the command would be
-  shipped as a single binary, with npm as a second way to get it.
+- **Where the server keeps what it holds.** SQLite would let `docket serve`
+  run with nothing else beside it. A deployment that needs more can bring
+  Postgres when it does.
 - **Decisions need keys.** A decision is a `topic` and a `question` today,
   with nothing that names it. To be named in a trailer or followed by `log`,
   each needs a key like a gap's, such as

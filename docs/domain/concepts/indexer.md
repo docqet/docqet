@@ -36,5 +36,5 @@ src/**, test/**, db/**, ...    → annotations
 
 ## Not to be confused with
 
-- The UI or server: they read the state the indexer writes, and never the
-  repository itself.
+- The server and the UI: the server holds the states it's sent, and the UI
+  shows what `docket` works out from them. Neither reads the repository.

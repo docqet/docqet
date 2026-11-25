@@ -1,12 +1,18 @@
 # Tool
 
-The `docket` command and the UI.
+`docket` and the UI it serves.
 
-- **[The `docket` command](cli/)** indexes and checks a repository's docs,
+- **[`docket`](cli/)** is one Go program, shipped as a binary and as a
+  container image. As a CLI it indexes and checks a repository's docs,
   answers questions about them, follows how they change across commits, and
-  sends state and test results to a Docket server. Not built yet: its README
-  is a draft of what we'll build.
-- **[The UI](ui/)** reads only `state.json`. It answers, at a glance: what the
+  sends state and test results to a Docket server. With `docket serve` it is
+  that server, and with `docket ui` it shows the UI over a working tree. It
+  works out everything Docket derives. Not built yet: its README is a draft of
+  what we'll build.
+- **[The UI](ui/)** is how Docket shows things. Once `docket` exists, it gets
+  everything from `docket`'s API and works nothing out itself. Until then, it
+  reads `state.json` files directly and works out maturity, readiness and risk
+  itself, as described below. It answers, at a glance: what the
   software can do, who it serves and how far along it is for each of them, how
   stable each capability is, the rules each follows, and what the gaps
   are. A rule shows the code and tests that point at it.

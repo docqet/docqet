@@ -283,27 +283,37 @@ one probably belongs in another tool, which Docket can link to. For example:
 
 ## Proposed architecture
 
-Docket is planned as three parts. Only the spec and an early UI exist today
-(see [Where it is today](#where-it-is-today)).
+Docket is planned as three parts: the spec, the agent kit, and `docket`, one
+Go program that does everything else. Only the spec, the kit and an early UI
+exist today (see [Where it is today](#where-it-is-today)).
 
 ```mermaid
 flowchart LR
   kit["Agent<br/>development kit"]
   repo[("Repository<br/>intention and evidence")]
-  indexer["Indexer"]
-  server["Docket server"]
+  ci["CI<br/>on any host"]
   people(["People<br/>and agents"])
 
+  subgraph image["docket: one Go binary, one image"]
+    cli["CLI<br/>index, check, read, diff"]
+    server["Server<br/>docket serve"]
+    ui["UI<br/>embedded"]
+  end
+
   kit -- "keeps current" --> repo
-  repo -- "read by" --> indexer
-  indexer -- "preview / apply" --> server
-  server -- "API and UI" --> people
+  repo -- "read by" --> cli
+  ci -- "runs" --> cli
+  cli -- "apply states,<br/>send results" --> server
+  server -- "API" --> ui
+  ui --> people
+  server -- "API" --> people
 ```
 
 Agents use the **kit** to keep a repository's intention and evidence current as
-they build. The **indexer** reads the repository and applies its state to the
-**server**, which combines every project's state and shows it to everyone with
-a stake in the software.
+they build. The **`docket` CLI** reads the repository, on a laptop or in CI,
+and sends each commit's state and its test results to the **server**, which
+combines every project's state and shows it to everyone with a stake in the
+software. The CLI and the server are the same program.
 
 ### 1. Agent development kit
 
@@ -315,70 +325,97 @@ made.
 
 It's optional. Docket works without agents, and the kit is how they make the
 most of it. It's written for any agent, as an `AGENTS.md` block and an Agent
-Skills skill, and each project adds its own instructions beside it. See
+Skills skill, and each project adds its own instructions beside it.
+`docket kit` installs it into a project and keeps it up to date. See
 [`kit/`](kit/).
 
-### 2. Docket server
-
-The central place where Docket projects come together, so people and agents
-can see and explore the state of their software across every repository that
-contributes to it. It:
-
-- **Holds each project's applied state**, and combines projects into one view
-  of the product, showing contradictions between them.
-- **Offers an API**, so agents and other tools can ask about the software's
-  state instead of reading every repository.
-- **Serves the UI**, which shows what the software can do, who it serves, how
-  ready it is, the rules each capability follows, its known gaps and its
-  evidence.
-- **Controls access**, so one client never sees another's projects.
-
-### 3. Indexer and spec
+### 2. Spec
 
 _A better name will come._ The [spec](spec/) is the format: how a repository
 declares the state of its software, in docs, frontmatter and annotations, and
-the shape of the state worked out from it. The indexer applies the spec to a
-repository. It reads the docs and annotations, works out everything derived,
-and writes the project's state, stamped with the commit it describes.
+the shape of the state worked out from it. It belongs to no one tool: `docket`
+is one program that reads it, and anyone can write another.
 
-It then reconciles that state with the server, much as infrastructure as code
-does:
+### 3. `docket`
 
-- **Preview** shows what would change on the server: capabilities added or
-  promoted, gaps closed, rules with new evidence, new problems.
-- **Apply** sends the state, so the server reflects the repository.
-- **Reconciling** finds where the server and the repository disagree, and
-  brings the server back in line with what the repository declares.
+One program, written in Go, that owns all of Docket's logic, shipped as a
+single binary and as a single container image. The same binary is the CLI,
+the server, and what serves the UI.
 
-The repository is always where state is declared. The server reflects it, and
-is never edited directly.
+- **Go owns everything Docket works out.** Indexing a repository, checking
+  it, combining projects, maturity, readiness, risk and exposure, and how
+  things changed between commits are each written once, in Go. The CLI, the
+  server and the UI can never disagree, since there's only one place each is
+  worked out.
+- **As a CLI**, engineers, agents and CI use it on a repository: to index and
+  check its docs, ask what a change touches, list gaps, see how something has
+  changed over time, and send states and test and QA results to the server.
+  It works on any repository host and in any CI. Every read can come from the
+  working tree, a commit or the server, for one project or the whole
+  platform. Its commands are drafted in [`tool/cli/`](tool/cli/).
+- **As the server**, with `docket serve`, it's the central place where
+  projects come together. It:
+  - **Holds each project's applied state** at every commit on its main
+    branch, with the test and QA results sent for each, and combines projects
+    into one view of the product, showing contradictions between them.
+  - **Offers an API**, so the UI, agents and other tools can ask about the
+    software's state, now and at any commit, instead of reading every
+    repository.
+  - **Serves the UI.**
+  - **Controls access**, so one client never sees another's projects. It
+    won't start without its storage and sign-in set up.
+- **As a local viewer**, with `docket ui`, it serves the same UI over a
+  repository's working tree, so anyone can see their branch the way the
+  server will show it. It's only reachable from the machine it runs on, and
+  needs no sign-in.
+- **The UI only shows things.** It's a web app built into the binary. It gets
+  everything it shows from the API, derived figures included, and works
+  nothing out itself, whether it's served by `docket serve` or `docket ui`.
+  It shows what the software can do, who it serves, how ready it is, the
+  rules each capability follows, its known gaps, its evidence, and how all of
+  it has changed.
+- **One image runs it all.** The image holds the binary, and runs
+  `docket serve` unless told to run another command, so the same image
+  deploys the server and runs `docket apply` in a CI that works in
+  containers. The binary is also released on its own, for laptops and CI.
+
+The CLI reconciles each repository with the server, much as infrastructure as
+code does:
+
+- **Preview** shows what merging a branch would change on the server:
+  capabilities added or promoted, gaps closed, decisions answered and what
+  they became, rules with new evidence, new problems.
+- **Apply** sends each new commit on the main branch, so the server reflects
+  the repository.
+
+The repository owns intention, and the server owns what was observed. Intention
+is only ever declared in the repository, and the server is never edited
+directly. The server holds the state at each commit and the results sent for
+it. How things changed is worked out from git, so the server's history can
+always be rebuilt from the repository.
 
 ## Where it is today
 
-| Part                  | Today                                                                                           |
-| --------------------- | ----------------------------------------------------------------------------------------------- |
-| Spec                  | A draft for review, with two example projects laid out as repositories. See [`spec/`](spec/).   |
-| Indexer               | Not built. The examples' `state.json` files are written by hand to show what it would produce.  |
-| Server and UI         | No server yet. A static UI reads one or more `state.json` files directly. See [`tool/`](tool/). |
-| Agent development kit | A first draft for any agent: an `AGENTS.md` block and a `docket` skill. See [`kit/`](kit/).     |
+| Part                  | Today                                                                                                                                                                 |
+| --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Spec                  | A draft for review, with two example projects laid out as repositories. See [`spec/`](spec/).                                                                         |
+| `docket`              | Not built. Its commands are drafted in [`tool/cli/`](tool/cli/). The examples' `state.json` files are written by hand to show what indexing would produce.            |
+| UI                    | An early UI in TypeScript that reads `state.json` files directly and works out maturity, readiness and risk itself, until `docket` serves them. See [`tool/`](tool/). |
+| Agent development kit | A first draft for any agent: an `AGENTS.md` block and a `docket` skill. See [`kit/`](kit/).                                                                           |
 
 ## Open questions
 
 Things we haven't decided, to settle as the prototype answers them:
 
-- **What to call the indexer and spec**, as one part or two.
-- **How the server and repositories share being the source of truth.** Each
-  repository declares its own part. Is the server only a reflection of them,
-  or does it hold anything of its own, such as history across commits?
-- **Which commits apply.** Only the default branch, or branches and pull
-  requests too, to preview a change before it merges?
+- **What to call the spec.**
 - **How projects and clients map onto access control** on the server.
 - **How unconfirmed intention is marked in the spec**, so intention an agent
   wrote from existing code isn't counted as declared until a person confirms
   it. It's not a draft capability, which a person has declared and nobody has
   started.
-- **Which other forms of evidence to accept**, such as commits, pull requests
-  and CI results, and how each is linked to the intention it's about.
+- **Which other forms of evidence to accept**, beyond test and QA results,
+  such as deploys or pull requests, and how each is linked to the intention
+  it's about.
 
 ## Layout
 
@@ -387,4 +424,4 @@ Things we haven't decided, to settle as the prototype answers them:
 | [`docs/`](docs/) | Docket's own docs, starting with [an overview of its concepts](docs/domain/overview.md)         |
 | [`spec/`](spec/) | The format: doc types, frontmatter, IDs, code and test annotations, and the `state.json` schema |
 | [`kit/`](kit/)   | The agent development kit: skills and rules that keep docs and annotations current              |
-| [`tool/`](tool/) | The `docket` command (indexer) and the UI that reads its output                                 |
+| [`tool/`](tool/) | `docket`, the Go program that's the CLI and the server, and the UI it serves                    |
