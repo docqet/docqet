@@ -14,6 +14,7 @@ import (
 // one: it's in when any contribution says so. It returns new states and
 // never changes the ones it's given. With no initiative, it returns them as
 // they are.
+// docqet:implements capability:initiative-scope
 func ScopeToInitiative(states []*state.State, initiative string) []*state.State {
 	if initiative == "" {
 		return states

@@ -1,3 +1,4 @@
+// docqet:implements capability:initiative-scope
 import { useState } from "react";
 import RadioButtonCheckedRoundedIcon from "@mui/icons-material/RadioButtonCheckedRounded";
 import RadioButtonUncheckedRoundedIcon from "@mui/icons-material/RadioButtonUncheckedRounded";

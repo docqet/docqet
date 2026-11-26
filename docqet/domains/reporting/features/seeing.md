@@ -12,4 +12,9 @@ capabilities:
   - capability:product-view
   - capability:local-viewer
   - capability:cli-reads
+  - capability:domain-language
+  - capability:how-its-built
+  - capability:choices
+  - capability:initiative-scope
+  - capability:seeing-problems
 ---

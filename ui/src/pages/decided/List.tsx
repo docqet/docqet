@@ -1,3 +1,4 @@
+// docqet:implements capability:choices
 import { LeftLabel } from "../../components/left/LeftMark";
 import { param, sectionHref, type Route } from "../../routes";
 import { Count, Empty, PageHeader, Section, Stat, Tabs, View, currentTab } from "../../components/shell/layout";
