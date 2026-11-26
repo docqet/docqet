@@ -149,10 +149,10 @@ components:
       description: >-
         A project's state, as `docket index` writes it to `state.json`:
         every doc's entry, its evidence, reverse links and problems, and the
-        stability checklist it was indexed against. The
-        [spec's Index output](https://github.com/exalynt/docket/blob/main/spec/README.md#index-output)
+        expectations it was indexed against. The
+        [state concept](https://github.com/exalynt/docket/blob/main/docket/domains/authoring/concepts/state.md)
         describes every field.
-      required: [docket, project, commit, indexedAt, summary, problems, checklist]
+      required: [docket, project, commit, indexedAt, summary, problems, expectations]
       additionalProperties: true
       properties:
         docket:
@@ -178,7 +178,7 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/Problem"
-        checklist:
+        expectations:
           type: object
           additionalProperties: true
 

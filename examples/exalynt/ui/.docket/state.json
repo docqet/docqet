@@ -896,7 +896,7 @@
       "message": "Capability client-agreements doesn't exist."
     }
   ],
-  "checklist": {
+  "expectations": {
     "kinds": [
       {
         "id": "web-app",

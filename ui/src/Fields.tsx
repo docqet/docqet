@@ -82,7 +82,7 @@ export const tradeoffHref = (t: Tradeoff) => {
 
 /*
  * One thing a gap, tradeoff or decision affects, as a tag and what it is: a
- * checklist outcome, with its quality and level; a rule; or a gap or
+ * expected outcome, with its quality and level; a rule; or a gap or
  * tradeoff, by name, linked.
  */
 export function AffectedItem({ item }: { item: Affected }) {

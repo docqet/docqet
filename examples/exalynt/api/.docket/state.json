@@ -13617,7 +13617,7 @@
       "domain": "accounts"
     }
   ],
-  "checklist": {
+  "expectations": {
     "kinds": [
       {
         "id": "web-app",

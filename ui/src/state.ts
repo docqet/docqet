@@ -20,7 +20,7 @@ export type Decision = {
   topic: string | null;
   question: string;
   /*
-   * What waits on its answer: checklist outcomes, as `outcome:<quality>/<level>/<id>`,
+   * What waits on its answer: expected outcomes, as `outcome:<quality>/<level>/<id>`,
    * and gaps and tradeoffs, by ID, which combining makes its project's, as
    * the docs' lists of them are. Missing from state written before it.
    */
@@ -155,7 +155,7 @@ export type TechnicalDoc = Doc & {
   /* What a mechanism applies to: its project's capabilities, or its product's. A component's is always "project", and means nothing. */
   applies: "project" | "product";
   capabilities: string[];
-  /* The checklist outcomes it meets for the capabilities it serves, as `outcome:<quality>/<level>/<id>`. */
+  /* The expected outcomes it meets for the capabilities it serves, as `outcome:<quality>/<level>/<id>`. */
   meets: string[];
   gaps: string[];
   tradeoffs: string[];
@@ -244,7 +244,7 @@ export type Gap = {
   /* A product gap's domain; a technical gap has none. */
   domain?: string;
   /*
-   * What it falls short of: stability checklist outcomes, as
+   * What it falls short of: expected outcomes, as
    * `outcome:<quality>/<level>/<id>`, and rules it doesn't hold to yet, as
    * `rule:<id>`, which combining resolves to `rule:<id>@<domain>`.
    */
@@ -266,7 +266,7 @@ export type Tradeoff = {
   id: string;
   project?: string;
   domain?: string;
-  /* The stability checklist outcomes it falls short of on purpose, as `outcome:<quality>/<level>/<id>`. */
+  /* The expected outcomes it falls short of on purpose, as `outcome:<quality>/<level>/<id>`. */
   affects: string[];
   /* What we chose, in a few words, and in a sentence or two. */
   name: string;
@@ -279,7 +279,7 @@ export type Tradeoff = {
   places: EvidencePlace[];
 };
 
-/* The checklist outcomes a gap, tradeoff or decision affects, as `outcome:<quality>/<level>/<id>`. */
+/* The expected outcomes a gap, tradeoff or decision affects, as `outcome:<quality>/<level>/<id>`. */
 export const outcomesAffected = (item: { affects: string[] }) => item.affects.filter((ref) => ref.startsWith("outcome:"));
 
 /* The rules a gap affects, as `<id>@<domain>`, once combining has resolved them. */
@@ -292,37 +292,37 @@ export const subjectOf = (item: { id: string }) => {
 };
 
 /*
- * The stability checklist: what each level generally means and expects, by
+ * The expectations: what each level generally means and expects, by
  * quality, with an entry for every level. An outcome applies from its level
  * up, through `until` where a higher level replaces it. An entry without
  * outcomes expects nothing new at its level, and only guides. It's a
  * guideline, not a gate: implementation and overengineering are examples to
  * judge by.
  */
-export type ChecklistExample = { text: string; kinds: string[] };
-export type ChecklistOutcome = {
+export type ExpectationExample = { text: string; kinds: string[] };
+export type ExpectedOutcome = {
   /* Its reference, as what affects or meets it names it: `outcome:<quality>/<level>/<id>`. */
   id: string;
   level: Level;
   text: string;
   until: Level | null;
   /* How meeting it might look ("How it might look"), each with the kinds of software it may suit, or none where it isn't tagged. */
-  implementation: ChecklistExample[];
+  implementation: ExpectationExample[];
   /* Work that may be more than its level needs, tagged the same way. */
-  overengineering: ChecklistExample[];
+  overengineering: ExpectationExample[];
 };
-export type ChecklistLevel = {
+export type ExpectationLevel = {
   level: Level;
   /* How much the level asks of the quality, in a sentence, or null where it expects nothing. */
   summary: string | null;
-  outcomes: ChecklistOutcome[];
+  outcomes: ExpectedOutcome[];
   /* Only where it has no outcomes: how work on the quality might look at this level. */
-  implementation: ChecklistExample[];
-  overengineering: ChecklistExample[];
+  implementation: ExpectationExample[];
+  overengineering: ExpectationExample[];
 };
-export type ChecklistQuality = { id: string; name: string; question: string; why: string; levels: ChecklistLevel[] };
-export type ChecklistKind = { id: string; name: string };
-export type Checklist = { kinds: ChecklistKind[]; qualities: ChecklistQuality[] };
+export type ExpectationQuality = { id: string; name: string; question: string; why: string; levels: ExpectationLevel[] };
+export type ExpectationKind = { id: string; name: string };
+export type Expectations = { kinds: ExpectationKind[]; qualities: ExpectationQuality[] };
 
 /* What the indexer found wrong. `domain` is that of the doc it's about, if it's about one. */
 export type Problem = { type: string; subject: string; capabilities: string[]; message: string; domain?: string };
@@ -342,8 +342,8 @@ export type DocketState = {
   gaps: Gap[];
   tradeoffs: Tradeoff[];
   problems: Problem[];
-  /* The stability checklist, the same for every project: the first project's, or null if none has one. */
-  checklist: Checklist | null;
+  /* The expectations, the same for every project: the first project's, or null if none has one. */
+  expectations: Expectations | null;
 };
 
 /* A place where software is defined, as its state.json's header has it, with its maturity, worked out from its features alone. */
@@ -394,8 +394,8 @@ export type StateFile = {
   /* State written before a tradeoff had one benefit and one drawback has lists of each instead. */
   tradeoffs?: (Omit<Tradeoff, "benefit" | "drawback"> & Partial<Tradeoff> & { benefits?: string[]; drawbacks?: string[] })[];
   problems: Problem[];
-  /* Missing from state written before the checklist. */
-  checklist?: Checklist;
+  /* Missing from state written before the expectations. */
+  expectations?: Expectations;
 };
 
 /* A project's header, from its state.json. Its maturity is worked out once its features are put together (see combine). */
@@ -503,7 +503,7 @@ export function combine(files: StateFile[]): DocketState {
     gaps: [],
     tradeoffs: [],
     problems: [],
-    checklist: files.find((f) => f.checklist)?.checklist ?? null,
+    expectations: files.find((f) => f.expectations)?.expectations ?? null,
   };
   /* Rule and concept links as declared, to resolve once every domain is in. */
   const pending: { from: Doc & { rules?: string[]; concepts: string[] }; domain: string; rules: string[]; concepts: string[] }[] = [];
@@ -1032,8 +1032,8 @@ export function filterBy(state: DocketState, picks: Pick[]): MapFilter | null {
 
 const levelIndex = (level: Level) => LEVEL_ORDER.indexOf(level);
 
-/* Whether a checklist outcome applies at a level: from its own level up, through `until` where it has one. A draft claims none. */
-export const appliesAt = (outcome: ChecklistOutcome, level: CapabilityLevel) =>
+/* Whether an expected outcome applies at a level: from its own level up, through `until` where it has one. A draft claims none. */
+export const appliesAt = (outcome: ExpectedOutcome, level: CapabilityLevel) =>
   level !== null && levelIndex(outcome.level) <= levelIndex(level) && (!outcome.until || levelIndex(outcome.until) >= levelIndex(level));
 
 /* The level after this one: Prototype after a draft, or null after GA. */
@@ -1043,11 +1043,11 @@ export const levelInDomain = (c: Capability, domain: string): CapabilityLevel =>
 export const nextLevel = (level: CapabilityLevel): Level | null => LEVEL_ORDER[rank(level) + 1] ?? null;
 
 /* Every outcome of a quality, in level order. */
-export const outcomesOf = (quality: ChecklistQuality) => quality.levels.flatMap((l) => l.outcomes);
+export const outcomesOf = (quality: ExpectationQuality) => quality.levels.flatMap((l) => l.outcomes);
 
-/* A checklist outcome, with its quality, by its reference: `outcome:<quality>/<level>/<id>`. */
-export function checklistOutcome(checklist: Checklist | null, id: string): { outcome: ChecklistOutcome; quality: ChecklistQuality } | undefined {
-  for (const quality of checklist?.qualities ?? []) {
+/* An expected outcome, with its quality, by its reference: `outcome:<quality>/<level>/<id>`. */
+export function expectedOutcome(expectations: Expectations | null, id: string): { outcome: ExpectedOutcome; quality: ExpectationQuality } | undefined {
+  for (const quality of expectations?.qualities ?? []) {
     const outcome = outcomesOf(quality).find((o) => o.id === id);
     if (outcome) return { outcome, quality };
   }
@@ -1062,12 +1062,12 @@ export const openDecisions = (doc: Doc): Decision[] => doc.from.flatMap((f) => f
 export type DecisionHolder = { kind: "domain" | "feature" | "capability" | "mechanism" | "component"; doc: Doc };
 
 /*
- * What a gap, tradeoff or decision affects, each found: a checklist outcome,
+ * What a gap, tradeoff or decision affects, each found: an expected outcome,
  * with its quality; a rule; a gap; or a tradeoff. Anything that isn't there
  * is left out.
  */
 export type Affected =
-  | { kind: "outcome"; outcome: ChecklistOutcome; quality: ChecklistQuality }
+  | { kind: "outcome"; outcome: ExpectedOutcome; quality: ExpectationQuality }
   | { kind: "rule"; rule: Rule }
   | { kind: "gap"; gap: Gap }
   | { kind: "tradeoff"; tradeoff: Tradeoff };
@@ -1075,7 +1075,7 @@ export type Affected =
 export function affectedBy(state: DocketState, item: { affects: string[] }): Affected[] {
   return item.affects.flatMap((ref): Affected[] => {
     if (ref.startsWith("outcome:")) {
-      const named = checklistOutcome(state.checklist, ref);
+      const named = expectedOutcome(state.expectations, ref);
       return named ? [{ kind: "outcome", ...named }] : [];
     }
     if (ref.startsWith("rule:")) {
@@ -1159,7 +1159,7 @@ export function leftIn(state: DocketState, capability: Capability, technical = t
 export const leftCount = (left: Left) => left.decisions.length + left.gaps.length + left.technical.length;
 
 /*
- * Where a checklist outcome stands for a capability:
+ * Where an expected outcome stands for a capability:
  *
  * - gap: a gap on it, or on what it's built on, affects the outcome
  * - tradeoff: a tradeoff on it, or on what it's built on, affects it: not met, by choice
@@ -1176,7 +1176,7 @@ export type OutcomeStanding = {
   by: TechnicalDoc[];
 };
 
-export function outcomeStanding(state: DocketState, capability: Capability, outcome: ChecklistOutcome): OutcomeStanding {
+export function outcomeStanding(state: DocketState, capability: Capability, outcome: ExpectedOutcome): OutcomeStanding {
   const on = builtOn(state, capability);
   const affects = (item: { affects: string[] }) => item.affects.includes(outcome.id);
   const gaps = [...gapsById(state, capability.gaps), ...on.flatMap((e) => gapsById(state, e.gaps))].filter(affects);
@@ -1277,7 +1277,7 @@ export type Risk = {
 
 /* How a gap scores on one capability, as riskOf works it out. */
 function riskOn(state: DocketState, item: Gap): (capability: Capability) => RiskOn {
-  const outcomes = outcomesAffected(item).flatMap((id) => checklistOutcome(state.checklist, id)?.outcome ?? []);
+  const outcomes = outcomesAffected(item).flatMap((id) => expectedOutcome(state.expectations, id)?.outcome ?? []);
   const rules = rulesAffected(item);
   const impact = item.impact ? IMPACT_STEPS[item.impact] : 0;
   const likelihood = LIKELIHOOD_FACTORS[item.likelihood ?? "certain"];

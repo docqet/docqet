@@ -9,7 +9,7 @@ import { DocLink, GapsCell, Num } from "./indexParts";
 /*
  * How the software is meant to be built: its mechanisms and its components,
  * a tab each. Each row says what it is, what relies on it, its technical gaps
- * with the worst one's impact, and how many tradeoffs and checklist outcomes
+ * with the worst one's impact, and how many tradeoffs and expected outcomes
  * it has. The one with the worst gap comes first.
  */
 export default function BuiltPage({ state, route }: { state: DocketState; route: Route }) {

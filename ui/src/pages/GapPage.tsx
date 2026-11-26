@@ -34,7 +34,7 @@ import { InitiativeTags, initiativesOf } from "../Initiatives";
  * above it and what it says in full under it. Then its risk profile, its own
  * section: its risk, how it's worked out, which claims it breaks, and its
  * score on each capability it's on. Then only the links it has: the rules and
- * checklist outcomes it falls short of, the open decisions it waits on, and
+ * expected outcomes it falls short of, the open decisions it waits on, and
  * where the code marks it.
  */
 export default function GapPage({ state, id }: { state: DocketState; id: string; route: Route }) {
@@ -43,8 +43,8 @@ export default function GapPage({ state, id }: { state: DocketState; id: string;
   return <GapView state={state} gap={gap} />;
 }
 
-/* The checklist reference's place for an outcome's quality, on the glossary. */
-const qualityHref = (quality: string) => `${sectionHref("glossary", { tab: "checklist" })}#${quality}`;
+/* The expectations reference's place for an outcome's quality, on the glossary. */
+const qualityHref = (quality: string) => `${sectionHref("glossary", { tab: "expectations" })}#${quality}`;
 
 function GapView({ state, gap }: { state: DocketState; gap: Gap }) {
   const kind = gapKind(gap);
@@ -178,7 +178,7 @@ function RiskProfile({ state, gap, risk }: { state: DocketState; gap: Gap; risk:
 }
 
 /*
- * For each rule and checklist outcome a gap affects, whether it breaks a
+ * For each rule and expected outcome a gap affects, whether it breaks a
  * claim, and why: a rule, where a capability it's on with a level follows
  * it; an outcome, where a capability it's on is at a level that expects it.
  * Affecting neither, it breaks none.
@@ -205,7 +205,7 @@ function claimsOf(state: DocketState, gap: Gap, risk: Risk): { breaks: boolean; 
     }
     return [];
   });
-  return claims.length ? claims : [{ breaks: false, text: "It affects no rule or checklist outcome, so it breaks no claim." }];
+  return claims.length ? claims : [{ breaks: false, text: "It affects no rule or expected outcome, so it breaks no claim." }];
 }
 
 /* Capabilities by name: "A", "A and B", or, past three, how many. */

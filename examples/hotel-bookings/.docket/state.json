@@ -906,7 +906,7 @@
     }
   ],
   "problems": [],
-  "checklist": {
+  "expectations": {
     "kinds": [
       {
         "id": "web-app",

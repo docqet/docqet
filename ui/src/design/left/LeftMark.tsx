@@ -9,7 +9,7 @@ import type { TermId } from "../term/terms";
 /*
  * What's left, and what we chose to live with, look the same wherever they
  * show: on the map, in the side panel, on a detail page and on the
- * checklist. Each kind has one mark, in one color, and one name. A gap is a
+ * expectations. Each kind has one mark, in one color, and one name. A gap is a
  * gap whoever would notice it, so product and technical gaps share a mark
  * and are told apart by name: each gap is labelled with its kind.
  */

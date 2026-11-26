@@ -1,10 +1,12 @@
-# The stability checklist: the outcomes each quality of the work is expected
-# to reach at each stability level, so the people depending on a capability
-# and the people and agents building it share the same picture of what its
-# level means. It's part of the spec, so it's the same for every project,
-# whatever kind of software it is.
+# The expectations: the outcomes each quality of the work is expected to
+# reach at each stability level, so the people depending on a capability and
+# the people and agents building it share the same picture of what its level
+# means. They're part of the format, built into docket, so they're the same
+# for every project, whatever kind of software it is, and no project copies
+# or changes them. The expectations concept, in
+# docket/domains/authoring/concepts/expectations.md, explains them.
 #
-# It's a guideline, not a gate:
+# They're a guideline, not a gate:
 #
 # - Not every box needs checking. Work can be called a level, GA included,
 #   with outcomes unmet. What's unmet is written down as a known gap.

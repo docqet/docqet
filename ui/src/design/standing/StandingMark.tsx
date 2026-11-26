@@ -5,7 +5,7 @@ import { GapIcon, LEFT_KINDS } from "../left/LeftMark";
 import { Tip } from "../Tip";
 
 /*
- * Whether something declared holds, the same wherever it shows: a checklist
+ * Whether something declared holds, the same wherever it shows: an expected
  * outcome or a rule a capability follows. Not held, when a gap names it;
  * held with evidence, when something points at it; held on trust, when
  * nothing says either way, which is a lighter check, not a warning. An

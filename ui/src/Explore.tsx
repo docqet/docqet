@@ -430,7 +430,7 @@ export function Places({ state, places, label, detailed = false }: { state: Dock
 /*
  * A gap, as an item in a LeftList: something we know falls short and mean to
  * close, with its mark, labelled product or technical. With `detailed`, it says what it affects (the
- * checklist outcomes it falls short of, the rules it doesn't hold to yet, the
+ * expected outcomes it falls short of, the rules it doesn't hold to yet, the
  * mechanism or component it's in) and where it shows in the code. `on`, for a
  * technical gap, is the mechanism or component it's on.
  */
@@ -585,7 +585,7 @@ function TradeoffSide({ side, text }: { side: "benefits" | "drawbacks"; text: st
   );
 }
 
-/* The checklist outcomes a tradeoff falls short of on purpose, if it names any, as a gap shows what it affects. */
+/* The expected outcomes a tradeoff falls short of on purpose, if it names any, as a gap shows what it affects. */
 function FallsShortOf({ state, tradeoff }: { state: DocketState; tradeoff: Tradeoff }) {
   const affected = affectedBy(state, tradeoff);
   if (!affected.length) return null;
@@ -712,13 +712,13 @@ export function TechnicalRows({ docs, newTab = false }: { state: DocketState; do
 /*
  * What's still open about a capability, near the top so it's read first:
  * decisions nobody has made, its product gaps, and the technical gaps of what
- * it's built on; then how much of its level's checklist is met, and `checklist`, a way to the
+ * it's built on; then how much of what its level expects is met, and `expectations`, a way to the
  * whole of it. With `detailed`, as on its detail page, each gap says more.
  */
 export function WhatsLeft({
   state,
   capability,
-  checklist,
+  expectations,
   detailed = false,
   onConcept,
   onShow,
@@ -726,7 +726,7 @@ export function WhatsLeft({
 }: {
   state: DocketState;
   capability: Capability;
-  checklist?: ReactNode;
+  expectations?: ReactNode;
   detailed?: boolean;
   onConcept: (id: string) => void;
   onShow: (target: Target) => void;
@@ -734,7 +734,7 @@ export function WhatsLeft({
 }) {
   const left = leftIn(state, capability);
   const n = leftCount(left);
-  const counts = checklistCounts(state, capability);
+  const counts = expectationCounts(state, capability);
   return (
     <section className="explore-left">
       <Heading count={n || undefined}>What's left</Heading>
@@ -744,18 +744,18 @@ export function WhatsLeft({
         <p className="concepts-empty">Nothing open: no open decisions or gaps are written down.</p>
       )}
       {counts ? (
-        <p className="explore-left-checklist">
+        <p className="explore-left-expectations">
           <span>
-            {counts.count - counts.notMet - counts.byChoice - counts.open} of {counts.count} {levelName(capability.stability)} checklist outcomes met
+            {counts.count - counts.notMet - counts.byChoice - counts.open} of the {counts.count} outcomes {levelName(capability.stability)} expects are met
             {counts.evidence ? `, ${counts.evidence} with evidence` : ""}
             {counts.byChoice ? `, ${counts.byChoice} not met by choice` : ""}
             {counts.open ? `, ${counts.open} open` : ""}.
           </span>
-          {checklist}
+          {expectations}
         </p>
       ) : capability.stability === null ? (
-        <p className="explore-left-checklist">
-          <span>A draft: declared, and not started, so it claims nothing on the checklist yet.</span>
+        <p className="explore-left-expectations">
+          <span>A draft: declared, and not started, so it claims none of the expectations yet.</span>
         </p>
       ) : null}
     </section>
@@ -924,12 +924,12 @@ export function LeftRollup({
  * says aren't met, how many a tradeoff says aren't met by choice, how many an
  * open decision leaves open, and how many
  * a mechanism or component it's built on says it meets; or null with no
- * checklist, or for a draft, which claims none. An outcome nothing names counts
+ * expectations, or for a draft, which claims none. An outcome nothing names counts
  * as met on its level's word.
  */
-export function checklistCounts(state: DocketState, capability: Capability) {
-  if (!state.checklist || capability.stability === null) return null;
-  const standings = state.checklist.qualities
+export function expectationCounts(state: DocketState, capability: Capability) {
+  if (!state.expectations || capability.stability === null) return null;
+  const standings = state.expectations.qualities
     .flatMap(outcomesOf)
     .map((o) => outcomeStanding(state, capability, o).standing)
     .filter((s) => s !== "not-expected");

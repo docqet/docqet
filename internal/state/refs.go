@@ -26,7 +26,7 @@ func ParseRef(s string) (Ref, bool) {
 	return Ref{Type: m[1], ID: m[2], Domain: m[3], Key: m[4]}, true
 }
 
-// IsOutcomeRef reports whether s is written as a checklist outcome's reference.
+// IsOutcomeRef reports whether s is written as an outcome's reference.
 func IsOutcomeRef(s string) bool {
 	return strings.HasPrefix(s, "outcome:")
 }

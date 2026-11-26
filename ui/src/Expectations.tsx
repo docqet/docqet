@@ -15,17 +15,17 @@ import {
   outcomeStanding,
   outcomesOf,
   type Capability,
-  type Checklist,
-  type ChecklistExample,
-  type ChecklistOutcome,
-  type ChecklistQuality,
+  type Expectations,
+  type ExpectationExample,
+  type ExpectedOutcome,
+  type ExpectationQuality,
   type DocketState,
   type Level,
 } from "./state";
 
 /*
- * The stability checklist, laid out as Exalynt's stability checklist page lays
- * it out, in Docket's look: pick a level to see what it expects, by quality,
+ * The expectations, laid out as Exalynt's stability checklist page lays them
+ * out, in Docket's look: pick a level to see what it expects, by quality,
  * each outcome with how meeting it might look and what may be overengineering
  * at that level. It's a guideline, not a gate, so the guidance is there to
  * judge by, never to follow step by step.
@@ -53,7 +53,7 @@ const BUILDS_ON_INFO = "Outcomes expected at lower levels. They still apply at t
  * expected while they apply, with their guidance, since they're easy to miss
  * otherwise.
  */
-function outcomesAt(quality: ChecklistQuality, level: Level) {
+function outcomesAt(quality: ExpectationQuality, level: Level) {
   const included = outcomesOf(quality).filter((o) => appliesAt(o, level));
   return {
     expected: included.filter((o) => o.level === level || o.until),
@@ -61,11 +61,11 @@ function outcomesAt(quality: ChecklistQuality, level: Level) {
   };
 }
 
-const checklistAt = (checklist: Checklist, level: Level) => checklist.qualities.map((quality) => ({ quality, ...outcomesAt(quality, level) }));
+const expectationsAt = (expectations: Expectations, level: Level) => expectations.qualities.map((quality) => ({ quality, ...outcomesAt(quality, level) }));
 
 /* How many qualities expect something at a level, and how many outcomes they expect. */
-function countsAt(checklist: Checklist, level: Level) {
-  const sections = checklistAt(checklist, level);
+function countsAt(expectations: Expectations, level: Level) {
+  const sections = expectationsAt(expectations, level);
   return {
     qualities: sections.filter((s) => s.expected.length).length,
     outcomes: sections.reduce((n, s) => n + s.expected.length, 0),
@@ -74,15 +74,15 @@ function countsAt(checklist: Checklist, level: Level) {
 
 const isMet = (s: Standing) => s === "evidence" || s === "trust";
 
-export function StabilityChecklist({ state, checklist, capability }: { state: DocketState; checklist: Checklist; capability: Capability }) {
+export function StabilityExpectations({ state, expectations, capability }: { state: DocketState; expectations: Expectations; capability: Capability }) {
   const own = capability.stability;
   const [level, setLevel] = useState<Level>(own ?? "prototype");
   const [showAll, setShowAll] = useState(false);
-  const of = (outcome: ChecklistOutcome) => outcomeStanding(state, capability, outcome);
-  const standing = (outcome: ChecklistOutcome): Standing => of(outcome).standing;
-  const kindName = (id: string) => checklist.kinds.find((k) => k.id === id)?.name ?? id;
+  const of = (outcome: ExpectedOutcome) => outcomeStanding(state, capability, outcome);
+  const standing = (outcome: ExpectedOutcome): Standing => of(outcome).standing;
+  const kindName = (id: string) => expectations.kinds.find((k) => k.id === id)?.name ?? id;
 
-  const sections = checklistAt(checklist, level);
+  const sections = expectationsAt(expectations, level);
   const empty = sections.filter((s) => !s.expected.length).length;
   const shown = showAll ? sections : sections.filter((s) => s.expected.length);
   const expected = sections.flatMap((s) => s.expected);
@@ -104,7 +104,7 @@ export function StabilityChecklist({ state, checklist, capability }: { state: Do
       </p>
       <div className="sc-levels" role="radiogroup" aria-labelledby="sc-level">
         {STABILITY_LEVEL_IDS.map((id) => {
-          const counts = countsAt(checklist, id);
+          const counts = countsAt(expectations, id);
           return (
             <button key={id} type="button" role="radio" aria-checked={id === level} className="sc-level" onClick={() => setLevel(id)}>
               <span className="sc-level-top">
@@ -278,7 +278,7 @@ function StandingIcon({ standing }: { standing: Standing }) {
 }
 
 /* A quality's name, which opens what it's about and how much each level asks of it, so the levels mean the same to everyone. */
-function QualityName({ quality }: { quality: ChecklistQuality }) {
+function QualityName({ quality }: { quality: ExpectationQuality }) {
   return (
     <DetailsPopover
       title={
@@ -305,7 +305,7 @@ function QualityName({ quality }: { quality: ChecklistQuality }) {
 }
 
 /* Implementation, shown as how meeting it might look, and what may be overengineering: a pill for each, whose popover holds the list. Empty lists are left out. */
-function Guidance({ implementation, overengineering, kindName }: { implementation: ChecklistExample[]; overengineering: ChecklistExample[]; kindName: (id: string) => string }) {
+function Guidance({ implementation, overengineering, kindName }: { implementation: ExpectationExample[]; overengineering: ExpectationExample[]; kindName: (id: string) => string }) {
   if (!implementation.length && !overengineering.length) return null;
   return (
     <div className="sc-guidance">
@@ -328,7 +328,7 @@ function Guidance({ implementation, overengineering, kindName }: { implementatio
 }
 
 /* A list of examples, each with a tag for each kind of software it may suit. Without tags, it may suit any kind. */
-function Examples({ list, kindName }: { list: ChecklistExample[]; kindName: (id: string) => string }) {
+function Examples({ list, kindName }: { list: ExpectationExample[]; kindName: (id: string) => string }) {
   return (
     <ul className="sc-examples">
       {list.map((e) => (

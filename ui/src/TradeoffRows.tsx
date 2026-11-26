@@ -5,14 +5,14 @@ import { Excerpt, InlineMarkdown } from "./design/markdown/Markdown";
 import { STABILITY } from "./design/stability/stability";
 import { sectionHref, docHref } from "./routes";
 import { HeldDecisions } from "./Fields";
-import { checklistOutcome, decisionsAffecting, find, outcomesAffected, subjectOf, technicalDoc, type DocketState, type Tradeoff } from "./state";
+import { expectedOutcome, decisionsAffecting, find, outcomesAffected, subjectOf, technicalDoc, type DocketState, type Tradeoff } from "./state";
 import "./gaprows.css";
 
 /*
  * Tradeoffs, easy to take in however many there are, the way GapRows shows
  * gaps: one line each, what was chosen, in the order given. A tradeoff has no
  * risk, since it's chosen. A line opens in place to show the drawback, the
- * benefit where one is written down and the checklist outcomes it falls
+ * benefit where one is written down and the expected outcomes it falls
  * short of on purpose. One an open decision affects is reopened: it's marked
  * so, and opens to the question. What it's on is named unless that's the
  * page it's shown on (`here`).
@@ -29,7 +29,7 @@ export function TradeoffRows({ state, tradeoffs, here }: { state: DocketState; t
 
 function TradeoffLine({ state, tradeoff: t, here }: { state: DocketState; tradeoff: Tradeoff; here?: { id: string } }) {
   const { type } = subjectOf(t);
-  const named = outcomesAffected(t).flatMap((id) => checklistOutcome(state.checklist, id) ?? []);
+  const named = outcomesAffected(t).flatMap((id) => expectedOutcome(state.expectations, id) ?? []);
   const reopened = decisionsAffecting(state, t.id);
   return (
     <li>
@@ -64,7 +64,7 @@ function TradeoffLine({ state, tradeoff: t, here }: { state: DocketState; tradeo
                 <dt>Falls short of</dt>
                 <dd>
                   &ldquo;{n.outcome.text}&rdquo;{" "}
-                  <a href={`${sectionHref("glossary", { tab: "checklist" })}#${n.quality.id}`}>
+                  <a href={`${sectionHref("glossary", { tab: "expectations" })}#${n.quality.id}`}>
                     {n.quality.name} &middot; {STABILITY[n.outcome.level].name}
                   </a>
                 </dd>

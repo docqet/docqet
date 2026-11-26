@@ -28,7 +28,7 @@ func Index(fsys fs.FS) (*state.State, error) {
 	if err != nil {
 		return nil, err
 	}
-	checklist, err := Checklist()
+	expectations, err := Expectations()
 	if err != nil {
 		return nil, err
 	}
@@ -48,7 +48,7 @@ func Index(fsys fs.FS) (*state.State, error) {
 		Gaps:         []state.Gap{},
 		Tradeoffs:    []state.Tradeoff{},
 		Problems:     []state.Problem{},
-		Checklist:    checklist,
+		Expectations: expectations,
 	}
 	if cfg.Product != nil {
 		st.Product = &state.Ident{ID: cfg.Product.ID, Name: cfg.Product.Name}

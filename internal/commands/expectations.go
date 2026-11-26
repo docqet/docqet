@@ -2,12 +2,12 @@ package commands
 
 import "github.com/urfave/cli/v3"
 
-// ChecklistCommand shows what each stability level expects, or what a
+// ExpectationsCommand shows what each stability level expects, or what a
 // promotion needs. Only --for reads the project, so only then do the source
 // flags apply.
-func ChecklistCommand() *cli.Command {
+func ExpectationsCommand() *cli.Command {
 	return &cli.Command{
-		Name:      "checklist",
+		Name:      "expectations",
 		Category:  reading,
 		Before:    maxArgs(1),
 		Usage:     "What each stability level expects, or what a promotion needs",
