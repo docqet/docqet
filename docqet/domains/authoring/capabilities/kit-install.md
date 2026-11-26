@@ -19,4 +19,6 @@ personas: [persona:engineer]
 - Listing the agents it supports, with `docqet kit agents`.
 - Adding the skill's folders to the project's `.docqetignore`, since the
   kit's example annotations would otherwise be read as the project's own.
+- Seeing which agents it's installed for, and whether it's the installed
+  `docqet`'s, with `docqet kit status`.
 - `docqet kit check`, for CI.

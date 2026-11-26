@@ -26,5 +26,5 @@ decisions:
       `outcome:functionality/alpha/main-path` from its rules' evidence?
 ---
 
-`docqet rubric`, which shows it from the command line, is drafted and
-not built yet. Agents read it there once it is, and the UI shows it today.
+People and agents read it from the command line with `docqet rubric`, and
+in the UI.
