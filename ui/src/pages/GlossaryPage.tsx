@@ -195,8 +195,7 @@ function Levels() {
         <p className="dp-note">
           Each gap has a risk on each capability it&rsquo;s on, from 0 to 100. A capability is exposed to its riskiest gap&rsquo;s share of the most it could
           be: a certain, damaging gap reaching everyone that breaks a claim its level makes. Several capabilities, as in a feature, domain, project or what
-          serves a persona, count by their level, weighted as in maturity, so exposure on GA counts for most. Drafts don&rsquo;t count, and gaps with no impact
-          rated add nothing. Only the riskiest gap on each capability counts, so closing a lesser one doesn&rsquo;t change it.
+          serves a persona, count by their level, weighted as in maturity, so exposure on GA counts for most. Drafts don&rsquo;t count. Only the riskiest gap on each capability counts, so closing a lesser one doesn&rsquo;t change it.
         </p>
         <p className="dp-note">
           It isn&rsquo;t stability: a level is declared, and exposure never changes it. Promoting a capability can raise its exposure, where its gaps break a

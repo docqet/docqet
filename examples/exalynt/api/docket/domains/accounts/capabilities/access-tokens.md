@@ -51,6 +51,7 @@ gaps:
     name: Impersonators can create lasting tokens
     impact: damaging
     likelihood: unlikely
+    reach: all
     description: >-
       Someone impersonating a user through the sign-in provider can create a
       token for them, which outlasts the impersonation.
@@ -60,6 +61,7 @@ gaps:
       - rule:bans-suspend-a-persons-tokens
     impact: damaging
     likelihood: unlikely
+    reach: all
     description: >-
       A ban can arrive late or out of order: a banned user's tokens work until
       word of it arrives. An older update arriving after the ban undoes it

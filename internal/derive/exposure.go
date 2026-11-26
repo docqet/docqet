@@ -35,9 +35,9 @@ type Exposure struct {
 // certain damaging gap reaching all that breaks a claim its level makes. Its
 // exposure is its riskiest gap's raw score's share of that, its own or one
 // on what it's built on, and it counts with its level's weight in risk, at
-// its level in short. Gaps with no impact rated add nothing, and drafts don't
-// count. Its band is the quarter it falls in, from its unrounded percent, and
-// at least moderate while any gap is unacceptable on one of them.
+// its level in short. Drafts don't count. Its band is the quarter it falls
+// in, from its unrounded percent, and at least moderate while any gap is
+// unacceptable on one of them.
 func ExposureOf(p *combine.Product, capabilities []*combine.Capability) Exposure {
 	var e Exposure
 	exposed, weights := 0.0, 0.0
@@ -56,7 +56,7 @@ func ExposureOf(p *combine.Product, capabilities []*combine.Capability) Exposure
 		raw := 0.0
 		if riskiest != nil {
 			raw = riskiest.Raw
-			if raw > 0 && VerdictOf(&riskiest.Score) == Unacceptable {
+			if raw > 0 && VerdictOf(riskiest.Score) == Unacceptable {
 				e.Unacceptable = true
 			}
 		}

@@ -223,9 +223,9 @@ type Gap struct {
 	ID          string   `json:"id"`
 	Domain      string   `json:"domain,omitempty"`
 	Affects     []string `json:"affects"`
-	Impact      *string  `json:"impact"`
-	Likelihood  *string  `json:"likelihood"`
-	Reach       *string  `json:"reach"`
+	Impact      string   `json:"impact"`
+	Likelihood  string   `json:"likelihood"`
+	Reach       string   `json:"reach"`
 	Name        string   `json:"name"`
 	Description string   `json:"description"`
 	Places      []Place  `json:"places"`

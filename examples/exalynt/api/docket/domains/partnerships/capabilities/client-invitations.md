@@ -53,6 +53,7 @@ gaps:
       - outcome:security/beta/duties
     impact: damaging
     likelihood: unlikely
+    reach: all
     description: >-
       What the law asks of email a partner has Exalynt send to someone who
       never asked for it, such as a way to opt out, hasn't been reviewed, and

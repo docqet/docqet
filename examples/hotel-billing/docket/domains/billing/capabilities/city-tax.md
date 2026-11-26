@@ -19,6 +19,8 @@ gaps:
     affects:
       - rule:children-pay-no-city-tax
     impact: inconvenient
+    likelihood: certain
+    reach: all
     description: >-
       Guests' ages aren't recorded, so city tax is added for every guest on a
       stay, and clerks correct it by hand for children.

@@ -53,6 +53,7 @@ gaps:
     name: Version 1 changed in place after acceptance
     impact: damaging
     likelihood: unlikely
+    reach: all
     description: >-
       The definition of Fulfilled, and version 1 of the Client Agreement, were
       changed in place to say the engineer marks a block fulfilled and nobody

@@ -399,9 +399,13 @@ func (c *checker) outcomes(s subject, field string, refs []string) {
 	}
 }
 
-func (c *checker) oneOf(s subject, field string, value *string, allowed ...string) {
-	if value != nil && !slices.Contains(allowed, *value) {
-		c.add(state.InvalidFrontmatter, s, "%s is %q: it's %s.", field, *value, strings.Join(allowed, ", "))
+// oneOf checks a field every gap has is one of allowed.
+func (c *checker) oneOf(s subject, field, value string, allowed ...string) {
+	switch {
+	case value == "":
+		c.add(state.InvalidFrontmatter, s, "A gap needs %s: it's %s.", field, strings.Join(allowed, ", "))
+	case !slices.Contains(allowed, value):
+		c.add(state.InvalidFrontmatter, s, "%s is %q: it's %s.", field, value, strings.Join(allowed, ", "))
 	}
 }
 

@@ -107,7 +107,7 @@ with each list cut down to its keys:
   are empty when it has none.
 - **`gaps`**: every gap from every doc, each with its ID, its `domain` when
   it's a capability's, the references it `affects` as written, its `impact`,
-  `likelihood` and `reach` or `null`, its `name` and `description`, and
+  `likelihood` and `reach`, its `name` and `description`, and
   `places`: where `docket:gap` annotations mark it, in the same shape as
   evidence.
 - **`tradeoffs`**: every tradeoff from every doc, each with its ID, its

@@ -25,8 +25,8 @@ gaps:
     affects:                          # optional: the claims it's why aren't true yet, see below
       - outcome:usability/beta/everyone
     impact: blocking                  # see below: how bad it is for those it reaches
-    likelihood: possible              # optional, `certain` when left out
-    reach: few                        # optional, `all` when left out
+    likelihood: possible              # see below: how likely it is to bite within a year
+    reach: few                        # see below: how many of the people served it would reach
     description: >-
       The room calendar can't be used from the keyboard, so a clerk who can't
       use a mouse can't pick dates. None of the clerks needs to today.
@@ -75,7 +75,8 @@ project.
 ### Rating impact, likelihood and reach
 
 Three ratings say what a gap could do, each by judgement about this
-software's circumstances. None needs to be exact: they make the judgement
+software's circumstances. Every gap has all three: none has a default, and
+leaving one out is a problem `docket check` reports. None needs to be exact: they make the judgement
 visible, so a person can see it and correct it. Never lower any of them
 because the capability is early: rate them as if people relied on the
 capability, since risk weighs them by its level already, and nobody re-rates
@@ -98,8 +99,8 @@ order, and stop at the first yes:
 A wrong result someone notices and puts right is `inconvenient`. When torn
 between two, pick the lower unless the higher one's test is plainly met.
 
-**Likelihood** is how likely it is to bite within the next year. Leave it out
-when it's `certain`. When torn, pick the higher:
+**Likelihood** is how likely it is to bite within the next year. When torn,
+pick the higher:
 
 - `certain`: it's happening, or it definitely will within a year.
 - `expected`: you'd bet on it happening within a year.
@@ -112,8 +113,7 @@ used, and its likelihood says how likely they are.
 
 **Reach** is how many of the people the software serves it would reach, if it
 bit: who its capabilities' personas stand for, and whoever runs it, builds on
-it, or depends on what it produces. Leave it out when it's `all`. When torn,
-pick the higher:
+it, or depends on what it produces. When torn, pick the higher:
 
 - `all`: everyone the software serves.
 - `most`: most of them, the usual case.

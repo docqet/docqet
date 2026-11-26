@@ -13,6 +13,7 @@ gaps:
       - outcome:reliability/beta/fails-clearly
     impact: inconvenient
     likelihood: expected
+    reach: all
     description: >-
       Calls to the payment provider have no timeout, so a slow provider holds
       the request open until the platform gives up on it.

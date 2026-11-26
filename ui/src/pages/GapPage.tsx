@@ -119,22 +119,16 @@ function RiskProfile({ gap, risk }: { gap: Gap; risk: Risk }) {
   const top = risk.on[0];
   const claims = claimsOf(gap, risk);
   return (
-    <section className="dp-risk" data-verdict={risk.verdict ?? "none"}>
+    <section className="dp-risk" data-verdict={risk.verdict}>
       <h2 className="dp-risk-title">Risk</h2>
       <div className="dp-risk-card">
         <div className="dp-risk-head">
-          {risk.score !== null ? (
-            <>
-              <span className="dp-risk-score risk-score" data-verdict={risk.verdict!}>
-                <RiskBars verdict={risk.verdict} size="small" />
-                {riskScore(risk.score)}
-                <span className="dp-risk-verdict">{VERDICT_NAMES[risk.verdict!].name}</span>
-              </span>
-              <span className="dp-risk-means">{VERDICT_NAMES[risk.verdict!].means}</span>
-            </>
-          ) : (
-            <span className="dp-faint">Not rated: with no impact, it has no risk.</span>
-          )}
+          <span className="dp-risk-score risk-score" data-verdict={risk.verdict}>
+            <RiskBars verdict={risk.verdict} size="small" />
+            {riskScore(risk.score)}
+            <span className="dp-risk-verdict">{VERDICT_NAMES[risk.verdict].name}</span>
+          </span>
+          <span className="dp-risk-means">{VERDICT_NAMES[risk.verdict].means}</span>
         </div>
         {top ? (
           <div className="dp-risk-workings">
@@ -160,11 +154,9 @@ function RiskProfile({ gap, risk }: { gap: Gap; risk: Risk }) {
                 <a href={docHref("capability", o.capability.id)}>{o.capability.name}</a>
                 {o.claim ? <span className="dp-risk-breaks">Breaks a claim</span> : null}
                 <CapabilityStability level={o.capability.stability} name={o.capability.name} />
-                {risk.score !== null ? (
-                  <span className="risk-on-score" data-verdict={verdictOf(o.score) ?? "none"}>
-                    {riskScore(o.score)}
-                  </span>
-                ) : null}
+                <span className="risk-on-score" data-verdict={verdictOf(o.score)}>
+                  {riskScore(o.score)}
+                </span>
               </li>
             ))}
           </ul>

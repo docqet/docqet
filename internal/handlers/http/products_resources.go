@@ -62,7 +62,7 @@ func newExposureResource(e derive.Exposure) ExposureResource {
 }
 
 func newScoredGapResource(s derive.Scored) ScoredGapResource {
-	r := ScoredGapResource{Gap: s.Gap.ID, Score: s.Score, Verdict: ptr(s.Verdict)}
+	r := ScoredGapResource{Gap: s.Gap.ID, Score: s.Score, Verdict: string(s.Verdict)}
 	if s.On != nil {
 		r.Capability = &s.On.Capability.ID
 	}
@@ -74,7 +74,6 @@ func newRiskSummaryResource(a derive.Across) RiskSummaryResource {
 		Score:   a.Score,
 		Verdict: ptr(a.Verdict),
 		Counts:  map[string]int{},
-		Unrated: a.Unrated,
 		Gaps:    make([]ScoredGapResource, len(a.Items)),
 	}
 	for v, n := range a.Counts {
@@ -463,7 +462,7 @@ func newGapResource(p *combine.Product, g *combine.Gap, within *derive.Scored) G
 		Places:      newPlaceResources(g.Places),
 		Risk: RiskResource{
 			Score:        risk.Score,
-			Verdict:      ptr(risk.Verdict),
+			Verdict:      string(risk.Verdict),
 			Claim:        risk.Claim,
 			Capabilities: risk.Capabilities,
 			Spread:       make([]SpreadResource, len(risk.Spread)),

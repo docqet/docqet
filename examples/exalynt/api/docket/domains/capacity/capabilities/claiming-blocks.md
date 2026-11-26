@@ -60,6 +60,7 @@ gaps:
   - id: clicking-unclaims
     name: Clicking a block unclaims it
     impact: inconvenient
+    likelihood: certain
     reach: some
     description: >-
       Before a block's week starts, clicking it on My Schedule unclaims it, so

@@ -31,7 +31,7 @@ A long list of gaps says nothing about which ones to care about. Docket can't
 know how a running system is used, but it can tell what's at stake from the
 judgement written down beside it, so readers score each gap's risk and the
 ones that matter are read first. Three parts are about the gap, and rated by
-hand on it, since only people know them:
+hand on every gap, since only people know them:
 
 - **Impact**: how bad it is for those it reaches when it bites.
 - **Likelihood**: how likely it is to bite within a year.
@@ -78,8 +78,8 @@ impact step × likelihood × reach  ×  level weight × claim factor if it break
 | `blocking`     | 3    |     | `possible` | ½      |     | `some` | ½      |     | Beta      | 4      | 1.25         |
 | `damaging`     | 4    |     | `unlikely` | ¼      |     | `few`  | ¼      |     | GA        | 6      | 1.5          |
 
-- **Likelihood is `certain`, and reach `all`, when left out.** A certain gap
-  reaching everyone scores as impact and level alone.
+- **Every gap rates all three.** None has a default, so every gap has a
+  risk. A certain gap reaching everyone scores as impact and level alone.
 - **The level weight is [maturity's](maturity.md#how-its-worked-out).** A
   draft weighs 0, since it claims nothing, so a gap scores 0 there.
 - **Breaking a claim adds nothing on a Prototype**, and more at each level
@@ -100,8 +100,7 @@ claim at a given level, moves the score the same way wherever it starts. A
 gap that's less likely, or reaches fewer, scores lower, down to 0.
 
 The gap's **risk** is its highest score: what's at stake where it matters
-most. A gap with no impact rated has no risk, and comes after every gap
-that's rated.
+most.
 
 Stability can outweigh impact: a certain damaging gap on a Prototype, where
 data may be fake, scores 48, below a certain blocking gap on GA at 76. And
@@ -148,9 +147,8 @@ on: how many have each score, highest first, such as
 `76 on 1 · 48 on 2 · 38 on 1`. Readers order gaps by risk, highest first,
 then by spread: of two gaps with the same risk, the one with more
 capabilities at that score comes first; if they're level there, the one with
-more at the next score, and so on. Gaps with no impact rated come last. A gap
-in something many capabilities rely on spreads further than one on a single
-capability.
+more at the next score, and so on. A gap in something many capabilities
+rely on spreads further than one on a single capability.
 
 ## Exposure
 

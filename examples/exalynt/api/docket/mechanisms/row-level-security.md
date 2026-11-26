@@ -11,6 +11,7 @@ gaps:
     name: Leaving out the organization runs on platform
     impact: damaging
     likelihood: unlikely
+    reach: all
     description: >-
       `X-Organization-ID` is optional, so anyone signed in can leave it out
       and run on `api_platform`. Holding no platform role, they hold no
@@ -21,6 +22,7 @@ gaps:
     name: Shared tables lack row-level security
     impact: damaging
     likelihood: unlikely
+    reach: all
     description: >-
       Shared tables have no row-level security, `users` above all, as staff
       names appear across organizations: a query there that forgets to filter

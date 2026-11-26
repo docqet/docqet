@@ -64,6 +64,7 @@ gaps:
     name: Deploys restore built-in roles
     impact: damaging
     likelihood: unlikely
+    reach: all
     description: >-
       Each deploy puts back permissions taken off Admin, Member, Billing, and
       Administrator, and renaming one makes a new role under the old name. A

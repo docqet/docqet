@@ -5,7 +5,7 @@ import { Excerpt, plainText } from "./design/markdown/Markdown";
 import { LeftMark } from "./design/left/LeftMark";
 import { Tip } from "./design/Tip";
 import { docHref } from "./routes";
-import { VERDICTS, find, subjectOf, technicalDoc, type DocketState, type Gap, type Risk, type RiskAcross, type TechnicalDoc, type Verdict } from "./state";
+import { VERDICTS, find, subjectOf, technicalDoc, type DocketState, type Gap, type Risk, type RiskAcross, type TechnicalDoc } from "./state";
 import { GapRiskMark, RiskBars, RiskScore, VERDICT_NAMES } from "./design/risk/RiskScore";
 import "./gaprows.css";
 import { InitiativeTags } from "./Initiatives";
@@ -47,22 +47,21 @@ export function GapRows({
         ))}
       </ul>
     );
-  const groups: (Verdict | null)[] = [...VERDICTS, null];
   return (
     <div className="gr-groups">
-      {groups.map((verdict) => {
-        const these = scored.filter((r) => r.risk.verdict === verdict).sort((a, b) => (b.risk.score ?? -1) - (a.risk.score ?? -1));
+      {VERDICTS.map((verdict) => {
+        const these = scored.filter((r) => r.risk.verdict === verdict).sort((a, b) => b.risk.score - a.risk.score);
         if (!these.length) return null;
         const open = allOpen || verdict === "unacceptable" || verdict === "tolerable";
         return (
-          <details key={verdict ?? "none"} className="gr-group" open={open}>
-            <summary className="gr-group-head" data-verdict={verdict ?? "none"}>
-              <span className="gr-group-verdict risk-score" data-verdict={verdict ?? "none"}>
+          <details key={verdict} className="gr-group" open={open}>
+            <summary className="gr-group-head" data-verdict={verdict}>
+              <span className="gr-group-verdict risk-score" data-verdict={verdict}>
                 <RiskBars verdict={verdict} size="small" />
-                {verdict ? VERDICT_NAMES[verdict].name : "Not rated"}
+                {VERDICT_NAMES[verdict].name}
               </span>
               <span className="gr-group-count">{these.length}</span>
-              <span className="gr-group-test">{verdict ? VERDICT_NAMES[verdict].means : "No impact rated, so no risk."}</span>
+              <span className="gr-group-test">{VERDICT_NAMES[verdict].means}</span>
             </summary>
             <ul className="gr-list">
               {these.map((r) => (

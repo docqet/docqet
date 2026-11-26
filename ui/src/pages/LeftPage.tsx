@@ -99,8 +99,8 @@ export default function LeftPage({ state, route }: { state: DocketState; route: 
 
 /* The gaps' risk spread, under their count: the bar, then how many there are of each risk, each in its color, each showing only those. */
 function GapSpread({ rows }: { rows: GapRow[] }) {
-  const count = (v: Verdict | "none") => rows.filter((r) => (r.verdict ?? "none") === v).length;
-  const parts = ([...VERDICTS, "none"] as const).filter((v) => count(v));
+  const count = (v: Verdict) => rows.filter((r) => r.verdict === v).length;
+  const parts = VERDICTS.filter((v) => count(v));
   return (
     <span className="lf-gap-spread">
       <span className="lf-gap-spread-bar">
@@ -114,8 +114,8 @@ function GapSpread({ rows }: { rows: GapRow[] }) {
       <span className="lf-gap-spread-counts">
         {parts.map((v) => (
           <a key={v} href={withParam("verdict", v)} data-verdict={v}>
-            <RiskBars verdict={v === "none" ? null : v} size="small" />
-            <strong>{count(v)}</strong> {v === "none" ? "not rated" : VERDICT_NAMES[v].name.toLowerCase()}
+            <RiskBars verdict={v} size="small" />
+            <strong>{count(v)}</strong> {VERDICT_NAMES[v].name.toLowerCase()}
           </a>
         ))}
       </span>
@@ -137,7 +137,7 @@ const SCOPE_KINDS: Record<ScopeKind, string> = {
 
 /* What each value of a part is called. */
 function valueName(part: PartId, value: string): string {
-  if (value === "none") return part === "stability" ? "No level" : "Not rated";
+  if (part === "stability" && value === "none") return "No level";
   switch (part) {
     case "verdict":
       return VERDICT_NAMES[value as Verdict].name;
@@ -263,11 +263,11 @@ function FilterValue({ part, value }: { part: PartId; value: string }) {
   if (part === "verdict")
     return (
       <span className="lf-verdict-value risk-score" data-verdict={value}>
-        <RiskBars verdict={value === "none" ? null : (value as Verdict)} size="small" />
+        <RiskBars verdict={value as Verdict} size="small" />
         {valueName(part, value)}
       </span>
     );
-  if (part === "impact" || part === "likelihood" || part === "reach") return <PartTag part={part} value={value === "none" ? null : value} />;
+  if (part === "impact" || part === "likelihood" || part === "reach") return <PartTag part={part} value={value} />;
   if (part === "claim")
     return (
       <span className="lf-claim-value" data-breaks={value === "breaks" || undefined}>

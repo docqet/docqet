@@ -332,8 +332,9 @@ In the order to read them, across both domains.
 - [Tradeoff](concepts/tradeoff.md): something we chose, knowing its benefit
   and drawback.
 - [Risk](../reporting/concepts/risk.md): what's at stake in a gap, scored
-  from its impact, the level of each capability it's on, and whether it
-  breaks a claim made there, and its spread, how that spreads across them.
+  from its impact, likelihood and reach, the level of each capability it's
+  on, and whether it breaks a claim made there, and its spread, how that
+  spreads across them.
 - [Exposure](../reporting/concepts/exposure.md): what the gaps open on some
   capabilities put at stake together: to risk what maturity is to stability.
 

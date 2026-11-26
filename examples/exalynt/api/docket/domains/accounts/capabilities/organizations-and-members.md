@@ -97,6 +97,7 @@ gaps:
       - outcome:security/beta/misuse
     impact: inconvenient
     likelihood: unlikely
+    reach: all
     description: >-
       Anyone who signs up sees the names and email addresses of the team
       they're given, with no one at Exalynt having looked at them first.
@@ -108,6 +109,7 @@ gaps:
       - outcome:security/beta/duties
     impact: damaging
     likelihood: unlikely
+    reach: all
     description: >-
       Nothing of an organization's data is deleted after it closes, even on
       request.
@@ -117,6 +119,7 @@ gaps:
       - outcome:security/beta/duties
     impact: damaging
     likelihood: unlikely
+    reach: all
     description: >-
       Sign-up doesn't link to a privacy notice, and the agreements with the
       services that hold people's details (sign-in, email, monitoring) aren't

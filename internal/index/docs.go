@@ -52,9 +52,9 @@ type gap struct {
 	Name        string   `yaml:"name"`
 	Description string   `yaml:"description"`
 	Affects     []string `yaml:"affects"`
-	Impact      *string  `yaml:"impact"`
-	Likelihood  *string  `yaml:"likelihood"`
-	Reach       *string  `yaml:"reach"`
+	Impact      string   `yaml:"impact"`
+	Likelihood  string   `yaml:"likelihood"`
+	Reach       string   `yaml:"reach"`
 }
 
 type tradeoff struct {

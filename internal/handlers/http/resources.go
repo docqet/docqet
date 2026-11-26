@@ -69,25 +69,24 @@ type ExposureResource struct {
 }
 
 // RiskSummaryResource is what's at stake across some gaps: the highest score
-// and its verdict, null with none rated, how many fall in each verdict
-// (unacceptable, tolerable, acceptable), and how many have no impact rated.
+// and its verdict, null with no gaps, and how many fall in each verdict
+// (unacceptable, tolerable, acceptable).
 type RiskSummaryResource struct {
 	Score   *int           `json:"score"`
 	Verdict *string        `json:"verdict"`
 	Counts  map[string]int `json:"counts"`
-	Unrated int            `json:"unrated"`
 	// Gaps is each gap, riskiest first, with its score there.
 	Gaps []ScoredGapResource `json:"gaps"`
 }
 
 // ScoredGapResource is a gap's score among some capabilities: where it
-// scores highest there, and that score and verdict, null where it doesn't
-// show or has no impact rated.
+// scores highest there, null where it doesn't show, and that score and
+// verdict, 0 where it doesn't show.
 type ScoredGapResource struct {
 	Gap        string  `json:"gap"`
 	Capability *string `json:"capability"`
-	Score      *int    `json:"score"`
-	Verdict    *string `json:"verdict"`
+	Score      int     `json:"score"`
+	Verdict    string  `json:"verdict"`
 }
 
 // ReadinessResource is how ready people can rely on some capabilities being,
@@ -396,10 +395,10 @@ type SpreadResource struct {
 }
 
 // RiskResource is what's at stake in leaving a gap open, on every
-// capability it shows on. Score and Verdict are null with no impact rated.
+// capability it shows on. Score is 0 where it shows on none.
 type RiskResource struct {
-	Score        *int             `json:"score"`
-	Verdict      *string          `json:"verdict"`
+	Score        int              `json:"score"`
+	Verdict      string           `json:"verdict"`
 	Claim        bool             `json:"claim"`
 	Capabilities int              `json:"capabilities"`
 	Spread       []SpreadResource `json:"spread"`
@@ -423,9 +422,9 @@ type GapResource struct {
 	Project     string                 `json:"project"`
 	Domain      string                 `json:"domain"`
 	Affects     []string               `json:"affects"`
-	Impact      *string                `json:"impact"`
-	Likelihood  *string                `json:"likelihood"`
-	Reach       *string                `json:"reach"`
+	Impact      string                 `json:"impact"`
+	Likelihood  string                 `json:"likelihood"`
+	Reach       string                 `json:"reach"`
 	Name        string                 `json:"name"`
 	Description string                 `json:"description"`
 	Places      []PlaceResource        `json:"places"`

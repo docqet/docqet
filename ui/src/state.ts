@@ -257,10 +257,10 @@ export type Initiative = Doc & {
  */
 export const IMPACTS = ["damaging", "blocking", "inconvenient", "negligible"] as const;
 export type Impact = (typeof IMPACTS)[number];
-/* How likely it is to bite within a year, most first. Left out, it's certain. */
+/* How likely it is to bite within a year, most first. */
 export const LIKELIHOODS = ["certain", "expected", "possible", "unlikely"] as const;
 export type Likelihood = (typeof LIKELIHOODS)[number];
-/* What share of the people the software serves it would reach if it bit, most first. Left out, it's all. */
+/* What share of the people the software serves it would reach if it bit, most first. */
 export const REACHES = ["all", "most", "some", "few"] as const;
 export type Reach = (typeof REACHES)[number];
 
@@ -276,11 +276,10 @@ export type Gap = {
    * `rule:<id>`, which combining resolves to `rule:<id>@<domain>`.
    */
   affects: string[];
-  /* What it does to those it reaches when it bites, or null where nobody has said. */
-  impact: Impact | null;
-  /* How likely it is to bite, and how many it would reach, or null where left out: certain, and all. */
-  likelihood: Likelihood | null;
-  reach: Reach | null;
+  /* What it does to those it reaches when it bites, how likely it is to bite, and how many it would reach. */
+  impact: Impact;
+  likelihood: Likelihood;
+  reach: Reach;
   /* What falls short, in a few words, and in a sentence or two. */
   name: string;
   description: string;
@@ -700,8 +699,8 @@ export const VERDICTS = ["unacceptable", "tolerable", "acceptable"] as const;
 export type Verdict = (typeof VERDICTS)[number];
 /* In thirds. */
 export const VERDICT_FROM: Record<Verdict, number> = { unacceptable: 67, tolerable: 33, acceptable: 0 };
-export const verdictOf = (score: number | null): Verdict | null =>
-  score === null ? null : score >= VERDICT_FROM.unacceptable ? "unacceptable" : score >= VERDICT_FROM.tolerable ? "tolerable" : "acceptable";
+export const verdictOf = (score: number): Verdict =>
+  score >= VERDICT_FROM.unacceptable ? "unacceptable" : score >= VERDICT_FROM.tolerable ? "tolerable" : "acceptable";
 
 /* How it scores on one capability: each part's factor, whether it breaks a claim and that claim's factor (1 where it breaks none), what they multiply to, and that on the scale. */
 export type RiskOn = {
@@ -716,11 +715,12 @@ export type RiskOn = {
   score: number;
 };
 export type Risk = {
-  impact: Impact | null;
+  impact: Impact;
   likelihood: Likelihood;
   reach: Reach;
-  score: number | null;
-  verdict: Verdict | null;
+  /* Its highest score on the capabilities it shows on, 0 on none. */
+  score: number;
+  verdict: Verdict;
   /* Whether it breaks a claim on any capability it shows on. */
   claim: boolean;
   /* Each capability it shows on, highest score first, then most stable. */
@@ -797,16 +797,15 @@ export const readyShare = (r: Readiness) => (r.percent === null ? null : r.perce
  * domain, persona or component: each one's risk and verdict there, its
  * highest score on the capabilities `within` where given, or its risk
  * anywhere, riskiest first; the highest of those, and its verdict; and how many fall in each
- * verdict. Its score is null with none rated.
+ * verdict. Its score is null with no gaps.
  */
 export type RiskAcross<T> = {
   score: number | null;
   verdict: Verdict | null;
-  /* Each with where it scores highest among those capabilities, null with none. */
-  items: { item: T; risk: Risk; on: RiskOn | null; score: number | null; verdict: Verdict | null }[];
+  /* Each with where it scores highest among those capabilities, null with none, where it scores 0. */
+  items: { item: T; risk: Risk; on: RiskOn | null; score: number; verdict: Verdict }[];
   /* How many fall in each verdict. */
   counts: Record<Verdict, number>;
-  unrated: number;
 };
 
 /*
@@ -831,12 +830,11 @@ export const exposureText = (percent: number) => (percent > 0 && percent < 0.5 ?
 /* A risk score as written. */
 export const riskScore = (score: number) => String(score);
 
-/* An impact's place, worst first, with none after every one. */
-export const impactRank = (impact: Impact | null) => (impact ? IMPACTS.indexOf(impact) : IMPACTS.length);
+/* An impact's place, worst first. */
+export const impactRank = (impact: Impact) => IMPACTS.indexOf(impact);
 
-/* Riskiest first: by score, none rated last, then by spread, comparing each capability's score in turn, highest first. */
+/* Riskiest first: by score, then by spread, comparing each capability's score in turn, highest first. */
 export function byRisk(a: Risk, b: Risk): number {
-  if (a.score === null || b.score === null) return Number(a.score === null) - Number(b.score === null);
   for (let i = 0; i < Math.max(a.on.length, b.on.length); i++) {
     const d = (b.on[i]?.score ?? -1) - (a.on[i]?.score ?? -1);
     if (d) return d;

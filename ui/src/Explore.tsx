@@ -512,12 +512,11 @@ export const spreadText = (risk: Risk) => risk.spread.map((e) => `${riskScore(e.
  */
 export function RiskSpread({ risk }: { risk: Risk }) {
   const n = risk.on.length;
-  const rated = risk.score !== null;
   return (
-    <RiskSection label={rated ? `Risk ${riskScore(risk.score!)} · ${VERDICT_NAMES[risk.verdict!].name}` : n === 1 ? "On 1 capability" : `On ${n} capabilities`}>
+    <RiskSection label={`Risk ${riskScore(risk.score)} · ${VERDICT_NAMES[risk.verdict].name}`}>
       {n ? <RiskWorkings risk={risk} on={risk.on[0]} /> : null}
       {n > 1 ? <div className="risk-workings-group risk-on-head">On each capability</div> : null}
-      {n > 1 || !rated ? (
+      {n > 1 ? (
         <ul className="risk-on">
           {risk.on.map(({ capability: c, claim, score }) => (
             <li key={c.id}>
@@ -527,11 +526,9 @@ export function RiskSpread({ risk }: { risk: Risk }) {
               </span>
               <span className="risk-on-right">
                 <CapabilityStability level={c.stability} name={c.name} focusable={false} />
-                {rated ? (
-                  <span className="risk-on-score" data-verdict={verdictOf(score) ?? "none"}>
-                    {riskScore(score)}
-                  </span>
-                ) : null}
+                <span className="risk-on-score" data-verdict={verdictOf(score)}>
+                  {riskScore(score)}
+                </span>
               </span>
             </li>
           ))}
@@ -915,9 +912,9 @@ export function LeftRollup({
   );
 }
 
-/* The highest score among some of a capability's gaps, each scored on it, or null with none rated. */
+/* The highest score among some of a capability's gaps, each scored on it, or null with none. */
 const worstOf = (capability: Capability, gaps: Gap[]) =>
-  capability.readiness.gaps.items.reduce<number | null>((top, i) => (gaps.includes(i.item) && i.score !== null && (top === null || i.score > top) ? i.score : top), null);
+  capability.readiness.gaps.items.reduce<number | null>((top, i) => (gaps.includes(i.item) && (top === null || i.score > top) ? i.score : top), null);
 
 /*
  * How many outcomes a capability's level expects, how many of those a gap

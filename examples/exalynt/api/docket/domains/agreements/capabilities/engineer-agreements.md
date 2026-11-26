@@ -51,6 +51,7 @@ gaps:
     name: Version 1 changed in place after acceptance
     impact: inconvenient
     likelihood: unlikely
+    reach: all
     description: >-
       The definition of Fulfilled, and version 1 of the Engineer Agreement,
       were changed in place to say the engineer marks a block fulfilled and

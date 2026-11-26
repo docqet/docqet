@@ -38,7 +38,7 @@ func NeedsOf(p *combine.Product, c *combine.Capability) NotReady {
 		Decisions:  OpenDecisions(c.Doc),
 	}
 	for _, g := range GapsOn(p, c) {
-		if on := scoreOn(p, g, c); VerdictOf(&on.Score) == Unacceptable {
+		if on := scoreOn(p, g, c); VerdictOf(on.Score) == Unacceptable {
 			n.Gaps = append(n.Gaps, g)
 		}
 	}

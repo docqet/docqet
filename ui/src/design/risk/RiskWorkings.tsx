@@ -42,9 +42,6 @@ function ScoreSlider({ score, verdict }: { score: number; verdict: string }) {
   );
 }
 
-/* The verdict a score falls in, for its color. */
-const verdictOfScore = (score: number) => verdictOf(score) ?? "none";
-
 /* A factor as written: ¾, ½ and ¼ as fractions, the rest as numbers. */
 const factor = (n: number) => ({ 0.75: "¾", 0.5: "½", 0.25: "¼" })[n] ?? String(Math.round(n * 100) / 100);
 
@@ -55,7 +52,6 @@ const factor = (n: number) => ({ 0.75: "¾", 0.5: "½", 0.25: "¼" })[n] ?? Stri
  * they stay plain tags.
  */
 export function RiskWorkings({ risk, on, interactive = false }: { risk: Risk; on: RiskOn; interactive?: boolean }) {
-  const rated = risk.impact !== null;
   const tag = (part: "impact" | "likelihood" | "reach") =>
     interactive ? (
       part === "impact" ? (
@@ -75,7 +71,7 @@ export function RiskWorkings({ risk, on, interactive = false }: { risk: Risk; on
       </span>
       <span className="risk-workings-value">{tag("impact")}</span>
       <Slider stops={4} at={placeOf(IMPACTS, risk.impact)} label="Negligible, inconvenient, blocking, damaging" />
-      <span className="risk-workings-factor">{rated ? factor(on.impact) : "–"}</span>
+      <span className="risk-workings-factor">{factor(on.impact)}</span>
       <span className="risk-workings-label">
         <RiskPartIcon part="likelihood" size={13} />
         Likelihood
@@ -107,26 +103,22 @@ export function RiskWorkings({ risk, on, interactive = false }: { risk: Risk; on
       <Slider stops={2} at={on.claim ? 1 : 0} label="Keeps them, breaks one" />
       <span className="risk-workings-factor">× {String(on.claimFactor)}</span>
 
-      {rated ? (
-        <span className="risk-workings-total">
+      <span className="risk-workings-total">
           <span className="risk-workings-total-line">
             <span className="risk-workings-sum">
               {[...[on.impact, on.likelihood, on.reach, on.weight].map(factor), String(on.claimFactor)].join(" × ")} = {factor(on.raw)}
             </span>
-            <span className="risk-on-score" data-verdict={verdictOfScore(on.score)}>
+            <span className="risk-on-score" data-verdict={verdictOf(on.score)}>
               {on.score} of 100
             </span>
           </span>
-          <ScoreSlider score={on.score} verdict={verdictOfScore(on.score)} />
+          <ScoreSlider score={on.score} verdict={verdictOf(on.score)} />
           <span className="risk-workings-scale" aria-hidden>
             <span>Acceptable</span>
             <span>Tolerable</span>
             <span>Unacceptable</span>
           </span>
         </span>
-      ) : (
-        <span className="risk-workings-total">With no impact rated, it has no risk.</span>
-      )}
     </div>
   );
 }

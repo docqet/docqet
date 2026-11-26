@@ -12,6 +12,7 @@ gaps:
     name: Depends on Scalar's page structure
     impact: inconvenient
     likelihood: possible
+    reach: all
     description: >-
       The script that adds stability marks depends on Scalar's page structure,
       and the page loads `@scalar/api-reference` from jsdelivr without a

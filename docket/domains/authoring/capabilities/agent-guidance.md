@@ -10,16 +10,10 @@ description: >-
 stability: prototype
 personas: [persona:coding-agent]
 gaps:
-  - id: commands-not-built
-    name: Names commands that aren't built
-    impact: blocking
-    description: >-
-      The kit tells agents to use `docket touches`, `show`, `list`, `rename`
-      and `diff`, which aren't built yet, so an agent can't follow it as
-      written.
   - id: inferred-intention-unmarked
     name: Inferred intention has no marker
     impact: inconvenient
+    likelihood: certain
     reach: some
     description: >-
       There's no way to mark intention an agent worked out from code as
@@ -28,21 +22,43 @@ gaps:
   - id: decisions-not-named
     name: Answered decisions can't be named
     impact: negligible
+    likelihood: certain
+    reach: all
     description: >-
       Decisions have no key, so agents can't say in a trailer what an answered
       decision became, and history shows it removed with nothing in its place.
   - id: copilot-may-miss-skill
-    name: GitHub Copilot may not find the skill
+    name: Copilot in VS Code doesn't find the skill
     impact: inconvenient
-    likelihood: possible
+    likelihood: expected
     reach: some
     description: >-
-      Sources differ on whether Copilot reads `.agents/skills/` or only
-      `.github/skills/`. It still reads `AGENTS.md`, which points at the
-      skill.
+      Copilot in VS Code reads skills only from `.github/skills/`, where the
+      kit isn't installed. It still reads `AGENTS.md`, which names the
+      skill's path.
+  - id: gemini-needs-a-setting
+    name: Gemini CLI needs a setting to read AGENTS.md
+    impact: inconvenient
+    likelihood: expected
+    reach: few
+    description: >-
+      Gemini CLI reads `GEMINI.md` unless its `context.fileName` setting
+      includes `AGENTS.md`, so until someone sets it, it only finds the skill
+      when the work calls for it, not the kit's always-on part.
+  - id: no-product-reads
+    name: No reads across a product's projects
+    impact: inconvenient
+    likelihood: expected
+    reach: some
+    description: >-
+      The kit's commands read one project, so in a product of several
+      projects an agent checks another project's docs by running them in its
+      folder, and `--product` isn't there to reuse another project's IDs or
+      find contradictions.
   - id: no-workflows
     name: No workflows
     impact: inconvenient
+    likelihood: certain
     reach: some
     description: >-
       The kit has no workflows for implementing a change, promoting a

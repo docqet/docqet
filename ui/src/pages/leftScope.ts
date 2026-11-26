@@ -111,10 +111,10 @@ export type GapRow = {
   risk: Risk;
   /* Where it scores highest among the scope's capabilities, or null where it's on none with a level. */
   on: RiskOn | null;
-  score: number | null;
-  verdict: Verdict | null;
+  score: number;
+  verdict: Verdict;
   kind: "product" | "technical";
-  impact: Impact | null;
+  impact: Impact;
   likelihood: Likelihood;
   reach: Reach;
   level: Level | null;
@@ -128,7 +128,7 @@ export type GapRow = {
  */
 export function useRowsFor(state: DocketState, scope: Scope): GapRow[] | null {
   const within = useGapsFor(state, scope.capabilities ? scope.key : null);
-  const scored: { gap: Gap; on: RiskOn | null; score: number | null; verdict: Verdict | null }[] | null = scope.capabilities
+  const scored: { gap: Gap; on: RiskOn | null; score: number; verdict: Verdict }[] | null = scope.capabilities
     ? within && state.gaps.flatMap((gap) => within.find((w) => w.gap.id === gap.id) ?? [])
     : (scope.project ? state.gaps.filter((g) => g.project === scope.project) : state.gaps).map((gap) => ({
         gap,
@@ -151,7 +151,7 @@ export function useRowsFor(state: DocketState, scope: Scope): GapRow[] | null {
       level: on?.capability.stability ?? null,
       claim: on?.claim ?? false,
     }))
-    .sort((a, b) => (b.score ?? -1) - (a.score ?? -1) || (b.on?.weight ?? 0) - (a.on?.weight ?? 0));
+    .sort((a, b) => b.score - a.score || (b.on?.weight ?? 0) - (a.on?.weight ?? 0));
 }
 
 /*
@@ -160,7 +160,7 @@ export function useRowsFor(state: DocketState, scope: Scope): GapRow[] | null {
  * each verdict. Nothing's worked out but the order and the counts.
  */
 export const acrossRows = (rows: GapRow[]): RiskAcross<Gap> =>
-  summed([...rows].sort((a, b) => (b.score ?? -1) - (a.score ?? -1)).map((r) => ({ item: r.gap, risk: r.risk, on: r.on, score: r.score, verdict: r.verdict })));
+  summed([...rows].sort((a, b) => b.score - a.score).map((r) => ({ item: r.gap, risk: r.risk, on: r.on, score: r.score, verdict: r.verdict })));
 
 /* The decisions held on the scope: on its capabilities, the features and domains they're in, and what they're built on. */
 export function holdersIn(state: DocketState, holders: DecisionHolder[], scope: Scope): DecisionHolder[] {
@@ -178,8 +178,8 @@ export function holdersIn(state: DocketState, holders: DecisionHolder[], scope: 
 
 /* Each part of the risk model a row can be filtered or grouped by, with its values worst first, and the value a row has. */
 export const PARTS = {
-  verdict: { label: "Risk", values: [...VERDICTS, "none"] as string[], of: (r: GapRow) => r.verdict ?? "none" },
-  impact: { label: "Impact", values: [...IMPACTS, "none"] as string[], of: (r: GapRow) => r.impact ?? "none" },
+  verdict: { label: "Risk", values: [...VERDICTS] as string[], of: (r: GapRow) => r.verdict },
+  impact: { label: "Impact", values: [...IMPACTS] as string[], of: (r: GapRow) => r.impact },
   likelihood: { label: "Likelihood", values: [...LIKELIHOODS] as string[], of: (r: GapRow) => r.likelihood },
   reach: { label: "Reach", values: [...REACHES] as string[], of: (r: GapRow) => r.reach },
   stability: { label: "Stability", values: [...[...STABILITY_LEVEL_IDS].reverse(), "none"] as string[], of: (r: GapRow) => r.level ?? "none" },

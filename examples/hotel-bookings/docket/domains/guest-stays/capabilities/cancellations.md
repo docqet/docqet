@@ -18,6 +18,8 @@ gaps:
     affects:
       - rule:late-cancellation-fee
     impact: damaging
+    likelihood: certain
+    reach: all
     description: >-
       The late-cancellation fee isn't charged yet, so every cancellation is
       refunded in full.

@@ -59,6 +59,7 @@ gaps:
     name: Team names can name clients
     impact: damaging
     likelihood: unlikely
+    reach: all
     description: >-
       Nothing checks that a team's name doesn't name one of its clients,
       though every client it supports sees it. Name teams for what they do.
@@ -67,6 +68,7 @@ gaps:
     name: Terms from the app's own catalog copy
     impact: damaging
     likelihood: unlikely
+    reach: all
     description: >-
       The terms on an invitation come from the app's own copy of the terms
       catalog. That matters once the terms catalog changes and the app's copy
@@ -75,6 +77,7 @@ gaps:
     name: Invitations don't expire
     impact: damaging
     likelihood: unlikely
+    reach: all
     description: >-
       An engineer invitation doesn't expire. That matters if an old invitation
       is accepted by someone who shouldn't join any more.

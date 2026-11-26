@@ -12,6 +12,8 @@ gaps:
   - id: no-payment-reminders
     name: No reminders for overdue invoices
     impact: inconvenient
+    likelihood: certain
+    reach: all
     description: >-
       Nothing reminds a company when an invoice is overdue. The bookkeeper
       checks the unpaid invoices each week and chases them by email.

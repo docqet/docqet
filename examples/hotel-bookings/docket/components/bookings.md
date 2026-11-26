@@ -12,6 +12,7 @@ gaps:
       - outcome:observability/beta/hears-of-errors
     impact: inconvenient
     likelihood: possible
+    reach: all
     description: >-
       `saveBooking` passes every database error up as it is, so a clash that
       only the exclusion constraint caught is logged as an unknown failure,

@@ -21,6 +21,7 @@ gaps:
       - outcome:security/alpha/access
     impact: damaging
     likelihood: possible
+    reach: all
     description: >-
       Anyone who can reach a server can send it states and read every project
       on it, so a server holding a client's real projects must only be

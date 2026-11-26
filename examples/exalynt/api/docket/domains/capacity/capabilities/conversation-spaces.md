@@ -46,6 +46,7 @@ gaps:
     name: Space membership changes never retried
     impact: damaging
     likelihood: unlikely
+    reach: all
     description: >-
       Nothing is retried. If the messaging provider fails to put someone in a
       space, such as an engineer who just joined a client's team, they're

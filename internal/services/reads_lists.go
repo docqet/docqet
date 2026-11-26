@@ -38,7 +38,7 @@ type ListedGap struct {
 // there. With impacts, it's only the gaps rated one of them.
 func (v *View) ListGaps(within []*combine.Capability, impacts []string, byRisk bool) []ListedGap {
 	rated := func(g *combine.Gap) bool {
-		return len(impacts) == 0 || (g.Impact != nil && slices.Contains(impacts, *g.Impact))
+		return len(impacts) == 0 || slices.Contains(impacts, g.Impact)
 	}
 	out := []ListedGap{}
 	if within == nil {

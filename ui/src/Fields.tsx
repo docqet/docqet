@@ -55,8 +55,7 @@ function DecisionAffects({ state, decision }: { state: DocketState; decision: De
   if (!affected.length) return null;
   const riskiest = affected
     .flatMap((a) => (a.kind === "gap" ? [a.gap.risk] : []))
-    .filter((r) => r.score !== null)
-    .sort((a, b) => b.score! - a.score!)[0];
+    .sort((a, b) => b.score - a.score)[0];
   return (
     <div className="gap-affects decision-affects">
       <span className="gap-affects-label">Affects</span>

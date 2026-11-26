@@ -12,11 +12,10 @@ import (
 var ImpactSteps = map[string]float64{"negligible": 1, "inconvenient": 2, "blocking": 3, "damaging": 4}
 
 // LikelihoodFactors is each likelihood's factor: each step down takes off a
-// quarter. Left out, a gap is certain.
+// quarter.
 var LikelihoodFactors = map[string]float64{"certain": 1, "expected": 0.75, "possible": 0.5, "unlikely": 0.25}
 
-// ReachFactors is each reach's factor, as likelihood's. Left out, a gap
-// reaches all.
+// ReachFactors is each reach's factor, as likelihood's.
 var ReachFactors = map[string]float64{"all": 1, "most": 0.75, "some": 0.5, "few": 0.25}
 
 // ClaimFactors is how much more a gap weighs where it breaks a claim, by the
@@ -46,7 +45,7 @@ func Scale(raw float64) int {
 }
 
 // Verdict is whether leaving a gap open is acceptable, by the third of the
-// scale its risk falls in. It's "" with no risk.
+// scale its risk falls in.
 type Verdict string
 
 // The verdicts.
@@ -62,14 +61,12 @@ var Verdicts = []Verdict{Unacceptable, Tolerable, Acceptable}
 // VerdictFrom is the score each verdict starts at.
 var VerdictFrom = map[Verdict]int{Unacceptable: 67, Tolerable: 33, Acceptable: 0}
 
-// VerdictOf returns the verdict for a score, or "" for none.
-func VerdictOf(score *int) Verdict {
+// VerdictOf returns the verdict for a score.
+func VerdictOf(score int) Verdict {
 	switch {
-	case score == nil:
-		return ""
-	case *score >= VerdictFrom[Unacceptable]:
+	case score >= VerdictFrom[Unacceptable]:
 		return Unacceptable
-	case *score >= VerdictFrom[Tolerable]:
+	case score >= VerdictFrom[Tolerable]:
 		return Tolerable
 	}
 	return Acceptable
@@ -97,12 +94,12 @@ type Spread struct {
 }
 
 // Risk is what's at stake in leaving a gap open. Score is its highest score
-// on the capabilities it shows on, 0 on none, or nil with no impact rated.
+// on the capabilities it shows on, 0 on none.
 type Risk struct {
-	Impact     *string
+	Impact     string
 	Likelihood string
 	Reach      string
-	Score      *int
+	Score      int
 	Verdict    Verdict
 	// Claim is whether it breaks a claim on any capability it shows on.
 	Claim bool
@@ -110,23 +107,8 @@ type Risk struct {
 	// stable.
 	On           []RiskOn
 	Capabilities int
-	// Spread is how many capabilities have each score, highest first, and
-	// empty with no impact rated.
+	// Spread is how many capabilities have each score, highest first.
 	Spread []Spread
-}
-
-func likelihoodOf(g *combine.Gap) string {
-	if g.Likelihood == nil {
-		return "certain"
-	}
-	return *g.Likelihood
-}
-
-func reachOf(g *combine.Gap) string {
-	if g.Reach == nil {
-		return "all"
-	}
-	return *g.Reach
 }
 
 // scoreOn returns how a gap scores on one capability: its impact's step
@@ -135,15 +117,11 @@ func reachOf(g *combine.Gap) string {
 // claim it makes, affecting a rule the capability follows or an outcome its
 // level expects. A draft weighs nothing, and scores 0.
 func scoreOn(p *combine.Product, g *combine.Gap, c *combine.Capability) RiskOn {
-	impact := 0.0
-	if g.Impact != nil {
-		impact = ImpactSteps[*g.Impact]
-	}
 	on := RiskOn{
 		Capability:  c,
-		Impact:      impact,
-		Likelihood:  LikelihoodFactors[likelihoodOf(g)],
-		Reach:       ReachFactors[reachOf(g)],
+		Impact:      ImpactSteps[g.Impact],
+		Likelihood:  LikelihoodFactors[g.Likelihood],
+		Reach:       ReachFactors[g.Reach],
 		Weight:      RiskWeights[c.Stability],
 		ClaimFactor: 1,
 	}
@@ -207,23 +185,18 @@ func RiskOf(p *combine.Product, g *combine.Gap) Risk {
 	})
 	r := Risk{
 		Impact:       g.Impact,
-		Likelihood:   likelihoodOf(g),
-		Reach:        reachOf(g),
+		Likelihood:   g.Likelihood,
+		Reach:        g.Reach,
 		On:           on,
 		Capabilities: len(on),
 	}
 	for _, o := range on {
 		r.Claim = r.Claim || o.Claim
 	}
-	if g.Impact == nil {
-		return r
-	}
-	score := 0
 	if len(on) > 0 {
-		score = on[0].Score
+		r.Score = on[0].Score
 	}
-	r.Score = &score
-	r.Verdict = VerdictOf(&score)
+	r.Verdict = VerdictOf(r.Score)
 	for _, o := range on {
 		if n := len(r.Spread); n > 0 && r.Spread[n-1].Score == o.Score {
 			r.Spread[n-1].Capabilities++
@@ -235,25 +208,25 @@ func RiskOf(p *combine.Product, g *combine.Gap) Risk {
 }
 
 // Scored is one gap among several, with its risk, and where it scores
-// highest among the capabilities they're scored on, nil with none.
+// highest among the capabilities they're scored on, nil with none, where it
+// scores 0.
 type Scored struct {
 	Gap     *combine.Gap
 	Risk    Risk
 	On      *RiskOn
-	Score   *int
+	Score   int
 	Verdict Verdict
 }
 
 // Across is what's at stake across some gaps, as in a capability, feature,
 // domain, persona or component: each gap scored there, riskiest first, the
 // highest of those and its verdict, and how many fall in each verdict. Score
-// is nil with none rated.
+// is nil, and Verdict "", with no gaps.
 type Across struct {
 	Score   *int
 	Verdict Verdict
 	Items   []Scored
 	Counts  map[Verdict]int
-	Unrated int
 }
 
 // RiskAcross returns what's at stake across some gaps: each one's highest
@@ -276,49 +249,34 @@ func RiskAcross(p *combine.Product, gaps []*combine.Gap, within []*combine.Capab
 			}
 		}
 		s.Score = s.Risk.Score
-		if s.Score != nil && ids != nil {
-			score := 0
+		if ids != nil {
+			s.Score = 0
 			if s.On != nil {
-				score = s.On.Score
+				s.Score = s.On.Score
 			}
-			s.Score = &score
 		}
 		s.Verdict = VerdictOf(s.Score)
 		items = append(items, s)
 	}
-	slices.SortStableFunc(items, func(a, b Scored) int { return orUnrated(b.Score) - orUnrated(a.Score) })
+	slices.SortStableFunc(items, func(a, b Scored) int { return b.Score - a.Score })
 	a := Across{Items: items, Counts: map[Verdict]int{}}
 	for _, v := range Verdicts {
 		a.Counts[v] = 0
 	}
 	for _, s := range items {
-		if s.Score == nil {
-			a.Unrated++
-		} else {
-			a.Counts[s.Verdict]++
-		}
+		a.Counts[s.Verdict]++
 	}
 	if len(items) > 0 {
-		a.Score = items[0].Score
+		a.Score = &items[0].Score
+		a.Verdict = items[0].Verdict
 	}
-	a.Verdict = VerdictOf(a.Score)
 	return a
 }
 
-func orUnrated(score *int) int {
-	if score == nil {
-		return -1
-	}
-	return *score
-}
-
-// byRisk orders risks riskiest first: by score, none rated last, then by
-// spread, comparing each capability's score in turn, highest first. It's
-// for slices.SortStableFunc.
+// byRisk orders risks riskiest first: by score, then by spread, comparing
+// each capability's score in turn, highest first. It's for
+// slices.SortStableFunc.
 func byRisk(a, b Risk) int {
-	if a.Score == nil || b.Score == nil {
-		return boolInt(a.Score == nil) - boolInt(b.Score == nil)
-	}
 	for i := range max(len(a.On), len(b.On)) {
 		if d := scoreAt(b.On, i) - scoreAt(a.On, i); d != 0 {
 			return d
@@ -332,13 +290,6 @@ func scoreAt(on []RiskOn, i int) int {
 		return on[i].Score
 	}
 	return -1
-}
-
-func boolInt(b bool) int {
-	if b {
-		return 1
-	}
-	return 0
 }
 
 // InRiskOrder returns items in order of their risk, riskiest first, keeping

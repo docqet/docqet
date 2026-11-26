@@ -74,12 +74,13 @@ serves.
 
 ## What's at stake
 
-A gap says what's at stake with its `impact`, `likelihood` and `reach`. All
-three are rated as if people relied on the capability, never lowered by its
-level, since [risk](../../reporting/concepts/risk.md) weighs them by its
-level. So they aren't rated again when the capability is promoted. Readers
-order gaps by the risk worked out from them, and show a gap without an
-impact as not rated, after the rest.
+A gap says what's at stake with its `impact`, `likelihood` and `reach`.
+Every gap rates all three: none of them has a default, and a gap missing
+one is `invalid-frontmatter`. All three are rated as if people relied on the
+capability, never lowered by its level, since
+[risk](../../reporting/concepts/risk.md) weighs them by its level. So they
+aren't rated again when the capability is promoted. Readers order gaps by
+the risk worked out from them.
 
 All three ratings are judgement, in that software's circumstances, and none
 of them needs to be exact. Where in
@@ -126,7 +127,7 @@ Where the lines fall:
 
 ### Likelihood
 
-How likely it is to bite within the next year. Left out, it's `certain`:
+How likely it is to bite within the next year:
 
 | Likelihood | The test                                             |
 | ---------- | ---------------------------------------------------- |
@@ -145,7 +146,7 @@ the condition is. When torn between two, pick the higher.
 How many of the people the software serves it would reach, if it bit: the
 people its capabilities' [personas](persona.md)
 stand for, and whoever runs it, builds on it, or depends on what it
-produces. Left out, it's `all`:
+produces:
 
 | Reach  | The test                                           |
 | ------ | -------------------------------------------------- |
@@ -239,10 +240,12 @@ has:
 - **`name`**: what falls short, in a few words, such as
   `Calendar needs a mouse`.
 - **`description`**: a sentence or two.
-- **Optionally**, the outcomes and rules it `affects`, its `impact`, its
-  `likelihood` and its `reach`.
+- **`impact`**, **`likelihood`** and **`reach`**: what's at stake, as above.
+- **Optionally**, the outcomes and rules it `affects`.
 
-Room booking's calendar falls short of an outcome Beta expects:
+Room booking's calendar falls short of an outcome Beta expects. It's
+`certain`, since it's true today, and reaches `all`, since it's an
+accessibility duty the hotel has:
 
 ```yaml
 gaps:
@@ -251,13 +254,15 @@ gaps:
     affects:
       - outcome:usability/beta/everyone
     impact: blocking
+    likelihood: certain
+    reach: all
     description: >-
       The room calendar can't be used from the keyboard, so clerks need a
       mouse to pick dates.
 ```
 
 On [city tax](../../../../examples/hotel-billing/docket/domains/billing/capabilities/city-tax.md),
-a gap affects a rule:
+a gap affects a rule. It's happening now, and every clerk corrects it:
 
 ```yaml
 gaps:
@@ -266,6 +271,8 @@ gaps:
     affects:
       - rule:children-pay-no-city-tax
     impact: inconvenient
+    likelihood: certain
+    reach: all
     description: >-
       Guests' ages aren't recorded, so city tax is added for every guest on a
       stay, and clerks correct it by hand for children.

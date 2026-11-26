@@ -211,9 +211,9 @@ type Gap struct {
 	Project     string
 	Domain      string // a product gap's; a technical gap has none
 	Affects     []string
-	Impact      *string
-	Likelihood  *string
-	Reach       *string
+	Impact      string
+	Likelihood  string
+	Reach       string
 	Name        string
 	Description string
 	Places      []Place

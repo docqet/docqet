@@ -4100,10 +4100,6 @@ button.page-table-row:hover .page-table-name strong {
   --impact: var(--faint);
 }
 
-[data-impact="none"] {
-  --impact: var(--faint);
-}
-
 /*
  * A part of a gap's risk as a tag: its icon and its value, tinted with its
  * color, --tag, with slightly rounded corners. Impact is in its own color;
@@ -4227,12 +4223,6 @@ button.page-table-row:hover .page-table-name strong {
   padding-left: 6px;
   font-weight: 500;
   border-left: 1px solid color-mix(in srgb, var(--impact) 35%, transparent);
-}
-
-.impact-badge[data-impact="none"] {
-  font-weight: 500;
-  background: none;
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--impact) 45%, transparent);
 }
 
 /*

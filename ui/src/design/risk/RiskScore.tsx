@@ -28,9 +28,9 @@ export const VERDICT_NAMES: Record<Verdict, { name: string; means: string }> = {
   acceptable: { name: "Acceptable", means: "Fine to leave open." },
 };
 
-/* "2 unacceptable · 5 tolerable · 31 acceptable · 1 not rated", leaving out any with none. */
+/* "2 unacceptable · 5 tolerable · 31 acceptable", leaving out any with none. */
 export const verdictCounts = (risk: RiskAcross<unknown>) =>
-  [...VERDICTS.map((v) => [risk.counts[v], VERDICT_NAMES[v].name.toLowerCase()] as const), [risk.unrated, "not rated"] as const]
+  VERDICTS.map((v) => [risk.counts[v], VERDICT_NAMES[v].name.toLowerCase()] as const)
     .filter(([n]) => n)
     .map(([n, name]) => `${n} ${name}`)
     .join(" · ");
@@ -94,8 +94,8 @@ export function RiskScore<T extends Gap>({
   /* The exposure ring's diameter: 24, as maturity's on a card, by default. */
   size?: number;
 }) {
-  if (!risk.items.length) return null;
-  const name = risk.verdict ? VERDICT_NAMES[risk.verdict].name : "Not rated";
+  if (!risk.items.length || risk.score === null || risk.verdict === null) return null;
+  const name = VERDICT_NAMES[risk.verdict].name;
   if (exposure && exposure.percent !== null && exposure.band) {
     const text = exposureText(exposure.percent);
     return (
@@ -124,15 +124,15 @@ export function RiskScore<T extends Gap>({
     <DetailsPopover hoverOnly={inButton} title={<RiskDetails risk={risk} of={of} />}>
       <span
         className="risk-score"
-        data-verdict={risk.verdict ?? "none"}
+        data-verdict={risk.verdict}
         role="img"
-        aria-label={risk.score === null ? "Risk not rated" : `Risk ${risk.score}, ${name.toLowerCase()}`}
+        aria-label={`Risk ${risk.score}, ${name.toLowerCase()}`}
         tabIndex={inButton ? undefined : 0}
       >
         <RiskBars verdict={risk.verdict} size="small" />
         <span>
-          {risk.score === null ? "Not rated" : `Risk ${riskScore(risk.score)}`}
-          {verdict && risk.verdict ? ` · ${name}` : null}
+          {`Risk ${riskScore(risk.score)}`}
+          {verdict ? ` · ${name}` : null}
         </span>
       </span>
     </DetailsPopover>
@@ -147,8 +147,7 @@ export function RiskScore<T extends Gap>({
  * is worked out is on the gap itself.
  */
 function RiskDetails<T extends Gap>({ risk, of }: { risk: RiskAcross<T>; of: string }) {
-  const rated = risk.items.filter((i) => i.score !== null);
-  const riskiest = rated.slice(0, 3);
+  const riskiest = risk.items.slice(0, 3);
   const alone = risk.items.length === 1 ? risk.items[0] : null;
   return (
     <DetailsCard card width={320}>
@@ -158,9 +157,9 @@ function RiskDetails<T extends Gap>({ risk, of }: { risk: RiskAcross<T>; of: str
           <>
             <Box sx={{ mt: 1, display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: 1 }}>
               <Box className="risk-details-verdict" sx={{ fontSize: "1.12em", fontWeight: 700 }}>
-                {risk.verdict ? VERDICT_NAMES[risk.verdict].name : "Not rated"}
+                {VERDICT_NAMES[alone.verdict].name}
               </Box>
-              {risk.score !== null ? <Box sx={{ color: "text.secondary", fontVariantNumeric: "tabular-nums" }}>{risk.score} of 100</Box> : null}
+              <Box sx={{ color: "text.secondary", fontVariantNumeric: "tabular-nums" }}>{alone.score} of 100</Box>
             </Box>
             <Box sx={{ mt: 1, fontWeight: 600 }}>{plainText(alone.item.name)}</Box>
             {alone.on ? (
@@ -179,7 +178,7 @@ function RiskDetails<T extends Gap>({ risk, of }: { risk: RiskAcross<T>; of: str
                   {riskiest.map(({ item, score, verdict }) => (
                     <li key={item.id}>
                       <span className="risk-riskiest-name">{plainText(item.name)}</span>
-                      <span className="risk-on-score" data-verdict={verdict ?? "none"}>
+                      <span className="risk-on-score" data-verdict={verdict}>
                         {score}
                       </span>
                     </li>
@@ -275,8 +274,7 @@ function ExposureDetails<T extends Gap>({ risk, exposure, of }: { risk: RiskAcro
             a claim its level makes.
           </div>
           <div>
-            Its {n} {n === 1 ? "capability" : "capabilities"} then count by their level, GA most, as in maturity. Drafts don&rsquo;t count
-            {risk.unrated ? ", and gaps not rated add nothing" : ""}. Each quarter is a band: low, minor, moderate and high.
+            Its {n} {n === 1 ? "capability" : "capabilities"} then count by their level, GA most, as in maturity. Drafts don&rsquo;t count. Each quarter is a band: low, minor, moderate and high.
           </div>
         </DetailsWorkings>
       </div>
@@ -284,9 +282,9 @@ function ExposureDetails<T extends Gap>({ risk, exposure, of }: { risk: RiskAcro
   );
 }
 
-/* How many fall in each verdict, worst first, then those not rated, leaving out any with none. */
+/* How many fall in each verdict, worst first, leaving out any with none. */
 const spreadOf = (risk: RiskAcross<unknown>) =>
-  [...VERDICTS.map((v) => ({ key: v as string, n: risk.counts[v], name: VERDICT_NAMES[v].name.toLowerCase() })), { key: "none", n: risk.unrated, name: "not rated" }].filter((p) => p.n);
+  VERDICTS.map((v) => ({ key: v as string, n: risk.counts[v], name: VERDICT_NAMES[v].name.toLowerCase() })).filter((p) => p.n);
 
 /* A bar split by how many fall in each verdict, worst first, unlabeled: small beside a name, or `wide` across a popover. */
 export function RiskSpreadBar({ risk, wide = false }: { risk: RiskAcross<unknown>; wide?: boolean }) {
@@ -321,12 +319,12 @@ export function VerdictSpread({ risk }: { risk: RiskAcross<unknown> }) {
 /*
  * One gap's risk where it's shown: its bars and score, in its verdict's
  * color, opening how it's worked out on `on`, the capability it scores
- * highest on there. Unrated, a faint dash. Inside something clickable,
+ * highest on there. On none with a level, a faint dash. Inside something clickable,
  * `inButton` opens it on hover only.
  */
 export function GapRiskMark({ risk, on, inButton = false }: { risk: Risk; on: RiskOn | null; inButton?: boolean }) {
-  if (risk.impact === null || !on) return <span className="gap-risk-mark risk-score" data-verdict="none">–</span>;
-  const verdict = verdictOf(on.score)!;
+  if (!on) return <span className="gap-risk-mark risk-score" data-verdict="none">–</span>;
+  const verdict = verdictOf(on.score);
   return (
     <DetailsPopover
       hoverOnly={inButton}

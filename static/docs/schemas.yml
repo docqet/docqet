@@ -268,8 +268,8 @@ components:
       type: object
       description: >-
         A gap's score among some capabilities: where it scores highest there,
-        and that score and verdict, null where it doesn't show or has no
-        impact rated.
+        null where it doesn't show, and that score and verdict, 0 where it
+        doesn't show.
       required: [gap, capability, score, verdict]
       properties:
         gap:
@@ -281,29 +281,27 @@ components:
           example: room-booking
         score:
           type: integer
-          nullable: true
           example: 54
         verdict:
           type: string
-          nullable: true
-          enum: [unacceptable, tolerable, acceptable, null]
+          enum: [unacceptable, tolerable, acceptable]
           example: tolerable
 
     RiskSummary:
       type: object
       description: What's at stake across some gaps.
-      required: [score, verdict, counts, unrated, gaps]
+      required: [score, verdict, counts, gaps]
       properties:
         score:
           type: integer
           nullable: true
-          description: The highest score, null with none rated.
+          description: The highest score, null with no gaps.
           example: 54
         verdict:
           type: string
           nullable: true
           enum: [unacceptable, tolerable, acceptable, null]
-          description: The highest score's verdict, null with none rated.
+          description: The highest score's verdict, null with no gaps.
           example: tolerable
         counts:
           type: object
@@ -314,9 +312,6 @@ components:
             unacceptable: 0
             tolerable: 2
             acceptable: 1
-        unrated:
-          type: integer
-          description: How many gaps have no impact rated.
         gaps:
           type: array
           description: Each gap, riskiest first, with its score there.
@@ -979,16 +974,14 @@ components:
       type: object
       description: >-
         What's at stake in leaving a gap open, on every capability it shows
-        on. Score and verdict are null with no impact rated.
+        on. Score is 0 where it shows on none.
       required: [score, verdict, claim, capabilities, spread, "on"]
       properties:
         score:
           type: integer
-          nullable: true
         verdict:
           type: string
-          nullable: true
-          enum: [unacceptable, tolerable, acceptable, null]
+          enum: [unacceptable, tolerable, acceptable]
         claim:
           type: boolean
         capabilities:
@@ -1043,16 +1036,13 @@ components:
           $ref: "#/components/schemas/StringList"
         impact:
           type: string
-          nullable: true
-          enum: [negligible, inconvenient, blocking, damaging, null]
+          enum: [negligible, inconvenient, blocking, damaging]
         likelihood:
           type: string
-          nullable: true
-          enum: [certain, expected, possible, unlikely, null]
+          enum: [certain, expected, possible, unlikely]
         reach:
           type: string
-          nullable: true
-          enum: [all, most, some, few, null]
+          enum: [all, most, some, few]
         name:
           type: string
         description:

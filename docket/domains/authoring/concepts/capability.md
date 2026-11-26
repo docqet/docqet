@@ -154,6 +154,8 @@ gaps:
     affects:
       - outcome:usability/beta/everyone
     impact: blocking
+    likelihood: certain
+    reach: all
     description: >-
       The room calendar can't be used from the keyboard, so clerks need a
       mouse to pick dates.

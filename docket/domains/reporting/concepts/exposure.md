@@ -50,8 +50,7 @@ a capability's exposure = its riskiest gap's raw score ÷ (4 × level weight × 
 exposure                = Σ (level weight × each capability's exposure) ÷ Σ level weight
 ```
 
-A capability with no gaps has none. Drafts don't count, and gaps with no
-impact rated add nothing.
+A capability with no gaps has none. Drafts don't count.
 
 - **A feature's** comes from its capabilities, each counted once, at its level
   in short: the lowest across the domains that build it.

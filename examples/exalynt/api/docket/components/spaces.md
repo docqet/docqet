@@ -13,6 +13,7 @@ gaps:
     name: User sync doesn't remove people from spaces
     impact: damaging
     likelihood: unlikely
+    reach: all
     description: >-
       `api sync users` has no hook, so a ban or deletion it applies doesn't
       take the user out of the provider's spaces. That matters when it bans or

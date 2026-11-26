@@ -85,9 +85,19 @@ const evidence = (e: api.EvidenceResource): Evidence => ({ implements: e.impleme
 
 /* Placeholders for the figures, filled in once every doc is there to point at. */
 const noExposure: Exposure = { percent: null, capabilities: 0, band: null, unacceptable: false };
-const noAcross = (): RiskAcross<Gap> => ({ score: null, verdict: null, items: [], counts: { unacceptable: 0, tolerable: 0, acceptable: 0 }, unrated: 0 });
+const noAcross = (): RiskAcross<Gap> => ({ score: null, verdict: null, items: [], counts: { unacceptable: 0, tolerable: 0, acceptable: 0 } });
 const noReadiness = (): Readiness => ({ percent: null, band: null, maturity: null, exposure: noExposure, levels: [], gaps: noAcross(), ready: [], notReady: [], notStarted: [] });
-const noRisk: Risk = { impact: null, likelihood: "certain", reach: "all", score: null, verdict: null, claim: false, on: [], capabilities: 0, spread: [] };
+const noRisk = (g: api.GapResource): Risk => ({
+  impact: g.impact as Risk["impact"],
+  likelihood: g.likelihood as Risk["likelihood"],
+  reach: g.reach as Risk["reach"],
+  score: 0,
+  verdict: "acceptable",
+  claim: false,
+  on: [],
+  capabilities: 0,
+  spread: [],
+});
 
 /* The product showing, from its resources. */
 export function modelOf(r: api.ProductResources, showing: api.Showing): DocketState {
@@ -176,7 +186,7 @@ export function modelOf(r: api.ProductResources, showing: api.Showing): DocketSt
         name: g.name,
         description: g.description,
         places: g.places,
-        risk: noRisk,
+        risk: noRisk(g),
         affected: [],
         decisions: [],
       }),
@@ -266,10 +276,10 @@ function converters(state: DocketState) {
   };
   const risk = (g: api.GapResource): Risk => ({
     impact: g.impact as Risk["impact"],
-    likelihood: (g.likelihood ?? "certain") as Risk["likelihood"],
-    reach: (g.reach ?? "all") as Risk["reach"],
+    likelihood: g.likelihood as Risk["likelihood"],
+    reach: g.reach as Risk["reach"],
     score: g.risk.score,
-    verdict: g.risk.verdict as Verdict | null,
+    verdict: g.risk.verdict as Verdict,
     claim: g.risk.claim,
     on: g.risk.on.flatMap((o) => riskOn(o) ?? []),
     capabilities: g.risk.capabilities,
@@ -282,10 +292,9 @@ function converters(state: DocketState) {
       const item = gaps.get(s.gap);
       if (!item) return [];
       const whole = item.risk;
-      return [{ item, risk: whole, on: whole.on.find((o) => o.capability.id === s.capability) ?? null, score: s.score, verdict: s.verdict as Verdict | null }];
+      return [{ item, risk: whole, on: whole.on.find((o) => o.capability.id === s.capability) ?? null, score: s.score, verdict: s.verdict as Verdict }];
     }),
     counts: { unacceptable: a.counts.unacceptable ?? 0, tolerable: a.counts.tolerable ?? 0, acceptable: a.counts.acceptable ?? 0 },
-    unrated: a.unrated,
   });
   const exposure = (e: api.ExposureResource): Exposure => ({
     percent: e.percent,
@@ -380,7 +389,7 @@ export function useStatusFor(state: DocketState, forRef: string | null, initiati
 }
 
 /* A gap among the capabilities a for names: what it puts at stake there, and where it scores highest. */
-export type GapWithin = { gap: Gap; score: number | null; verdict: Verdict | null; on: RiskOn | null };
+export type GapWithin = { gap: Gap; score: number; verdict: Verdict; on: RiskOn | null };
 
 /*
  * The gaps that show on the capabilities a for names, riskiest there first,
@@ -400,9 +409,9 @@ export function useGapsFor(state: DocketState, forRef: string | null): GapWithin
       setGaps(
         list.flatMap((r) => {
           const gap = byId.get(r.id);
-          if (!gap) return [];
           const w = r.within;
-          return [{ gap, score: w?.score ?? null, verdict: (w?.verdict ?? null) as Verdict | null, on: gap.risk.on.find((o) => o.capability.id === w?.capability) ?? null }];
+          if (!gap || !w) return [];
+          return [{ gap, score: w.score, verdict: w.verdict as Verdict, on: gap.risk.on.find((o) => o.capability.id === w.capability) ?? null }];
         }),
       );
     });
@@ -421,10 +430,10 @@ export function useGapsFor(state: DocketState, forRef: string | null): GapWithin
  * capabilities are built on.
  */
 export function summed(items: RiskAcross<Gap>["items"]): RiskAcross<Gap> {
-  const top = items.find((i) => i.score !== null);
+  const top = items[0];
   const counts = { unacceptable: 0, tolerable: 0, acceptable: 0 };
-  for (const i of items) if (i.verdict) counts[i.verdict]++;
-  return { score: top?.score ?? null, verdict: top?.verdict ?? null, items, counts, unrated: items.filter((i) => i.score === null).length };
+  for (const i of items) counts[i.verdict]++;
+  return { score: top?.score ?? null, verdict: top?.verdict ?? null, items, counts };
 }
 
 /* The gaps of a figure that keep passes, scored as the figure scored them. */
@@ -435,5 +444,5 @@ export const gapsAcross = (gaps: Gap[]): RiskAcross<Gap> =>
   summed(
     gaps
       .map((g) => ({ item: g, risk: g.risk, on: g.risk.on[0] ?? null, score: g.risk.score, verdict: g.risk.verdict }))
-      .sort((a, b) => (b.score ?? -1) - (a.score ?? -1)),
+      .sort((a, b) => b.score - a.score),
   );

@@ -10,12 +10,11 @@ import type { Rubric } from "./state";
 
 export type MaturityResource = { percent: number; band: string } | null;
 export type ExposureResource = { percent: number | null; capabilities: number; band: string | null; unacceptable: boolean };
-export type ScoredGapResource = { gap: string; capability: string | null; score: number | null; verdict: string | null };
+export type ScoredGapResource = { gap: string; capability: string | null; score: number; verdict: string };
 export type RiskSummaryResource = {
   score: number | null;
   verdict: string | null;
   counts: Record<string, number>;
-  unrated: number;
   gaps: ScoredGapResource[];
 };
 export type DecisionResource = { topic: string | null; question: string; affects: string[] };
@@ -148,8 +147,8 @@ export type RiskOnResource = {
   score: number;
 };
 export type RiskResource = {
-  score: number | null;
-  verdict: string | null;
+  score: number;
+  verdict: string;
   claim: boolean;
   capabilities: number;
   spread: { score: number; capabilities: number }[];
@@ -162,9 +161,9 @@ export type GapResource = {
   project: string;
   domain: string;
   affects: string[];
-  impact: string | null;
-  likelihood: string | null;
-  reach: string | null;
+  impact: string;
+  likelihood: string;
+  reach: string;
   name: string;
   description: string;
   places: PlaceResource[];

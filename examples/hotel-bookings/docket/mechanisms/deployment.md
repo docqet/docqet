@@ -15,6 +15,7 @@ gaps:
       - outcome:reliability/ga/recovery
     impact: damaging
     likelihood: possible
+    reach: all
     description: >-
       Migrations have no down step, so undoing a release that changed the
       schema means restoring the database from the night before.
