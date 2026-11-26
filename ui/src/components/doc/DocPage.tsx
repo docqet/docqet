@@ -1,4 +1,7 @@
 import { Fragment, useEffect, useRef, type ReactNode } from "react";
+import Box from "@mui/material/Box";
+import type { Theme } from "@mui/material/styles";
+import type { SystemStyleObject } from "@mui/system";
 import WarningAmberRoundedIcon from "@mui/icons-material/WarningAmberRounded";
 import { ConceptIcon } from "../Concepts";
 import { StabilityMark } from "../stability/StabilityMark";
@@ -27,7 +30,6 @@ import {
 import Tooltip from "@mui/material/Tooltip";
 import { docHref, navigate, withParam, type Route } from "../../routes";
 import { PageHeader, View } from "../shell/layout";
-import "./page.css";
 
 export type DocGo = {
   state: DocketState;
@@ -47,6 +49,84 @@ export const KIND_NAMES: Record<Pick["kind"] | TechnicalKind | "initiative", { o
 
 /* A tab's address on this page. */
 export const tabHref = (tab: string) => withParam("tab", tab);
+
+/*
+ * The looks doc pages share. A card holds rows, such as a domain's concepts
+ * or what implements something; in a Section it sits flush with the
+ * section's width.
+ */
+export const cardSx: SystemStyleObject<Theme> = {
+  px: 2.25,
+  py: 1.75,
+  bgcolor: "background.paper",
+  border: 1,
+  borderColor: "divider",
+  borderRadius: "12px",
+};
+
+/* A line of prose in a section, such as what a level means or that nothing serves them yet, with its links in the accent. */
+export const lineSx: SystemStyleObject<Theme> = {
+  maxWidth: 760,
+  fontSize: 14,
+  lineHeight: 1.55,
+  color: "text.secondary",
+  "& a": { color: "primary.main", textDecoration: "none" },
+};
+
+/* A line apiece: a domain's or feature's name, then its level, maturity or readiness. */
+export const levelsSx: SystemStyleObject<Theme> = {
+  display: "flex",
+  flexDirection: "column",
+  gap: "2px",
+  maxWidth: 640,
+  mb: 1.5,
+  "& > li": {
+    display: "grid",
+    gridTemplateColumns: "minmax(0, 1fr) auto auto",
+    alignItems: "center",
+    gap: 1.5,
+    py: 1,
+    fontSize: 13.5,
+    borderBottom: 1,
+    borderColor: "divider",
+  },
+  "& > li > a": { fontWeight: 600 },
+};
+
+/* A small outlined tag, such as a rubric quality's name or a kind of software. */
+export const tagSx: SystemStyleObject<Theme> = {
+  px: "7px",
+  fontSize: 11,
+  fontWeight: 600,
+  lineHeight: "18px",
+  color: "text.secondary",
+  border: 1,
+  borderColor: "surface.borderStrong",
+  borderRadius: 999,
+};
+
+/* What's faint beside what matters, such as a separator in a trail or "None" in a table. */
+export const faintSx: SystemStyleObject<Theme> = { color: "text.disabled" };
+
+/*
+ * Something named with its icon, as in a trail: a link to its page, given
+ * `href`, lit in the accent on hover. Icons come at 14px, whatever size
+ * they're made at.
+ */
+export function Crumb({ href, icon, children }: { href?: string; icon?: ReactNode; children: ReactNode }) {
+  const sx: SystemStyleObject<Theme> = { display: "inline-flex", alignItems: "center", gap: 0.5, "& svg": { fontSize: "14px !important" } };
+  return href ? (
+    <Box component="a" href={href} sx={{ ...sx, color: "inherit", textDecoration: "none", "&:hover": { color: "primary.main" } }}>
+      {icon}
+      {children}
+    </Box>
+  ) : (
+    <Box component="span" sx={sx}>
+      {icon}
+      {children}
+    </Box>
+  );
+}
 
 /*
  * A doc's page: its view, which lands at its top when it opens and whenever
@@ -105,13 +185,12 @@ export function DocHeader({
           trail || project || initiatives.length ? (
             <>
               {trail}
-              {trail && project ? <span className="faint">·</span> : null}
-              {project ? (
-                <span className="page-crumb">
-                  <ProjectIcon size={14} />
-                  {project}
-                </span>
+              {trail && project ? (
+                <Box component="span" sx={faintSx}>
+                  ·
+                </Box>
               ) : null}
+              {project ? <Crumb icon={<ProjectIcon size={14} />}>{project}</Crumb> : null}
               <InitiativeTags state={state} ids={initiatives} />
             </>
           ) : undefined
@@ -120,7 +199,11 @@ export function DocHeader({
           <>
             {KIND_NAMES[kind].icon}
             <Term id={kind}>{KIND_NAMES[kind].one}</Term>
-            {kindNote ? <span className="page-kind-note">· {kindNote}</span> : null}
+            {kindNote ? (
+              <Box component="span" sx={{ fontWeight: 500, color: "text.disabled" }}>
+                · {kindNote}
+              </Box>
+            ) : null}
           </>
         }
         title={title}
@@ -128,11 +211,31 @@ export function DocHeader({
         lede={single && doc.description ? doc.description : undefined}
         stats={stats}
       />
+      {/* A contradiction, as a callout of its own, under the header and over the tabs. */}
       {problems.map((p) => (
-        <p key={p.message} className="explore-problem page-problem">
-          <WarningAmberRoundedIcon sx={{ fontSize: 17, flex: "none" }} />
+        <Box
+          component="p"
+          key={p.message}
+          sx={{
+            display: "flex",
+            alignItems: "flex-start",
+            gap: 1,
+            mt: -1,
+            mb: 2.5,
+            px: 1.5,
+            py: 1.25,
+            fontSize: 13,
+            lineHeight: 1.45,
+            color: "warning.main",
+            bgcolor: (t) => `color-mix(in srgb, ${t.vars.palette.warning.main} 9%, transparent)`,
+            border: 1,
+            borderColor: (t) => `color-mix(in srgb, ${t.vars.palette.warning.main} 30%, transparent)`,
+            borderRadius: "8px",
+          }}
+        >
+          <WarningAmberRoundedIcon sx={{ fontSize: 17, flex: "none", mt: "1px" }} />
           {p.message}
-        </p>
+        </Box>
       ))}
     </>
   );
@@ -141,10 +244,9 @@ export function DocHeader({
 /* A domain in a trail, as a link to its page. */
 export function DomainCrumb({ state, id }: { state: DocketState; id: string }) {
   return (
-    <a className="page-crumb" href={docHref("domain", id)}>
-      <DomainIcon size={14} />
+    <Crumb href={docHref("domain", id)} icon={<DomainIcon size={14} />}>
       {domainName(state, id)}
-    </a>
+    </Crumb>
   );
 }
 
@@ -155,7 +257,11 @@ export function DomainTrail({ state, domains }: { state: DocketState; domains: s
     <>
       {domains.map((id, i) => (
         <Fragment key={id}>
-          {i ? <span className="faint">+</span> : null}
+          {i ? (
+            <Box component="span" sx={faintSx}>
+              +
+            </Box>
+          ) : null}
           <DomainCrumb state={state} id={id} />
         </Fragment>
       ))}
@@ -166,13 +272,12 @@ export function DomainTrail({ state, domains }: { state: DocketState; domains: s
 /* A capability as a link to its page, with its level. */
 export function CapabilityLink({ capability, tab }: { capability: Capability; tab?: string }) {
   return (
-    <span className="page-crumb">
-      <a className="page-crumb" href={docHref("capability", capability.id, tab)}>
-        {NAMES.capability.icon}
+    <Crumb>
+      <Crumb href={docHref("capability", capability.id, tab)} icon={NAMES.capability.icon}>
         {capability.name}
-      </a>
+      </Crumb>
       <CapabilityStability level={capability.stability} name={capability.name} focusable={false} />
-    </span>
+    </Crumb>
   );
 }
 
@@ -188,19 +293,32 @@ export function LevelName({ level, name, named = false }: { level: CapabilityLev
 
 export const MAX_AVATARS = 6;
 
+/* Personas' pictures, overlapping, each ringed in the card's color, and how many more past the first few. */
 export function Avatars({ personas }: { personas: Persona[] }) {
   const more = personas.length - MAX_AVATARS;
   return (
-    <span className="page-avatars">
-      {personas.slice(0, MAX_AVATARS).map((p) => (
+    <Box component="span" sx={{ display: "inline-flex" }}>
+      {personas.slice(0, MAX_AVATARS).map((p, i) => (
         <Tooltip key={p.id} title={personaNameAndRole(p).name}>
-          <span>
+          <Box
+            component="span"
+            sx={{
+              display: "inline-flex",
+              ml: i ? "-6px" : 0,
+              borderRadius: "50%",
+              boxShadow: (t) => `0 0 0 2px ${t.vars.palette.background.paper}`,
+            }}
+          >
             <PersonaAvatar persona={p} size={26} />
-          </span>
+          </Box>
         </Tooltip>
       ))}
-      {more > 0 ? <span className="page-avatars-more">+{more}</span> : null}
-    </span>
+      {more > 0 ? (
+        <Box component="span" sx={{ alignSelf: "center", ml: 0.75, fontSize: 12, fontWeight: 600, color: "text.secondary" }}>
+          +{more}
+        </Box>
+      ) : null}
+    </Box>
   );
 }
 

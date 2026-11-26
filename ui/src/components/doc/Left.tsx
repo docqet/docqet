@@ -18,9 +18,10 @@ import { someOf } from "../../model";
 import { GapRows, LeftFigure } from "../risk/GapRows";
 import { docHref } from "../../routes";
 import { Section, Stat } from "../shell/layout";
+import Box from "@mui/material/Box";
 import { type DocGo } from "./DocPage";
 import { tabHref } from "./DocPage";
-import { CapabilityLink } from "./DocPage";
+import { CapabilityLink, Crumb, cardSx } from "./DocPage";
 
 /* Something that holds open decisions, with what it is. */
 export type Holder = { kind: "domain" | "feature" | "capability" | "mechanism" | "component"; doc: Doc };
@@ -76,10 +77,9 @@ export function HolderLink({ holder }: { holder: Holder }) {
   if (kind === "mechanism" || kind === "component") return <TechnicalLink doc={doc as TechnicalDoc} />;
   if (kind === "capability") return <CapabilityLink capability={doc as Capability} tab="left" />;
   return (
-    <a className="page-crumb" href={docHref(kind, doc.id)}>
-      {kind === "domain" ? <DomainIcon size={14} /> : NAMES[kind].icon}
+    <Crumb href={docHref(kind, doc.id)} icon={kind === "domain" ? <DomainIcon size={14} /> : NAMES[kind].icon}>
       {doc.name}
-    </a>
+    </Crumb>
   );
 }
 
@@ -102,23 +102,41 @@ export function OpenDecisions({ doc, ...go }: DocGo & { doc: Doc }) {
  */
 export function LeftTab({ left, here, nothing, ...go }: DocGo & { left: LeftHere; here?: Doc; nothing?: string }) {
   const { state } = go;
-  if (!leftTotal(left)) return <p className="page-nothing-left">{nothing ?? "Nothing left: no open decisions or gaps are written down."}</p>;
+  if (!leftTotal(left))
+    return (
+      <Box
+        component="p"
+        sx={{
+          px: 2.5,
+          py: 2.25,
+          fontSize: 14,
+          color: "success.main",
+          bgcolor: (t) => `color-mix(in srgb, ${t.vars.palette.success.main} 7%, transparent)`,
+          border: 1,
+          borderColor: (t) => `color-mix(in srgb, ${t.vars.palette.success.main} 22%, transparent)`,
+          borderRadius: "10px",
+        }}
+      >
+        {nothing ?? "Nothing left: no open decisions or gaps are written down."}
+      </Box>
+    );
   return (
     <>
       {left.decisions ? (
         <Section title={<LeftLabel kind="decision" size={16} />} count={left.decisions} note="Questions not settled yet: each answer changes what's intended.">
-          <div className="page-card">
+          <Box sx={cardSx}>
+            {/* Each one's open decisions under what they're on, a group apiece. */}
             {left.holders.map((h) => (
-              <div key={`${h.kind}:${h.doc.id}`} className="page-subject-group">
+              <Box key={`${h.kind}:${h.doc.id}`} sx={{ "& + &": { mt: 1.75, pt: 1.5, borderTop: 1, borderColor: "divider" } }}>
                 {h.doc !== here ? (
-                  <div className="page-subject">
+                  <Box sx={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "4px 8px", mb: 0.5, fontSize: 13, fontWeight: 550 }}>
                     <HolderLink holder={h} />
-                  </div>
+                  </Box>
                 ) : null}
                 <OpenDecisions {...go} doc={h.doc} />
-              </div>
+              </Box>
             ))}
-          </div>
+          </Box>
         </Section>
       ) : null}
       {left.gaps.length ? (

@@ -1,3 +1,10 @@
+import Box from "@mui/material/Box";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
 import RuleRoundedIcon from "@mui/icons-material/RuleRounded";
 import { Excerpt } from "../markdown/Markdown";
 import { Term } from "../term/Term";
@@ -6,7 +13,8 @@ import { RULE_STANDING_LABELS, plural } from "../names";
 import { type Capability, type DocketState, type Rule } from "../../state";
 import { docHref } from "../../routes";
 import { Empty } from "../shell/layout";
-import { CapabilityTable } from "./CapabilityTable";
+import { CapabilityTable, cellSubSx, tableCardSx, wideOnly } from "./CapabilityTable";
+import { faintSx, lineSx } from "./DocPage";
 
 /* Where something stands: each of its capabilities, with its stability beside what's left on it. Past `limit`, a link to them all. */
 export function StandingSummary({
@@ -27,9 +35,9 @@ export function StandingSummary({
     <>
       <CapabilityTable state={state} capabilities={shown} domain={domain} technical={false} compact />
       {capabilities.length > shown.length ? (
-        <p className="page-line">
+        <Box component="p" sx={lineSx}>
           <a href={all}>See all {capabilities.length} capabilities</a>
-        </p>
+        </Box>
       ) : null}
     </>
   );
@@ -45,7 +53,7 @@ export const placesOf = (r: Rule) => r.evidence.verifies.length + r.evidence.imp
  * under it. With `capability`, whether that capability holds to it, the ones
  * a gap says it doesn't first; otherwise how many capabilities follow it and
  * how many places are its evidence. Evidence is optional, so none is no
- * warning.
+ * warning. On a phone, the evidence is left out: each rule's page has it.
  */
 export function RuleTable({ rules, capability }: { rules: Rule[]; capability?: Capability }) {
   if (!rules.length) return <Empty>None written down yet.</Empty>;
@@ -53,31 +61,31 @@ export function RuleTable({ rules, capability }: { rules: Rule[]; capability?: C
     ? [...rules].sort((a, b) => Number(capability.ruleStandings[b.id] === "gap") - Number(capability.ruleStandings[a.id] === "gap"))
     : rules;
   return (
-    <div className="page-table-scroll">
-      <table className="view-table page-rule-table">
-        <thead>
-          <tr>
-            <th>
+    <TableContainer sx={tableCardSx}>
+      <Table sx={{ "& .MuiTableBody-root .MuiTableCell-root": { verticalAlign: "top" } }}>
+        <TableHead>
+          <TableRow>
+            <TableCell>
               <Term id="rule" hoverOnly>
                 Rule
               </Term>
-            </th>
-            {capability ? <th>Standing</th> : <th className="num">Followed by</th>}
-            <th className="num">
+            </TableCell>
+            {capability ? <TableCell>Standing</TableCell> : <TableCell align="right">Followed by</TableCell>}
+            <TableCell align="right" sx={wideOnly}>
               <Term id="evidence" hoverOnly>
                 Evidence
               </Term>
-            </th>
-          </tr>
-        </thead>
-        <tbody>
+            </TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
           {sorted.map((r) => {
             const standing = capability ? capability.ruleStandings[r.id] : null;
             const places = placesOf(r);
             return (
-              <tr key={r.id}>
-                <td>
-                  <span className="page-rule-cell">
+              <TableRow key={r.id}>
+                <TableCell sx={{ minWidth: { xs: 160, sm: 280 } }}>
+                  <Box component="span" sx={{ display: "flex", gap: 1 }}>
                     {standing ? (
                       <StandingMark standing={standing} label={RULE_STANDING_LABELS[standing]} />
                     ) : (
@@ -85,23 +93,45 @@ export function RuleTable({ rules, capability }: { rules: Rule[]; capability?: C
                     )}
                     <span>
                       <a href={docHref("rule", r.id)}>{r.name}</a>
-                      <Excerpt text={r.why} lines={2} className="page-cell-sub" />
+                      <Box component="span" sx={cellSubSx}>
+                        <Excerpt text={r.why} lines={2} />
+                      </Box>
                     </span>
-                  </span>
-                </td>
+                  </Box>
+                </TableCell>
                 {standing ? (
-                  <td className="page-standing-cell" data-tone={standing === "gap" ? "warn" : undefined}>
+                  <TableCell
+                    sx={{
+                      whiteSpace: { sm: "nowrap" },
+                      color: standing === "gap" ? "warning.main" : "text.secondary",
+                      fontWeight: standing === "gap" ? 600 : undefined,
+                    }}
+                  >
                     {STANDING_SHORT[standing]}
-                  </td>
+                  </TableCell>
                 ) : (
-                  <td className="num">{r.capabilities.length || <span className="faint">None</span>}</td>
+                  <TableCell align="right">
+                    {r.capabilities.length || (
+                      <Box component="span" sx={faintSx}>
+                        None
+                      </Box>
+                    )}
+                  </TableCell>
                 )}
-                <td className="num">{places ? plural(places, "place", "places") : <span className="faint">None</span>}</td>
-              </tr>
+                <TableCell align="right" sx={wideOnly}>
+                  {places ? (
+                    plural(places, "place", "places")
+                  ) : (
+                    <Box component="span" sx={faintSx}>
+                      None
+                    </Box>
+                  )}
+                </TableCell>
+              </TableRow>
             );
           })}
-        </tbody>
-      </table>
-    </div>
+        </TableBody>
+      </Table>
+    </TableContainer>
   );
 }

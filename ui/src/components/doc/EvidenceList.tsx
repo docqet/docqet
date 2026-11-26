@@ -1,26 +1,31 @@
 import type { ReactNode } from "react";
+import Box from "@mui/material/Box";
 import Tooltip from "@mui/material/Tooltip";
 import { projectName, type DocketState, type EvidencePlace } from "../../state";
 
-/* Places in the code: the line below each annotation, as written, and its file and line. */
+/* Places in the code: the line below each annotation, as written, on one line cut short, and its file and line. */
 export function EvidenceList({ state, places, icon }: { state: DocketState; places: EvidencePlace[]; icon: ReactNode }) {
   const several = state.projects.length > 1;
   return (
-    <ul className="dp-places">
+    <Box component="ul" sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
       {places.map((e) => (
-        <li key={`${e.project}:${e.file}:${e.line}`}>
-          <span className="dp-place-icon">{icon}</span>
-          <span className="dp-place">
+        <Box component="li" key={`${e.project}:${e.file}:${e.line}`} sx={{ display: "flex", alignItems: "flex-start", gap: 1 }}>
+          <Box component="span" sx={{ display: "inline-flex", flex: "none", mt: "3px", color: "text.disabled" }}>
+            {icon}
+          </Box>
+          <Box component="span" sx={{ display: "flex", flexDirection: "column", gap: "2px", minWidth: 0 }}>
             <Tooltip title={e.text}>
-              <code>{e.text}</code>
+              <Box component="code" sx={{ overflow: "hidden", fontSize: 12.5, whiteSpace: "nowrap", textOverflow: "ellipsis" }}>
+                {e.text}
+              </Box>
             </Tooltip>
-            <span className="dp-place-where">
+            <Box component="span" sx={{ fontFamily: "fontFamilyMono", fontSize: 11.5, color: "text.disabled" }}>
               {e.file}:{e.line}
               {several && e.project ? ` · ${projectName(state, e.project)}` : ""}
-            </span>
-          </span>
-        </li>
+            </Box>
+          </Box>
+        </Box>
       ))}
-    </ul>
+    </Box>
   );
 }

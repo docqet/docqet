@@ -1,3 +1,4 @@
+import Box from "@mui/material/Box";
 import { StabilityRubric } from "./components/Rubric";
 import { ConceptChips } from "../../components/Concepts";
 import { MORE_ABOUT } from "../../components/markdown/Markdown";
@@ -32,7 +33,7 @@ import { DecidedTab } from "../../components/doc/DecidedTab";
 import { RuleTable } from "../../components/doc/RuleTable";
 import { EvidencePair } from "../../components/doc/EvidencePair";
 import { Missing } from "../../components/doc/Missing";
-import { docGo } from "../../components/doc/DocPage";
+import { docGo, cardSx, Crumb, faintSx, levelsSx, lineSx } from "../../components/doc/DocPage";
 
 /* A capability's page, or what shows when it isn't in the projects showing. */
 export default function CapabilityView({ state, id, route }: { state: DocketState; id: string; route: Route }) {
@@ -96,18 +97,27 @@ export function CapabilityPage({ capability, route, ...go }: DocPageProps & { ca
         trail={
           <>
             <DomainTrail state={state} domains={docDomains(capability)} />
-            <span className="faint">›</span>
+            <Box component="span" sx={faintSx}>
+              ›
+            </Box>
             {feature ? (
-              <a className="page-crumb" href={docHref("feature", feature.id)}>
-                {NAMES.feature.icon}
+              <Crumb href={docHref("feature", feature.id)} icon={NAMES.feature.icon}>
                 {feature.name}
-              </a>
+              </Crumb>
             ) : (
               <span>Not in a feature</span>
             )}
           </>
         }
-        marks={level ? <StabilityMark level={level} feature={capability.name} size="extra-long" /> : <span className="page-draft">Draft</span>}
+        marks={
+          level ? (
+            <StabilityMark level={level} feature={capability.name} size="extra-long" />
+          ) : (
+            <Box component="span" sx={{ fontSize: 14, fontWeight: 600, color: "text.secondary" }}>
+              Draft
+            </Box>
+          )
+        }
         stats={
           <>
             <Stat
@@ -175,17 +185,21 @@ export function CapabilityPage({ capability, route, ...go }: DocPageProps & { ca
           <Sources {...go} kind="capability" doc={capability} title="What it does" />
           <Section title="Its level">
             {capability.levels.length > 1 ? (
-              <ul className="page-levels">
+              <Box component="ul" sx={levelsSx}>
                 {capability.levels.map((l) => (
                   <li key={`${l.project}:${l.domain}`}>
                     <DomainCrumb state={state} id={l.domain} />
                     <LevelName level={l.level} name={capability.name} named />
-                    {state.projects.length > 1 ? <span className="faint">{projectName(state, l.project)}</span> : null}
+                    {state.projects.length > 1 ? (
+                      <Box component="span" sx={faintSx}>
+                        {projectName(state, l.project)}
+                      </Box>
+                    ) : null}
                   </li>
                 ))}
-              </ul>
+              </Box>
             ) : null}
-            <p className="page-line">
+            <Box component="p" sx={lineSx}>
               {level ? `${STABILITY[level].name}: ${STABILITY[level].stability}.` : "A draft: declared, and not started."}{" "}
               {next ? (
                 <>
@@ -195,18 +209,18 @@ export function CapabilityPage({ capability, route, ...go }: DocPageProps & { ca
               ) : (
                 "GA is the top level."
               )}
-            </p>
+            </Box>
           </Section>
           <TopGaps state={state} left={left} here={capability} />
           {!left.gaps.length ? (
             <Section title="What's left" term="gap">
-              <p className="page-line">
+              <Box component="p" sx={lineSx}>
                 {left.decisions ? (
                   <a href={tabHref("left")}>{plural(left.decisions, "open decision", "open decisions")}</a>
                 ) : (
                   "Nothing left: no open decisions or gaps are written down."
                 )}
-              </p>
+              </Box>
             </Section>
           ) : null}
           {personas.length ? (
@@ -245,9 +259,9 @@ export function CapabilityPage({ capability, route, ...go }: DocPageProps & { ca
         <>
           {on.length ? (
             <Section title="Built on" term="component" count={on.length} note="The mechanisms that apply to it and the components that list it.">
-              <div className="page-card">
+              <Box sx={cardSx}>
                 <TechnicalRows state={state} docs={on} />
-              </div>
+              </Box>
             </Section>
           ) : null}
           <Section

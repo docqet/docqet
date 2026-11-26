@@ -1,3 +1,4 @@
+import Box from "@mui/material/Box";
 import { MORE_ABOUT } from "../../components/markdown/Markdown";
 import { StabilitySpread } from "../../components/stability/StabilitySpread";
 import { Term } from "../../components/term/Term";
@@ -25,7 +26,7 @@ import { LeftTab } from "../../components/doc/Left";
 import { TopGaps } from "../../components/doc/Left";
 import { CapabilityTable } from "../../components/doc/CapabilityTable";
 import { Missing } from "../../components/doc/Missing";
-import { docGo } from "../../components/doc/DocPage";
+import { docGo, Crumb, levelsSx, lineSx } from "../../components/doc/DocPage";
 
 /* A persona's page, or what shows when it isn't in the projects showing. */
 export default function PersonaView({ state, id, route }: { state: DocketState; id: string; route: Route }) {
@@ -64,10 +65,10 @@ export function PersonaPage({ persona, route, ...go }: DocPageProps & { persona:
         initiatives={persona.initiatives}
         kindNote={role}
         title={
-          <span className="page-title-picture">
+          <Box component="span" sx={{ display: "inline-flex", alignItems: "center", gap: 1.75 }}>
             <PersonaAvatar persona={persona} size={44} />
             {name}
-          </span>
+          </Box>
         }
         trail={domains.length ? <DomainTrail state={state} domains={domains} /> : undefined}
         stats={
@@ -109,19 +110,20 @@ export function PersonaPage({ persona, route, ...go }: DocPageProps & { persona:
           />
           <Section title="By feature" count={features.length} note="How ready each feature is for them, from its capabilities that serve them.">
             {features.length ? (
-              <ul className="page-levels">
+              <Box component="ul" sx={levelsSx}>
                 {features.map((f) => (
                   <li key={f.id}>
-                    <a className="page-crumb" href={docHref("feature", f.id)}>
-                      {NAMES.feature.icon}
+                    <Crumb href={docHref("feature", f.id)} icon={NAMES.feature.icon}>
                       {f.name}
-                    </a>
+                    </Crumb>
                     <ReadinessFor state={state} forRef={`persona:${persona.id},feature:${f.id}`} of={`${f.name}'s readiness for ${name}`} />
                   </li>
                 ))}
-              </ul>
+              </Box>
             ) : (
-              <p className="page-line">No feature serves them yet.</p>
+              <Box component="p" sx={lineSx}>
+                No feature serves them yet.
+              </Box>
             )}
           </Section>
           <TopGaps state={state} left={left} />
@@ -133,10 +135,9 @@ export function PersonaPage({ persona, route, ...go }: DocPageProps & { persona:
               <Section
                 key={f.id}
                 title={
-                  <a className="page-crumb page-section-link" href={docHref("feature", f.id)}>
-                    {NAMES.feature.icon}
+                  <Crumb href={docHref("feature", f.id)} icon={NAMES.feature.icon}>
                     {f.name}
-                  </a>
+                  </Crumb>
                 }
                 aside={<ReadinessFor state={state} forRef={`persona:${persona.id},feature:${f.id}`} of={`${f.name}'s readiness for ${name}`} started />}
               >

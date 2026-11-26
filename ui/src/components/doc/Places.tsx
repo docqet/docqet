@@ -1,3 +1,4 @@
+import Box from "@mui/material/Box";
 import CodeRoundedIcon from "@mui/icons-material/CodeRounded";
 import { projectName, type EvidencePlace, type DocketState } from "../../state";
 import Tooltip from "@mui/material/Tooltip";
@@ -12,23 +13,25 @@ export function Places({ state, places, label, detailed = false }: { state: Dock
   if (!detailed) return <span>{plural(places.length, `${label} in 1 place`, `${label} in ${places.length} places`).replace(/^\d+ /, "")}</span>;
   const several = state.projects.length > 1;
   return (
-    <ul className="page-places explore-places">
+    <Box component="ul" sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
       {places.map((e) => (
-        <li key={`${e.project}:${e.file}:${e.line}`}>
-          <span className="page-place-icon">
+        <Box component="li" key={`${e.project}:${e.file}:${e.line}`} sx={{ display: "flex", gap: 1, minWidth: 0 }}>
+          <Box component="span" sx={{ display: "inline-flex", mt: "2px", color: "text.disabled" }}>
             <CodeRoundedIcon sx={{ fontSize: 14 }} />
-          </span>
-          <span className="page-place">
+          </Box>
+          <Box component="span" sx={{ display: "flex", flexDirection: "column", gap: "2px", minWidth: 0 }}>
             <Tooltip title={e.text}>
-              <code>{e.text}</code>
+              <Box component="code" sx={{ fontSize: 12, overflowWrap: "anywhere" }}>
+                {e.text}
+              </Box>
             </Tooltip>
-            <span className="page-place-where">
+            <Box component="span" sx={{ fontSize: 11.5, overflowWrap: "anywhere", color: "text.disabled" }}>
               {e.file}:{e.line}
               {several && e.project ? ` · ${projectName(state, e.project)}` : ""}
-            </span>
-          </span>
-        </li>
+            </Box>
+          </Box>
+        </Box>
       ))}
-    </ul>
+    </Box>
   );
 }

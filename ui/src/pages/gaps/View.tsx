@@ -18,7 +18,6 @@ import { appliesAt, find, riskScore, subjectOf, technicalDoc, verdictOf, type Do
 import { EvidenceList } from "../../components/doc/EvidenceList";
 import { Missing } from "../../components/doc/Missing";
 /* EvidenceList's rules, until it's styled in place. */
-import "../doc.css";
 import { InitiativeTags, initiativesOf } from "../../components/Initiatives";
 
 /*

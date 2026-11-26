@@ -17,7 +17,6 @@ import { docHref, navigate, type Route } from "../../routes";
 import { Empty, PageHeader, Section, Stat, Tabs, View, currentTab, type TabDef } from "../../components/shell/layout";
 import { byFeature, contradictionsOf, domainName, find, gapsById, projectName, type Capability, type DocketState, type Rule } from "../../state";
 /* EvidenceList's rules, until it's styled in place. */
-import "../doc.css";
 import { EvidenceList } from "../../components/doc/EvidenceList";
 import { Missing } from "../../components/doc/Missing";
 import { InitiativeTags, initiativesOf } from "../../components/Initiatives";

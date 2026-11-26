@@ -1,27 +1,56 @@
 import { type ReactNode } from "react";
+import Box from "@mui/material/Box";
+import type { Theme } from "@mui/material/styles";
+import type { SystemStyleObject } from "@mui/system";
 import { Facets, facets } from "../Fields";
 import { Body } from "../markdown/Markdown";
 import { DomainIcon } from "../names";
 import { ProjectIcon } from "../shell/ProductFilter";
 import { domainName, projectName, type Contribution, type Doc, type DocketState } from "../../state";
 import { Section } from "../shell/layout";
-import { type DocGo } from "./DocPage";
+import { Crumb, type DocGo } from "./DocPage";
+
+/* Several sources, a column each, to compare. */
+const sourcesSx: SystemStyleObject<Theme> = {
+  display: "grid",
+  gridTemplateColumns: "repeat(auto-fit, minmax(min(300px, 100%), 1fr))",
+  gap: 2.5,
+};
+
+/* A source's column, or a body on its own: its parts one under another, with the body in a panel of its own at a readable width. */
+const sourceSx: SystemStyleObject<Theme> = {
+  display: "grid",
+  gap: 1.5,
+  minWidth: 0,
+  "& > .doc-body": {
+    px: 2.75,
+    py: 2,
+    bgcolor: (t) => `color-mix(in srgb, ${t.vars.palette.text.primary} 2%, transparent)`,
+    border: 1,
+    borderColor: "divider",
+    borderRadius: "10px",
+  },
+  "& > .doc-body .markdown": { maxWidth: "76ch", mt: 0, fontSize: 15, lineHeight: 1.6 },
+};
 
 /* Above what a source says, where several define it: the domain, where they differ, and the project it's from. */
 export function SourceFrom({ state, doc, from }: { state: DocketState; doc: Doc; from: Contribution }) {
   return (
-    <div className="page-source-from">
-      {doc.from.some((o) => o.domain !== from.domain) ? (
-        <span className="explore-crumb">
-          <DomainIcon size={14} />
-          {domainName(state, from.domain)}
-        </span>
-      ) : null}
-      <span className="explore-crumb">
-        <ProjectIcon size={14} />
-        {projectName(state, from.project)}
-      </span>
-    </div>
+    <Box
+      sx={{
+        display: "flex",
+        flexWrap: "wrap",
+        gap: "6px 14px",
+        pb: 1,
+        fontSize: 13,
+        fontWeight: 650,
+        borderBottom: 1,
+        borderColor: "divider",
+      }}
+    >
+      {doc.from.some((o) => o.domain !== from.domain) ? <Crumb icon={<DomainIcon size={14} />}>{domainName(state, from.domain)}</Crumb> : null}
+      <Crumb icon={<ProjectIcon size={14} />}>{projectName(state, from.project)}</Crumb>
+    </Box>
   );
 }
 
@@ -39,15 +68,19 @@ export function Sources({ kind, doc, title, aside, ...go }: DocGo & { kind: stri
   return (
     <Section title={title} aside={aside}>
       {several ? (
-        <div className="page-sources">
+        <Box sx={sourcesSx}>
           {fielded.map((f, i) => (
-            <div key={i} className="page-source">
+            <Box key={i} sx={sourceSx}>
               <SourceFrom state={state} doc={doc} from={f} />
-              {f.description ? <p className="page-source-summary">{f.description}</p> : null}
+              {f.description ? (
+                <Box component="p" sx={{ fontSize: 15, lineHeight: 1.5 }}>
+                  {f.description}
+                </Box>
+              ) : null}
               <Facets items={facets(kind, f, go)} />
-            </div>
+            </Box>
           ))}
-        </div>
+        </Box>
       ) : (
         <Facets items={facets(kind, fielded[0], go)} />
       )}
@@ -66,18 +99,18 @@ export function Bodies({ doc, ...go }: DocGo & { doc: Doc }) {
   if (!written.length) return null;
   if (written.length === 1)
     return (
-      <div className="page-about">
+      <Box sx={[sourceSx, { maxWidth: 820 }]}>
         <Body from={written[0]} go={go} limit={BODY_LIMIT} />
-      </div>
+      </Box>
     );
   return (
-    <div className="page-sources">
+    <Box sx={sourcesSx}>
       {written.map((f, i) => (
-        <div key={i} className="page-source">
+        <Box key={i} sx={sourceSx}>
           <SourceFrom state={go.state} doc={doc} from={f} />
           <Body from={f} go={go} limit={BODY_LIMIT} />
-        </div>
+        </Box>
       ))}
-    </div>
+    </Box>
   );
 }

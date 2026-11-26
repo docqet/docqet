@@ -1,20 +1,40 @@
+import Box from "@mui/material/Box";
 import { Places } from "./Places";
 import { type Capability, type DocketState } from "../../state";
+import { cardSx, faintSx } from "./DocPage";
 
-/* Where the code says it implements or verifies something, from its annotations. */
+/* Where the code says it implements or verifies something, from its annotations: what implements it beside what verifies it. */
 export function EvidencePair({ state, doc }: { state: DocketState; doc: { evidence: Capability["evidence"] } }) {
-  return (
-    <div className="page-card">
-      <div className="page-evidence-pair">
-        <div>
-          <span className="page-label">Implemented by</span>
-          {doc.evidence.implements.length ? <Places state={state} places={doc.evidence.implements} label="" detailed /> : <span className="faint">None</span>}
-        </div>
-        <div>
-          <span className="page-label">Verified by</span>
-          {doc.evidence.verifies.length ? <Places state={state} places={doc.evidence.verifies} label="" detailed /> : <span className="faint">None</span>}
-        </div>
-      </div>
+  const side = (label: string, places: Capability["evidence"]["implements"]) => (
+    <div>
+      <Box component="span" sx={{ display: "block", mb: 0.5, typography: "overline", color: "text.disabled" }}>
+        {label}
+      </Box>
+      {places.length ? (
+        <Places state={state} places={places} label="" detailed />
+      ) : (
+        <Box component="span" sx={faintSx}>
+          None
+        </Box>
+      )}
     </div>
+  );
+  return (
+    <Box sx={cardSx}>
+      <Box
+        sx={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+          gap: 1.5,
+          mt: 1.75,
+          pt: 1.5,
+          borderTop: 1,
+          borderColor: "divider",
+        }}
+      >
+        {side("Implemented by", doc.evidence.implements)}
+        {side("Verified by", doc.evidence.verifies)}
+      </Box>
+    </Box>
   );
 }

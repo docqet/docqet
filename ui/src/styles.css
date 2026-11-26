@@ -197,6 +197,7 @@
   font: inherit;
   color: inherit;
   text-align: left;
+  text-decoration: none;
   background: none;
   border: 0;
   border-radius: 5px;
@@ -503,34 +504,6 @@
   font-size: 13.5px;
 }
 
-/* A contradiction, as a callout of its own. */
-.explore-problem {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  margin: 16px 0 0;
-  padding: 10px 12px;
-  font-size: 13px;
-  line-height: 1.45;
-  color: var(--warning);
-  background: color-mix(in srgb, var(--warning) 9%, transparent);
-  border: 1px solid color-mix(in srgb, var(--warning) 30%, transparent);
-  border-radius: 8px;
-}
-
-.explore-problem svg {
-  margin-top: 1px;
-}
-
-.explore-gap-kind {
-  display: block;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--faint);
-}
-
 .explore-tag {
   padding: 0 7px;
   font-size: 11px;
@@ -718,37 +691,6 @@
 
 /* ——— What's left, in a side panel or on a detail page ——— */
 
-.explore-left-list {
-  padding-left: 20px;
-  list-style: disc;
-  font-size: 13.5px;
-}
-
-.explore-left-list li {
-  padding: 2px 0;
-}
-
-.explore-left-list li::marker {
-  color: var(--faint);
-}
-
-/* Under a gap or rule: its kind, and what it falls short of. */
-.explore-left-meta {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 4px 10px;
-  margin: 3px 0 2px;
-  font-size: 12px;
-  color: var(--faint);
-}
-
-/* The code a gap or tradeoff names, in full, under its other details. */
-.explore-left-meta .explore-places {
-  flex-basis: 100%;
-  margin-top: 2px;
-}
-
 /* In the side panel, a section or a kind of what's left, folded shut until it's opened. */
 .explore-fold > summary {
   display: flex;
@@ -773,7 +715,6 @@
   transform: rotate(180deg);
 }
 
-.explore-fold > summary:hover .explore-gap-kind,
 .explore-fold > summary:hover .explore-fold-chevron {
   color: var(--muted);
 }
@@ -814,37 +755,12 @@ a.filter-toggle {
 
 /* ——— Detail pages ——— */
 
-.page {
-  height: 100%;
-  overflow-y: auto;
-}
-
 .page-label {
   font-size: 11px;
   font-weight: 650;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--faint);
-}
-
-.page-avatars {
-  display: inline-flex;
-}
-
-.page-avatars > span {
-  display: inline-flex;
-  border-radius: 50%;
-  box-shadow: 0 0 0 2px var(--popover);
-}
-
-.page-avatars > span + span {
-  margin-left: -6px;
-}
-
-.page-card {
-  background: var(--popover);
-  border: 1px solid var(--border);
-  border-radius: 12px;
 }
 
 /* ——— What's left and tradeoffs: one mark, one color and one row wherever they show ——— */
@@ -1087,301 +1003,7 @@ a.filter-toggle {
   list-style: none;
 }
 
-.page-card {
-  padding: 16px 18px;
-}
-
-.page-card h3 {
-  margin-bottom: 10px;
-  font-size: 11px;
-  font-weight: 650;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--faint);
-}
-
-/* Several sources, a column each, to compare. */
-.page-sources {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
-  gap: 20px;
-}
-
-.page-source-from {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px 14px;
-  padding-bottom: 8px;
-  font-size: 13px;
-  font-weight: 650;
-  border-bottom: 1px solid var(--border);
-}
-
-.page-source-summary {
-  font-size: 15px;
-  line-height: 1.5;
-}
-
-.page-places {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.page-places li {
-  display: flex;
-  gap: 8px;
-  min-width: 0;
-}
-
-.page-place-icon {
-  display: inline-flex;
-  margin-top: 2px;
-  color: var(--faint);
-}
-
-.page-place {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  min-width: 0;
-}
-
-.page-place code {
-  font-size: 12px;
-  overflow-wrap: anywhere;
-}
-
-.page-place-where {
-  font-size: 11.5px;
-  overflow-wrap: anywhere;
-  color: var(--faint);
-}
-
-/* A domain's features, as cards. */
-.page-feature-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 12px;
-}
-
-.page-feature {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding: 14px 16px;
-  font: inherit;
-  color: inherit;
-  text-align: left;
-  background: color-mix(in srgb, var(--text) 2%, transparent);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  cursor: pointer;
-}
-
-.page-feature:hover {
-  background: var(--accent-soft);
-  border-color: var(--accent);
-}
-
-.page-feature-head {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 14.5px;
-}
-
-.page-feature-head strong {
-  flex: 1;
-}
-
-.page-feature-summary {
-  font-size: 13px;
-  color: var(--muted);
-}
-
-.page-feature ul {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  font-size: 13px;
-}
-
-.page-feature li {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.page-feature > .faint {
-  font-size: 12px;
-}
-
-/*
- * The stability rubric, as a checklist: a note that it's a guideline, a level picker, then each quality with its
- * outcomes, and popovers for how meeting one might look, what may be
- * overengineering, and what it builds on.
- */
-.sc-note {
-  margin-bottom: 18px;
-  padding: 10px 14px;
-  font-size: 13px;
-  line-height: 1.55;
-  color: var(--muted);
-  background: var(--accent-soft);
-  border-left: 2px solid var(--accent);
-  border-radius: 0 8px 8px 0;
-}
-
-.sc-note strong {
-  color: var(--text);
-}
-
-.sc-pick-label {
-  margin-bottom: 8px;
-  font-size: 11px;
-  font-weight: 650;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--faint);
-}
-
-.sc-levels {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 8px;
-}
-
-.sc-level {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding: 10px 12px;
-  font: inherit;
-  text-align: left;
-  color: var(--text);
-  background: transparent;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-.sc-level:hover {
-  border-color: var(--border-strong);
-  background: var(--accent-soft);
-}
-
-.sc-level[aria-checked="true"] {
-  border-color: var(--accent);
-  box-shadow: var(--lit-ring);
-}
-
-.sc-level:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
-
-.sc-level-top {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.sc-level-own {
-  margin-left: auto;
-  font-size: 10.5px;
-  font-weight: 650;
-  color: var(--accent);
-}
-
-.sc-level-counts {
-  font-size: 12px;
-  line-height: 1.45;
-  color: var(--muted);
-}
-
-.sc-bar {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 6px 16px;
-  margin: 16px 0 6px;
-}
-
-.sc-status {
-  flex: 1 1 320px;
-  font-size: 13.5px;
-  color: var(--muted);
-}
-
-.sc-status strong {
-  color: var(--ok);
-}
-
-.sc-status strong[data-met="no"] {
-  color: var(--warning);
-}
-
-.sc-show-all {
-  display: inline-flex;
-  align-items: center;
-  gap: 2px;
-  font-size: 12.5px;
-  color: var(--muted);
-  cursor: pointer;
-}
-
-.sc-quality {
-  padding: 16px 0 14px;
-  border-top: 1px solid var(--border);
-}
-
-.sc-quality:last-child {
-  padding-bottom: 0;
-}
-
-.sc-quality-head {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 10px;
-}
-
-.sc-quality-head h3 {
-  font-size: 14.5px;
-  font-weight: 700;
-}
-
-.sc-quality-name {
-  cursor: help;
-  text-decoration: underline dotted var(--border-strong);
-  text-underline-offset: 4px;
-}
-
-.sc-quality-name:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-  border-radius: 3px;
-}
-
-.sc-question {
-  margin-top: 2px;
-  font-size: 12.5px;
-  color: var(--muted);
-}
-
-.sc-outcomes > li + li {
-  margin-top: 12px;
-}
-
-.sc-outcome {
-  display: grid;
-  grid-template-columns: 18px minmax(0, 1fr);
-  gap: 8px;
-  font-size: 13.5px;
-  line-height: 1.5;
-}
+/* ——— The stability rubric's marks and popovers: whether an outcome or rule holds (StandingMark), and what a pill or a quality opens ——— */
 
 .sc-standing {
   display: inline-flex;
@@ -1412,88 +1034,6 @@ a.filter-toggle {
   color: var(--faint);
 }
 
-.sc-outcome-label {
-  font-size: 10.5px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--accent);
-}
-
-.sc-outcome-text {
-  color: var(--text);
-}
-
-.sc-outcome[data-standing="not-expected"] .sc-outcome-text {
-  color: var(--muted);
-}
-
-.sc-nothing {
-  font-size: 13px;
-  color: var(--faint);
-}
-
-.sc-guidance {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px 16px;
-  margin-top: 4px;
-}
-
-.sc-pill {
-  display: inline-flex;
-  flex: none;
-  align-items: center;
-  gap: 5px;
-  padding: 1px 0;
-  font: inherit;
-  font-size: 12px;
-  color: var(--muted);
-  background: none;
-  border: 0;
-  cursor: help;
-}
-
-.sc-pill[data-kind="implementation"] svg {
-  color: var(--accent);
-}
-
-.sc-pill[data-kind="overengineering"] svg {
-  color: var(--warning);
-}
-
-.sc-pill[data-kind="builds-on"] svg {
-  color: var(--faint);
-}
-
-.sc-pill-label {
-  text-decoration: underline dotted var(--border-strong);
-  text-underline-offset: 3px;
-}
-
-.sc-pill:hover .sc-pill-label,
-.sc-pill:focus-visible .sc-pill-label {
-  color: var(--text);
-}
-
-.sc-pill:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-  border-radius: 3px;
-}
-
-.sc-pill-count {
-  min-width: 16px;
-  padding: 0 4px;
-  font-size: 10.5px;
-  font-weight: 650;
-  line-height: 15px;
-  text-align: center;
-  color: var(--muted);
-  background: var(--accent-soft);
-  border-radius: 999px;
-}
-
 /* A pill's popover: what it means, then the list. */
 .sc-pill-info,
 .sc-why {
@@ -1508,48 +1048,6 @@ a.filter-toggle {
   font-weight: 650;
   color: var(--faint);
   border-top: 1px solid var(--border);
-}
-
-.sc-examples {
-  padding-left: 16px;
-  list-style: disc;
-}
-
-.sc-examples li + li {
-  margin-top: 6px;
-}
-
-.sc-examples li::marker {
-  color: var(--faint);
-}
-
-.sc-kinds {
-  display: inline-flex;
-  flex-wrap: wrap;
-  gap: 3px;
-  margin-left: 6px;
-  vertical-align: 1px;
-}
-
-.sc-kinds .explore-tag {
-  padding: 0 6px;
-  font-size: 10.5px;
-  line-height: 16px;
-}
-
-.sc-builds-on li {
-  display: grid;
-  grid-template-columns: auto 16px minmax(0, 1fr);
-  align-items: start;
-  gap: 8px;
-}
-
-.sc-builds-on li + li {
-  margin-top: 7px;
-}
-
-.sc-builds-on .sc-standing {
-  margin-top: 1px;
 }
 
 /* In a quality's popover: how much each level asks of it. */
@@ -1570,115 +1068,6 @@ a.filter-toggle {
 
 .sc-summaries li[data-empty] span:last-child {
   color: var(--faint);
-}
-
-/*
- * What meets an outcome, under it: a small label, the mechanisms and
- * components that say so as chips, and how much evidence there is.
- */
-.sc-met-by {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 4px 6px;
-  margin-top: 8px;
-  font-size: 12px;
-  color: var(--muted);
-}
-
-.sc-met-by-label {
-  margin-right: 2px;
-  font-size: 10.5px;
-  font-weight: 650;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--faint);
-}
-
-.sc-met-by .link {
-  gap: 4px;
-  padding: 1px 8px 1px 6px;
-  line-height: 18px;
-  color: var(--concept);
-  text-decoration: none;
-  background: var(--concept-soft);
-  border: 1px solid color-mix(in srgb, var(--concept) 22%, transparent);
-  border-radius: 999px;
-}
-
-.sc-met-by .link:hover {
-  border-color: color-mix(in srgb, var(--concept) 55%, transparent);
-}
-
-.sc-met-by .link svg {
-  font-size: 14px;
-  color: currentColor;
-  opacity: 0.8;
-}
-
-.sc-met-by-note {
-  margin-left: 2px;
-  color: var(--faint);
-}
-
-.sc-gap .explore-left-meta {
-  margin-top: 4px;
-}
-
-.sc-gap {
-  margin-top: 6px;
-  padding: 6px 8px;
-  font-size: 12.5px;
-  color: var(--text);
-  background: color-mix(in srgb, var(--warning) 9%, transparent);
-  border-left: 2px solid var(--warning);
-  border-radius: 0 6px 6px 0;
-}
-
-/* An open decision on whether to meet it, in a decision's color. */
-.sc-gap[data-kind="decision"] {
-  background: color-mix(in srgb, var(--accent) 7%, transparent);
-  border-left-color: var(--accent);
-}
-
-@media (max-width: 640px) {
-  .sc-levels {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-/* ——— Gaps and tradeoffs, and mechanisms' and components' pages ——— */
-
-/* Tradeoffs or open decisions under what they're on, each a group of its own. */
-.page-subject-group + .page-subject-group {
-  margin-top: 14px;
-  padding-top: 12px;
-  border-top: 1px solid var(--border);
-}
-
-.page-subject {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 4px 8px;
-  margin-bottom: 4px;
-  font-size: 13px;
-  font-weight: 550;
-}
-
-/* What implements and what verifies a mechanism or component, side by side. */
-.page-evidence-pair {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 12px;
-  margin-top: 14px;
-  padding-top: 12px;
-  border-top: 1px solid var(--border);
-}
-
-.page-evidence-pair .page-label {
-  display: block;
-  margin-bottom: 4px;
 }
 
 /* ——— What a doc says: its fields, then its body ——— */
@@ -1796,30 +1185,6 @@ a.filter-toggle {
 
 .doc-body-toggle:hover {
   text-decoration: underline;
-}
-
-/* On a detail page: the fields, then the body in a panel of its own at a readable width. */
-.page-about,
-.page-source {
-  display: grid;
-  gap: 12px;
-  min-width: 0;
-}
-
-.page-about > .doc-body,
-.page-source > .doc-body {
-  padding: 16px 22px;
-  background: color-mix(in srgb, var(--text) 2%, transparent);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-}
-
-.page-about > .doc-body .markdown,
-.page-source > .doc-body .markdown {
-  max-width: 76ch;
-  margin-top: 0;
-  font-size: 15px;
-  line-height: 1.6;
 }
 
 /* One of Docket's words, opening what it means (Term): dotted underline, help cursor. */

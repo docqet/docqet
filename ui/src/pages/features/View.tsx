@@ -1,3 +1,4 @@
+import Box from "@mui/material/Box";
 import { ConceptChips } from "../../components/Concepts";
 import { MORE_ABOUT } from "../../components/markdown/Markdown";
 import { StabilitySpread } from "../../components/stability/StabilitySpread";
@@ -31,7 +32,7 @@ import { DecidedTab } from "../../components/doc/DecidedTab";
 import { CapabilityTable } from "../../components/doc/CapabilityTable";
 import { StandingSummary } from "../../components/doc/RuleTable";
 import { Missing } from "../../components/doc/Missing";
-import { docGo } from "../../components/doc/DocPage";
+import { docGo, faintSx, levelsSx, lineSx } from "../../components/doc/DocPage";
 
 /* A feature's page, or what shows when it isn't in the projects showing. */
 export default function FeatureView({ state, id, route }: { state: DocketState; id: string; route: Route }) {
@@ -108,7 +109,7 @@ export function FeaturePage({ feature, route, ...go }: DocPageProps & { feature:
           <Sources {...go} kind="feature" doc={feature} title="What it is" />
           <Section title="Where it stands">
             {feature.parts.length > 1 ? (
-              <ul className="page-levels">
+              <Box component="ul" sx={levelsSx}>
                 {feature.parts.map((p) => (
                   <li key={p.domain}>
                     <DomainCrumb state={state} id={p.domain} />
@@ -118,15 +119,19 @@ export function FeaturePage({ feature, route, ...go }: DocPageProps & { feature:
                       of="none of its capabilities here has a level yet"
                       spread={partLevels(state, p.capabilities, p.domain)}
                     />
-                    <span className="faint">{plural(p.capabilities.length, "capability", "capabilities")}</span>
+                    <Box component="span" sx={faintSx}>
+                      {plural(p.capabilities.length, "capability", "capabilities")}
+                    </Box>
                   </li>
                 ))}
-              </ul>
+              </Box>
             ) : null}
             {capabilities.length ? (
               <StandingSummary state={state} capabilities={capabilities} all={tabHref("capabilities")} />
             ) : (
-              <p className="page-line">No capabilities yet.</p>
+              <Box component="p" sx={lineSx}>
+                No capabilities yet.
+              </Box>
             )}
           </Section>
           <StillNeedsSection readiness={readiness} readyText="Ready: every started capability is at Beta or above, with no unacceptable gap." />

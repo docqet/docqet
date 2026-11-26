@@ -1,3 +1,4 @@
+import Box from "@mui/material/Box";
 import { ConceptChips, ConceptIcon, related } from "../../components/Concepts";
 import { facets } from "../../components/Fields";
 import { MORE_ABOUT } from "../../components/markdown/Markdown";
@@ -19,7 +20,7 @@ import { Bodies } from "../../components/doc/About";
 import { RuleTable } from "../../components/doc/RuleTable";
 import { DocRows } from "../../components/doc/DocRows";
 import { Missing } from "../../components/doc/Missing";
-import { docGo } from "../../components/doc/DocPage";
+import { docGo, cardSx, Crumb, faintSx } from "../../components/doc/DocPage";
 
 /* A concept's page, or what shows when it isn't in the projects showing. */
 export default function ConceptView({ state, id, route }: { state: DocketState; id: string; route: Route }) {
@@ -47,6 +48,11 @@ export function ConceptPage({ concept, route, ...go }: DocPageProps & { concept:
     ...(elsewhere.length ? [{ id: "elsewhere", label: "The same word elsewhere", count: elsewhere.length }] : []),
   ];
   const tab = currentTab(route, tabs);
+  const file = (
+    <Box component="code" sx={faintSx}>
+      {concept.file}
+    </Box>
+  );
   return (
     <DocView title={concept.name} route={route}>
       <DocHeader
@@ -79,9 +85,9 @@ export function ConceptPage({ concept, route, ...go }: DocPageProps & { concept:
       <Tabs tabs={tabs} current={tab} />
       {tab === "meaning" ? (
         <>
-          <Sources {...go} kind="concept" doc={concept} title="What it means" aside={<code className="faint">{concept.file}</code>} />
+          <Sources {...go} kind="concept" doc={concept} title="What it means" aside={file} />
           {hasBody(concept) ? (
-            <Section title={MORE_ABOUT} aside={fielded ? undefined : <code className="faint">{concept.file}</code>}>
+            <Section title={MORE_ABOUT} aside={fielded ? undefined : file}>
               <Bodies {...go} doc={concept} />
             </Section>
           ) : null}
@@ -105,17 +111,16 @@ export function ConceptPage({ concept, route, ...go }: DocPageProps & { concept:
             key={feature?.id ?? ""}
             title={
               feature ? (
-                <a className="page-crumb page-section-link" href={docHref("feature", feature.id)}>
-                  {NAMES.feature.icon}
+                <Crumb href={docHref("feature", feature.id)} icon={NAMES.feature.icon}>
                   {feature.name}
-                </a>
+                </Crumb>
               ) : (
                 "Not in a feature"
               )
             }
             count={capabilities.length}
           >
-            <div className="page-card">
+            <Box sx={cardSx}>
               <DocRows
                 rows={capabilities.map((c) => ({
                   key: c.id,
@@ -126,7 +131,7 @@ export function ConceptPage({ concept, route, ...go }: DocPageProps & { concept:
                   mark: <CapabilityStability level={c.stability} name={c.name} focusable={false} />,
                 }))}
               />
-            </div>
+            </Box>
           </Section>
         ))
       ) : tab === "rules" ? (
@@ -142,7 +147,7 @@ export function ConceptPage({ concept, route, ...go }: DocPageProps & { concept:
         </Section>
       ) : (
         <Section title="The same word elsewhere" count={elsewhere.length} note="Each domain's word means what it says there.">
-          <div className="page-card">
+          <Box sx={cardSx}>
             <DocRows
               rows={elsewhere.map((c) => ({
                 key: c.id,
@@ -152,7 +157,7 @@ export function ConceptPage({ concept, route, ...go }: DocPageProps & { concept:
                 summary: c.description,
               }))}
             />
-          </div>
+          </Box>
         </Section>
       )}
     </DocView>

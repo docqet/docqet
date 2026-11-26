@@ -2,7 +2,10 @@ import { useState, type ReactNode } from "react";
 import LayersOutlinedIcon from "@mui/icons-material/LayersOutlined";
 import LightbulbOutlinedIcon from "@mui/icons-material/LightbulbOutlined";
 import WarningAmberRoundedIcon from "@mui/icons-material/WarningAmberRounded";
+import Box from "@mui/material/Box";
 import Switch from "@mui/material/Switch";
+import type { Theme } from "@mui/material/styles";
+import type { SystemStyleObject } from "@mui/system";
 import { DetailsPopover, NoPopovers } from "../../../components/popovers/DetailsPopover";
 import { STABILITY, STABILITY_LEVEL_IDS } from "../../../components/stability/stability";
 import { StabilityMark } from "../../../components/stability/StabilityMark";
@@ -12,7 +15,18 @@ import { StandingMark, type Standing } from "../../../components/standing/Standi
 import { TechnicalLink } from "../../../components/Technical";
 import { levelName } from "../../../components/stability/stability";
 import { plural } from "../../../components/names";
-import { appliesAt, outcomesOf, type Capability, type Rubric, type RubricExample, type ExpectedOutcome, type RubricQuality, type Level } from "../../../state";
+import {
+  appliesAt,
+  outcomesOf,
+  type Capability,
+  type Rubric,
+  type RubricExample,
+  type ExpectedOutcome,
+  type RubricQuality,
+  type Level,
+  type TechnicalDoc,
+} from "../../../state";
+import { tagSx } from "../../../components/doc/DocPage";
 import { PillCard } from "../../../components/popovers/PillCard";
 import { QualityDetails } from "../../../components/popovers/QualityDetails";
 
@@ -84,40 +98,72 @@ export function StabilityRubric({ rubric, capability }: { rubric: Rubric; capabi
   const name = STABILITY[level].name;
 
   return (
-    <div className="sc">
-      <aside className="sc-note">
+    <div>
+      <Box
+        component="aside"
+        sx={{
+          mb: 2.25,
+          px: 1.75,
+          py: 1.25,
+          fontSize: 13,
+          lineHeight: 1.55,
+          color: "text.secondary",
+          bgcolor: "surface.accentSoft",
+          borderLeft: 2,
+          borderColor: "primary.main",
+          borderRadius: "0 8px 8px 0",
+          "& strong": { color: "text.primary" },
+        }}
+      >
         <strong>A guideline, not a gate.</strong> It gives a level the same meaning for everyone, and doesn't replace engineering judgment: what an outcome
         takes, and whether it applies at all, depends on the software, who uses it and the circumstances. An outcome that applies is met, not applicable, or
         written down as a gap, GA included.
-      </aside>
+      </Box>
 
-      <p className="sc-pick-label" id="sc-level">
+      <Box component="p" id="sc-level" sx={{ mb: 1, typography: "overline", color: "text.disabled" }}>
         Pick a stability level
-      </p>
-      <div className="sc-levels" role="radiogroup" aria-labelledby="sc-level">
+      </Box>
+      <Box
+        role="radiogroup"
+        aria-labelledby="sc-level"
+        sx={{ display: "grid", gridTemplateColumns: { xs: "repeat(2, minmax(0, 1fr))", sm: "repeat(4, minmax(0, 1fr))" }, gap: 1 }}
+      >
         {STABILITY_LEVEL_IDS.map((id) => {
           const counts = countsAt(rubric, id);
           return (
-            <button key={id} type="button" role="radio" aria-checked={id === level} className="sc-level" onClick={() => setLevel(id)}>
-              <span className="sc-level-top">
+            <Box component="button" key={id} type="button" role="radio" aria-checked={id === level} onClick={() => setLevel(id)} sx={levelSx}>
+              <Box component="span" sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                 {/* A choice, so its level opens no popover over it. */}
                 <NoPopovers>
                   <StabilityMark level={id} focusable={false} />
                 </NoPopovers>
-                {id === own ? <span className="sc-level-own">Its level</span> : null}
-              </span>
-              <span className="sc-level-counts">
+                {id === own ? (
+                  <Box component="span" sx={{ ml: "auto", fontSize: 10.5, fontWeight: 650, color: "primary.main" }}>
+                    Its level
+                  </Box>
+                ) : null}
+              </Box>
+              <Box component="span" sx={{ fontSize: 12, lineHeight: 1.45, color: "text.secondary" }}>
                 {plural(counts.qualities, "quality", "qualities")}
                 <br />
                 {plural(counts.outcomes, "expected outcome", "expected outcomes")}
-              </span>
-            </button>
+              </Box>
+            </Box>
           );
         })}
-      </div>
+      </Box>
 
-      <div className="sc-bar">
-        <p className="sc-status">
+      <Box sx={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "6px 16px", mt: 2, mb: 0.75 }}>
+        <Box
+          component="p"
+          sx={{
+            flex: "1 1 320px",
+            fontSize: 13.5,
+            color: "text.secondary",
+            "& strong": { color: "success.main" },
+            "& strong[data-met=no]": { color: "warning.main" },
+          }}
+        >
           {own === null ? (
             <>
               What {name} would expect of {capability.name}. It's a draft, declared and not started, so none of it is claimed yet.
@@ -141,117 +187,230 @@ export function StabilityRubric({ rubric, capability }: { rubric: Rubric; capabi
               What {name} expects. {capability.name} is at {levelName(own)}, which builds on it.
             </>
           )}
-        </p>
+        </Box>
         {empty ? (
-          <label className="sc-show-all">
+          <Box component="label" sx={{ display: "inline-flex", alignItems: "center", gap: "2px", fontSize: 12.5, color: "text.secondary", cursor: "pointer" }}>
             <Switch size="small" checked={showAll} onChange={(e) => setShowAll(e.target.checked)} />
             Show {plural(empty, "quality", "qualities")} with nothing expected
-          </label>
+          </Box>
         ) : null}
-      </div>
+      </Box>
 
-      <div className="sc-qualities">
+      <div>
         {shown.map(({ quality, expected, buildsOn }) => {
           const entry = quality.levels.find((l) => l.level === level)!;
           return (
-            <section key={quality.id} className="sc-quality">
-              <header className="sc-quality-head">
+            <Box component="section" key={quality.id} sx={{ pt: 2, pb: 1.75, borderTop: 1, borderColor: "divider", "&:last-of-type": { pb: 0 } }}>
+              <Box component="header" sx={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 1.5, mb: 1.25 }}>
                 <div>
-                  <h3>
+                  <Box component="h3" sx={{ fontSize: 14.5, fontWeight: 700 }}>
                     <QualityName quality={quality} />
-                  </h3>
-                  <p className="sc-question">{quality.question}</p>
+                  </Box>
+                  <Box component="p" sx={{ mt: "2px", fontSize: 12.5, color: "text.secondary" }}>
+                    {quality.question}
+                  </Box>
                 </div>
                 {buildsOn.length ? (
                   <Pill kind="builds-on" icon={<LayersOutlinedIcon sx={{ fontSize: 15 }} />} label="Builds on" count={buildsOn.length}>
                     <PillCard label="Builds on" info={BUILDS_ON_INFO} listLabel="Still expected">
-                      <ul className="sc-builds-on">
+                      <ul>
                         {buildsOn.map((o) => (
-                          <li key={o.id}>
+                          <Box
+                            component="li"
+                            key={o.id}
+                            sx={{
+                              display: "grid",
+                              gridTemplateColumns: "auto 16px minmax(0, 1fr)",
+                              alignItems: "start",
+                              gap: 1,
+                              "& + &": { mt: "7px" },
+                              /* The standing mark sits a pixel lower than it does beside an outcome. */
+                              "& .sc-standing": { mt: "1px" },
+                            }}
+                          >
                             <StabilityMark level={o.level} statement={false} focusable={false} />
                             <StandingIcon standing={standing(o)} />
                             <span>{o.text}</span>
-                          </li>
+                          </Box>
                         ))}
                       </ul>
                     </PillCard>
                   </Pill>
                 ) : null}
-              </header>
+              </Box>
               {expected.length ? (
-                <ul className="sc-outcomes">
+                <ul>
                   {expected.map((o) => (
-                    <li key={o.id} className="sc-outcome" data-standing={standing(o)}>
+                    <Box
+                      component="li"
+                      key={o.id}
+                      sx={{ display: "grid", gridTemplateColumns: "18px minmax(0, 1fr)", gap: 1, fontSize: 13.5, lineHeight: 1.5, "& + &": { mt: 1.5 } }}
+                    >
                       <StandingIcon standing={standing(o)} />
                       <div>
                         {o.until && o.until !== o.level ? (
-                          <p className="sc-outcome-label">
+                          <Box
+                            component="p"
+                            sx={{ fontSize: 10.5, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", color: "primary.main" }}
+                          >
                             From {STABILITY[o.level].name} through {STABILITY[o.until].name}
-                          </p>
+                          </Box>
                         ) : null}
-                        <p className="sc-outcome-text">{o.text}</p>
+                        <Box component="p" sx={{ color: standing(o) === "not-expected" ? "text.secondary" : "text.primary" }}>
+                          {o.text}
+                        </Box>
                         <Guidance implementation={o.implementation} overengineering={o.overengineering} kindName={kindName} />
                         {of(o).gaps.map((g) => (
-                          <p key={g.id} className="sc-gap">
-                            <span className="explore-gap-kind">
+                          <OutcomeNote
+                            key={g.id}
+                            label={
                               <LeftLabel kind={gapKind(g)} size={13}>
                                 {LEFT_KINDS[gapKind(g)].one}
                               </LeftLabel>
-                            </span>
+                            }
+                          >
                             {g.name}
-                          </p>
+                          </OutcomeNote>
                         ))}
                         {of(o).tradeoffs.map((t) => (
-                          <p key={t.id} className="sc-gap">
-                            <span className="explore-gap-kind">
+                          <OutcomeNote
+                            key={t.id}
+                            label={
                               <LeftLabel kind="tradeoff" size={13}>
                                 Not met, by choice
                               </LeftLabel>
-                            </span>
+                            }
+                          >
                             {t.name}
-                          </p>
+                          </OutcomeNote>
                         ))}
                         {of(o).decisions.map((d, i) => (
-                          <p key={i} className="sc-gap" data-kind="decision">
-                            <span className="explore-gap-kind">
+                          <OutcomeNote
+                            key={i}
+                            decision
+                            label={
                               <LeftLabel kind="decision" size={13}>
                                 Open
                               </LeftLabel>
-                            </span>
+                            }
+                          >
                             <InlineMarkdown text={d.question} />
-                          </p>
+                          </OutcomeNote>
                         ))}
                         {appliesAt(o, own) && !of(o).gaps.length && !of(o).tradeoffs.length && !of(o).decisions.length && of(o).by.length ? (
-                          <div className="sc-met-by">
-                            <span className="sc-met-by-label">Met by</span>
-                            {of(o).by.map((e) => (
-                              <TechnicalLink key={e.id} doc={e} />
-                            ))}
-                            <span className="sc-met-by-note">
-                              {(() => {
-                                const n = of(o).by.reduce((sum, e) => sum + e.evidence.implements.length + e.evidence.verifies.length, 0);
-                                return n ? `evidence in ${plural(n, "place", "places")}` : "nothing in the code points at it yet";
-                              })()}
-                            </span>
-                          </div>
+                          <MetBy by={of(o).by} />
                         ) : null}
                       </div>
-                    </li>
+                    </Box>
                   ))}
                 </ul>
               ) : (
                 <>
-                  <p className="sc-nothing">
+                  <Box component="p" sx={{ fontSize: 13, color: "text.disabled" }}>
                     {buildsOn.length ? "Nothing new expected" : "Nothing expected"} at {name}.
-                  </p>
+                  </Box>
                   <Guidance implementation={entry.implementation} overengineering={entry.overengineering} kindName={kindName} />
                 </>
               )}
-            </section>
+            </Box>
           );
         })}
       </div>
     </div>
+  );
+}
+
+/* A level to pick: a card that lights in the accent's soft fill on hover, and is ringed in the accent when picked. */
+const levelSx: SystemStyleObject<Theme> = {
+  display: "flex",
+  flexDirection: "column",
+  gap: 1,
+  px: 1.5,
+  py: 1.25,
+  font: "inherit",
+  textAlign: "left",
+  color: "text.primary",
+  bgcolor: "transparent",
+  border: 1,
+  borderColor: "divider",
+  borderRadius: "8px",
+  cursor: "pointer",
+  "&:hover": { borderColor: "surface.borderStrong", bgcolor: "surface.accentSoft" },
+  "&[aria-checked=true]": { borderColor: "primary.main", boxShadow: (t) => t.vars.palette.lit.ring },
+  "&:focus-visible": { outline: "2px solid", outlineColor: "primary.main", outlineOffset: "2px" },
+};
+
+/* What says an outcome isn't met, by a gap or by choice, or that whether to meet it is open: its kind over its name, in a gap's color or a decision's. */
+function OutcomeNote({ label, decision = false, children }: { label: ReactNode; decision?: boolean; children: ReactNode }) {
+  return (
+    <Box
+      component="p"
+      sx={{
+        mt: 0.75,
+        px: 1,
+        py: 0.75,
+        fontSize: 12.5,
+        color: "text.primary",
+        bgcolor: (t) => `color-mix(in srgb, ${decision ? t.vars.palette.primary.main : t.vars.palette.warning.main} ${decision ? 7 : 9}%, transparent)`,
+        borderLeft: 2,
+        borderColor: decision ? "primary.main" : "warning.main",
+        borderRadius: "0 6px 6px 0",
+      }}
+    >
+      <Box
+        component="span"
+        sx={{ display: "block", fontSize: 11, fontWeight: 600, letterSpacing: "0.04em", textTransform: "uppercase", color: "text.disabled" }}
+      >
+        {label}
+      </Box>
+      {children}
+    </Box>
+  );
+}
+
+/*
+ * What meets an outcome, under it: a small label, the mechanisms and
+ * components that say so as chips, and how much evidence there is.
+ */
+function MetBy({ by }: { by: TechnicalDoc[] }) {
+  const n = by.reduce((sum, e) => sum + e.evidence.implements.length + e.evidence.verifies.length, 0);
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        flexWrap: "wrap",
+        alignItems: "center",
+        gap: "4px 6px",
+        mt: 1,
+        fontSize: 12,
+        color: "text.secondary",
+        "& a": {
+          gap: 0.5,
+          py: "1px",
+          pr: 1,
+          pl: 0.75,
+          lineHeight: "18px",
+          color: "concept.main",
+          textDecoration: "none",
+          bgcolor: "concept.soft",
+          border: 1,
+          borderColor: (t) => `color-mix(in srgb, ${t.vars.palette.concept.main} 22%, transparent)`,
+          borderRadius: 999,
+          "&:hover": { borderColor: (t) => `color-mix(in srgb, ${t.vars.palette.concept.main} 55%, transparent)` },
+          "& svg": { fontSize: 14, color: "currentColor", opacity: 0.8 },
+        },
+      }}
+    >
+      <Box component="span" sx={{ mr: "2px", fontSize: 10.5, fontWeight: 650, letterSpacing: "0.06em", textTransform: "uppercase", color: "text.disabled" }}>
+        Met by
+      </Box>
+      {by.map((e) => (
+        <TechnicalLink key={e.id} doc={e} />
+      ))}
+      <Box component="span" sx={{ ml: "2px", color: "text.disabled" }}>
+        {n ? `evidence in ${plural(n, "place", "places")}` : "nothing in the code points at it yet"}
+      </Box>
+    </Box>
   );
 }
 
@@ -273,9 +432,19 @@ function StandingIcon({ standing }: { standing: Standing }) {
 function QualityName({ quality }: { quality: RubricQuality }) {
   return (
     <DetailsPopover title={<QualityDetails quality={quality} />}>
-      <span className="sc-quality-name" tabIndex={0}>
+      <Box
+        component="span"
+        tabIndex={0}
+        sx={{
+          cursor: "help",
+          textDecoration: "underline dotted",
+          textDecorationColor: (t) => t.vars.palette.surface.borderStrong,
+          textUnderlineOffset: "4px",
+          "&:focus-visible": focusSx,
+        }}
+      >
         {quality.name}
-      </span>
+      </Box>
     </DetailsPopover>
   );
 }
@@ -292,7 +461,7 @@ function Guidance({
 }) {
   if (!implementation.length && !overengineering.length) return null;
   return (
-    <div className="sc-guidance">
+    <Box sx={{ display: "flex", flexWrap: "wrap", gap: "4px 16px", mt: 0.5 }}>
       {implementation.length ? (
         <Pill kind="implementation" icon={<LightbulbOutlinedIcon sx={{ fontSize: 15 }} />} label="How it might look" count={implementation.length}>
           <PillCard label="How it might look" info={IMPLEMENTATION_INFO} listLabel="Examples">
@@ -307,41 +476,87 @@ function Guidance({
           </PillCard>
         </Pill>
       ) : null}
-    </div>
+    </Box>
   );
 }
 
 /* A list of examples, each with a tag for each kind of software it may suit. Without tags, it may suit any kind. */
 function Examples({ list, kindName }: { list: RubricExample[]; kindName: (id: string) => string }) {
   return (
-    <ul className="sc-examples">
+    <Box component="ul" sx={{ pl: 2, listStyle: "disc", "& > li + li": { mt: 0.75 }, "& > li::marker": { color: "text.disabled" } }}>
       {list.map((e) => (
         <li key={e.text}>
           {e.text}
           {e.kinds.length ? (
-            <span className="sc-kinds">
+            <Box component="span" sx={{ display: "inline-flex", flexWrap: "wrap", gap: "3px", ml: 0.75, verticalAlign: "1px" }}>
               {e.kinds.map((k) => (
-                <span key={k} className="explore-tag">
+                <Box component="span" key={k} sx={[tagSx, { px: 0.75, fontSize: 10.5, lineHeight: "16px" }]}>
                   {kindName(k)}
-                </span>
+                </Box>
               ))}
-            </span>
+            </Box>
           ) : null}
         </li>
       ))}
-    </ul>
+    </Box>
   );
 }
 
+/* A visible focus ring, in the accent. */
+const focusSx: SystemStyleObject<Theme> = { outline: "2px solid", outlineColor: "primary.main", outlineOffset: "2px", borderRadius: "3px" };
+
+/* Each pill's icon in its kind's tone: an idea in the accent, overengineering as a warning, and what it builds on faint. */
+const PILL_TONES = { implementation: "primary.main", overengineering: "warning.main", "builds-on": "text.disabled" } as const;
+
 /* A link-like trigger, with an icon in its kind's tone, a label and a count, that opens its popover on hover, focus or tap. */
-function Pill({ kind, icon, label, count, children }: { kind: string; icon: ReactNode; label: string; count: number; children: ReactNode }) {
+function Pill({ kind, icon, label, count, children }: { kind: keyof typeof PILL_TONES; icon: ReactNode; label: string; count: number; children: ReactNode }) {
   return (
     <DetailsPopover title={children}>
-      <button type="button" className="sc-pill" data-kind={kind}>
+      <Box
+        component="button"
+        type="button"
+        sx={{
+          display: "inline-flex",
+          flex: "none",
+          alignItems: "center",
+          gap: "5px",
+          py: "1px",
+          px: 0,
+          font: "inherit",
+          fontSize: 12,
+          color: "text.secondary",
+          bgcolor: "transparent",
+          border: 0,
+          cursor: "help",
+          "& > svg": { color: PILL_TONES[kind] },
+          "&:hover > span:first-of-type, &:focus-visible > span:first-of-type": { color: "text.primary" },
+          "&:focus-visible": focusSx,
+        }}
+      >
         {icon}
-        <span className="sc-pill-label">{label}</span>
-        <span className="sc-pill-count">{count}</span>
-      </button>
+        <Box
+          component="span"
+          sx={{ textDecoration: "underline dotted", textDecorationColor: (t) => t.vars.palette.surface.borderStrong, textUnderlineOffset: "3px" }}
+        >
+          {label}
+        </Box>
+        <Box
+          component="span"
+          sx={{
+            minWidth: 16,
+            px: 0.5,
+            fontSize: 10.5,
+            fontWeight: 650,
+            lineHeight: "15px",
+            textAlign: "center",
+            color: "text.secondary",
+            bgcolor: "surface.accentSoft",
+            borderRadius: 999,
+          }}
+        >
+          {count}
+        </Box>
+      </Box>
     </DetailsPopover>
   );
 }

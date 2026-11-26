@@ -1,3 +1,4 @@
+import Box from "@mui/material/Box";
 import { MORE_ABOUT } from "../../components/markdown/Markdown";
 import { StabilitySpread } from "../../components/stability/StabilitySpread";
 import { Term } from "../../components/term/Term";
@@ -24,7 +25,7 @@ import { LeftTab } from "../../components/doc/Left";
 import { TopGaps } from "../../components/doc/Left";
 import { CapabilityTable } from "../../components/doc/CapabilityTable";
 import { Missing } from "../../components/doc/Missing";
-import { docGo } from "../../components/doc/DocPage";
+import { docGo, Crumb, levelsSx, lineSx } from "../../components/doc/DocPage";
 
 /* A initiative's page, or what shows when it isn't in the projects showing. */
 export default function InitiativeView({ state, id, route }: { state: DocketState; id: string; route: Route }) {
@@ -91,36 +92,38 @@ export function InitiativePage({ initiative, route, ...go }: DocPageProps & { in
           <StillNeedsSection readiness={readiness} readyText={`${name} is ready: everything started in it is at Beta or above, with no unacceptable gap.`} />
           <Section title="Who it's for" term="persona" count={personas.length} note="How ready it is for each, from its capabilities that serve them.">
             {personas.length ? (
-              <ul className="page-levels">
+              <Box component="ul" sx={levelsSx}>
                 {personas.map((p) => (
                   <li key={p.id}>
-                    <a className="page-crumb" href={docHref("persona", p.id)}>
-                      <PersonaAvatar persona={p} size={22} />
+                    <Crumb href={docHref("persona", p.id)} icon={<PersonaAvatar persona={p} size={22} />}>
                       {p.name}
-                    </a>
+                    </Crumb>
                     <ReadinessFor state={state} forRef={`persona:${p.id}`} initiative={initiative.id} of={`${name}'s readiness for ${p.name}`} />
                   </li>
                 ))}
-              </ul>
+              </Box>
             ) : (
-              <p className="page-line">No persona says it's part of {name}.</p>
+              <Box component="p" sx={lineSx}>
+                No persona says it's part of {name}.
+              </Box>
             )}
           </Section>
           <Section title="By feature" count={features.length} note="How ready each feature's part of it is, from its capabilities in it.">
             {features.length ? (
-              <ul className="page-levels">
+              <Box component="ul" sx={levelsSx}>
                 {features.map((f) => (
                   <li key={f.id}>
-                    <a className="page-crumb" href={docHref("feature", f.id)}>
-                      {NAMES.feature.icon}
+                    <Crumb href={docHref("feature", f.id)} icon={NAMES.feature.icon}>
                       {f.name}
-                    </a>
+                    </Crumb>
                     <ReadinessFor state={state} forRef={`feature:${f.id}`} initiative={initiative.id} of={`${f.name}'s readiness in ${name}`} />
                   </li>
                 ))}
-              </ul>
+              </Box>
             ) : (
-              <p className="page-line">None of its capabilities is in a feature.</p>
+              <Box component="p" sx={lineSx}>
+                None of its capabilities is in a feature.
+              </Box>
             )}
           </Section>
           <TopGaps state={state} left={left} />
@@ -132,10 +135,9 @@ export function InitiativePage({ initiative, route, ...go }: DocPageProps & { in
               <Section
                 key={f.id}
                 title={
-                  <a className="page-crumb page-section-link" href={docHref("feature", f.id)}>
-                    {NAMES.feature.icon}
+                  <Crumb href={docHref("feature", f.id)} icon={NAMES.feature.icon}>
                     {f.name}
-                  </a>
+                  </Crumb>
                 }
                 aside={<ReadinessFor state={state} forRef={`feature:${f.id}`} initiative={initiative.id} of={`${f.name}'s readiness in ${name}`} started />}
               >

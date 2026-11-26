@@ -1,3 +1,4 @@
+import Box from "@mui/material/Box";
 import { facets } from "../../components/Fields";
 import { MORE_ABOUT } from "../../components/markdown/Markdown";
 import { STABILITY } from "../../components/stability/stability";
@@ -21,7 +22,7 @@ import { DecidedTab } from "../../components/doc/DecidedTab";
 import { CapabilityTable } from "../../components/doc/CapabilityTable";
 import { EvidencePair } from "../../components/doc/EvidencePair";
 import { Missing } from "../../components/doc/Missing";
-import { docGo } from "../../components/doc/DocPage";
+import { docGo, cardSx, tagSx } from "../../components/doc/DocPage";
 
 /* A mechanism's or component's page, or what shows when it isn't in the projects showing. */
 export default function TechnicalView({ state, kind, id, route }: { state: DocketState; kind: "mechanism" | "component"; id: string; route: Route }) {
@@ -103,20 +104,33 @@ export function TechnicalPage({ doc, route, ...go }: DocPageProps & { doc: Techn
               count={outcomes.length}
               note="For each capability it serves, these count as met on its rubric, with the places in the code as evidence, unless a gap names one."
             >
-              <div className="page-card">
-                <ul className="explore-left-list">
+              <Box sx={cardSx}>
+                <Box component="ul" sx={{ pl: 2.5, listStyle: "disc", fontSize: 13.5, "& > li": { py: "2px" }, "& > li::marker": { color: "text.disabled" } }}>
                   {outcomes.map(({ outcome, quality }) => (
                     <li key={outcome.id}>
                       {outcome.text}
-                      <span className="explore-left-meta">
-                        <span className="explore-tag">
+                      {/* Its quality and level, as a tag under it. */}
+                      <Box
+                        component="span"
+                        sx={{
+                          display: "flex",
+                          flexWrap: "wrap",
+                          alignItems: "center",
+                          gap: "4px 10px",
+                          mt: "3px",
+                          mb: "2px",
+                          fontSize: 12,
+                          color: "text.disabled",
+                        }}
+                      >
+                        <Box component="span" sx={tagSx}>
                           {quality.name} · {STABILITY[outcome.level].name}
-                        </span>
-                      </span>
+                        </Box>
+                      </Box>
                     </li>
                   ))}
-                </ul>
-              </div>
+                </Box>
+              </Box>
             </Section>
           ) : null}
           {!fielded && !hasBody(doc) && !outcomes.length ? <Empty>Nothing more is written about it than what's above.</Empty> : null}

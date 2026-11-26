@@ -1,3 +1,6 @@
+import Box from "@mui/material/Box";
+import type { Theme } from "@mui/material/styles";
+import type { SystemStyleObject } from "@mui/system";
 import { ConceptIcon } from "../../components/Concepts";
 import { MORE_ABOUT } from "../../components/markdown/Markdown";
 import { MaturityRing } from "../../components/maturity/MaturityRing";
@@ -29,7 +32,23 @@ import { StandingSummary } from "../../components/doc/RuleTable";
 import { RuleTable } from "../../components/doc/RuleTable";
 import { DocRows } from "../../components/doc/DocRows";
 import { Missing } from "../../components/doc/Missing";
-import { docGo } from "../../components/doc/DocPage";
+import { docGo, cardSx, lineSx } from "../../components/doc/DocPage";
+
+/* A feature in a domain, as a card that's a link to its page, lit in the accent on hover. */
+const featureCardSx: SystemStyleObject<Theme> = {
+  display: "flex",
+  flexDirection: "column",
+  gap: 1,
+  px: 2,
+  py: 1.75,
+  color: "inherit",
+  textDecoration: "none",
+  bgcolor: (t) => `color-mix(in srgb, ${t.vars.palette.text.primary} 2%, transparent)`,
+  border: 1,
+  borderColor: "divider",
+  borderRadius: "10px",
+  "&:hover": { bgcolor: "surface.accentSoft", borderColor: "primary.main" },
+};
 
 /* A domain's page, or what shows when it isn't in the projects showing. */
 export default function DomainView({ state, id, route }: { state: DocketState; id: string; route: Route }) {
@@ -112,7 +131,9 @@ export function DomainPage({ domain, route, ...go }: DocPageProps & { domain: Do
             {capabilities.length ? (
               <StandingSummary state={state} capabilities={capabilities} domain={domain.id} all={tabHref("features")} />
             ) : (
-              <p className="page-line">A part of the business the software doesn't serve yet.</p>
+              <Box component="p" sx={lineSx}>
+                A part of the business the software doesn't serve yet.
+              </Box>
             )}
           </Section>
           <StillNeedsSection
@@ -125,16 +146,18 @@ export function DomainPage({ domain, route, ...go }: DocPageProps & { domain: Do
         <>
           <Section title={<Term id="feature">Features</Term>} count={features.length}>
             {features.length ? (
-              <div className="page-feature-grid">
+              <Box sx={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(260px, 100%), 1fr))", gap: 1.5 }}>
                 {features.map((f) => {
                   const part = partOf(f, domain.id);
                   const caps = (part?.capabilities ?? []).flatMap((id) => find(state.capabilities, id) ?? []);
                   const elsewhere = f.parts.filter((p) => p.domain !== domain.id).map((p) => domainName(state, p.domain));
                   return (
-                    <a key={f.id} className="page-feature" href={docHref("feature", f.id)}>
-                      <span className="page-feature-head">
+                    <Box component="a" key={f.id} href={docHref("feature", f.id)} sx={featureCardSx}>
+                      <Box component="span" sx={{ display: "flex", alignItems: "center", gap: 1, fontSize: 14.5 }}>
                         {NAMES.feature.icon}
-                        <strong>{f.name}</strong>
+                        <Box component="strong" sx={{ flex: 1 }}>
+                          {f.name}
+                        </Box>
                         {part?.maturity != null ? (
                           <MaturityRing
                             progress={part.maturity}
@@ -144,24 +167,32 @@ export function DomainPage({ domain, route, ...go }: DocPageProps & { domain: Do
                             spread={caps.map((c) => c.levels.find((l) => l.domain === domain.id)?.level ?? c.stability)}
                           />
                         ) : null}
-                      </span>
-                      {f.description ? <span className="page-feature-summary">{f.description}</span> : null}
-                      <ul>
+                      </Box>
+                      {f.description ? (
+                        <Box component="span" sx={{ fontSize: 13, color: "text.secondary" }}>
+                          {f.description}
+                        </Box>
+                      ) : null}
+                      <Box component="ul" sx={{ display: "flex", flexDirection: "column", gap: 0.5, fontSize: 13 }}>
                         {caps.map((c) => {
                           const level = c.levels.find((l) => l.domain === domain.id)?.level ?? c.stability;
                           return (
-                            <li key={c.id}>
+                            <Box component="li" key={c.id} sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                               <CapabilityStability level={level} name={c.name} focusable={false} />
                               {c.name}
-                            </li>
+                            </Box>
                           );
                         })}
-                      </ul>
-                      {elsewhere.length ? <span className="faint">Also in {elsewhere.join(", ")}</span> : null}
-                    </a>
+                      </Box>
+                      {elsewhere.length ? (
+                        <Box component="span" sx={{ fontSize: 12, color: "text.disabled" }}>
+                          Also in {elsewhere.join(", ")}
+                        </Box>
+                      ) : null}
+                    </Box>
                   );
                 })}
-              </div>
+              </Box>
             ) : (
               <Empty>A part of the business the software doesn't serve yet.</Empty>
             )}
@@ -183,7 +214,7 @@ export function DomainPage({ domain, route, ...go }: DocPageProps & { domain: Do
         <>
           {concepts.length ? (
             <Section title={<Term id="concept">Concepts</Term>} count={concepts.length} note="What its words mean here.">
-              <div className="page-card">
+              <Box sx={cardSx}>
                 <DocRows
                   rows={concepts.map((c) => ({
                     key: c.id,
@@ -193,7 +224,7 @@ export function DomainPage({ domain, route, ...go }: DocPageProps & { domain: Do
                     summary: c.description,
                   }))}
                 />
-              </div>
+              </Box>
             </Section>
           ) : null}
           {rules.length ? (
