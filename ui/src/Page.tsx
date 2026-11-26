@@ -2,17 +2,17 @@ import { Fragment, useEffect, useRef, type ReactNode } from "react";
 import RuleRoundedIcon from "@mui/icons-material/RuleRounded";
 import WarningAmberRoundedIcon from "@mui/icons-material/WarningAmberRounded";
 import { StabilityRubric } from "./Rubric";
-import { ConceptChips, ConceptIcon, related } from "./Concepts";
-import { DecisionList, Facets, facets } from "./Fields";
-import { Body, Excerpt, MORE_ABOUT } from "./design/markdown/Markdown";
-import { MaturityRing } from "./design/maturity/MaturityRing";
-import { STABILITY } from "./design/stability/stability";
-import { StabilityMark } from "./design/stability/StabilityMark";
-import { StabilitySpread } from "./design/stability/StabilitySpread";
-import { LeftLabel } from "./design/left/LeftMark";
-import { Term } from "./design/term/Term";
-import { CapabilityStability } from "./design/catalog/CapabilityLabel";
-import { StandingMark } from "./design/standing/StandingMark";
+import { ConceptChips, ConceptIcon, related } from "./components/Concepts";
+import { DecisionList, Facets, facets } from "./components/Fields";
+import { Body, Excerpt, MORE_ABOUT } from "./components/markdown/Markdown";
+import { MaturityRing } from "./components/maturity/MaturityRing";
+import { STABILITY } from "./components/stability/stability";
+import { StabilityMark } from "./components/stability/StabilityMark";
+import { StabilitySpread } from "./components/stability/StabilitySpread";
+import { LeftLabel } from "./components/left/LeftMark";
+import { Term } from "./components/term/Term";
+import { CapabilityStability } from "./components/CapabilityLabel";
+import { StandingMark } from "./components/standing/StandingMark";
 import {
   TECHNICAL_NAMES,
   TechnicalLink,
@@ -30,11 +30,11 @@ import {
   leftOf,
 } from "./Explore";
 import { DomainIcon } from "./FeatureMap";
-import { PersonaAvatar, personaNameAndRole } from "./Personas";
-import { ReadinessMark, StillNeeds, needsLine } from "./Readiness";
-import { ProjectIcon } from "./ProductFilter";
-import { InitiativeIcon } from "./ScopeFilter";
-import { InitiativeTags, initiativesOf } from "./Initiatives";
+import { PersonaAvatar, personaNameAndRole } from "./components/Personas";
+import { ReadinessMark, StillNeeds, needsLine } from "./components/Readiness";
+import { ProjectIcon } from "./components/shell/ProductFilter";
+import { InitiativeIcon } from "./components/shell/ScopeFilter";
+import { InitiativeTags, initiativesOf } from "./components/Initiatives";
 import {
   bareId,
   builtOn,
@@ -79,12 +79,12 @@ import {
   type Rule,
 } from "./state";
 import { someOf, useStatusFor } from "./model";
-import { Tip } from "./design/Tip";
-import { GapRows, LeftFigure } from "./GapRows";
-import { ExposureStat, MaturityStat } from "./pages/indexParts";
-import { TradeoffRows } from "./TradeoffRows";
+import { Tip } from "./components/Tip";
+import { GapRows, LeftFigure } from "./components/risk/GapRows";
+import { ExposureStat, MaturityStat } from "./components/indexParts";
+import { TradeoffRows } from "./components/TradeoffRows";
 import { docHref, navigate, sectionHref, withParam, type Route } from "./routes";
-import { Empty, PageHeader, Section, Stat, Tabs, View, currentTab, type TabDef } from "./shell/layout";
+import { Empty, PageHeader, Section, Stat, Tabs, View, currentTab, type TabDef } from "./components/shell/layout";
 import "./page.css";
 
 /*

@@ -3,11 +3,10 @@ import "@mui/material/themeCssVarsAugmentation";
 import { createTheme, type Shadows } from "@mui/material/styles";
 
 /*
- * The MUI theme the copied design components render under, in Docket's look:
- * violet and fuchsia, Geist, cards with tight 8px corners, and the same
- * surface colors as styles.css. `shape` is 3px, so the popover's card, which
- * the design system rounds to 2.5 units, comes to about 7px. Light or dark
- * follows the system's setting.
+ * Docket's MUI theme: violet and fuchsia, Geist, cards with tight 8px
+ * corners, and the same surface colors as styles.css. `shape` is 3px, so the
+ * popover's card, which DetailsPopover rounds to 2.5 units, comes to about
+ * 7px. Light or dark follows the system's setting.
  */
 const base = createTheme();
 const shadows = [...base.shadows] as Shadows;

@@ -9,22 +9,22 @@ import RemoveRoundedIcon from "@mui/icons-material/RemoveRounded";
 import WarningAmberRoundedIcon from "@mui/icons-material/WarningAmberRounded";
 import WidgetsOutlinedIcon from "@mui/icons-material/WidgetsOutlined";
 import Box from "@mui/material/Box";
-import { MATURITY_BANDS, maturityBand } from "./design/maturity/maturity";
-import { MaturityRing } from "./design/maturity/MaturityRing";
-import type { MaturitySubject } from "./design/maturity/MaturityDetails";
-import { STABILITY, levelColor } from "./design/stability/stability";
-import { CapabilityStability } from "./design/catalog/CapabilityLabel";
-import { GapFilter, GapKindTag, LeftCounts, LeftItem, LeftLabel, LeftList, gapKind, type GapShow, type LeftKind } from "./design/left/LeftMark";
-import { RiskSection } from "./design/risk/ImpactBadge";
-import { ExposureMark, GapRiskMark, VERDICT_NAMES } from "./design/risk/RiskScore";
-import { RiskWorkings } from "./design/risk/RiskWorkings";
-import { Term } from "./design/term/Term";
-import { InlineMarkdown, MoreAboutFold } from "./design/markdown/Markdown";
-import { AffectedItem, DecisionList, Facets, HeldDecisions, facets } from "./Fields";
+import { MATURITY_BANDS, maturityBand } from "./components/maturity/maturity";
+import { MaturityRing } from "./components/maturity/MaturityRing";
+import type { MaturitySubject } from "./components/popovers/MaturityDetails";
+import { STABILITY, levelColor } from "./components/stability/stability";
+import { CapabilityStability } from "./components/CapabilityLabel";
+import { GapFilter, GapKindTag, LeftCounts, LeftItem, LeftLabel, LeftList, gapKind, type GapShow, type LeftKind } from "./components/left/LeftMark";
+import { RiskSection } from "./components/risk/ImpactBadge";
+import { ExposureMark, GapRiskMark, VERDICT_NAMES } from "./components/risk/RiskScore";
+import { RiskWorkings } from "./components/popovers/RiskWorkings";
+import { Term } from "./components/term/Term";
+import { InlineMarkdown, MoreAboutFold } from "./components/markdown/Markdown";
+import { AffectedItem, DecisionList, Facets, HeldDecisions, facets } from "./components/Fields";
 import { DomainIcon } from "./FeatureMap";
-import { PersonaAvatar, PersonaIcon, personaNameAndRole } from "./Personas";
-import { ReadinessMark } from "./Readiness";
-import { ProjectIcon } from "./ProductFilter";
+import { PersonaAvatar, PersonaIcon, personaNameAndRole } from "./components/Personas";
+import { ReadinessMark } from "./components/Readiness";
+import { ProjectIcon } from "./components/shell/ProductFilter";
 import {
   openDecisions,
   outcomesOf,
@@ -59,8 +59,8 @@ import {
   type RuleStanding,
   type Target,
 } from "./state";
-import { Tip } from "./design/Tip";
-import { InitiativeTags } from "./Initiatives";
+import { Tip } from "./components/Tip";
+import { InitiativeTags } from "./components/Initiatives";
 import { useStatusFor } from "./model";
 
 /* What the panel can show: the product's parts, each as a list or one of them. */

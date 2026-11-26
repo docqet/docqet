@@ -1,14 +1,14 @@
 import type { MouseEvent } from "react";
 import SpaceDashboardOutlinedIcon from "@mui/icons-material/SpaceDashboardOutlined";
-import { GROUP_HEAD, GROUP_PAD, type CanvasGroup, type CanvasItem, type Pos, type Size } from "./Canvas";
-import { CapabilityCard } from "./design/catalog/CapabilityCard";
-import { FeatureCard } from "./design/catalog/FeatureCard";
-import { MaturityRing } from "./design/maturity/MaturityRing";
-import { ContradictionHint } from "./CapabilityHints";
-import { ConceptChips, ConceptIcon } from "./Concepts";
-import { PersonaCard } from "./Personas";
-import { ProjectIcon } from "./ProductFilter";
-import { RiskScore } from "./design/risk/RiskScore";
+import { GROUP_HEAD, GROUP_PAD, type CanvasGroup, type CanvasItem, type Pos, type Size } from "./pages/map/components/Canvas";
+import { CapabilityCard } from "./pages/map/components/CapabilityCard";
+import { FeatureCard } from "./pages/map/components/FeatureCard";
+import { MaturityRing } from "./components/maturity/MaturityRing";
+import { ContradictionHint } from "./pages/map/components/CapabilityHints";
+import { ConceptChips, ConceptIcon } from "./components/Concepts";
+import { PersonaCard } from "./components/Personas";
+import { ProjectIcon } from "./components/shell/ProductFilter";
+import { RiskScore } from "./components/risk/RiskScore";
 import {
   capabilityCard,
   conceptsOf,
@@ -31,7 +31,7 @@ import {
   type RiskAcross,
 } from "./state";
 import { useStatusFor } from "./model";
-import { Tip } from "./design/Tip";
+import { Tip } from "./components/Tip";
 
 /* A domain's mark, wherever one is named. */
 export function DomainIcon({ size = 14 }: { size?: number }) {
@@ -90,8 +90,7 @@ const opener = (onOpen: (pick: Pick) => void, pick: Pick) => (e: MouseEvent<HTML
  * has a part in, holding the capabilities that domain builds, at their levels
  * there, and each capability in no feature on a card of its own. A feature
  * that spans domains has a card in each, saying where else it is. The cards
- * are the design system's, rethemed, and kept to what shows how things
- * relate: names, levels and maturity, and each feature ends with the
+ * keep to what shows how things relate: names, levels and maturity, and each feature ends with the
  * concepts its capabilities use there, which open in the peek; what's left
  * and the rules are on each one's page. With several projects showing, each card says which define it,
  * and one that projects contradict each other on has a warning. Above the

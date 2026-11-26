@@ -3,18 +3,17 @@ import LayersOutlinedIcon from "@mui/icons-material/LayersOutlined";
 import LightbulbOutlinedIcon from "@mui/icons-material/LightbulbOutlined";
 import WarningAmberRoundedIcon from "@mui/icons-material/WarningAmberRounded";
 import Switch from "@mui/material/Switch";
-import { DetailsCard, DetailsEyebrow, DetailsPopover, NoPopovers } from "./design/DetailsPopover";
-import { STABILITY, STABILITY_LEVEL_IDS } from "./design/stability/stability";
-import { StabilityMark } from "./design/stability/StabilityMark";
-import { LEFT_KINDS, LeftLabel, gapKind } from "./design/left/LeftMark";
-import { InlineMarkdown } from "./design/markdown/Markdown";
-import { StandingMark, type Standing } from "./design/standing/StandingMark";
+import { DetailsCard, DetailsEyebrow, DetailsPopover, NoPopovers } from "./components/popovers/DetailsPopover";
+import { STABILITY, STABILITY_LEVEL_IDS } from "./components/stability/stability";
+import { StabilityMark } from "./components/stability/StabilityMark";
+import { LEFT_KINDS, LeftLabel, gapKind } from "./components/left/LeftMark";
+import { InlineMarkdown } from "./components/markdown/Markdown";
+import { StandingMark, type Standing } from "./components/standing/StandingMark";
 import { TechnicalLink, levelName, plural } from "./Explore";
 import { appliesAt, outcomesOf, type Capability, type Rubric, type RubricExample, type ExpectedOutcome, type RubricQuality, type Level } from "./state";
 
 /*
- * The stability rubric, laid out as Exalynt's stability checklist page lays it
- * out, in Docket's look: pick a level to see what it expects, by quality,
+ * The stability rubric, as a checklist: pick a level to see what it expects, by quality,
  * each outcome with how meeting it might look and what may be overengineering
  * at that level. It's a guideline, not a gate, so the guidance is there to
  * judge by, never to follow step by step.

@@ -132,3 +132,6 @@ export function followLink(e: React.MouseEvent) {
   e.preventDefault();
   navigate(url.search + url.hash || window.location.pathname);
 }
+
+/* A param in the address, such as a filter. */
+export const param = (key: string) => new URLSearchParams(window.location.search).get(key);

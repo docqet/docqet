@@ -3338,8 +3338,7 @@ button.page-table-row:hover .page-table-name strong {
 }
 
 /*
- * The stability rubric, laid out as Exalynt's stability checklist page lays it out:
- * a note that it's a guideline, a level picker, then each quality with its
+ * The stability rubric, as a checklist: a note that it's a guideline, a level picker, then each quality with its
  * outcomes, and popovers for how meeting one might look, what may be
  * overengineering, and what it builds on.
  */

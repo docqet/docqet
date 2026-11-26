@@ -1,5 +1,5 @@
 import type { Showing } from "./services/docket/client";
-import { STABILITY_LEVEL_IDS, type StabilityLevelId } from "./design/stability/stability";
+import { STABILITY_LEVEL_IDS, type StabilityLevelId } from "./components/stability/stability";
 
 /*
  * What the pages hold about the product showing (DocketState): each doc, put
@@ -908,4 +908,16 @@ export function pageInUrl(): PageAt | null {
     if (id) return { kind, id } as PageAt;
   }
   return null;
+}
+
+/* Gaps or tradeoffs grouped by what they're on, in the order they come, so a list in risk order gives groups with the riskiest first. */
+export function bySubject<T extends { id: string }>(items: T[]): { type: string; id: string; items: T[] }[] {
+  const groups = new Map<string, { type: string; id: string; items: T[] }>();
+  for (const item of items) {
+    const on = subjectOf(item);
+    const key = `${on.type}:${on.id}`;
+    if (!groups.has(key)) groups.set(key, { ...on, items: [] });
+    groups.get(key)!.items.push(item);
+  }
+  return [...groups.values()];
 }
