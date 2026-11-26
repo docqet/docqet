@@ -15,7 +15,7 @@ export default defineConfig([
       globals: globals.browser,
     },
     rules: {
-      /* Many files still export helpers beside their components; the move to components/ and pages/ splits them, then this goes back to an error. */
+      /* Many files export small helpers beside their components. That only costs a full reload instead of a hot one in the dev server, so it warns. */
       "react-refresh/only-export-components": "warn",
     },
   },
