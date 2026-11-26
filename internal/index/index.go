@@ -54,6 +54,10 @@ func Index(fsys fs.FS) (*state.State, error) {
 		st.Product = &state.Ident{ID: cfg.Product.ID, Name: cfg.Product.Name}
 	}
 
+	ig, err := readIgnore(fsys)
+	if err != nil {
+		return nil, err
+	}
 	var (
 		docs        []*doc
 		annotations []annotation
@@ -64,12 +68,12 @@ func Index(fsys fs.FS) (*state.State, error) {
 			return err
 		}
 		if d.IsDir() {
-			if p != "." && skipDir(fsys, p) {
+			if p != "." && (skipDir(fsys, p) || ig.ignored(p, true)) {
 				return fs.SkipDir
 			}
 			return nil
 		}
-		if p == "docket.yaml" {
+		if p == "docket.yaml" || ig.ignored(p, false) {
 			return nil
 		}
 		data, err := fs.ReadFile(fsys, p)
