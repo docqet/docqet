@@ -153,9 +153,27 @@ func (v *View) ProjectMaturity(project string) *derive.Maturity {
 
 // Within returns the capabilities a for names, as the CLI's --for and the
 // API's ?for= mean it: a project's, a persona's, an initiative's, a domain's
-// or a feature's capabilities, or one capability. It returns ErrInvalidScope
-// for a reference that names nothing showing.
-func (v *View) Within(ref string) ([]*combine.Capability, error) {
+// or a feature's capabilities, or one capability.
+// Several references, separated by commas, name the capabilities they all
+// share, such as those in a feature that serve a persona. It returns
+// ErrInvalidScope for a reference that names nothing showing.
+func (v *View) Within(refs string) ([]*combine.Capability, error) {
+	var caps []*combine.Capability
+	for i, ref := range strings.Split(refs, ",") {
+		these, err := v.within(strings.TrimSpace(ref))
+		if err != nil {
+			return nil, err
+		}
+		if i == 0 {
+			caps = these
+			continue
+		}
+		caps = slices.DeleteFunc(caps, func(c *combine.Capability) bool { return !slices.Contains(these, c) })
+	}
+	return caps, nil
+}
+
+func (v *View) within(ref string) ([]*combine.Capability, error) {
 	r, ok := state.ParseRef(ref)
 	if !ok {
 		return nil, fmt.Errorf("%w: %q isn't a reference", ErrInvalidScope, ref)

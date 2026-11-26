@@ -46,9 +46,10 @@ import "github.com/exalynt/docket/internal/state"
 //	GET /products/{product}/search?q=               []SearchResultResource
 //
 // ?for= is a reference, such as persona:front-desk-clerk, to a project,
-// persona, initiative, domain, feature or capability, as the CLI's --for:
-// a list or status then counts only its capabilities, and a gap's Within
-// says what it puts at stake there.
+// persona, initiative, domain, feature or capability, as the CLI's --for, or
+// several separated by commas, for the capabilities they all
+// share: a list or status then counts only those capabilities, and a gap's
+// Within says what it puts at stake there.
 
 // MaturityResource is a maturity: a whole percentage, and the level its band
 // is named for (prototype, alpha, beta or ga). Null where there's none.

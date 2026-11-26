@@ -1301,8 +1301,11 @@ components:
       required: false
       description: >-
         A reference to a project, persona, initiative, domain, feature or
-        capability, as the CLI's `--for`: count only its capabilities. One
-        that names nothing showing is a 400.
+        capability, as the CLI's `--for`: count only its capabilities.
+        Several, separated by commas, count
+        only the capabilities they all share, such as
+        `persona:front-desk-clerk,feature:front-desk`. One that names nothing
+        showing is a 400.
       schema:
         type: string
         example: persona:front-desk-clerk
