@@ -11,12 +11,12 @@ The server has two kinds of callers, so it has two kinds of endpoint.
 A state is the unit the CLI sends and receives: one project, at one commit.
 
 ```text
-PUT /v1/projects/{project}/commits/{sha}           apply: the state, its parents, commit time and trailers
-PUT /v1/projects/{project}/commits/{sha}/results   results: JUnit or QA
-GET /v1/projects/{project}                         the project, with its latest commit, where apply starts from
-GET /v1/projects/{project}/state                   the latest applied state, whole
-GET /v1/projects/{project}/commits/{sha}           a commit, without its state, so apply can skip one already sent
-GET /v1/projects/{project}/commits/{sha}/state     a commit's state, whole
+PUT /api/v1/projects/{project}/commits/{sha}           apply: the state, its parents, commit time and trailers
+PUT /api/v1/projects/{project}/commits/{sha}/results   results: JUnit or QA
+GET /api/v1/projects/{project}                         the project, with its latest commit, where apply starts from
+GET /api/v1/projects/{project}/state                   the latest applied state, whole
+GET /api/v1/projects/{project}/commits/{sha}           a commit, without its state, so apply can skip one already sent
+GET /api/v1/projects/{project}/commits/{sha}/state     a commit's state, whole
 ```
 
 All but results are built.
@@ -36,16 +36,16 @@ All but results are built.
 The UI, and any other tool or agent, reads REST resources: never a state file.
 
 ```text
-GET /v1/products
-GET /v1/products/{product}
-GET /v1/products/{product}/status?initiative=mvp&for=persona:front-desk-clerk
-GET /v1/products/{product}/projects
-GET /v1/products/{product}/capabilities?stability=beta&initiative=mvp
-GET /v1/products/{product}/capabilities/{id}
-GET /v1/products/{product}/capabilities/{id}/gaps/{key}
-GET /v1/products/{product}/domains/{domain}/rules/{id}
-GET /v1/products/{product}/gaps?sort=risk&impact=blocking,damaging
-GET /v1/products/{product}/features, personas, initiatives, decisions, tradeoffs, mechanisms, components, problems
+GET /api/v1/products
+GET /api/v1/products/{product}
+GET /api/v1/products/{product}/status?initiative=mvp&for=persona:front-desk-clerk
+GET /api/v1/products/{product}/projects
+GET /api/v1/products/{product}/capabilities?stability=beta&initiative=mvp
+GET /api/v1/products/{product}/capabilities/{id}
+GET /api/v1/products/{product}/capabilities/{id}/gaps/{key}
+GET /api/v1/products/{product}/domains/{domain}/rules/{id}
+GET /api/v1/products/{product}/gaps?sort=risk&impact=blocking,damaging
+GET /api/v1/products/{product}/features, personas, initiatives, decisions, tradeoffs, mechanisms, components, problems
 ```
 
 - **Resources are the product's, not a project's.** What anyone sees is the
@@ -72,9 +72,9 @@ time, each in its own way.
 **What it was like at a point** is the same resources, read at that point:
 
 ```text
-GET /v1/products/hotel/capabilities/room-booking                   the latest
-GET /v1/products/hotel/capabilities/room-booking?at=9b1e004        as of a commit
-GET /v1/products/hotel/gaps?at=2026-10-01T00:00:00Z&sort=risk      as of a time
+GET /api/v1/products/hotel/capabilities/room-booking                the latest
+GET /api/v1/products/hotel/capabilities/room-booking?at=9b1e004     as of a commit
+GET /api/v1/products/hotel/gaps?at=2026-10-01T00:00:00Z&sort=risk   as of a time
 ```
 
 - **`?at=` is on every resource**, rather than a second tree of resources
@@ -101,10 +101,10 @@ GET /v1/products/hotel/gaps?at=2026-10-01T00:00:00Z&sort=risk      as of a time
 `docket log`, `diff` and the timeline:
 
 ```text
-GET /v1/products/hotel/changes?since=2026-09-01&initiative=mvp    docket log gaps --initiative mvp --since … --remote --product
-GET /v1/products/hotel/capabilities/room-booking/changes          docket log capability:room-booking --remote
-GET /v1/products/hotel/compare?from=<sha>&to=<sha>                docket diff --remote <from> <to>
-GET /v1/projects/hotel-bookings/commits                           the commits applied, with their times and trailers
+GET /api/v1/products/hotel/changes?since=2026-09-01&initiative=mvp   docket log gaps --initiative mvp --since … --remote --product
+GET /api/v1/products/hotel/capabilities/room-booking/changes         docket log capability:room-booking --remote
+GET /api/v1/products/hotel/compare?from=<sha>&to=<sha>               docket diff --remote <from> <to>
+GET /api/v1/projects/hotel-bookings/commits                          the commits applied, with their times and trailers
 ```
 
 - **A change** is one entry in a log: its date, commit and project, what
@@ -137,7 +137,7 @@ On the server:
 
 The api repository's REST conventions apply:
 
-- **Paths** are plural and kebab-case, under `/v1`.
+- **Paths** are plural and kebab-case, under `/api/v1`.
 - **Each endpoint returns a translated resource**, a `CapabilityResource`
   built from the state and what's derived, never a raw `state` type. The
   whole-state endpoints are the one exception: there, the state is the

@@ -463,7 +463,7 @@ go run ./cmd/docket -C examples/hotel-bookings check          # its problems, ex
 go run ./cmd/docket -C examples/hotel-bookings index --stdout # its state
 make run                                                      # migrate, then serve on localhost:8080
 DOCKET_SERVER=http://localhost:8080 go run ./cmd/docket -C examples/hotel-bookings apply
-curl localhost:8080/v1/projects/hotel-bookings/state          # the state the server keeps
+curl localhost:8080/api/v1/projects/hotel-bookings/state      # the state the server keeps
 ```
 
 `docket index` without `--stdout` writes over an example's hand-written

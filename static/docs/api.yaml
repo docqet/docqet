@@ -26,7 +26,7 @@ info:
 
     **Prototype** endpoints explore an idea: they may change completely or be
     removed, without notice. Endpoints move up a level as they settle, and
-    only GA endpoints promise no breaking changes within `/v1`.
+    only GA endpoints promise no breaking changes within `/api/v1`.
 
 
     ## Maturity
@@ -46,9 +46,9 @@ info:
     that client's people, such as on a private network.
   version: 0.1.0
 servers:
-  - url: http://localhost:8080/v1
+  - url: http://localhost:8080/api/v1
     description: Local development, `docket serve`
-  - url: http://127.0.0.1:4100/v1
+  - url: http://127.0.0.1:4100/api/v1
     description: This machine, `docket ui`
 tags:
   - name: Health

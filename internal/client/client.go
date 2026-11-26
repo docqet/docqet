@@ -28,7 +28,7 @@ type Client struct {
 
 // New returns a Client for the server at base, such as https://docket.example.com.
 func New(base string) *Client {
-	return &Client{base: strings.TrimRight(base, "/") + "/v1", http: &http.Client{Timeout: time.Minute}}
+	return &Client{base: strings.TrimRight(base, "/") + "/api/v1", http: &http.Client{Timeout: time.Minute}}
 }
 
 // Commit is a commit the server has applied for a project.

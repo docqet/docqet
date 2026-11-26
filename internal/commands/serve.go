@@ -77,7 +77,7 @@ func ServeCommand() *cli.Command {
 	}
 }
 
-// router builds the handler `serve` and `ui` serve: the API under /v1, its
+// router builds the handler `serve` and `ui` serve: the API under /api/v1, its
 // docs under /docs, the states the UI shows, and the UI under everything
 // else. states are the state.json files to show, one per project. With db,
 // the server's database, the API takes and serves applied states too.
@@ -104,7 +104,7 @@ func router(logger *slog.Logger, states []string, db *sql.DB) (http.Handler, err
 	health.Start()
 
 	r := chi.NewRouter()
-	r.Route("/v1", func(api chi.Router) {
+	r.Route("/api/v1", func(api chi.Router) {
 		// Health stays public so infrastructure probes, such as Compose's
 		// healthcheck, reach it without a token.
 		health.RegisterRoutes(api)
