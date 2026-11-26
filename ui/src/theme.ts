@@ -246,4 +246,19 @@ const theme = createTheme({
   },
 });
 
+/*
+ * MUI writes `--mui-palette-stability-prototype` but leaves `prototype` out
+ * of `theme.vars`, as it does any key named like `__proto__` or
+ * `constructor`, so components reading `theme.vars.palette.stability[level]`
+ * would get nothing for Prototype. Point it at the variable MUI did write,
+ * here and each time the provider builds the vars again.
+ */
+const withPrototype = (vars: typeof theme.vars) => {
+  vars.palette.stability.prototype = "var(--mui-palette-stability-prototype)";
+  return vars;
+};
+withPrototype(theme.vars);
+const generateThemeVars = theme.generateThemeVars;
+theme.generateThemeVars = () => withPrototype(generateThemeVars());
+
 export default theme;
