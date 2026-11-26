@@ -1,0 +1,229 @@
+# Gaps, tradeoffs and decisions
+
+These are where intention and reality differ, each declared in frontmatter on
+the one doc it's about:
+
+| Declared on            | Gaps                                               | Tradeoffs                              | Decisions |
+| ---------------------- | -------------------------------------------------- | -------------------------------------- | --------- |
+| Capability             | What someone using it would notice                 | Limits it has by choice                | Yes       |
+| Feature                | None: a missing capability is a draft              | Non-goals: capabilities never to build | Yes       |
+| Domain                 | None                                               | None                                   | Yes       |
+| Mechanism or component | What only someone working on the code would notice | Technical choices                      | Yes       |
+
+Rules, concepts, personas and initiatives have none of them. A limit across a
+whole domain is a rule, or a tradeoff on the mechanism that causes it.
+
+## Gaps
+
+A gap is something we intend to close. Docket lists it so people know about
+it. When and how it's closed is up to them, so a gap never says.
+
+```yaml
+gaps:
+  - id: calendar-needs-a-mouse        # unique on this doc, in every project and domain that writes it
+    name: Calendar needs a mouse      # what falls short, in a few words
+    affects:                          # optional: the claims it's why aren't true yet, see below
+      - outcome:usability/beta/everyone
+    impact: blocking                  # see below: how bad it is for those it reaches
+    likelihood: possible              # see below: how likely it is to bite within a year
+    reach: few                        # see below: how many of the people served it would reach
+    description: >-
+      The room calendar can't be used from the keyboard, so a clerk who can't
+      use a mouse can't pick dates. None of the clerks needs to today.
+```
+
+A gap's ID is its doc's reference plus its key:
+`capability:room-booking#calendar-needs-a-mouse`.
+A doc written in several domains or projects, such as a capability, is still
+one doc, so check the keys it already has before choosing one:
+`docket show <reference> --product` lists its gaps and tradeoffs from every
+project.
+
+- **Most gaps affect nothing.** They're limits on what the capability does.
+  A gap affects an outcome only when it's the reason the capability's level
+  falls short of it, or a rule only when the capability follows it and
+  doesn't hold to it yet. See [What `affects` says](#what-affects-says).
+- **A rule written before it's built** is followed by its capabilities, each
+  with a gap affecting it, since following a rule otherwise claims it holds.
+- **When a gap has a visible effect and a technical cause**, the gap goes on
+  the capability, and the component's body explains the cause. A gap is never
+  in both.
+- **Relying on something less stable isn't a gap.** When a capability, or
+  part of one, depends on a capability at a lower level, that capability's
+  level already says how much can be counted on, so don't write a gap saying
+  so. A gap is what falls short in the thing itself.
+- **A gap is never just what its own level already says.** Being behind a
+  flag, opt-in, not yet in production, or still changing is what Prototype
+  and Alpha mean, so don't write it as a gap. It's a gap only once the level
+  says otherwise, such as a Beta capability still not available to the people
+  it serves.
+- **A bug usually isn't a gap.** When the software is meant to do something
+  and simply doesn't, fixing the code closes it, so it goes in the issue
+  tracker. A gap needs work nobody has done yet: building, deciding,
+  designing or testing. Write a known bug as a gap only when it won't be fixed
+  soon and changes what people can rely on.
+- **Mark where it shows in the code** with `docket:gap <gap ID>` when there's
+  a clear place, instead of a bare TODO.
+- **Closing a gap** removes it and its `docket:gap` annotations, which
+  `docket show <gap ID>` lists.
+- **A gap we decide never to close** becomes a tradeoff, with its drawback.
+  That's a person's decision. Under the same key, it's the same thing, now a
+  tradeoff. Under another key, nothing in the docs links the two, and the
+  commit says what the gap became with a `Docket-Became` trailer (see
+  [SKILL.md](SKILL.md#committing)).
+
+### Rating impact, likelihood and reach
+
+Three ratings say what a gap could do, each by judgement about this
+software's circumstances. Every gap has all three: none has a default, and
+leaving one out is a problem `docket check` reports. None needs to be exact: they make the judgement
+visible, so a person can see it and correct it. Never lower any of them
+because the capability is early: rate them as if people relied on the
+capability, since risk weighs them by its level already, and nobody re-rates
+them when it's promoted.
+
+**Impact** is how bad it is for those it reaches, if it bit. Never lower it
+for being unlikely or reaching few: that's what the other two are for. Ask in
+order, and stop at the first yes:
+
+1. Could it leave something wrong that can't be fully put right, or that
+   someone acts on without knowing, at a cost? Data lost or kept wrong, money
+   moved wrongly, legal or financial exposure, someone able to do what they
+   shouldn't. **`damaging`**
+2. Could it stop someone from getting done what they rely on it for, by any
+   route, until it's closed? **`blocking`**
+3. Does it cost time, a step by hand, or a workaround, while the result still
+   comes out right? **`inconvenient`**
+4. Otherwise, **`negligible`**: nothing anyone relies on changes.
+
+A wrong result someone notices and puts right is `inconvenient`. When torn
+between two, pick the lower unless the higher one's test is plainly met.
+
+**Likelihood** is how likely it is to bite within the next year. When torn,
+pick the higher:
+
+- `certain`: it's happening, or it definitely will within a year.
+- `expected`: you'd bet on it happening within a year.
+- `possible`: it could happen, but you wouldn't bet on it.
+- `unlikely`: it would surprise you.
+
+A gap that only bites in some conditions, such as untested code, says what
+they are in its description, in terms of the design, not of how the system is
+used, and its likelihood says how likely they are.
+
+**Reach** is how many of the people the software serves it would reach, if it
+bit: who its capabilities' personas stand for, and whoever runs it, builds on
+it, or depends on what it produces. When torn, pick the higher:
+
+- `all`: everyone the software serves.
+- `most`: most of them, the usual case.
+- `some`: a real share of them, but not the usual case.
+- `few`: a small group with a particular need or situation.
+
+Read the personas before rating anything about who can use it: the same gap
+can reach differently in different software. Legal or contractual exposure
+the business really has, and anyone able to do what they shouldn't, are
+always `all`.
+
+`docket` orders gaps by risk, worked out from the three ratings, the level of
+each capability the gap is on, and whether it breaks a claim made there.
+`docket show` and `docket list gaps --sort risk` show it. Rate each gap you
+add, and say in your report how you rated it, so a person can correct it.
+
+## Tradeoffs
+
+A tradeoff is something chosen over an alternative and lived with. One
+tradeoff is one choice.
+
+```yaml
+tradeoffs:
+  - id: constraint-not-lock
+    name: Database constraint, not an app lock   # what we chose, in a few words
+    affects:                                     # optional: outcomes it falls short of on purpose
+      - outcome:reliability/beta/data-kept
+    description: >-
+      The database refuses overlapping bookings with an exclusion constraint,
+      rather than the app locking the room while it checks.
+    benefit: >-
+      No two bookings can overlap, however they arrive, without the app having
+      to get locking right.
+    drawback: >-
+      Bookings need Postgres with `btree_gist`, so they can't move to a
+      database without it, should they ever need to.
+```
+
+- **Always write the `benefit`.** A choice whose reason isn't written down
+  can't be weighed against its drawback.
+- **The description says what was chosen, and instead of what.**
+- **Mark the code** with `docket:tradeoff <tradeoff ID>` where it looks wrong
+  on purpose, so nobody "fixes" it.
+- **A technical tradeoff you made while building is yours to record.** A limit
+  on what a capability does, or a non-goal on a feature, is a product choice:
+  record it once a person has made it.
+- **A tradeoff isn't rated.** It carries no risk: someone already weighed its
+  drawback and chose to live with it. A drawback that's worth worrying about
+  means the choice isn't settled: record an open decision that affects it,
+  which reopens it, or turn it back into a gap.
+
+## Decisions
+
+A decision is a question about what's intended, on the doc it's about. That
+includes questions that building something is meant to answer, which are most
+common while a capability is a prototype.
+
+```yaml
+decisions:
+  - topic: No-shows                   # optional, a few words
+    question: >-
+      Is a guest who never arrives treated as a late cancellation, or charged
+      for the whole stay?
+    affects:                          # optional: what's waiting on the answer
+      - capability:cancellations#no-shows-charged-nothing
+```
+
+- **Every decision written down is open**, and counts as what's left.
+- **Record one** when a question about intention comes up that nobody has
+  answered and you didn't need answered to go on. Write the question so that
+  someone without your context can answer it, and put any options in it.
+- **Answer one** only with a person's answer: delete it, and write the answer
+  where it belongs, as a rule, concept, capability, gap, tradeoff or whatever
+  it became, in the same change. Nothing links back to the question; git has
+  its history. A decision answered with nothing to write down, such as "no",
+  is just deleted.
+- **Stay on the decision's side.** A decision on a domain, feature or
+  capability becomes product docs, or their gaps or tradeoffs. One on a
+  mechanism or component becomes technical docs, or theirs.
+
+## What `affects` says
+
+Declaring a level claims every outcome the rubric lists at it, and
+following a rule claims the rule holds. A gap, a tradeoff and a decision are
+the three ways of saying "except here", and `affects` says which claim, or
+which other item, each is about. Its meaning comes from what's doing the
+affecting:
+
+| `affects` → | An outcome | A rule | A gap | A tradeoff |
+| --- | --- | --- | --- | --- |
+| **Gap** | Not met yet | Not held yet | | |
+| **Tradeoff** | Not met, by choice | | | |
+| **Decision** | Open: neither claimed nor short | | Waits on its answer | Reopened |
+
+- **Write references**: `outcome:<quality>/<level>/<id>` (`docket rubric`
+  lists them), `rule:<id>`, with `@<domain>` for another domain's, or a gap's
+  or tradeoff's ID.
+- **Never anything else.** The doc an item is on is already what it's about,
+  so it never affects a capability, feature or persona. A gap never affects a
+  gap: which to close first is for a task tracker. A tradeoff never affects a
+  rule: a rule can't be broken by choice, so either the rule changes or it's
+  a gap.
+- **A gap affecting a claim raises its risk** on each capability where the
+  claim is made: one whose level expects the outcome, or that follows the
+  rule. It raises it more the higher the level, and not at all on a
+  Prototype.
+- **A gap that's really an unsettled question** is written as both: the
+  consequence as the gap, and the question as a decision that affects it.
+- **Stay on its side.** Product items affect product gaps and tradeoffs;
+  technical ones affect technical gaps and tradeoffs. Both can affect
+  outcomes.
+- **Closing, reversing or answering** deletes the item with its `affects`, so
+  nothing is left pointing anywhere.

@@ -418,9 +418,9 @@ always be rebuilt from the repository.
 | Part                  | Today                                                                                                                                                                 |
 | --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Format                | A draft for review, defined by Docket's concept docs, starting from the [Authoring](docket/domains/authoring/domain.md) domain, with example projects laid out as repositories in [`examples/`](examples/). |
-| `docket`              | Indexes and checks a project, and applies its states to the server, which keeps them in SQLite and checks them with the same check. The rest of the commands drafted in [`cmd/docket/`](cmd/docket/) exist with their flags, and answer that they aren't built yet. The examples' `state.json` files are written by hand to show what indexing should produce. |
+| `docket`              | Sets up a project and installs the kit, indexes and checks it, answers what a change touches, shows and lists its docs, the rubric and what's changed, renames IDs, and applies its states to the server, which keeps them in SQLite and checks them with the same check. The rest of the commands drafted in [`cmd/docket/`](cmd/docket/) exist with their flags, and answer that they aren't built yet. The examples' `state.json` files are written by hand to show what indexing should produce. |
 | UI                    | An early UI in TypeScript that reads only the server's API, which works out maturity, readiness and risk. See [`ui/`](ui/).     |
-| Agent development kit | A first draft for any agent: an `AGENTS.md` block and a `docket` skill, written for `docket` as drafted, so it can't be installed or used until `docket` is built. See [`kit/`](kit/). |
+| Agent development kit | For any agent: an `AGENTS.md` block and a `docket` skill, installed with `docket kit`, and used to build Docket itself. Every command it names is built, over the working tree or a commit, but none reads the rest of the product or the server yet. See [`kit/`](kit/). |
 
 ## Open questions
 
@@ -474,6 +474,41 @@ domains. It's easy to mix up what's Docket's and what's an example, so:
 | [`cmd/docket/`](cmd/docket/) | `docket`, the Go program that's the CLI and the server, with the draft of its commands                           |
 | `internal/`                  | `docket`'s code, and the [stability rubric](internal/rubric/rubric.yml) it's built with                  |
 | [`ui/`](ui/)                 | The UI `docket` serves, built into the binary                                                                    |
+
+## Installing docket
+
+`docket` is one Go program. Install it with Go 1.26 or later. The repository
+is private, so Go needs to know not to look for it in the public proxy:
+
+```sh
+export GOPRIVATE=github.com/exalynt
+go install github.com/exalynt/docket/cmd/docket@latest   # or @<commit or tag>
+```
+
+Or, from a checkout of this repository, `make install`. A binary built this
+way has no UI in it, unless `make ui-build` ran first, but every command that
+reads or changes a project works.
+
+Then, in the repository to bring Docket to:
+
+```sh
+docket init --id my-app --name "My App"   # writes docket.yaml
+docket kit                                # installs the agent kit
+docket check                              # exit 1 on any problem
+```
+
+The kit's [README](kit/README.md) says what `docket kit` writes and how agents
+use it, and its [`adopting.md`](kit/skills/docket/adopting.md) how an agent
+helps write the first docs.
+
+In CI, `go install` it the same way, with a token that can read this
+repository. The image published to GHCR is the server's, and has no `git`,
+which the commands that compare with a branch need. On every pull request:
+
+```sh
+docket check --changed --base "origin/$BASE_BRANCH" --commits "origin/$BASE_BRANCH..HEAD"
+docket kit --check   # the kit committed is the one this docket carries
+```
 
 ## Developing
 

@@ -2,13 +2,17 @@
 
 _A draft of what we'll build. Every command here may change or be dropped.
 Each is scaffolded in [`internal/commands`](../../internal/commands/) with the
-flags drafted here, and the global `--json` and `-C`. Built so far:
-[`index`](#docket-index) and [`check`](#docket-check), over the working tree
-or with `--at` a commit, [`apply`](#docket-apply), [`serve`](#docket-serve),
-the new `docket migrate`, which brings the server's database up to date
-before it serves, and [`ui`](#docket-ui), which shows a project's
-`.docket/state.json` without re-indexing. The rest answer that they aren't
-built yet and exit 2._
+flags drafted here, and the global `--json` and `-C`. Built so far, over the
+working tree or with `--at` a commit: what the [agent kit](../../kit/) needs,
+[`init`](#docket-init), [`kit`](#docket-kit), [`index`](#docket-index),
+[`check`](#docket-check), [`touches`](#docket-touches),
+[`show`](#docket-show), [`list`](#docket-list), [`rubric`](#docket-rubric),
+[`rename`](#docket-rename) and [`diff`](#docket-diff); and
+[`apply`](#docket-apply), [`serve`](#docket-serve), the new `docket migrate`,
+which brings the server's database up to date before it serves, and
+[`ui`](#docket-ui), which shows a project's `.docket/state.json` without
+re-indexing. No read takes `--remote` or `--product` yet. The rest answer
+that they aren't built yet and exit 2._
 
 One command for everything Docket does with a repository: setting it up,
 indexing and checking its docs, answering questions about it, following how
@@ -152,22 +156,22 @@ docket list gaps --remote --product    # the whole product as the server has it:
 ### `docket init`
 
 Writes `docket.yaml` in the current folder, making it a project: usually the
-repository's root, or a package's folder in a repository with several. It asks
-for the project's ID and name, and the product it's part of, or takes them as
-flags. It also adds `.docket/` to
-`.gitignore`. It doesn't write any docs: the kit's `adopting.md` covers
+repository's root, or a package's folder in a repository with several. It
+takes the project's ID and name, and the product it's part of, as flags, and
+fails naming the flag it needs when one is missing. It also adds `.docket/`
+to `.gitignore`. It doesn't write any docs: the kit's `adopting.md` covers
 bringing Docket to existing code.
 
 ```sh
-docket init --id hotel-bookings --name "Hotel Bookings" --product hotel
+docket init --id hotel-bookings --name "Hotel Bookings" --product hotel --product-name Hotel
 ```
 
 ### `docket kit`
 
 Installs the [agent kit](../../kit/) into the project, or updates it: the
-skill under `.agents/skills/docket/`, the link from `.claude/skills/docket`,
-the block in `AGENTS.md`, and the import in `CLAUDE.md`. The kit is built into
-the binary, so it's always the one written for this version's commands.
+skill under `.agents/skills/docket/`, the block in `AGENTS.md`, the import in
+an existing `CLAUDE.md`, and the skill's folder in `.docketignore`. The kit is built into the binary, so it's
+always the one written for this version's commands.
 
 ```sh
 docket kit           # install or update; safe to re-run
@@ -175,14 +179,19 @@ docket kit --check   # exit 1 if the project's copy isn't this version's kit, fo
 ```
 
 - **It owns the skill's folder and the block, and nothing else.** It makes
-  `.agents/skills/docket/` match the kit exactly, removing files the kit no
-  longer has, and replaces only what's between the `docket-kit:start` and
-  `docket-kit:end` markers in `AGENTS.md`. The rest of `AGENTS.md` and
-  `CLAUDE.md` is the project's, and it only ever adds to them.
+  the skill's folder match the kit exactly, removing files the kit no longer
+  has, and replaces only what's between the `<!-- docket-kit:start -->` and
+  `<!-- docket-kit:end -->` markers in `AGENTS.md`. The rest of `AGENTS.md`
+  and `CLAUDE.md` is the project's, and it only ever adds to them. It never
+  creates a `CLAUDE.md`, since Claude Code reads `AGENTS.md` in a project
+  without one.
+- **The skill is written once**, to `.agents/skills/`, which most agents
+  read. Claude Code, which doesn't yet, finds it through `AGENTS.md`. The
+  copy or link an earlier kit wrote to `.claude/skills/docket/` is removed.
 - **It reports each file** as `added`, `updated`, `removed` or `ok`.
-- **It stops at what it can't safely change**, such as a
-  `.claude/skills/docket` that isn't its link, or a start marker with no end,
-  and exits 1 saying what to fix.
+- **It stops at what it can't safely change**, such as a start marker with no
+  end, or a file where the skill's folder should be, and exits 2 saying what to
+  fix.
 
 ### `docket index`
 

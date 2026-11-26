@@ -16,10 +16,9 @@ of that by hand, so an agent without `docket` asks for it to be installed.
 It isn't written for one agent. It's plain Markdown, in the two forms most
 agents now read:
 
-- **`AGENTS.md`**, which Codex, Cursor, GitHub Copilot, Gemini CLI and most
-  other agents load in every session. Claude Code loads it through
-  `CLAUDE.md`. The kit's part is short: what Docket is, and the handful of
-  things an agent must always do.
+- **`AGENTS.md`**, which Codex, Cursor, GitHub Copilot, Windsurf and Claude
+  Code load in every session. The kit's part is short: what Docket is, and
+  the handful of things an agent must always do.
 - **An [Agent Skills](https://agentskills.io) skill**, `docket`, which agents
   load when the work calls for it. It has the details: which command to run
   when, what to update when, what to ask, and how to write each doc, gap,
@@ -38,9 +37,14 @@ kit/
 ```
 
 These files are the kit's source. They're built into `docket`, so each
-release of the command carries the kit written for its commands.
+release of the command carries the kit written for its commands. This
+repository installs its own kit with `docket kit` too, so its copy in
+`.agents/` is checked against these files in CI.
 
 ## Installing it in a project
+
+Install `docket` (see the [README](../README.md#installing-docket)), then, in
+a project with a `docket.yaml`:
 
 ```bash
 docket kit
@@ -49,26 +53,49 @@ docket kit
 It writes these into the project, to be committed with it, so everyone working
 on it gets them, whatever agent they use:
 
-| Written                  | What for                                                                            |
-| ------------------------ | ----------------------------------------------------------------------------------- |
-| `.agents/skills/docket/` | A copy of the skill, where Codex, Cursor and Gemini CLI look for a project's skills |
-| `.claude/skills/docket`  | A link to that copy, where Claude Code looks                                        |
-| `AGENTS.md`              | The kit's block, between `docket-kit:start` and `docket-kit:end` markers            |
-| `CLAUDE.md`              | An `@AGENTS.md` line, so Claude Code reads `AGENTS.md`, unless it already has one   |
+| Written                  | What for                                                                                         |
+| ------------------------ | ------------------------------------------------------------------------------------------------ |
+| `AGENTS.md`              | The kit's block, between `<!-- docket-kit:start -->` and `<!-- docket-kit:end -->`          |
+| `.agents/skills/docket/` | The skill, where Codex, Cursor, Gemini CLI, Windsurf and Copilot look for a project's skills |
+| `CLAUDE.md`              | An `@AGENTS.md` line, only if the project already has a `CLAUDE.md` without one              |
+| `.docketignore`          | The skill's folder, so its example annotations aren't read as the project's own             |
 
-An existing `AGENTS.md` or `CLAUDE.md` keeps everything it had: the block or
-the import line is added at the end. Run it again after updating `docket` to
-update the kit. It reports each file as `added`, `updated`, `removed` or `ok`,
-and changes only what's the kit's: the skill's folder, which it makes match
-the kit exactly, and what's between the markers.
+- **The skill is written once**, to `.agents/skills/`. Claude Code doesn't
+  look for skills there yet, so it reads the skill because the block in
+  `AGENTS.md` says where it is and to read it before changing anything. An
+  earlier kit also wrote a copy to `.claude/skills/docket/`, which running
+  the kit now removes.
+- **`CLAUDE.md` is left alone when there's none.** Claude Code reads
+  `AGENTS.md` itself, but only in a project with no `CLAUDE.md`, so the
+  import is added only to one that exists. The kit never creates one.
+- **An existing `AGENTS.md` keeps everything it had**: the block is added at
+  the end, or replaced in place.
+
+Run it again after updating `docket` to update the kit. It reports each file
+as `added`, `updated`, `removed` or `ok`, and changes only what's the kit's:
+the skill's folder, which it makes match the kit exactly, what's between
+the markers, and the lines it adds. Other tools can keep blocks of their own
+in `AGENTS.md` beside it.
 
 ```bash
 docket kit --check   # exit 1 if the project's copy isn't the kit this docket carries, for CI
 ```
 
-Don't hand-edit the copy or the block, since the next `docket kit` overwrites
-them. To change the kit for every project, change it here. To change it for
-one project, see below.
+Don't hand-edit the skill or the block, since the next `docket kit`
+overwrites them. To change the kit for every project, change it here. To
+change it for one project, see below.
+
+### Agents that need a setting
+
+- **Claude Code** reads `AGENTS.md`, but not skills from `.agents/skills/`,
+  so it follows the block to the skill rather than loading it by itself, and
+  `/docket` doesn't invoke it.
+- **Gemini CLI** reads `GEMINI.md`, not `AGENTS.md`, unless its
+  `context.fileName` setting includes `AGENTS.md`. It reads the skill from
+  `.agents/skills/` either way.
+- **GitHub Copilot in VS Code** reads skills only from `.github/skills/`, so
+  it finds the skill through `AGENTS.md`, which names its path.
+- **Aider** reads `AGENTS.md` only when it's passed with `--read`.
 
 An agent that reads neither `AGENTS.md` nor skills can be pointed at
 `AGENTS.md` and `.agents/skills/docket/SKILL.md` by hand, or through its own
@@ -115,6 +142,5 @@ the kit: it's part of the format, built into `docket`, and agents read it with
 
 The kit's gaps and tradeoffs are on
 [Agent guidance](../docket/domains/authoring/capabilities/agent-guidance.md),
-in Docket's own docs. Installing the kit adds its folder to a project's
-`.docketignore`, so its example annotations aren't read as the project's own
-(see [Installing the kit](../docket/domains/authoring/capabilities/kit-install.md)).
+in Docket's own docs, and how it's installed is
+[Installing the kit](../docket/domains/authoring/capabilities/kit-install.md).

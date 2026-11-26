@@ -4,3 +4,6 @@
 # Docket's own docs need no entry: annotations are never read from a Docket
 # doc, so the concept docs can show examples freely.
 /kit/**/*.md
+
+# The agent kit's skill, written by docket kit. Its examples aren't this project's.
+/.agents/skills/docket/**/*.md

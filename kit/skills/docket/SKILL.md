@@ -31,6 +31,11 @@ Every command takes `--json`.
 
 If `docket` isn't installed, stop and ask the user to install it.
 
+Reads of the rest of the product (`--product`) and of the server
+(`--remote`) aren't built yet. In a repository with several projects, read
+another project's docs by running the same command in its folder, with
+`docket -C <folder>`.
+
 ## Where things are
 
 A Markdown file is a Docket doc when its frontmatter has `docket`, its type.

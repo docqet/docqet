@@ -27,6 +27,15 @@ gaps:
     description: >-
       Decisions have no key, so agents can't say in a trailer what an answered
       decision became, and history shows it removed with nothing in its place.
+  - id: claude-reads-skill-by-instruction
+    name: Claude Code doesn't load the skill itself
+    impact: inconvenient
+    likelihood: possible
+    reach: some
+    description: >-
+      Claude Code doesn't read skills from `.agents/skills/` yet, so it reads
+      the skill only because the block in `AGENTS.md` tells it to, can miss
+      it if it doesn't follow that, and can't be asked for it with `/docket`.
   - id: copilot-may-miss-skill
     name: Copilot in VS Code doesn't find the skill
     impact: inconvenient

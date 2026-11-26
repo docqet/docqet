@@ -1,7 +1,14 @@
-.PHONY: help build up down nuke logs migrate run apply examples ui ui-build ui-lint fix fmt lint vet docs-lint check test
+.PHONY: help install build up down nuke logs migrate run apply examples ui ui-build ui-lint fix fmt lint vet docs-lint check test
 
 help: ## Show this help
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-20s\033[0m %s\n", $$1, $$2}'
+
+## --- The docket command ---
+
+VERSION ?= $(shell git describe --tags --always --dirty 2>/dev/null || echo dev)
+
+install: ## Install docket into your Go bin, to use it in any project (the UI is embedded only if ui/dist is built)
+	go install -ldflags "-X main.version=$(VERSION)" ./cmd/docket
 
 ## --- Local stack ---
 

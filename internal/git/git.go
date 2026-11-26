@@ -203,3 +203,103 @@ func IsDirty(ctx context.Context, dir string) (bool, error) {
 	}
 	return len(bytes.TrimSpace(out)) > 0, nil
 }
+
+// Changed returns the files changed in dir since base: in commits since
+// base's merge base with HEAD, staged or not, and new files git would track.
+// Paths are relative to dir, and only files under it are listed.
+func Changed(ctx context.Context, dir, base string) ([]string, error) {
+	mb, err := MergeBase(ctx, dir, base)
+	if err != nil {
+		return nil, err
+	}
+	out, err := run(ctx, dir, "diff", "--name-only", "--relative", "-z", mb)
+	if err != nil {
+		return nil, err
+	}
+	untracked, err := run(ctx, dir, "ls-files", "-z", "--others", "--exclude-standard")
+	if err != nil {
+		return nil, err
+	}
+	return names(append(out, untracked...)), nil
+}
+
+// MergeBase returns the commit base and HEAD last had in common.
+func MergeBase(ctx context.Context, dir, base string) (string, error) {
+	out, err := run(ctx, dir, "merge-base", base, "HEAD")
+	if err != nil {
+		return "", fmt.Errorf("%s has no common history with HEAD", base)
+	}
+	return strings.TrimSpace(string(out)), nil
+}
+
+// Staged returns the files staged in dir, relative to it.
+func Staged(ctx context.Context, dir string) ([]string, error) {
+	out, err := run(ctx, dir, "diff", "--cached", "--name-only", "--relative", "-z")
+	if err != nil {
+		return nil, err
+	}
+	return names(out), nil
+}
+
+// StagedTree returns the files of dir as they're staged, read from git's
+// index. It writes the index's tree to the object database, as git commit
+// would, and changes no ref.
+func StagedTree(ctx context.Context, dir string) (fs.FS, error) {
+	out, err := run(ctx, dir, "write-tree")
+	if err != nil {
+		return nil, err
+	}
+	// Run in dir, as Tree runs git archive, it holds only that folder.
+	return Tree(ctx, dir, strings.TrimSpace(string(out)))
+}
+
+// DefaultBase is the main branch to compare a change with: origin/HEAD, as
+// git clone sets it.
+func DefaultBase(ctx context.Context, dir string) (string, error) {
+	out, err := run(ctx, dir, "rev-parse", "--abbrev-ref", "origin/HEAD")
+	if err != nil {
+		return "", errors.New("there's no origin/HEAD to compare with: give --base, such as --base main")
+	}
+	return strings.TrimSpace(string(out)), nil
+}
+
+// Commits returns the commits in a range, such as origin/main..HEAD, oldest
+// first.
+func Commits(ctx context.Context, dir, rng string) ([]string, error) {
+	out, err := run(ctx, dir, "rev-list", "--reverse", rng)
+	if err != nil {
+		return nil, err
+	}
+	return strings.Fields(string(out)), nil
+}
+
+// Message returns a commit's message, and the values of its own trailers
+// with key, read as git reads them.
+func Message(ctx context.Context, dir, sha, key string) (message string, trailers []string, err error) {
+	out, err := run(ctx, dir, "log", "-1", "--format=%B%x00%(trailers:key="+key+",valueonly,separator=%x1f)", sha)
+	if err != nil {
+		return "", nil, err
+	}
+	parts := strings.SplitN(string(out), "\x00", 2)
+	if len(parts) == 2 {
+		for v := range strings.SplitSeq(strings.TrimSpace(parts[1]), "\x1f") {
+			if v = strings.TrimSpace(v); v != "" {
+				trailers = append(trailers, v)
+			}
+		}
+	}
+	return parts[0], trailers, nil
+}
+
+// names splits git's -z output into names.
+func names(out []byte) []string {
+	var list []string
+	seen := map[string]bool{}
+	for name := range strings.SplitSeq(string(out), "\x00") {
+		if name != "" && !seen[name] {
+			seen[name] = true
+			list = append(list, name)
+		}
+	}
+	return list
+}
