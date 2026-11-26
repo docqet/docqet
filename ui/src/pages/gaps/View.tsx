@@ -156,8 +156,7 @@ function RiskProfile({ gap, risk }: { gap: Gap; risk: Risk }) {
   const top = risk.on[0];
   const claims = claimsOf(gap, risk);
   return (
-    /* data-verdict sets --risk, the color the risk bars and workings inside take. */
-    <Box component="section" data-verdict={risk.verdict} sx={{ maxWidth: 820, mb: 3 }}>
+    <Box component="section" sx={{ maxWidth: 820, mb: 3 }}>
       <Box component="h2" sx={{ mb: 1.25, fontSize: 15, fontWeight: 700 }}>
         Risk
       </Box>

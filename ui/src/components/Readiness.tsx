@@ -80,6 +80,7 @@ export function ReadinessMark({
   bare?: boolean;
   size?: number;
 }) {
+  /* `readiness` on the mark: a hook for a header's stat, which lays it out as maturity's and exposure's. */
   const started = startedOf(readiness);
   if (!started || readiness.percent === null)
     return (

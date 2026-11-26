@@ -35,3 +35,10 @@ CLI's, which writes and sends them, and the server's, which takes them.
   or `DOCKET_API`'s. `make examples` loads the examples into it. They're
   folders in this repository rather than repositories of their own, so each
   one's state is sent as it is, at this repository's HEAD.
+- **It's styled from the MUI theme alone.** `ui/src/theme.ts` holds every
+  color, for light and dark, along with the shadows, breakpoints and MUI
+  components' defaults, such as menus and tables. Components style
+  themselves with `sx` in the theme's terms, and there are no stylesheets.
+  A class name is only a hook another component's `sx` or code reaches
+  through, such as `grip`, which the map's canvas uses to tell a drag from
+  a click, and each says so where it's set.

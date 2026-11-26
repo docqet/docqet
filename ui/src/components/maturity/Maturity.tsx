@@ -28,6 +28,7 @@ export function Maturity({
   /* What it's worked out from, for its ring's popover (see MaturityRing). */
   spread?: CapabilityLevel[];
 }) {
+  /* `explore-level` on the figure: a hook for a header's stat, which lays it out as readiness's and exposure's. */
   if (value === null)
     return (
       <Box component="span" className="explore-level" sx={levelSx}>

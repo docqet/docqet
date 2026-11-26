@@ -1,7 +1,11 @@
 import Box from "@mui/material/Box";
 import DragIndicatorRoundedIcon from "@mui/icons-material/DragIndicatorRounded";
 
-/* The handle what can be dragged is picked up by, faint until the row or card is hovered. */
+/*
+ * The handle what can be dragged is picked up by, faint until the row or
+ * card is hovered. `grip` is a hook for the map's canvas, which tells a drag
+ * from a click by whether it starts on one (`closest(".grip")`).
+ */
 export function Grip() {
   return (
     <Box

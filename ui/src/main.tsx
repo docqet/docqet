@@ -3,7 +3,6 @@ import { createRoot } from "react-dom/client";
 import { ThemeProvider } from "@mui/material/styles";
 import "@fontsource-variable/geist";
 import "@fontsource-variable/geist-mono";
-import "./styles.css";
 import App from "./App";
 import { Baseline } from "./components/Baseline";
 import theme from "./theme";

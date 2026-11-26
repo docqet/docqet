@@ -95,6 +95,7 @@ export function CapabilityLabel({
       )}
       <Box sx={{ flex: "none", display: "flex", alignItems: "center", gap: 0.75 }}>
         {hint}
+        {/* lens-stability: a hook for the map, which hides it under a lens showing something else. */}
         <span className="lens-stability">
           <CapabilityStability name={name} level={level} />
         </span>

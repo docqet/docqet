@@ -154,12 +154,10 @@ function GapSpread({ rows }: { rows: GapRow[] }) {
       </Box>
       <Box component="span" sx={{ display: "flex", flexWrap: "wrap", gap: "4px 16px" }}>
         {parts.map((v) => (
-          /* data-verdict colors the bars inside. */
           <Box
             component="a"
             key={v}
             href={withParam("verdict", v)}
-            data-verdict={v}
             sx={{
               display: "inline-flex",
               alignItems: "center",
@@ -378,10 +376,9 @@ const countSx: SystemStyleObject<Theme> = { fontSize: 11, fontVariantNumeric: "t
 function FilterValue({ part, value }: { part: PartId; value: string }) {
   if (part === "verdict")
     return (
-      /* data-verdict colors the bars. Acceptable's name stays in the text's color, since its own is faint. */
+      /* Acceptable's name stays in the text's color, since its own is faint. */
       <Box
         component="span"
-        data-verdict={value}
         sx={{
           flex: "none",
           display: "inline-flex",
@@ -531,7 +528,7 @@ const trSx: SystemStyleObject<Theme> = {
 };
 
 /* The headings: small, uppercase and faint; from a tablet down, where the columns go, for screen readers only. */
-const thSx: SystemStyleObject<Theme> = {
+const thSx = (t: Theme): SystemStyleObject<Theme> => ({
   py: 1,
   fontSize: 11,
   fontWeight: 650,
@@ -539,8 +536,8 @@ const thSx: SystemStyleObject<Theme> = {
   textTransform: "uppercase",
   color: "text.disabled",
   "& > span": { display: "inline-flex", alignItems: "center", gap: "5px" },
-  "@media (max-width: 899.95px)": visuallyHidden,
-};
+  [t.breakpoints.down("md")]: visuallyHidden,
+});
 
 function GapLine({ state, row: r, here }: { state: DocketState; row: GapRow; here?: string }) {
   const { type, id } = subjectOf(r.gap);
@@ -590,11 +587,10 @@ function GapLine({ state, row: r, here }: { state: DocketState; row: GapRow; her
           ) : null}
         </Box>
       </Box>
-      {/* lf-on: what it's on and its initiatives read quieter here, and line up at the right, from their own components' rules. */}
+      {/* What it's on, and its initiatives, quieter here and lined up at the right. */}
       <Box
         component="span"
         role="cell"
-        className="lf-on"
         sx={{
           minWidth: 0,
           flexBasis: "100%",
@@ -606,7 +602,7 @@ function GapLine({ state, row: r, here }: { state: DocketState; row: GapRow; her
           textAlign: { xs: "left", md: "right" },
         }}
       >
-        {here === id ? null : <SubjectLink state={state} type={type} id={id} />}
+        {here === id ? null : <SubjectLink state={state} type={type} id={id} quiet />}
         <GapInitiatives state={state} gap={r.gap} />
       </Box>
     </Box>

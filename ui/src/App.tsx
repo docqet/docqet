@@ -135,13 +135,15 @@ export default function App() {
   }
   if (all && !all.length) {
     return (
-      <div className="message">
+      <Box sx={{ height: "100%", display: "grid", placeContent: "center", justifyItems: "start", gap: 1.5, p: 3, maxWidth: 520, mx: "auto" }}>
         <Logo />
-        <h1>Nothing to show yet</h1>
+        <Box component="h1" sx={{ fontSize: 20, fontWeight: "bold", letterSpacing: "-0.02em" }}>
+          Nothing to show yet
+        </Box>
         <p>
           No project has been applied to this server. Run <code>docket apply</code> in one, then reload.
         </p>
-      </div>
+      </Box>
     );
   }
   if (!state || !product) return slow ? <ShellSkeleton /> : null;

@@ -293,6 +293,7 @@ export function Section({
         <Box
           component="h2"
           sx={{
+            flex: "none",
             fontSize: 16,
             fontWeight: "bold",
             letterSpacing: "-0.01em",
@@ -303,7 +304,18 @@ export function Section({
         </Box>
         {count !== undefined ? <Count n={count} /> : null}
         {aside ? (
-          <Box component="span" sx={{ ml: "auto", fontSize: 13, "& a": { color: "primary.main", textDecoration: "none" } }}>
+          <Box
+            component="span"
+            sx={{
+              ml: "auto",
+              minWidth: 0,
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+              fontSize: 13,
+              "& a": { color: "primary.main", textDecoration: "none" },
+            }}
+          >
             {aside}
           </Box>
         ) : null}
