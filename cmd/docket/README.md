@@ -695,8 +695,9 @@ docket serve --config /etc/docket/server.yaml
   CI that works in containers.
 - **It never reads a repository.** Everything it holds was sent to it.
 
-How it's configured, and what its API looks like, will be drafted once the
-commands that talk to it settle.
+What its API looks like, whole states for the CLI and REST resources for the
+UI, is planned in [How `docket` is built](../../docs/architecture/api.md).
+How it's configured will be drafted once the commands that talk to it settle.
 
 ## How clients use it
 

@@ -383,6 +383,9 @@ the server, and what serves the UI.
   deploys the server and runs `docket apply` in a CI that works in
   containers. The binary is also released on its own, for laptops and CI.
 
+[How `docket` is built](docs/architecture/) plans its code: where its logic
+lives, how the CLI and the server share it, and the API the UI reads.
+
 The CLI reconciles each project with the server, much as infrastructure as
 code does:
 
@@ -425,7 +428,7 @@ Things we haven't decided, to settle as the prototype answers them:
 
 | Directory                    | What's in it                                                                                                     |
 | ---------------------------- | ---------------------------------------------------------------------------------------------------------------- |
-| [`docs/`](docs/)             | Docket's own docs, starting with [an overview of its concepts](docs/domain/overview.md)                          |
+| [`docs/`](docs/)             | Docket's own docs: [an overview of its concepts](docs/domain/overview.md), and [how `docket` is built](docs/architecture/) |
 | [`spec/`](spec/)             | The format: doc types, frontmatter, IDs, code and test annotations, commit trailers, and the `state.json` schema |
 | [`examples/`](examples/)     | Example projects laid out as repositories, each with the `state.json` indexing would produce                     |
 | [`kit/`](kit/)               | The agent development kit: skills and rules that keep docs and annotations current                               |
