@@ -14,7 +14,7 @@ explains it, and `docs/architecture/` says how it's built.
   never run `docket index` in them without `--stdout`.
 - **The kit's source is `kit/`.** The copy in `.agents/skills/docket/`, and
   the block below, are written by
-  `go run ./cmd/docket kit`: edit `kit/`, then run it. CI fails when they
+  `go run ./cmd/docket kit update`: edit `kit/`, then run it. CI fails when they
   differ. A change to a command's flags or output that the kit names changes
   the kit in the same commit.
 - **Use the command you're building.** Run `go run ./cmd/docket` rather than

@@ -63,7 +63,7 @@ the server are separate, since they aren't reads.
 | Command | What for | Kind |
 | --- | --- | --- |
 | [`docket init`](#docket-init) | Make a folder a Docket project | Setting up |
-| [`docket kit`](#docket-kit) | Install or update the agent kit | Setting up |
+| [`docket kit`](#docket-kit) | Install, update or remove the agent kit, for the agents the project uses | Setting up |
 | [`docket index`](#docket-index) | Write the state for the working tree or a commit | Setting up |
 | [`docket check`](#docket-check) | Find problems in the docs, annotations and commit trailers | Read |
 | [`docket touches`](#docket-touches) | What a set of files or a change is about | Read |
@@ -168,29 +168,37 @@ docket init --id hotel-bookings --name "Hotel Bookings" --product hotel --produc
 
 ### `docket kit`
 
-Installs the [agent kit](../../kit/) into the project, or updates it: the
-skill under `.agents/skills/docket/`, the block in `AGENTS.md`, the import in
-an existing `CLAUDE.md`, and the skill's folder in `.docketignore`. The kit is built into the binary, so it's
-always the one written for this version's commands.
+Manages the [agent kit](../../kit/) in the project: installs it for the
+agents the project uses, updates it, removes it, and checks it. The kit is
+built into the binary, so it's always the one written for this version's
+commands.
 
 ```sh
-docket kit           # install or update; safe to re-run
-docket kit --check   # exit 1 if the project's copy isn't this version's kit, for CI
+docket kit                                  # what it's installed for, and whether it's this docket's
+docket kit install                          # for most agents, through AGENTS.md: the default
+docket kit install --agent claude           # for Claude Code too, or alone on a fresh install
+docket kit remove --agent claude            # stop installing it for an agent
+docket kit remove                           # remove it entirely
+docket kit update                           # rewrite it for every agent it's installed for
+docket kit check                            # exit 1 if it isn't installed or isn't this version's, for CI
+docket kit agents                           # the agents it can be installed for
 ```
 
-- **It owns the skill's folder and the block, and nothing else.** It makes
-  the skill's folder match the kit exactly, removing files the kit no longer
-  has, and replaces only what's between the `<!-- docket-kit:start -->` and
-  `<!-- docket-kit:end -->` markers in `AGENTS.md`. The rest of `AGENTS.md`
-  and `CLAUDE.md` is the project's, and it only ever adds to them. It never
-  creates a `CLAUDE.md`, since Claude Code reads `AGENTS.md` in a project
-  without one.
-- **The skill is written once**, to `.agents/skills/`, which most agents
-  read. Claude Code, which doesn't yet, finds it through `AGENTS.md`. The
-  copy or link an earlier kit wrote to `.claude/skills/docket/` is removed.
+- **Each agent's files go where it reads them.** Every agent but Claude Code
+  reads the skill from `.agents/skills/docket/` and the block from
+  `AGENTS.md`. Claude Code reads the skill from `.claude/skills/docket/`, and
+  the block from `CLAUDE.md`, which imports `AGENTS.md` when other agents use
+  the kit too. Each skill folder is a real copy. The kit README lists every
+  agent.
+- **What's installed is worked out from the skill folders there**, so nothing
+  else records it.
+- **It owns its skill folders and its block, and nothing else.** It makes the
+  skill folders match the kit exactly, and replaces only what's between the
+  `<!-- docket-kit:start -->` and `<!-- docket-kit:end -->` markers. The
+  rest of `AGENTS.md` and `CLAUDE.md` is the project's.
 - **It reports each file** as `added`, `updated`, `removed` or `ok`.
 - **It stops at what it can't safely change**, such as a start marker with no
-  end, or a file where the skill's folder should be, and exits 2 saying what to
+  end, or a file where a skill folder should be, and exits 2 saying what to
   fix.
 
 ### `docket index`
@@ -717,7 +725,7 @@ How it's configured will be drafted once the commands that talk to it settle.
 
 ```sh
 docket init --id hotel-bookings --name "Hotel Bookings" --product hotel
-docket kit
+docket kit install
 # write the first docs, with an agent following the kit's adopting.md
 docket check
 git add docket.yaml docket/ .agents/ .claude/ AGENTS.md CLAUDE.md .gitignore
@@ -813,7 +821,7 @@ docket list decisions --product=hotel --initiative mvp
   `source`, as [Where a read comes from](#where-a-read-comes-from) describes.
 - **Exit codes**: `0` when everything's fine, `1` when it found what it was
   asked to fail on, such as a problem in `check` or an out-of-date kit in
-  `kit --check`, and `2` when it couldn't run: bad usage, not in a project, or
+  `kit check`, and `2` when it couldn't run: bad usage, not in a project, or
   a server it couldn't reach or wasn't allowed into.
 - **No prompts unless it's run in a terminal.** Anything it would ask, it
   takes as a flag, and without one it fails with exit 2 and says which flag.

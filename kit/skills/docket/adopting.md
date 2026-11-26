@@ -16,11 +16,12 @@ product:                  # optional: the software product it's part of, with it
 
 ```sh
 docket init --id hotel-bookings --name "Hotel Bookings" --product hotel
-docket kit
+docket kit install    # add --agent claude for Claude Code
 ```
 
-`docket init` also adds `.docket/` to `.gitignore`, and `docket kit` installs
-this kit, if it isn't already there.
+`docket init` also adds `.docket/` to `.gitignore`, and `docket kit install`
+installs this kit, if it isn't already there, for the agents the project
+uses: `docket kit agents` lists them.
 
 ## Intention read from code isn't declared
 

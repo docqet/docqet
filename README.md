@@ -337,8 +337,8 @@ most of it. It's written for any agent, as an `AGENTS.md` block and an Agent
 Skills skill, and each project adds its own instructions beside it. Agents do
 the work through the `docket` command, so the kit needs it: it tells them
 which command answers each question, rather than how to answer it by hand.
-The kit is built into `docket`, and `docket kit` installs it into a project
-and keeps it up to date. See [`kit/`](kit/).
+The kit is built into `docket`, and `docket kit` installs it into a project,
+for the agents it uses, and keeps it up to date. See [`kit/`](kit/).
 
 ### 2. Format
 
@@ -420,7 +420,7 @@ always be rebuilt from the repository.
 | Format                | A draft for review, defined by Docket's concept docs, starting from the [Authoring](docket/domains/authoring/domain.md) domain, with example projects laid out as repositories in [`examples/`](examples/). |
 | `docket`              | Sets up a project and installs the kit, indexes and checks it, answers what a change touches, shows and lists its docs, the rubric and what's changed, renames IDs, and applies its states to the server, which keeps them in SQLite and checks them with the same check. The rest of the commands drafted in [`cmd/docket/`](cmd/docket/) exist with their flags, and answer that they aren't built yet. The examples' `state.json` files are written by hand to show what indexing should produce. |
 | UI                    | An early UI in TypeScript that reads only the server's API, which works out maturity, readiness and risk. See [`ui/`](ui/).     |
-| Agent development kit | For any agent: an `AGENTS.md` block and a `docket` skill, installed with `docket kit`, and used to build Docket itself. Every command it names is built, over the working tree or a commit, but none reads the rest of the product or the server yet. See [`kit/`](kit/). |
+| Agent development kit | For any agent: an `AGENTS.md` block and a `docket` skill, installed with `docket kit` for the agents a project uses, and used to build Docket itself. Every command it names is built, over the working tree or a commit, but none reads the rest of the product or the server yet. See [`kit/`](kit/). |
 
 ## Open questions
 
@@ -493,12 +493,12 @@ Then, in the repository to bring Docket to:
 
 ```sh
 docket init --id my-app --name "My App"   # writes docket.yaml
-docket kit                                # installs the agent kit
+docket kit install                        # the agent kit; --agent claude for Claude Code
 docket check                              # exit 1 on any problem
 ```
 
-The kit's [README](kit/README.md) says what `docket kit` writes and how agents
-use it, and its [`adopting.md`](kit/skills/docket/adopting.md) how an agent
+The kit's [README](kit/README.md) says what `docket kit` writes, for which
+agents, and how they use it, and its [`adopting.md`](kit/skills/docket/adopting.md) how an agent
 helps write the first docs.
 
 In CI, `go install` it the same way, with a token that can read this
@@ -507,7 +507,7 @@ which the commands that compare with a branch need. On every pull request:
 
 ```sh
 docket check --changed --base "origin/$BASE_BRANCH" --commits "origin/$BASE_BRANCH..HEAD"
-docket kit --check   # the kit committed is the one this docket carries
+docket kit check     # the kit committed is the one this docket carries
 ```
 
 ## Developing

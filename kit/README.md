@@ -38,68 +38,85 @@ kit/
 
 These files are the kit's source. They're built into `docket`, so each
 release of the command carries the kit written for its commands. This
-repository installs its own kit with `docket kit` too, so its copy in
-`.agents/` is checked against these files in CI.
+repository installs its own kit with `docket kit install` too, so its copy
+in `.agents/` is checked against these files in CI, with `docket kit check`.
 
 ## Installing it in a project
 
 Install `docket` (see the [README](../README.md#installing-docket)), then, in
-a project with a `docket.yaml`:
+a project with a `docket.yaml`, install the kit for the agents the project
+uses:
 
 ```bash
-docket kit
+docket kit install                    # for most agents, through AGENTS.md: the default
+docket kit install --agent claude     # for Claude Code
+docket kit install --agent claude --agent codex   # for both
 ```
 
-It writes these into the project, to be committed with it, so everyone working
-on it gets them, whatever agent they use:
+It writes the kit where each agent reads it, to be committed with the
+project, so everyone working on it gets it:
 
-| Written                  | What for                                                                                         |
-| ------------------------ | ------------------------------------------------------------------------------------------------ |
-| `AGENTS.md`              | The kit's block, between `<!-- docket-kit:start -->` and `<!-- docket-kit:end -->`          |
-| `.agents/skills/docket/` | The skill, where Codex, Cursor, Gemini CLI, Windsurf and Copilot look for a project's skills |
-| `CLAUDE.md`              | An `@AGENTS.md` line, only if the project already has a `CLAUDE.md` without one              |
-| `.docketignore`          | The skill's folder, so its example annotations aren't read as the project's own             |
+| Written                  | When                              | What for                                                                           |
+| ------------------------ | --------------------------------- | ---------------------------------------------------------------------------------- |
+| `.agents/skills/docket/` | For any agent but Claude Code     | The skill, where Codex, Cursor, Gemini CLI, Windsurf and Copilot look for it       |
+| `.claude/skills/docket/` | For Claude Code                   | The skill, where Claude Code looks for it                                          |
+| `AGENTS.md`              | For any agent but Claude Code     | The kit's block, between `<!-- docket-kit:start -->` and `<!-- docket-kit:end -->` |
+| `CLAUDE.md`              | For Claude Code                   | The block, when it's only for Claude Code. With other agents too, `@AGENTS.md`     |
+| `CLAUDE.md`              | For other agents, if it exists    | `@AGENTS.md`, since Claude Code reads `AGENTS.md` only without a `CLAUDE.md`       |
+| `.docketignore`          | Always                            | Each skill folder, so its example annotations aren't read as the project's own     |
 
-- **The skill is written once**, to `.agents/skills/`. Claude Code doesn't
-  look for skills there yet, so it reads the skill because the block in
-  `AGENTS.md` says where it is and to read it before changing anything. An
-  earlier kit also wrote a copy to `.claude/skills/docket/`, which running
-  the kit now removes.
-- **`CLAUDE.md` is left alone when there's none.** Claude Code reads
-  `AGENTS.md` itself, but only in a project with no `CLAUDE.md`, so the
-  import is added only to one that exists. The kit never creates one.
-- **An existing `AGENTS.md` keeps everything it had**: the block is added at
-  the end, or replaced in place.
+- **The block is written once.** It's in `AGENTS.md` whenever the kit is
+  installed for an agent that reads it, and names `.agents/skills/docket/`.
+  Installed only for Claude Code, it's in `CLAUDE.md`, and names
+  `.claude/skills/docket/`.
+- **Each skill folder is a real copy**, not a link, since a committed link
+  breaks on checkouts without symlinks, such as Windows'.
+- **The project's own text is kept.** The block is added at the end of
+  `AGENTS.md` or `CLAUDE.md`, or replaced in place, and other tools can keep
+  blocks of their own beside it.
 
-Run it again after updating `docket` to update the kit. It reports each file
-as `added`, `updated`, `removed` or `ok`, and changes only what's the kit's:
-the skill's folder, which it makes match the kit exactly, what's between
-the markers, and the lines it adds. Other tools can keep blocks of their own
-in `AGENTS.md` beside it.
+What's installed is worked out from the skill folders that are there, so
+nothing else records it.
 
 ```bash
-docket kit --check   # exit 1 if the project's copy isn't the kit this docket carries, for CI
+docket kit                            # what it's installed for, and whether it's this docket's
+docket kit install --agent claude     # add an agent
+docket kit remove --agent claude      # remove one, moving the block if it has to
+docket kit remove                     # remove the kit entirely
+docket kit update                     # after updating docket: rewrite it for every agent it's installed for
+docket kit check                      # exit 1 if it isn't installed, or isn't this docket's, for CI
+docket kit agents                     # the agents it can be installed for
 ```
 
-Don't hand-edit the skill or the block, since the next `docket kit`
+Each reports every file as `added`, `updated`, `removed` or `ok`, and changes
+only what's the kit's: its skill folders, which it makes match the kit
+exactly, what's between its markers, and the lines it adds. Removing the kit
+leaves an `@AGENTS.md` line in `CLAUDE.md`, which the project may want
+anyway.
+
+Don't hand-edit the skill or the block, since the next `docket kit update`
 overwrites them. To change the kit for every project, change it here. To
 change it for one project, see below.
 
-### Agents that need a setting
+### Supported agents
 
-- **Claude Code** reads `AGENTS.md`, but not skills from `.agents/skills/`,
-  so it follows the block to the skill rather than loading it by itself, and
-  `/docket` doesn't invoke it.
-- **Gemini CLI** reads `GEMINI.md`, not `AGENTS.md`, unless its
-  `context.fileName` setting includes `AGENTS.md`. It reads the skill from
-  `.agents/skills/` either way.
-- **GitHub Copilot in VS Code** reads skills only from `.github/skills/`, so
-  it finds the skill through `AGENTS.md`, which names its path.
-- **Aider** reads `AGENTS.md` only when it's passed with `--read`.
+As each agent's own docs described it on 2026-11-25. `docket kit agents`
+prints the same list.
 
-An agent that reads neither `AGENTS.md` nor skills can be pointed at
-`AGENTS.md` and `.agents/skills/docket/SKILL.md` by hand, or through its own
-rules file.
+| Agent                                         | `--agent`  | What it reads                                    | Kit installed in                | Notes                                                                                     |
+| --------------------------------------------- | ---------- | ------------------------------------------------ | ------------------------------- | ----------------------------------------------------------------------------------------- |
+| Claude Code                                   | `claude`   | `CLAUDE.md`, or `AGENTS.md` without one; `.claude/skills/` | `.claude/skills/`, `CLAUDE.md` | Without `--agent claude`, it reads the skill only because the block says where it is, and `/docket` doesn't invoke it |
+| Codex                                         | `codex`    | `AGENTS.md`, `.agents/skills/`                   | `.agents/skills/`, `AGENTS.md`  |                                                                                           |
+| Cursor                                        | `cursor`   | `AGENTS.md`, `.agents/skills/`                   | `.agents/skills/`, `AGENTS.md`  |                                                                                           |
+| GitHub Copilot (CLI, cloud agent, VS Code)    | `copilot`  | `AGENTS.md`; `.agents/skills/` in the CLI and cloud agent | `.agents/skills/`, `AGENTS.md`  | Copilot in VS Code reads skills only from `.github/skills/`, so it finds the skill through `AGENTS.md` |
+| Gemini CLI                                    | `gemini`   | `GEMINI.md`, `.agents/skills/`                   | `.agents/skills/`, `AGENTS.md`  | Add `AGENTS.md` to its `context.fileName` setting, or it won't read the block              |
+| Windsurf                                      | `windsurf` | `AGENTS.md`, `.agents/skills/`                   | `.agents/skills/`, `AGENTS.md`  |                                                                                           |
+| Any other agent that reads `AGENTS.md`        | `agents`   | `AGENTS.md`                                      | `.agents/skills/`, `AGENTS.md`  | Such as Aider, which reads it when passed with `--read AGENTS.md`, and Zed, where a stray `.rules` file can hide it |
+
+Every name but `claude` installs the same files, so naming several of them is
+the same as naming one. An agent that reads neither `AGENTS.md` nor skills can
+be pointed at `AGENTS.md` and `.agents/skills/docket/SKILL.md` by hand, or
+through its own rules file.
 
 ## Extending it for a project
 

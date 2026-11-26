@@ -36,7 +36,7 @@ jobs:
       - name: Docket's own docs have no problems
         run: go run ./cmd/docket check
       - name: The installed agent kit is kit/'s
-        run: go run ./cmd/docket kit --check
+        run: go run ./cmd/docket kit check
 
   vulnerabilities:
     name: Vulnerabilities

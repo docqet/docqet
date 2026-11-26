@@ -11,7 +11,7 @@ point back at them: `docket:implements`, `docket:verifies`, `docket:gap` and
 You work with it through the `docket` command, which reads the docs and
 annotations and checks them. If `docket` isn't installed, ask the user to
 install it before changing anything here. The `docket` skill, in
-`.agents/skills/docket/`, has the details: read its `SKILL.md` before your
+`{{skills}}/docket/`, has the details: read its `SKILL.md` before your
 first change to code, tests or docs here, whether or not your agent loads
 skills from that folder.
 

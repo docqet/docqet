@@ -28,14 +28,16 @@ gaps:
       Decisions have no key, so agents can't say in a trailer what an answered
       decision became, and history shows it removed with nothing in its place.
   - id: claude-reads-skill-by-instruction
-    name: Claude Code doesn't load the skill itself
+    name: Claude Code reads the skill only when told to
     impact: inconvenient
     likelihood: possible
     reach: some
     description: >-
-      Claude Code doesn't read skills from `.agents/skills/` yet, so it reads
-      the skill only because the block in `AGENTS.md` tells it to, can miss
-      it if it doesn't follow that, and can't be asked for it with `/docket`.
+      In a project where the kit isn't installed for Claude Code, Claude Code
+      doesn't load the skill from `.agents/skills/` itself: it reads it only
+      because the block in `AGENTS.md` says to, can miss it, and can't be
+      asked for it with `/docket`. `docket kit install --agent claude` writes
+      it where Claude Code reads it.
   - id: copilot-may-miss-skill
     name: Copilot in VS Code doesn't find the skill
     impact: inconvenient
@@ -85,7 +87,7 @@ tradeoffs:
       project reads the same copy.
     drawback: >-
       An agent's `docket` can be older or newer than the committed kit, so the
-      kit can name commands it doesn't have. `docket kit --check` in CI keeps
+      kit can name commands it doesn't have. `docket kit check` in CI keeps
       the kit matching CI's `docket`, not every engineer's.
 ---
 

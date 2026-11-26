@@ -126,8 +126,8 @@ func declared(id string) string {
 // keyOf is a gap's or tradeoff's key: what follows # in its ID.
 func keyOf(id string) string {
 	id = declared(id)
-	if i := strings.Index(id, "#"); i >= 0 {
-		return id[i+1:]
+	if _, after, ok := strings.Cut(id, "#"); ok {
+		return after
 	}
 	return id
 }
