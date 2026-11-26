@@ -7,18 +7,19 @@ belongs in it._
 
 ## How it supports software engineering
 
-Docqet defines software engineering as the discipline of applying
-engineering craft and judgment to build software that delivers value to
-people, consistently behaves as intended, and evolves gracefully. These ideas
-take inspiration from
+Software engineering is the discipline of applying engineering craft and
+judgment to build software that delivers value to people, consistently
+behaves as intended, and evolves gracefully. That's
 [Exalynt's thinking on software engineering](https://readme.exalynt.com/how-it-works/software-engineering),
-but Docqet defines them for itself, along with its stability levels, maturity,
-readiness and the rest of its concepts.
+and the stability levels and maturity Docqet records come from it too.
+Docqet doesn't define or own any of it. It's a tool for applying the
+discipline through intent as code.
 
 A discipline is a set of shared standards that people hold each other to.
 Docqet gives a project's standards somewhere to live: an open format for
-writing intention down, the stability rubric that says what each level means,
-and every change to either reviewed in a pull request alongside the code.
+writing intention down, a stability rubric so everyone reads each level the
+same way, and every change to either reviewed in a pull request alongside
+the code.
 
 ### What the software should do
 
@@ -30,9 +31,9 @@ and every change to either reviewed in a pull request alongside the code.
 
 ### Judgment
 
-Docqet defines judgment as the ability to evaluate tradeoffs amid
-uncertainty, decide at the right moment, and take responsibility for the
-outcomes. Docqet gives each part somewhere to be written down:
+Judgment is the ability to evaluate tradeoffs amid uncertainty, decide at
+the right moment, and take responsibility for the outcomes. People exercise
+it, not Docqet. Docqet gives each part somewhere to be written down:
 
 | Judgment means…                            | Docqet records                                                                                                                    |
 | ------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------- |
@@ -74,8 +75,8 @@ back is right. Docqet gives agents the first, the declared intention, before
 they change code. It leaves the second with people: nothing an agent writes
 counts until a person confirms it.
 
-Docqet informs judgment and shows the standard of craft, but does neither.
-People decide what to build, what level a capability is at, and when a gap
+Docqet informs judgment and shows the standard of craft, but exercises
+neither. It's a tool people use to apply them. People decide what to build, what level a capability is at, and when a gap
 is acceptable. Docqet makes those decisions, and the evidence behind them,
 visible to everyone.
 

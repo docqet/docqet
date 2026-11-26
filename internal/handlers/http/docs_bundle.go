@@ -12,7 +12,7 @@ import (
 )
 
 // stabilityBadges name the badge the docs show for each x-stability level,
-// as Docqet's stability levels name them. GA is the
+// as the format names the levels. GA is the
 // default expectation, so it gets no badge.
 var stabilityBadges = map[string]string{
 	"prototype": "Prototype",

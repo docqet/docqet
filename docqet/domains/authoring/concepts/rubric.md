@@ -17,9 +17,11 @@ A stability level says in one word how stable something is. The stability
 rubric says what that word means, quality by quality, for the people
 depending on a capability and the people and agents building it.
 
-It's part of the format, defined once in Docqet, so it's the same for every
-project and every tool that reads Docqet, whatever kind of software it is. A
-project doesn't copy it, change it or configure it.
+It's built into the format, so it's the same for every project and every
+tool that reads Docqet, whatever kind of software it is. A project doesn't
+copy it, change it or configure it. It's a tool for applying engineering
+judgment about stability the same way everywhere, not the authority on what
+stability means.
 
 ## A guideline, not a gate
 
