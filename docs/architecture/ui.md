@@ -10,7 +10,8 @@ resources exist:
 
 1. **Until then, `serve` and `docket ui` serve what the UI reads today**:
    `projects.json` and each project's `state.json`, from
-   `internal/handlers/http`'s `StatesHandler`.
+   `internal/handlers/http`'s `StatesHandler`. `serve` shows each project's
+   latest applied state, and `docket ui` its `.docket/state.json`.
 2. **The UI moves to the resources view by view**, as the read service and
    `derive` can serve each one. Its own combining and deriving are deleted as
    they're replaced.

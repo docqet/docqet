@@ -84,6 +84,25 @@ func (r *StateRepository) GetLatestCommit(ctx context.Context, project string) (
 		`SELECT `+commitColumns+` FROM commits WHERE project = ? ORDER BY committed_at DESC, applied_at DESC LIMIT 1`, project))
 }
 
+// ListProjects returns the ID of every project with a commit stored, in
+// order.
+func (r *StateRepository) ListProjects(ctx context.Context) ([]string, error) {
+	rows, err := on(ctx, r.db).QueryContext(ctx, `SELECT DISTINCT project FROM commits ORDER BY project`)
+	if err != nil {
+		return nil, err
+	}
+	defer func() { _ = rows.Close() }()
+	var projects []string
+	for rows.Next() {
+		var p string
+		if err := rows.Scan(&p); err != nil {
+			return nil, err
+		}
+		projects = append(projects, p)
+	}
+	return projects, rows.Err()
+}
+
 func scanCommit(row *sql.Row) (repositories.AppliedCommit, error) {
 	var (
 		c                      repositories.AppliedCommit

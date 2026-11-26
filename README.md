@@ -507,6 +507,17 @@ DOCKET_SERVER=http://localhost:8080 go run ./cmd/docket -C examples/hotel-bookin
 curl localhost:8080/api/v1/projects/hotel-bookings/state      # the state the server keeps
 ```
 
+Docket documents itself, so it can be sent to a local server and seen in its
+UI. `apply` sends commits, so the server shows what's committed: `docket ui`
+shows the working tree.
+
+```sh
+make ui-build   # the UI the server embeds
+make run        # migrate, then serve on localhost:8080
+make apply      # send Docket's new commits; open http://localhost:8080
+make apply DOCKET_SERVER=http://localhost:8090   # or to the server make build started
+```
+
 `docket index` without `--stdout` writes over an example's hand-written
 `state.json`.
 

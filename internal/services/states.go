@@ -157,6 +157,23 @@ func (s *StateService) GetLatest(ctx context.Context, project string) (Applied, 
 	return s.withState(ctx, c)
 }
 
+// ListLatest returns every project's latest applied state, by project ID.
+func (s *StateService) ListLatest(ctx context.Context) ([]Applied, error) {
+	projects, err := s.states.ListProjects(ctx)
+	if err != nil {
+		return nil, err
+	}
+	latest := make([]Applied, 0, len(projects))
+	for _, p := range projects {
+		a, err := s.GetLatest(ctx, p)
+		if err != nil {
+			return nil, fmt.Errorf("the latest state of %s: %w", p, err)
+		}
+		latest = append(latest, a)
+	}
+	return latest, nil
+}
+
 func (s *StateService) withState(ctx context.Context, c repositories.AppliedCommit) (Applied, error) {
 	body, err := s.states.GetState(ctx, c.StateHash)
 	if err != nil {

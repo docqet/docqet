@@ -18,6 +18,7 @@ import (
 	"github.com/exalynt/docket/internal/logs"
 	"github.com/exalynt/docket/internal/repositories/sqlite"
 	"github.com/exalynt/docket/internal/services"
+	"github.com/exalynt/docket/internal/state"
 )
 
 // shutdownTimeout bounds how long in-flight requests have to finish once
@@ -26,7 +27,8 @@ const shutdownTimeout = 10 * time.Second
 
 // ServeCommand runs the Docket server: it takes each project's states from
 // `docket apply`, keeps them in SQLite and hands them back, and serves the
-// API's docs, a readiness probe and the UI, which shows no projects yet.
+// API's docs, a readiness probe and the UI, over each project's latest
+// applied state.
 func ServeCommand() *cli.Command {
 	return &cli.Command{
 		Name:     "serve",
@@ -79,8 +81,9 @@ func ServeCommand() *cli.Command {
 
 // router builds the handler `serve` and `ui` serve: the API under /api/v1, its
 // docs under /docs, the states the UI shows, and the UI under everything
-// else. states are the state.json files to show, one per project. With db,
-// the server's database, the API takes and serves applied states too.
+// else. With db, the server's database, the API takes and serves applied
+// states, and the UI shows each project's latest. Without it, the UI shows
+// the state.json files at states, one per project.
 func router(logger *slog.Logger, states []string, db *sql.DB) (http.Handler, error) {
 	uiHandler, err := httphandlers.NewUIHandler()
 	if err != nil {
@@ -96,10 +99,12 @@ func router(logger *slog.Logger, states []string, db *sql.DB) (http.Handler, err
 	health := httphandlers.NewHealthHandler(logger)
 	health.AddServer("http", func(context.Context) error { return nil })
 	var projects *httphandlers.ProjectsHandler
+	shown := httphandlers.FileStates(states)
 	if db != nil {
 		health.AddDependency("database", "sqlite", db.PingContext)
 		stateService := services.NewStateService(sqlite.NewStateRepository(db), sqlite.NewUnitOfWork(db))
 		projects = httphandlers.NewProjectsHandler(logger, stateService)
+		shown = latestStates(stateService)
 	}
 	health.Start()
 
@@ -113,9 +118,25 @@ func router(logger *slog.Logger, states []string, db *sql.DB) (http.Handler, err
 		}
 	})
 	docsHandler.RegisterRoutes(r)
-	httphandlers.NewStatesHandler(states).RegisterRoutes(r)
+	httphandlers.NewStatesHandler(logger, shown).RegisterRoutes(r)
 	uiHandler.RegisterRoutes(r)
 	return r, nil
+}
+
+// latestStates shows each project's latest applied state.
+// docket:implements capability:overview
+func latestStates(states *services.StateService) httphandlers.StateSource {
+	return func(ctx context.Context) ([]*state.State, error) {
+		latest, err := states.ListLatest(ctx)
+		if err != nil {
+			return nil, err
+		}
+		shown := make([]*state.State, len(latest))
+		for i, a := range latest {
+			shown[i] = a.State
+		}
+		return shown, nil
+	}
 }
 
 // run serves handler on addr until ctx is done, then drains in-flight

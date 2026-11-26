@@ -37,4 +37,7 @@ type StateRepository interface {
 	// GetLatestCommit returns a project's most recent commit by commit time,
 	// or ErrNotFound when none is stored.
 	GetLatestCommit(ctx context.Context, project string) (AppliedCommit, error)
+	// ListProjects returns the ID of every project with a commit stored, in
+	// order.
+	ListProjects(ctx context.Context) ([]string, error)
 }

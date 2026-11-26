@@ -1,4 +1,4 @@
-.PHONY: help build up down nuke logs migrate run ui ui-build fix fmt lint vet docs-lint check test
+.PHONY: help build up down nuke logs migrate run apply ui ui-build fix fmt lint vet docs-lint check test
 
 help: ## Show this help
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-20s\033[0m %s\n", $$1, $$2}'
@@ -25,6 +25,11 @@ migrate: ## Bring the local server's database, data/docket.db, up to date
 
 run: migrate ## Run the server locally, outside Docker, on localhost:8080, with its API docs at /docs/api
 	go run ./cmd/docket serve
+
+DOCKET_SERVER ?= http://localhost:8080
+
+apply: ## Send Docket's own new commits to the local server: DOCKET_SERVER=http://localhost:8090 for Docker's
+	DOCKET_SERVER=$(DOCKET_SERVER) go run ./cmd/docket apply
 
 ## --- UI ---
 
