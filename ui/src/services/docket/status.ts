@@ -13,4 +13,5 @@ export type StatusResource = {
  * The figures of what's showing, or, with `forRef`, of the capabilities it
  * names: several references, comma-separated, for those they share.
  */
-export const getStatus = (showing: Showing, forRef?: string) => getOne<StatusResource>(productPath(showing, "/status", forRef ? { for: forRef } : {}));
+export const getStatus = (showing: Showing, forRef?: string, signal?: AbortSignal) =>
+  getOne<StatusResource>(productPath(showing, "/status", forRef ? { for: forRef } : {}), signal);

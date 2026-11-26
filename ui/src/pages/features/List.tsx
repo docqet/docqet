@@ -25,6 +25,8 @@ import {
 import { DocLink, GapsCell, LevelMark, PersonaFaces, ExposureStat } from "../../components/indexParts";
 import { InitiativeTags, initiativesOf } from "../../components/Initiatives";
 import { useStatusFor } from "../../model";
+import Skeleton from "@mui/material/Skeleton";
+import { ReadFallback } from "../../components/ReadFallback";
 
 type Group = "domain" | "stability" | "exposure";
 const GROUPS: Group[] = ["domain", "stability", "exposure"];
@@ -257,7 +259,9 @@ function FeatureBranch({ state, feature, domain }: { state: DocketState; feature
   const levels = capabilities.map((c) => levelInDomain(c, domain));
   /* Its figures in this domain: the feature's own when it's in no other, or else the server's for its part here. */
   const inPart = useStatusFor(state, elsewhere.length ? `feature:${feature.id},domain:${domain}` : null);
-  const figures = elsewhere.length ? inPart && { exposure: inPart.exposure, risk: inPart.risk } : { exposure: feature.exposure, risk: feature.readiness.gaps };
+  const figures = elsewhere.length
+    ? inPart.data && { exposure: inPart.data.exposure, risk: inPart.data.risk }
+    : { exposure: feature.exposure, risk: feature.readiness.gaps };
   return (
     <FoldRow
       className="ix-feature"
@@ -273,7 +277,13 @@ function FeatureBranch({ state, feature, domain }: { state: DocketState; feature
           />
         )
       }
-      exposure={figures ? <ExposureMark exposure={figures.exposure} risk={figures.risk} of={feature.name} /> : null}
+      exposure={
+        figures ? (
+          <ExposureMark exposure={figures.exposure} risk={figures.risk} of={feature.name} />
+        ) : (
+          <ReadFallback read={inPart} what="its exposure here" inline skeleton={<Skeleton variant="circular" width={22} height={22} />} />
+        )
+      }
       head={
         <>
           <DocLink kind="feature" id={feature.id} name={feature.name} />

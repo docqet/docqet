@@ -11,4 +11,4 @@ export type PersonaResource = DocResource &
     initiatives: string[];
   };
 
-export const listPersonas = (showing: Showing) => getAll<PersonaResource>(productPath(showing, "/personas"));
+export const listPersonas = (showing: Showing, signal?: AbortSignal) => getAll<PersonaResource>(productPath(showing, "/personas"), signal);

@@ -32,6 +32,8 @@ import {
 import { useStatusFor } from "../../../model";
 import Tooltip from "@mui/material/Tooltip";
 import { DomainIcon } from "../../../components/names";
+import Skeleton from "@mui/material/Skeleton";
+import { ReadFallback } from "../../../components/ReadFallback";
 
 /* A card's width, and the room between cards, as tidy lays them out. A persona's card is narrower. */
 const SLOT = 320;
@@ -267,9 +269,10 @@ function AreaMarks({ risk, exposure, of }: { risk: RiskAcross<Gap> | undefined; 
  */
 function PartMarks({ state, feature, domain }: { state: DocketState; feature: Feature; domain: string }) {
   const whole = feature.parts.length < 2;
-  const status = useStatusFor(state, whole ? null : `feature:${feature.id},domain:${domain}`);
-  const figures = whole ? { risk: feature.readiness.gaps, exposure: feature.exposure } : { risk: status?.risk, exposure: status?.exposure };
-  return <AreaMarks {...figures} of={feature.name} />;
+  const read = useStatusFor(state, whole ? null : `feature:${feature.id},domain:${domain}`);
+  if (whole) return <AreaMarks risk={feature.readiness.gaps} exposure={feature.exposure} of={feature.name} />;
+  if (!read.data) return <ReadFallback read={read} what="its risk here" inline skeleton={<Skeleton variant="circular" width={24} height={24} />} />;
+  return <AreaMarks risk={read.data.risk} exposure={read.data.exposure} of={feature.name} />;
 }
 
 /* How many card columns tidy puts side by side across domains, and the room between domains. */

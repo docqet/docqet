@@ -11,4 +11,4 @@ export type ProblemResource = {
   line?: number;
 };
 
-export const listProblems = (showing: Showing) => getAll<ProblemResource>(productPath(showing, "/problems"));
+export const listProblems = (showing: Showing, signal?: AbortSignal) => getAll<ProblemResource>(productPath(showing, "/problems"), signal);

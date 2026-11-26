@@ -23,7 +23,7 @@ import {
   type Verdict,
 } from "../../../state";
 import { gapKind } from "../../../components/left/LeftMark";
-import { summed, useGapsFor } from "../../../model";
+import { summed, useGapsFor, type GapWithin, type Read } from "../../../model";
 import { STABILITY_LEVEL_IDS } from "../../../components/stability/stability";
 
 /*
@@ -125,23 +125,11 @@ export type GapRow = {
   claim: boolean;
 };
 
-/*
- * The gaps that show on the scope's capabilities, each scored there by the
- * server, riskiest first; for a project, those written in it, and for
- * everything, every gap, each with its whole risk. Null while they're read.
- */
-export function useRowsFor(state: DocketState, scope: Scope): GapRow[] | null {
-  const within = useGapsFor(state, scope.capabilities ? scope.key : null);
-  const scored: { gap: Gap; on: RiskOn | null; score: number; verdict: Verdict }[] | null = scope.capabilities
-    ? within && state.gaps.flatMap((gap) => within.find((w) => w.gap.id === gap.id) ?? [])
-    : (scope.project ? state.gaps.filter((g) => g.project === scope.project) : state.gaps).map((gap) => ({
-        gap,
-        on: gap.risk.on[0] ?? null,
-        score: gap.risk.score,
-        verdict: gap.risk.verdict,
-      }));
-  if (!scored) return null;
-  return scored
+type Scored = { gap: Gap; on: RiskOn | null; score: number; verdict: Verdict };
+
+/* Gaps as rows, riskiest first. */
+const rowsOf = (scored: Scored[]): GapRow[] =>
+  scored
     .map(({ gap, on, score, verdict }) => ({
       gap,
       risk: gap.risk,
@@ -156,6 +144,27 @@ export function useRowsFor(state: DocketState, scope: Scope): GapRow[] | null {
       claim: on?.claim ?? false,
     }))
     .sort((a, b) => b.score - a.score || (b.on?.weight ?? 0) - (a.on?.weight ?? 0));
+
+/*
+ * The gaps that show on the scope's capabilities, each scored there by the
+ * server, riskiest first, as a read; for a project, those written in it, and
+ * for everything, every gap, each with its whole risk, which are already in.
+ */
+export function useRowsFor(state: DocketState, scope: Scope): Read<GapRow[]> {
+  const within = useGapsFor(state, scope.capabilities ? scope.key : null);
+  if (!scope.capabilities) {
+    const rows = rowsOf(
+      (scope.project ? state.gaps.filter((g) => g.project === scope.project) : state.gaps).map((gap) => ({
+        gap,
+        on: gap.risk.on[0] ?? null,
+        score: gap.risk.score,
+        verdict: gap.risk.verdict,
+      })),
+    );
+    return { data: rows, previous: rows, loading: false, error: false, retry: () => {} };
+  }
+  const scored = (list: GapWithin[] | null) => list && rowsOf(state.gaps.flatMap((gap) => list.find((w) => w.gap.id === gap.id) ?? []));
+  return { ...within, data: scored(within.data), previous: scored(within.previous) };
 }
 
 /*

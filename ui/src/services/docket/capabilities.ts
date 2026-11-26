@@ -30,4 +30,4 @@ export type CapabilityResource = DocResource & {
   outcomes: OutcomeStandingResource[];
 };
 
-export const listCapabilities = (showing: Showing) => getAll<CapabilityResource>(productPath(showing, "/capabilities"));
+export const listCapabilities = (showing: Showing, signal?: AbortSignal) => getAll<CapabilityResource>(productPath(showing, "/capabilities"), signal);

@@ -33,6 +33,10 @@ import { ScopePicker } from "./components/ScopePicker";
 import "../left.css";
 import { GapInitiatives } from "../../components/risk/GapRows";
 import { SubjectLink } from "../../components/SubjectLink";
+import Box from "@mui/material/Box";
+import LinearProgress from "@mui/material/LinearProgress";
+import Skeleton from "@mui/material/Skeleton";
+import { ReadError, ReadFallback } from "../../components/ReadFallback";
 
 /*
  * What's left to do, and what matters most: the gaps to close and the
@@ -48,7 +52,10 @@ export default function LeftPage({ state, route }: { state: DocketState; route: 
   const go = goFor(state);
   const search = new URLSearchParams(window.location.search);
   const scope = scopeOf(state, search.get("for"));
-  const rows = useRowsFor(state, scope) ?? [];
+  const read = useRowsFor(state, scope);
+  /* While another scope's gaps are read, the last ones stay on screen, marked as refreshing. */
+  const shown = read.data ?? read.previous;
+  const rows = shown ?? [];
   const holders = holdersIn(state, holdersOf(state), scope).filter((h) => openDecisions(h.doc).length);
   const decisions = holders.reduce((n, h) => n + openDecisions(h.doc).length, 0);
   const tabs = [
@@ -59,7 +66,7 @@ export default function LeftPage({ state, route }: { state: DocketState; route: 
           Gaps
         </LeftLabel>
       ),
-      count: rows.length,
+      count: shown ? rows.length : undefined,
     },
     { id: "decisions", label: <LeftLabel kind="decision" size={14} hoverOnly />, count: decisions },
   ];
@@ -93,8 +100,8 @@ export default function LeftPage({ state, route }: { state: DocketState; route: 
                   Gaps
                 </LeftLabel>
               }
-              value={rows.length || "None"}
-              note={rows.length ? <GapSpread rows={rows} /> : "Nothing written down to close"}
+              value={shown ? rows.length || "None" : <Skeleton width={40} />}
+              note={!shown ? <Skeleton width={160} /> : rows.length ? <GapSpread rows={rows} /> : "Nothing written down to close"}
             />
             <Stat
               label={<LeftLabel kind="decision" size={13} hoverOnly />}
@@ -106,7 +113,18 @@ export default function LeftPage({ state, route }: { state: DocketState; route: 
         }
       />
       <Tabs tabs={tabs} current={tab} />
-      {tab === "gaps" ? <GapsTab state={state} rows={rows} scope={scope} search={search} /> : <DecisionsTab holders={holders} go={go} />}
+      {tab !== "gaps" ? (
+        <DecisionsTab holders={holders} go={go} />
+      ) : read.error ? (
+        <ReadError what="the gaps for this scope" onRetry={read.retry} />
+      ) : shown ? (
+        <Box aria-busy={read.loading || undefined} sx={{ position: "relative", opacity: read.loading ? 0.6 : 1, transition: "opacity 150ms" }}>
+          {read.loading ? <LinearProgress sx={{ position: "absolute", top: -6, left: 0, right: 0, height: 2 }} /> : null}
+          <GapsTab state={state} rows={rows} scope={scope} search={search} />
+        </Box>
+      ) : (
+        <ReadFallback read={read} what="the gaps for this scope" skeleton={<Skeleton variant="rounded" height={240} />} />
+      )}
     </View>
   );
 }

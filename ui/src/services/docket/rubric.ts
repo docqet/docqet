@@ -20,4 +20,4 @@ export type RubricQualityResource = { id: string; name: string; question: string
 export type RubricResource = { kinds: { id: string; name: string }[]; qualities: RubricQualityResource[] };
 
 /* The stability rubric the product showing is held to. */
-export const getRubric = (showing: Showing) => getOne<RubricResource>(productPath(showing, "/rubric"));
+export const getRubric = (showing: Showing, signal?: AbortSignal) => getOne<RubricResource>(productPath(showing, "/rubric"), signal);

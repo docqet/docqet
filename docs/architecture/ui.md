@@ -18,6 +18,12 @@ CLI's, which writes and sends them, and the server's, which takes them.
   in a feature that serve a persona, or in one domain's part of a feature, is
   `/status?for=`, with several references for the capabilities they share.
   The gaps a scope puts at stake are `/gaps?for=`. Search is `/search`.
+- **Every read can be slow or fail.** `useRead` in `model.ts` cancels a read
+  once what it's for changes, so an old answer never replaces a newer one, and
+  says whether it's loading or failed, with a retry. A part waiting on one
+  shows a skeleton after a moment, keeps what it showed while the next
+  arrives, or says what couldn't load. Each page renders inside an error
+  boundary, so one that crashes leaves the shell working.
 - **Lookups and presentation stay in the UI.** Finding a doc by ID, the cards
   on the map, filtering, ordering and counting what the server sent by what
   it says, and showing only some of a figure's gaps, such as a persona's own,

@@ -1,4 +1,4 @@
 import { getAll, productPath, type Showing } from "./client";
 import type { TechnicalResource } from "./shared";
 
-export const listMechanisms = (showing: Showing) => getAll<TechnicalResource>(productPath(showing, "/mechanisms"));
+export const listMechanisms = (showing: Showing, signal?: AbortSignal) => getAll<TechnicalResource>(productPath(showing, "/mechanisms"), signal);

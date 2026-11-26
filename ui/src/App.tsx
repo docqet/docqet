@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { useMemo, type ReactNode } from "react";
 import Logo from "./components/shell/Logo";
 import BuiltPage from "./pages/built/List";
 import DecidedPage from "./pages/decided/List";
@@ -22,7 +22,15 @@ import PersonaView from "./pages/personas/View";
 import TechnicalView from "./pages/built/View";
 import type { ProductChoice } from "./components/shell/ProductFilter";
 import { navigate, routeOf, useSearch, type Route } from "./routes";
-import { loadProduct } from "./model";
+import Alert from "@mui/material/Alert";
+import AlertTitle from "@mui/material/AlertTitle";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import LinearProgress from "@mui/material/LinearProgress";
+import { ErrorBoundary } from "./components/ErrorBoundary";
+import { ReadError, useDelayed } from "./components/ReadFallback";
+import { ShellSkeleton } from "./components/shell/ShellSkeleton";
+import { loadProduct, useRead } from "./model";
 import { listProducts, type ProductResource } from "./services/docket/products";
 import { scopeOf, scopeParam } from "./scope";
 import Shell from "./components/shell/Shell";
@@ -49,17 +57,13 @@ const choiceOf = (p: ProductResource): ProductChoice => ({
  * to them.
  */
 export default function App() {
-  const [all, setAll] = useState<ProductResource[] | null>(null);
-  const [state, setState] = useState<DocketState | null>(null);
-  const [error, setError] = useState<string | null>(null);
   const search = useSearch();
   const wanted = useMemo(() => showingIn(search), [search]);
   const route = useMemo(() => routeOf(search), [search]);
   const scope = useMemo(() => scopeOf(search), [search]);
 
-  useEffect(() => {
-    listProducts().then(setAll, (e: unknown) => setError(String(e)));
-  }, []);
+  const listed = useRead("products", (signal) => listProducts(signal));
+  const all = listed.data;
 
   /* Each product, and its projects, to choose from. */
   const products: ProductChoice[] = useMemo(() => (all ?? []).map(choiceOf), [all]);
@@ -80,18 +84,18 @@ export default function App() {
   /* Some of the product's projects, or all of them, as the server is asked for them. */
   const projects = chosen.length === product?.projects.length ? "" : chosen.join(",");
   const initiative = scopeParam(scope);
-  useEffect(() => {
-    if (!product) return;
-    let current = true;
-    const showing = { product: product.id, projects: projects ? projects.split(",") : [], initiative };
-    loadProduct(showing).then(
-      (s) => current && setState(s),
-      (e: unknown) => current && setError(String(e)),
-    );
-    return () => {
-      current = false;
-    };
-  }, [product, projects, initiative]);
+  const loaded = useRead(product ? `${product.id}|${projects}|${initiative ?? ""}` : null, (signal) =>
+    loadProduct({ product: product!.id, projects: projects ? projects.split(",") : [], initiative }, signal),
+  );
+  /*
+   * What shows: the product as read for what's showing, or, while another
+   * set of its projects or another initiative is read, what was showing
+   * before, marked as refreshing. Another product's docs never show under
+   * this one's frame while its own are read.
+   */
+  const state = loaded.data ?? (loaded.previous?.showing.product === product?.id ? loaded.previous : null);
+  const refreshing = useDelayed(loaded.loading && state !== null);
+  const slow = useDelayed(!state && !listed.error && !loaded.error);
 
   /*
    * Show a product, and some of its projects, or all of them with none
@@ -112,16 +116,21 @@ export default function App() {
     navigate(params.size ? `?${params}` : window.location.pathname);
   };
 
-  if (error) {
+  if (listed.error || (loaded.error && !state)) {
     return (
-      <div className="message">
-        <Logo />
-        <h1>The server couldn't be read</h1>
-        <p>
-          Docket reads everything it shows from the server's API, under <code>/api/v1</code>.
-        </p>
-        <p className="faint">{error}</p>
-      </div>
+      <Box sx={{ p: { xs: 2, md: 6 }, maxWidth: 640 }}>
+        <Alert
+          severity="error"
+          action={
+            <Button color="inherit" size="small" onClick={listed.error ? listed.retry : loaded.retry}>
+              Retry
+            </Button>
+          }
+        >
+          <AlertTitle>The server couldn&rsquo;t be read</AlertTitle>
+          Docket reads everything it shows from the server&rsquo;s API, under <code>/api/v1</code>. Check that the server is running, then try again.
+        </Alert>
+      </Box>
     );
   }
   if (all && !all.length) {
@@ -135,8 +144,7 @@ export default function App() {
       </div>
     );
   }
-  /* Another product's docs never show under this one's frame while its own are read. */
-  if (!state || !product || state.showing.product !== product.id) return <div className="message faint">Loading…</div>;
+  if (!state || !product) return slow ? <ShellSkeleton /> : null;
 
   /* Keyed by the product's projects, so each product has a canvas of its own and a different set starts it afresh. */
   const layoutKey = product.projects.map((p) => p.id).join(",");
@@ -150,7 +158,9 @@ export default function App() {
       onProduct={(id) => choose(id)}
       onProjects={(ids) => choose(product.id, ids)}
     >
-      {content(state, route, layoutKey)}
+      {refreshing ? <LinearProgress sx={{ position: "fixed", top: 0, left: 0, right: 0, height: 2, zIndex: "appBar" }} /> : null}
+      {loaded.error ? <ReadError what="what's showing now. What you see is from before" onRetry={loaded.retry} /> : null}
+      <ErrorBoundary key={search}>{content(state, route, layoutKey)}</ErrorBoundary>
     </Shell>
   );
 }

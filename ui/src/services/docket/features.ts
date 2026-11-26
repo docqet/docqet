@@ -8,4 +8,4 @@ export type FeatureResource = DocResource &
     parts: { domain: string; capabilities: string[]; maturity: MaturityResource }[];
   };
 
-export const listFeatures = (showing: Showing) => getAll<FeatureResource>(productPath(showing, "/features"));
+export const listFeatures = (showing: Showing, signal?: AbortSignal) => getAll<FeatureResource>(productPath(showing, "/features"), signal);

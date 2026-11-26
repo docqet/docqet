@@ -26,6 +26,9 @@ import {
   type Rule,
   type Pick,
 } from "../../state";
+import LinearProgress from "@mui/material/LinearProgress";
+import { isAbort } from "../../services/docket/client";
+import { ReadError, useDelayed } from "../ReadFallback";
 
 /*
  * What choosing a result does: opens a domain, feature, capability, concept,
@@ -209,24 +212,31 @@ export default function Search({ state, all, onSelect }: { state: DocketState; a
   const entries = useMemo(() => new Map(index(state, all).map((e) => [e.key, e])), [state, all]);
 
   /*
-   * What the server found, and for what: a moment after typing stops, so it
-   * isn't asked at every key. The last results stay until the next arrive.
+   * What the server found, and for what: once typing pauses, so it isn't
+   * asked at every key. A new search cancels the one before, and the last
+   * results stay, marked as refreshing, until the next arrive. A search that
+   * fails says so, with a retry.
    */
   const q = query.trim();
-  const [found, setFound] = useState<{ q: string; results: SearchResultResource[] } | null>(null);
+  const [found, setFound] = useState<{ q: string; results: SearchResultResource[]; failed?: boolean } | null>(null);
+  const [attempt, setAttempt] = useState(0);
   useEffect(() => {
     if (!q) return;
-    let current = true;
+    const controller = new AbortController();
     const timer = setTimeout(() => {
-      searchProduct(state.showing, q)
-        .catch(() => [])
-        .then((results) => current && setFound({ q, results }));
-    }, 150);
+      searchProduct(state.showing, q, controller.signal).then(
+        (results) => setFound({ q, results }),
+        (e: unknown) => {
+          if (!isAbort(e)) setFound({ q, results: [], failed: true });
+        },
+      );
+    }, 300);
     return () => {
-      current = false;
       clearTimeout(timer);
+      controller.abort();
     };
-  }, [state.showing, q]);
+  }, [state.showing, q, attempt]);
+  const searching = useDelayed(!!q && found?.q !== q);
 
   const terms = useMemo(() => (q && found ? [found.q.toLowerCase()] : []), [q, found]);
   const groups = useMemo(() => {
@@ -322,7 +332,8 @@ export default function Search({ state, all, onSelect }: { state: DocketState; a
             </kbd>
           </label>
 
-          <div className="search-results" id="search-results" role="listbox">
+          {searching ? <LinearProgress sx={{ height: 2 }} /> : null}
+          <div className="search-results" id="search-results" role="listbox" aria-busy={searching || undefined}>
             {!q ? (
               <div className="search-empty">Find a project, domain, feature, capability, rule, concept, or persona, and open it.</div>
             ) : groups.length ? (
@@ -354,7 +365,13 @@ export default function Search({ state, all, onSelect }: { state: DocketState; a
                 </div>
               ))
             ) : found?.q === q ? (
-              <div className="search-empty">Nothing matches “{q}”.</div>
+              found.failed ? (
+                <div className="search-empty">
+                  <ReadError what="search results" onRetry={() => setAttempt((a) => a + 1)} />
+                </div>
+              ) : (
+                <div className="search-empty">Nothing matches “{q}”.</div>
+              )
             ) : null}
           </div>
 

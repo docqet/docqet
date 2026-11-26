@@ -12,4 +12,4 @@ export type ProductProjectResource = {
 };
 
 /* The product's projects showing. */
-export const listProjects = (showing: Showing) => getAll<ProductProjectResource>(productPath(showing, "/projects"));
+export const listProjects = (showing: Showing, signal?: AbortSignal) => getAll<ProductProjectResource>(productPath(showing, "/projects"), signal);

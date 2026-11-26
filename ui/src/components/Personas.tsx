@@ -8,6 +8,8 @@ import { InitiativeTags } from "./Initiatives";
 import type { ExploreKind } from "./names";
 import { useStatusFor } from "../model";
 import { startedOf, type DocketState, type Feature, type Persona, type Pick, type Target } from "../state";
+import Skeleton from "@mui/material/Skeleton";
+import { ReadFallback } from "./ReadFallback";
 
 export function PersonaIcon({ size = 16 }: { size?: number }) {
   return <PersonOutlineRoundedIcon sx={{ fontSize: size, flex: "none", color: "var(--persona)" }} />;
@@ -92,20 +94,25 @@ export function PersonaRows({ state, personas, feature, onOpen }: { state: Docke
 
 /* One persona's row, with how ready `feature` is for them, as the server works it out, when it's given. */
 export function PersonaRow({ state, persona: p, feature, onOpen }: { state: DocketState; persona: Persona; feature?: Feature; onOpen: Links["onOpen"] }) {
-  const readiness = useStatusFor(state, feature ? `persona:${p.id},feature:${feature.id}` : null)?.readiness ?? null;
+  const read = useStatusFor(state, feature ? `persona:${p.id},feature:${feature.id}` : null);
+  const readiness = read.data?.readiness ?? null;
+  /* Beside the row's button rather than in it, so its popover and a retry are their own to focus and press. */
   return (
-    <li>
+    <Box component="li" sx={{ display: "flex", alignItems: "center", gap: 1, "& > .concept-row": { flex: 1, minWidth: 0 } }}>
       <Row
         icon={<PersonaAvatar persona={p} size={28} />}
         {...rowName(p)}
         tags={<InitiativeTags state={state} ids={p.initiatives} plain />}
         onClick={() => onOpen("persona", p.id)}
-      >
-        {readiness && feature && startedOf(readiness) ? (
-          <ReadinessMark readiness={readiness} of={`${feature.name}'s readiness for ${personaNameAndRole(p).name}`} inButton />
-        ) : null}
-      </Row>
-    </li>
+      />
+      {!feature ? null : readiness ? (
+        startedOf(readiness) ? (
+          <ReadinessMark readiness={readiness} of={`${feature.name}'s readiness for ${personaNameAndRole(p).name}`} />
+        ) : null
+      ) : (
+        <ReadFallback read={read} what="readiness" inline skeleton={<Skeleton variant="rounded" width={96} height={20} />} />
+      )}
+    </Box>
   );
 }
 

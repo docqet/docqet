@@ -44,5 +44,5 @@ export type GapResource = {
  * The gaps showing, or, with `for`, those on the capabilities it names, each
  * scored there. `sort: "risk"` puts the riskiest first.
  */
-export const listGaps = (showing: Showing, options: { for?: string; sort?: "risk" } = {}) =>
-  getAll<GapResource>(productPath(showing, "/gaps", { for: options.for ?? "", sort: options.sort ?? "" }));
+export const listGaps = (showing: Showing, options: { for?: string; sort?: "risk" } = {}, signal?: AbortSignal) =>
+  getAll<GapResource>(productPath(showing, "/gaps", { for: options.for ?? "", sort: options.sort ?? "" }), signal);

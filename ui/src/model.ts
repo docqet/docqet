@@ -5,9 +5,9 @@
  * can follow them. Nothing here works out a figure: each is the server's.
  */
 
-import { useEffect, useState } from "react";
+import { useEffect, useEffectEvent, useState } from "react";
 import { listCapabilities, type OutcomeStandingResource } from "./services/docket/capabilities";
-import type { Showing } from "./services/docket/client";
+import { isAbort, type Showing } from "./services/docket/client";
 import { listComponents } from "./services/docket/components";
 import { listConcepts } from "./services/docket/concepts";
 import { listDomains } from "./services/docket/domains";
@@ -139,24 +139,24 @@ const noRisk = (g: GapResource): Risk => ({
 });
 
 /* Everything about the product showing, as the server serves it, read at once. */
-async function readProduct(showing: Showing) {
+async function readProduct(showing: Showing, signal?: AbortSignal) {
   const [status, projects, rubric, domains, features, capabilities, rules, concepts, personas, initiatives, mechanisms, components, gaps, tradeoffs, problems] =
     await Promise.all([
-      getStatus(showing),
-      listProjects(showing),
-      getRubric(showing),
-      listDomains(showing),
-      listFeatures(showing),
-      listCapabilities(showing),
-      listRules(showing),
-      listConcepts(showing),
-      listPersonas(showing),
-      listInitiatives(showing),
-      listMechanisms(showing),
-      listComponents(showing),
-      listGaps(showing),
-      listTradeoffs(showing),
-      listProblems(showing),
+      getStatus(showing, undefined, signal),
+      listProjects(showing, signal),
+      getRubric(showing, signal),
+      listDomains(showing, signal),
+      listFeatures(showing, signal),
+      listCapabilities(showing, signal),
+      listRules(showing, signal),
+      listConcepts(showing, signal),
+      listPersonas(showing, signal),
+      listInitiatives(showing, signal),
+      listMechanisms(showing, signal),
+      listComponents(showing, signal),
+      listGaps(showing, {}, signal),
+      listTradeoffs(showing, signal),
+      listProblems(showing, signal),
     ]);
   return {
     status,
@@ -178,7 +178,7 @@ async function readProduct(showing: Showing) {
 }
 
 /* The product showing, read from the server and turned into what the pages hold. */
-export const loadProduct = async (showing: Showing) => modelOf(await readProduct(showing), showing);
+export const loadProduct = async (showing: Showing, signal?: AbortSignal) => modelOf(await readProduct(showing, signal), showing);
 
 /* The product showing, from its resources. */
 function modelOf(r: Awaited<ReturnType<typeof readProduct>>, showing: Showing): DocketState {
@@ -455,40 +455,76 @@ function technical(t: TechnicalResource): TechnicalDoc {
 }
 
 /*
+ * A read from the server, as a view shows it: what was read (null until it
+ * arrives, and after a failure), whether it's on its way, whether it failed,
+ * and a way to try again. `previous` is the last answer for any key, for a
+ * view that keeps what's on screen while the next arrives.
+ */
+export type Read<T> = { data: T | null; previous: T | null; loading: boolean; error: boolean; retry: () => void };
+
+const ids = new WeakMap<object, number>();
+let lastId = 0;
+/* A number for an object, the same each time, so a read's key can say which product it was for. */
+export function idOf(o: object): number {
+  if (!ids.has(o)) ids.set(o, ++lastId);
+  return ids.get(o)!;
+}
+
+/*
+ * Read with `read` whenever `key` names something, again whenever the key
+ * changes, and again on retry. The read before is cancelled, and only an
+ * answer for the current key and attempt shows, so a slow answer for an old
+ * key never replaces a newer one. With no key, nothing is read.
+ */
+export function useRead<T>(key: string | null, read: (signal: AbortSignal) => Promise<T>): Read<T> {
+  const [attempt, setAttempt] = useState(0);
+  const [got, setGot] = useState<{ key: string; attempt: number; data: T | null } | null>(null);
+  const [previous, setPrevious] = useState<T | null>(null);
+  const run = useEffectEvent(read);
+  useEffect(() => {
+    if (key === null) return;
+    const controller = new AbortController();
+    run(controller.signal).then(
+      (data) => {
+        setGot({ key, attempt, data });
+        setPrevious(data);
+      },
+      (e: unknown) => {
+        if (!isAbort(e)) setGot({ key, attempt, data: null });
+      },
+    );
+    return () => controller.abort();
+  }, [key, attempt]);
+  const mine = got && got.key === key && got.attempt === attempt ? got : null;
+  return {
+    data: mine?.data ?? null,
+    previous,
+    loading: key !== null && !mine,
+    error: mine !== null && mine.data === null,
+    retry: () => setAttempt((a) => a + 1),
+  };
+}
+
+/*
  * The figures of the capabilities a for names, as the server works them out,
  * for a set no doc's own figures cover: those in a feature that serve a
  * persona, as `persona:<id>,feature:<id>`, or in one domain's part of a
- * feature, as `feature:<id>,domain:<id>`. With initiative, within that initiative instead
- * of what's showing. Null until they're read, and with no for.
+ * feature, as `feature:<id>,domain:<id>`. With initiative, within that
+ * initiative instead of what's showing. With no for, nothing is read.
  */
-export function useStatusFor(state: DocketState, forRef: string | null, initiative?: string | null): Status | null {
-  /* What was read, and what for, so a read for something else shows as null until its own arrives. */
-  const [read, setRead] = useState<{ state: DocketState; forRef: string; initiative?: string | null; status: Status } | null>(null);
-  useEffect(() => {
-    if (!forRef) return;
+export function useStatusFor(state: DocketState, forRef: string | null, initiative?: string | null): Read<Status> {
+  return useRead(forRef ? `${idOf(state)}|${forRef}|${initiative ?? ""}` : null, async (signal) => {
     const showing = initiative === undefined ? state.showing : { ...state.showing, initiative };
-    let current = true;
-    getStatus(showing, forRef).then((r) => {
-      if (!current) return;
-      const { readiness, exposure, across } = converters(state);
-      setRead({
-        state,
-        forRef,
-        initiative,
-        status: {
-          maturity: r.maturity?.percent ?? null,
-          band: (r.maturity?.band ?? null) as Level | null,
-          readiness: readiness(r.readiness),
-          exposure: exposure(r.exposure),
-          risk: across(r.risk),
-        },
-      });
-    });
-    return () => {
-      current = false;
+    const r = await getStatus(showing, forRef!, signal);
+    const { readiness, exposure, across } = converters(state);
+    return {
+      maturity: r.maturity?.percent ?? null,
+      band: (r.maturity?.band ?? null) as Level | null,
+      readiness: readiness(r.readiness),
+      exposure: exposure(r.exposure),
+      risk: across(r.risk),
     };
-  }, [state, forRef, initiative]);
-  return read && read.state === state && read.forRef === forRef && read.initiative === initiative ? read.status : null;
+  });
 }
 
 /* A gap among the capabilities a for names: what it puts at stake there, and where it scores highest. */
@@ -497,33 +533,19 @@ export type GapWithin = { gap: Gap; score: number; verdict: Verdict; on: RiskOn 
 /*
  * The gaps that show on the capabilities a for names, riskiest there first,
  * each scored there, as the server works them out: what's left for a persona,
- * a project or any other doc. Null until they're read, and with no for.
+ * a project or any other doc. With no for, nothing is read.
  */
-export function useGapsFor(state: DocketState, forRef: string | null): GapWithin[] | null {
-  /* What was read, and what for, so a read for something else shows as null until its own arrives. */
-  const [read, setRead] = useState<{ state: DocketState; forRef: string; gaps: GapWithin[] } | null>(null);
-  useEffect(() => {
-    if (!forRef) return;
-    let current = true;
-    listGaps(state.showing, { for: forRef, sort: "risk" }).then((list) => {
-      if (!current) return;
-      const byId = new Map(state.gaps.map((g) => [g.id, g]));
-      setRead({
-        state,
-        forRef,
-        gaps: list.flatMap((r) => {
-          const gap = byId.get(r.id);
-          const w = r.within;
-          if (!gap || !w) return [];
-          return [{ gap, score: w.score, verdict: w.verdict as Verdict, on: gap.risk.on.find((o) => o.capability.id === w.capability) ?? null }];
-        }),
-      });
+export function useGapsFor(state: DocketState, forRef: string | null): Read<GapWithin[]> {
+  return useRead(forRef ? `${idOf(state)}|${forRef}` : null, async (signal) => {
+    const list = await listGaps(state.showing, { for: forRef!, sort: "risk" }, signal);
+    const byId = new Map(state.gaps.map((g) => [g.id, g]));
+    return list.flatMap((r) => {
+      const gap = byId.get(r.id);
+      const w = r.within;
+      if (!gap || !w) return [];
+      return [{ gap, score: w.score, verdict: w.verdict as Verdict, on: gap.risk.on.find((o) => o.capability.id === w.capability) ?? null }];
     });
-    return () => {
-      current = false;
-    };
-  }, [state, forRef]);
-  return read && read.state === state && read.forRef === forRef ? read.gaps : null;
+  });
 }
 
 /*

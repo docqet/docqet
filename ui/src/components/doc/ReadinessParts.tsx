@@ -3,6 +3,8 @@ import { startedOf, type Readiness, type DocketState } from "../../state";
 import { useStatusFor } from "../../model";
 import { Section, Stat } from "../shell/layout";
 import { tabHref } from "./DocPage";
+import Skeleton from "@mui/material/Skeleton";
+import { ReadFallback } from "../ReadFallback";
 
 /* How ready it is, as a figure in the header, as its pie, linking to what it still needs on its first tab. `of` heads its popover. */
 export function ReadinessStat({ readiness, tab, of }: { readiness: Readiness; tab: string; of: string }) {
@@ -48,7 +50,8 @@ export function ReadinessFor({
   of: string;
   started?: boolean;
 }) {
-  const status = useStatusFor(state, forRef, initiative);
-  if (!status || (started && !startedOf(status.readiness))) return null;
-  return <ReadinessMark readiness={status.readiness} of={of} />;
+  const read = useStatusFor(state, forRef, initiative);
+  if (!read.data) return <ReadFallback read={read} what="readiness" inline skeleton={<Skeleton variant="rounded" width={120} height={22} />} />;
+  if (started && !startedOf(read.data.readiness)) return null;
+  return <ReadinessMark readiness={read.data.readiness} of={of} />;
 }

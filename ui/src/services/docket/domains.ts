@@ -3,4 +3,4 @@ import type { DocResource, FiguresResource } from "./shared";
 
 export type DomainResource = DocResource & FiguresResource & { features: string[]; capabilities: string[] };
 
-export const listDomains = (showing: Showing) => getAll<DomainResource>(productPath(showing, "/domains"));
+export const listDomains = (showing: Showing, signal?: AbortSignal) => getAll<DomainResource>(productPath(showing, "/domains"), signal);

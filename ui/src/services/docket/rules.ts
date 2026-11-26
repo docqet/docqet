@@ -9,4 +9,4 @@ export type RuleResource = DocResource & {
   standings: Record<string, string>;
 };
 
-export const listRules = (showing: Showing) => getAll<RuleResource>(productPath(showing, "/rules"));
+export const listRules = (showing: Showing, signal?: AbortSignal) => getAll<RuleResource>(productPath(showing, "/rules"), signal);

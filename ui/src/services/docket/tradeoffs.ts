@@ -16,4 +16,4 @@ export type TradeoffResource = {
   decisions: HeldDecisionResource[];
 };
 
-export const listTradeoffs = (showing: Showing) => getAll<TradeoffResource>(productPath(showing, "/tradeoffs"));
+export const listTradeoffs = (showing: Showing, signal?: AbortSignal) => getAll<TradeoffResource>(productPath(showing, "/tradeoffs"), signal);
