@@ -4,21 +4,11 @@
  * under what they're on.
  */
 
-/* A count in a header tile, in its impact's color. */
-.lf-impact-value {
-  color: var(--impact);
-}
-
 .lf-intro {
   max-width: 760px;
   margin: -8px 0 20px;
   font-size: 13.5px;
   color: var(--muted);
-}
-
-.lf-faint {
-  font-size: 12.5px;
-  color: var(--faint);
 }
 
 /* ——— Filters ——— */
@@ -83,24 +73,10 @@
 
 /* ——— Cards, groups and rows ——— */
 
-.lf-card,
-.lf-list {
+.lf-card {
   background: var(--popover);
   border: 1px solid var(--border);
   border-radius: 10px;
-}
-
-.lf-list {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-/* A list inside a group's card, which draws the border. */
-.lf-list.lf-bare {
-  background: none;
-  border: 0;
-  border-radius: 0;
 }
 
 .lf-group {
@@ -133,60 +109,6 @@
 .lf-holder-head {
   margin-bottom: 10px;
   font-size: 14px;
-}
-
-/* A row: its impact down the left, then what it says and, under that, a line of what it's on. */
-.lf-row {
-  display: grid;
-  grid-template-columns: 112px minmax(0, 1fr);
-  gap: 12px;
-  padding: 10px 14px;
-}
-
-.lf-row + .lf-row {
-  border-top: 1px solid var(--border);
-}
-
-.lf-impact {
-  padding-top: 2px;
-}
-
-.lf-row-body {
-  min-width: 0;
-}
-
-.lf-row-title {
-  display: -webkit-box;
-  overflow: hidden;
-  font-size: 14px;
-  font-weight: 550;
-  line-height: 1.45;
-  color: var(--text);
-  text-decoration: none;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-}
-
-a.lf-row-title:hover {
-  color: var(--accent);
-}
-
-.lf-row-title code {
-  font-size: 0.92em;
-}
-
-.lf-row-meta {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 4px 12px;
-  margin-top: 4px;
-  font-size: 12.5px;
-  color: var(--muted);
-}
-
-.lf-row-meta .gap-kind-tag {
-  margin-right: 0;
 }
 
 .lf-claim {
@@ -260,67 +182,9 @@ a.lf-row-title:hover {
 
 /* ——— A tradeoff's two sides, compact ——— */
 
-.lf-sides {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  margin-top: 8px;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  overflow: hidden;
-}
-
-.lf-side {
-  min-width: 0;
-  padding: 8px 12px;
-  font-size: 13px;
-  line-height: 1.45;
-  background: color-mix(in srgb, var(--side) 5%, transparent);
-}
-
-.lf-side + .lf-side {
-  border-left: 1px solid var(--border);
-}
-
-.lf-side[data-side="benefit"] {
-  --side: var(--ok);
-}
-
-.lf-side[data-side="drawback"] {
-  --side: var(--warning);
-}
-
-.lf-side-label {
-  display: block;
-  margin-bottom: 2px;
-  font-size: 10.5px;
-  font-weight: 650;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--side);
-}
-
-.lf-none {
-  font-style: italic;
-  color: var(--faint);
-}
-
 @media (max-width: 720px) {
-  .lf-row {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 4px;
-  }
-
   .lf-more.lf-more-inline {
     padding-left: 14px;
-  }
-
-  .lf-sides {
-    grid-template-columns: 1fr;
-  }
-
-  .lf-side + .lf-side {
-    border-left: 0;
-    border-top: 1px solid var(--border);
   }
 }
 

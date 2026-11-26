@@ -60,15 +60,6 @@
   color: var(--muted);
 }
 
-.ix-level {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 13px;
-  font-weight: 650;
-  white-space: nowrap;
-}
-
 /* Personas served, as overlapping pictures. */
 .ix-faces {
   display: inline-flex;

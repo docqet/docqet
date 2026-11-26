@@ -150,31 +150,6 @@ ul {
   cursor: default;
 }
 
-.topbar {
-  position: fixed;
-  top: 16px;
-  left: 16px;
-  right: 16px;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 12px;
-  pointer-events: none;
-}
-
-.topbar > * {
-  pointer-events: auto;
-}
-
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 10px 16px 10px 12px;
-  min-width: 0;
-}
-
 .divider {
   width: 1px;
   align-self: stretch;
@@ -318,29 +293,10 @@ ul {
   cursor: help;
 }
 
-.card-contradiction {
-  display: inline-flex;
-  align-items: center;
-  gap: 3px;
-  margin-left: auto;
-  color: var(--warning);
-  cursor: help;
-}
-
 .stats {
   display: flex;
   align-items: center;
   padding: 6px;
-}
-
-.stat {
-  display: grid;
-  padding: 6px 16px;
-  min-width: 88px;
-}
-
-.stat + .stat {
-  border-left: 1px solid var(--border);
 }
 
 .stat-maturity {
@@ -352,20 +308,6 @@ ul {
 
 .stat-maturity > div {
   display: grid;
-}
-
-.stat-n {
-  font-size: 20px;
-  font-weight: 650;
-  letter-spacing: -0.02em;
-  font-variant-numeric: tabular-nums;
-  line-height: 1.2;
-}
-
-.stat-label {
-  font-size: 12px;
-  color: var(--muted);
-  white-space: nowrap;
 }
 
 .zoom {
@@ -910,23 +852,6 @@ kbd {
 
 /* ——— Concepts ——— */
 
-/* The search, in the middle of the header. */
-.finders {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex: 1 1 360px;
-  max-width: 720px;
-  min-width: 0;
-  align-self: center;
-  justify-content: center;
-}
-
-.finders .search-trigger {
-  flex: 1 1 auto;
-  max-width: 280px;
-}
-
 .filter-toggle {
   display: inline-flex;
   align-items: center;
@@ -956,84 +881,6 @@ kbd {
 .filter-toggle[aria-current="page"] {
   color: var(--popover);
   background: var(--concept);
-}
-
-.stat-button {
-  grid-template-columns: auto auto 1fr;
-  grid-template-areas:
-    "icon n chevron"
-    "label label chevron";
-  align-items: center;
-  column-gap: 6px;
-  padding: 6px 8px 6px 12px;
-  margin-left: 6px;
-  font: inherit;
-  color: inherit;
-  text-align: left;
-  background: color-mix(in srgb, var(--text) 3%, transparent);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  cursor: pointer;
-  transition:
-    background 120ms,
-    border-color 120ms,
-    box-shadow 120ms;
-}
-
-.stat-maturity + .stat-button {
-  margin-left: 10px;
-}
-
-.stat-icon {
-  grid-area: icon;
-  display: flex;
-}
-
-.stat-button .stat-n {
-  grid-area: n;
-}
-
-.stat-button .stat-label {
-  grid-area: label;
-}
-
-.stat-chevron {
-  grid-area: chevron;
-  justify-self: end;
-  color: var(--faint);
-  transition:
-    transform 120ms,
-    color 120ms;
-}
-
-.stat-button:hover {
-  background: var(--lit-row);
-  border-color: var(--border-strong);
-  box-shadow: 0 1px 2px rgb(30 16 70 / 0.08);
-}
-
-.stat-button:hover .stat-chevron {
-  color: var(--accent);
-  transform: translateX(2px);
-}
-
-.stat-button[aria-pressed="true"] {
-  background: var(--accent-soft);
-  border-color: color-mix(in srgb, var(--accent) 45%, transparent);
-}
-
-.stat-button[aria-pressed="true"] .stat-n,
-.stat-button[aria-pressed="true"] .stat-chevron {
-  color: var(--accent);
-}
-
-.stat-button:active {
-  transform: translateY(1px);
-}
-
-.stat-button:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 1px;
 }
 
 .feature-concepts {
@@ -1129,182 +976,11 @@ kbd {
   z-index: 5;
 }
 
-.concepts-header {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 8px 8px 14px;
-  border-bottom: 1px solid var(--border);
-}
-
-.concepts-header .icon-button:first-child {
-  margin-left: -8px;
-}
-
-.concepts-title {
-  flex: 1;
-  font-weight: 650;
-}
-
-/* Back, named for where it goes: quieter than a title, so it isn't read as what's showing. */
-.panel-back {
-  flex: 1;
-  min-width: 0;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  margin-left: -6px;
-  padding: 4px 6px;
-  font: inherit;
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--muted);
-  text-align: left;
-  background: none;
-  border: 0;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.panel-back span {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.panel-back:hover {
-  color: var(--text);
-  background: var(--accent-soft);
-}
-
-.concepts-body {
-  flex: 1;
-  overflow-y: auto;
-  padding: 12px 16px 20px;
-}
-
-.concepts-filter {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  height: 36px;
-  padding: 0 10px;
-  margin-bottom: 8px;
-  border: 1px solid var(--border-strong);
-  border-radius: 6px;
-  cursor: text;
-}
-
-.concepts-filter:focus-within {
-  border-color: var(--concept);
-  box-shadow: 0 0 0 3px var(--concept-soft);
-}
-
-.concepts-filter input {
-  flex: 1;
-  min-width: 0;
-  border: 0;
-  outline: 0;
-  background: none;
-  font: inherit;
-  color: var(--text);
-}
-
-.concepts-filter input::-webkit-search-cancel-button {
-  display: none;
-}
-
-.concepts-empty {
-  padding: 8px 0;
-  font-size: 13px;
-  color: var(--muted);
-}
-
-.concept-list button {
-  display: grid;
-  gap: 2px;
-  padding: 10px;
-  margin: 0 -10px;
-  width: calc(100% + 20px);
-  font: inherit;
-  color: inherit;
-  text-align: left;
-  background: none;
-  border: 0;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-.concept-list button:hover,
-.concept-list button:focus-visible {
-  background: var(--concept-soft);
-  outline: 0;
-}
-
-.concept-name {
-  font-weight: 650;
-}
-
-.concept-summary {
-  color: var(--muted);
-  font-size: 13px;
-}
-
-.concept-meta {
-  font-size: 12px;
-  color: var(--faint);
-}
-
 .concept h2 {
   margin-top: 6px;
   font-size: 22px;
   line-height: 1.2;
   letter-spacing: -0.02em;
-}
-
-.concept-lede {
-  margin-top: 6px;
-  font-size: 14.5px;
-}
-
-/* What the same word means in other scopes, each opening there. */
-.concept-elsewhere {
-  display: grid;
-  gap: 6px;
-  margin-top: 10px;
-}
-
-.concept-elsewhere-row {
-  display: grid;
-  gap: 2px;
-  padding: 8px 10px;
-  border: 1px dashed var(--border-strong);
-  border-radius: 8px;
-  background: none;
-  color: var(--muted);
-  font: inherit;
-  font-size: 13px;
-  text-align: left;
-  cursor: pointer;
-}
-
-.concept-elsewhere-row:hover {
-  border-color: var(--concept);
-  color: var(--text);
-}
-
-.concept-elsewhere-scope {
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--concept);
-}
-
-.concept-file {
-  margin-top: 10px;
-  font-size: 12px;
-  color: var(--faint);
 }
 
 .concept section {
@@ -1320,24 +996,6 @@ kbd {
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--faint);
-}
-
-.concept-group + .concept-group {
-  margin-top: 10px;
-}
-
-.concept-group-name {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin-bottom: 2px;
-  font-size: 12.5px;
-  font-weight: 600;
-  color: var(--muted);
-}
-
-.concept-group-name .link {
-  color: inherit;
 }
 
 .concept-row {
@@ -1489,10 +1147,7 @@ kbd {
 }
 
 .markdown :not(pre) > code,
-.left-item-text code,
-.gap-affect code,
-.tradeoff-choice code,
-.tradeoff-side code {
+.gap-affect code {
   padding: 1px 5px;
   font-size: 0.86em;
   background: color-mix(in srgb, var(--text) 6%, transparent);
@@ -1629,36 +1284,13 @@ kbd {
 /* ——— Narrow screens ——— */
 
 @media (max-width: 720px) {
-  .topbar {
-    top: 10px;
-    left: 10px;
-    right: 10px;
-    gap: 8px;
-  }
-  .brand,
-  .finders,
   .stats {
     width: 100%;
     max-width: none;
     flex: none;
   }
-  .stat {
-    flex: 1;
-    min-width: 0;
-    padding: 4px 10px;
-  }
   .stat-maturity {
     flex: 2;
-  }
-  .stat-n {
-    font-size: 17px;
-  }
-  .stat-button {
-    margin-left: 4px;
-    padding: 4px 6px;
-  }
-  .stat-chevron {
-    display: none;
   }
   .concepts {
     top: 10px;
@@ -1672,96 +1304,10 @@ kbd {
 
 /* ——— Areas, features and capabilities panel (Explore) ——— */
 
-/* A list row's name, with its maturity or level at the end. */
-.explore-name {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-}
-
-/* The top of one doc: its kind, name, what it's part of, level or maturity, and actions. */
-.explore-hero {
-  padding-bottom: 2px;
-}
-
-.explore-kind {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--muted);
-}
-
-/* What it's part of, under its name: "Billing + Guest stays › Front desk". */
-.explore-trail {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 4px 6px;
-  margin-top: 8px;
-  font-size: 12.5px;
-  color: var(--faint);
-}
-
 .explore-crumb {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-}
-
-.explore-trail .link {
-  color: var(--muted);
-  text-decoration: none;
-}
-
-.explore-trail .link:hover {
-  color: var(--text);
-  text-decoration: underline;
-}
-
-/* Its name, with its level, maturity or readiness at the right. */
-.explore-name-row {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 6px 12px;
-  margin-top: 6px;
-}
-
-.explore-name-row[data-picture] {
-  align-items: center;
-}
-
-.concept .explore-name-row h2,
-.explore-name-row .explore-title {
-  margin-top: 0;
-}
-
-.explore-status {
-  flex: none;
-  display: flex;
-  align-items: center;
-  min-height: 26px;
-  margin-left: auto;
-}
-
-/* Where a capability's domains are at different levels, each of theirs. */
-.explore-domain-levels {
-  margin-top: 6px;
-  font-size: 12.5px;
-}
-
-/* A capability's level: its mark and name, in the level's color. */
-.explore-level-mark {
-  flex: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 13px;
-  font-weight: 650;
 }
 
 .explore-level {
@@ -1769,13 +1315,6 @@ kbd {
   align-items: center;
   gap: 8px;
   font-size: 13.5px;
-}
-
-.explore-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 14px;
 }
 
 /* A contradiction, as a callout of its own. */
@@ -1797,97 +1336,6 @@ kbd {
   margin-top: 1px;
 }
 
-/* What each source says, where there's more than one, a card apiece. */
-.explore-sources {
-  display: grid;
-  gap: 12px;
-  margin-top: 16px;
-}
-
-.explore-source {
-  overflow: hidden;
-  background: color-mix(in srgb, var(--text) 2.5%, transparent);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-}
-
-/* Where a source is from: its domain and project, each labelled, across the top of its card. */
-.explore-source-head {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px 24px;
-  padding: 10px 14px;
-  background: color-mix(in srgb, var(--text) 4%, transparent);
-  border-bottom: 1px solid var(--border);
-}
-
-.explore-source-from {
-  display: grid;
-  gap: 2px;
-  min-width: 0;
-}
-
-.explore-source-label {
-  font-size: 10.5px;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--faint);
-}
-
-.explore-source-name {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  min-width: 0;
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--text);
-  white-space: nowrap;
-}
-
-.explore-source-body {
-  padding: 0 14px 14px;
-}
-
-.explore-source-body:empty {
-  display: none;
-}
-
-.explore-source-summary {
-  margin: 12px 0 0;
-  font-size: 14px;
-  line-height: 1.5;
-}
-
-.explore-source .markdown {
-  margin-top: 12px;
-}
-
-/* A section's heading, with how many it holds. */
-.explore-heading {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.explore-count {
-  min-width: 18px;
-  padding: 1px 6px;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0;
-  text-align: center;
-  color: var(--muted);
-  background: color-mix(in srgb, var(--text) 7%, transparent);
-  border-radius: 999px;
-}
-
-/* A domain's part of a feature, as its heading, with that part's maturity at the end. */
-.explore-part > :last-child:not(.explore-count) {
-  margin-left: auto;
-}
-
 .explore-gap-kind {
   display: block;
   font-size: 11px;
@@ -1895,15 +1343,6 @@ kbd {
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--faint);
-}
-
-/* A warning beside a rule, such as a gap saying a capability doesn't hold to it yet. Missing evidence never gets one: evidence is optional. */
-.explore-evidence-warning {
-  display: inline-flex;
-  align-items: center;
-  gap: 3px;
-  font-size: 11.5px;
-  color: var(--warning);
 }
 
 .explore-tag {
@@ -2001,48 +1440,9 @@ kbd {
   user-select: none;
 }
 
-/* A list row with a picture: the picture beside its name, summary and meta. */
-.concept-list button.has-picture {
-  grid-template-columns: auto 1fr;
-  column-gap: 12px;
-}
-
-.concept-list button.has-picture > .persona-avatar {
-  grid-row: span 4;
-  align-self: start;
-}
-
-.concept-list button.has-picture > :not(.persona-avatar) {
-  grid-column: 2;
-}
-
-/* A persona's name, beside their picture. */
-.explore-title {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-top: 6px;
-}
-
-.concept .explore-title h2 {
-  margin-top: 0;
-}
-
 /* A persona's card on the map: their picture, name and role, and their readiness at the right. As PERSONA_SLOT in FeatureMap.tsx. */
 .slot.persona-slot {
   width: 280px;
-}
-
-/* A persona's role, under their name in the side panel. */
-.explore-role {
-  margin-top: 2px;
-  font-size: 15px;
-  color: var(--muted);
-}
-
-.persona-role {
-  font-size: 13px;
-  color: var(--muted);
 }
 
 /* Lines from an open persona's card to what serves them, under the cards. */
@@ -2227,18 +1627,6 @@ kbd {
 
 /* ——— What's left, in a side panel or on a detail page ——— */
 
-.explore-left-group + .explore-left-group {
-  margin-top: 12px;
-}
-
-.explore-left-group > .explore-gap-kind {
-  margin-bottom: 4px;
-}
-
-.explore-left-group .markdown {
-  font-size: 13.5px;
-}
-
 .explore-left-list {
   padding-left: 20px;
   list-style: disc;
@@ -2270,46 +1658,6 @@ kbd {
   margin-top: 2px;
 }
 
-.explore-left-rubric {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 2px 8px;
-  margin-top: 12px;
-  font-size: 12.5px;
-  color: var(--muted);
-}
-
-.explore-left-rubric a {
-  color: var(--accent);
-}
-
-/* On a detail page, each capability with something open, then its items. */
-.explore-left-capability + .explore-left-capability {
-  margin-top: 16px;
-  padding-top: 14px;
-  border-top: 1px dashed var(--border);
-}
-
-.link-row {
-  margin-bottom: 8px;
-  padding: 0;
-  font: inherit;
-  text-align: left;
-  background: none;
-  border: 0;
-  cursor: pointer;
-}
-
-.link-row .concept-row-name {
-  font-size: 14px;
-  color: var(--text);
-}
-
-.link-row:hover .concept-row-name {
-  color: var(--accent);
-  text-decoration: underline;
-}
-
 /* In the side panel, a section or a kind of what's left, folded shut until it's opened. */
 .explore-fold > summary {
   display: flex;
@@ -2324,10 +1672,6 @@ kbd {
   display: none;
 }
 
-.explore-fold > summary > .explore-heading {
-  margin-bottom: 0;
-}
-
 .explore-fold-chevron {
   margin-left: auto;
   color: var(--faint);
@@ -2338,7 +1682,6 @@ kbd {
   transform: rotate(180deg);
 }
 
-.explore-fold > summary:hover .explore-heading,
 .explore-fold > summary:hover .explore-gap-kind,
 .explore-fold > summary:hover .explore-fold-chevron {
   color: var(--muted);
@@ -2348,10 +1691,6 @@ kbd {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
   border-radius: 4px;
-}
-
-.explore-fold-body {
-  margin-top: 8px;
 }
 
 /* A doc's fields and body, folded under its summary. */
@@ -2378,25 +1717,6 @@ kbd {
   text-decoration: underline;
 }
 
-/* Rules by name alone, in the side panel. */
-.explore-rule-names li {
-  display: flex;
-  gap: 10px;
-  padding: 4px 0;
-  font-size: 13.5px;
-}
-
-.explore-rule-names .sc-standing,
-.page-rule-name .sc-standing {
-  flex: none;
-}
-
-/* Beside a rule's name in the side panel, when a gap says the capability doesn't hold to it yet. */
-.explore-rule-standing {
-  color: var(--warning);
-  font-size: 12px;
-}
-
 a.filter-toggle {
   text-decoration: none;
 }
@@ -2408,221 +1728,12 @@ a.filter-toggle {
   overflow-y: auto;
 }
 
-.page-top {
-  position: sticky;
-  top: 0;
-  z-index: 3;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 10px 32px;
-  background: var(--popover);
-  border-bottom: 1px solid var(--border);
-}
-
-.page-brand {
-  display: inline-flex;
-  color: inherit;
-  text-decoration: none;
-}
-
-/* The way back to the canvas, first in the bar, where the eye starts. */
-.page-back {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 5px 12px 5px 8px;
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--popover);
-  background: var(--concept);
-  border-radius: 999px;
-  text-decoration: none;
-  transition: background-color 120ms;
-}
-
-.page-back svg {
-  transition: transform 120ms;
-}
-
-.page-back:hover {
-  background: color-mix(in srgb, var(--concept) 85%, var(--text));
-}
-
-.page-back:hover svg {
-  transform: translateX(-2px);
-}
-
-.page-back:focus-visible {
-  outline: 2px solid var(--concept);
-  outline-offset: 2px;
-}
-
-.page-projects {
-  flex: 1;
-  min-width: 0;
-  overflow: hidden;
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--muted);
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
-.page-wrap {
-  max-width: 1240px;
-  margin: 0 auto;
-  padding: 0 32px;
-}
-
-.page-missing {
-  padding-top: 64px;
-}
-
-.page-missing h1 {
-  margin-bottom: 8px;
-  font-size: 24px;
-}
-
-/* The band across the top: who or what it is, and its status in figures. */
-.page-hero {
-  padding: 32px 0 28px;
-  background: var(--popover);
-  border-bottom: 1px solid var(--border);
-}
-
-.page-hero-head {
-  display: flex;
-  align-items: flex-start;
-  gap: 20px;
-}
-
-.page-hero-text {
-  min-width: 0;
-}
-
-.page-hero h1 {
-  margin-top: 6px;
-  font-size: 34px;
-  line-height: 1.15;
-  letter-spacing: -0.025em;
-}
-
-.page-role {
-  margin-top: 2px;
-  font-size: 15px;
-  color: var(--muted);
-}
-
-.page-hero .explore-trail {
-  margin-top: 10px;
-  font-size: 13px;
-}
-
-.page-lede {
-  max-width: 760px;
-  margin-top: 14px;
-  font-size: 18px;
-  line-height: 1.5;
-}
-
-.page-hero .explore-problem {
-  margin-top: 16px;
-}
-
-.page-tiles {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-  gap: 12px;
-  margin-top: 24px;
-}
-
-.page-tile {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  min-width: 0;
-  padding: 14px 16px;
-  background: color-mix(in srgb, var(--text) 2.5%, transparent);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-}
-
-.page-tile[data-tone="warn"] {
-  background: color-mix(in srgb, var(--warning) 7%, transparent);
-  border-color: color-mix(in srgb, var(--warning) 35%, transparent);
-}
-
-.page-tile[data-tone="warn"] .page-tile-value {
-  color: var(--warning);
-}
-
-.page-tile[data-tone="ok"] .page-tile-value {
-  color: var(--ok);
-}
-
-.page-tile-label,
-.page-label,
-.page-cell-label {
+.page-label {
   font-size: 11px;
   font-weight: 650;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--faint);
-}
-
-.page-tile-value {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  min-height: 30px;
-  font-size: 20px;
-  font-weight: 700;
-  letter-spacing: -0.01em;
-}
-
-.page-tile-note {
-  font-size: 12.5px;
-  color: var(--muted);
-}
-
-.page-tile-percent {
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--muted);
-}
-
-.page-level,
-.page-maturity {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-weight: 700;
-}
-
-/* How many capabilities are at each level. */
-.level-bar-wrap {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  width: 100%;
-}
-
-.level-bar {
-  display: flex;
-  gap: 2px;
-  height: 6px;
-  overflow: hidden;
-  border-radius: 3px;
-}
-
-.level-bar > span {
-  background: var(--level);
-}
-
-.level-bar-key {
-  font-size: 12px;
-  color: var(--muted);
 }
 
 .page-avatars {
@@ -2639,65 +1750,10 @@ a.filter-toggle {
   margin-left: -6px;
 }
 
-/* The proof in a wide column, beside one that stays in view. */
-.page-columns {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 360px;
-  grid-template-areas: "main rail";
-  align-items: start;
-  gap: 28px;
-  padding-top: 28px;
-  padding-bottom: 80px;
-}
-
-.page-main {
-  grid-area: main;
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  min-width: 0;
-}
-
-.page-rail {
-  grid-area: rail;
-  position: sticky;
-  top: 76px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  max-height: calc(100vh - 92px);
-  overflow-y: auto;
-}
-
-.page-block,
 .page-card {
   background: var(--popover);
   border: 1px solid var(--border);
   border-radius: 12px;
-}
-
-.page-block {
-  padding: 22px 24px 24px;
-}
-
-.page-block-head {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 16px;
-}
-
-.page-block-head h2 {
-  font-size: 17px;
-  font-weight: 700;
-  letter-spacing: -0.01em;
-}
-
-/* What the block's items are, under its heading, such as what makes a gap a gap. */
-.page-block-note {
-  margin: -8px 0 14px;
-  font-size: 13.5px;
-  color: var(--muted);
 }
 
 /* ——— What's left and tradeoffs: one mark, one color and one row wherever they show ——— */
@@ -2779,10 +1835,6 @@ a.filter-toggle {
   gap: 8px;
 }
 
-.left-list[data-detailed] .left-item-text {
-  font-size: 14.5px;
-}
-
 /* A gap's kind, labelled before what it says. */
 .gap-kind-tag {
   display: inline-block;
@@ -2802,21 +1854,6 @@ a.filter-toggle {
 .gap-kind-tag[data-kind="technical-gap"] {
   color: var(--muted);
   background: color-mix(in srgb, var(--text) 8%, transparent);
-}
-
-/* Over a list of gaps: its label, then how many of each kind, which narrow it to one. */
-.explore-gaps-head {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 6px 10px;
-  margin-bottom: 6px;
-}
-
-.explore-gaps-head .left-counts {
-  font-size: 12px;
-  color: var(--muted);
 }
 
 .gap-filter {
@@ -2959,121 +1996,6 @@ a.filter-toggle {
   list-style: none;
 }
 
-/*
- * A tradeoff, as on a detail page: what we chose, then its benefits and its
- * drawbacks side by side, each a list.
- */
-.tradeoff-label {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  margin-bottom: 4px;
-  font-size: 10.5px;
-  font-weight: 650;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--faint);
-}
-
-/* Both sides in one panel, split down the middle, since both came with the choice; stacked when narrow. */
-.tradeoff-sides {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  margin-top: 4px;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  overflow: hidden;
-}
-
-.tradeoff-side {
-  min-width: 0;
-  padding: 12px 14px 14px;
-  font-size: 13.5px;
-  line-height: 1.5;
-  background: color-mix(in srgb, var(--side) 5%, transparent);
-}
-
-.tradeoff-side + .tradeoff-side {
-  border-left: 1px solid var(--border);
-}
-
-@media (max-width: 720px) {
-  .tradeoff-sides {
-    grid-template-columns: 1fr;
-  }
-
-  .tradeoff-side + .tradeoff-side {
-    border-left: 0;
-    border-top: 1px solid var(--border);
-  }
-}
-
-.tradeoff-side-label {
-  display: block;
-  margin-bottom: 8px;
-  font-size: 10.5px;
-  font-weight: 650;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--side);
-}
-
-.tradeoff-points {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.tradeoff-points li {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-}
-
-/* A small round mark, as tall as a line of text so it sits on the point's first line. */
-.tradeoff-point-mark {
-  flex-shrink: 0;
-  display: inline-flex;
-  align-items: center;
-  height: 1.5em;
-}
-
-.tradeoff-point-mark > svg {
-  padding: 1px;
-  border-radius: 50%;
-  color: var(--side);
-  background: color-mix(in srgb, var(--side) 16%, transparent);
-}
-
-.tradeoff-none {
-  color: var(--faint);
-  font-style: italic;
-}
-
-.tradeoff-benefits {
-  --side: var(--ok);
-}
-
-.tradeoff-drawbacks {
-  --side: var(--warning);
-}
-
-.page-block-aside {
-  margin-left: auto;
-  font-size: 13px;
-}
-
-.page-block-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font: inherit;
-  color: var(--text);
-}
-
 .page-card {
   padding: 16px 18px;
 }
@@ -3107,104 +2029,6 @@ a.filter-toggle {
 .page-source-summary {
   font-size: 15px;
   line-height: 1.5;
-}
-
-/* Tables of capabilities and rules. */
-.page-table {
-  display: grid;
-  overflow: hidden;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-}
-
-.page-table-row {
-  display: grid;
-  align-items: start;
-  gap: 16px;
-  width: 100%;
-  padding: 12px 16px;
-  font: inherit;
-  font-size: 13.5px;
-  color: inherit;
-  text-align: left;
-  background: none;
-  border: 0;
-  border-top: 1px solid var(--border);
-}
-
-.page-table-head {
-  padding-top: 9px;
-  padding-bottom: 9px;
-  font-size: 11px;
-  font-weight: 650;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--faint);
-  background: color-mix(in srgb, var(--text) 3%, transparent);
-  border-top: 0;
-}
-
-button.page-table-row {
-  cursor: pointer;
-}
-
-button.page-table-row:hover {
-  background: var(--accent-soft);
-}
-
-button.page-table-row:hover .page-table-name strong {
-  color: var(--accent);
-}
-
-.cap-table .page-table-row {
-  grid-template-columns: minmax(0, 2.4fr) 112px 100px 110px minmax(56px, auto);
-  align-items: center;
-}
-
-.rule-table .page-table-row {
-  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr) minmax(0, 1fr);
-}
-
-.page-table-name {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-  min-width: 0;
-}
-
-.page-table-name strong {
-  font-weight: 650;
-}
-
-.page-table-name > span {
-  line-height: 1.45;
-  color: var(--muted);
-}
-
-.page-table [role="cell"][data-tone="warn"] {
-  font-weight: 600;
-  color: var(--warning);
-}
-
-.page-rule-name {
-  display: flex;
-  gap: 8px;
-}
-
-.page-rule-meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px 12px;
-  font-size: 12px;
-  color: var(--faint);
-}
-
-.page-rule-meta .link {
-  font-size: 12px;
-}
-
-.page-evidence-cell .page-cell-label {
-  display: none;
 }
 
 .page-places {
@@ -3732,99 +2556,7 @@ button.page-table-row:hover .page-table-name strong {
   }
 }
 
-/* Narrower: what's left above the rest, then tables and the grid stacked. */
-@media (max-width: 1040px) {
-  .page-columns {
-    grid-template-columns: minmax(0, 1fr);
-    grid-template-areas: "rail" "main";
-  }
-
-  .page-rail {
-    position: static;
-    max-height: none;
-    overflow: visible;
-  }
-}
-
-@media (max-width: 760px) {
-  .page-top {
-    padding: 8px 16px;
-  }
-
-  .page-wrap {
-    padding: 0 16px;
-  }
-
-  .page-hero {
-    padding: 20px 0;
-  }
-
-  .page-hero h1 {
-    font-size: 26px;
-  }
-
-  .page-lede {
-    font-size: 16px;
-  }
-
-  .page-tiles {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .page-block {
-    padding: 16px;
-  }
-
-  .page-table-head {
-    display: none;
-  }
-
-  .cap-table .page-table-row {
-    grid-template-columns: minmax(0, 1fr) auto;
-    gap: 6px 12px;
-  }
-
-  .cap-table .page-table-name {
-    grid-column: 1 / -1;
-  }
-
-  .rule-table .page-table-row {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 10px;
-  }
-
-  .page-evidence-cell .page-cell-label {
-    display: block;
-    margin-bottom: 4px;
-  }
-}
-
 /* ——— Gaps and tradeoffs, and mechanisms' and components' pages ——— */
-
-/* Which gaps, tradeoffs and decisions the gaps page shows: everything, product gaps, or technical gaps. */
-.page-show {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-bottom: 18px;
-}
-
-/* A sentence under a card's title saying what's in it. */
-.page-note {
-  margin: 0 0 8px;
-  font-size: 12.5px;
-}
-
-/* What a gap is on, above it, where that isn't clear from where it's shown. */
-.explore-gap-subject {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 4px 8px;
-  margin-bottom: 2px;
-  font-size: 12.5px;
-  font-weight: 550;
-}
 
 /* Tradeoffs or open decisions under what they're on, each a group of its own. */
 .page-subject-group + .page-subject-group {
@@ -3917,8 +2649,6 @@ button.page-table-row:hover .page-table-name strong {
 }
 
 /* A list of sentences, or of open decisions, each item its own Markdown. */
-.field-list,
-.decision-list,
 .confused-list {
   display: grid;
   gap: 8px;
@@ -3928,24 +2658,6 @@ button.page-table-row:hover .page-table-name strong {
   list-style: none;
 }
 
-.field-list > li {
-  position: relative;
-  min-width: 0;
-  padding-left: 16px;
-}
-
-.field-list > li::before {
-  position: absolute;
-  top: 0.62em;
-  left: 2px;
-  width: 5px;
-  height: 5px;
-  content: "";
-  background: var(--faint);
-  border-radius: 50%;
-}
-
-.decision-list > li,
 .confused-list > li {
   display: grid;
   gap: 2px;
@@ -3995,11 +2707,6 @@ button.page-table-row:hover .page-table-name strong {
   text-decoration: underline;
 }
 
-.explore-source-body .doc-body,
-.concept-says .doc-body {
-  margin-top: 14px;
-}
-
 /* On a detail page: the fields, then the body in a panel of its own at a readable width. */
 .page-about,
 .page-source {
@@ -4024,28 +2731,6 @@ button.page-table-row:hover .page-table-name strong {
   line-height: 1.6;
 }
 
-/* A rule's why, in its row, labelled, as part of what it is. */
-.page-rule-why {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  min-width: 0;
-  margin-top: 4px;
-}
-
-.page-rule-why .markdown {
-  margin-top: 0;
-}
-
-/* More about a rule, folded in its row. */
-.rule-table .explore-more {
-  margin-top: 6px;
-}
-
-.rule-table .explore-more .doc-body {
-  margin-top: 6px;
-}
-
 /* One of Docket's words, opening what it means (Term): dotted underline, help cursor. */
 .term {
   cursor: help;
@@ -4059,33 +2744,6 @@ button.page-table-row:hover .page-table-name strong {
 .term:focus-visible {
   outline: 2px solid var(--accent, currentColor);
   outline-offset: 2px;
-}
-
-/*
- * Over a gap, or a tradeoff in a list: what it's on, if that isn't clear,
- * and its kind, then, at the end of the line, what's at stake.
- */
-.gap-head {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 4px 8px;
-  margin-bottom: 4px;
-}
-
-.gap-head .explore-gap-subject {
-  margin-bottom: 0;
-}
-
-.gap-head .gap-kind-tag {
-  margin-right: 0;
-}
-
-.gap-head .impact-badge,
-.tradeoff-label .impact-badge,
-.gap-head > .part-tag-focus,
-.tradeoff-label > .part-tag-focus {
-  margin-left: auto;
 }
 
 /*
@@ -4433,10 +3091,6 @@ button.page-table-row:hover .page-table-name strong {
   color: var(--risk);
 }
 
-.risk-details-name {
-  color: var(--impact);
-}
-
 .risk-details-verdict {
   color: var(--risk);
 }
@@ -4519,11 +3173,6 @@ button.page-table-row:hover .page-table-name strong {
   font-size: 0.78em;
   color: var(--faint);
   text-align: center;
-}
-
-.risk-on-head {
-  margin-top: 12px;
-  margin-bottom: 2px;
 }
 
 /*
@@ -4846,39 +3495,12 @@ button.page-table-row:hover .page-table-name strong {
   font-weight: 600;
 }
 
-/* In a risk popover: what it's on, or what rides on it, a row apiece. */
-.risk-on {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.risk-on > li {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 3px 0;
-}
-
-.risk-on-right {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  flex-shrink: 0;
-}
-
 /* A capability's score, at the end of its row: the same width each, so they line up. */
 .risk-on-score {
   min-width: 2.5em;
   text-align: right;
   font-weight: 600;
   font-variant-numeric: tabular-nums;
-}
-
-.risk-on-claim {
-  color: var(--muted);
-  font-size: 0.92em;
 }
 
 .risk-note {

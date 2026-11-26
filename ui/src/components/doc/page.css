@@ -107,27 +107,12 @@ a.page-crumb:hover {
   font-weight: 600;
 }
 
-.page-level-summary {
-  max-width: 420px;
-}
-
 .page-section-link {
   color: var(--text) !important;
 }
 
 .page-section-link:hover {
   color: var(--accent) !important;
-}
-
-/* A gap's text opens its page. */
-a.page-gap-link {
-  display: block;
-  color: inherit;
-  text-decoration: none;
-}
-
-a.page-gap-link:hover {
-  color: var(--accent);
 }
 
 .page-about {
@@ -210,11 +195,4 @@ a.page-left-cell {
 /* A domain's features, as cards that are links. */
 a.page-feature {
   text-decoration: none;
-}
-
-/* A maturity as a stat's value: its ring, with the percentage beside it, then its band. */
-.page-stat-maturity {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
 }
