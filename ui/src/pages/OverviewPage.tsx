@@ -5,11 +5,11 @@ import { Maturity, NAMES, TECHNICAL_NAMES, plural } from "../Explore";
 import { StabilitySpread } from "../design/stability/StabilitySpread";
 import { ExposureStat, GapsCell, MaturityStat } from "./indexParts";
 import { LeftFigure } from "../GapRows";
-import { PersonaAvatar, personaReadiness } from "../Personas";
+import { PersonaAvatar } from "../Personas";
 import { ReadinessMark, StillNeeds } from "../Readiness";
 import { InlineMarkdown } from "../design/markdown/Markdown";
 import { MaturityRing } from "../design/maturity/MaturityRing";
-import { MATURITY_BANDS, maturityBand } from "../design/maturity/maturity";
+import { MATURITY_BANDS } from "../design/maturity/maturity";
 import { GapRiskMark } from "../design/risk/RiskScore";
 import { STABILITY, STABILITY_LEVEL_IDS, levelColor } from "../design/stability/stability";
 import { Term } from "../design/term/Term";
@@ -20,14 +20,10 @@ import {
   find,
   partOf,
   isReady,
-  readinessOf,
   readyShare,
   startedOf,
   gapsOn,
   inRiskOrder,
-  riskAcross,
-  riskOf,
-  maturityOf,
   openDecisions,
   subjectOf,
   technicalDoc,
@@ -53,19 +49,17 @@ import { GapInitiatives } from "../GapRows";
 export default function OverviewPage({ state }: { state: DocketState; route: Route }) {
   const several = state.projects.length > 1;
   const name = several ? (state.projects[0]?.product.name ?? "Product") : (state.projects[0]?.name ?? "Project");
-  const maturity = maturityOf(state);
-
-  const readiness = useMemo(() => readinessOf(state, state.capabilities), [state]);
+  const { maturity, readiness } = state.status;
   /* Each persona with their readiness, least ready first, those with nothing started last. */
   const personas = useMemo(
     () =>
       state.personas
-        .map((persona) => ({ persona, readiness: personaReadiness(state, persona) }))
+        .map((persona) => ({ persona, readiness: persona.readiness }))
         .sort((a, b) => (readyShare(a.readiness) ?? Infinity) - (readyShare(b.readiness) ?? Infinity) || a.persona.name.localeCompare(b.persona.name)),
     [state],
   );
   const leastReady = personas.find((p) => isReady(p.readiness) === false);
-  const riskiest = useMemo(() => inRiskOrder(state, state.gaps, (g) => g).slice(0, 5), [state]);
+  const riskiest = useMemo(() => inRiskOrder(state.gaps, (g) => g).slice(0, 5), [state]);
   const decisions = [...state.domains, ...state.features, ...state.capabilities, ...state.mechanisms, ...state.components].reduce(
     (n, doc) => n + openDecisions(doc).length,
     0,
@@ -81,12 +75,13 @@ export default function OverviewPage({ state }: { state: DocketState; route: Rou
           <>
             <MaturityStat
               maturity={maturity}
+              band={state.status.band}
               subject="project"
               count={state.features.filter((f) => f.maturity !== null).length}
               spread={state.features.map((f) => f.band)}
               of={several ? "every project showing" : "this project"}
             />
-            <ExposureStat state={state} capabilities={state.capabilities} of={several ? "every project showing" : "this project"} />
+            <ExposureStat exposure={state.status.exposure} risk={state.status.risk} of={several ? "every project showing" : "this project"} />
             <Stat
               label="Readiness"
               term="readiness"
@@ -111,7 +106,7 @@ export default function OverviewPage({ state }: { state: DocketState; route: Rou
                 note={<ReadinessMark readiness={leastReady.readiness} of={`Readiness for ${leastReady.persona.name}`} inButton />}
               />
             ) : null}
-            <Stat label="What's left" term="gap" href={sectionHref("left")} value={<LeftFigure gaps={state.gaps} decisions={decisions} risk={riskAcross(state, state.gaps)} of="everything" />} />
+            <Stat label="What's left" term="gap" href={sectionHref("left")} value={<LeftFigure gaps={state.gaps} decisions={decisions} risk={state.status.risk} of="everything" />} />
             {state.problems.length ? (
               <Stat
                 label="Doc problems"
@@ -181,9 +176,11 @@ export default function OverviewPage({ state }: { state: DocketState; route: Rou
                 {p.maturity !== null ? (
                   <>
                     <MaturityRing progress={p.maturity} subject="project" size={24} label={`${p.name} maturity`} />
-                    <Box component="span" className="ov-band" sx={levelColor(maturityBand(p.maturity))}>
-                      {MATURITY_BANDS[maturityBand(p.maturity)]}
-                    </Box>
+                    {p.band ? (
+                      <Box component="span" className="ov-band" sx={levelColor(p.band)}>
+                        {MATURITY_BANDS[p.band]}
+                      </Box>
+                    ) : null}
                   </>
                 ) : (
                   <span className="ov-faint">No maturity yet</span>
@@ -249,7 +246,7 @@ function DomainStability({ state }: { state: DocketState }) {
   return (
     <>
       <ul className="ov-domains">
-        {rows.map(({ domain, capabilities, levels, gaps, decisions }) => {
+        {rows.map(({ domain, levels, gaps, decisions }) => {
           return (
             <li key={domain.id}>
               <a className="ov-link ov-ellipsis" href={docHref("domain", domain.id)}>
@@ -267,7 +264,7 @@ function DomainStability({ state }: { state: DocketState }) {
                 <span className="ov-count">{levels.length}</span>
               </span>
               <span className="ov-left">
-                <GapsCell gaps={gaps} exposure={{ state, capabilities }} kind="gap" decisions={decisions} of={domain.name} href={docHref("domain", domain.id, "left")} />
+                <GapsCell gaps={gaps} exposure={{ exposure: domain.exposure, risk: domain.readiness.gaps }} kind="gap" decisions={decisions} of={domain.name} href={docHref("domain", domain.id, "left")} />
               </span>
             </li>
           );
@@ -311,7 +308,7 @@ function GapOn({ state, gap }: { state: DocketState; gap: Gap }) {
 
 /* One of the riskiest gaps: its risk, opening how it's worked out, what it says, linking to its page, and what it's on. */
 function GapRow({ state, gap }: { state: DocketState; gap: Gap }) {
-  const risk = riskOf(state, gap);
+  const risk = gap.risk;
   return (
     <li>
       <span className="ov-gap-impact">

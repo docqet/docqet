@@ -3,7 +3,7 @@ import { ReadinessMark } from "../Readiness";
 import { docHref, type Route } from "../routes";
 import { InitiativeIcon } from "../ScopeFilter";
 import { Empty, PageHeader, View } from "../shell/layout";
-import { capabilitiesById, find, gapsById, readinessOf, type Capability, type DocketState } from "../state";
+import { capabilitiesById, find, gapsById, type Capability, type DocketState, type Initiative } from "../state";
 import { GapsCell, Num } from "./indexParts";
 
 /*
@@ -31,16 +31,7 @@ export default function InitiativesPage({ state }: { state: DocketState; route: 
           </thead>
           <tbody>
             {state.initiatives.map((i) => (
-              <Row
-                key={i.id}
-                state={state}
-                name={i.name}
-                note={i.description}
-                href={docHref("initiative", i.id)}
-                left={docHref("initiative", i.id, "left")}
-                capabilities={capabilitiesById(state, i.capabilities)}
-                personas={i.personas.filter((id) => find(state.personas, id)).length}
-              />
+              <Row key={i.id} state={state} initiative={i} />
             ))}
           </tbody>
         </table>
@@ -51,8 +42,13 @@ export default function InitiativesPage({ state }: { state: DocketState; route: 
   );
 }
 
-/* A row: the name, readiness, how many capabilities are in it, and the product gaps in those. */
-function Row({ state, name, note, href, left, capabilities, personas }: { state: DocketState; name: string; note?: string; href: string; left: string; capabilities: Capability[]; personas: number }) {
+/* An initiative's row: the name, readiness, how many capabilities and personas are in it, and the product gaps in those capabilities. */
+function Row({ state, initiative: i }: { state: DocketState; initiative: Initiative }) {
+  const { name, description: note } = i;
+  const href = docHref("initiative", i.id);
+  const left = docHref("initiative", i.id, "left");
+  const capabilities: Capability[] = capabilitiesById(state, i.capabilities);
+  const personas = i.personas.filter((id) => find(state.personas, id)).length;
   const gaps = gapsById(state, [...new Set(capabilities.flatMap((c) => c.gaps))]);
   return (
     <tr>
@@ -66,7 +62,7 @@ function Row({ state, name, note, href, left, capabilities, personas }: { state:
         </a>
       </td>
       <td>
-        <ReadinessMark readiness={readinessOf(state, capabilities)} of={`Readiness of ${name}`} />
+        <ReadinessMark readiness={i.readiness} of={`Readiness of ${name}`} />
       </td>
       <td className="num">
         <Num n={capabilities.length} />
@@ -75,7 +71,7 @@ function Row({ state, name, note, href, left, capabilities, personas }: { state:
         <Num n={personas} />
       </td>
       <td>
-        <GapsCell gaps={gaps} exposure={{ state, capabilities }} kind="product-gap" of={name} href={left} />
+        <GapsCell gaps={gaps} exposure={{ exposure: i.exposure, risk: i.readiness.gaps }} kind="product-gap" of={name} href={left} />
       </td>
     </tr>
   );

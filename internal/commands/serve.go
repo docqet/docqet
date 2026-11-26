@@ -80,11 +80,11 @@ func ServeCommand() *cli.Command {
 }
 
 // router builds the handler `serve` and `ui` serve: the API under /api/v1, its
-// docs under /docs, the states the UI shows, and the UI under everything
-// else. With db, the server's database, the API takes and serves applied
-// states, and its product resources and the UI show each project's latest.
-// Without it, they show the state.json files at states, one per project.
-func router(logger *slog.Logger, states []string, db *sql.DB) (http.Handler, error) {
+// docs under /docs, and the UI under everything else, which reads only the
+// API. With db, the server's database, the API takes and serves applied
+// states, and its resources are each project's latest. Without it, they're
+// the states source returns.
+func router(logger *slog.Logger, source services.StateSource, db *sql.DB) (http.Handler, error) {
 	uiHandler, err := httphandlers.NewUIHandler()
 	if err != nil {
 		return nil, err
@@ -99,14 +99,13 @@ func router(logger *slog.Logger, states []string, db *sql.DB) (http.Handler, err
 	health := httphandlers.NewHealthHandler(logger)
 	health.AddServer("http", func(context.Context) error { return nil })
 	var projects *httphandlers.ProjectsHandler
-	shown := httphandlers.FileStates(states)
 	if db != nil {
 		health.AddDependency("database", "sqlite", db.PingContext)
 		stateService := services.NewStateService(sqlite.NewStateRepository(db), sqlite.NewUnitOfWork(db))
 		projects = httphandlers.NewProjectsHandler(logger, stateService)
-		shown = latestStates(stateService)
+		source = latestStates(stateService)
 	}
-	products := httphandlers.NewProductsHandler(logger, services.NewReadService(shown))
+	products := httphandlers.NewProductsHandler(logger, services.NewReadService(source))
 	health.Start()
 
 	r := chi.NewRouter()
@@ -120,12 +119,11 @@ func router(logger *slog.Logger, states []string, db *sql.DB) (http.Handler, err
 		products.RegisterRoutes(api)
 	})
 	docsHandler.RegisterRoutes(r)
-	httphandlers.NewStatesHandler(logger, shown).RegisterRoutes(r)
 	uiHandler.RegisterRoutes(r)
 	return r, nil
 }
 
-// latestStates shows each project's latest applied state.
+// latestStates is each project's latest applied state.
 // docket:implements capability:overview
 func latestStates(states *services.StateService) services.StateSource {
 	return func(ctx context.Context) ([]*state.State, error) {

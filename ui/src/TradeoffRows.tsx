@@ -5,7 +5,7 @@ import { Excerpt, InlineMarkdown } from "./design/markdown/Markdown";
 import { STABILITY } from "./design/stability/stability";
 import { sectionHref, docHref } from "./routes";
 import { HeldDecisions } from "./Fields";
-import { expectedOutcome, decisionsAffecting, find, outcomesAffected, subjectOf, technicalDoc, type DocketState, type Tradeoff } from "./state";
+import { expectedOutcome, find, outcomesAffected, subjectOf, technicalDoc, type DocketState, type Tradeoff } from "./state";
 import "./gaprows.css";
 
 /*
@@ -30,7 +30,7 @@ export function TradeoffRows({ state, tradeoffs, here }: { state: DocketState; t
 function TradeoffLine({ state, tradeoff: t, here }: { state: DocketState; tradeoff: Tradeoff; here?: { id: string } }) {
   const { type } = subjectOf(t);
   const named = outcomesAffected(t).flatMap((id) => expectedOutcome(state.rubric, id) ?? []);
-  const reopened = decisionsAffecting(state, t.id);
+  const reopened = t.decisions;
   return (
     <li>
       <details className="tr-item">

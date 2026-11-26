@@ -1,14 +1,9 @@
 import Box from "@mui/material/Box";
 import {
   VERDICTS,
-  exposureOf,
   exposureText,
-  gapsOn,
-  riskAcross,
   riskScore,
   verdictOf,
-  type Capability,
-  type DocketState,
   type Gap,
   type Risk,
   type RiskAcross,
@@ -209,27 +204,28 @@ function RiskDetails<T extends Gap>({ risk, of }: { risk: RiskAcross<T>; of: str
  * gap on them, their own and those of what they're built on, each scored on
  * them, whose popover has the spread. Nothing when there are no gaps or none
  * of them is started, since drafts aren't exposed to anything. `named` adds the band's
- * name after it, in its color, as maturity's band follows its ring.
+ * name after it, in its color, as maturity's band follows its ring. Its
+ * figures are the server's: `exposure` and `risk` when given, as a doc's, or
+ * else a lone capability's own.
  */
 export function ExposureMark({
-  state,
-  capabilities,
   of,
   size = 22,
   inButton = false,
   named = false,
+  exposure,
+  risk,
 }: {
-  state: DocketState;
-  capabilities: Capability[];
   of: string;
   size?: number;
   inButton?: boolean;
   named?: boolean;
+  /* Some capabilities' exposure and the risk across their gaps, as the server works them out. */
+  exposure: Exposure;
+  risk: RiskAcross<Gap>;
 }) {
-  const gaps = [...new Set(capabilities.flatMap((c) => gapsOn(state, c)))];
-  const exposure = exposureOf(state, capabilities);
-  if (!gaps.length || exposure.percent === null || !exposure.band) return null;
-  const ring = <RiskScore risk={riskAcross(state, gaps, capabilities)} exposure={exposure} of={of} size={size} inButton={inButton} />;
+  if (!risk.items.length || exposure.percent === null || !exposure.band) return null;
+  const ring = <RiskScore risk={risk} exposure={exposure} of={of} size={size} inButton={inButton} />;
   if (!named) return ring;
   return (
     <span className="exposure-named" data-risk-band={exposure.band.id}>

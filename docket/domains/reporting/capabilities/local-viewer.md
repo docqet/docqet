@@ -13,8 +13,8 @@ gaps:
     name: Doesn't re-index as files change
     impact: inconvenient
     description: >-
-      It shows the state `docket index` last wrote, so engineers run
-      `docket index` again after each change to see it.
+      It shows the state `docket index` last wrote, read again on each
+      reload, so engineers run `docket index` after each change to see it.
   - id: working-tree-only
     name: Only the working tree
     impact: inconvenient

@@ -20,7 +20,6 @@ import {
   find,
   gapsById,
   projectName,
-  ruleStanding,
   type Capability,
   type DocketState,
   type EvidencePlace,
@@ -63,9 +62,9 @@ export const pageGo = (state: DocketState): Go => ({
 function RuleView({ state, rule, route }: { state: DocketState; rule: Rule; route: Route }) {
   const go = pageGo(state);
   const following = rule.capabilities.flatMap((id) => find(state.capabilities, id) ?? []);
-  const notHeld = following.filter((c) => ruleStanding(c, rule) === "gap");
+  const notHeld = following.filter((c) => rule.standings[c.id] === "gap");
   const held = following.length - notHeld.length;
-  const withEvidence = following.filter((c) => ruleStanding(c, rule) === "evidence").length;
+  const withEvidence = following.filter((c) => rule.standings[c.id] === "evidence").length;
   const concepts = rule.concepts.flatMap((cid) => find(state.concepts, cid) ?? []);
   const places = rule.evidence.verifies.length + rule.evidence.implements.length;
   const written = rule.from.filter((f) => f.body.trim());
@@ -208,7 +207,7 @@ function AppliesTo({ state, rule }: { state: DocketState; rule: Rule }) {
 }
 
 function Follower({ state, rule, capability }: { state: DocketState; rule: Rule; capability: Capability }) {
-  const standing = ruleStanding(capability, rule);
+  const standing = rule.standings[capability.id];
   const gaps = gapsById(
     state,
     rule.gaps.filter((g) => capability.gaps.includes(g)),

@@ -5,7 +5,7 @@ import { Excerpt, plainText } from "./design/markdown/Markdown";
 import { LeftMark } from "./design/left/LeftMark";
 import { Tip } from "./design/Tip";
 import { docHref } from "./routes";
-import { VERDICTS, find, riskOf, subjectOf, technicalDoc, type DocketState, type Gap, type Risk, type RiskAcross, type TechnicalDoc, type Verdict } from "./state";
+import { VERDICTS, find, subjectOf, technicalDoc, type DocketState, type Gap, type Risk, type RiskAcross, type TechnicalDoc, type Verdict } from "./state";
 import { GapRiskMark, RiskBars, RiskScore, VERDICT_NAMES } from "./design/risk/RiskScore";
 import "./gaprows.css";
 import { InitiativeTags } from "./Initiatives";
@@ -38,7 +38,7 @@ export function GapRows({
   grouped?: boolean;
   allOpen?: boolean;
 }) {
-  const scored = rows.map((r) => ({ ...r, risk: riskOf(state, r.gap) }));
+  const scored = rows.map((r) => ({ ...r, risk: r.gap.risk }));
   if (!grouped)
     return (
       <ul className="gr-list gr-flat">

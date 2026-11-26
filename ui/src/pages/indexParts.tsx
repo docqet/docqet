@@ -13,13 +13,13 @@ import { InitiativeIcon } from "../ScopeFilter";
 import { GapIcon, LEFT_KINDS, LeftMark, type LeftKind } from "../design/left/LeftMark";
 import { Tip } from "../design/Tip";
 import { docHref, type DocKind } from "../routes";
-import { bareId, exposureOf, gapsOn, type Capability, type CapabilityLevel, type DocketState, type Gap, type Persona, type RiskAcross } from "../state";
+import { bareId, type CapabilityLevel, type Exposure, type Gap, type Level, type Persona, type RiskAcross } from "../state";
 import { ExposureMark, RiskScore } from "../design/risk/RiskScore";
 import { Stat } from "../shell/layout";
 import Box from "@mui/material/Box";
 import { MaturityRing } from "../design/maturity/MaturityRing";
 import { fromCapabilities, type MaturitySubject } from "../design/maturity/MaturityDetails";
-import { MATURITY_BANDS, maturityBand } from "../design/maturity/maturity";
+import { MATURITY_BANDS } from "../design/maturity/maturity";
 import { levelColor } from "../design/stability/stability";
 import "./index.css";
 
@@ -97,8 +97,8 @@ export function GapsCell({
   gaps: Gap[];
   /* How the gaps spread across the verdicts, for gaps on no capabilities, such as a component's. */
   risk?: RiskAcross<Gap>;
-  /* The capabilities they're on, to show their exposure instead, as aggregated risk is everywhere. */
-  exposure?: { state: DocketState; capabilities: Capability[] };
+  /* The capabilities they're on, to show their exposure instead, as aggregated risk is everywhere, with the server's figures for them when they're a doc's. */
+  exposure?: { exposure: Exposure; risk: RiskAcross<Gap> };
   /* Which gaps they are: product, technical, or "gap" for both. */
   kind: "product-gap" | "technical-gap" | "gap";
   of?: string;
@@ -116,7 +116,7 @@ export function GapsCell({
     <span className="ix-gaps">
       {href ? <a className="ix-gaps-link" href={href}>{counts}</a> : counts}
       {gaps.length && exposure ? (
-        <ExposureMark state={exposure.state} capabilities={exposure.capabilities} of={of ?? "these"} />
+        <ExposureMark exposure={exposure.exposure} risk={exposure.risk} of={of ?? "these"} />
       ) : gaps.length && risk ? (
         <RiskScore risk={risk} of={of ?? "these"} />
       ) : null}
@@ -186,8 +186,11 @@ export function MaturityStat({
   spread,
   of,
   href,
+  band,
 }: {
   maturity: number | null;
+  /* Its band, as the server gives it with the maturity. */
+  band: Level | null;
   subject: MaturitySubject;
   count: number;
   spread: CapabilityLevel[];
@@ -195,8 +198,7 @@ export function MaturityStat({
   href?: string;
 }) {
   const across = fromCapabilities(subject) ? (count === 1 ? "1 capability" : `${count} capabilities`) : count === 1 ? "1 feature" : `${count} features`;
-  if (maturity === null) return <Stat label="Maturity" term="maturity" value={<span className="ix-none">None yet</span>} note="Nothing has a level yet" href={href} />;
-  const band = maturityBand(maturity);
+  if (maturity === null || band === null) return <Stat label="Maturity" term="maturity" value={<span className="ix-none">None yet</span>} note="Nothing has a level yet" href={href} />;
   return (
     <Stat
       label="Maturity"
@@ -219,14 +221,22 @@ export function MaturityStat({
  * worked out. It's how aggregated risk shows in every header, as maturity is
  * how aggregated stability does. `of` names what it's of, as a phrase.
  */
-export function ExposureStat({ state, capabilities, of }: { state: DocketState; capabilities: Capability[]; of: string }) {
-  const exposure = exposureOf(state, capabilities);
-  const atRisk = exposure.percent !== null && capabilities.some((c) => gapsOn(state, c).length);
+export function ExposureStat({
+  of,
+  exposure,
+  risk,
+}: {
+  of: string;
+  /* Some capabilities' exposure and the risk across their gaps, as the server works them out. */
+  exposure: Exposure;
+  risk: RiskAcross<Gap>;
+}) {
+  const atRisk = exposure.percent !== null && risk.items.length > 0;
   return (
     <Stat
       label="Exposure"
       term="exposure"
-      value={atRisk ? <ExposureMark state={state} capabilities={capabilities} of={of} named /> : "None"}
+      value={atRisk ? <ExposureMark exposure={exposure} risk={risk} of={of} named /> : "None"}
       tone={atRisk ? undefined : "ok"}
       note={
         exposure.percent === null

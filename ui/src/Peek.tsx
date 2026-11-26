@@ -7,7 +7,7 @@ import WidgetsOutlinedIcon from "@mui/icons-material/WidgetsOutlined";
 import { ConceptIcon } from "./Concepts";
 import { Maturity } from "./Explore";
 import { DomainIcon } from "./FeatureMap";
-import { PersonaAvatar, PersonaIcon, personaNameAndRole, personaReadiness } from "./Personas";
+import { PersonaAvatar, PersonaIcon, personaNameAndRole } from "./Personas";
 import { ReadinessMark } from "./Readiness";
 import { docHref, type DocKind } from "./routes";
 import { InlineMarkdown } from "./design/markdown/Markdown";
@@ -19,19 +19,17 @@ import {
   partOf,
   domainName,
   find,
-  gapsById,
-  riskAcross,
-  exposureOf,
   leftCount,
-  leftIn,
   openDecisions,
   pickList,
-  ruleStanding,
   type Capability,
   type DocketState,
+  type Exposure,
   type Gap,
   type Pick,
+  type RiskAcross,
 } from "./state";
+import { gapsAcross, someOf } from "./model";
 import { InitiativeTags, initiativesOf } from "./Initiatives";
 
 /* Each kind's icon and name, as the peek and the map's filter bar say them. */
@@ -46,26 +44,32 @@ export const PICK_KINDS: Record<Pick["kind"], { one: string; icon: (size: number
 /* A figure in the peek: what it counts, how many, and the tab of its page that lists them. */
 type Figure = { label: string; value: ReactNode; tab: string };
 
-/* What the peek says about one thing: its mark, three figures, and the gaps it has, riskiest first. */
 /*
- * `within`: the capabilities its gaps are scored on, for its risk; none for a
- * concept, whose gaps keep their risk anywhere. `of`: what its exposure is
- * of, as a phrase, where that isn't its name, as for a persona.
+ * What the peek says about one thing: its mark, three figures, and its gaps,
+ * riskiest first, as the server scores them: `risk`, null while it's read.
+ * `exposure`: that of its capabilities, shown instead of the spread, where it
+ * has one. `within`: its capabilities, for the initiatives they're part of.
+ * `of`: what its exposure is of, as a phrase, where that isn't its name, as
+ * for a persona.
  */
 /* `initiatives`: those it says it's part of; left out, those its capabilities (`within`) are part of. */
-type Summary = { name: string; of?: string; picture?: ReactNode; role?: string | null; where?: string; mark: ReactNode; figures: Figure[]; gaps: Gap[]; within?: Capability[]; initiatives?: string[] };
+type Summary = {
+  name: string;
+  of?: string;
+  picture?: ReactNode;
+  role?: string | null;
+  where?: string;
+  mark: ReactNode;
+  figures: Figure[];
+  risk: RiskAcross<Gap> | null;
+  exposure?: Exposure;
+  within?: Capability[];
+  initiatives?: string[];
+};
 
-/* Each gap once, as several capabilities can share one through what they're built on. */
-const unique = (gaps: Gap[]) => [...new Map(gaps.map((g) => [g.id, g])).values()];
-
-/* The gaps some capabilities have, and how much is left across them, as a feature's or domain's page counts it. */
-function across(state: DocketState, capabilities: Capability[], technical = true) {
-  const lefts = capabilities.map((c) => leftIn(state, c, technical));
-  return {
-    left: lefts.reduce((n, l) => n + leftCount(l), 0),
-    gaps: unique(lefts.flatMap((l) => [...l.gaps, ...l.technical.map((t) => t.gap)])),
-  };
-}
+/* How much is left across some capabilities, as a feature's or domain's page counts it; with `technical` false, none of what they're built on. */
+const leftAcross = (capabilities: Capability[], technical = true) =>
+  capabilities.reduce((n, c) => n + (technical ? leftCount(c.left) : c.left.decisions.length + c.left.gaps.length), 0);
 
 const capabilitiesOf = (state: DocketState, ids: string[]) => ids.flatMap((id) => find(state.capabilities, id) ?? []);
 
@@ -73,19 +77,19 @@ function summarize(state: DocketState, at: Pick): Summary | null {
   if (at.kind === "capability") {
     const c = find(state.capabilities, at.id);
     if (!c) return null;
-    const left = leftIn(state, c);
     const rules = c.rules.flatMap((id) => find(state.rules, id) ?? []);
-    const held = rules.filter((r) => ruleStanding(c, r) !== "gap").length;
+    const held = rules.filter((r) => c.ruleStandings[r.id] !== "gap").length;
     return {
       name: c.name,
       initiatives: c.initiatives,
       mark: c.stability ? <StabilityMark level={c.stability} feature={c.name} size="extra-long" /> : <span className="faint">Draft</span>,
       figures: [
-        { label: "What's left", value: leftCount(left), tab: "left" },
+        { label: "What's left", value: leftCount(c.left), tab: "left" },
         { label: "Rules held", value: rules.length ? `${held} / ${rules.length}` : 0, tab: "rules" },
         { label: "Personas served", value: c.personas.filter((id) => find(state.personas, id)).length, tab: "overview" },
       ],
-      gaps: unique([...left.gaps, ...left.technical.map((t) => t.gap)]),
+      risk: c.risk,
+      exposure: c.exposure,
       within: [c],
     };
   }
@@ -93,16 +97,16 @@ function summarize(state: DocketState, at: Pick): Summary | null {
     const f = find(state.features, at.id);
     if (!f) return null;
     const capabilities = capabilitiesOf(state, f.capabilities);
-    const { left, gaps } = across(state, capabilities);
     return {
       name: f.name,
       mark: <Maturity value={f.maturity} of="none of its capabilities has a level" spread={capabilities.map((c) => c.stability)} />,
       figures: [
         { label: "Capabilities", value: capabilities.length, tab: "capabilities" },
-        { label: "What's left", value: openDecisions(f).length + left, tab: "left" },
+        { label: "What's left", value: openDecisions(f).length + leftAcross(capabilities), tab: "left" },
         { label: "Personas served", value: new Set(capabilities.flatMap((c) => c.personas)).size, tab: "personas" },
       ],
-      gaps,
+      risk: f.readiness.gaps,
+      exposure: f.exposure,
       within: capabilities,
     };
   }
@@ -110,7 +114,6 @@ function summarize(state: DocketState, at: Pick): Summary | null {
     const d = find(state.domains, at.id);
     if (!d) return null;
     const capabilities = domainCapabilities(state, d);
-    const { left, gaps } = across(state, capabilities);
     return {
       name: d.name,
       mark: (
@@ -125,35 +128,33 @@ function summarize(state: DocketState, at: Pick): Summary | null {
       figures: [
         { label: "Features", value: d.features.length, tab: "features" },
         { label: "Capabilities", value: capabilities.length, tab: "features" },
-        { label: "What's left", value: openDecisions(d).length + left, tab: "left" },
+        { label: "What's left", value: openDecisions(d).length + leftAcross(capabilities), tab: "left" },
       ],
-      gaps,
+      risk: d.readiness.gaps,
+      exposure: d.exposure,
       within: capabilities,
     };
   }
   if (at.kind === "concept") {
-    const concept = find(state.concepts, at.id);
-    if (!concept) return null;
-    const rules = concept.rules.flatMap((id) => find(state.rules, id) ?? []);
-    /* A concept has no gaps of its own: those it shows are the ones saying a rule about it doesn't hold yet. */
-    const gaps = unique(rules.flatMap((r) => gapsById(state, r.gaps)));
+    const c = find(state.concepts, at.id);
+    if (!c) return null;
+    const rules = c.rules.flatMap((id) => find(state.rules, id) ?? []);
     return {
-      name: concept.name,
-      where: domainName(state, concept.domain),
+      name: c.name,
+      where: domainName(state, c.domain),
       mark: null,
       figures: [
-        { label: "Capabilities", value: concept.capabilities.filter((id) => find(state.capabilities, id)).length, tab: "used" },
+        { label: "Capabilities", value: c.capabilities.filter((id) => find(state.capabilities, id)).length, tab: "used" },
         { label: "Rules", value: rules.length, tab: "rules" },
         { label: "Rules not held", value: rules.filter((r) => r.gaps.length).length, tab: "rules" },
       ],
-      gaps,
+      /* A concept has no gaps of its own: those it shows say a rule about it doesn't hold yet, each scored anywhere. */
+      risk: gapsAcross([...new Map(rules.flatMap((r) => r.gaps.flatMap((id) => find(state.gaps, id) ?? [])).map((g) => [g.id, g])).values()]),
     };
   }
   const p = find(state.personas, at.id);
   if (!p) return null;
   const capabilities = capabilitiesOf(state, p.capabilities);
-  /* Only what someone using the product would notice. */
-  const { left, gaps } = across(state, capabilities, false);
   const { name, role } = personaNameAndRole(p);
   return {
     name,
@@ -161,13 +162,16 @@ function summarize(state: DocketState, at: Pick): Summary | null {
     role,
     picture: <PersonaAvatar persona={p} size={40} />,
     initiatives: p.initiatives,
-    mark: <ReadinessMark readiness={personaReadiness(state, p)} of={`Readiness for ${name}`} />,
+    mark: <ReadinessMark readiness={p.readiness} of={`Readiness for ${name}`} />,
     figures: [
       { label: "Capabilities", value: capabilities.length, tab: "serves" },
       { label: "Features", value: p.features.length, tab: "readiness" },
-      { label: "What's left", value: left, tab: "left" },
+      /* Only what someone using the product would notice. */
+      { label: "What's left", value: leftAcross(capabilities, false), tab: "left" },
     ],
-    gaps,
+    /* Only what someone using the product would notice: their capabilities' own gaps, each scored on what serves them. */
+    risk: someOf(p.readiness.gaps, (g) => capabilities.some((c) => c.left.gaps.includes(g))),
+    exposure: p.exposure,
     within: capabilities,
   };
 }
@@ -210,8 +214,8 @@ export default function Peek({
   const doc = find(pickList(state, at.kind), at.id);
   const kind = PICK_KINDS[at.kind];
   const page = (tab?: string) => docHref(at.kind as DocKind, at.id, tab);
-  const risk = riskAcross(state, s.gaps, s.within);
-  const riskiest = risk.items.slice(0, 3);
+  const risk = s.risk;
+  const riskiest = risk?.items.slice(0, 3) ?? [];
 
   return (
     <aside className="panel peek" data-no-pan aria-label={`${kind.one}: ${s.name}`}>
@@ -248,11 +252,11 @@ export default function Peek({
         ))}
       </div>
 
-      {riskiest.length ? (
+      {risk && riskiest.length ? (
         <section className="peek-gaps">
           <h3>
             Riskiest <Term id="gap">gaps</Term>
-            <RiskScore risk={risk} exposure={s.within ? exposureOf(state, s.within) : undefined} of={s.of ?? s.name} />
+            <RiskScore risk={risk} exposure={s.exposure} of={s.of ?? s.name} />
           </h3>
           <ul>
             {riskiest.map(({ item: g, risk: r, on }) => (
@@ -266,9 +270,9 @@ export default function Peek({
               </li>
             ))}
           </ul>
-          {s.gaps.length > riskiest.length ? (
+          {risk.items.length > riskiest.length ? (
             <a className="link peek-more" href={page("left")}>
-              All {s.gaps.length} gaps
+              All {risk.items.length} gaps
             </a>
           ) : null}
         </section>

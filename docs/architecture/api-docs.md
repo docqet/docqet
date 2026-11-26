@@ -28,9 +28,7 @@ it references, `static/docs/stability-marks.js` and `.css`.
   `static/docs/paths/`, referenced from `api.yaml`'s `paths`, with its
   schemas in `schemas.yml`. `make check` and CI lint the spec with Redocly
   (`redocly.yaml`).
-- Only the API under `/api/v1` is documented. `projects.json` and each
-  project's `state.json` are the UI's own contract until it moves to the
-  resources, so they aren't.
+- Only the API under `/api/v1` is documented, and it's all the UI reads.
 
 ## Gotchas
 

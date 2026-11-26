@@ -8,29 +8,29 @@ import { ContradictionHint } from "./CapabilityHints";
 import { ConceptChips, ConceptIcon } from "./Concepts";
 import { PersonaCard } from "./Personas";
 import { ProjectIcon } from "./ProductFilter";
-import { ExposureMark, RiskScore } from "./design/risk/RiskScore";
+import { RiskScore } from "./design/risk/RiskScore";
 import {
-  capabilitiesById,
   capabilityCard,
   conceptsOf,
   contradictionsOf,
-  domainCapabilities,
   domainGroup,
   domainName,
   featureCard,
   find,
-  gapsOn,
   personaCard,
   projectName,
   partOf,
-  riskAcross,
-  exposureOf,
   type Capability,
   type Doc,
   type DocketState,
   type Domain,
+  type Exposure,
+  type Feature,
+  type Gap,
   type Pick,
+  type RiskAcross,
 } from "./state";
+import { useStatusFor } from "./model";
 import { Tip } from "./design/Tip";
 
 /* A domain's mark, wherever one is named. */
@@ -55,9 +55,7 @@ const ROW_RING = 22;
 function line(state: DocketState, c: Capability, domain: string) {
   const here = c.levels.find((l) => l.domain === domain)?.level ?? c.stability;
   const contradictions = contradictionsOf(state, "capability", c.id).map((p) => p.message);
-  const gaps = gapsOn(state, c);
-  const risk = riskAcross(state, gaps, [c]);
-  const exposure = exposureOf(state, [c]);
+  const { risk, exposure } = c;
   return {
     name: c.name,
     level: here,
@@ -70,7 +68,7 @@ function line(state: DocketState, c: Capability, domain: string) {
       </>
     ),
     data: {
-      "data-risk-band": gaps.length ? exposure.band?.id : undefined,
+      "data-risk-band": risk.items.length ? exposure.band?.id : undefined,
     },
   };
 }
@@ -163,7 +161,7 @@ export function mapItems(state: DocketState, onOpen: (pick: Pick) => void, cards
                 grip
                 name={feature.name}
                 maturity={part.maturity}
-                hint={<AreaMarks state={state} capabilities={capabilitiesById(state, part.capabilities)} of={feature.name} />}
+                hint={<PartMarks state={state} feature={feature} domain={domain.id} />}
                 capabilities={part.capabilities.flatMap((cid) => {
                   const c = find(state.capabilities, cid);
                   return c ? [{ id: c.id, ...line(state, c, domain.id) }] : [];
@@ -234,7 +232,7 @@ export function mapGroups(state: DocketState, onOpen: (pick: Pick) => void): Can
             </span>
           </Tip>
           <span className="area-marks" data-no-pan>
-            <AreaMarks state={state} capabilities={domainCapabilities(state, domain)} of={domain.name} />
+            <AreaMarks risk={domain.readiness.gaps} exposure={domain.exposure} of={domain.name} />
           </span>
           {domain.maturity !== null ? (
             <span className="area-maturity lens-stability" data-no-pan>
@@ -257,14 +255,29 @@ export function mapGroups(state: DocketState, onOpen: (pick: Pick) => void): Can
 /*
  * What the map shows about a feature's or domain's capabilities beyond
  * maturity, each only in its view: their exposure, from every gap on
- * them, their own and those of what they're built on, each scored on them.
+ * them, their own and those of what they're built on, each scored on them,
+ * as the server works it out. Nothing when there are no gaps or none of
+ * them is started, since drafts aren't exposed to anything.
  */
-function AreaMarks({ state, capabilities, of }: { state: DocketState; capabilities: Capability[]; of: string }) {
+function AreaMarks({ risk, exposure, of }: { risk: RiskAcross<Gap> | undefined; exposure: Exposure | undefined; of: string }) {
+  if (!risk?.items.length || !exposure || exposure.percent === null || !exposure.band) return null;
   return (
     <span className="lens-risk">
-      <ExposureMark state={state} capabilities={capabilities} of={of} size={24} inButton />
+      <RiskScore risk={risk} exposure={exposure} of={of} size={24} inButton />
     </span>
   );
+}
+
+/*
+ * A feature's part in a domain's marks: the feature's own figures when that
+ * part is all of it, or else the server's for the feature's capabilities in
+ * that domain.
+ */
+function PartMarks({ state, feature, domain }: { state: DocketState; feature: Feature; domain: string }) {
+  const whole = feature.parts.length < 2;
+  const status = useStatusFor(state, whole ? null : `feature:${feature.id},domain:${domain}`);
+  const figures = whole ? { risk: feature.readiness.gaps, exposure: feature.exposure } : { risk: status?.risk, exposure: status?.exposure };
+  return <AreaMarks {...figures} of={feature.name} />;
 }
 
 /* How many card columns tidy puts side by side across domains, and the room between domains. */

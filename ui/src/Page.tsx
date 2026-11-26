@@ -6,7 +6,6 @@ import { ConceptChips, ConceptIcon, related } from "./Concepts";
 import { DecisionList, Facets, facets } from "./Fields";
 import { Body, Excerpt, MORE_ABOUT } from "./design/markdown/Markdown";
 import { MaturityRing } from "./design/maturity/MaturityRing";
-import { featureMaturity } from "./design/maturity/maturity";
 import { STABILITY } from "./design/stability/stability";
 import { StabilityMark } from "./design/stability/StabilityMark";
 import { StabilitySpread } from "./design/stability/StabilitySpread";
@@ -29,9 +28,10 @@ import {
   plural,
   type ExploreKind,
   Maturity,
+  leftOf,
 } from "./Explore";
 import { DomainIcon } from "./FeatureMap";
-import { PersonaAvatar, personaNameAndRole, personaReadiness } from "./Personas";
+import { PersonaAvatar, personaNameAndRole } from "./Personas";
 import { ReadinessMark, StillNeeds, needsLine } from "./Readiness";
 import { ProjectIcon } from "./ProductFilter";
 import { InitiativeIcon } from "./ScopeFilter";
@@ -46,12 +46,8 @@ import {
   domainName,
   gapsById,
   inRiskOrder,
-  riskAcross,
   openDecisions,
   domainCapabilities,
-  needsOf,
-  personaCapabilitiesIn,
-  readinessOf,
   startedOf,
   type Readiness,
   pageHref,
@@ -60,7 +56,6 @@ import {
   find,
   tradeoffsById,
   leftCount,
-  leftIn,
   nextLevel,
   partOf,
   pickList,
@@ -85,8 +80,8 @@ import {
   capabilitiesById,
   type Pick,
   type Rule,
-  ruleStanding,
 } from "./state";
+import { someOf, useStatusFor } from "./model";
 import { Tip } from "./design/Tip";
 import { GapRows, LeftFigure } from "./GapRows";
 import { ExposureStat, MaturityStat } from "./pages/indexParts";
@@ -438,6 +433,17 @@ function StillNeedsSection({ readiness, readyText }: { readiness: Readiness; rea
   );
 }
 
+/*
+ * The readiness of the capabilities `forRef` names, as the server works it
+ * out, within `initiative` when given: nothing while it's read, and with
+ * `started`, nothing unless something in them is started.
+ */
+function ReadinessFor({ state, forRef, initiative, of, started = false }: { state: DocketState; forRef: string; initiative?: string; of: string; started?: boolean }) {
+  const status = useStatusFor(state, forRef, initiative);
+  if (!status || (started && !startedOf(status.readiness))) return null;
+  return <ReadinessMark readiness={status.readiness} of={of} />;
+}
+
 /* ——— What's left ——— */
 
 /* Something that holds open decisions, with what it is. */
@@ -453,20 +459,22 @@ type LeftHere = { holders: Holder[]; decisions: number; gaps: LeftGap[]; risk: R
  * What's left across some capabilities, with the open decisions of `own`,
  * the feature or domain they're under, first. A technical gap on what several
  * of them are built on is one gap, so it counts once. With `technical` false,
- * as for a persona, only what someone using the product would notice.
+ * as for a persona, only what someone using the product would notice. Its
+ * risk is from `readiness`, theirs, whose gaps are every gap on them, each
+ * scored on them.
  */
-function leftAcross(state: DocketState, capabilities: Capability[], own?: Holder, technical = true): LeftHere {
+function leftAcross(capabilities: Capability[], readiness: Readiness, own?: Holder, technical = true): LeftHere {
   const holders = [...(own ? [own] : []), ...capabilities.map((doc): Holder => ({ kind: "capability", doc }))].filter((h) => openDecisions(h.doc).length);
   const gaps = new Map<string, LeftGap>();
   for (const c of capabilities) {
-    for (const gap of gapsById(state, c.gaps)) gaps.set(gap.id, { gap });
-    if (technical) for (const on of builtOn(state, c)) for (const gap of gapsById(state, on.gaps)) gaps.set(gap.id, { gap, on });
+    for (const gap of c.left.gaps) gaps.set(gap.id, { gap });
+    if (technical) for (const { gap, on } of c.left.technical) gaps.set(gap.id, { gap, on });
   }
   return {
     holders,
     decisions: holders.reduce((n, h) => n + openDecisions(h.doc).length, 0),
-    gaps: inRiskOrder(state, [...gaps.values()], (g) => g.gap),
-    risk: riskAcross(state, [...gaps.values()].map((g) => g.gap), capabilities),
+    gaps: inRiskOrder([...gaps.values()], (g) => g.gap),
+    risk: someOf(readiness.gaps, (g) => gaps.has(g.id)),
   };
 }
 
@@ -476,8 +484,8 @@ function leftOnTechnical(state: DocketState, doc: TechnicalDoc): LeftHere {
   return {
     holders: decisions ? [{ kind: doc.kind, doc }] : [],
     decisions,
-    gaps: inRiskOrder(state, gapsById(state, doc.gaps), (g) => g).map((gap) => ({ gap })),
-    risk: riskAcross(state, gapsById(state, doc.gaps)),
+    gaps: inRiskOrder(gapsById(state, doc.gaps), (g) => g).map((gap) => ({ gap })),
+    risk: doc.risk,
   };
 }
 
@@ -628,7 +636,7 @@ function CapabilityTable({
         <tbody>
           {capabilities.map((c) => {
             const level = (domain && c.levels.find((l) => l.domain === domain)?.level) || c.stability;
-            const left = leftIn(state, c, technical);
+            const left = leftOf(c, technical);
             return (
               <tr key={c.id}>
                 <td>
@@ -691,7 +699,7 @@ const placesOf = (r: Rule) => r.evidence.verifies.length + r.evidence.implements
  */
 function RuleTable({ rules, capability }: { rules: Rule[]; capability?: Capability }) {
   if (!rules.length) return <Empty>None written down yet.</Empty>;
-  const sorted = capability ? [...rules].sort((a, b) => Number(ruleStanding(capability, b) === "gap") - Number(ruleStanding(capability, a) === "gap")) : rules;
+  const sorted = capability ? [...rules].sort((a, b) => Number(capability.ruleStandings[b.id] === "gap") - Number(capability.ruleStandings[a.id] === "gap")) : rules;
   return (
     <div className="page-table-scroll">
       <table className="view-table page-rule-table">
@@ -704,7 +712,7 @@ function RuleTable({ rules, capability }: { rules: Rule[]; capability?: Capabili
         </thead>
         <tbody>
           {sorted.map((r) => {
-            const standing = capability ? ruleStanding(capability, r) : null;
+            const standing = capability ? capability.ruleStandings[r.id] : null;
             const places = placesOf(r);
             return (
               <tr key={r.id}>
@@ -795,12 +803,12 @@ function CapabilityPage({ capability, route, ...go }: PageProps & { capability: 
   const feature = capability.feature ? find(state.features, capability.feature) : undefined;
   const on = builtOn(state, capability);
   const places = capability.evidence.implements.length + capability.evidence.verifies.length;
-  const left = leftAcross(state, [capability]);
+  const readiness = capability.readiness;
+  const left = leftAcross([capability], readiness);
   const decided = capability.tradeoffs.length;
-  const ruleCount = (s: "gap" | "evidence" | "trust") => rules.filter((r) => ruleStanding(capability, r) === s).length;
-  const needs = level ? needsOf(state, capability) : null;
-  const ready = needs ? !needs.belowBeta && !needs.gaps.length : null;
-  const readiness = readinessOf(state, [capability]);
+  const ruleCount = (s: "gap" | "evidence" | "trust") => rules.filter((r) => capability.ruleStandings[r.id] === s).length;
+  /* What it still needs to be ready: nothing, once it is, and nothing asked of a draft. */
+  const needs = level ? (readiness.notReady.find((n) => n.capability.id === capability.id) ?? null) : null;
 
   const tabs: TabDef[] = [
     { id: "overview", label: "Overview" },
@@ -843,10 +851,10 @@ function CapabilityPage({ capability, route, ...go }: PageProps & { capability: 
               label="Readiness"
               term="readiness"
               value={readiness.percent === null ? "Not started" : <ReadinessMark readiness={readiness} of={`Readiness of ${capability.name}`} inButton />}
-              note={!needs ? "A draft doesn't count" : ready ? "Nothing left: at Beta or above, with no unacceptable gap" : needsLine(needs)}
+              note={!level ? "A draft doesn't count" : !needs ? "Nothing left: at Beta or above, with no unacceptable gap" : needsLine(needs)}
               href={needs?.gaps.length ? tabHref("left") : undefined}
             />
-            <ExposureStat state={state} capabilities={[capability]} of={capability.name} />
+            <ExposureStat exposure={capability.exposure} risk={capability.risk} of={capability.name} />
             <LeftStat left={left} of={capability.name} />
             <Stat
               label="Rules" term="rule"
@@ -946,7 +954,7 @@ function CapabilityPage({ capability, route, ...go }: PageProps & { capability: 
         </Section>
       ) : tab === "stability" && state.rubric ? (
         <Section title={<Term id="rubric">Stability rubric</Term>} id="rubric">
-          <StabilityRubric key={capability.id} state={state} rubric={state.rubric} capability={capability} />
+          <StabilityRubric key={capability.id} rubric={state.rubric} capability={capability} />
         </Section>
       ) : tab === "built" ? (
         <>
@@ -982,8 +990,8 @@ function FeaturePage({ feature, route, ...go }: PageProps & { feature: Feature }
   const capabilities = feature.capabilities.flatMap((id) => find(state.capabilities, id) ?? []);
   const concepts = featureConcepts(state, feature);
   const personas = state.personas.filter((p) => p.features.includes(feature.id));
-  const left = leftAcross(state, capabilities, { kind: "feature", doc: feature });
-  const readiness = readinessOf(state, capabilities);
+  const readiness = feature.readiness;
+  const left = leftAcross(capabilities, readiness, { kind: "feature", doc: feature });
   const decided = feature.tradeoffs.length;
   const tabs: TabDef[] = [
     { id: "overview", label: "Overview" },
@@ -1007,12 +1015,13 @@ function FeaturePage({ feature, route, ...go }: PageProps & { feature: Feature }
             <Stat label="Capabilities" term="capability" value={capabilities.length || "None"} note={<StabilitySpread levels={capabilities.map((c) => c.stability)} of={feature.name} inButton />} href={tabHref("capabilities")} />
             <MaturityStat
               maturity={feature.maturity}
+              band={feature.band}
               subject="feature"
               count={capabilities.filter((c) => c.stability).length}
               spread={capabilities.map((c) => c.stability)}
               of={feature.name}
             />
-            <ExposureStat state={state} capabilities={capabilities} of={feature.name} />
+            <ExposureStat exposure={feature.exposure} risk={feature.readiness.gaps} of={feature.name} />
             <ReadinessStat readiness={readiness} tab="overview" of={`Readiness of ${feature.name}`} />
             <LeftStat left={left} of={feature.name} />
             <Stat
@@ -1121,8 +1130,8 @@ function DomainPage({ domain, route, ...go }: PageProps & { domain: Domain }) {
   const capabilities = domainCapabilities(state, domain);
   const concepts = state.concepts.filter((c) => c.domain === domain.id).sort((a, b) => a.name.localeCompare(b.name));
   const rules = state.rules.filter((r) => r.domain === domain.id);
-  const left = leftAcross(state, capabilities, { kind: "domain", doc: domain });
-  const readiness = readinessOf(state, capabilities);
+  const readiness = domain.readiness;
+  const left = leftAcross(capabilities, readiness, { kind: "domain", doc: domain });
   const tabs: TabDef[] = [
     { id: "overview", label: "Overview" },
     { id: "features", label: "Features", term: "feature" as const, count: features.length },
@@ -1149,12 +1158,13 @@ function DomainPage({ domain, route, ...go }: PageProps & { domain: Domain }) {
             <Stat label="Capabilities" term="capability" value={capabilities.length || "None"} note={<StabilitySpread levels={capabilities.map((c) => levelInDomain(c, domain.id))} of={domain.name} inButton />} href={tabHref("features")} />
             <MaturityStat
               maturity={domain.maturity}
+              band={domain.band}
               subject="domain"
               count={domain.features.filter((id) => partOf(find(state.features, id), domain.id)?.maturity != null).length}
               spread={domain.features.map((id) => partOf(find(state.features, id), domain.id)?.band ?? null)}
               of={domain.name}
             />
-            <ExposureStat state={state} capabilities={capabilities} of={domain.name} />
+            <ExposureStat exposure={domain.exposure} risk={domain.readiness.gaps} of={domain.name} />
             <ReadinessStat readiness={readiness} tab="overview" of={`Readiness of ${domain.name}`} />
             <Stat
               label="Language" term="concept"
@@ -1268,8 +1278,8 @@ function PersonaPage({ persona, route, ...go }: PageProps & { persona: Persona }
   const features = persona.features.flatMap((id) => find(state.features, id) ?? []);
   const loose = capabilities.filter((c) => !c.feature);
   const domains = [...new Set(capabilities.flatMap((c) => docDomains(c)))];
-  const left = leftAcross(state, capabilities, undefined, false);
-  const readiness = personaReadiness(state, persona);
+  const readiness = persona.readiness;
+  const left = leftAcross(capabilities, readiness, undefined, false);
   const { name, role } = personaNameAndRole(persona);
   const tabs: TabDef[] = [
     { id: "readiness", label: "Readiness", term: "readiness" as const },
@@ -1303,13 +1313,14 @@ function PersonaPage({ persona, route, ...go }: PageProps & { persona: Persona }
               href={tabHref("serves")}
             />
             <MaturityStat
-              maturity={featureMaturity(capabilities.map((c) => c.stability))}
+              maturity={persona.maturity}
+              band={persona.band}
               subject="persona"
               count={capabilities.filter((c) => c.stability).length}
               spread={capabilities.map((c) => c.stability)}
               of={`what serves ${persona.name}`}
             />
-            <ExposureStat state={state} capabilities={capabilities} of={`what serves ${persona.name}`} />
+            <ExposureStat exposure={persona.exposure} risk={persona.readiness.gaps} of={`what serves ${persona.name}`} />
             <ReadinessStat readiness={readiness} tab="readiness" of={`Readiness for ${name}`} />
             <LeftStat left={left} of={`what serves ${persona.name}`} />
           </>
@@ -1329,7 +1340,7 @@ function PersonaPage({ persona, route, ...go }: PageProps & { persona: Persona }
                       {NAMES.feature.icon}
                       {f.name}
                     </a>
-                    <ReadinessMark readiness={readinessOf(state, personaCapabilitiesIn(state, persona, f))} of={`${f.name}'s readiness for ${name}`} />
+                    <ReadinessFor state={state} forRef={`persona:${persona.id},feature:${f.id}`} of={`${f.name}'s readiness for ${name}`} />
                   </li>
                 ))}
               </ul>
@@ -1342,7 +1353,6 @@ function PersonaPage({ persona, route, ...go }: PageProps & { persona: Persona }
       ) : tab === "serves" ? (
         <>
           {features.map((f) => {
-            const inFeature = readinessOf(state, personaCapabilitiesIn(state, persona, f));
             return (
               <Section
                 key={f.id}
@@ -1352,7 +1362,7 @@ function PersonaPage({ persona, route, ...go }: PageProps & { persona: Persona }
                     {f.name}
                   </a>
                 }
-                aside={startedOf(inFeature) ? <ReadinessMark readiness={inFeature} of={`${f.name}'s readiness for ${name}`} /> : undefined}
+                aside={<ReadinessFor state={state} forRef={`persona:${persona.id},feature:${f.id}`} of={`${f.name}'s readiness for ${name}`} started />}
               >
                 <CapabilityTable state={state} capabilities={capabilities.filter((c) => c.feature === f.id)} technical={false} />
               </Section>
@@ -1387,9 +1397,8 @@ function InitiativePage({ initiative, route, ...go }: PageProps & { initiative: 
   const features = initiative.features.flatMap((id) => find(state.features, id) ?? []);
   const loose = capabilities.filter((c) => !c.feature);
   const domains = [...new Set(capabilities.flatMap((c) => docDomains(c)))];
-  const left = leftAcross(state, capabilities, undefined, false);
-  const readiness = readinessOf(state, capabilities);
-  const inFeature = (f: Feature) => capabilitiesById(state, f.capabilities.filter((id) => initiative.capabilities.includes(id)));
+  const readiness = initiative.readiness;
+  const left = leftAcross(capabilities, readiness, undefined, false);
   const personas = initiative.personas.flatMap((id) => find(state.personas, id) ?? []);
   const name = initiative.name;
   const tabs: TabDef[] = [
@@ -1416,13 +1425,14 @@ function InitiativePage({ initiative, route, ...go }: PageProps & { initiative: 
               href={tabHref("capabilities")}
             />
             <MaturityStat
-              maturity={featureMaturity(capabilities.map((c) => c.stability))}
+              maturity={initiative.maturity}
+              band={initiative.band}
               subject="initiative"
               count={capabilities.filter((c) => c.stability).length}
               spread={capabilities.map((c) => c.stability)}
               of={name}
             />
-            <ExposureStat state={state} capabilities={capabilities} of={name} />
+            <ExposureStat exposure={initiative.exposure} risk={initiative.readiness.gaps} of={name} />
             <ReadinessStat readiness={readiness} tab="readiness" of={`Readiness of ${name}`} />
             <LeftStat left={left} of={name} />
           </>
@@ -1441,10 +1451,7 @@ function InitiativePage({ initiative, route, ...go }: PageProps & { initiative: 
                       <PersonaAvatar persona={p} size={22} />
                       {p.name}
                     </a>
-                    <ReadinessMark
-                      readiness={readinessOf(state, capabilities.filter((c) => c.personas.includes(p.id)))}
-                      of={`${name}'s readiness for ${p.name}`}
-                    />
+                    <ReadinessFor state={state} forRef={`persona:${p.id}`} initiative={initiative.id} of={`${name}'s readiness for ${p.name}`} />
                   </li>
                 ))}
               </ul>
@@ -1461,7 +1468,7 @@ function InitiativePage({ initiative, route, ...go }: PageProps & { initiative: 
                       {NAMES.feature.icon}
                       {f.name}
                     </a>
-                    <ReadinessMark readiness={readinessOf(state, inFeature(f))} of={`${f.name}'s readiness in ${name}`} />
+                    <ReadinessFor state={state} forRef={`feature:${f.id}`} initiative={initiative.id} of={`${f.name}'s readiness in ${name}`} />
                   </li>
                 ))}
               </ul>
@@ -1474,7 +1481,6 @@ function InitiativePage({ initiative, route, ...go }: PageProps & { initiative: 
       ) : tab === "capabilities" ? (
         <>
           {features.map((f) => {
-            const ready = readinessOf(state, inFeature(f));
             return (
               <Section
                 key={f.id}
@@ -1484,7 +1490,7 @@ function InitiativePage({ initiative, route, ...go }: PageProps & { initiative: 
                     {f.name}
                   </a>
                 }
-                aside={startedOf(ready) ? <ReadinessMark readiness={ready} of={`${f.name}'s readiness in ${name}`} /> : undefined}
+                aside={<ReadinessFor state={state} forRef={`feature:${f.id}`} initiative={initiative.id} of={`${f.name}'s readiness in ${name}`} started />}
               >
                 <CapabilityTable state={state} capabilities={capabilities.filter((c) => c.feature === f.id)} technical={false} />
               </Section>

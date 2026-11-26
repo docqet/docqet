@@ -88,9 +88,9 @@ Each step builds only what its commands need:
 4. **The server's store.** Built: `docket migrate`, the state repository, the
    whole-state endpoints and `apply`. Still to come: results, with their
    repository and `docket results`.
-5. **The resources.** Built: every resource in [the API](api.md#resources-for-the-ui),
-   with its spec. Still to come: the UI moving to them, then the make targets
-   that load the examples.
+5. **Built: the resources**, every one in [the API](api.md#resources-for-the-ui),
+   with its spec, the UI reading only them, and `make examples`, which loads
+   the examples into the local server.
 6. **History**: git as an `fs.FS`, `diff`, `log`, `history` and `preview`,
    then `?at=`, changes worked out as states are applied, and the change and
    comparison resources.

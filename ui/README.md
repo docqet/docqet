@@ -1,26 +1,28 @@
 # UI
 
-How Docket shows things. Once [`docket`](../cmd/docket/) exists, the UI gets
-everything from `docket`'s API and works nothing out itself, and is built into
-the binary. Until then, it reads `state.json` files directly and works out
-maturity, readiness and risk itself, as described below. It answers, at a
+How Docket shows things. The UI gets everything from `docket`'s API and works
+nothing out itself: the server combines a product's projects and works out
+maturity, readiness and risk, as described below. It's built into the binary,
+and `docket serve` and `docket ui` serve it. It answers, at a
 glance: what the software can do, who it serves and how far along it is for
 each of them, how stable each capability is, the rules each follows, and what
 the gaps are. A rule shows the code and tests that point at it.
 
-The UI shows several projects together, each from its own `state.json`. One
-Docket server serves one client, so every project it shows belongs to that
-client, and there's no sign-in yet. See
+The UI shows a product's projects together, as the server put them together.
+One Docket server serves one client, so every project it shows belongs to
+that client, and there's no sign-in yet. See
 [the proposed architecture](../README.md#3-docket).
 
 ## Running the UI
 
+The dev server passes `/api` on to a running Docket server, so start one and
+give it something to show first:
+
 ```sh
-cd ui
-npm install
-npm run dev                                   # every project in examples/
-DOCKET_STATE=path/to/state.json npm run dev   # any other state.json
-DOCKET_STATE=a/state.json:b/state.json npm run dev   # several, separated as in PATH
+make run                                      # the server, on localhost:8080
+make examples                                 # load the examples into it, or make apply for Docket itself
+cd ui && npm install && npm run dev
+DOCKET_API=http://localhost:8090 npm run dev  # or another server, such as make build's
 ```
 
 ### How it's laid out
@@ -81,14 +83,13 @@ the cards sit is this browser's own, for each product.
 - **Seeing them**: a doc's page and each search result say which projects
   define it. On the map, each domain is one region holding every project's
   part of it, and a feature that spans domains has a card in each.
-- **Maturity**: nothing in `state.json` says it, so the UI works it out,
-  for one project or several, the same way. With several showing, its
-  popover lists each project's.
+- **Maturity**: the server works it out, for one project or several, the
+  same way. With several showing, its popover lists each project's.
 
 ### Maturity and readiness
 
-Two different questions, worked out by the UI from each capability's level,
-neither from the other:
+Two different questions, worked out by the server from each capability's
+level, neither from the other:
 
 - **Maturity** is how far along the work is, for planning: a weighted average
   of capabilities' level scores, drafts left out, in one of four bands. A
@@ -166,19 +167,5 @@ decisions and tradeoffs.
   choice (a tradeoff affects it), open (a decision affects it), met with evidence (a mechanism or component the capability is
   built on meets it), or met on its level's word.
 
-`npm run build` writes a static site to `dist/`. Put a `state.json` beside its
-`index.html` and serve the folder. Nothing else runs on the server. To show
-several projects, put a `projects.json` there instead, listing where each
-one's `state.json` is, relative to the page:
-
-```json
-{
-  "projects": [
-    { "state": "hotel-bookings/state.json" },
-    { "state": "hotel-billing/state.json" }
-  ]
-}
-```
-
-Everyone who can open the page can see every project it lists, so list only
-projects they're all allowed to see.
+`npm run build` writes the UI to `dist/`, which `go build` embeds in the
+binary, so `docket serve` and `docket ui` serve it beside the API it reads.

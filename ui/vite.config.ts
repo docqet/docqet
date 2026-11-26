@@ -1,69 +1,17 @@
-import { existsSync, readdirSync, readFileSync } from "node:fs";
-import { delimiter, join, resolve } from "node:path";
 import react from "@vitejs/plugin-react";
-import { defineConfig, type Connect, type Plugin } from "vite";
+import { defineConfig } from "vite";
 
 /*
- * The UI reads `projects.json` from beside its own page, and each project's
- * `state.json` from where that lists. While developing, both are served from
- * here: every project in examples/, or the state.json files
- * DOCKET_STATE names, separated as in PATH. They're read on every request, so
- * re-indexing shows on reload.
+ * The UI reads everything from the server's API, under /api/v1. While
+ * developing, the dev server passes those requests on to a running server:
+ * DOCKET_API, or else the one `make run` starts, on localhost:8080.
  */
-const examples = resolve(import.meta.dirname, "../examples");
-
-function statePaths(): string[] {
-  if (process.env.DOCKET_STATE) {
-    return process.env.DOCKET_STATE.split(delimiter)
-      .filter(Boolean)
-      .map((p) => resolve(p));
-  }
-  return projectsIn(examples)
-    .map((dir) => join(dir, ".docket/state.json"))
-    .filter((p) => existsSync(p));
-}
-
-/* Every project in a folder: each folder with a docket.yaml, however deep, since one repository can hold several. */
-function projectsIn(dir: string): string[] {
-  const here = existsSync(join(dir, "docket.yaml")) ? [dir] : [];
-  const below = readdirSync(dir, { withFileTypes: true })
-    .filter((e) => e.isDirectory() && !e.name.startsWith(".") && e.name !== "node_modules")
-    .map((e) => e.name)
-    .sort()
-    .flatMap((name) => projectsIn(join(dir, name)));
-  return [...here, ...below];
-}
-
-const serveState: Connect.NextHandleFunction = (req, res, next) => {
-  const { pathname } = new URL(req.url ?? "/", "http://localhost");
-  const json = (body: string | Buffer) => {
-    res.setHeader("Content-Type", "application/json");
-    res.end(body);
-  };
-  if (pathname === "/projects.json") {
-    const list = statePaths().map((_, i) => ({ state: `projects/${i}/state.json` }));
-    return json(JSON.stringify({ projects: list }));
-  }
-  const match = pathname.match(/^\/projects\/(\d+)\/state\.json$/);
-  const path = match && statePaths()[Number(match[1])];
-  if (path) return json(readFileSync(path));
-  next();
-};
-
-function state(): Plugin {
-  return {
-    name: "docket-state",
-    configureServer(server) {
-      server.middlewares.use(serveState);
-    },
-    configurePreviewServer(server) {
-      server.middlewares.use(serveState);
-    },
-  };
-}
+const api = process.env.DOCKET_API ?? "http://localhost:8080";
 
 export default defineConfig({
-  plugins: [react(), state()],
-  /* Relative, so the built UI works from any folder beside a state.json or projects.json. */
+  plugins: [react()],
+  server: { proxy: { "/api": api } },
+  preview: { proxy: { "/api": api } },
+  /* Relative, so the built UI works under whatever path the server serves it from. */
   base: "./",
 });

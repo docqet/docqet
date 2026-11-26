@@ -1,5 +1,5 @@
 import { Term } from "../design/term/Term";
-import { PersonaAvatar, personaNameAndRole, personaReadiness } from "../Personas";
+import { PersonaAvatar, personaNameAndRole } from "../Personas";
 import { ReadinessMark } from "../Readiness";
 import { docHref, type Route } from "../routes";
 import { Empty, PageHeader, View } from "../shell/layout";
@@ -15,7 +15,7 @@ import { InitiativeTags } from "../Initiatives";
  * only someone working on the code would notice.
  */
 export default function PersonasPage({ state }: { state: DocketState; route: Route }) {
-  const share = new Map(state.personas.map((p) => [p, readyShare(personaReadiness(state, p))]));
+  const share = new Map(state.personas.map((p) => [p, readyShare(p.readiness)]));
   const personas = [...state.personas].sort((a, b) => (share.get(a) ?? -1) - (share.get(b) ?? -1));
   return (
     <View title="Personas" wide>
@@ -61,13 +61,13 @@ function PersonaRow({ state, persona }: { state: DocketState; persona: Persona }
         <InitiativeTags state={state} ids={persona.initiatives} block />
       </td>
       <td>
-        <ReadinessMark readiness={personaReadiness(state, persona)} of={`Readiness for ${name}`} />
+        <ReadinessMark readiness={persona.readiness} of={`Readiness for ${name}`} />
       </td>
       <td className="num">
         <Num n={capabilities.length} />
       </td>
       <td>
-        <GapsCell gaps={gaps} exposure={{ state, capabilities }} kind="product-gap" of={`what serves ${name}`} href={docHref("persona", persona.id, "left")} />
+        <GapsCell gaps={gaps} exposure={{ exposure: persona.exposure, risk: persona.readiness.gaps }} kind="product-gap" of={`what serves ${name}`} href={docHref("persona", persona.id, "left")} />
       </td>
     </tr>
   );

@@ -12,14 +12,12 @@ import { StandingMark, type Standing } from "./design/standing/StandingMark";
 import { TechnicalLink, levelName, plural } from "./Explore";
 import {
   appliesAt,
-  outcomeStanding,
   outcomesOf,
   type Capability,
   type Rubric,
   type RubricExample,
   type ExpectedOutcome,
   type RubricQuality,
-  type DocketState,
   type Level,
 } from "./state";
 
@@ -74,11 +72,11 @@ function countsAt(rubric: Rubric, level: Level) {
 
 const isMet = (s: Standing) => s === "evidence" || s === "trust";
 
-export function StabilityRubric({ state, rubric, capability }: { state: DocketState; rubric: Rubric; capability: Capability }) {
+export function StabilityRubric({ rubric, capability }: { rubric: Rubric; capability: Capability }) {
   const own = capability.stability;
   const [level, setLevel] = useState<Level>(own ?? "prototype");
   const [showAll, setShowAll] = useState(false);
-  const of = (outcome: ExpectedOutcome) => outcomeStanding(state, capability, outcome);
+  const of = (outcome: ExpectedOutcome) => capability.outcomes[outcome.id];
   const standing = (outcome: ExpectedOutcome): Standing => of(outcome).standing;
   const kindName = (id: string) => rubric.kinds.find((k) => k.id === id)?.name ?? id;
 

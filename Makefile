@@ -1,4 +1,4 @@
-.PHONY: help build up down nuke logs migrate run apply ui ui-build fix fmt lint vet docs-lint check test
+.PHONY: help build up down nuke logs migrate run apply examples ui ui-build fix fmt lint vet docs-lint check test
 
 help: ## Show this help
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-20s\033[0m %s\n", $$1, $$2}'
@@ -31,9 +31,22 @@ DOCKET_SERVER ?= http://localhost:8080
 apply: ## Send Docket's own new commits to the local server: DOCKET_SERVER=http://localhost:8090 for Docker's
 	DOCKET_SERVER=$(DOCKET_SERVER) go run ./cmd/docket apply
 
+# The examples are folders in this repository, not repositories of their own,
+# so each one's state is sent as it is, at this repository's HEAD, rather
+# than by docket apply. Needs jq.
+examples: ## Load the examples into the local server, for the UI to show
+	@sha=$$(git rev-parse HEAD); at=$$(git show -s --format=%cI HEAD); \
+	for state in $$(find examples -path '*/.docket/state.json' | sort); do \
+		id=$$(jq -r .project.id $$state); \
+		jq -c --arg at "$$at" '{parents: [], committedAt: $$at, trailers: [], state: .}' $$state | \
+			curl -sf -o /dev/null -w "$$id %{http_code}\n" -X PUT -H 'Content-Type: application/json' \
+				--data-binary @- $(DOCKET_SERVER)/api/v1/projects/$$id/commits/$$sha || exit 1; \
+	done
+
 ## --- UI ---
 
-ui: ## Run the UI's dev server, over examples/
+ui: ## Run the UI's dev server, over the local server's API: make run, then make apply or make examples
+
 	cd ui && npm install && npm run dev
 
 ui-build: ## Build the UI into ui/dist, for go build to embed

@@ -12,11 +12,8 @@ import { docHref, sectionHref, type Route } from "../routes";
 import { View } from "../shell/layout";
 import { HeldDecisions } from "../Fields";
 import {
-  affectedBy,
   appliesAt,
-  decisionsAffecting,
   find,
-  riskOf,
   riskScore,
   subjectOf,
   technicalDoc,
@@ -48,9 +45,9 @@ const qualityHref = (quality: string) => `${sectionHref("glossary", { tab: "rubr
 
 function GapView({ state, gap }: { state: DocketState; gap: Gap }) {
   const kind = gapKind(gap);
-  const risk = riskOf(state, gap);
-  const affected = affectedBy(state, gap);
-  const waits = decisionsAffecting(state, gap.id);
+  const risk = gap.risk;
+  const affected = gap.affected;
+  const waits = gap.decisions;
 
   return (
     <View title={plainTitle(gap.name)}>
@@ -65,7 +62,7 @@ function GapView({ state, gap }: { state: DocketState; gap: Gap }) {
         <Clamped text={gap.description} />
       </header>
 
-      <RiskProfile state={state} gap={gap} risk={risk} />
+      <RiskProfile gap={gap} risk={risk} />
 
       <dl className="dp-links">
         {affected.map((a) =>
@@ -118,9 +115,9 @@ function GapView({ state, gap }: { state: DocketState; gap: Gap }) {
  * and what it contributes; which claims it breaks, and why, or why it breaks
  * none; and, on more than one capability, its score on each, highest first.
  */
-function RiskProfile({ state, gap, risk }: { state: DocketState; gap: Gap; risk: Risk }) {
+function RiskProfile({ gap, risk }: { gap: Gap; risk: Risk }) {
   const top = risk.on[0];
-  const claims = claimsOf(state, gap, risk);
+  const claims = claimsOf(gap, risk);
   return (
     <section className="dp-risk" data-verdict={risk.verdict ?? "none"}>
       <h2 className="dp-risk-title">Risk</h2>
@@ -183,9 +180,9 @@ function RiskProfile({ state, gap, risk }: { state: DocketState; gap: Gap; risk:
  * it; an outcome, where a capability it's on is at a level that expects it.
  * Affecting neither, it breaks none.
  */
-function claimsOf(state: DocketState, gap: Gap, risk: Risk): { breaks: boolean; text: string }[] {
+function claimsOf(gap: Gap, risk: Risk): { breaks: boolean; text: string }[] {
   const started = risk.on.filter((o) => o.weight > 0).map((o) => o.capability);
-  const claims = affectedBy(state, gap).flatMap((a) => {
+  const claims = gap.affected.flatMap((a) => {
     if (a.kind === "rule") {
       const by = started.filter((c) => c.rules.includes(a.rule.id));
       return [

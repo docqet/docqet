@@ -421,7 +421,7 @@ always be rebuilt from the repository.
 | --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Format                | A draft for review, defined by Docket's concept docs, starting from the [Authoring](docket/domains/authoring/domain.md) domain, with example projects laid out as repositories in [`examples/`](examples/). |
 | `docket`              | Indexes and checks a project, and applies its states to the server, which keeps them in SQLite and checks them with the same check. The rest of the commands drafted in [`cmd/docket/`](cmd/docket/) exist with their flags, and answer that they aren't built yet. The examples' `state.json` files are written by hand to show what indexing should produce. |
-| UI                    | An early UI in TypeScript that reads `state.json` files directly and works out maturity, readiness and risk itself, until `docket` serves them. See [`ui/`](ui/).     |
+| UI                    | An early UI in TypeScript that reads only the server's API, which works out maturity, readiness and risk. See [`ui/`](ui/).     |
 | Agent development kit | A first draft for any agent: an `AGENTS.md` block and a `docket` skill, written for `docket` as drafted, so it can't be installed or used until `docket` is built. See [`kit/`](kit/). |
 
 ## Open questions
@@ -483,12 +483,13 @@ domains. It's easy to mix up what's Docket's and what's an example, so:
 cp compose.override.example.yml compose.override.yml   # publishes the server on localhost:8090
 make build      # build and start the server in Docker
 make run        # or run it on this machine, on localhost:8080
-make ui         # the UI's dev server, over examples/
+make examples   # load the examples into the server make run started
+make ui         # the UI's dev server, over that server's API
 make help       # everything else
 ```
 
-`docket ui` shows the built UI over one project's `.docket/state.json`, on
-http://127.0.0.1:4100:
+`docket ui` serves the built UI and the API over one project's
+`.docket/state.json`, on http://127.0.0.1:4100:
 
 ```sh
 make ui-build

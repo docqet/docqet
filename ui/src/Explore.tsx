@@ -26,11 +26,8 @@ import { PersonaAvatar, PersonaIcon, personaNameAndRole } from "./Personas";
 import { ReadinessMark } from "./Readiness";
 import { ProjectIcon } from "./ProductFilter";
 import {
-  affectedBy,
-  decisionsAffecting,
   openDecisions,
   
-  outcomeStanding,
   outcomesOf,
   tradeoffsById,
   contradictionsOf,
@@ -42,15 +39,10 @@ import {
   find,
   inRiskOrder,
   leftCount,
-  leftIn,
-  riskOf,
-  riskAcross,
   riskScore,
   verdictOf,
   pageHref,
   projectName,
-  personaCapabilitiesIn,
-  readinessOf,
   startedOf,
   
   type Capability,
@@ -76,6 +68,7 @@ import {
 } from "./state";
 import { Tip } from "./design/Tip";
 import { InitiativeTags } from "./Initiatives";
+import { useStatusFor } from "./model";
 
 /* What the panel can show: the product's parts, each as a list or one of them. */
 export type ExploreKind = "domain" | "feature" | "capability" | "persona";
@@ -450,10 +443,10 @@ export function GapItem({
   detailed?: boolean;
   newTab?: boolean;
 }) {
-  const affected = affectedBy(state, gap);
+  const affected = gap.affected;
   const rules = affected.flatMap((a) => (a.kind === "rule" ? [a.rule] : []));
   /* How many capabilities a technical gap shows on, beyond the one it's shown under. */
-  const reach = on ? riskOf(state, gap).capabilities : 0;
+  const reach = on ? gap.risk.capabilities : 0;
   const reachText = reach > 1 ? ` · on ${reach} capabilities` : "";
   if (detailed)
     return (
@@ -461,7 +454,7 @@ export function GapItem({
           <div className="gap-head">
             {subject ? <span className="explore-gap-subject">{subject}</span> : null}
             <GapKindTag kind={gapKind(gap)} />
-            <GapRisk state={state} gap={gap} />
+            <GapRisk gap={gap} />
           </div>
           <div className="left-item-text">
             <InlineMarkdown text={gap.name} />
@@ -489,7 +482,7 @@ export function GapItem({
       <div className="gap-head">
         {subject ? <span className="explore-gap-subject">{subject}</span> : null}
         <GapKindTag kind={gapKind(gap)} />
-        <GapRisk state={state} gap={gap} />
+        <GapRisk gap={gap} />
       </div>
       <div className="left-item-text">
         <InlineMarkdown text={gap.name} />
@@ -551,8 +544,8 @@ export function RiskSpread({ risk }: { risk: Risk }) {
 }
 
 /* What's at stake in a gap: its risk, its bars and score, opening how it's worked out, so no part of its risk shows alone. */
-function GapRisk({ state, gap }: { state: DocketState; gap: Gap }) {
-  const risk = riskOf(state, gap);
+function GapRisk({ gap }: { gap: Gap }) {
+  const risk = gap.risk;
   return <GapRiskMark risk={risk} on={risk.on[0] ?? null} />;
 }
 
@@ -586,8 +579,8 @@ function TradeoffSide({ side, text }: { side: "benefits" | "drawbacks"; text: st
 }
 
 /* The expected outcomes a tradeoff falls short of on purpose, if it names any, as a gap shows what it affects. */
-function FallsShortOf({ state, tradeoff }: { state: DocketState; tradeoff: Tradeoff }) {
-  const affected = affectedBy(state, tradeoff);
+function FallsShortOf({ tradeoff }: { tradeoff: Tradeoff }) {
+  const affected = tradeoff.affected;
   if (!affected.length) return null;
   return (
     <div className="gap-affects">
@@ -600,8 +593,8 @@ function FallsShortOf({ state, tradeoff }: { state: DocketState; tradeoff: Trade
 }
 
 /* The open decisions that reopen a tradeoff, if any: once one is answered, the choice may change. */
-function ReopenedBy({ state, tradeoff }: { state: DocketState; tradeoff: Tradeoff }) {
-  const held = decisionsAffecting(state, tradeoff.id);
+function ReopenedBy({ tradeoff }: { tradeoff: Tradeoff }) {
+  const held = tradeoff.decisions;
   if (!held.length) return null;
   return (
     <div className="gap-affects tradeoff-reopened">
@@ -648,8 +641,8 @@ export function Tradeoffs({
             <TradeoffSide side="benefits" text={t.benefit} />
             <TradeoffSide side="drawbacks" text={t.drawback} />
           </div>
-          <FallsShortOf state={state} tradeoff={t} />
-          <ReopenedBy state={state} tradeoff={t} />
+          <FallsShortOf tradeoff={t} />
+          <ReopenedBy tradeoff={t} />
           <Places state={state} places={t.places} label="Marked" detailed />
         </LeftItem>
       ))}
@@ -732,7 +725,7 @@ export function WhatsLeft({
   onShow: (target: Target) => void;
   onPick?: (pick: Pick) => void;
 }) {
-  const left = leftIn(state, capability);
+  const left = capability.left;
   const n = leftCount(left);
   const counts = rubricCounts(state, capability);
   return (
@@ -761,6 +754,9 @@ export function WhatsLeft({
     </section>
   );
 }
+
+/* What's left about a capability, as the server has it: with `technical` false, as for a persona, only what someone using the product would notice. */
+export const leftOf = (capability: Capability, technical = true): Left => (technical ? capability.left : { ...capability.left, technical: [] });
 
 /* A doc's open decisions, from each of its sources, as a list under their label. */
 function Decisions({ state, doc, onConcept, onShow, onPick }: { state: DocketState; doc: Doc; onConcept: (id: string) => void; onShow: (target: Target) => void; onPick?: (pick: Pick) => void }) {
@@ -825,7 +821,7 @@ function Gaps({ state, product, technical, detailed }: { state: DocketState; pro
         <GapFilter product={product.length} technical={technical.length} show={show} onShow={setShow} />
       </div>
       <LeftList detailed={detailed}>
-        {inRiskOrder(state, [...product.map((gap) => ({ gap, on: undefined as TechnicalDoc | undefined })), ...technical], (i) => i.gap)
+        {inRiskOrder([...product.map((gap) => ({ gap, on: undefined as TechnicalDoc | undefined })), ...technical], (i) => i.gap)
           .filter(({ on }) => show === "all" || (show === "technical-gap") === !!on)
           .map(({ gap, on }) => (
             <GapItem key={gap.id} state={state} gap={gap} on={on} detailed={detailed} newTab={!!on && !detailed} />
@@ -866,12 +862,12 @@ export function LeftRollup({
   onPick?: (pick: Pick) => void;
 }) {
   const decisions = own ? openDecisions(own) : [];
-  /* Capabilities with anything open, the riskiest first: each gap scored on that capability. */
+  /* Capabilities with anything open, the riskiest first: each gap scored on that capability, as its readiness has them. */
   const open = capabilities
-    .map((c) => ({ capability: c, left: leftIn(state, c, technical) }))
+    .map((c) => ({ capability: c, left: leftOf(c, technical) }))
     .filter(({ left }) => leftCount(left))
-    .map((o) => ({ ...o, risk: riskAcross(state, [...o.left.gaps, ...o.left.technical.map((t) => t.gap)], [o.capability]) }))
-    .sort((a, b) => (b.risk.score ?? -1) - (a.risk.score ?? -1));
+    .map((o) => ({ ...o, score: worstOf(o.capability, [...o.left.gaps, ...o.left.technical.map((t) => t.gap)]) }))
+    .sort((a, b) => (b.score ?? -1) - (a.score ?? -1));
   const total = decisions.length + open.reduce((n, { left }) => n + leftCount(left), 0);
   return (
     <section className="explore-left">
@@ -903,7 +899,7 @@ export function LeftRollup({
                 name={capability.name}
                 summary={
                   <>
-                    <ExposureMark state={state} capabilities={[capability]} of={capability.name} inButton />
+                    <ExposureMark exposure={capability.exposure} risk={capability.risk} of={capability.name} inButton />
                     <LeftSummary left={left} />
                   </>
                 }
@@ -919,6 +915,10 @@ export function LeftRollup({
   );
 }
 
+/* The highest score among some of a capability's gaps, each scored on it, or null with none rated. */
+const worstOf = (capability: Capability, gaps: Gap[]) =>
+  capability.readiness.gaps.items.reduce<number | null>((top, i) => (gaps.includes(i.item) && i.score !== null && (top === null || i.score > top) ? i.score : top), null);
+
 /*
  * How many outcomes a capability's level expects, how many of those a gap
  * says aren't met, how many a tradeoff says aren't met by choice, how many an
@@ -931,7 +931,7 @@ export function rubricCounts(state: DocketState, capability: Capability) {
   if (!state.rubric || capability.stability === null) return null;
   const standings = state.rubric.qualities
     .flatMap(outcomesOf)
-    .map((o) => outcomeStanding(state, capability, o).standing)
+    .map((o) => capability.outcomes[o.id]?.standing ?? "not-expected")
     .filter((s) => s !== "not-expected");
   const n = (standing: string) => standings.filter((s) => s === standing).length;
   return { count: standings.length, notMet: n("gap"), byChoice: n("tradeoff"), open: n("open"), evidence: n("evidence") };
@@ -949,24 +949,29 @@ const rowName = (p: Persona) => {
 export function PersonaRows({ state, personas, feature, onOpen }: { state: DocketState; personas: Persona[]; feature?: Feature; onOpen: Links["onOpen"] }) {
   return (
     <ul>
-      {personas.map((p) => {
-        const readiness = feature ? readinessOf(state, personaCapabilitiesIn(state, p, feature)) : null;
-        return (
-          <li key={p.id}>
-            <Row
-              icon={<PersonaAvatar persona={p} size={28} />}
-              {...rowName(p)}
-              tags={<InitiativeTags state={state} ids={p.initiatives} plain />}
-              onClick={() => onOpen("persona", p.id)}
-            >
-              {readiness && feature && startedOf(readiness) ? (
-                <ReadinessMark readiness={readiness} of={`${feature.name}'s readiness for ${personaNameAndRole(p).name}`} inButton />
-              ) : null}
-            </Row>
-          </li>
-        );
-      })}
+      {personas.map((p) => (
+        <PersonaRow key={p.id} state={state} persona={p} feature={feature} onOpen={onOpen} />
+      ))}
     </ul>
+  );
+}
+
+/* One persona's row, with how ready `feature` is for them, as the server works it out, when it's given. */
+function PersonaRow({ state, persona: p, feature, onOpen }: { state: DocketState; persona: Persona; feature?: Feature; onOpen: Links["onOpen"] }) {
+  const readiness = useStatusFor(state, feature ? `persona:${p.id},feature:${feature.id}` : null)?.readiness ?? null;
+  return (
+    <li>
+      <Row
+        icon={<PersonaAvatar persona={p} size={28} />}
+        {...rowName(p)}
+        tags={<InitiativeTags state={state} ids={p.initiatives} plain />}
+        onClick={() => onOpen("persona", p.id)}
+      >
+        {readiness && feature && startedOf(readiness) ? (
+          <ReadinessMark readiness={readiness} of={`${feature.name}'s readiness for ${personaNameAndRole(p).name}`} inButton />
+        ) : null}
+      </Row>
+    </li>
   );
 }
 

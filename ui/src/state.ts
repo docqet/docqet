@@ -1,9 +1,10 @@
-import { MATURITY_LEVELS, featureMaturity, maturityBand, projectMaturity } from "./design/maturity/maturity";
+import type { Showing } from "./api";
 import { STABILITY_LEVEL_IDS, type StabilityLevelId } from "./design/stability/stability";
 
 /*
- * The shape of `state.json`, as the spec's "Index output" section describes
- * it, and of the view the page builds from one or more of them (DocketState).
+ * What the pages hold about the product showing (DocketState): each doc, put
+ * together across its projects, with the figures the server works out for
+ * it, as model.ts builds them from the server's resources.
  */
 
 /* A stability level, as state.json and the design components both name it: "ga". */
@@ -97,9 +98,12 @@ export type Domain = Doc & {
   features: string[];
   /* The capabilities in no feature that it builds part of. */
   capabilities: string[];
-  /* 0 to 100, worked out from its parts of features, or null with none. Readers work it out; state.json doesn't say. */
+  /* 0 to 100, from its parts of features, or null with none, as the server works it out. */
   maturity: number | null;
   band: Level | null;
+  /* Every capability with a part in it: how ready, and how exposed. */
+  readiness: Readiness;
+  exposure: Exposure;
 };
 
 /* One domain's part of a feature: the capabilities that domain builds or lists, and its maturity from their levels there. */
@@ -115,6 +119,8 @@ export type Feature = Doc & {
   band: Level | null;
   /* Its tradeoffs: capabilities we've decided never to build, as it declares them. */
   tradeoffs: string[];
+  readiness: Readiness;
+  exposure: Exposure;
 };
 
 export type Capability = Doc & {
@@ -136,6 +142,14 @@ export type Capability = Doc & {
   /* The mechanisms that apply to it and the components that list it, as `mechanism:<id>` or `component:<id>`, worked out from their `capabilities`. */
   builtBy: string[];
   evidence: Evidence;
+  readiness: Readiness;
+  exposure: Exposure;
+  /* Every gap on it, its own and those of what it's built on, scored on it. */
+  risk: RiskAcross<Gap>;
+  left: Left;
+  /* How it stands on each rule it follows, by the rule's ID, and on each of the rubric's outcomes, by the outcome's. */
+  ruleStandings: Record<string, RuleStanding>;
+  outcomes: Record<string, OutcomeStanding>;
 };
 
 /*
@@ -160,6 +174,8 @@ export type TechnicalDoc = Doc & {
   gaps: string[];
   tradeoffs: string[];
   evidence: Evidence;
+  /* What's at stake in its gaps, anywhere they show. */
+  risk: RiskAcross<Gap>;
 };
 
 /*
@@ -185,6 +201,8 @@ export type Rule = Doc & {
   evidence: Evidence;
   /* The gaps that say a capability doesn't hold to it yet, worked out from what they affect. */
   gaps: string[];
+  /* How each capability that follows it stands on it, by the capability's ID. */
+  standings: Record<string, RuleStanding>;
 };
 
 export type Concept = Doc & { capabilities: string[]; rules: string[] };
@@ -204,6 +222,11 @@ export type Persona = Doc & {
   features: string[];
   /* The initiatives it's part of: whose work they're for. In none, it shows only when everything does. */
   initiatives: string[];
+  /* What serves them: how mature, ready and exposed it is. */
+  maturity: number | null;
+  band: Level | null;
+  readiness: Readiness;
+  exposure: Exposure;
 };
 
 /*
@@ -217,6 +240,10 @@ export type Initiative = Doc & {
   features: string[];
   /* Every persona that lists it: who its work is for. */
   personas: string[];
+  maturity: number | null;
+  band: Level | null;
+  readiness: Readiness;
+  exposure: Exposure;
 };
 
 /*
@@ -239,7 +266,7 @@ export type Reach = (typeof REACHES)[number];
 
 export type Gap = {
   id: string;
-  /* Combining adds it: state.json doesn't say, since the file is the project's. */
+  /* The project that declares it. */
   project?: string;
   /* A product gap's domain; a technical gap has none. */
   domain?: string;
@@ -259,6 +286,10 @@ export type Gap = {
   description: string;
   /* Where it shows in the code, from `docket:gap` annotations. */
   places: EvidencePlace[];
+  /* What's at stake in leaving it open, what it affects, and the open decisions that affect it. */
+  risk: Risk;
+  affected: Affected[];
+  decisions: HeldDecision[];
 };
 
 /* A tradeoff: what we chose, its benefit, and its drawback. On a capability, feature, mechanism or component; its ID is as a gap's. */
@@ -277,6 +308,8 @@ export type Tradeoff = {
   drawback: string;
   /* The code it explains, from `docket:tradeoff` annotations. */
   places: EvidencePlace[];
+  affected: Affected[];
+  decisions: HeldDecision[];
 };
 
 /* The expected outcomes a gap, tradeoff or decision affects, as `outcome:<quality>/<level>/<id>`. */
@@ -344,9 +377,16 @@ export type DocketState = {
   problems: Problem[];
   /* The rubric, the same for every project: the first project's, or null if none has one. */
   rubric: Rubric | null;
+  /* Everything showing at a glance: its maturity, readiness and exposure, and what's at stake in every gap. */
+  status: Status;
+  /* What's showing, as the server was asked for it, to ask it more. */
+  showing: Showing;
 };
 
-/* A place where software is defined, as its state.json's header has it, with its maturity, worked out from its features alone. */
+/* What's showing at a glance, as the server works it out. */
+export type Status = { maturity: number | null; band: Level | null; readiness: Readiness; exposure: Exposure; risk: RiskAcross<Gap> };
+
+/* A place where software is defined, with its maturity from its features alone, as the server works it out. */
 export type Project = {
   id: string;
   name: string;
@@ -358,69 +398,8 @@ export type Project = {
   band: Level | null;
 };
 
-/* A doc as one project's state.json has it: its contribution in one domain, with links as declared. */
-type Raw<T extends Doc> = Omit<T, "from" | "levels" | "parts" | "project" | "builtBy">;
-
-/* One project's state.json, as the indexer writes it. */
-export type StateFile = {
-  docket: string;
-  project: { id: string; name: string };
-  /* Missing when the project declares no product, and from state written before products. */
-  product?: { id: string; name: string };
-  commit: string;
-  indexedAt: string;
-  /* Its counts, such as capabilities at each level. The page works out its own, so it reads none of them. */
-  summary?: { capabilities?: Record<Level | "draft", number> };
-  /* Each of its domain docs. A domain is its own domain, so these have no `domain`. */
-  domains: Omit<Raw<Domain>, "domain" | "features" | "capabilities">[];
-  /* `tradeoffs` is missing from state written before tradeoffs. */
-  features: (Omit<Raw<Feature>, "tradeoffs"> & { tradeoffs?: string[] })[];
-  /* A draft's `stability` is "draft". */
-  /* `initiatives` is missing from state written before initiatives. */
-  capabilities: (Omit<Raw<Capability>, "stability" | "tradeoffs" | "initiatives"> & { stability: Level | "draft"; tradeoffs?: string[]; initiatives?: string[] })[];
-  rules: Omit<Raw<Rule>, "gaps">[];
-  concepts: Raw<Concept>[];
-  /* Personas aren't in a domain, so these have no `domain`. Missing from state written before personas. */
-  /* A persona's `initiatives` is missing from state written before them. */
-  personas?: (Omit<Raw<Persona>, "domain" | "initiatives"> & { initiatives?: string[] })[];
-  /* Initiatives aren't in a domain either. Missing from state written before initiatives. */
-  initiatives?: Omit<Raw<Initiative>, "domain">[];
-  /* Technical docs aren't in a domain either. Missing from state written before them, as is `tradeoffs`. */
-  /* `applies` is missing from state written before it, meaning "project". */
-  mechanisms?: (Omit<Raw<TechnicalDoc>, "domain" | "kind" | "applies"> & { applies?: "project" | "product" })[];
-  components?: Omit<Raw<TechnicalDoc>, "domain" | "kind" | "applies">[];
-  /* `impact`, `likelihood` and `reach` are missing from state written before them. */
-  gaps: (Omit<Gap, "impact" | "likelihood" | "reach"> & Partial<Gap>)[];
-  /* State written before a tradeoff had one benefit and one drawback has lists of each instead. */
-  tradeoffs?: (Omit<Tradeoff, "benefit" | "drawback"> & Partial<Tradeoff> & { benefits?: string[]; drawbacks?: string[] })[];
-  problems: Problem[];
-  /* Missing from state written before the rubric. */
-  rubric?: Rubric;
-};
-
-/* A project's header, from its state.json. Its maturity is worked out once its features are put together (see combine). */
-export const projectOf = (file: StateFile): Project => ({
-  ...file.project,
-  product: file.product ?? file.project,
-  commit: file.commit,
-  indexedAt: file.indexedAt,
-  maturity: null,
-  band: null,
-});
-
 /* Projects that are shown together, as one product: those that declare the same product. */
 export type Product = { id: string; name: string; projects: Project[] };
-
-/* Every product, in the order their first projects are read, each with its projects in order. Its name is its first project's to say. */
-export function productsOf(all: Project[]): Product[] {
-  const products: Product[] = [];
-  for (const p of all) {
-    const product = products.find((x) => x.id === p.product.id);
-    if (product) product.projects.push(p);
-    else products.push({ ...p.product, projects: [p] });
-  }
-  return products;
-}
 
 const LEVEL_ORDER: readonly Level[] = STABILITY_LEVEL_IDS;
 
@@ -433,417 +412,12 @@ export const bareId = (id: string) => (id.includes("@") ? id.slice(0, id.lastInd
 /* The rule or concept a link from a doc in `domain` means, keyed as combining keys them: the domain it names, else its own. */
 const inDomain = (link: string, domain: string) => (link.includes("@") ? link : `${link}@${domain}`);
 
-/* A reference's ID, keeping any `@<domain>`: `rule:no-double-booking` is `no-double-booking`. */
-const idOf = (ref: string) => ref.slice(ref.indexOf(":") + 1);
-
-/*
- * One project's state with its links as IDs. State.json writes every link as
- * a reference, `<type>:<id>`, as the docs do, and the page keys each doc by its
- * ID in its type's list, so it reads the links it resolves by ID alone. A
- * problem's `subject` names several types, so it stays a reference.
- */
-function linksById(file: StateFile): StateFile {
-  const ids = (refs: string[] | undefined) => (refs ?? []).map(idOf);
-  const capabilities = <T extends { capabilities: string[] }>(e: T) => ({ ...e, capabilities: ids(e.capabilities) });
-  return {
-    ...file,
-    features: file.features.map(capabilities),
-    capabilities: file.capabilities.map((c) => ({ ...c, personas: ids(c.personas), initiatives: ids(c.initiatives), rules: ids(c.rules), concepts: ids(c.concepts) })),
-    rules: file.rules.map((r) => ({ ...r, concepts: ids(r.concepts) })),
-    personas: file.personas?.map((p) => ({ ...p, initiatives: ids(p.initiatives) })),
-    concepts: file.concepts.map((c) => (c.confusedWith ? { ...c, confusedWith: c.confusedWith.map((w) => ({ ...w, concept: w.concept && idOf(w.concept) })) } : c)),
-    mechanisms: file.mechanisms?.map(capabilities),
-    components: file.components?.map(capabilities),
-    problems: file.problems.map((p) => ({ ...p, capabilities: ids(p.capabilities) })),
-  };
-}
-
-/* Add one project's evidence, missing from state written before evidence, without repeating a place a doc's other entry already added. */
-const addEvidence = (into: Evidence, from: Evidence | undefined, project: string) => {
-  for (const verb of ["implements", "verifies"] as const)
-    for (const e of from?.[verb] ?? [])
-      if (!into[verb].some((x) => x.project === project && x.file === e.file && x.line === e.line)) into[verb].push({ ...e, project });
-};
-
-/* Add what isn't there yet, keeping the order. */
-const union = (into: string[], ids: string[]) => {
-  for (const id of ids) if (!into.includes(id)) into.push(id);
-};
-
-const band = (m: number | null) => (m === null ? null : maturityBand(m));
-
-/*
- * What the chosen projects define, from each one's state, as one, the
- * way the spec's "Combining" says, so the map, search and panels show one
- * picture of the product:
- *
- * - Domains, features and capabilities are one across everything, so
- *   contributions with the same ID are put together, their links combined.
- *   Features and capabilities span domains: each domain that writes one has
- *   a part in it, and a capability keeps its level in each.
- * - Rules and concepts are their domain's, keyed `<id>@<domain>`, so the same
- *   ID in two domains is two definitions. A link to one means the domain it
- *   names, else its own domain's.
- *
- * Then reverse links, parts and maturity are worked out again across
- * everything, and the contradictions between contributions become problems.
- */
-// docket:implements capability:product-view component:ui rule:contradictions-shown@reporting
-export function combine(files: StateFile[]): DocketState {
-  const state: DocketState = {
-    projects: [],
-    domains: [],
-    features: [],
-    capabilities: [],
-    rules: [],
-    concepts: [],
-    personas: [],
-    initiatives: [],
-    mechanisms: [],
-    components: [],
-    gaps: [],
-    tradeoffs: [],
-    problems: [],
-    rubric: files.find((f) => f.rubric)?.rubric ?? null,
-  };
-  /* Rule and concept links as declared, to resolve once every domain is in. */
-  const pending: { from: Doc & { rules?: string[]; concepts: string[] }; domain: string; rules: string[]; concepts: string[] }[] = [];
-  /* Who lists what, to find a capability in two features. */
-  const listings = new Map<string, { parent: string; project: string }[]>();
-  const listed = (child: string, parent: string, project: string) =>
-    listings.set(child, [...(listings.get(child) ?? []), { parent, project }]);
-  /* Which capabilities each domain lists in each feature. */
-  const featureLists = new Map<string, { domain: string; capabilities: string[] }[]>();
-  /* What each product's projects serve, and the mechanisms that apply across one, to put together once every project is in. */
-  const productServes = new Map<string, string[]>();
-  const acrossProduct: { doc: TechnicalDoc; product: string }[] = [];
-
-  /* Add one project's contribution to the doc with this ID, making it if it's the first. */
-  function contribute<T extends Doc>(list: T[], id: string, project: string, raw: Omit<Raw<Doc>, "domain"> & { domain: string }, make: (base: Doc) => T): T {
-    const from: Contribution = { project, domain: raw.domain, file: raw.file, name: raw.name, description: raw.description, body: raw.body ?? "" };
-    for (const key of FIELD_KEYS) if (key in raw) Object.assign(from, { [key]: raw[key] });
-    /*
-     * State written when decisions could close keeps answered ones, which
-     * aren't decisions any more. A gap or tradeoff a decision affects is its
-     * project's, as the docs' lists of them are.
-     */
-    if (from.decisions)
-      from.decisions = (from.decisions as (Omit<Decision, "affects"> & { status?: string; affects?: string[] })[])
-        .filter((d) => d.status !== "closed")
-        .map((d) => ({
-          topic: d.topic ?? null,
-          question: d.question,
-          affects: (d.affects ?? []).map((ref) => (ref.startsWith("outcome:") ? ref : `${ref}@${project}`)),
-        }));
-    if ("role" in raw || "title" in raw) {
-      const who = raw as { role?: string | null; title?: string | null };
-      from.role = who.role ?? null;
-      from.title = who.title ?? null;
-    }
-    let doc = find(list, id);
-    if (!doc) {
-      doc = make({ ...from, id, from: [] });
-      list.push(doc);
-    }
-    doc.from.push(from);
-    return doc;
-  }
-  const newDomain = (base: Doc): Domain => ({ ...base, features: [], capabilities: [], maturity: null, band: null });
-
-  for (const file of files.map(linksById)) {
-    const project = file.project.id;
-    const product = projectOf(file).product.id;
-    state.projects.push(projectOf(file));
-    /* What a project serves, as a mechanism's `capabilities` are worked out: what it declares, other than drafts, and what its components list. */
-    const serves = productServes.get(product) ?? [];
-    union(serves, file.capabilities.filter((c) => c.stability !== "draft").map((c) => c.id));
-    for (const c of file.components ?? []) union(serves, c.capabilities);
-    productServes.set(product, serves);
-    for (const d of file.domains) contribute(state.domains, d.id, project, { ...d, domain: d.id }, newDomain);
-    /* A gap's or tradeoff's ID is its project's, as the docs' lists below name them. */
-    const own = (ids: string[] | undefined) => (ids ?? []).map((id) => `${id}@${project}`);
-    for (const f of file.features) {
-      const feature = contribute(state.features, f.id, project, f, (base) => ({ ...base, capabilities: [], parts: [], maturity: null, band: null, tradeoffs: [] }));
-      union(feature.capabilities, f.capabilities);
-      union(feature.tradeoffs, own(f.tradeoffs));
-      for (const c of f.capabilities) listed(`capability:${c}`, f.id, project);
-      featureLists.set(f.id, [...(featureLists.get(f.id) ?? []), { domain: f.domain, capabilities: f.capabilities }]);
-    }
-    for (const c of file.capabilities) {
-      const level = c.stability === "draft" ? null : c.stability;
-      const capability = contribute(state.capabilities, c.id, project, c, (base) => ({
-        ...base,
-        personas: [],
-        initiatives: [],
-        stability: level,
-        levels: [],
-        feature: null,
-        rules: [],
-        concepts: [],
-        gaps: [],
-        tradeoffs: [],
-        builtBy: [],
-        evidence: { implements: [], verifies: [] },
-      }));
-      addEvidence(capability.evidence, c.evidence, project);
-      capability.levels.push({ project, domain: c.domain, level });
-      union(capability.personas, c.personas ?? []);
-      union(capability.initiatives, c.initiatives ?? []);
-      union(capability.gaps, own(c.gaps));
-      union(capability.tradeoffs, own(c.tradeoffs));
-      pending.push({ from: capability, domain: c.domain, rules: c.rules, concepts: c.concepts });
-    }
-    for (const r of file.rules) {
-      const rule = contribute(state.rules, `${r.id}@${r.domain}`, project, r, (base) => ({
-        ...base,
-        capabilities: [],
-        concepts: [],
-        evidence: { implements: [], verifies: [] },
-        gaps: [],
-      }));
-      addEvidence(rule.evidence, r.evidence, project);
-      pending.push({ from: rule, domain: r.domain, rules: [], concepts: r.concepts });
-    }
-    for (const c of file.concepts) {
-      contribute(state.concepts, `${c.id}@${c.domain}`, project, c, (base) => ({ ...base, capabilities: [], rules: [] }));
-    }
-    /* A persona is in no domain; its contributions are told apart by project, as a domain's are. */
-    for (const p of file.personas ?? []) {
-      const persona = contribute(state.personas, p.id, project, { ...p, domain: "" }, (base) => ({
-        ...base,
-        role: p.role ?? null,
-        title: p.title ?? null,
-        image: p.image ?? null,
-        capabilities: [],
-        features: [],
-        initiatives: [],
-      }));
-      union(persona.initiatives, p.initiatives ?? []);
-    }
-    /* An initiative is in no domain either. */
-    for (const i of file.initiatives ?? []) {
-      contribute(state.initiatives, i.id, project, { ...i, domain: "" }, (base) => ({ ...base, capabilities: [], features: [], personas: [] }));
-    }
-    /* Mechanisms and components are in no domain; their contributions are told apart by project, as a persona's are. */
-    for (const kind of ["mechanism", "component"] as const) {
-      const entries =
-        kind === "mechanism"
-          ? (file.mechanisms ?? []).map((e) => ({ ...e, applies: e.applies ?? ("project" as const) }))
-          : (file.components ?? []).map((e) => ({ ...e, applies: "project" as const }));
-      for (const e of entries) {
-        const doc = contribute(kind === "mechanism" ? state.mechanisms : state.components, e.id, project, { ...e, domain: "" }, (base) => ({
-          ...base,
-          kind,
-          applies: "project" as const,
-          capabilities: [],
-          meets: [],
-          gaps: [],
-          tradeoffs: [],
-          evidence: { implements: [], verifies: [] },
-        }));
-        union(doc.capabilities, e.capabilities);
-        if (e.applies === "product") {
-          doc.applies = "product";
-          acrossProduct.push({ doc, product });
-        }
-        union(doc.meets, e.meets);
-        union(doc.gaps, own(e.gaps));
-        union(doc.tradeoffs, own(e.tradeoffs));
-        addEvidence(doc.evidence, e.evidence, project);
-      }
-    }
-    /* Each place in the code a gap or tradeoff names says which repository it's in, as evidence does. */
-    const placed = (places: EvidencePlace[] | undefined) => (places ?? []).map((p) => ({ ...p, project }));
-    state.gaps.push(...file.gaps.map((g) => ({ ...g, affects: g.affects ?? [], impact: g.impact ?? null, likelihood: g.likelihood ?? null, reach: g.reach ?? null, project, id: `${g.id}@${project}`, places: placed(g.places) })));
-    state.tradeoffs.push(
-      ...(file.tradeoffs ?? []).map(({ benefits, drawbacks, ...t }) => ({
-        ...t,
-        affects: t.affects ?? [],
-        benefit: t.benefit ?? (benefits?.length ? benefits.join(" ") : null),
-        drawback: t.drawback ?? (drawbacks ?? []).join(" "),
-        project,
-        id: `${t.id}@${project}`,
-        places: placed(t.places),
-      })),
-    );
-    /* A rule or concept a problem names is its domain's. */
-    const subject = (p: Problem) => {
-      const type = p.subject.slice(0, p.subject.indexOf(":"));
-      return (type === "rule" || type === "concept") && p.domain ? `${p.subject}@${p.domain}` : p.subject;
-    };
-    state.problems.push(...file.problems.map((p) => ({ ...p, subject: subject(p) })));
-  }
-
-  /* A domain docs are written in, with no domain doc showing, still gets a place, named by its ID. */
-  for (const doc of [...state.features, ...state.capabilities, ...state.rules, ...state.concepts]) {
-    for (const f of doc.from) {
-      if (!find(state.domains, f.domain)) {
-        state.domains.push(newDomain({ id: f.domain, project: f.project, domain: f.domain, file: "", name: f.domain, body: "", from: [] }));
-      }
-    }
-  }
-
-  const projectName = (id: string) => find(state.projects, id)?.name ?? id;
-
-  /* Links to rules and concepts: the domain named, else its own. */
-  for (const p of pending) {
-    const resolve = (list: Doc[], link: string): string[] => {
-      const id = inDomain(link, p.domain);
-      return find(list, id) ? [id] : [];
-    };
-    if ("rules" in p.from && p.from.rules) union(p.from.rules, p.rules.flatMap((l) => resolve(state.rules, l)));
-    union(p.from.concepts, p.concepts.flatMap((l) => resolve(state.concepts, l)));
-  }
-
-  /* A mechanism that applies across its product applies to what every project on it serves, which no one project's indexer can see. */
-  for (const { doc, product } of acrossProduct) union(doc.capabilities, productServes.get(product) ?? []);
-
-  /* Reverse links, worked out again across everything. */
-  for (const c of state.capabilities) {
-    for (const id of c.rules) union(find(state.rules, id)?.capabilities ?? [], [c.id]);
-    for (const id of c.concepts) union(find(state.concepts, id)?.capabilities ?? [], [c.id]);
-  }
-  for (const r of state.rules) for (const id of r.concepts) union(find(state.concepts, id)?.rules ?? [], [r.id]);
-  for (const e of [...state.mechanisms, ...state.components]) {
-    for (const id of e.capabilities) union(find(state.capabilities, id)?.builtBy ?? [], [`${e.kind}:${e.id}`]);
-  }
-  /*
-   * A rule a gap affects means the domain it names, else its own, as a
-   * capability's link to one does. One that isn't there is left out.
-   */
-  for (const g of state.gaps) {
-    g.affects = g.affects.flatMap((ref) => {
-      if (!ref.startsWith("rule:")) return [ref];
-      const rule = find(state.rules, inDomain(idOf(ref), g.domain ?? ""));
-      if (!rule) return [];
-      union(rule.gaps, [g.id]);
-      return [`rule:${rule.id}`];
-    });
-  }
-
-  /* Which feature each capability is in: the first listing, with a contradiction when projects list it in different ones. */
-  for (const c of state.capabilities) {
-    const all = listings.get(`capability:${c.id}`) ?? [];
-    const parents = [...new Set(all.map((l) => l.parent))];
-    if (parents.length > 1 && new Set(all.map((l) => l.project)).size > 1) {
-      state.problems.push({
-        type: "in-two-features",
-        subject: `capability:${c.id}`,
-        capabilities: [c.id],
-        message: `Listed in ${parents.length} features: ${all.map((l) => `${l.parent} in ${projectName(l.project)}`).join(", ")}.`,
-      });
-    }
-    c.feature = parents[0] ?? null;
-    c.stability = c.levels.reduce((low, l) => (rank(l.level) < rank(low) ? l.level : low), c.levels[0].level);
-  }
-
-  /*
-   * Each feature's part in each domain: the capabilities that domain builds,
-   * or lists in its own doc of the feature, with its maturity from their
-   * levels in that domain alone. The feature's own maturity spans its
-   * domains, so it counts each capability once, at its level in short.
-   */
-  const levelsIn = (id: string, domain?: string) =>
-    (find(state.capabilities, id)?.levels ?? []).filter((l) => !domain || l.domain === domain).map((l) => l.level);
-  for (const f of state.features) {
-    const domains: string[] = [];
-    for (const l of featureLists.get(f.id) ?? []) union(domains, [l.domain]);
-    for (const id of f.capabilities) union(domains, (find(state.capabilities, id)?.levels ?? []).map((l) => l.domain));
-    for (const domain of domains) {
-      const listedThere = (featureLists.get(f.id) ?? []).filter((l) => l.domain === domain).flatMap((l) => l.capabilities);
-      const capabilities = f.capabilities.filter((id) => listedThere.includes(id) || levelsIn(id, domain).length);
-      const maturity = featureMaturity(capabilities.flatMap((id) => levelsIn(id, domain)));
-      f.parts.push({ domain, capabilities, maturity, band: band(maturity) });
-      union(find(state.domains, domain)?.features ?? [], [f.id]);
-    }
-    f.maturity = featureMaturity(f.capabilities.flatMap((id) => find(state.capabilities, id)?.stability ?? []));
-    f.band = band(f.maturity);
-  }
-  for (const c of state.capabilities) {
-    if (!c.feature) for (const l of c.levels) union(find(state.domains, l.domain)?.capabilities ?? [], [c.id]);
-  }
-  /* Each persona's capabilities, and the features those are in. */
-  for (const c of state.capabilities) for (const id of c.personas) union(find(state.personas, id)?.capabilities ?? [], [c.id]);
-  for (const p of state.personas) {
-    union(p.features, state.features.filter((f) => p.capabilities.some((id) => f.capabilities.includes(id))).map((f) => f.id));
-  }
-  /* Each initiative's capabilities, and the features those are in. */
-  for (const c of state.capabilities) for (const id of c.initiatives) union(find(state.initiatives, id)?.capabilities ?? [], [c.id]);
-  for (const p of state.personas) for (const id of p.initiatives) union(find(state.initiatives, id)?.personas ?? [], [p.id]);
-  for (const i of state.initiatives) {
-    union(i.features, state.features.filter((f) => i.capabilities.some((id) => f.capabilities.includes(id))).map((f) => f.id));
-  }
-  for (const d of state.domains) {
-    d.maturity = projectMaturity(d.features.map((id) => partOf(find(state.features, id), d.id)?.maturity ?? null));
-    d.band = band(d.maturity);
-  }
-  /* Each project's maturity, from its features alone: with several, each project is put together again on its own. */
-  for (const p of state.projects) {
-    p.maturity = files.length === 1 ? maturityOf(state) : maturityOf(combine(files.filter((f) => f.project.id === p.id)));
-    p.band = band(p.maturity);
-  }
-
-  /* Contradictions: a product doc whose name or description differs between contributions, or a rule or concept within one domain, where a rule is its name and body. */
-  const differing = (type: string, docs: Doc[]) => {
-    for (const doc of docs) {
-      const said = new Set(doc.from.map((f) => [f.name, f.role ?? "", f.title ?? "", f.description ?? "", type === "rule" ? f.body : ""].join("\n")));
-      if (said.size < 2) continue;
-      const who = list_(docProjects(doc).map(projectName));
-      state.problems.push({
-        type: "contradiction",
-        subject: `${type}:${doc.id}`,
-        capabilities: type === "capability" ? [doc.id] : [],
-        message: `${who} describe ${doc.name} differently.`,
-      });
-    }
-  };
-  differing("domain", state.domains);
-  differing("feature", state.features);
-  differing("capability", state.capabilities);
-  differing("rule", state.rules);
-  differing("concept", state.concepts);
-  differing("persona", state.personas);
-  differing("initiative", state.initiatives);
-  differing("mechanism", state.mechanisms);
-  differing("component", state.components);
-
-  /* A gap's or tradeoff's ID means one, so two projects declaring the same one is a duplicate. Within a project, its indexer reports it. */
-  const declaredBy = new Map<string, string[]>();
-  for (const g of [...state.gaps, ...state.tradeoffs]) {
-    const ref = g.id.slice(0, g.id.lastIndexOf("@"));
-    declaredBy.set(ref, [...(declaredBy.get(ref) ?? []), g.project ?? ""]);
-  }
-  for (const [ref, projects] of declaredBy) {
-    const by = [...new Set(projects)];
-    if (by.length < 2) continue;
-    const doc = ref.slice(0, ref.indexOf("#"));
-    state.problems.push({
-      type: "duplicate-id",
-      subject: doc,
-      capabilities: doc.startsWith("capability:") ? [doc.slice(doc.indexOf(":") + 1)] : [],
-      message: `${list_(by.map(projectName))} each declare ${ref}. Give one of them another key.`,
-    });
-  }
-  return state;
-}
-
-/* "A", "A and B", "A, B and C". */
-const list_ = (names: string[]) =>
-  names.length > 1 ? `${names.slice(0, -1).join(", ")} and ${names[names.length - 1]}` : (names[0] ?? "");
-
 /* The projects that contribute to a doc, each once, in order. */
 export const docProjects = (doc: Doc) => [...new Set(doc.from.map((f) => f.project))];
 /* The domains a doc is written in, each once, in order. */
 export const docDomains = (doc: Doc) => [...new Set(doc.from.map((f) => f.domain))];
 export const domainName = (state: DocketState, id: string) => find(state.domains, id)?.name ?? id;
 export const projectName = (state: DocketState, id: string) => find(state.projects, id)?.name ?? id;
-
-/*
- * The maturity of everything showing, one project or several: from its
- * features' maturities, each weighted as a capability in its band would be,
- * so a capability that spans domains counts once.
- */
-export const maturityOf = (state: DocketState): number | null => projectMaturity(state.features.map((f) => f.maturity));
 
 /* A feature's part in a domain, if it has one. */
 export const partOf = (feature: Feature | undefined, domain: string) => feature?.parts.find((p) => p.domain === domain);
@@ -857,13 +431,6 @@ export function domainCapabilities(state: DocketState, domain: Domain): Capabili
   return capabilitiesById(state, [...new Set(ids)]);
 }
 
-/* The capabilities in a feature that serve a persona. */
-export const personaCapabilitiesIn = (state: DocketState, persona: Persona, feature: Feature) =>
-  capabilitiesById(state, feature.capabilities.filter((id) => persona.capabilities.includes(id)));
-
-/* The capabilities a project contributes to, each judged as a whole. */
-export const projectCapabilities = (state: DocketState, project: string) => state.capabilities.filter((c) => c.from.some((f) => f.project === project));
-
 /* The contradictions a doc has, and gap or tradeoff IDs its projects both declare, as combining found them. */
 export const contradictionsOf = (state: DocketState, type: string, id: string) =>
   state.problems.filter(
@@ -871,27 +438,6 @@ export const contradictionsOf = (state: DocketState, type: string, id: string) =
       (p.type === "contradiction" || p.type === "duplicate-id" || p.type === "in-two-features") &&
       p.subject === `${type}:${id}`,
   );
-
-const isJson = (response: Response) => response.headers.get("content-type")?.includes("json") ?? false;
-
-/*
- * Where each project's state.json is, relative to the page, as
- * `projects.json` beside it lists them. With no such file, the page shows the
- * one `state.json` beside it, so the list is empty.
- */
-export async function loadProjects(): Promise<string[]> {
-  const response = await fetch("./projects.json", { cache: "no-store" });
-  /* Some servers answer a missing file with the page itself. */
-  if (response.status === 404 || (response.ok && !isJson(response))) return [];
-  if (!response.ok) throw new Error(`projects.json: ${response.status} ${response.statusText}`);
-  return ((await response.json()) as { projects: { state: string }[] }).projects.map((p) => p.state);
-}
-
-export async function loadState(path = "./state.json"): Promise<StateFile> {
-  const response = await fetch(path, { cache: "no-store" });
-  if (!response.ok) throw new Error(`${path}: ${response.status} ${response.statusText}`);
-  return (await response.json()) as StateFile;
-}
 
 export function find<T extends { id: string }>(list: T[], id: string): T | undefined {
   return list.find((item) => item.id === id);
@@ -966,7 +512,7 @@ export function pickName(state: DocketState, pick: Pick): string {
 
 /*
  * Capabilities grouped by the feature they're in, features in the order
- * state.json lists them, then those in no feature under null.
+ * the server lists them, then those in no feature under null.
  */
 export function byFeature(state: DocketState, capabilityIds: string[]): { feature: Feature | null; capabilities: Capability[] }[] {
   const capabilities = capabilityIds.flatMap((id) => find(state.capabilities, id) ?? []);
@@ -1030,7 +576,6 @@ export function filterBy(state: DocketState, picks: Pick[]): MapFilter | null {
   return { capabilities, cards };
 }
 
-
 const levelIndex = (level: Level) => LEVEL_ORDER.indexOf(level);
 
 /* Whether an expected outcome applies at a level: from its own level up, through `until` where it has one. A draft claims none. */
@@ -1093,20 +638,6 @@ export function affectedBy(state: DocketState, item: { affects: string[] }): Aff
 /* An open decision, with the doc it's held on. */
 export type HeldDecision = { decision: Decision; on: DecisionHolder };
 
-/* The open decisions that affect a gap or tradeoff, by its ID, each with the doc it's held on: what it waits on, or what reopens it. */
-export function decisionsAffecting(state: DocketState, id: string): HeldDecision[] {
-  const holders: [DecisionHolder["kind"], Doc[]][] = [
-    ["domain", state.domains],
-    ["feature", state.features],
-    ["capability", state.capabilities],
-    ["mechanism", state.mechanisms],
-    ["component", state.components],
-  ];
-  return holders.flatMap(([kind, docs]) =>
-    docs.flatMap((doc) => openDecisions(doc).flatMap((decision) => (decision.affects.includes(id) ? [{ decision, on: { kind, doc } }] : []))),
-  );
-}
-
 /* The concept a link from a doc in `domain` means: the one in the domain it names with `@<domain>`, else its own domain's. */
 export const conceptLinked = (state: DocketState, link: string, domain: string): Concept | undefined => find(state.concepts, inDomain(link, domain));
 
@@ -1119,10 +650,6 @@ export const conceptLinked = (state: DocketState, link: string, domain: string):
  * follows it.
  */
 export type RuleStanding = "gap" | "evidence" | "trust";
-export const ruleStanding = (capability: Capability, rule: Rule): RuleStanding =>
-  rule.gaps.some((id) => capability.gaps.includes(id)) ? "gap" : hasEvidence(rule.evidence) ? "evidence" : "trust";
-
-export const hasEvidence = (evidence: Evidence) => evidence.verifies.length > 0 || evidence.implements.length > 0;
 
 /* A technical gap under a capability: the gap, and the mechanism or component it's on. */
 export type TechnicalGap = { gap: Gap; on: TechnicalDoc };
@@ -1148,15 +675,6 @@ export function technicalDoc(state: DocketState, ref: string): TechnicalDoc | un
 /* What a capability is built on: the mechanisms and components that list it. */
 export const builtOn = (state: DocketState, capability: Capability) => capability.builtBy.flatMap((ref) => technicalDoc(state, ref) ?? []);
 
-/* With `technical` false, as for a persona, only what someone using the product would notice. */
-export function leftIn(state: DocketState, capability: Capability, technical = true): Left {
-  return {
-    decisions: openDecisions(capability),
-    gaps: gapsById(state, capability.gaps),
-    technical: technical ? builtOn(state, capability).flatMap((on) => gapsById(state, on.gaps).map((gap) => ({ gap, on }))) : [],
-  };
-}
-
 export const leftCount = (left: Left) => left.decisions.length + left.gaps.length + left.technical.length;
 
 /*
@@ -1176,70 +694,6 @@ export type OutcomeStanding = {
   decisions: Decision[];
   by: TechnicalDoc[];
 };
-
-export function outcomeStanding(state: DocketState, capability: Capability, outcome: ExpectedOutcome): OutcomeStanding {
-  const on = builtOn(state, capability);
-  const affects = (item: { affects: string[] }) => item.affects.includes(outcome.id);
-  const gaps = [...gapsById(state, capability.gaps), ...on.flatMap((e) => gapsById(state, e.gaps))].filter(affects);
-  const tradeoffs = [...tradeoffsById(state, capability.tradeoffs), ...on.flatMap((e) => tradeoffsById(state, e.tradeoffs))].filter(affects);
-  const decisions = [...openDecisions(capability), ...on.flatMap(openDecisions)].filter(affects);
-  const by = on.filter((e) => e.meets.includes(outcome.id));
-  const standing = !appliesAt(outcome, capability.stability)
-    ? "not-expected"
-    : gaps.length
-      ? "gap"
-      : tradeoffs.length
-        ? "tradeoff"
-        : decisions.length
-          ? "open"
-          : by.length
-            ? "evidence"
-            : "trust";
-  return { standing, gaps, tradeoffs, decisions, by };
-}
-
-/* ——— Risk ——— */
-
-/*
- * The capabilities a gap or tradeoff shows on: its capability's own, or
- * every capability its mechanism or component serves, or a feature's
- * capabilities for a feature's tradeoff.
- */
-export function showsOn(state: DocketState, item: { id: string }): Capability[] {
-  const { type, id } = subjectOf(item);
-  if (type === "capability") return find(state.capabilities, id) ? [find(state.capabilities, id)!] : [];
-  const ids = type === "feature" ? find(state.features, id)?.capabilities : technicalDoc(state, `${type}:${id}`)?.capabilities;
-  return (ids ?? []).flatMap((c) => find(state.capabilities, c) ?? []);
-}
-
-/*
- * What's at stake in leaving a gap open, as the spec's Risk
- * section works it out, on each capability it shows on: what the gap could
- * do, its impact's step times its likelihood times its reach, times how much
- * people rely on what it's in, that capability's level's weight in risk,
- * times its level's claim factor where it breaks a claim that level makes,
- * affecting a rule the capability follows or an outcome its level expects.
- * That's put on 0 to 100 by a log scale, so each step adds a steady amount:
- * 0 is a certain negligible gap reaching all on a Prototype, and 100 a
- * certain damaging gap reaching all and breaking a claim on GA. Less likely or reaching fewer,
- * it scores lower, and never below 0. A draft weighs nothing, and scores 0.
- * Its risk is the highest of those, or null with no impact rated; its
- * verdict, the third of the scale that falls in; its spread, how its
- * scores spread across the capabilities, highest first. A tradeoff has none:
- * it's chosen.
- */
-export const IMPACT_STEPS: Record<Impact, number> = { negligible: 1, inconvenient: 2, blocking: 3, damaging: 4 };
-/* Each step down takes off a quarter. */
-export const LIKELIHOOD_FACTORS: Record<Likelihood, number> = { certain: 1, expected: 0.75, possible: 0.5, unlikely: 0.25 };
-export const REACH_FACTORS: Record<Reach, number> = { all: 1, most: 0.75, some: 0.5, few: 0.25 };
-/* How much more a gap weighs where it breaks a claim, by the level that makes it: the more people are entitled to rely on a claim, the more breaking it costs. */
-export const CLAIM_FACTORS: Record<Level, number> = { prototype: 1, alpha: 1.125, beta: 1.25, ga: 1.5 };
-/* How much people are entitled to rely on each level, and how exposed they are to its gaps. A draft weighs nothing. Risk's own, apart from maturity's. */
-export const RISK_WEIGHTS: Record<Level, number> = { prototype: 2, alpha: 3, beta: 4, ga: 6 };
-/* The raw scores that are 0 and 100: a certain negligible gap reaching all on a Prototype, and a certain damaging gap reaching all and breaking a claim on GA. */
-const RAW_MIN = IMPACT_STEPS.negligible * RISK_WEIGHTS.prototype;
-const RAW_MAX = IMPACT_STEPS.damaging * RISK_WEIGHTS.ga * CLAIM_FACTORS.ga;
-const onScale = (raw: number) => (raw > 0 ? Math.max(0, Math.round((Math.log(raw / RAW_MIN) / Math.log(RAW_MAX / RAW_MIN)) * 100)) : 0);
 
 /* Whether leaving it open is acceptable, by the third of the scale its risk falls in, worst first. */
 export const VERDICTS = ["unacceptable", "tolerable", "acceptable"] as const;
@@ -1276,46 +730,6 @@ export type Risk = {
   spread: { score: number; capabilities: number }[];
 };
 
-/* How a gap scores on one capability, as riskOf works it out. */
-function riskOn(state: DocketState, item: Gap): (capability: Capability) => RiskOn {
-  const outcomes = outcomesAffected(item).flatMap((id) => expectedOutcome(state.rubric, id)?.outcome ?? []);
-  const rules = rulesAffected(item);
-  const impact = item.impact ? IMPACT_STEPS[item.impact] : 0;
-  const likelihood = LIKELIHOOD_FACTORS[item.likelihood ?? "certain"];
-  const reach = REACH_FACTORS[item.reach ?? "all"];
-  return (capability) => {
-    const weight = capability.stability ? RISK_WEIGHTS[capability.stability] : 0;
-    const claim = weight > 0 && (rules.some((r) => capability.rules.includes(r)) || outcomes.some((o) => appliesAt(o, capability.stability)));
-    const claimFactor = claim && capability.stability ? CLAIM_FACTORS[capability.stability] : 1;
-    const raw = impact * likelihood * reach * weight * claimFactor;
-    return { capability, impact, likelihood, reach, weight, claim, claimFactor, raw, score: onScale(raw) };
-  };
-}
-
-export function riskOf(state: DocketState, item: Gap): Risk {
-  const on = showsOn(state, item)
-    .map(riskOn(state, item))
-    .sort((a, b) => b.score - a.score || b.weight - a.weight);
-  const rated = item.impact !== null;
-  const spread: Risk["spread"] = [];
-  for (const o of on) {
-    const last = spread[spread.length - 1];
-    if (last?.score === o.score) last.capabilities++;
-    else spread.push({ score: o.score, capabilities: 1 });
-  }
-  return {
-    impact: item.impact,
-    likelihood: item.likelihood ?? "certain",
-    reach: item.reach ?? "all",
-    score: rated ? (on[0]?.score ?? 0) : null,
-    verdict: verdictOf(rated ? (on[0]?.score ?? 0) : null),
-    claim: on.some((o) => o.claim),
-    on,
-    capabilities: on.length,
-    spread: rated ? spread : [],
-  };
-}
-
 /* ——— Readiness ——— */
 
 /*
@@ -1335,12 +749,6 @@ export const gapsOn = (state: DocketState, capability: Capability) => [
   ...builtOn(state, capability).flatMap((on) => gapsById(state, on.gaps)),
 ];
 
-/* What a started capability still needs to be ready: nothing, once it's ready. */
-export function needsOf(state: DocketState, capability: Capability): NotReady {
-  const gaps = gapsOn(state, capability).filter((g) => verdictOf(riskOn(state, g)(capability).score) === "unacceptable");
-  return { capability, belowBeta: rank(capability.stability) < rank("beta"), gaps, decisions: openDecisions(capability) };
-}
-
 /*
  * The readiness of some capabilities, as of a feature, domain, persona or
  * project: a recommendation, 0 to 100, for people to judge by. It's their
@@ -1351,6 +759,8 @@ export function needsOf(state: DocketState, capability: Capability): NotReady {
  */
 export type Readiness = {
   percent: number | null;
+  /* The quarter it falls in, as the server says, or null with nothing started. */
+  band: (typeof READINESS_BANDS)[number] | null;
   maturity: number | null;
   exposure: Exposure;
   /* Each capability's level, null for a draft: what its maturity is worked out from. */
@@ -1361,33 +771,6 @@ export type Readiness = {
   notReady: NotReady[];
   notStarted: Capability[];
 };
-
-// docket:implements capability:readiness component:ui
-export function readinessOf(state: DocketState, capabilities: Capability[]): Readiness {
-  const exposure = exposureOf(state, capabilities);
-  const gaps = riskAcross(state, [...new Set(capabilities.flatMap((c) => gapsOn(state, c)))], capabilities);
-  const levels = capabilities.map((c) => c.stability);
-  const readiness: Readiness = { percent: null, maturity: null, exposure, levels, gaps, ready: [], notReady: [], notStarted: [] };
-  let total = 0;
-  let weights = 0;
-  for (const c of capabilities) {
-    if (c.stability === null) {
-      readiness.notStarted.push(c);
-      continue;
-    }
-    const needs = needsOf(state, c);
-    const { score, weight } = MATURITY_LEVELS[c.stability];
-    total += score * weight;
-    weights += weight;
-    if (!needs.belowBeta && !needs.gaps.length) readiness.ready.push(c);
-    else readiness.notReady.push(needs);
-  }
-  if (weights) {
-    readiness.maturity = total / weights;
-    readiness.percent = Math.round(readiness.maturity * (1 - (exposure.percent ?? 0) / 100));
-  }
-  return readiness;
-}
 
 /* How many it's worked out from: the started ones. */
 export const startedOf = (r: Readiness) => r.ready.length + r.notReady.length;
@@ -1401,10 +784,10 @@ export const READINESS_BANDS = [
 ] as const;
 
 /* The quarter a readiness falls in, or null with nothing started. */
-export const readinessBand = (r: Readiness) => (r.percent === null ? null : [...READINESS_BANDS].reverse().find((b) => r.percent! >= b.from)!);
+export const readinessBand = (r: Readiness) => r.band;
 
 /* In the Ready quarter, below it, or null with nothing started. */
-export const isReady = (r: Readiness): boolean | null => (r.percent === null ? null : r.percent >= 75);
+export const isReady = (r: Readiness): boolean | null => (r.band === null ? null : r.band.name === "Ready");
 
 /* Readiness from 0 to 1, for putting the least ready first; null with nothing started. */
 export const readyShare = (r: Readiness) => (r.percent === null ? null : r.percent / 100);
@@ -1426,37 +809,9 @@ export type RiskAcross<T> = {
   unrated: number;
 };
 
-export function riskAcross<T extends Gap>(state: DocketState, items: T[], within?: Capability[]): RiskAcross<T> {
-  const ids = within ? new Set(within.map((c) => c.id)) : null;
-  const scored = items
-    .map((item) => {
-      const risk = riskOf(state, item);
-      const on = (ids ? risk.on.filter((o) => ids.has(o.capability.id)) : risk.on)[0] ?? null;
-      const score = risk.score === null || !ids ? risk.score : (on?.score ?? 0);
-      return { item, risk, on, score, verdict: verdictOf(score) };
-    })
-    .sort((a, b) => (b.score ?? -1) - (a.score ?? -1));
-  const score = scored[0]?.score ?? null;
-  return {
-    score,
-    verdict: verdictOf(score),
-    items: scored,
-    counts: Object.fromEntries(VERDICTS.map((v) => [v, scored.filter((s) => s.verdict === v).length])) as Record<Verdict, number>,
-    unrated: scored.filter((s) => s.score === null).length,
-  };
-}
-
 /*
- * The exposure of some capabilities, as of a feature, domain, project or
- * persona: what the gaps still open on them put at stake together, as how
- * much of the most they could be exposed to their riskiest gaps are, 0 to
- * 100. It's to risk what maturity is to stability. The most a capability
- * could be exposed to is a certain damaging gap reaching all that breaks a
- * claim its level makes. Its exposure is its riskiest gap's raw score's share of
- * that, its own or one on what it's built on, and it counts with its level's
- * weight in risk. Gaps with no impact rated add nothing, and drafts don't
- * count. Nothing started, it's null. Its band, the quarter it falls in,
- * says how much the gaps still open on them put at stake, and is at least
+ * Exposure's quarters, its bands: how much the gaps still open on some
+ * capabilities put at stake together, as the server works it out, at least
  * moderate while any gap is unacceptable on one of them. It isn't their
  * stability: that's declared, and says how much people can depend on them.
  */
@@ -1469,30 +824,6 @@ export const RISK_BANDS = [
 export type RiskBand = (typeof RISK_BANDS)[number];
 
 export type Exposure = { percent: number | null; capabilities: number; band: RiskBand | null; unacceptable: boolean };
-
-export function exposureOf(state: DocketState, capabilities: Capability[]): Exposure {
-  let exposed = 0;
-  let weights = 0;
-  let started = 0;
-  let unacceptable = false;
-  for (const c of capabilities) {
-    if (!c.stability) continue;
-    const weight = RISK_WEIGHTS[c.stability];
-    const most = IMPACT_STEPS.damaging * weight * CLAIM_FACTORS[c.stability];
-    const riskiest = gapsOn(state, c).reduce<RiskOn | null>((top, g) => {
-      const on = riskOn(state, g)(c);
-      return !top || on.raw > top.raw ? on : top;
-    }, null);
-    if (riskiest && verdictOf(riskiest.score) === "unacceptable" && riskiest.raw > 0) unacceptable = true;
-    exposed += weight * ((riskiest?.raw ?? 0) / most);
-    weights += weight;
-    started++;
-  }
-  const percent = weights ? (exposed / weights) * 100 : null;
-  const byShare = percent === null ? null : [...RISK_BANDS].reverse().find((b) => percent >= b.from)!;
-  const band = byShare && unacceptable && byShare.from < RISK_BANDS[2].from ? RISK_BANDS[2] : byShare;
-  return { percent, capabilities: started, band, unacceptable };
-}
 
 /* An exposure as written: whole percents, and "<1%" for a little that rounds to none. */
 export const exposureText = (percent: number) => (percent > 0 && percent < 0.5 ? "<1%" : `${Math.round(percent)}%`);
@@ -1514,14 +845,9 @@ export function byRisk(a: Risk, b: Risk): number {
 }
 
 /* Items in order of their risk, riskiest first, keeping the given order among equals. `of` says which gap each is. */
-export function inRiskOrder<T>(state: DocketState, items: T[], of: (item: T) => Gap): T[] {
-  const risks = new Map(items.map((i) => [i, riskOf(state, of(i))]));
-  return [...items].sort((a, b) => byRisk(risks.get(a)!, risks.get(b)!));
+export function inRiskOrder<T>(items: T[], of: (item: T) => Gap): T[] {
+  return [...items].sort((a, b) => byRisk(of(a).risk, of(b).risk));
 }
-
-/* The worst of some impacts, or null with none rated. */
-export const worstImpact = (impacts: (Impact | null)[]): Impact | null =>
-  impacts.reduce<Impact | null>((worst, i) => (impactRank(i) < impactRank(worst) ? i : worst), null);
 
 /* ——— Detail pages ——— */
 

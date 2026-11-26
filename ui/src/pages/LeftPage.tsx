@@ -18,7 +18,6 @@ import {
   VERDICTS,
   find,
   openDecisions,
-  riskAcross,
   subjectOf,
   technicalDoc,
   type Capability,
@@ -28,7 +27,7 @@ import {
   type Level,
   type Verdict,
 } from "../state";
-import { PARTS, PART_IDS, filtersFrom, holdersIn, passes, rowsFor, scopeOf, type Filters, type GapRow, type PartId, type Scope, type ScopeKind } from "./leftScope";
+import { PARTS, PART_IDS, acrossRows, filtersFrom, holdersIn, passes, scopeOf, useRowsFor, type Filters, type GapRow, type PartId, type Scope, type ScopeKind } from "./leftScope";
 import { ScopePicker } from "./ScopePicker";
 import "./left.css";
 import { GapInitiatives } from "../GapRows";
@@ -47,7 +46,7 @@ export default function LeftPage({ state, route }: { state: DocketState; route: 
   const go = goFor(state);
   const search = new URLSearchParams(window.location.search);
   const scope = scopeOf(state, search.get("for"));
-  const rows = rowsFor(state, scope);
+  const rows = useRowsFor(state, scope) ?? [];
   const holders = holdersIn(state, holdersOf(state), scope).filter((h) => openDecisions(h.doc).length);
   const decisions = holders.reduce((n, h) => n + openDecisions(h.doc).length, 0);
   const tabs = [
@@ -324,7 +323,7 @@ function GapGroup({ head, state, rows, here }: { head: ReactNode; state: DocketS
         <span className="view-section-count">{rows.length}</span>
         {rows.length > 1 ? (
           <span className="lf-group-risk">
-            <RiskScore risk={riskAcross(state, rows.map((r) => r.gap), rows.map((r) => r.on?.capability).filter((c): c is Capability => !!c))} of="this group" />
+            <RiskScore risk={acrossRows(rows)} of="this group" />
           </span>
         ) : null}
       </header>

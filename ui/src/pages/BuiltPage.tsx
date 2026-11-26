@@ -3,7 +3,7 @@ import { Term } from "../design/term/Term";
 import { Excerpt } from "../design/markdown/Markdown";
 import { docHref, type Route } from "../routes";
 import { Empty, PageHeader, Tabs, View, currentTab, type TabDef } from "../shell/layout";
-import { gapsById, riskAcross, type DocketState, type TechnicalDoc, type TechnicalKind } from "../state";
+import { gapsById, type DocketState, type TechnicalDoc, type TechnicalKind } from "../state";
 import { DocLink, GapsCell, Num } from "./indexParts";
 
 /*
@@ -33,7 +33,7 @@ export default function BuiltPage({ state, route }: { state: DocketState; route:
 }
 
 function TechnicalTable({ state, kind, docs }: { state: DocketState; kind: TechnicalKind; docs: TechnicalDoc[] }) {
-  const risk = (d: TechnicalDoc) => riskAcross(state, gapsById(state, d.gaps)).score ?? -1;
+  const risk = (d: TechnicalDoc) => d.risk.score ?? -1;
   const rows = [...docs].sort((a, b) => risk(b) - risk(a) || b.gaps.length - a.gaps.length);
   return (
     <table className="view-table ix-table">
@@ -58,7 +58,7 @@ function TechnicalTable({ state, kind, docs }: { state: DocketState; kind: Techn
               {kind === "mechanism" ? <span className="ix-where">{d.applies === "product" ? "Across its product" : "Across its project"}</span> : null}
             </td>
             <td className="ix-nowrap">
-              <GapsCell gaps={gapsById(state, d.gaps)} risk={riskAcross(state, gapsById(state, d.gaps))} kind="technical-gap" of={d.name} href={docHref(d.kind, d.id, "left")} />
+              <GapsCell gaps={gapsById(state, d.gaps)} risk={d.risk} kind="technical-gap" of={d.name} href={docHref(d.kind, d.id, "left")} />
             </td>
             <td className="num">
               <Num n={d.tradeoffs.length} />

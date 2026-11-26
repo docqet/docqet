@@ -2,6 +2,7 @@ package commands
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"os"
@@ -10,6 +11,8 @@ import (
 
 	"github.com/exalynt/docket/internal/logs"
 	"github.com/exalynt/docket/internal/project"
+	"github.com/exalynt/docket/internal/services"
+	"github.com/exalynt/docket/internal/state"
 )
 
 // uiAddr is where `docket ui` listens. It's loopback only, and can't be
@@ -17,11 +20,11 @@ import (
 // by mistake.
 const uiAddr = "127.0.0.1:4100"
 
-// UICommand serves the UI over this project, on this machine only.
-//
-// For now it shows the project's .docket/state.json as docket index wrote it,
-// and doesn't re-index as files change. Only the working tree can be
-// shown: the source flags answer that they aren't built.
+// UICommand serves the UI over this project, on this machine only: the
+// server's API, over the project's .docket/state.json as docket index wrote
+// it, read on every request, so re-indexing shows on reload. It doesn't
+// index the working tree itself. Only the working tree can be shown: the
+// source flags answer that they aren't built.
 // docket:implements capability:local-viewer
 func UICommand() *cli.Command {
 	return &cli.Command{
@@ -51,11 +54,27 @@ func UICommand() *cli.Command {
 			logger := logs.New(os.Stderr, "info", "text")
 			logger.InfoContext(ctx, "showing the project's state as it is, without re-indexing", "state", state, "url", "http://"+uiAddr)
 
-			handler, err := router(logger, []string{state}, nil)
+			handler, err := router(logger, fileState(state), nil)
 			if err != nil {
 				return err
 			}
 			return run(ctx, logger, uiAddr, handler)
 		},
+	}
+}
+
+// fileState is the state.json at path, read on every call, as the only
+// project's latest state.
+func fileState(path string) services.StateSource {
+	return func(context.Context) ([]*state.State, error) {
+		body, err := os.ReadFile(path)
+		if err != nil {
+			return nil, err
+		}
+		var st state.State
+		if err := json.Unmarshal(body, &st); err != nil {
+			return nil, fmt.Errorf("%s: %w", path, err)
+		}
+		return []*state.State{&st}, nil
 	}
 }

@@ -8,9 +8,6 @@ import {
   domainCapabilities,
   domainName,
   find,
-  riskOf,
-  showsOn,
-  verdictOf,
   type Capability,
   type DecisionHolder,
   type DocketState,
@@ -21,10 +18,12 @@ import {
   type Likelihood,
   type Reach,
   type Risk,
+  type RiskAcross,
   type RiskOn,
   type Verdict,
 } from "../state";
 import { gapKind } from "../design/left/LeftMark";
+import { summed, useGapsFor } from "../model";
 import { STABILITY_LEVEL_IDS } from "../design/stability/stability";
 
 /*
@@ -122,35 +121,46 @@ export type GapRow = {
   claim: boolean;
 };
 
-/* The gaps that show on the scope's capabilities, each scored there, riskiest first. */
-export function rowsFor(state: DocketState, scope: Scope): GapRow[] {
-  const ids = scope.capabilities ? new Set(scope.capabilities.map((c) => c.id)) : null;
-  const gaps = ids
-    ? state.gaps.filter((g) => showsOn(state, g).some((c) => ids.has(c.id)))
-    : scope.project
-      ? state.gaps.filter((g) => g.project === scope.project)
-      : state.gaps;
-  return gaps
-    .map((gap) => {
-      const risk = riskOf(state, gap);
-      const on = (ids ? risk.on.filter((o) => ids.has(o.capability.id)) : risk.on)[0] ?? null;
-      const score = risk.impact === null ? null : (on?.score ?? 0);
-      return {
+/*
+ * The gaps that show on the scope's capabilities, each scored there by the
+ * server, riskiest first; for a project, those written in it, and for
+ * everything, every gap, each with its whole risk. Null while they're read.
+ */
+export function useRowsFor(state: DocketState, scope: Scope): GapRow[] | null {
+  const within = useGapsFor(state, scope.capabilities ? scope.key : null);
+  const scored: { gap: Gap; on: RiskOn | null; score: number | null; verdict: Verdict | null }[] | null = scope.capabilities
+    ? within && state.gaps.flatMap((gap) => within.find((w) => w.gap.id === gap.id) ?? [])
+    : (scope.project ? state.gaps.filter((g) => g.project === scope.project) : state.gaps).map((gap) => ({
         gap,
-        risk,
-        on,
-        score,
-        verdict: verdictOf(score),
-        kind: gapKind(gap) === "technical-gap" ? ("technical" as const) : ("product" as const),
-        impact: gap.impact,
-        likelihood: risk.likelihood,
-        reach: risk.reach,
-        level: on?.capability.stability ?? null,
-        claim: on?.claim ?? false,
-      };
-    })
+        on: gap.risk.on[0] ?? null,
+        score: gap.risk.score,
+        verdict: gap.risk.verdict,
+      }));
+  if (!scored) return null;
+  return scored
+    .map(({ gap, on, score, verdict }) => ({
+      gap,
+      risk: gap.risk,
+      on,
+      score,
+      verdict,
+      kind: gapKind(gap) === "technical-gap" ? ("technical" as const) : ("product" as const),
+      impact: gap.impact,
+      likelihood: gap.risk.likelihood,
+      reach: gap.risk.reach,
+      level: on?.capability.stability ?? null,
+      claim: on?.claim ?? false,
+    }))
     .sort((a, b) => (b.score ?? -1) - (a.score ?? -1) || (b.on?.weight ?? 0) - (a.on?.weight ?? 0));
 }
+
+/*
+ * What's at stake across some rows, as a group's figure: their scores, as
+ * the server gave them, riskiest first, the highest, and how many fall in
+ * each verdict. Nothing's worked out but the order and the counts.
+ */
+export const acrossRows = (rows: GapRow[]): RiskAcross<Gap> =>
+  summed([...rows].sort((a, b) => (b.score ?? -1) - (a.score ?? -1)).map((r) => ({ item: r.gap, risk: r.risk, on: r.on, score: r.score, verdict: r.verdict })));
 
 /* The decisions held on the scope: on its capabilities, the features and domains they're in, and what they're built on. */
 export function holdersIn(state: DocketState, holders: DecisionHolder[], scope: Scope): DecisionHolder[] {

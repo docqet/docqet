@@ -7,7 +7,6 @@ import { docHref, type DocKind } from "./routes";
 import {
   affectedBy,
   conceptLinked,
-  riskOf,
   subjectOf,
   type Affected,
   type Contribution,
@@ -55,7 +54,7 @@ function DecisionAffects({ state, decision }: { state: DocketState; decision: De
   const affected = affectedBy(state, decision);
   if (!affected.length) return null;
   const riskiest = affected
-    .flatMap((a) => (a.kind === "gap" ? [riskOf(state, a.gap)] : []))
+    .flatMap((a) => (a.kind === "gap" ? [a.gap.risk] : []))
     .filter((r) => r.score !== null)
     .sort((a, b) => b.score! - a.score!)[0];
   return (

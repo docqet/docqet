@@ -3,7 +3,7 @@ import Card from "@mui/material/Card";
 import PersonOutlineRoundedIcon from "@mui/icons-material/PersonOutlineRounded";
 import { Grip } from "./design/Grip";
 import { ReadinessMark } from "./Readiness";
-import { capabilitiesById, readinessOf, startedOf, type DocketState, type Persona } from "./state";
+import { startedOf, type DocketState, type Persona } from "./state";
 
 export function PersonaIcon({ size = 16 }: { size?: number }) {
   return <PersonOutlineRoundedIcon sx={{ fontSize: size, flex: "none", color: "var(--persona)" }} />;
@@ -66,5 +66,5 @@ export function PersonaCard({ state, persona }: { state: DocketState; persona: P
   );
 }
 
-/* How ready the software is for a persona: every capability that lists them. */
-export const personaReadiness = (state: DocketState, persona: Persona) => readinessOf(state, capabilitiesById(state, persona.capabilities));
+/* How ready the software is for a persona: every capability that lists them, as the server works it out. */
+export const personaReadiness = (_state: DocketState, persona: Persona) => persona.readiness;

@@ -5,7 +5,7 @@ import { STABILITY_LEVEL_IDS, type StabilityLevelId } from "../stability/stabili
 // from its Capabilities' stability levels, for planning. Whether people can
 // use it is readiness, which doesn't depend on maturity.
 // Copied from Exalynt's design system; the spec's "Features and maturity" has the rules.
-// The UI works them out from these (see state.ts), as nothing in state.json says.
+// The server works maturity out with these same numbers; the UI shows them, as in the glossary.
 
 /** Where maturity counts as healthy for most businesses; the last quarter is room to keep evolving. */
 export const HEALTHY_MATURITY = 75;

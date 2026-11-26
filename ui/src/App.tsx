@@ -16,9 +16,11 @@ import ProblemsPage from "./pages/ProblemsPage";
 import RulePage from "./pages/RulePage";
 import type { ProductChoice } from "./ProductFilter";
 import { navigate, routeOf, useSearch, type Route } from "./routes";
-import { scopeFiles, scopeOf } from "./scope";
+import { getProduct, getProducts, type ProductResource } from "./api";
+import { modelOf } from "./model";
+import { scopeOf, scopeParam } from "./scope";
 import Shell from "./shell/Shell";
-import { combine, loadProjects, loadState, productsOf, projectOf, type DocketState, type PageAt, type StateFile } from "./state";
+import type { DocketState, PageAt, Product } from "./state";
 
 /* The product and projects named in the address, as `?product=<id>&project=<id>,<id>`. */
 const showingIn = (search: string) => {
@@ -26,14 +28,23 @@ const showingIn = (search: string) => {
   return { product: params.get("product"), projects: (params.get("project") ?? "").split(",").filter(Boolean) };
 };
 
+/* A product and its projects, as the product filter offers them. */
+const choiceOf = (p: ProductResource): ProductChoice => ({
+  id: p.id,
+  name: p.name,
+  projects: p.projects.map((x) => ({ ...x, maturity: x.maturity?.percent ?? null, band: (x.maturity?.band ?? null) as Product["projects"][number]["band"] })),
+});
+
 /*
  * Docket: one product's projects at a time, in the shell's frame, at the view
- * or doc page the address names. `projects.json` lists the projects' state,
- * or else there's the one `state.json`. The page can be filtered to some of
- * the product's projects; the address says which.
+ * or doc page the address names, all of it read from the server's API. The
+ * page can be filtered to some of the product's projects, and to one
+ * initiative; the address says which, and the server narrows what it serves
+ * to them.
  */
 export default function App() {
-  const [files, setFiles] = useState<StateFile[] | null>(null);
+  const [all, setAll] = useState<ProductResource[] | null>(null);
+  const [state, setState] = useState<DocketState | null>(null);
   const [error, setError] = useState<string | null>(null);
   const search = useSearch();
   const wanted = useMemo(() => showingIn(search), [search]);
@@ -41,15 +52,11 @@ export default function App() {
   const scope = useMemo(() => scopeOf(search), [search]);
 
   useEffect(() => {
-    loadProjects()
-      .then((paths) => Promise.all(paths.length ? paths.map((p) => loadState(p)) : [loadState()]))
-      .then(setFiles, (e: unknown) => setError(String(e)));
+    getProducts().then(setAll, (e: unknown) => setError(String(e)));
   }, []);
 
-  /* Each project's state with only the capabilities in scope, so everything below, maturity included, counts only those. */
-  const scoped = useMemo(() => scopeFiles(files ?? [], scope), [files, scope]);
   /* Each product, and its projects, to choose from. */
-  const products: ProductChoice[] = useMemo(() => productsOf((files ?? []).map(projectOf)), [files]);
+  const products: ProductChoice[] = useMemo(() => (all ?? []).map(choiceOf), [all]);
   /*
    * The product showing: the one the address names, or else the one its
    * first named project is in, or else the first. And its projects showing:
@@ -64,7 +71,23 @@ export default function App() {
     const named = wanted.projects.filter((id) => known.includes(id));
     return named.length ? named : known;
   }, [product, wanted]);
-  const state = useMemo(() => files && combine(scoped.filter((f) => chosen.includes(f.project.id))), [files, scoped, chosen]);
+  /* Some of the product's projects, or all of them, as the server is asked for them. */
+  const projects = chosen.length === product?.projects.length ? "" : chosen.join(",");
+  const initiative = scopeParam(scope);
+  useEffect(() => {
+    if (!product) return;
+    let current = true;
+    const showing = { product: product.id, projects: projects ? projects.split(",") : [], initiative };
+    getProduct(showing)
+      .then((r) => modelOf(r, showing))
+      .then(
+        (s) => current && setState(s),
+        (e: unknown) => current && setError(String(e)),
+      );
+    return () => {
+      current = false;
+    };
+  }, [product, projects, initiative]);
 
   /*
    * Show a product, and some of its projects, or all of them with none
@@ -89,16 +112,27 @@ export default function App() {
     return (
       <div className="message">
         <Logo />
-        <h1>The state couldn't be read</h1>
+        <h1>The server couldn't be read</h1>
         <p>
-          Docket reads <code>projects.json</code>, or else <code>state.json</code>, from beside this page.
-          Run <code>docket index</code>, then reload.
+          Docket reads everything it shows from the server's API, under <code>/api/v1</code>.
         </p>
         <p className="faint">{error}</p>
       </div>
     );
   }
-  if (!state || !files || !product) return <div className="message faint">Loading…</div>;
+  if (all && !all.length) {
+    return (
+      <div className="message">
+        <Logo />
+        <h1>Nothing to show yet</h1>
+        <p>
+          No project has been applied to this server. Run <code>docket apply</code> in one, then reload.
+        </p>
+      </div>
+    );
+  }
+  /* Another product's docs never show under this one's frame while its own are read. */
+  if (!state || !product || state.showing.product !== product.id) return <div className="message faint">Loading…</div>;
 
   /* Keyed by the product's projects, so each product has a canvas of its own and a different set starts it afresh. */
   const layoutKey = product.projects.map((p) => p.id).join(",");

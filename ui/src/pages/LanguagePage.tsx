@@ -5,7 +5,7 @@ import { Excerpt } from "../design/markdown/Markdown";
 import { StandingMark } from "../design/standing/StandingMark";
 import type { Route } from "../routes";
 import { Empty, PageHeader, Section, Tabs, View, currentTab, type TabDef } from "../shell/layout";
-import { domainName, find, ruleStanding, type Concept, type DocketState, type Rule, type RuleStanding } from "../state";
+import { domainName, find, type Concept, type DocketState, type Rule, type RuleStanding } from "../state";
 import { DocLink, FilterBox, Num, byName, matches } from "./indexParts";
 
 /*
@@ -143,7 +143,7 @@ function standingsOf(state: DocketState, rule: Rule): Counts {
   const counts: Counts = { evidence: 0, trust: 0, gap: 0 };
   for (const id of rule.capabilities) {
     const capability = find(state.capabilities, id);
-    if (capability) counts[ruleStanding(capability, rule)]++;
+    if (capability) counts[capability.ruleStandings[rule.id]]++;
   }
   return counts;
 }

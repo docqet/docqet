@@ -8,16 +8,13 @@ import { Term } from "../design/term/Term";
 import { docHref, withParam, type Route } from "../routes";
 import { Empty, PageHeader, Section, Stat, View } from "../shell/layout";
 import {
-  domainCapabilities,
   domainName,
   levelInDomain,
   find,
   gapsOn,
-  maturityOf,
   openDecisions,
   partOf,
   RISK_BANDS,
-  exposureOf,
   type Capability,
   type CapabilityLevel,
   type DocketState,
@@ -26,6 +23,7 @@ import {
 } from "../state";
 import { DocLink, GapsCell, LevelMark, PersonaFaces, ExposureStat } from "./indexParts";
 import { InitiativeTags, initiativesOf } from "../Initiatives";
+import { useStatusFor } from "../model";
 
 type Group = "domain" | "stability" | "exposure";
 const GROUPS: Group[] = ["domain", "stability", "exposure"];
@@ -45,8 +43,7 @@ const GROUPS: Group[] = ["domain", "stability", "exposure"];
 export default function FeaturesPage({ state }: { state: DocketState; route: Route }) {
   const asked = new URLSearchParams(window.location.search).get("group") as Group | null;
   const group: Group = asked && GROUPS.includes(asked) ? asked : "domain";
-  const overall = maturityOf(state);
-  const inFeatures = state.capabilities.filter((c) => c.feature);
+  const overall = state.status.maturity;
   return (
     <View title="Features" wide>
       <PageHeader
@@ -68,7 +65,7 @@ export default function FeaturesPage({ state }: { state: DocketState; route: Rou
               }
               note={`Across ${plural(state.features.length, "feature", "features")}`}
             />
-            <ExposureStat state={state} capabilities={inFeatures} of="every feature showing" />
+            <ExposureStat exposure={state.status.exposure} risk={state.status.risk} of="every capability showing" />
             <Stat
               label="Capabilities"
               term="capability"
@@ -147,7 +144,7 @@ function CapabilityRow({ state, capability, domain, where }: { state: DocketStat
         <LevelMark name={capability.name} level={levelIn(capability, domain)} />
       </span>
       <span className="ix-cap-risk">
-        <ExposureMark state={state} capabilities={[capability]} of={capability.name} />
+        <ExposureMark exposure={capability.exposure} risk={capability.risk} of={capability.name} />
       </span>
       <span className="ix-cap-left">
         <GapsCell gaps={[...new Set(gapsOn(state, capability))]} kind="gap" decisions={openDecisions(capability).length} href={docHref("capability", capability.id, "left")} />
@@ -211,7 +208,7 @@ function DomainBranch({ state, domain }: { state: DocketState; domain: Domain })
           />
         )
       }
-      exposure={<ExposureMark state={state} capabilities={domainCapabilities(state, domain)} of={domain.name} />}
+      exposure={<ExposureMark exposure={domain.exposure} risk={domain.readiness.gaps} of={domain.name} />}
       head={<DocLink kind="domain" id={domain.id} name={domain.name} />}
     >
       {!features.length && !loose.length ? <p className="ix-empty">A part of the business the software doesn't serve yet.</p> : null}
@@ -240,6 +237,9 @@ function FeatureBranch({ state, feature, domain }: { state: DocketState; feature
   const capabilities = (part?.capabilities ?? []).flatMap((id) => find(state.capabilities, id) ?? []);
   const elsewhere = feature.parts.filter((p) => p.domain !== domain);
   const levels = capabilities.map((c) => levelInDomain(c, domain));
+  /* Its figures in this domain: the feature's own when it's in no other, or else the server's for its part here. */
+  const inPart = useStatusFor(state, elsewhere.length ? `feature:${feature.id},domain:${domain}` : null);
+  const figures = elsewhere.length ? inPart && { exposure: inPart.exposure, risk: inPart.risk } : { exposure: feature.exposure, risk: feature.readiness.gaps };
   return (
     <FoldRow
       className="ix-feature"
@@ -248,7 +248,7 @@ function FeatureBranch({ state, feature, domain }: { state: DocketState; feature
           <MaturityRing progress={part.maturity} subject="feature" count={levels.filter(Boolean).length} label={`${feature.name} maturity`} size={22} spread={levels} />
         )
       }
-      exposure={<ExposureMark state={state} capabilities={capabilities} of={feature.name} />}
+      exposure={figures ? <ExposureMark exposure={figures.exposure} risk={figures.risk} of={feature.name} /> : null}
       head={
         <>
           <DocLink kind="feature" id={feature.id} name={feature.name} />
@@ -316,7 +316,7 @@ function ByStability({ state }: { state: DocketState }) {
  * which aren't exposed to anything. Each says where it is, as grouped by stability.
  */
 function ByExposure({ state }: { state: DocketState }) {
-  const scored = state.capabilities.map((c) => ({ c, exposure: exposureOf(state, [c]), gaps: gapsOn(state, c).length }));
+  const scored = state.capabilities.map((c) => ({ c, exposure: c.exposure, gaps: gapsOn(state, c).length }));
   const groups = [
     ...[...RISK_BANDS].reverse().map((band) => ({
       key: band.id,

@@ -1,24 +1,29 @@
 # The UI
 
-_How the UI gets from reading state files to reading only the server's API.
-Part of [how `docket` is built](README.md)._
+_How the UI reads only the server's API. Part of [how `docket` is
+built](README.md)._
 
-**The UI will read only from the server's API.** Today it reads
-`projects.json` and whole `state.json` files, and works out combining,
-maturity, readiness and risk itself in TypeScript. That goes once the
-resources exist:
+**The UI reads only the server's API.** It never reads a state file, and works
+out no figure: the server combines a product's projects and derives maturity,
+readiness, risk and exposure, and the UI shows them. State files are the
+CLI's, which writes and sends them, and the server's, which takes them.
 
-1. **Until then, `serve` and `docket ui` serve what the UI reads today**:
-   `projects.json` and each project's `state.json`, from
-   `internal/handlers/http`'s `StatesHandler`. `serve` shows each project's
-   latest applied state, and `docket ui` its `.docket/state.json`.
-2. **The UI moves to the resources view by view**, as the read service and
-   `derive` can serve each one. Its own combining and deriving are deleted as
-   they're replaced.
-3. **`projects.json` and the `StatesHandler` go** when the last view has
-   moved, and the UI's dev server stops reading `examples/` itself.
-4. **Make targets load the examples into the local server**, so the UI has
-   real states to show while it's developed. The examples are folders in this
-   repository rather than repositories of their own, so loading them sends
-   each example's state as it is, rather than running `docket apply` over
-   commits. How is decided when it's built.
+- **It loads the product showing at once.** `ui/src/api.ts` reads every list
+  under `/api/v1/products/{product}`, paging through each, with `?project=`
+  and `?initiative=` for what's showing, and `ui/src/model.ts` turns them into
+  the docs the pages hold, with each doc's figures on it.
+- **What no doc's figures cover, it asks for.** Readiness for the capabilities
+  in a feature that serve a persona, or in one domain's part of a feature, is
+  `/status?for=`, with several references for the capabilities they share.
+  The gaps a scope puts at stake are `/gaps?for=`. Search is `/search`.
+- **Lookups and presentation stay in the UI.** Finding a doc by ID, the cards
+  on the map, filtering, ordering and counting what the server sent by what
+  it says, and showing only some of a figure's gaps, such as a persona's own,
+  are how the UI shows things, not figures. So is coloring a server's number
+  by its band or verdict, with the same cutoffs the glossary shows.
+- **`serve` and `docket ui` serve the same API**, from what was applied or
+  from `.docket/state.json`, so the UI can't tell which it's talking to.
+- **The UI's dev server passes `/api` on** to a running server: `make run`'s,
+  or `DOCKET_API`'s. `make examples` loads the examples into it. They're
+  folders in this repository rather than repositories of their own, so each
+  one's state is sent as it is, at this repository's HEAD.

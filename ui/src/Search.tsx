@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
+import * as api from "./api";
 import BoltOutlinedIcon from "@mui/icons-material/BoltOutlined";
 import RuleRoundedIcon from "@mui/icons-material/RuleRounded";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
@@ -14,10 +15,8 @@ import { DomainIcon } from "./FeatureMap";
 import { ProjectIcon } from "./ProductFilter";
 import {
   docDomains,
-  fieldsText,
   domainName,
   find,
-  bareId,
   docProjects,
   projectName,
   ruleAppliesTo,
@@ -40,8 +39,6 @@ type Entry = {
   key: string;
   kind: Kind;
   title: string;
-  /* What else it's found by: its description and ID. */
-  text: string;
   /* A line under it, for context: what it's in, or applies to. */
   context: string;
   /* A capability's level, or null for a draft. */
@@ -82,10 +79,10 @@ function appliesTo(state: DocketState, rule: Rule): string {
 }
 
 /*
- * Everything there is to find, with where each is on the canvas. The
- * product's projects are found whether they're showing or not, from `all`.
- * With several projects showing, everything else says which projects define
- * it, and is found by their names too.
+ * How each result shows, and what choosing it does, by `<kind>:<id>`. The
+ * server finds them; this only says what each is in. The product's projects
+ * show when it has several. With several projects showing, everything else
+ * says which projects define it.
  */
 function index(state: DocketState, all: Project[]): Entry[] {
   const several = state.projects.length > 1;
@@ -96,7 +93,6 @@ function index(state: DocketState, all: Project[]): Entry[] {
           key: `project:${p.id}`,
           kind: "project" as const,
           title: p.name,
-          text: p.id,
           context: state.projects.some((x) => x.id === p.id)
             ? state.projects.length === 1
               ? "Showing"
@@ -105,7 +101,7 @@ function index(state: DocketState, all: Project[]): Entry[] {
           target: { project: p.id },
         }))
       : [];
-  return [...projects, ...entries(state).map((e) => (several ? { ...e, from: from(...e.projects), text: `${e.text} ${from(...e.projects)}` } : e))];
+  return [...projects, ...entries(state).map((e) => (several ? { ...e, from: from(...e.projects) } : e))];
 }
 
 function entries(state: DocketState): (Entry & { projects: string[] })[] {
@@ -116,7 +112,6 @@ function entries(state: DocketState): (Entry & { projects: string[] })[] {
       key: `domain:${d.id}`,
       kind: "domain" as const,
       title: d.name,
-      text: `${d.description ?? ""} ${d.id}`,
       context: plural(d.features.length, "feature", "features"),
       target: { pick: { kind: "domain" as const, id: d.id } },
       projects: docProjects(d),
@@ -127,7 +122,6 @@ function entries(state: DocketState): (Entry & { projects: string[] })[] {
         key: `feature:${f.id}`,
         kind: "feature" as const,
         title: f.name,
-        text: `${f.description ?? ""} ${f.id} ${spans}`,
         context: `${spans} · ${plural(f.capabilities.length, "capability", "capabilities")}`,
         target: { pick: { kind: "feature" as const, id: f.id } },
         projects: docProjects(f),
@@ -137,7 +131,6 @@ function entries(state: DocketState): (Entry & { projects: string[] })[] {
       key: `capability:${c.id}`,
       kind: "capability" as const,
       title: c.name,
-      text: `${c.description ?? ""} ${c.id} ${domains(docDomains(c))}`,
       context: `${(c.feature && find(state.features, c.feature)?.name) || "Not in a feature"} · ${domains(docDomains(c))}`,
       level: c.stability,
       target: { pick: { kind: "capability" as const, id: c.id } },
@@ -147,27 +140,22 @@ function entries(state: DocketState): (Entry & { projects: string[] })[] {
       key: `rule:${r.id}`,
       kind: "rule" as const,
       title: r.name,
-      text: `${r.from.map((f) => f.body).join(" ")} ${bareId(r.id)}`,
       context: r.capabilities.length ? appliesTo(state, r) : domainName(state, r.domain),
       target: { rule: r.id },
       projects: docProjects(r),
     })),
-    /* Found by what they mean, too, so "guest" finds Booking. */
     ...state.concepts.map((c) => ({
       key: `concept:${c.id}`,
       kind: "concept" as const,
       title: c.name,
-      text: `${c.description ?? ""} ${bareId(c.id)} ${c.from.map((f) => `${fieldsText(f)} ${f.body}`).join(" ")} ${domainName(state, c.domain)}`,
       context: `${state.domains.length > 1 ? `${domainName(state, c.domain)} · ` : ""}${c.description ?? plural(c.capabilities.length, "capability", "capabilities")}`,
       target: { pick: { kind: "concept" as const, id: c.id } },
       projects: docProjects(c),
     })),
-    /* Found by what they need, too, so "payment" finds the guest. */
     ...state.personas.map((p) => ({
       key: `persona:${p.id}`,
       kind: "persona" as const,
       title: p.name,
-      text: `${p.description ?? ""} ${p.id} ${p.from.map((f) => `${fieldsText(f)} ${f.body}`).join(" ")}`,
       context: p.description ?? plural(p.capabilities.length, "capability", "capabilities"),
       target: { pick: { kind: "persona" as const, id: p.id } },
       projects: docProjects(p),
@@ -176,7 +164,6 @@ function entries(state: DocketState): (Entry & { projects: string[] })[] {
       key: `initiative:${i.id}`,
       kind: "initiative" as const,
       title: i.name,
-      text: `${i.description ?? ""} ${i.id} ${i.from.map((f) => f.body).join(" ")}`,
       context: i.description ?? plural(i.capabilities.length, "capability", "capabilities"),
       target: { pick: { kind: "initiative" as const, id: i.id } },
       projects: docProjects(i),
@@ -184,26 +171,7 @@ function entries(state: DocketState): (Entry & { projects: string[] })[] {
   ];
 }
 
-/*
- * How well an entry matches every term, or null if one is missing. A title
- * that starts with a term beats one with a word that does, which beats the
- * term anywhere in the title, which beats it only in the description or ID.
- */
-function score(entry: Entry, terms: string[]): number | null {
-  const title = entry.title.toLowerCase();
-  const rest = entry.text.toLowerCase();
-  let total = 0;
-  for (const term of terms) {
-    if (title.startsWith(term)) total += 4;
-    else if (title.includes(` ${term}`) || title.includes(`-${term}`)) total += 3;
-    else if (title.includes(term)) total += 2;
-    else if (rest.includes(term)) total += 1;
-    else return null;
-  }
-  return total;
-}
-
-/* The title with the first match of each term marked. */
+/* The title with the first match of each term marked: the search, as one term, since that's what the server matches. */
 function highlight(title: string, terms: string[]): ReactNode {
   const lower = title.toLowerCase();
   const spans: [number, number][] = [];
@@ -246,23 +214,41 @@ export default function Search({
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState(0);
-  const entries = useMemo(() => index(state, all), [state, all]);
+  const entries = useMemo(() => new Map(index(state, all).map((e) => [e.key, e])), [state, all]);
 
-  const terms = useMemo(() => query.toLowerCase().split(/\s+/).filter(Boolean), [query]);
+  /*
+   * What the server found, and for what: a moment after typing stops, so it
+   * isn't asked at every key. The last results stay until the next arrive.
+   */
+  const q = query.trim();
+  const [found, setFound] = useState<{ q: string; results: api.SearchResultResource[] } | null>(null);
+  useEffect(() => {
+    if (!q) return;
+    let current = true;
+    const timer = setTimeout(() => {
+      api
+        .getAll<api.SearchResultResource>(api.productPath(state.showing, "/search", { q }))
+        .catch(() => [])
+        .then((results) => current && setFound({ q, results }));
+    }, 150);
+    return () => {
+      current = false;
+      clearTimeout(timer);
+    };
+  }, [state.showing, q]);
+
+  const terms = useMemo(() => (q && found ? [found.q.toLowerCase()] : []), [q, found]);
   const groups = useMemo(() => {
-    if (!terms.length) return [];
-    const scored = entries
-      .map((entry) => ({ entry, score: score(entry, terms) }))
-      .filter((r): r is { entry: Entry; score: number } => r.score !== null)
-      .sort((a, b) => b.score - a.score || a.entry.title.localeCompare(b.entry.title));
+    if (!q || !found) return [];
+    const results = found.results.flatMap((r) => entries.get(`${r.kind}:${r.id}`) ?? []);
     return GROUPS.map((g) => ({
       ...g,
-      results: scored.filter((r) => r.entry.kind === g.kind).slice(0, PER_GROUP).map((r) => r.entry),
+      results: results.filter((e) => e.kind === g.kind).slice(0, PER_GROUP),
     })).filter((g) => g.results.length);
-  }, [entries, terms]);
+  }, [entries, q, found]);
   const flat = groups.flatMap((g) => g.results);
 
-  useEffect(() => setActive(0), [query]);
+  useEffect(() => setActive(0), [found]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -324,7 +310,7 @@ export default function Search({
               value={query}
               placeholder={placeholder}
               aria-label="Search projects, domains, features, capabilities, rules, concepts, and personas"
-              aria-expanded={terms.length > 0}
+              aria-expanded={q.length > 0}
               aria-controls="search-results"
               aria-activedescendant={flat[active] ? `result-${flat[active].key}` : undefined}
               role="combobox"
@@ -350,7 +336,7 @@ export default function Search({
           </label>
 
           <div className="search-results" id="search-results" role="listbox">
-            {!terms.length ? (
+            {!q ? (
               <div className="search-empty">
                 Find a project, domain, feature, capability, rule, concept, or persona, and open it.
               </div>
@@ -384,9 +370,9 @@ export default function Search({
                   })}
                 </div>
               ))
-            ) : (
-              <div className="search-empty">Nothing matches “{query.trim()}”.</div>
-            )}
+            ) : found?.q === q ? (
+              <div className="search-empty">Nothing matches “{q}”.</div>
+            ) : null}
           </div>
 
           <div className="search-footer" aria-hidden>
