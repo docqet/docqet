@@ -6,7 +6,7 @@ supported.
 ## Reporting a vulnerability
 
 Please don't open a public issue. Report it privately through GitHub's
-[private vulnerability reporting](https://github.com/exalynt/docqet/security/advisories/new),
+[private vulnerability reporting](https://github.com/docqet/docqet/security/advisories/new),
 with what you found, how to reproduce it, and what it affects.
 
 We'll acknowledge it, keep you updated, and credit you when it's fixed,

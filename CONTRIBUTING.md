@@ -3,9 +3,9 @@
 Thanks for your interest in Docqet. Contributions are welcome: bug reports,
 ideas, docs, examples, tests and code.
 
-This guide covers what's specific to Docqet. It builds on Exalynt's
-[contributing guide](https://github.com/exalynt/community/blob/main/CONTRIBUTING.md),
-which applies to every Exalynt project. By taking part, you agree to follow
+This guide covers what's specific to this repository. It builds on Docqet's
+[contributing guide](https://github.com/docqet/community/blob/main/CONTRIBUTING.md),
+which applies to every Docqet repository. By taking part, you agree to follow
 the [Code of Conduct](CODE_OF_CONDUCT.md).
 
 ## Before you start
@@ -16,10 +16,10 @@ change a lot, so:
 - **Small fixes** (typos, broken links, clear bugs) can go straight to a
   pull request.
 - **Anything larger** (a new command, a change to the format, a new
-  dependency) should start as an [issue](https://github.com/exalynt/docqet/issues),
+  dependency) should start as an [issue](https://github.com/docqet/docqet/issues),
   so we can agree on the problem before you put time into a solution.
 - **Questions and open-ended ideas** go in
-  [Exalynt's discussions](https://github.com/exalynt/community/discussions).
+  [Docqet's discussions](https://github.com/docqet/community/discussions).
 
 Check the open decisions in [`docqet/`](docqet/) too. If your idea touches
 one, say so in the issue. [Docqet's principles](docs/principles.md) say what
@@ -31,7 +31,7 @@ You need Go (the version in [`go.mod`](go.mod)), Node 24 for the UI, and
 `make`. Docker is optional.
 
 ```sh
-git clone https://github.com/exalynt/docqet.git
+git clone https://github.com/docqet/docqet.git
 cd docqet
 cd ui && npm ci && cd ..
 make test       # Go tests

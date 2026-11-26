@@ -7,7 +7,7 @@ info:
     the endpoints the CLI sends each project's states through and reads
     them back from, and the resources the UI reads: each product's docs, put
     together across its projects, with the figures worked out for them, as
-    [the plan](https://github.com/exalynt/docqet/blob/main/docs/architecture/api.md)
+    [the plan](https://github.com/docqet/docqet/blob/main/docs/architecture/api.md)
     describes.
 
 
@@ -21,12 +21,12 @@ info:
 
 
     Every endpoint carries a
-    [stability level](https://github.com/exalynt/docqet/blob/main/docqet/domains/authoring/concepts/stability-level.md):
+    [stability level](https://github.com/docqet/docqet/blob/main/docqet/domains/authoring/concepts/stability-level.md):
     Prototype, Alpha, Beta, or GA. Below GA it shows as a mark beside the
     endpoint and in the navigation, which says what to expect when you hover,
     focus, or tap it, and every endpoint states it in its `x-stability`
     field. Each group of endpoints shows its
-    [maturity](https://github.com/exalynt/docqet/blob/main/docqet/domains/reporting/concepts/maturity.md) in the
+    [maturity](https://github.com/docqet/docqet/blob/main/docqet/domains/reporting/concepts/maturity.md) in the
     navigation, and in the overview under Maturity below: how close its
     endpoints are to being stable and supported.
 
