@@ -26,7 +26,7 @@ func databaseFlag() cli.Flag {
 
 // MigrateCommand brings the server's database up to this version's schema.
 // It's a step of its own, run before `docqet serve`, which refuses to start
-// on a database that's behind.
+// on a database that's behind unless it's run with --migrate.
 func MigrateCommand() *cli.Command {
 	return &cli.Command{
 		Name:         "migrate",

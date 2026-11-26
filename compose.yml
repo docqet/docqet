@@ -1,27 +1,16 @@
 services:
-  # Brings the database up to this version's schema, then exits. Migrations
-  # are a step of their own, so the app waits for it rather than migrating as
-  # it starts.
-  migrate:
-    build: &build
+  app:
+    build:
       context: .
       dockerfile: Dockerfile
       target: runner
-    command: ["docqet", "migrate"]
-    environment:
-      DATABASE_PATH: /var/lib/docqet/docqet.db
-    volumes:
-      - docqet-data:/var/lib/docqet
-
-  app:
-    build: *build
     command: ["docqet", "serve"]
-    depends_on:
-      migrate:
-        condition: service_completed_successfully
     environment:
       PORT: "8080"
       DATABASE_PATH: /var/lib/docqet/docqet.db
+      # This stack is for local development, so the server migrates its
+      # database as it starts. It's off by default everywhere else.
+      MIGRATE: "true"
     # The server's SQLite database lives on the docqet-data volume, so it
     # survives restarts; `docker compose down -v` wipes it.
     volumes:

@@ -62,6 +62,7 @@ curl localhost:8080/api/v1/products/docqet/status   # its figures, as the API se
 | `LOG_LEVEL`     | `--log-level`  | `info`           | The lowest level logged: debug, info, warn, error |
 | `LOG_FORMAT`    | `--log-format` | `json`           | `json` for log pipelines, `text` for reading      |
 | `DATABASE_PATH` | `--database`   | `data/docqet.db` | The server's SQLite database                      |
+| `MIGRATE`       | `--migrate`    | `false`          | `serve` migrates the database before it starts    |
 
 `docqet apply` sends to the server in the project's `docqet.yaml`, as
 `server:`, or in `DOCQET_SERVER`, which wins.

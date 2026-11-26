@@ -14,8 +14,9 @@ import (
 var migrations embed.FS
 
 // ErrNotMigrated is returned when the database's schema is behind this
-// version of docqet, so `docqet migrate` needs running first.
-var ErrNotMigrated = errors.New("the database isn't migrated: run docqet migrate")
+// version of docqet, so `docqet migrate` needs running first, or `docqet
+// serve` needs --migrate.
+var ErrNotMigrated = errors.New("the database isn't migrated: run docqet migrate, or serve with --migrate")
 
 // provider is goose over Driver's migrations.
 func provider(db *sql.DB) (*goose.Provider, error) {

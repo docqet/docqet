@@ -54,6 +54,11 @@ func ServeCommand() *cli.Command {
 				Sources: cli.EnvVars("LOG_FORMAT"),
 			},
 			databaseFlag(),
+			&cli.BoolFlag{
+				Name:    "migrate",
+				Usage:   "bring the database up to date before serving, rather than refusing to start on one that's behind: for local runs",
+				Sources: cli.EnvVars("MIGRATE"),
+			},
 		},
 		Action: func(ctx context.Context, cmd *cli.Command) error {
 			logger := logs.New(os.Stderr, cmd.String("log-level"), cmd.String("log-format"))
@@ -64,9 +69,16 @@ func ServeCommand() *cli.Command {
 				return err
 			}
 			defer func() { _ = db.Close() }()
-			// Migrations are a step of their own, never run here, so a
-			// database behind this version refuses to serve.
-			if err := database.CheckMigrated(ctx, db); err != nil {
+			// Migrations are a step of their own unless --migrate asks for
+			// them here, for a local run. Otherwise a database behind this
+			// version refuses to serve.
+			if cmd.Bool("migrate") {
+				applied, version, err := database.Migrate(ctx, db)
+				if err != nil {
+					return err
+				}
+				logger.InfoContext(ctx, "migrated database", "applied", applied, "version", version)
+			} else if err := database.CheckMigrated(ctx, db); err != nil {
 				return err
 			}
 

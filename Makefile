@@ -34,8 +34,8 @@ logs: ## Follow the server's logs
 migrate: ## Bring the local server's database, data/docqet.db, up to date
 	go run ./cmd/docqet migrate
 
-run: migrate ## Run the server locally, outside Docker, on localhost:8080, with its API docs at /docs/api
-	go run ./cmd/docqet serve
+run: ## Run the server locally, outside Docker, on localhost:8080, with its API docs at /docs/api, migrating its database first
+	go run ./cmd/docqet serve --migrate
 
 DOCQET_SERVER ?= http://localhost:8080
 

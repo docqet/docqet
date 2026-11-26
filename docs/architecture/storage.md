@@ -77,10 +77,11 @@ placeholders, named for now by what they hold (see
 - **`internal/database` opens it and keeps its schema up to date.** Its goose
   migrations are in `internal/database/migrations/`, in a folder for each
   driver: `migrations/sqlite/` for now.
-- **Migrations run from an explicit command**, `docqet migrate`, never when
+- **Migrations run from an explicit command**, `docqet migrate`, not when
   the server starts. `docqet serve` refuses to start on a database that's
-  behind. Compose runs `migrate` as a service of its own that the app waits
-  for, and `make run` runs it first.
+  behind, unless it's given `--migrate` (`MIGRATE=true`), which brings it up
+  to date first. That's off by default and meant for local runs: `make run`
+  passes it, and `compose.yml` sets it for the local stack.
 - **The database is one file**, at `DATABASE_PATH`: `data/docqet.db` for a
   local run, ignored by git, and `/var/lib/docqet/docqet.db` on a volume in
   Compose.
