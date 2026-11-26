@@ -12,8 +12,8 @@ explains it, and `docs/architecture/` says how it's built.
 - **`examples/` holds projects of their own**, each with a `docket.yaml`,
   used as fixtures. Their `.docket/state.json` files are written by hand, so
   never run `docket index` in them without `--stdout`.
-- **The kit's source is `kit/`.** The copy in `.agents/skills/docket/`, and
-  the block below, are written by
+- **The kit's source is `kit/`.** It's installed here for Claude Code: the
+  copy in `.claude/skills/docket/`, and the block below, are written by
   `go run ./cmd/docket kit update`: edit `kit/`, then run it. CI fails when they
   differ. A change to a command's flags or output that the kit names changes
   the kit in the same commit.
@@ -35,7 +35,7 @@ point back at them: `docket:implements`, `docket:verifies`, `docket:gap` and
 You work with it through the `docket` command, which reads the docs and
 annotations and checks them. If `docket` isn't installed, ask the user to
 install it before changing anything here. The `docket` skill, in
-`.agents/skills/docket/`, has the details: read its `SKILL.md` before your
+`.claude/skills/docket/`, has the details: read its `SKILL.md` before your
 first change to code, tests or docs here, whether or not your agent loads
 skills from that folder.
 

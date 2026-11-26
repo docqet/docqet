@@ -6,4 +6,4 @@
 /kit/**/*.md
 
 # The agent kit's skill, written by docket kit. Its examples aren't this project's.
-/.agents/skills/docket/**/*.md
+/.claude/skills/docket/**/*.md

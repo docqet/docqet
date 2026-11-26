@@ -190,8 +190,10 @@ docket kit agents                           # the agents it can be installed for
   the block from `CLAUDE.md`, which imports `AGENTS.md` when other agents use
   the kit too. Each skill folder is a real copy. The kit README lists every
   agent.
-- **What's installed is worked out from the skill folders there**, so nothing
-  else records it.
+- **A lock records what it installed**, in `.agents/docket.lock`, or
+  `.claude/docket.lock` when the kit is only for Claude Code: the agents'
+  targets, and whether it added the `@AGENTS.md` line. So removing the kit
+  takes out what it wrote, and nothing of the project's.
 - **It owns its skill folders and its block, and nothing else.** It makes the
   skill folders match the kit exactly, and replaces only what's between the
   `<!-- docket-kit:start -->` and `<!-- docket-kit:end -->` markers. The

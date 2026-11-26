@@ -38,8 +38,9 @@ kit/
 
 These files are the kit's source. They're built into `docket`, so each
 release of the command carries the kit written for its commands. This
-repository installs its own kit with `docket kit install` too, so its copy
-in `.agents/` is checked against these files in CI, with `docket kit check`.
+repository installs its own kit too, for Claude Code, with
+`docket kit install --agent claude`, so its copy in `.claude/` is checked
+against these files in CI, with `docket kit check`.
 
 ## Installing it in a project
 
@@ -63,6 +64,7 @@ project, so everyone working on it gets it:
 | `AGENTS.md`              | For any agent but Claude Code     | The kit's block, between `<!-- docket-kit:start -->` and `<!-- docket-kit:end -->` |
 | `CLAUDE.md`              | For Claude Code                   | The block, when it's only for Claude Code. With other agents too, `@AGENTS.md`     |
 | `CLAUDE.md`              | For other agents, if it exists    | `@AGENTS.md`, since Claude Code reads `AGENTS.md` only without a `CLAUDE.md`       |
+| `.agents/docket.lock`    | Always, or `.claude/` for Claude Code only | What the kit installed, so it removes only that                    |
 | `.docketignore`          | Always                            | Each skill folder, so its example annotations aren't read as the project's own     |
 
 - **The block is written once.** It's in `AGENTS.md` whenever the kit is
@@ -75,8 +77,11 @@ project, so everyone working on it gets it:
   `AGENTS.md` or `CLAUDE.md`, or replaced in place, and other tools can keep
   blocks of their own beside it.
 
-What's installed is worked out from the skill folders that are there, so
-nothing else records it.
+A lock, `.agents/docket.lock`, or `.claude/docket.lock` when the kit is
+only for Claude Code, records what it installed: the agents' targets, and
+whether it added the `@AGENTS.md` line. So `remove` takes out what the kit
+wrote and nothing else. A kit installed before the lock is read from the
+skill folders there, and gets one on its next `docket kit update`.
 
 ```bash
 docket kit                            # what it's installed for, and whether it's this docket's
@@ -90,9 +95,7 @@ docket kit agents                     # the agents it can be installed for
 
 Each reports every file as `added`, `updated`, `removed` or `ok`, and changes
 only what's the kit's: its skill folders, which it makes match the kit
-exactly, what's between its markers, and the lines it adds. Removing the kit
-leaves an `@AGENTS.md` line in `CLAUDE.md`, which the project may want
-anyway.
+exactly, what's between its markers, the lines it adds, and its lock.
 
 Don't hand-edit the skill or the block, since the next `docket kit update`
 overwrites them. To change the kit for every project, change it here. To
