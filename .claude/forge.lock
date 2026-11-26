@@ -1,0 +1,19 @@
+# forge v0.0.0-20261126153438-0f635676c96a
+# targets claude
+# languages go typescript
+# stacks go/http typescript/react
+commit
+implement
+pr
+promote
+qa
+stability-review
+use
+ux
+observability
+standards
+testing
+go
+typescript
+go-http
+typescript-react

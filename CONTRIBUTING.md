@@ -73,6 +73,10 @@ running the code you're changing.
   generated. Edit `kit/`, then run `go run ./cmd/docqet kit update`. CI fails
   if they differ. A change to a command's flags or output that the kit names
   changes the kit too.
+- **Forge's skills and block are generated too.** The other skills in
+  `.claude/skills/`, the Forge block in `CLAUDE.md`, and `.claude/forge.lock`
+  are written by [forge](https://github.com/exalynt/forge). Don't edit them:
+  run `forge update` to bring them up to date.
 - **`ui/` is built into the binary.** Run `make ui-build` before `go build`
   if you want the real UI in it.
 
