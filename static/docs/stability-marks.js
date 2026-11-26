@@ -22,8 +22,8 @@
   // never runs. Keep in step with stabilityMark in internal/handlers.
   const STABILITY_MARK = "⁠";
 
-  const STABILITY_DOCS_URL = "https://github.com/exalynt/docqet/blob/main/docqet/domains/authoring/concepts/stability-level.md";
-  const MATURITY_DOCS_URL = "https://github.com/exalynt/docqet/blob/main/docqet/domains/reporting/concepts/maturity.md";
+  const STABILITY_DOCS_URL = "https://github.com/docqet/docqet/blob/main/docqet/domains/authoring/concepts/stability-level.md";
+  const MATURITY_DOCS_URL = "https://github.com/docqet/docqet/blob/main/docqet/domains/reporting/concepts/maturity.md";
 
   const { operations = {}, tags = {}, order = [] } = window.DOCQET_STABILITY || {};
 
