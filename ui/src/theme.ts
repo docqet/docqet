@@ -25,8 +25,12 @@ type DocqetPalette = {
   impact: { blocking: string; inconvenient: string };
   /* Each stability level's color. */
   stability: Record<StabilityLevelId, string>;
-  /* The logo's tile, from light to dark, its mark, and its dot: the same in both schemes. */
-  brand: { light: string; main: string; dark: string; mark: string; dot: string };
+  /*
+   * The logo, the same in both schemes: its tile, from light to dark; the page,
+   * a folded D; the page's fold; and its two rules, each a track (what's meant)
+   * with a fill (what's met). `trackSmall` is a step darker, for 24px and below.
+   */
+  brand: { light: string; main: string; dark: string; mark: string; fold: string; track: string; trackSmall: string; fill: string };
 };
 
 declare module "@mui/material/styles" {
@@ -43,7 +47,16 @@ declare module "@mui/material/styles" {
   }
 }
 
-const brand = { light: "#a78bfa", main: "#7c3aed", dark: "#5b21b6", mark: "#ffffff", dot: "#f0abfc" };
+const brand = {
+  light: "#a78bfa",
+  main: "#7c3aed",
+  dark: "#5b21b6",
+  mark: "#ffffff",
+  fold: "#cab9fc",
+  track: "#eae0fc",
+  trackSmall: "#ddd0fb",
+  fill: "#ae85f4",
+};
 
 /*
  * Docqet's MUI theme: violet and fuchsia, Geist, cards with tight 8px

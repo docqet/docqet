@@ -4,13 +4,17 @@ import type { ResponsiveStyleValue } from "@mui/system";
 import { useId } from "react";
 
 /*
- * Docqet's mark, a geometric "d" on a violet tile with a status light, and
- * its wordmark. The tile is the theme's brand colors, the same in both
- * schemes, since it holds up on light and dark backgrounds alike.
+ * Docqet's mark, a folded page shaped as a capital "D" on a violet tile, and
+ * its wordmark. The page holds two rules, each a track for what's meant and a
+ * fill for what's met: one met, one halfway. The tile is the theme's brand
+ * colors, the same in both schemes, since it holds up on light and dark
+ * backgrounds alike. docs/assets/logo/ has it as files.
  */
 export function Mark({ size = 28 }: { size?: number }) {
   const gradient = useId();
   const brand = useTheme().vars.palette.brand;
+  /* Under 24px a paler track disappears, and the halfway rule reads as a short one. */
+  const track = size <= 24 ? brand.trackSmall : brand.track;
   return (
     <svg width={size} height={size} viewBox="0 0 32 32" fill="none" aria-hidden>
       <defs>
@@ -22,9 +26,11 @@ export function Mark({ size = 28 }: { size?: number }) {
       </defs>
       <rect x="1" y="1" width="30" height="30" rx="9" fill={`url(#${gradient})`} />
       <rect x="1.5" y="1.5" width="29" height="29" rx="8.5" style={{ stroke: brand.mark }} strokeOpacity=".2" />
-      <circle cx="14.5" cy="18" r="5.5" style={{ stroke: brand.mark }} strokeWidth="3.2" />
-      <path d="M20.5 8v15.5" style={{ stroke: brand.mark }} strokeWidth="3.2" strokeLinecap="round" />
-      <circle cx="9.5" cy="9.5" r="1.9" style={{ fill: brand.dot }} />
+      <path d="M12 7H15.5C21.3 7 25 10.9 25 16.2C25 21.5 21.3 25.5 15.5 25.5H9A1.5 1.5 0 0 1 7.5 24V11.5Z" style={{ fill: brand.mark }} />
+      <path d="M12 7V11.5H7.5Z" style={{ fill: brand.fold }} />
+      <rect x="10.7" y="13.55" width="10.77" height="2.4" rx="1.2" style={{ fill: brand.fill }} />
+      <rect x="10.7" y="18.15" width="10.14" height="2.4" rx="1.2" style={{ fill: track }} />
+      <rect x="10.7" y="18.15" width="5.07" height="2.4" rx="1.2" style={{ fill: brand.fill }} />
     </svg>
   );
 }

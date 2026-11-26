@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none" role="img" aria-label="Docqet">
+  <defs>
+    <linearGradient id="docqet-avatar" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#a78bfa"/>
+      <stop offset=".55" stop-color="#7c3aed"/>
+      <stop offset="1" stop-color="#5b21b6"/>
+    </linearGradient>
+  </defs>
+  <rect width="32" height="32" fill="url(#docqet-avatar)"/>
+  <g transform="translate(16 16.25) scale(1.12) translate(-16.25 -16.25)">
+    <path d="M12 7H15.5C21.3 7 25 10.9 25 16.2C25 21.5 21.3 25.5 15.5 25.5H9A1.5 1.5 0 0 1 7.5 24V11.5Z" fill="#ffffff"/>
+    <path d="M12 7V11.5H7.5Z" fill="#cab9fc"/>
+    <rect x="10.70" y="13.55" width="10.77" height="2.4" rx="1.2" fill="#eae0fc"/>
+    <rect x="10.70" y="13.55" width="10.77" height="2.4" rx="1.2" fill="#ae85f4"/>
+    <rect x="10.70" y="18.15" width="10.14" height="2.4" rx="1.2" fill="#eae0fc"/>
+    <rect x="10.70" y="18.15" width="5.07" height="2.4" rx="1.2" fill="#ae85f4"/>
+  </g>
+</svg>
