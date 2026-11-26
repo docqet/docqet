@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="176" height="18" viewBox="0 0 176 18" role="img" aria-label="Stability: Prototype · Exploring">
+  <title>Stability: Prototype · Exploring</title>
+  <rect x="0" y="6.5" width="5" height="5" rx="1" fill="#aaa4ba"/>
+  <rect x="7.5" y="6.5" width="5" height="5" rx="1" fill="#262130"/>
+  <rect x="15" y="6.5" width="5" height="5" rx="1" fill="#262130"/>
+  <rect x="22.5" y="6.5" width="5" height="5" rx="1" fill="#262130"/>
+  <text x="34" y="13.5" fill="#aaa4ba" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13"><tspan font-weight="500">Prototype</tspan><tspan fill-opacity="0.75"> · Exploring</tspan></text>
+</svg>

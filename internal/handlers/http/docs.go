@@ -76,7 +76,7 @@ var docsTemplate = template.Must(template.New("docs").Parse(`<!DOCTYPE html>
       });
     </script>
     <script>
-      window.EXALYNT_STABILITY = {{.Stability}};
+      window.DOCKET_STABILITY = {{.Stability}};
     </script>
     <script src="stability-marks.js"></script>
   </body>

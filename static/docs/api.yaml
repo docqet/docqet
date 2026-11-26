@@ -20,13 +20,13 @@ info:
     ## Stability
 
 
-    Every endpoint carries an Exalynt
-    [stability level](https://readme.exalynt.com/how-it-works/stability-levels):
+    Every endpoint carries a
+    [stability level](https://github.com/exalynt/docket/blob/main/docket/domains/authoring/concepts/stability-level.md):
     Prototype, Alpha, Beta, or GA. Below GA it shows as a mark beside the
     endpoint and in the navigation, which says what to expect when you hover,
     focus, or tap it, and every endpoint states it in its `x-stability`
     field. Each group of endpoints shows its
-    [maturity](https://readme.exalynt.com/how-it-works/maturity) in the
+    [maturity](https://github.com/exalynt/docket/blob/main/docket/domains/reporting/concepts/maturity.md) in the
     navigation, and in the overview under Maturity below: how close its
     endpoints are to being stable and supported.
 

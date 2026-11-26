@@ -147,7 +147,7 @@ On the server:
 
 ## Conventions
 
-The api repository's REST conventions apply:
+These REST conventions apply:
 
 - **Paths** are plural and kebab-case, under `/api/v1`.
 - **Each endpoint returns a translated resource**, a `CapabilityResource`
@@ -155,7 +155,7 @@ The api repository's REST conventions apply:
   whole-state endpoints are the one exception: there, the state is the
   resource.
 - **A list is a bare JSON array**, and an error is `{"error": "..."}`, with
-  the api's status codes.
+  standard HTTP status codes.
 - **Every list is paginated from its first version**, through
   `github.com/exalynt/turn`, with `Link` and `X-Total-Count` headers and
   never anything in the body. So filtering, sorting and search are the

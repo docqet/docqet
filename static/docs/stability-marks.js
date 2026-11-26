@@ -1,6 +1,6 @@
-// Draws stability the way the design package does (design:
-// src/components/stability/ and src/components/maturity/), each with a
-// popover (hover, focus, or tap) saying what it means:
+// Draws stability the way Docket's UI does (its StabilityMark and
+// MaturityRing), each with a popover (hover, focus, or tap) saying what it
+// means:
 //
 //   - Scalar's stability badge on each operation becomes a StabilityMark: the
 //     Track and the level's name, in the level's color. Scalar draws an
@@ -9,23 +9,23 @@
 //     leaves Scalar's own pill in place if it cannot.
 //   - Each operation in the navigation gets a short StabilityMark, the Track
 //     alone, and each tag a MaturityRing worked out from its operations'
-//     levels. The docs page puts every level in window.EXALYNT_STABILITY,
+//     levels. The docs page puts every level in window.DOCKET_STABILITY,
 //     since the navigation only draws a tag's operations once it's opened.
 //   - The introduction's Maturity section gets an overview: the whole API's
 //     maturity, how many endpoints are at each level, and every tag's
 //     MaturityRing, each linking to its tag.
 //
-// The levels and maturity's rules mirror the design package's
-// stability/stability.ts and maturity/maturity.ts; change them there first.
+// The levels and maturity's rules are Docket's own, as the UI's stability.ts
+// and maturity.ts define them; keep this in step with those.
 (() => {
   // U+2060 WORD JOINER: invisible, so a badge reads normally if this script
   // never runs. Keep in step with stabilityMark in internal/handlers.
   const STABILITY_MARK = "⁠";
 
-  const STABILITY_DOCS_URL = "https://readme.exalynt.com/how-it-works/stability-levels";
-  const MATURITY_DOCS_URL = "https://readme.exalynt.com/how-it-works/maturity";
+  const STABILITY_DOCS_URL = "https://github.com/exalynt/docket/blob/main/docket/domains/authoring/concepts/stability-level.md";
+  const MATURITY_DOCS_URL = "https://github.com/exalynt/docket/blob/main/docket/domains/reporting/concepts/maturity.md";
 
-  const { operations = {}, tags = {}, order = [] } = window.EXALYNT_STABILITY || {};
+  const { operations = {}, tags = {}, order = [] } = window.DOCKET_STABILITY || {};
 
   // Each level, and the maturity band named for it, which takes its color.
   const LEVELS = [
@@ -90,7 +90,7 @@
   // and how much weight that score carries in the average. One GA weighs as
   // much as 1.5 Betas, 2 Alphas, or 3 Prototypes, and each score sits inside its
   // level's band, so a tag whose operations are all at one level shows in that
-  // level's band. Mirrors MATURITY_LEVELS in design's maturity/maturity.ts.
+  // level's band. Matches MATURITY_LEVELS in the UI's maturity.ts.
   const MATURITY_LEVELS = {
     prototype: { score: 15, weight: 2 },
     alpha: { score: 35, weight: 3 },

@@ -12,7 +12,7 @@ import (
 )
 
 // stabilityBadges name the badge the docs show for each x-stability level,
-// as on https://readme.exalynt.com/how-it-works/stability-levels. GA is the
+// as Docket's stability levels name them. GA is the
 // default expectation, so it gets no badge.
 var stabilityBadges = map[string]string{
 	"prototype": "Prototype",
@@ -22,7 +22,7 @@ var stabilityBadges = map[string]string{
 
 // stabilityMark ends every stability badge's name, so the docs page's
 // stability-marks.js can find exactly those badges and draw them like the
-// design package's StabilityMark. It is U+2060 WORD JOINER, which is
+// UI's StabilityMark. It is U+2060 WORD JOINER, which is
 // invisible, so the badge reads normally wherever the script does not run.
 // Keep in step with STABILITY_MARK in static/docs/stability-marks.js.
 const stabilityMark = "\u2060"

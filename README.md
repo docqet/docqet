@@ -1,15 +1,15 @@
 # docket
 
-<a href="https://readme.exalynt.com/how-it-works/stability-levels#stability-prototype"><picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://design.exalynt.io/stability/prototype-extra-long-dark.svg">
-  <img src="https://design.exalynt.io/stability/prototype-extra-long-light.svg" alt="Stability: Prototype · Exploring" height="18">
+<a href="docket/domains/authoring/concepts/stability-level.md"><picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/stability-prototype-dark.svg">
+  <img src="docs/assets/stability-prototype-light.svg" alt="Stability: Prototype · Exploring" height="18">
 </picture></a>
 
 What your software is meant to do, written beside the code, linked to the
 evidence of what it actually does, and readable by everyone with a stake in it.
 
 > [!WARNING]
-> Docket is a **Prototype**, one of Exalynt's [stability levels](https://readme.exalynt.com/how-it-works/stability-levels). It explores an idea so we can choose a direction. Anything here, the format included, may change completely or be thrown away. Don't build on it yet.
+> Docket is a **Prototype**, one of Docket's [stability levels](docket/domains/authoring/concepts/stability-level.md). It explores an idea so we can choose a direction. Anything here, the format included, may change completely or be thrown away. Don't build on it yet.
 
 Docket is an open format, and the tools that read it, for writing down what
 your software is meant to do: its capabilities, the rules they follow, the
@@ -33,7 +33,7 @@ intended, what's real, and the gap between.
 
 Docket exists to help people apply the discipline of software engineering to
 their projects, with
-[craft and judgment](https://readme.exalynt.com/how-it-works/software-engineering).
+[craft and judgment](#how-it-supports-software-engineering).
 Judgment is only as sound as the evidence it rests on, and for most projects
 that evidence is hard to find:
 
@@ -152,14 +152,13 @@ its own indexer for it.
 
 ## How it supports software engineering
 
-Exalynt defines
-[software engineering](https://readme.exalynt.com/how-it-works/software-engineering)
-as the discipline of applying engineering
-[craft](https://readme.exalynt.com/how-it-works/software-engineering#engineering-craft)
-and
-[judgment](https://readme.exalynt.com/how-it-works/software-engineering#engineering-judgment)
-to build software that delivers value to people, consistently behaves as
-intended, and evolves gracefully.
+Docket defines software engineering as the discipline of applying
+engineering craft and judgment to build software that delivers value to
+people, consistently behaves as intended, and evolves gracefully. These ideas
+take inspiration from
+[Exalynt's thinking on software engineering](https://readme.exalynt.com/how-it-works/software-engineering),
+but Docket defines them for itself, along with its stability levels, maturity,
+readiness and the rest of its concepts.
 
 A discipline is a set of shared standards that people hold each other to.
 Docket gives a project's standards somewhere to live: an open format for writing
@@ -176,7 +175,7 @@ change to either reviewed in a pull request alongside the code.
 
 ### Judgment
 
-Exalynt defines judgment as the ability to evaluate tradeoffs amid uncertainty,
+Docket defines judgment as the ability to evaluate tradeoffs amid uncertainty,
 decide at the right moment, and take responsibility for the outcomes. Deciding
 how much design, testing and polish the work needs for its stability level is
 one of the places it's used. Docket gives each of these somewhere to be written
@@ -219,13 +218,12 @@ that declaration specific, and puts it beside the code it's about.
 
 ### Agents
 
-Exalynt's view of
-[AI in software engineering](https://readme.exalynt.com/how-it-works/ai-in-software-engineering)
-is that AI's judgments often lack the circumstances behind a decision, and the
-discipline supplies them: what the AI needs to know, and whether what comes
-back is right. Docket gives agents the first, the declared intention, before
-they change code. It leaves the second with people: nothing an agent writes
-counts until a person confirms it.
+Docket's view of AI in software engineering is that AI's judgments often lack
+the circumstances behind a decision, and the discipline supplies them: what
+the AI needs to know, and whether what comes back is right. Docket gives
+agents the first, the declared intention, before they change code. It leaves
+the second with people: nothing an agent writes counts until a person
+confirms it.
 
 Docket informs judgment and shows the standard of craft, but it does neither.
 People decide what to build, what level a capability is at, and when a gap is

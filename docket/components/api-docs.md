@@ -17,13 +17,6 @@ gaps:
       and the page loads `@scalar/api-reference` from jsdelivr without a
       version. A Scalar release can stop the marks, rings and overview from
       appearing, with no error, and nothing tests the rendered page.
-  - id: two-copies
-    name: Two copies of the script and bundler
-    impact: negligible
-    likelihood: expected
-    description: >-
-      The script and bundler are here and in the api repository, kept in step
-      by hand.
 ---
 
 How it works is in [API docs](../../docs/architecture/api-docs.md).

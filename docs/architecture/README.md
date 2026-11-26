@@ -11,9 +11,9 @@ which._
 
 ## Layers
 
-`docket` follows the api repository's layering, with one difference: most of
-Docket's logic is computation over docs, not orchestration, so it lives in
-pure packages below the services.
+`docket` is layered, from thin entry points down to I/O behind interfaces.
+Most of Docket's logic is computation over docs, not orchestration, so it
+lives in pure packages below the services.
 
 ```text
 internal/commands, internal/handlers/http     thin: parse input, call a service, render
@@ -31,7 +31,7 @@ a client for the server
   one service method, and renders the result: text for people, JSON with
   `--json`. A handler does the same with a request. Rendering text is
   presentation, so it stays in `commands`.
-- **Services orchestrate.** As in the api, each is built with
+- **Services orchestrate.** Each is built with
   `NewXService(...)` from interfaces, and takes `ctx` first. A service only
   exists once there's orchestration to do. Until then, a command may call the
   core directly, as `docket index` will at first.
@@ -39,8 +39,8 @@ a client for the server
   network or a database, so what it works out depends only on what it's
   given. That's what lets the CLI, the server and the UI never disagree, and
   lets the server's history be rebuilt from git.
-- **Boundaries** are interfaces with an implementation package each, as the
-  api's are: `repositories` and `repositories/sqlite`, for example. Each is
+- **Boundaries** are interfaces with an implementation package each:
+  `repositories` and `repositories/sqlite`, for example. Each is
   added with the first command that needs it, never ahead of it.
 
 The core's packages:

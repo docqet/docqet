@@ -3,9 +3,9 @@
 _How the server keeps what it's sent: repositories, SQLite, and keeping states
 small. Part of [how `docket` is built](README.md)._
 
-The server keeps what it's sent in SQLite, behind repositories, as the api
-repository does. The state repository is built, storing each distinct state
-once by its hash. The results and changes repositories are still to come.
+The server keeps what it's sent in SQLite, behind repositories. The state
+repository is built, storing each distinct state once by its hash. The results
+and changes repositories are still to come.
 
 **Code:** `internal/repositories` (each repository's interface in a file of
 its own, and what they share in `shared.go`), `internal/repositories/sqlite`
@@ -15,7 +15,7 @@ store, and when).
 
 ## Repositories
 
-The api's repository rules apply:
+The repositories follow these rules:
 
 - **Repositories only persist.** They store and retrieve, with no logic and
   no decisions, and use common names: `Get`, `List`, `Upsert`, `Create`.
@@ -74,13 +74,13 @@ placeholders, named for now by what they hold (see
 
 - **The driver is `modernc.org/sqlite`**, which is pure Go, so the image still
   builds with `CGO_ENABLED=0`.
-- **`internal/database` opens it and keeps its schema up to date**, as the
-  api's does. Its goose migrations are in `internal/database/migrations/`, in
-  a folder for each driver: `migrations/sqlite/` for now.
+- **`internal/database` opens it and keeps its schema up to date.** Its goose
+  migrations are in `internal/database/migrations/`, in a folder for each
+  driver: `migrations/sqlite/` for now.
 - **Migrations run from an explicit command**, `docket migrate`, never when
-  the server starts, as the api's rule says. `docket serve` refuses to start
-  on a database that's behind. Compose runs `migrate` as a service of its own
-  that the app waits for, and `make run` runs it first.
+  the server starts. `docket serve` refuses to start on a database that's
+  behind. Compose runs `migrate` as a service of its own that the app waits
+  for, and `make run` runs it first.
 - **The database is one file**, at `DATABASE_PATH`: `data/docket.db` for a
   local run, ignored by git, and `/var/lib/docket/docket.db` on a volume in
   Compose.
