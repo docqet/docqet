@@ -8,7 +8,7 @@ import { sectionHref } from "../routes";
 /*
  * Around each page, so one that crashes says so, with a way to reload or go
  * to the overview, while the shell around it keeps working. Keyed by the
- * address where it's used, so going anywhere else starts afresh.
+ * page and tab where it's used, so going to another starts afresh.
  */
 export class ErrorBoundary extends Component<{ children: ReactNode }, { failed: boolean }> {
   state = { failed: false };

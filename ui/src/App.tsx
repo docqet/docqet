@@ -162,10 +162,18 @@ export default function App() {
     >
       {refreshing ? <LinearProgress sx={{ position: "fixed", top: 0, left: 0, right: 0, height: 2, zIndex: "appBar" }} /> : null}
       {loaded.error ? <ReadError what="what's showing now. What you see is from before" onRetry={loaded.retry} /> : null}
-      <ErrorBoundary key={search}>{content(state, route, layoutKey)}</ErrorBoundary>
+      <ErrorBoundary key={pageKey(route)}>{content(state, route, layoutKey)}</ErrorBoundary>
     </Shell>
   );
 }
+
+/*
+ * Which page is showing, and which of its tabs: what a crash is contained to.
+ * Not the whole address, since a page changes its own params, such as a
+ * filter, or the map forgetting `show` once it has opened what it named, and
+ * remounting it then would throw away what it just did.
+ */
+const pageKey = (route: Route) => (route.kind === "doc" ? `${route.doc}:${route.id}` : route.section) + `|${route.tab ?? ""}`;
 
 /* The view or doc page the address names. */
 function content(state: DocketState, route: Route, layoutKey: string): ReactNode {
