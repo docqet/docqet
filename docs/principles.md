@@ -7,13 +7,16 @@ belongs in it._
 
 ## How it supports software engineering
 
-Software engineering is the discipline of applying engineering craft and
-judgment to build software that delivers value to people, consistently
-behaves as intended, and evolves gracefully. That's
-[Exalynt's thinking on software engineering](https://readme.exalynt.com/how-it-works/software-engineering),
-and the stability levels and maturity Docqet records come from it too.
-Docqet doesn't define or own any of it. It's a tool for applying the
-discipline through intent as code.
+Software engineering is the discipline of applying
+[engineering craft](https://readme.exalynt.com/how-it-works/software-engineering/#engineering-craft)
+and [judgment](https://readme.exalynt.com/how-it-works/software-engineering/#engineering-judgment)
+to build software that delivers value to people, consistently behaves as
+intended, and evolves gracefully. That's
+[Exalynt's definition of software engineering](https://readme.exalynt.com/how-it-works/software-engineering/),
+and the [stability levels](https://readme.exalynt.com/how-it-works/stability-levels/)
+and [maturity](https://readme.exalynt.com/how-it-works/maturity/) Docqet
+records come from Exalynt too. Docqet doesn't define or own any of it. It's
+a tool for applying the discipline through intent as code.
 
 A discipline is a set of shared standards that people hold each other to.
 Docqet gives a project's standards somewhere to live: an open format for
@@ -31,7 +34,8 @@ the code.
 
 ### Judgment
 
-Judgment is the ability to evaluate tradeoffs amid uncertainty, decide at
+[Engineering judgment](https://readme.exalynt.com/how-it-works/software-engineering/#engineering-judgment)
+is the practiced ability to evaluate tradeoffs amid uncertainty, decide at
 the right moment, and take responsibility for the outcomes. People exercise
 it, not Docqet. Docqet gives each part somewhere to be written down:
 
@@ -48,8 +52,9 @@ people affected at its center. That's up to the people making it.
 
 ### Craft
 
-Craft is how well the software is built: clear, simple, secure, dependable
-and maintainable. Docqet can't judge code. It holds the team's intention
+[Craft](https://readme.exalynt.com/how-it-works/software-engineering/#engineering-craft)
+is how well the software is built: clear, simple, secure, dependable and
+maintainable. Docqet can't judge code. It holds the team's intention
 about how the software is built, and shows where the build falls short:
 
 - **Tradeoffs made on purpose**, with their benefit and drawback, and what
