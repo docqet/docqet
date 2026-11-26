@@ -1,4 +1,6 @@
+import Box from "@mui/material/Box";
 import { useTheme } from "@mui/material/styles";
+import type { ResponsiveStyleValue } from "@mui/system";
 import { useId } from "react";
 
 /*
@@ -27,11 +29,26 @@ export function Mark({ size = 28 }: { size?: number }) {
   );
 }
 
-export default function Logo() {
+/* The mark and wordmark. `wordmark` says where the word shows, such as `{ sm: "none", md: "inline" }` to leave the mark alone in a crowded bar. */
+export default function Logo({ wordmark = "inline" }: { wordmark?: ResponsiveStyleValue<"inline" | "none"> }) {
   return (
-    <span className="logo">
+    <Box component="span" sx={{ display: "inline-flex", alignItems: "center", gap: "9px" }}>
       <Mark />
-      <span className="wordmark">docket</span>
-    </span>
+      <Box
+        component="span"
+        sx={{
+          display: wordmark,
+          fontWeight: 650,
+          fontSize: 19,
+          letterSpacing: "-0.03em",
+          background: (t) => `linear-gradient(120deg, ${t.vars.palette.text.primary} 30%, ${t.vars.palette.primary.main} 100%)`,
+          backgroundClip: "text",
+          WebkitBackgroundClip: "text",
+          color: "transparent",
+        }}
+      >
+        docket
+      </Box>
+    </Box>
   );
 }

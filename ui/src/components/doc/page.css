@@ -57,10 +57,6 @@ a.page-crumb:hover {
 
 /* ——— Sections ——— */
 
-.view-section .page-card {
-  padding: 14px 18px;
-}
-
 .page-line {
   max-width: 760px;
   font-size: 14px;

@@ -4,7 +4,9 @@ import RadioButtonUncheckedRoundedIcon from "@mui/icons-material/RadioButtonUnch
 import RocketLaunchOutlinedIcon from "@mui/icons-material/RocketLaunchOutlined";
 import UnfoldMoreRoundedIcon from "@mui/icons-material/UnfoldMoreRounded";
 import Menu from "@mui/material/Menu";
+import Box from "@mui/material/Box";
 import MenuItem from "@mui/material/MenuItem";
+import { MenuGroup, Option, filterSx, hintSx, menuSlots, switchSx } from "./ProductFilter";
 import { navigate, withParam } from "../../routes";
 import { scopeParam, type Scope } from "../../scope";
 import type { Initiative } from "../../state";
@@ -40,56 +42,51 @@ export default function ScopeFilter({ scope, initiatives }: { scope: Scope; init
   };
 
   return (
-    <div className="project">
-      <button
+    <Box sx={filterSx}>
+      <Box
+        component="button"
         type="button"
-        className="project-switch"
+        sx={switchSx}
         aria-haspopup="menu"
         aria-expanded={anchor ? true : undefined}
-        onClick={(e) => setAnchor(e.currentTarget.closest<HTMLElement>(".project"))}
+        onClick={(e) => setAnchor(e.currentTarget.parentElement)}
       >
         <InitiativeIcon />
         <strong>{scopeName(scope, initiatives)}</strong>
         <UnfoldMoreRoundedIcon aria-hidden sx={{ fontSize: 16 }} />
-      </button>
-      <span className="faint">Initiative</span>
+      </Box>
+      <Box component="span" sx={hintSx}>
+        Initiative
+      </Box>
       <Menu
         anchorEl={anchor}
         open={Boolean(anchor)}
         onClose={() => setAnchor(null)}
         anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
-        slotProps={{
-          paper: { className: "project-menu", sx: { minWidth: anchor?.offsetWidth } },
-          list: { className: "project-menu-list" },
-        }}
+        slotProps={menuSlots(anchor)}
       >
-        <li className="project-menu-group" role="presentation">
-          Initiative
-        </li>
+        <MenuGroup>Initiative</MenuGroup>
         {choices.map((c) => {
           const on = scopeParam(c.scope) === current;
           return (
             <MenuItem
               key={scopeParam(c.scope) ?? "all"}
-              className="project-menu-item"
+
               role="menuitemradio"
               aria-checked={on}
               selected={on}
               onClick={() => choose(c.scope)}
             >
               {on ? (
-                <RadioButtonCheckedRoundedIcon aria-hidden sx={{ fontSize: 18, flex: "none", color: "var(--accent)" }} />
+                <RadioButtonCheckedRoundedIcon aria-hidden sx={{ fontSize: 18, flex: "none", color: "primary.main" }} />
               ) : (
-                <RadioButtonUncheckedRoundedIcon aria-hidden sx={{ fontSize: 18, flex: "none", color: "var(--faint)" }} />
+                <RadioButtonUncheckedRoundedIcon aria-hidden sx={{ fontSize: 18, flex: "none", color: "text.disabled" }} />
               )}
-              <span className="project-option">
-                <span className="project-option-name">{c.name}</span>
-                <span className="faint">{c.hint}</span>
-              </span>
+              <Option name={c.name} hint={c.hint} />
             </MenuItem>
           );
         })}
       </Menu>
-    </div>
+    </Box>
   );
 }

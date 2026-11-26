@@ -4,7 +4,10 @@ import RuleRoundedIcon from "@mui/icons-material/RuleRounded";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 import WidgetsOutlinedIcon from "@mui/icons-material/WidgetsOutlined";
 import Box from "@mui/material/Box";
-import Modal from "@mui/material/Modal";
+import Dialog from "@mui/material/Dialog";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import { useTheme, type Theme } from "@mui/material/styles";
+import type { SystemStyleObject } from "@mui/system";
 import { STABILITY, levelColor } from "../stability/stability";
 import { StabilityTrack } from "../stability/StabilityTrack";
 import { ConceptIcon } from "../Concepts";
@@ -188,7 +191,11 @@ function highlight(title: string, terms: string[]): ReactNode {
   for (const [start, end] of spans) {
     if (start < i) continue;
     if (start > i) parts.push(title.slice(i, start));
-    parts.push(<mark key={start}>{title.slice(start, end)}</mark>);
+    parts.push(
+      <Box component="mark" key={start} sx={{ bgcolor: "transparent", color: "primary.main", fontWeight: 700 }}>
+        {title.slice(start, end)}
+      </Box>,
+    );
     i = end;
   }
   parts.push(title.slice(i));
@@ -285,111 +292,284 @@ export default function Search({ state, all, onSelect }: { state: DocketState; a
   };
 
   const placeholder = all.length > 1 ? "Search projects, features, capabilities…" : "Search domains, features, capabilities, rules…";
+  const theme = useTheme();
+  const phone = useMediaQuery(theme.breakpoints.down("sm"), { noSsr: true });
+  const still = useMediaQuery("(prefers-reduced-motion: reduce)", { noSsr: true });
 
   return (
     <>
-      <button type="button" className="panel search-trigger" data-no-pan onClick={() => setOpen(true)}>
-        <SearchRoundedIcon aria-hidden sx={{ fontSize: 18 }} />
-        <span className="search-trigger-label">Search</span>
-        <span className="search-keys" aria-hidden>
-          <kbd>{MOD}</kbd>
-          <kbd>K</kbd>
-        </span>
-      </button>
+      <Box
+        component="button"
+        type="button"
+        aria-label="Search"
+        data-no-pan
+        onClick={() => setOpen(true)}
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          gap: 1,
+          flex: { sm: "0 1 240px" },
+          minWidth: 0,
+          height: 40,
+          width: { xs: 40, sm: "auto" },
+          justifyContent: { xs: "center", sm: "flex-start" },
+          pl: { xs: 0, sm: 1.5 },
+          pr: { xs: 0, sm: 1 },
+          font: "inherit",
+          fontSize: 13.5,
+          fontWeight: 500,
+          color: { xs: "text.secondary", sm: "text.disabled" },
+          bgcolor: { xs: "transparent", sm: (t: Theme) => `color-mix(in srgb, ${t.vars.palette.text.primary} 3%, transparent)` },
+          border: { xs: 0, sm: 1 },
+          borderColor: { sm: "divider" },
+          borderRadius: { xs: "6px", sm: "8px" },
+          cursor: "pointer",
+          transition: "border-color 0.15s, color 0.15s",
+          "&:hover": { color: { xs: "primary.main", sm: "text.secondary" }, borderColor: "surface.borderStrong", bgcolor: { xs: "surface.accentSoft" } },
+          "&:focus-visible": { outline: 2, outlineColor: "primary.main", outlineOffset: 2 },
+        }}
+      >
+        <SearchRoundedIcon aria-hidden sx={{ fontSize: { xs: 20, sm: 18 } }} />
+        <Box component="span" aria-hidden sx={{ display: { xs: "none", sm: "inline" }, flex: 1, textAlign: "left" }}>
+          Search
+        </Box>
+        <Box component="span" aria-hidden sx={{ display: { xs: "none", sm: "inline-flex" }, gap: "3px" }}>
+          <Kbd>{MOD}</Kbd>
+          <Kbd>K</Kbd>
+        </Box>
+      </Box>
 
-      <Modal open={open} onClose={() => setOpen(false)} disableAutoFocus disableScrollLock slotProps={{ backdrop: { className: "search-backdrop" } }}>
-        <div className="search" role="dialog" aria-modal aria-label="Search" data-no-pan>
-          <label className="search-field">
-            <SearchRoundedIcon aria-hidden sx={{ fontSize: 20, color: "text.secondary" }} />
-            <input
-              ref={field}
-              type="search"
-              value={query}
-              placeholder={placeholder}
-              aria-label="Search projects, domains, features, capabilities, rules, concepts, and personas"
-              aria-expanded={q.length > 0}
-              aria-controls="search-results"
-              aria-activedescendant={flat[active] ? `result-${flat[active].key}` : undefined}
-              role="combobox"
-              autoComplete="off"
-              spellCheck={false}
-              onChange={(e) => setQuery(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "ArrowDown") {
-                  e.preventDefault();
-                  setActive((i) => Math.min(i + 1, flat.length - 1));
-                } else if (e.key === "ArrowUp") {
-                  e.preventDefault();
-                  setActive((i) => Math.max(i - 1, 0));
-                } else if (e.key === "Enter" && flat[active]) {
-                  e.preventDefault();
-                  choose(flat[active]);
-                }
-              }}
-            />
-            <kbd className="search-esc" onClick={() => setOpen(false)}>
-              Esc
-            </kbd>
-          </label>
+      {/*
+       * Open search: in the middle of the page, a little above centre, over
+       * the view dimmed and blurred; on a phone, the whole screen.
+       */}
+      <Dialog
+        open={open}
+        onClose={() => setOpen(false)}
+        fullScreen={phone}
+        maxWidth={false}
+        disableAutoFocus
+        disableScrollLock
+        transitionDuration={still ? 0 : { enter: 160, exit: 0 }}
+        slotProps={{
+          backdrop: {
+            sx: {
+              bgcolor: (t: Theme) => `color-mix(in srgb, ${t.vars.palette.background.default} 45%, transparent)`,
+              backdropFilter: "blur(6px) saturate(0.9)",
+            },
+          },
+          paper: { "aria-label": "Search", "data-no-pan": true, sx: paperSx } as object,
+        }}
+        sx={{ "& .MuiDialog-container": { alignItems: "flex-start" } }}
+      >
+        <Box
+          component="label"
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: 1.25,
+            flex: "none",
+            pl: 2,
+            pr: 1.75,
+            height: 56,
+            borderBottom: 1,
+            borderColor: "divider",
+            cursor: "text",
+          }}
+        >
+          <SearchRoundedIcon aria-hidden sx={{ fontSize: 20, color: "text.secondary" }} />
+          <Box
+            component="input"
+            ref={field}
+            type="search"
+            value={query}
+            placeholder={placeholder}
+            aria-label="Search projects, domains, features, capabilities, rules, concepts, and personas"
+            aria-expanded={q.length > 0}
+            aria-controls="search-results"
+            aria-activedescendant={flat[active] ? `result-${flat[active].key}` : undefined}
+            role="combobox"
+            autoComplete="off"
+            spellCheck={false}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setQuery(e.target.value)}
+            onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+              if (e.key === "ArrowDown") {
+                e.preventDefault();
+                setActive((i) => Math.min(i + 1, flat.length - 1));
+              } else if (e.key === "ArrowUp") {
+                e.preventDefault();
+                setActive((i) => Math.max(i - 1, 0));
+              } else if (e.key === "Enter" && flat[active]) {
+                e.preventDefault();
+                choose(flat[active]);
+              }
+            }}
+            sx={{
+              flex: 1,
+              minWidth: 0,
+              border: 0,
+              outline: 0,
+              bgcolor: "transparent",
+              font: "inherit",
+              fontSize: 16,
+              color: "text.primary",
+              "&::placeholder": { color: "text.disabled", opacity: 1 },
+              "&::-webkit-search-cancel-button": { display: "none" },
+            }}
+          />
+          <Box
+            component="button"
+            type="button"
+            onClick={() => setOpen(false)}
+            sx={[kbdSx, { bgcolor: "transparent", cursor: "pointer", font: "inherit", fontFamily: "fontFamilyMono", fontSize: 11 }]}
+          >
+            Esc
+          </Box>
+        </Box>
 
-          {searching ? <LinearProgress sx={{ height: 2 }} /> : null}
-          <div className="search-results" id="search-results" role="listbox" aria-busy={searching || undefined}>
-            {!q ? (
-              <div className="search-empty">Find a project, domain, feature, capability, rule, concept, or persona, and open it.</div>
-            ) : groups.length ? (
-              groups.map((g) => (
-                <div key={g.kind} role="group" aria-label={g.label}>
-                  <div className="search-group">{g.label}</div>
-                  {g.results.map((entry) => {
-                    const i = flat.indexOf(entry);
-                    return (
-                      <div
-                        key={entry.key}
-                        id={`result-${entry.key}`}
-                        role="option"
-                        aria-selected={i === active}
-                        className={`search-result${i === active ? " active" : ""}`}
-                        onMouseDown={(e) => e.preventDefault()}
-                        onMouseMove={() => setActive(i)}
-                        onClick={() => choose(entry)}
-                      >
-                        <KindIcon kind={entry.kind} />
-                        <span className="search-text">
-                          <span className="search-title">{highlight(entry.title, terms)}</span>
-                          <span className="search-context">{entry.from ? `${entry.from} · ${entry.context}` : entry.context}</span>
-                        </span>
-                        {entry.level ? <LevelMark level={entry.level} /> : entry.level === null ? <span className="faint">Draft</span> : null}
-                      </div>
-                    );
-                  })}
-                </div>
-              ))
-            ) : found?.q === q ? (
-              found.failed ? (
-                <div className="search-empty">
-                  <ReadError what="search results" onRetry={() => setAttempt((a) => a + 1)} />
-                </div>
-              ) : (
-                <div className="search-empty">Nothing matches “{q}”.</div>
-              )
-            ) : null}
-          </div>
+        {searching ? <LinearProgress sx={{ height: 2 }} /> : null}
+        <Box
+          id="search-results"
+          role="listbox"
+          aria-busy={searching || undefined}
+          sx={{ flex: 1, minHeight: 0, maxHeight: { sm: 440 }, overflowY: "auto", p: 0.75 }}
+        >
+          {!q ? (
+            <Box sx={emptySx}>Find a project, domain, feature, capability, rule, concept, or persona, and open it.</Box>
+          ) : groups.length ? (
+            groups.map((g) => (
+              <div key={g.kind} role="group" aria-label={g.label}>
+                <Box sx={{ px: 1.25, pt: 1, pb: 0.5, typography: "overline", color: "text.disabled" }}>{g.label}</Box>
+                {g.results.map((entry) => {
+                  const i = flat.indexOf(entry);
+                  return (
+                    <Box
+                      key={entry.key}
+                      id={`result-${entry.key}`}
+                      role="option"
+                      aria-selected={i === active}
+                      onMouseDown={(e) => e.preventDefault()}
+                      onMouseMove={() => setActive(i)}
+                      onClick={() => choose(entry)}
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 1.25,
+                        px: 1.25,
+                        py: "7px",
+                        borderRadius: "5px",
+                        cursor: "pointer",
+                        "&[aria-selected=true]": { bgcolor: "surface.accentSoft" },
+                      }}
+                    >
+                      <KindIcon kind={entry.kind} />
+                      <Box component="span" sx={{ flex: 1, minWidth: 0, display: "grid" }}>
+                        <Box component="span" sx={[ellipsisSx, { fontSize: 13.5, fontWeight: 550 }]}>
+                          {highlight(entry.title, terms)}
+                        </Box>
+                        <Box component="span" sx={[ellipsisSx, { fontSize: 12, color: "text.secondary" }]}>
+                          {entry.from ? `${entry.from} · ${entry.context}` : entry.context}
+                        </Box>
+                      </Box>
+                      {entry.level ? (
+                        <LevelMark level={entry.level} />
+                      ) : entry.level === null ? (
+                        <Box component="span" sx={{ color: "text.disabled" }}>
+                          Draft
+                        </Box>
+                      ) : null}
+                    </Box>
+                  );
+                })}
+              </div>
+            ))
+          ) : found?.q === q ? (
+            found.failed ? (
+              <Box sx={emptySx}>
+                <ReadError what="search results" onRetry={() => setAttempt((a) => a + 1)} />
+              </Box>
+            ) : (
+              <Box sx={emptySx} aria-live="polite">
+                Nothing matches “{q}”.
+              </Box>
+            )
+          ) : null}
+        </Box>
 
-          <div className="search-footer" aria-hidden>
-            <span>
-              <kbd>↑</kbd>
-              <kbd>↓</kbd> to move
-            </span>
-            <span>
-              <kbd>↵</kbd> to show on the map
-            </span>
-            <span>
-              <kbd>Esc</kbd> to close
-            </span>
-          </div>
-        </div>
-      </Modal>
+        {/* How to work it, along its foot, where there's a keyboard. */}
+        <Box
+          aria-hidden
+          sx={{
+            display: { xs: "none", sm: "flex" },
+            flexWrap: "wrap",
+            gap: "6px 16px",
+            flex: "none",
+            px: 2,
+            py: "9px",
+            borderTop: 1,
+            borderColor: "divider",
+            fontSize: 12,
+            color: "text.disabled",
+            "& kbd": { mr: "2px" },
+          }}
+        >
+          <span>
+            <Kbd>↑</Kbd>
+            <Kbd>↓</Kbd> to move
+          </span>
+          <span>
+            <Kbd>↵</Kbd> to show on the map
+          </span>
+          <span>
+            <Kbd>Esc</Kbd> to close
+          </span>
+        </Box>
+      </Dialog>
     </>
+  );
+}
+
+/* Open search's card, from sm up; on a phone, Dialog's fullScreen fills the screen instead. */
+const paperSx = (t: Theme): SystemStyleObject<Theme> => ({
+  display: "flex",
+  flexDirection: "column",
+  overflow: "hidden",
+  bgcolor: "background.paper",
+  backgroundImage: "none",
+  [t.breakpoints.up("sm")]: {
+    m: 0,
+    mt: "max(12vh, 16px)",
+    width: "min(640px, calc(100vw - 32px))",
+    maxHeight: "calc(100vh - max(12vh, 16px) - 16px)",
+    border: 1,
+    borderColor: "divider",
+    borderRadius: "12px",
+    boxShadow: 24,
+  },
+});
+
+const ellipsisSx: SystemStyleObject<Theme> = { whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" };
+
+const emptySx: SystemStyleObject<Theme> = { px: 1.25, py: 1.75, fontSize: 13, color: "text.secondary" };
+
+/* A key, as it's labelled on the keyboard. */
+const kbdSx: SystemStyleObject<Theme> = {
+  fontFamily: "fontFamilyMono",
+  fontSize: 11,
+  color: "text.secondary",
+  px: 0.75,
+  py: "1px",
+  border: 1,
+  borderColor: "surface.borderStrong",
+  borderBottomWidth: 2,
+  borderRadius: "4px",
+};
+
+function Kbd({ children }: { children: ReactNode }) {
+  return (
+    <Box component="kbd" sx={kbdSx}>
+      {children}
+    </Box>
   );
 }
 

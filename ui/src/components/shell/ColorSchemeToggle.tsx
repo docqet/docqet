@@ -3,12 +3,11 @@ import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
 import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
 import SettingsBrightnessOutlinedIcon from "@mui/icons-material/SettingsBrightnessOutlined";
 import IconButton from "@mui/material/IconButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Tooltip from "@mui/material/Tooltip";
 import { useColorScheme } from "@mui/material/styles";
+import { barIconSx } from "./barIcon";
 
 const MODES = [
   { mode: "system", name: "System", Icon: SettingsBrightnessOutlinedIcon },
@@ -30,7 +29,7 @@ export function ColorSchemeToggle() {
           aria-haspopup="menu"
           aria-expanded={anchor ? "true" : undefined}
           onClick={(e) => setAnchor(e.currentTarget)}
-          sx={{ color: "text.secondary", borderRadius: "6px", "&:hover": { color: "primary.main", bgcolor: "surface.accentSoft" } }}
+          sx={barIconSx}
         >
           <current.Icon sx={{ fontSize: 20 }} />
         </IconButton>
@@ -45,10 +44,8 @@ export function ColorSchemeToggle() {
               setAnchor(null);
             }}
           >
-            <ListItemIcon>
-              <Icon fontSize="small" />
-            </ListItemIcon>
-            <ListItemText>{name}</ListItemText>
+            <Icon fontSize="small" sx={{ color: "text.secondary" }} />
+            {name}
           </MenuItem>
         ))}
       </Menu>

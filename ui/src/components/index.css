@@ -425,19 +425,47 @@
 }
 
 /*
- * Maturity, exposure and readiness as a stat card's figure, all laid out
- * alike: the ring or pie with its percentage beside it, then the band's name,
- * in its color, at one calm size rather than the card's big number size.
+ * A plain table for index pages: a row per thing, its name first. Rows that
+ * open something have a link in their first cell.
  */
-.stat-tile-value > :is(.explore-level, .stat-maturity, .exposure-named, .readiness) {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 15px;
-  font-weight: 650;
-  letter-spacing: 0;
+.view-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13.5px;
 }
 
-.stat-tile-value > :is(.explore-level, .stat-maturity, .exposure-named, .readiness) strong {
+.view-table th {
+  padding: 8px 12px;
+  font-size: 11px;
   font-weight: 650;
+  letter-spacing: 0.06em;
+  text-align: left;
+  text-transform: uppercase;
+  color: var(--faint);
+  border-bottom: 1px solid var(--border);
+}
+
+.view-table td {
+  padding: 10px 12px;
+  vertical-align: middle;
+  border-bottom: 1px solid var(--border);
+}
+
+.view-table tbody tr:hover {
+  background: color-mix(in srgb, var(--text) 2.5%, transparent);
+}
+
+.view-table a {
+  color: inherit;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.view-table a:hover {
+  color: var(--accent);
+}
+
+.view-table .num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
 }

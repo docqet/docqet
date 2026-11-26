@@ -12,7 +12,7 @@ import { IMPACT_NAMES, ImpactBadge, JudgementBadge, LIKELIHOOD_NAMES, PartTag, R
 import { GapRiskMark, RiskBars, RiskScore, VERDICT_NAMES } from "../../components/risk/RiskScore";
 import { STABILITY } from "../../components/stability/stability";
 import { docHref, navigate, sectionHref, withParam, type Route } from "../../routes";
-import { Empty, PageHeader, Section, Stat, Tabs, View, currentTab } from "../../components/shell/layout";
+import { Count, Empty, PageHeader, Section, Stat, Tabs, View, currentTab } from "../../components/shell/layout";
 import { VERDICTS, bySubject, openDecisions, subjectOf, type DecisionHolder, type DocketState, type Level, type Verdict } from "../../state";
 import {
   PARTS,
@@ -368,7 +368,7 @@ function GapGroup({ head, state, rows, here }: { head: ReactNode; state: DocketS
     <div className="lf-card lf-group">
       <header className="lf-group-head">
         {head}
-        <span className="view-section-count">{rows.length}</span>
+        <Count n={rows.length} />
         {rows.length > 1 ? (
           <span className="lf-group-risk">
             <RiskScore risk={acrossRows(rows)} of="this group" />

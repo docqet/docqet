@@ -1,6 +1,6 @@
 import { LeftLabel } from "../../components/left/LeftMark";
 import { param, sectionHref, type Route } from "../../routes";
-import { Empty, PageHeader, Section, Stat, Tabs, View, currentTab } from "../../components/shell/layout";
+import { Count, Empty, PageHeader, Section, Stat, Tabs, View, currentTab } from "../../components/shell/layout";
 import { bySubject, subjectOf, type DocketState, type Tradeoff } from "../../state";
 import { Choice } from "../../components/Choice";
 import { SubjectLink } from "../../components/SubjectLink";
@@ -87,7 +87,7 @@ function TradeoffsTab({ state, tradeoffs }: { state: DocketState; tradeoffs: Tra
             <div key={`${g.type}:${g.id}`} className="lf-card lf-group">
               <header className="lf-group-head">
                 <SubjectLink state={state} type={g.type} id={g.id} />
-                <span className="view-section-count">{g.items.length}</span>
+                <Count n={g.items.length} />
               </header>
               <TradeoffRows state={state} tradeoffs={g.items} here={{ id: g.id }} />
             </div>
@@ -110,7 +110,7 @@ function NonGoalsTab({ state, nonGoals }: { state: DocketState; nonGoals: Tradeo
         <div key={g.id} className="lf-card lf-group">
           <header className="lf-group-head">
             <SubjectLink state={state} type={g.type} id={g.id} />
-            <span className="view-section-count">{g.items.length}</span>
+            <Count n={g.items.length} />
           </header>
           <TradeoffRows state={state} tradeoffs={g.items} here={{ id: g.id }} />
         </div>

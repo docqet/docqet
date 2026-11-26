@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import CheckBoxOutlineBlankRoundedIcon from "@mui/icons-material/CheckBoxOutlineBlankRounded";
 import CheckBoxRoundedIcon from "@mui/icons-material/CheckBoxRounded";
 import FolderOutlinedIcon from "@mui/icons-material/FolderOutlined";
@@ -6,12 +6,73 @@ import RadioButtonCheckedRoundedIcon from "@mui/icons-material/RadioButtonChecke
 import RadioButtonUncheckedRoundedIcon from "@mui/icons-material/RadioButtonUncheckedRounded";
 import UnfoldMoreRoundedIcon from "@mui/icons-material/UnfoldMoreRounded";
 import Menu from "@mui/material/Menu";
+import Box from "@mui/material/Box";
 import MenuItem from "@mui/material/MenuItem";
+import type { Theme } from "@mui/material/styles";
+import type { SystemStyleObject } from "@mui/system";
 import type { Product, Project } from "../../state";
 
 /* A project's mark, wherever one is named. */
 export function ProjectIcon({ size = 14 }: { size?: number }) {
   return <FolderOutlinedIcon sx={{ fontSize: size, flex: "none", color: "text.secondary" }} />;
+}
+
+/* What a filter in the header is: its name, as a button opening its menu, over a quieter line saying more, both cut short if the bar is narrow. */
+export const filterSx: SystemStyleObject<Theme> = {
+  display: "grid",
+  minWidth: 0,
+  "& strong": { fontWeight: 600, fontSize: 15, letterSpacing: "-0.01em", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" },
+};
+
+/* The quieter line under a filter's name, or an option's. */
+export const hintSx: SystemStyleObject<Theme> = { fontSize: 12, color: "text.disabled", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" };
+
+/* A filter's name, as the button that opens its menu. */
+export const switchSx: SystemStyleObject<Theme> = {
+  display: "inline-flex",
+  alignItems: "center",
+  gap: 0.5,
+  justifySelf: "start",
+  maxWidth: "calc(100% + 12px)",
+  mx: "-6px",
+  my: "-2px",
+  px: 0.75,
+  py: "2px",
+  border: 0,
+  borderRadius: "5px",
+  bgcolor: "transparent",
+  color: "inherit",
+  font: "inherit",
+  cursor: "pointer",
+  "&:hover, &[aria-expanded=true]": { bgcolor: "surface.accentSoft" },
+  "&:focus-visible": { outline: 2, outlineColor: "primary.main", outlineOffset: 1 },
+  "& svg": { color: "text.disabled" },
+};
+
+/* Where a filter's menu hangs: just under the filter, at least as wide. */
+export const menuSlots = (anchor: HTMLElement | null) => ({ paper: { sx: { mt: 0.75, minWidth: anchor?.offsetWidth } } });
+
+/* A heading over a group of a menu's options. */
+export function MenuGroup({ children }: { children: ReactNode }) {
+  return (
+    <Box component="li" role="presentation" sx={{ px: 1.25, pt: 1.25, pb: 0.5, typography: "overline", color: "text.disabled" }}>
+      {children}
+    </Box>
+  );
+}
+
+/* An option in a filter's menu: its name over a line saying more. */
+export function Option({ name, hint }: { name: ReactNode; hint: ReactNode }) {
+  return (
+    <Box component="span" sx={{ display: "grid", flex: 1, minWidth: 0, mr: 1.5 }}>
+      <Box component="span" sx={{ fontSize: 13.5, fontWeight: 550, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+        {name}
+      </Box>
+      <Box component="span" sx={hintSx}>
+        {hint}
+      </Box>
+    </Box>
+  );
 }
 
 /* A product to choose in the header. */
@@ -22,9 +83,9 @@ const indexed = (p: Project) => new Date(p.indexedAt).toLocaleString(undefined, 
 /* The commit a project's repository was indexed at, and when. */
 function Indexed({ project }: { project: Project }) {
   return (
-    <span className="faint">
+    <>
       <code>{project.commit}</code> · {indexed(project)}
-    </span>
+    </>
   );
 }
 
@@ -59,10 +120,12 @@ export default function ProductFilter({
 
   if (products.length < 2 && all.length < 2) {
     return (
-      <div className="project">
+      <Box sx={filterSx}>
         <strong>{all[0].name}</strong>
-        <Indexed project={all[0]} />
-      </div>
+        <Box component="span" sx={hintSx}>
+          <Indexed project={all[0]} />
+        </Box>
+      </Box>
     );
   }
 
@@ -70,74 +133,64 @@ export default function ProductFilter({
   const toggle = (id: string) => onProjects(ids.includes(id) ? ids.filter((x) => x !== id) : all.map((p) => p.id).filter((x) => x === id || ids.includes(x)));
 
   return (
-    <div className="project">
-      <button
+    <Box sx={filterSx}>
+      <Box
+        component="button"
         type="button"
-        className="project-switch"
+        sx={switchSx}
         aria-haspopup="menu"
         aria-expanded={anchor ? true : undefined}
-        onClick={(e) => setAnchor(e.currentTarget.closest<HTMLElement>(".project"))}
+        onClick={(e) => setAnchor(e.currentTarget.parentElement)}
       >
         <strong>{product.name}</strong>
         <UnfoldMoreRoundedIcon aria-hidden sx={{ fontSize: 16 }} />
-      </button>
-      {all.length === 1 ? (
-        <Indexed project={all[0]} />
-      ) : (
-        <span className="faint">
-          {everything ? count(all.length) : showing.length === 1 ? `${showing[0].name} · 1 of ${all.length}` : `${showing.length} of ${count(all.length)}`}
-        </span>
-      )}
+      </Box>
+      <Box component="span" sx={hintSx}>
+        {all.length === 1 ? (
+          <Indexed project={all[0]} />
+        ) : everything ? (
+          count(all.length)
+        ) : showing.length === 1 ? (
+          `${showing[0].name} · 1 of ${all.length}`
+        ) : (
+          `${showing.length} of ${count(all.length)}`
+        )}
+      </Box>
       <Menu
         anchorEl={anchor}
         open={Boolean(anchor)}
         onClose={() => setAnchor(null)}
         anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
-        slotProps={{
-          paper: { className: "project-menu", sx: { minWidth: anchor?.offsetWidth } },
-          list: { className: "project-menu-list" },
-        }}
+        slotProps={menuSlots(anchor)}
       >
-        {products.length > 1 ? (
-          <li className="project-menu-group" role="presentation">
-            Products
-          </li>
-        ) : null}
+        {products.length > 1 ? <MenuGroup>Products</MenuGroup> : null}
         {products.length > 1
           ? products.map((p) => {
               const on = p.id === product.id;
               return (
                 <MenuItem
                   key={p.id}
-                  className="project-menu-item"
+
                   role="menuitemradio"
                   aria-checked={on}
                   selected={on}
                   onClick={() => (on ? null : onProduct(p.id))}
                 >
                   {on ? (
-                    <RadioButtonCheckedRoundedIcon aria-hidden sx={{ fontSize: 18, flex: "none", color: "var(--accent)" }} />
+                    <RadioButtonCheckedRoundedIcon aria-hidden sx={{ fontSize: 18, flex: "none", color: "primary.main" }} />
                   ) : (
-                    <RadioButtonUncheckedRoundedIcon aria-hidden sx={{ fontSize: 18, flex: "none", color: "var(--faint)" }} />
+                    <RadioButtonUncheckedRoundedIcon aria-hidden sx={{ fontSize: 18, flex: "none", color: "text.disabled" }} />
                   )}
-                  <span className="project-option">
-                    <span className="project-option-name">{p.name}</span>
-                    <span className="faint">{count(p.projects.length)}</span>
-                  </span>
+                  <Option name={p.name} hint={count(p.projects.length)} />
                 </MenuItem>
               );
             })
           : null}
-        <li className="project-menu-group" role="presentation">
-          {products.length > 1 ? `Projects in ${product.name}` : "Projects"}
-        </li>
+        <MenuGroup>{products.length > 1 ? `Projects in ${product.name}` : "Projects"}</MenuGroup>
         {all.length > 1 ? (
-          <MenuItem className="project-menu-item" onClick={() => onProjects(all.map((p) => p.id))}>
+          <MenuItem onClick={() => onProjects(all.map((p) => p.id))}>
             <Check on={everything} />
-            <span className="project-option">
-              <span className="project-option-name">All projects</span>
-              <span className="faint">{count(all.length)}</span>
-            </span>
+            <Option name="All projects" hint={count(all.length)} />
           </MenuItem>
         ) : null}
         {all.map((p) => {
@@ -145,29 +198,28 @@ export default function ProductFilter({
           return (
             <MenuItem
               key={p.id}
-              className="project-menu-item"
+
               role="menuitemcheckbox"
               aria-checked={on}
               disabled={on && showing.length === 1}
+              /* The last project showing can't be unticked, but it still reads as a project. */
+              sx={{ "&.Mui-disabled": { opacity: 1 } }}
               onClick={() => toggle(p.id)}
             >
               <Check on={on} />
-              <span className="project-option">
-                <span className="project-option-name">{p.name}</span>
-                <Indexed project={p} />
-              </span>
+              <Option name={p.name} hint={<Indexed project={p} />} />
             </MenuItem>
           );
         })}
       </Menu>
-    </div>
+    </Box>
   );
 }
 
 function Check({ on }: { on: boolean }) {
   return on ? (
-    <CheckBoxRoundedIcon aria-hidden sx={{ fontSize: 18, flex: "none", color: "var(--accent)" }} />
+    <CheckBoxRoundedIcon aria-hidden sx={{ fontSize: 18, flex: "none", color: "primary.main" }} />
   ) : (
-    <CheckBoxOutlineBlankRoundedIcon aria-hidden sx={{ fontSize: 18, flex: "none", color: "var(--faint)" }} />
+    <CheckBoxOutlineBlankRoundedIcon aria-hidden sx={{ fontSize: 18, flex: "none", color: "text.disabled" }} />
   );
 }

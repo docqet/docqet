@@ -55,8 +55,10 @@ const base = createTheme();
 const shadows = [...base.shadows] as Shadows;
 /* Cards. */
 shadows[1] = "0 1px 2px rgb(30 16 70 / 0.05), 0 8px 24px -8px rgb(60 30 140 / 0.14)";
-/* Popovers (DetailsCard). */
+/* Popovers (DetailsCard) and menus. */
 shadows[8] = "0 2px 6px rgb(20 10 50 / 0.08), 0 18px 40px -12px rgb(40 20 100 / 0.32)";
+/* Dialogs, such as open search. */
+shadows[24] = "0 2px 6px rgb(20 10 50 / 0.08), 0 32px 72px -16px rgb(40 20 100 / 0.42)";
 
 const theme = createTheme({
   cssVariables: { colorSchemeSelector: "class" },
@@ -141,6 +143,8 @@ const theme = createTheme({
     subtitle2: { fontWeight: 650 },
     body2: { fontSize: 13 },
     button: { textTransform: "none", fontWeight: 600 },
+    /* The small uppercase label over a group, a figure or a column: `sx={{ typography: "overline" }}`, usually in text.disabled. */
+    overline: { fontSize: 11, fontWeight: 650, lineHeight: 1.45, letterSpacing: "0.08em", textTransform: "uppercase" },
   },
   components: {
     MuiCard: {
@@ -150,6 +154,33 @@ const theme = createTheme({
           borderRadius: 8,
           boxShadow: theme.shadows[1],
           backgroundColor: theme.vars.palette.background.paper,
+        }),
+      },
+    },
+    /* Menus, such as the header's lists of projects and initiatives: a card like a popover's, with rounded rows lit in the accent's soft fill. */
+    MuiMenu: {
+      styleOverrides: {
+        paper: ({ theme }) => ({
+          backgroundColor: theme.vars.palette.background.paper,
+          backgroundImage: "none",
+          border: `1px solid ${theme.vars.palette.divider}`,
+          borderRadius: 8,
+          boxShadow: theme.shadows[8],
+        }),
+        list: { padding: 6 },
+      },
+    },
+    MuiMenuItem: {
+      styleOverrides: {
+        root: ({ theme }) => ({
+          gap: 10,
+          minHeight: 0,
+          padding: "7px 10px",
+          borderRadius: 5,
+          font: "inherit",
+          "&:hover, &.Mui-focusVisible, &.Mui-selected, &.Mui-selected:hover, &.Mui-selected.Mui-focusVisible": {
+            backgroundColor: theme.vars.palette.surface.accentSoft,
+          },
         }),
       },
     },

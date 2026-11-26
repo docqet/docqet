@@ -58,7 +58,7 @@ export function DocView({ title, route, children }: { title: string; route: Rout
     const section = window.location.hash.slice(1);
     const at = section ? document.getElementById(section) : null;
     if (at) at.scrollIntoView();
-    else top.current?.closest(".view")?.scrollTo({ top: 0 });
+    else top.current?.closest("[data-view]")?.scrollTo({ top: 0 });
   }, [route.tab]);
   return (
     <View title={title}>

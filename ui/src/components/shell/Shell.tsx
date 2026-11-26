@@ -1,14 +1,21 @@
-import type { ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import BuildOutlinedIcon from "@mui/icons-material/BuildOutlined";
 import HelpOutlineRoundedIcon from "@mui/icons-material/HelpOutlineRounded";
 import HubOutlinedIcon from "@mui/icons-material/HubOutlined";
 import InsightsOutlinedIcon from "@mui/icons-material/InsightsOutlined";
+import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
 import TaskAltRoundedIcon from "@mui/icons-material/TaskAltRounded";
 import WarningAmberRoundedIcon from "@mui/icons-material/WarningAmberRounded";
 import WidgetsOutlinedIcon from "@mui/icons-material/WidgetsOutlined";
+import Box from "@mui/material/Box";
+import Drawer from "@mui/material/Drawer";
+import IconButton from "@mui/material/IconButton";
+import Tooltip from "@mui/material/Tooltip";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import { useTheme } from "@mui/material/styles";
+import { barIconSx } from "./barIcon";
 import { ConceptIcon } from "../Concepts";
 import { GapIcon } from "../left/LeftMark";
-import Tooltip from "@mui/material/Tooltip";
 import { ColorSchemeToggle } from "./ColorSchemeToggle";
 import Logo from "./Logo";
 import { PersonaIcon } from "../Personas";
@@ -18,14 +25,16 @@ import type { Scope } from "../../scope";
 import { followLink, navigate, sectionHref, sectionOf, docHref, type Route, type Section } from "../../routes";
 import Search, { type Selection } from "./Search";
 import { openDecisions, pageHref, type DocketState, type Product } from "../../state";
-import "./shell.css";
 
 /*
  * Every view's frame: a bar across the top that says where the reader is and
  * lets them find anything (the product and its projects, search, the
  * glossary), a nav down the side for which question they're asking, and the
- * view itself filling the rest. Clicks on in-app links anywhere inside move
- * without reloading.
+ * view itself filling the rest. The view scrolls on its own, so the bar and
+ * nav stay put. Below md the nav folds into a drawer, opened from a button at
+ * the start of the bar, and on a phone the bar wraps, putting the product and
+ * initiative on a line of their own. Clicks on in-app links anywhere inside
+ * move without reloading.
  */
 export default function Shell({
   state,
@@ -46,44 +55,107 @@ export default function Shell({
   onProjects: (ids: string[]) => void;
   children: ReactNode;
 }) {
+  const wide = useMediaQuery(useTheme().breakpoints.up("md"), { noSsr: true });
+  const [drawer, setDrawer] = useState(false);
   const select = (s: Selection) => {
     if ("pick" in s) navigate(pageHref(s.pick));
     else if ("rule" in s) navigate(docHref("rule", s.rule));
     else onProjects([s.project]);
   };
+  const nav = <SideNav state={state} at={sectionOf(route)} onGo={() => setDrawer(false)} />;
   return (
-    <div className="shell" onClick={followLink}>
-      <header className="shell-top">
-        <a className="shell-brand" href={sectionHref("overview")} aria-label="Overview">
-          <Logo />
-        </a>
-        <span className="shell-divider" aria-hidden />
-        <ProductFilter showing={state.projects} product={product} products={products} onProduct={onProduct} onProjects={onProjects} />
-        <ScopeFilter scope={scope} initiatives={state.initiatives} />
-        <div className="shell-search">
+    <Box
+      onClick={followLink}
+      sx={{
+        display: "grid",
+        gridTemplateColumns: { xs: "minmax(0, 1fr)", md: "220px minmax(0, 1fr)" },
+        gridTemplateRows: "auto minmax(0, 1fr)",
+        gridTemplateAreas: { xs: '"top" "main"', md: '"top top" "side main"' },
+        height: "100%",
+      }}
+    >
+      <Box
+        component="header"
+        sx={{
+          gridArea: "top",
+          display: "flex",
+          flexWrap: { xs: "wrap", sm: "nowrap" },
+          alignItems: "center",
+          columnGap: 1.5,
+          rowGap: 0.5,
+          minHeight: 56,
+          px: { xs: 1.5, sm: 2 },
+          py: { xs: 1, sm: 0 },
+          bgcolor: "background.paper",
+          borderBottom: 1,
+          borderColor: "divider",
+          zIndex: 10,
+        }}
+      >
+        {wide ? null : (
+          <IconButton aria-label="Sections" aria-expanded={drawer} onClick={() => setDrawer(true)} sx={[barIconSx, { ml: -0.5 }]}>
+            <MenuRoundedIcon sx={{ fontSize: 22 }} />
+          </IconButton>
+        )}
+        <Box component="a" href={sectionHref("overview")} aria-label="Overview" sx={{ display: "inline-flex", color: "inherit", textDecoration: "none" }}>
+          <Logo wordmark={{ xs: "inline", sm: "none", md: "inline" }} />
+        </Box>
+        <Box component="span" aria-hidden sx={{ display: { xs: "none", sm: "block" }, width: "1px", height: 22, bgcolor: "divider" }} />
+        <Box sx={{ order: { xs: 1, sm: 0 }, flexBasis: { xs: "100%", sm: "auto" }, display: "flex", alignItems: "center", gap: 2, minWidth: 0 }}>
+          <ProductFilter showing={state.projects} product={product} products={products} onProduct={onProduct} onProjects={onProjects} />
+          <ScopeFilter scope={scope} initiatives={state.initiatives} />
+        </Box>
+        <Box sx={{ flex: 1, display: "flex", justifyContent: { xs: "flex-end", sm: "center" }, minWidth: 0 }}>
           <Search state={state} all={product.projects} onSelect={select} />
-        </div>
+        </Box>
         <Tooltip title="What Docket's words mean">
-          <a
-            className="shell-icon-link"
+          <Box
+            component="a"
             href={sectionHref("glossary")}
             aria-label="Glossary"
             aria-current={route.kind === "section" && route.section === "glossary" ? "page" : undefined}
+            sx={barIconSx}
           >
             <HelpOutlineRoundedIcon sx={{ fontSize: 20 }} />
-          </a>
+          </Box>
         </Tooltip>
         <ColorSchemeToggle />
-      </header>
-      <SideNav state={state} at={sectionOf(route)} />
-      <main className="shell-main">{children}</main>
-    </div>
+      </Box>
+      {wide ? (
+        <Box sx={{ gridArea: "side", minHeight: 0, overflowY: "auto", bgcolor: "background.paper", borderRight: 1, borderColor: "divider" }}>{nav}</Box>
+      ) : (
+        <Drawer
+          open={drawer}
+          onClose={() => setDrawer(false)}
+          slotProps={{ paper: { sx: { width: 260, bgcolor: "background.paper", backgroundImage: "none" } } }}
+        >
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, minHeight: 56, px: 2, borderBottom: 1, borderColor: "divider" }}>
+            <Logo />
+          </Box>
+          {nav}
+        </Drawer>
+      )}
+      <Box
+        component="main"
+        sx={{
+          gridArea: "main",
+          position: "relative",
+          minHeight: 0,
+          overflow: "hidden",
+          /* What the map fixes to the window sits in the view's area instead. */
+          "& .canvas, & .zoom": { position: "absolute" },
+        }}
+      >
+        {children}
+      </Box>
+    </Box>
   );
 }
 
 type NavItem = { section: Section; label: string; icon: ReactNode; question: string; count?: number };
 
-function SideNav({ state, at }: { state: DocketState; at: Section }) {
+/* Which question the reader is asking: a link per section, grouped, each with how many it holds. `onGo` runs when one is chosen, to close the drawer. */
+function SideNav({ state, at, onGo }: { state: DocketState; at: Section; onGo: () => void }) {
   const decisions = [...state.domains, ...state.features, ...state.capabilities, ...state.mechanisms, ...state.components].reduce(
     (n, doc) => n + openDecisions(doc).length,
     0,
@@ -160,23 +232,60 @@ function SideNav({ state, at }: { state: DocketState; at: Section }) {
     },
   ];
   return (
-    <nav className="shell-side" aria-label="Sections">
+    <Box component="nav" aria-label="Sections" sx={{ display: "flex", flexDirection: "column", gap: 1.75, px: 1.25, py: 1.75 }}>
       {groups.map((g, i) => (
-        <div key={i} className="shell-side-group">
-          {g.label ? <div className="shell-side-label">{g.label}</div> : null}
+        <Box key={i} sx={{ display: "flex", flexDirection: "column", gap: "1px" }}>
+          {g.label ? <Box sx={{ px: 1.25, pb: 0.5, typography: "overline", color: "text.disabled" }}>{g.label}</Box> : null}
           {g.items.map((item) => (
             <Tooltip key={item.section} title={item.question} placement="right">
-              <a className="shell-side-item" href={sectionHref(item.section)} aria-current={at === item.section ? "page" : undefined}>
-                <span className="shell-side-icon" aria-hidden>
+              <Box
+                component="a"
+                href={sectionHref(item.section)}
+                onClick={onGo}
+                aria-current={at === item.section ? "page" : undefined}
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 1.25,
+                  px: 1.25,
+                  py: "7px",
+                  fontSize: 13.5,
+                  fontWeight: 550,
+                  color: "text.secondary",
+                  textDecoration: "none",
+                  borderRadius: "7px",
+                  "&:hover": { color: "text.primary", bgcolor: (t) => `color-mix(in srgb, ${t.vars.palette.text.primary} 4%, transparent)` },
+                  "&[aria-current=page]": { color: "primary.main", bgcolor: "surface.accentSoft" },
+                }}
+              >
+                <Box
+                  component="span"
+                  aria-hidden
+                  sx={{ display: "inline-flex", flex: "none", "& svg": { fontSize: 19, width: 19, height: 19, color: "inherit !important" } }}
+                >
                   {item.icon}
-                </span>
-                <span className="shell-side-name">{item.label}</span>
-                {item.count ? <span className="shell-side-count">{item.count}</span> : null}
-              </a>
+                </Box>
+                <Box component="span" sx={{ flex: 1, minWidth: 0, overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }}>
+                  {item.label}
+                </Box>
+                {item.count ? (
+                  <Box
+                    component="span"
+                    sx={{
+                      fontSize: 11.5,
+                      fontWeight: 600,
+                      fontVariantNumeric: "tabular-nums",
+                      color: at === item.section ? "primary.main" : "text.disabled",
+                    }}
+                  >
+                    {item.count}
+                  </Box>
+                ) : null}
+              </Box>
             </Tooltip>
           ))}
-        </div>
+        </Box>
       ))}
-    </nav>
+    </Box>
   );
 }

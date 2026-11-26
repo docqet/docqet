@@ -115,14 +115,8 @@
   text-decoration: none;
 }
 
-.dp-name:hover,
-.view-section-head h2 a:hover {
+.dp-name:hover {
   color: var(--accent);
-}
-
-.view-section-head h2 a {
-  color: inherit;
-  text-decoration: none;
 }
 
 .dp-row-note {

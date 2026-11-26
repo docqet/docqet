@@ -1,4 +1,6 @@
 import { useEffect, type ReactNode } from "react";
+import Box from "@mui/material/Box";
+import type { SxProps, Theme } from "@mui/material/styles";
 import { Term } from "../term/Term";
 import { NoPopovers } from "../popovers/DetailsPopover";
 import type { TermId } from "../term/terms";
@@ -32,15 +34,15 @@ const labelled = (label: ReactNode, term?: TermId) =>
     label
   );
 
-/* A view's scrolling area. `wide` lets a table use the whole width. Sets the tab's title. */
+/* A view's scrolling area. `wide` lets a table use the whole width. Sets the tab's title. `data-view` marks it for a doc page to scroll back to its top. */
 export function View({ title, wide = false, children }: { title: string; wide?: boolean; children: ReactNode }) {
   useEffect(() => {
     document.title = `${title} · Docket`;
   }, [title]);
   return (
-    <div className="view">
-      <div className={`view-wrap${wide ? " view-wide" : ""}`}>{children}</div>
-    </div>
+    <Box data-view sx={{ height: "100%", overflowY: "auto" }}>
+      <Box sx={{ maxWidth: wide ? "none" : 1120, mx: "auto", px: { xs: 2, sm: 4 }, pt: { xs: 2.5, sm: 3.5 }, pb: 8 }}>{children}</Box>
+    </Box>
   );
 }
 
@@ -49,7 +51,8 @@ export function View({ title, wide = false, children }: { title: string; wide?: 
  * capability's icon and "Capability"; `trail` the breadcrumb above it, such
  * as its domain and feature, as links; `lede` its one sentence; `marks` what
  * sits beside the name, such as its stability level; `stats` a row of Stat
- * tiles under it; `actions` anything at the far right.
+ * tiles under it; `actions` anything at the far right. The name is the
+ * page's one h1.
  */
 export function PageHeader({
   kind,
@@ -69,21 +72,43 @@ export function PageHeader({
   actions?: ReactNode;
 }) {
   return (
-    <header className="view-head">
-      {trail ? <div className="view-trail">{trail}</div> : null}
-      <div className="view-head-row">
-        <div className="view-head-text">
-          {kind ? <div className="view-kind">{kind}</div> : null}
-          <div className="view-title-row">
-            <h1 className="view-title">{title}</h1>
-            {marks ? <div className="view-marks">{marks}</div> : null}
-          </div>
-          {lede ? <p className="view-lede">{lede}</p> : null}
-        </div>
-        {actions ? <div className="view-actions">{actions}</div> : null}
-      </div>
-      {stats ? <div className="view-stats">{stats}</div> : null}
-    </header>
+    <Box component="header" sx={{ display: "flex", flexDirection: "column", gap: 1.25, mb: 3 }}>
+      {trail ? (
+        <Box
+          sx={{
+            display: "flex",
+            flexWrap: "wrap",
+            alignItems: "center",
+            gap: "4px 8px",
+            fontSize: 12.5,
+            color: "text.secondary",
+            "& a": { color: "inherit", textDecoration: "none", "&:hover": { color: "primary.main" } },
+          }}
+        >
+          {trail}
+        </Box>
+      ) : null}
+      <Box sx={{ display: "flex", alignItems: "flex-start", gap: 2 }}>
+        <Box sx={{ flex: 1, minWidth: 0 }}>
+          {kind ? (
+            <Box sx={{ display: "inline-flex", alignItems: "center", gap: 0.75, mb: 0.5, fontSize: 12, fontWeight: 600, color: "text.secondary" }}>{kind}</Box>
+          ) : null}
+          <Box sx={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "8px 14px" }}>
+            <Box component="h1" sx={{ fontSize: { xs: 24, sm: 28 }, fontWeight: "bold", lineHeight: 1.2, letterSpacing: "-0.025em", overflowWrap: "anywhere" }}>
+              {title}
+            </Box>
+            {marks ? <Box sx={{ display: "flex", alignItems: "center", gap: 1.25 }}>{marks}</Box> : null}
+          </Box>
+          {lede ? (
+            <Box component="p" sx={{ maxWidth: 760, mt: 1, fontSize: { xs: 15, sm: 16 }, lineHeight: 1.5, color: "text.secondary" }}>
+              {lede}
+            </Box>
+          ) : null}
+        </Box>
+        {actions ? <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>{actions}</Box> : null}
+      </Box>
+      {stats ? <Box sx={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 1.5, mt: 1.25 }}>{stats}</Box> : null}
+    </Box>
   );
 }
 
@@ -108,19 +133,89 @@ export function Stat({
 }) {
   const body = (
     <>
-      <span className="stat-tile-label">{labelled(label, term)}</span>
-      <span className="stat-tile-value">{value}</span>
-      {note ? <span className="stat-tile-note">{note}</span> : null}
+      <Box component="span" sx={{ typography: "overline", color: "text.disabled" }}>
+        {labelled(label, term)}
+      </Box>
+      <Box
+        component="span"
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          gap: 1,
+          minHeight: 30,
+          fontSize: 20,
+          fontWeight: 700,
+          letterSpacing: "-0.01em",
+          color: tone === "warn" ? "warning.main" : tone === "ok" ? "success.main" : undefined,
+          /*
+           * Maturity, exposure and readiness as the figure, all laid out
+           * alike: the ring or pie with its percentage beside it, then the
+           * band's name, in its color, at one calm size rather than the
+           * tile's big number.
+           */
+          "& > :is(.explore-level, .stat-maturity, .exposure-named, .readiness)": {
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 1,
+            fontSize: 15,
+            fontWeight: 650,
+            letterSpacing: 0,
+            "& strong": { fontWeight: 650 },
+          },
+        }}
+      >
+        {value}
+      </Box>
+      {note ? (
+        <Box component="span" sx={{ fontSize: 12.5, color: "text.secondary" }}>
+          {note}
+        </Box>
+      ) : null}
     </>
   );
+  const sx: SxProps<Theme> = {
+    display: "flex",
+    flexDirection: "column",
+    gap: 0.5,
+    minWidth: 0,
+    gridColumn: wide ? { sm: "span 2" } : undefined,
+    px: 2,
+    py: 1.75,
+    color: "inherit",
+    textDecoration: "none",
+    bgcolor: "background.paper",
+    border: 1,
+    borderColor: "divider",
+    borderRadius: "10px",
+  };
   return href ? (
-    <a className={`stat-tile stat-tile-link${wide ? " stat-tile-wide" : ""}`} href={href} data-tone={tone}>
+    <Box component="a" href={href} sx={[sx, { "&:hover": { borderColor: "surface.borderStrong", boxShadow: 1 } }]}>
       {body}
-    </a>
+    </Box>
   ) : (
-    <div className={`stat-tile${wide ? " stat-tile-wide" : ""}`} data-tone={tone}>
-      {body}
-    </div>
+    <Box sx={sx}>{body}</Box>
+  );
+}
+
+/* How many a tab or section holds, in a small pill. */
+export function Count({ n }: { n: number }) {
+  return (
+    <Box
+      component="span"
+      sx={{
+        minWidth: 18,
+        px: 0.75,
+        py: "1px",
+        fontSize: 11,
+        fontWeight: 600,
+        textAlign: "center",
+        color: "text.secondary",
+        bgcolor: (t) => `color-mix(in srgb, ${t.vars.palette.text.primary} 7%, transparent)`,
+        borderRadius: 999,
+      }}
+    >
+      {n}
+    </Box>
   );
 }
 
@@ -132,18 +227,45 @@ export function currentTab(route: Route, tabs: TabDef[]): string {
   return tabs.some((t) => t.id === route.tab) ? route.tab! : tabs[0].id;
 }
 
-/* A page's tabs, each a link that changes `&tab=` in the address, so a tab can be linked to and back returns. */
+/*
+ * A page's tabs, each a link that changes `&tab=` in the address, so a tab
+ * can be linked to and back returns. They wrap onto a second line on a
+ * narrow screen rather than scrolling, so no scrollbar ever shows.
+ */
 export function Tabs({ tabs, current }: { tabs: TabDef[]; current: string }) {
   return (
-    <nav className="view-tabs" aria-label="Tabs">
+    <Box component="nav" aria-label="Tabs" sx={{ display: "flex", flexWrap: "wrap", gap: "2px", mb: 3, borderBottom: 1, borderColor: "divider" }}>
       {tabs.map((t, i) => (
-        <a key={t.id} className="view-tab" href={withParam("tab", i === 0 ? null : t.id)} aria-current={t.id === current ? "page" : undefined}>
+        <Box
+          component="a"
+          key={t.id}
+          href={withParam("tab", i === 0 ? null : t.id)}
+          aria-current={t.id === current ? "page" : undefined}
+          sx={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "7px",
+            pt: "9px",
+            pb: 1.25,
+            px: 1.5,
+            mb: "-1px",
+            fontSize: 13.5,
+            fontWeight: 600,
+            color: "text.secondary",
+            whiteSpace: "nowrap",
+            textDecoration: "none",
+            borderBottom: 2,
+            borderColor: "transparent",
+            "&:hover": { color: "text.primary" },
+            "&[aria-current=page]": { color: "primary.main", borderColor: "primary.main" },
+          }}
+        >
           {/* Tabs choose what's shown, so nothing in them opens a popover. */}
           <NoPopovers>{t.label}</NoPopovers>
-          {t.count !== undefined ? <span className="view-tab-count">{t.count}</span> : null}
-        </a>
+          {t.count !== undefined ? <Count n={t.count} /> : null}
+        </Box>
       ))}
-    </nav>
+    </Box>
   );
 }
 
@@ -166,20 +288,42 @@ export function Section({
   children: ReactNode;
 }) {
   return (
-    <section className="view-section" id={id}>
-      <header className="view-section-head">
-        <h2>{labelled(title, term)}</h2>
-        {count !== undefined ? <span className="view-section-count">{count}</span> : null}
-        {aside ? <span className="view-section-aside">{aside}</span> : null}
-      </header>
-      {note ? <p className="view-section-note">{note}</p> : null}
+    <Box component="section" id={id} sx={{ mb: 4, "& .page-card": { px: 2.25, py: 1.75 } }}>
+      <Box component="header" sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1.5 }}>
+        <Box
+          component="h2"
+          sx={{
+            fontSize: 16,
+            fontWeight: "bold",
+            letterSpacing: "-0.01em",
+            "& a": { color: "inherit", textDecoration: "none", "&:hover": { color: "primary.main" } },
+          }}
+        >
+          {labelled(title, term)}
+        </Box>
+        {count !== undefined ? <Count n={count} /> : null}
+        {aside ? (
+          <Box component="span" sx={{ ml: "auto", fontSize: 13, "& a": { color: "primary.main", textDecoration: "none" } }}>
+            {aside}
+          </Box>
+        ) : null}
+      </Box>
+      {note ? (
+        <Box component="p" sx={{ mt: -0.75, mb: 1.5, fontSize: 13, color: "text.secondary" }}>
+          {note}
+        </Box>
+      ) : null}
       {children}
-    </section>
+    </Box>
   );
 }
 
 export function Empty({ children }: { children: ReactNode }) {
-  return <p className="view-empty">{children}</p>;
+  return (
+    <Box component="p" sx={{ py: 3, color: "text.disabled" }}>
+      {children}
+    </Box>
+  );
 }
 
 /* What a view that isn't built yet shows. */
