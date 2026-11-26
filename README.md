@@ -5,6 +5,8 @@
   <img src="docs/assets/stability-prototype-light.svg" alt="Stability: Prototype · Exploring" height="18">
 </picture></a>
 
+**Intent as Code. Say what it's for. See where it stands. Know what's left.**
+
 What your software is meant to do, written beside the code, linked to the
 evidence of what it actually does, and readable by everyone with a stake in it.
 
