@@ -72,11 +72,14 @@ placeholders, named for now by what they hold (see
 
 ## SQLite
 
+- **SQLite is the default provider, and the only one so far.**
+  `DATABASE_PROVIDER` (`--database-provider`) names it, defaulting to
+  `sqlite`, and `serve` and `migrate` refuse any other value.
 - **The driver is `modernc.org/sqlite`**, which is pure Go, so the image still
   builds with `CGO_ENABLED=0`.
 - **`internal/database` opens it and keeps its schema up to date.** Its goose
   migrations are in `internal/database/migrations/`, in a folder for each
-  driver: `migrations/sqlite/` for now.
+  provider: `migrations/sqlite/` for now.
 - **Migrations run from an explicit command**, `docqet migrate`, not when
   the server starts. `docqet serve` refuses to start on a database that's
   behind, unless it's given `--migrate` (`MIGRATE=true`), which brings it up

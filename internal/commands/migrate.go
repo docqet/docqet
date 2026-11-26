@@ -14,13 +14,21 @@ import (
 // git. The image sets /var/lib/docqet/docqet.db, on a volume.
 const defaultDatabase = "data/docqet.db"
 
-// databaseFlag is the server's database, for serve and migrate.
-func databaseFlag() cli.Flag {
-	return &cli.StringFlag{
-		Name:    "database",
-		Usage:   "the `PATH` of the server's SQLite database",
-		Value:   defaultDatabase,
-		Sources: cli.EnvVars("DATABASE_PATH"),
+// databaseFlags are the server's database, for serve and migrate.
+func databaseFlags() []cli.Flag {
+	return []cli.Flag{
+		&cli.StringFlag{
+			Name:    "database-provider",
+			Usage:   "the `PROVIDER` the server keeps its database in: sqlite, the only one so far",
+			Value:   database.SQLite,
+			Sources: cli.EnvVars("DATABASE_PROVIDER"),
+		},
+		&cli.StringFlag{
+			Name:    "database",
+			Usage:   "the `PATH` of the server's SQLite database",
+			Value:   defaultDatabase,
+			Sources: cli.EnvVars("DATABASE_PATH"),
+		},
 	}
 }
 
@@ -33,10 +41,10 @@ func MigrateCommand() *cli.Command {
 		Category:     serving,
 		Usage:        "Bring the server's database up to this version's schema",
 		ArgValidator: maxArgs(0),
-		Flags:        []cli.Flag{databaseFlag()},
+		Flags:        databaseFlags(),
 		Action: func(ctx context.Context, cmd *cli.Command) error {
 			path := cmd.String("database")
-			db, err := database.Open(ctx, path)
+			db, err := database.Open(ctx, cmd.String("database-provider"), path)
 			if err != nil {
 				return err
 			}

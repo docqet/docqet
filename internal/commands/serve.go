@@ -34,7 +34,7 @@ func ServeCommand() *cli.Command {
 		Name:     "serve",
 		Category: serving,
 		Usage:    "Run the Docqet server",
-		Flags: []cli.Flag{
+		Flags: append([]cli.Flag{
 			&cli.StringFlag{
 				Name:    "port",
 				Usage:   "the `PORT` to listen on",
@@ -53,18 +53,17 @@ func ServeCommand() *cli.Command {
 				Value:   "json",
 				Sources: cli.EnvVars("LOG_FORMAT"),
 			},
-			databaseFlag(),
 			&cli.BoolFlag{
 				Name:    "migrate",
 				Usage:   "bring the database up to date before serving, rather than refusing to start on one that's behind: for local runs",
 				Sources: cli.EnvVars("MIGRATE"),
 			},
-		},
+		}, databaseFlags()...),
 		Action: func(ctx context.Context, cmd *cli.Command) error {
 			logger := logs.New(os.Stderr, cmd.String("log-level"), cmd.String("log-format"))
-			logger.InfoContext(ctx, "starting docqet server", "version", cmd.Root().Version, "database", cmd.String("database"))
+			logger.InfoContext(ctx, "starting docqet server", "version", cmd.Root().Version, "database_provider", cmd.String("database-provider"), "database", cmd.String("database"))
 
-			db, err := database.Open(ctx, cmd.String("database"))
+			db, err := database.Open(ctx, cmd.String("database-provider"), cmd.String("database"))
 			if err != nil {
 				return err
 			}

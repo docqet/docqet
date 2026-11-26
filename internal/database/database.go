@@ -1,5 +1,5 @@
 // Package database opens the server's database and keeps its schema up to
-// date. Its migrations are in migrations/, a folder for each driver.
+// date. Its migrations are in migrations/, a folder for each provider.
 package database
 
 import (
@@ -13,13 +13,16 @@ import (
 	_ "modernc.org/sqlite" // registers the "sqlite" driver
 )
 
-// Driver is the database the server keeps its data in. SQLite is the only
-// one so far, in one file, so a server runs with nothing beside it.
-const Driver = "sqlite"
+// SQLite is the provider the server keeps its data in by default, and the
+// only one so far: one file, so a server runs with nothing beside it.
+const SQLite = "sqlite"
 
-// Open opens the SQLite database at path, creating the file and its folder
-// if they're missing.
-func Open(ctx context.Context, path string) (*sql.DB, error) {
+// Open opens the database provider keeps at path. For SQLite, the only
+// provider so far, path is a file, created with its folder if it's missing.
+func Open(ctx context.Context, provider, path string) (*sql.DB, error) {
+	if provider != SQLite {
+		return nil, fmt.Errorf("database provider %q isn't supported: the only one is %s", provider, SQLite)
+	}
 	if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
 		return nil, err
 	}
@@ -27,7 +30,7 @@ func Open(ctx context.Context, path string) (*sql.DB, error) {
 	q.Add("_pragma", "busy_timeout(5000)")
 	q.Add("_pragma", "journal_mode(WAL)")
 	q.Add("_pragma", "foreign_keys(1)")
-	db, err := sql.Open(Driver, "file:"+path+"?"+q.Encode())
+	db, err := sql.Open(SQLite, "file:"+path+"?"+q.Encode())
 	if err != nil {
 		return nil, err
 	}

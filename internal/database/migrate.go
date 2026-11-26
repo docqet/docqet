@@ -18,9 +18,9 @@ var migrations embed.FS
 // serve` needs --migrate.
 var ErrNotMigrated = errors.New("the database isn't migrated: run docqet migrate, or serve with --migrate")
 
-// provider is goose over Driver's migrations.
+// provider is goose over SQLite's migrations, the only provider so far.
 func provider(db *sql.DB) (*goose.Provider, error) {
-	sub, err := fs.Sub(migrations, "migrations/"+Driver)
+	sub, err := fs.Sub(migrations, "migrations/"+SQLite)
 	if err != nil {
 		return nil, err
 	}
