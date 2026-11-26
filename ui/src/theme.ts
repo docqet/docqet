@@ -34,6 +34,13 @@ declare module "@mui/material/styles" {
   interface Palette extends DocketPalette {}
   // eslint-disable-next-line @typescript-eslint/no-empty-object-type
   interface PaletteOptions extends Partial<DocketPalette> {}
+  /* Code, paths and identifiers: `sx={{ fontFamily: "fontFamilyMono" }}`. */
+  interface TypographyVariants {
+    fontFamilyMono: string;
+  }
+  interface TypographyVariantsOptions {
+    fontFamilyMono?: string;
+  }
 }
 
 const brand = { light: "#a78bfa", main: "#7c3aed", dark: "#5b21b6", mark: "#ffffff", dot: "#f0abfc" };
@@ -119,10 +126,17 @@ const theme = createTheme({
       },
     },
   },
+  /*
+   * Phones below sm, tablets and narrow windows from sm to md, where the
+   * side nav folds into a drawer, and desktops from md. sm is 720 rather than
+   * MUI's 600, so a phone held sideways still gets the stacked layout.
+   */
+  breakpoints: { values: { xs: 0, sm: 720, md: 900, lg: 1200, xl: 1536 } },
   shape: { borderRadius: 3 },
   shadows,
   typography: {
     fontFamily: '"Geist Variable", ui-sans-serif, system-ui, sans-serif',
+    fontFamilyMono: '"Geist Mono Variable", ui-monospace, SFMono-Regular, Menlo, monospace',
     subtitle1: { fontSize: 15.5, fontWeight: 650, letterSpacing: "-0.015em" },
     subtitle2: { fontWeight: 650 },
     body2: { fontSize: 13 },
