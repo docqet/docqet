@@ -185,6 +185,46 @@ const theme = createTheme({
       },
     },
     /*
+     * Tables: a row per thing, its name first, ruled off, with small
+     * uppercase headings. A row lights faintly under the pointer, and links
+     * in it read as its text until hovered. Wrap a table in a
+     * TableContainer so a wide one scrolls sideways inside it, never the
+     * page; numbers go in cells with align="right".
+     */
+    MuiTable: {
+      styleOverrides: { root: { fontSize: 13.5 } },
+    },
+    MuiTableCell: {
+      styleOverrides: {
+        root: ({ theme }) => ({
+          padding: "10px 12px",
+          fontSize: "inherit",
+          lineHeight: "inherit",
+          letterSpacing: "normal",
+          color: "inherit",
+          borderBottom: `1px solid ${theme.vars.palette.divider}`,
+          "& a": { color: "inherit", fontWeight: 600, textDecoration: "none", "&:hover": { color: theme.vars.palette.primary.main } },
+        }),
+        head: ({ theme }) => ({
+          padding: "8px 12px",
+          fontSize: 11,
+          fontWeight: 650,
+          lineHeight: "inherit",
+          letterSpacing: "0.06em",
+          textTransform: "uppercase",
+          color: theme.vars.palette.text.disabled,
+        }),
+        alignRight: { fontVariantNumeric: "tabular-nums" },
+      },
+    },
+    MuiTableRow: {
+      styleOverrides: {
+        root: ({ theme }) => ({
+          ".MuiTableBody-root > &:hover": { backgroundColor: `color-mix(in srgb, ${theme.vars.palette.text.primary} 2.5%, transparent)` },
+        }),
+      },
+    },
+    /*
      * A plain tooltip: a few words on hover or focus about what something is
      * or does, describing what it's on rather than naming it, so a button
      * keeps the name its words or aria-label give it. Text with line breaks
