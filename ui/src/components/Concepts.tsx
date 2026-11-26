@@ -1,11 +1,11 @@
 import { type ReactNode } from "react";
 import MenuBookOutlinedIcon from "@mui/icons-material/MenuBookOutlined";
 import OpenInNewRoundedIcon from "@mui/icons-material/OpenInNewRounded";
-import Box from "@mui/material/Box";
-import { DetailsCard, DetailsEyebrow, DetailsPopover } from "./popovers/DetailsPopover";
+import { DetailsPopover } from "./popovers/DetailsPopover";
 import { follow } from "./markdown/Markdown";
 import { conceptLinked, fieldsText, find, pageHref, type Concept, type DocketState, type Pick } from "../state";
 import { Tip } from "./Tip";
+import { ConceptSummary } from "./popovers/ConceptSummary";
 
 /*
  * A way from a side panel to a doc's detail page, in a tab of its own, so the
@@ -72,17 +72,6 @@ export function ConceptChips({
         );
       })}
     </span>
-  );
-}
-
-function ConceptSummary({ concept }: { concept: Concept }) {
-  return (
-    <DetailsCard card>
-      <DetailsEyebrow>Concept</DetailsEyebrow>
-      <Box sx={{ mt: 0.5, fontSize: "1.12em", fontWeight: 700, lineHeight: 1.3 }}>{concept.name}</Box>
-      {concept.description ? <Box sx={{ mt: 0.75 }}>{concept.description}</Box> : null}
-      <Box sx={{ mt: 1, fontSize: 12, color: "text.secondary" }}>Click to see everything it's related to.</Box>
-    </DetailsCard>
   );
 }
 

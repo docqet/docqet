@@ -1,10 +1,10 @@
 import Box from "@mui/material/Box";
 import type { Theme } from "@mui/material/styles";
 import type { CapabilityLevel, Level } from "../../state";
-import { DetailsCard, DetailsEyebrow, DetailsPopover } from "../popovers/DetailsPopover";
+import { DetailsPopover } from "../popovers/DetailsPopover";
 import { MATURITY_BANDS } from "../maturity/maturity";
 import { STABILITY, STABILITY_LEVEL_IDS } from "./stability";
-import { StabilityTrack } from "./StabilityTrack";
+import { StabilitySpreadDetails } from "../popovers/StabilitySpreadDetails";
 
 /*
  * Stability spread: how many capabilities are at each level, as a bar split
@@ -17,16 +17,16 @@ import { StabilityTrack } from "./StabilityTrack";
 /* Drafts first, then the levels from Prototype to GA, as the bar runs left to right. */
 const ORDER: CapabilityLevel[] = [null, ...STABILITY_LEVEL_IDS];
 
-const levelName = (level: CapabilityLevel) => (level ? STABILITY[level].name : "Draft");
+export const levelName = (level: CapabilityLevel) => (level ? STABILITY[level].name : "Draft");
 
 /* A level's color as `--level`, in the shade for the color scheme. */
-const levelVar = (level: Level) => (theme: Theme) => ({
+export const levelVar = (level: Level) => (theme: Theme) => ({
   "--level": STABILITY[level].colors.light,
   ...theme.applyStyles("dark", { "--level": STABILITY[level].colors.dark }),
 });
 
 /* How many there are at each level, in order, leaving out any with none. */
-const spreadOf = (levels: CapabilityLevel[]) => ORDER.map((level) => ({ level, n: levels.filter((l) => l === level).length })).filter((s) => s.n);
+export const spreadOf = (levels: CapabilityLevel[]) => ORDER.map((level) => ({ level, n: levels.filter((l) => l === level).length })).filter((s) => s.n);
 
 /* "1 Prototype · 4 Beta · 1 GA". */
 export const stabilityCounts = (levels: CapabilityLevel[]) =>
@@ -62,32 +62,6 @@ export function StabilitySpread({ levels, of, wide = false, inButton = false }: 
         <StabilitySpreadBar levels={levels} wide={wide} />
       </span>
     </DetailsPopover>
-  );
-}
-
-function StabilitySpreadDetails({ levels, of }: { levels: CapabilityLevel[]; of: string }) {
-  return (
-    <DetailsCard card width={300}>
-      <DetailsEyebrow>Stability spread in {of}</DetailsEyebrow>
-      <Box sx={{ mt: 1.25 }}>
-        <StabilitySpreadBar levels={levels} wide />
-      </Box>
-      <ul className="stability-spread-counts">
-        {spreadOf(levels).map(({ level, n }) => (
-          <Box component="li" key={level ?? "draft"} sx={level ? levelVar(level) : undefined}>
-            <span className="stability-spread-name">
-              <SpreadSwatch draft={!level} />
-              {level ? <StabilityTrack level={level} /> : null}
-              {levelName(level)}
-            </span>
-            <span className="stability-spread-n">{n}</span>
-          </Box>
-        ))}
-      </ul>
-      <Box sx={{ mt: 1, color: "text.secondary", fontSize: "0.92em" }}>
-        How many capabilities are at each level, counted once each at their level in short. Maturity is worked out from it; drafts don&rsquo;t count there.
-      </Box>
-    </DetailsCard>
   );
 }
 

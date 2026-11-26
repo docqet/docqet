@@ -1,9 +1,9 @@
-import Box from "@mui/material/Box";
 import { VERDICTS, exposureText, riskScore, verdictOf, type Gap, type Risk, type RiskAcross, type Exposure, type RiskOn, type Verdict } from "../../state";
-import { DetailsCard, DetailsEyebrow, DetailsPopover, DetailsWorkings } from "../popovers/DetailsPopover";
-import { plainText } from "../markdown/Markdown";
+import { DetailsPopover } from "../popovers/DetailsPopover";
 import { RiskRing } from "./RiskRing";
-import { RiskWorkings } from "../popovers/RiskWorkings";
+import { RiskDetails } from "../popovers/RiskDetails";
+import { ExposureDetails } from "../popovers/ExposureDetails";
+import { GapRiskDetails } from "../popovers/GapRiskDetails";
 
 /*
  * Risk: what's at stake in leaving a gap open, from 0 to 100, and the
@@ -134,65 +134,6 @@ export function RiskScore<T extends Gap>({
 }
 
 /*
- * The risk across several, for its popover. One alone is shown as it would
- * be on its own: how its risk is worked out. Several show their highest
- * risk, how they spread across the verdicts, as a bar split by how many fall
- * in each, and the riskiest few with their scores, out of how many. How each
- * is worked out is on the gap itself.
- */
-function RiskDetails<T extends Gap>({ risk, of }: { risk: RiskAcross<T>; of: string }) {
-  const riskiest = risk.items.slice(0, 3);
-  const alone = risk.items.length === 1 ? risk.items[0] : null;
-  return (
-    <DetailsCard card width={320}>
-      <div className="risk-details" data-verdict={risk.verdict ?? "none"}>
-        <DetailsEyebrow>{alone ? `Risk in ${of}` : `Risk spread in ${of}`}</DetailsEyebrow>
-        {alone ? (
-          <>
-            <Box sx={{ mt: 1, display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: 1 }}>
-              <Box className="risk-details-verdict" sx={{ fontSize: "1.12em", fontWeight: 700 }}>
-                {VERDICT_NAMES[alone.verdict].name}
-              </Box>
-              <Box sx={{ color: "text.secondary", fontVariantNumeric: "tabular-nums" }}>{alone.score} of 100</Box>
-            </Box>
-            <Box sx={{ mt: 1, fontWeight: 600 }}>{plainText(alone.item.name)}</Box>
-            {alone.on ? (
-              <Box sx={{ mt: 1.25 }}>
-                <RiskWorkings risk={alone.risk} on={alone.on} />
-              </Box>
-            ) : null}
-          </>
-        ) : (
-          <>
-            <VerdictSpread risk={risk} />
-            {riskiest.length ? (
-              <>
-                <div className="risk-details-head">Riskiest</div>
-                <ul className="risk-riskiest">
-                  {riskiest.map(({ item, score, verdict }) => (
-                    <li key={item.id}>
-                      <span className="risk-riskiest-name">{plainText(item.name)}</span>
-                      <span className="risk-on-score" data-verdict={verdict}>
-                        {score}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-                {risk.items.length > riskiest.length ? (
-                  <div className="risk-note">
-                    The {riskiest.length} riskiest of {risk.items.length} gaps.
-                  </div>
-                ) : null}
-              </>
-            ) : null}
-          </>
-        )}
-      </div>
-    </DetailsCard>
-  );
-}
-
-/*
  * The exposure of some capabilities, as the map shows it: its ring, from every
  * gap on them, their own and those of what they're built on, each scored on
  * them, whose popover has the spread. Nothing when there are no gaps or none
@@ -225,55 +166,6 @@ export function ExposureMark({
       {ring}
       <strong>{exposure.band.name}</strong>
     </span>
-  );
-}
-
-/*
- * The exposure of some capabilities, for its popover: its band and what that
- * puts at stake, the share, how the gaps on them spread across the
- * verdicts, how it's worked out, and that it isn't their stability. `of`
- * names what it's of, as a phrase: "Scheduling", "what serves Mira".
- */
-function ExposureDetails<T extends Gap>({ risk, exposure, of }: { risk: RiskAcross<T>; exposure: Exposure; of: string }) {
-  const band = exposure.band!;
-  const n = exposure.capabilities;
-  return (
-    <DetailsCard card width={320}>
-      <div className="exposure-details" data-risk-band={band.id}>
-        <DetailsEyebrow>Exposure of {of}</DetailsEyebrow>
-        <Box sx={{ mt: 1.25, display: "flex", alignItems: "center", gap: 1.5 }}>
-          <RiskRing percent={exposure.percent!} size={56} />
-          <div>
-            <div className="exposure-band">{band.name}</div>
-            <Box sx={{ color: "text.secondary", fontVariantNumeric: "tabular-nums" }}>{exposureText(exposure.percent!)} of the most it could be exposed to</Box>
-          </div>
-        </Box>
-        <Box sx={{ mt: 1.25 }}>{band.says}</Box>
-        {exposure.unacceptable ? (
-          <Box sx={{ mt: 1 }}>
-            {risk.counts.unacceptable === 1 ? "A gap here is" : "Gaps here are"} unacceptable, so it&rsquo;s at least moderate, whatever the share.
-          </Box>
-        ) : null}
-        <div className="risk-details-head">
-          {risk.items.length} {risk.items.length === 1 ? "gap" : "gaps"} by risk
-        </div>
-        <VerdictSpread risk={risk} />
-        <Box sx={{ mt: 1.25, color: "text.secondary", fontSize: "0.92em" }}>
-          Exposure is to risk what maturity is to stability: one figure for the whole. It isn&rsquo;t stability. Each capability&rsquo;s level is declared, and
-          says how much people can depend on it; this is what the gaps still open against those levels put at stake.
-        </Box>
-        <DetailsWorkings>
-          <div>
-            Each capability is exposed to its riskiest gap&rsquo;s share of the most it could be: a certain, damaging gap reaching everyone that breaks a claim
-            its level makes.
-          </div>
-          <div>
-            Its {n} {n === 1 ? "capability" : "capabilities"} then count by their level, GA most, as in maturity. Drafts don&rsquo;t count. Each quarter is a
-            band: low, minor, moderate and high.
-          </div>
-        </DetailsWorkings>
-      </div>
-    </DetailsCard>
   );
 }
 
@@ -326,21 +218,7 @@ export function GapRiskMark({ risk, on, inButton = false }: { risk: Risk; on: Ri
     );
   const verdict = verdictOf(on.score);
   return (
-    <DetailsPopover
-      hoverOnly={inButton}
-      title={
-        <DetailsCard card width={340}>
-          <div className="risk-details" data-verdict={verdict}>
-            <DetailsEyebrow>How its risk is worked out</DetailsEyebrow>
-            <div className="gap-risk-head">
-              <span className="risk-details-verdict">{VERDICT_NAMES[verdict].name}</span>
-              <span>{on.score} of 100</span>
-            </div>
-            <RiskWorkings risk={risk} on={on} />
-          </div>
-        </DetailsCard>
-      }
-    >
+    <DetailsPopover hoverOnly={inButton} title={<GapRiskDetails risk={risk} on={on} />}>
       <span
         className="gap-risk-mark risk-score"
         data-verdict={verdict}

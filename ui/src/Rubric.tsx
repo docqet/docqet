@@ -3,7 +3,7 @@ import LayersOutlinedIcon from "@mui/icons-material/LayersOutlined";
 import LightbulbOutlinedIcon from "@mui/icons-material/LightbulbOutlined";
 import WarningAmberRoundedIcon from "@mui/icons-material/WarningAmberRounded";
 import Switch from "@mui/material/Switch";
-import { DetailsCard, DetailsEyebrow, DetailsPopover, NoPopovers } from "./components/popovers/DetailsPopover";
+import { DetailsPopover, NoPopovers } from "./components/popovers/DetailsPopover";
 import { STABILITY, STABILITY_LEVEL_IDS } from "./components/stability/stability";
 import { StabilityMark } from "./components/stability/StabilityMark";
 import { LEFT_KINDS, LeftLabel, gapKind } from "./components/left/LeftMark";
@@ -11,6 +11,8 @@ import { InlineMarkdown } from "./components/markdown/Markdown";
 import { StandingMark, type Standing } from "./components/standing/StandingMark";
 import { TechnicalLink, levelName, plural } from "./Explore";
 import { appliesAt, outcomesOf, type Capability, type Rubric, type RubricExample, type ExpectedOutcome, type RubricQuality, type Level } from "./state";
+import { PillCard } from "./components/popovers/PillCard";
+import { QualityDetails } from "./components/popovers/QualityDetails";
 
 /*
  * The stability rubric, as a checklist: pick a level to see what it expects, by quality,
@@ -268,23 +270,7 @@ function StandingIcon({ standing }: { standing: Standing }) {
 /* A quality's name, which opens what it's about and how much each level asks of it, so the levels mean the same to everyone. */
 function QualityName({ quality }: { quality: RubricQuality }) {
   return (
-    <DetailsPopover
-      title={
-        <DetailsCard card width={380}>
-          <DetailsEyebrow>Quality</DetailsEyebrow>
-          <strong>{quality.question}</strong>
-          <p className="sc-why">{quality.why}</p>
-          <ul className="sc-summaries">
-            {quality.levels.map((l) => (
-              <li key={l.level} data-empty={!l.summary || undefined}>
-                <StabilityMark level={l.level} statement={false} focusable={false} />
-                <span>{l.summary ?? "Nothing expected."}</span>
-              </li>
-            ))}
-          </ul>
-        </DetailsCard>
-      }
-    >
+    <DetailsPopover title={<QualityDetails quality={quality} />}>
       <span className="sc-quality-name" tabIndex={0}>
         {quality.name}
       </span>
@@ -355,17 +341,5 @@ function Pill({ kind, icon, label, count, children }: { kind: string; icon: Reac
         <span className="sc-pill-count">{count}</span>
       </button>
     </DetailsPopover>
-  );
-}
-
-/* A pill's popover: its title and what it means, then the list, labelled. */
-function PillCard({ label, info, listLabel, children }: { label: string; info: string; listLabel: string; children: ReactNode }) {
-  return (
-    <DetailsCard card width={440}>
-      <DetailsEyebrow>{label}</DetailsEyebrow>
-      <p className="sc-pill-info">{info}</p>
-      <p className="sc-list-label">{listLabel}</p>
-      {children}
-    </DetailsCard>
   );
 }

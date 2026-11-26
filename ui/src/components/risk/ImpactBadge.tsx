@@ -3,7 +3,9 @@ import CrisisAlertRoundedIcon from "@mui/icons-material/CrisisAlertRounded";
 import GroupsRoundedIcon from "@mui/icons-material/GroupsRounded";
 import Box from "@mui/material/Box";
 import type { ReactNode } from "react";
-import { DetailsCard, DetailsEyebrow, DetailsPopover } from "../popovers/DetailsPopover";
+import { DetailsEyebrow, DetailsPopover } from "../popovers/DetailsPopover";
+import { ImpactDetails } from "../popovers/ImpactDetails";
+import { JudgementDetails } from "../popovers/JudgementDetails";
 
 /*
  * What's at stake in a gap, or was in the gap a tradeoff was, when it bites: its
@@ -100,7 +102,7 @@ export function JudgementSection({ likelihood, reach }: { likelihood: Likelihood
  */
 type PartInfo = { eyebrow: string; scale: string; order: string[]; names: Record<string, { name: string; test: string }>; means: string };
 
-const PARTS_INFO: Record<RiskPart, PartInfo> = {
+export const PARTS_INFO: Record<RiskPart, PartInfo> = {
   impact: {
     eyebrow: "How bad it is",
     scale: "Impact, most first",
@@ -145,7 +147,7 @@ export function PartTag({ part, value, label = false, children }: { part: RiskPa
 }
 
 /* A part's scale, for its popover: each value as its tag, with its test, this one marked. */
-function Scale({ part, value }: { part: RiskPart; value: string }) {
+export function Scale({ part, value }: { part: RiskPart; value: string }) {
   const info = PARTS_INFO[part];
   return (
     <RiskSection label={info.scale}>
@@ -164,7 +166,7 @@ function Scale({ part, value }: { part: RiskPart; value: string }) {
 }
 
 /* The top of a part's popover: what it is, this value's name in its color, and its test. */
-function PartHead({ part, value, eyebrow }: { part: RiskPart; value: string; eyebrow?: string }) {
+export function PartHead({ part, value, eyebrow }: { part: RiskPart; value: string; eyebrow?: string }) {
   const info = PARTS_INFO[part];
   return (
     <>
@@ -192,16 +194,7 @@ export function JudgementBadge({
 }) {
   const info = PARTS_INFO[part];
   return (
-    <DetailsPopover
-      hoverOnly={inButton}
-      title={
-        <DetailsCard card width={340}>
-          <PartHead part={part} value={value} />
-          <Scale part={part} value={value} />
-          <Box sx={{ mt: 1.25, color: "text.secondary", fontSize: "0.92em" }}>{info.means}</Box>
-        </DetailsCard>
-      }
-    >
+    <DetailsPopover hoverOnly={inButton} title={<JudgementDetails part={part} value={value} />}>
       <span
         role="img"
         aria-label={`${part === "likelihood" ? "Likelihood" : "Reach"}: ${info.names[value].name}`}
@@ -274,22 +267,5 @@ export function RiskSection({ label, children }: { label: string; children: Reac
       <Box sx={{ mb: 0.5, fontSize: "0.84em", fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase", color: "text.secondary" }}>{label}</Box>
       {children}
     </Box>
-  );
-}
-
-/* What an impact means, for the popover, as likelihood's and reach's do: its name and test, what it takes, its scale, then its sections. */
-function ImpactDetails({ impact, eyebrow, children }: { impact: ImpactId; eyebrow: string; children?: ReactNode }) {
-  return (
-    <DetailsCard card width={340}>
-      <div className="risk-details" data-impact={impact}>
-        <PartHead part="impact" value={impact} eyebrow={eyebrow} />
-        <Box sx={{ mt: 0.5, color: "text.secondary" }}>
-          What whoever relies on it loses: <strong>{IMPACT_NAMES[impact].lost}</strong>.
-        </Box>
-        <Scale part="impact" value={impact} />
-        <Box sx={{ mt: 1.25, color: "text.secondary", fontSize: "0.92em" }}>{PARTS_INFO.impact.means}</Box>
-        {children}
-      </div>
-    </DetailsCard>
   );
 }
