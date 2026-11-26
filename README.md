@@ -516,6 +516,7 @@ make ui-build   # the UI the server embeds
 make run        # migrate, then serve on localhost:8080
 make apply      # send Docket's new commits; open http://localhost:8080
 make apply DOCKET_SERVER=http://localhost:8090   # or to the server make build started
+curl localhost:8080/api/v1/products/docket/status   # its figures, as the API serves them
 ```
 
 `docket index` without `--stdout` writes over an example's hand-written

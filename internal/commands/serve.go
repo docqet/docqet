@@ -82,8 +82,8 @@ func ServeCommand() *cli.Command {
 // router builds the handler `serve` and `ui` serve: the API under /api/v1, its
 // docs under /docs, the states the UI shows, and the UI under everything
 // else. With db, the server's database, the API takes and serves applied
-// states, and the UI shows each project's latest. Without it, the UI shows
-// the state.json files at states, one per project.
+// states, and its product resources and the UI show each project's latest.
+// Without it, they show the state.json files at states, one per project.
 func router(logger *slog.Logger, states []string, db *sql.DB) (http.Handler, error) {
 	uiHandler, err := httphandlers.NewUIHandler()
 	if err != nil {
@@ -106,6 +106,7 @@ func router(logger *slog.Logger, states []string, db *sql.DB) (http.Handler, err
 		projects = httphandlers.NewProjectsHandler(logger, stateService)
 		shown = latestStates(stateService)
 	}
+	products := httphandlers.NewProductsHandler(logger, services.NewReadService(shown))
 	health.Start()
 
 	r := chi.NewRouter()
@@ -116,6 +117,7 @@ func router(logger *slog.Logger, states []string, db *sql.DB) (http.Handler, err
 		if projects != nil {
 			projects.RegisterRoutes(api)
 		}
+		products.RegisterRoutes(api)
 	})
 	docsHandler.RegisterRoutes(r)
 	httphandlers.NewStatesHandler(logger, shown).RegisterRoutes(r)
@@ -125,7 +127,7 @@ func router(logger *slog.Logger, states []string, db *sql.DB) (http.Handler, err
 
 // latestStates shows each project's latest applied state.
 // docket:implements capability:overview
-func latestStates(states *services.StateService) httphandlers.StateSource {
+func latestStates(states *services.StateService) services.StateSource {
 	return func(ctx context.Context) ([]*state.State, error) {
 		latest, err := states.ListLatest(ctx)
 		if err != nil {

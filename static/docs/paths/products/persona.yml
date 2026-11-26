@@ -1,0 +1,27 @@
+get:
+  operationId: getPersona
+  x-stability: prototype
+  summary: Get a persona
+  description: >-
+    A persona, with the capabilities, features and initiatives that serve
+    them, and their figures.
+  tags:
+    - Products
+  # No sign-in yet: a server is only reachable by its client's people.
+  security: []
+  parameters:
+    - $ref: "../../schemas.yml#/components/parameters/Product"
+    - $ref: "../../schemas.yml#/components/parameters/DocID"
+    - $ref: "../../schemas.yml#/components/parameters/ProjectsShown"
+    - $ref: "../../schemas.yml#/components/parameters/Initiative"
+  responses:
+    "200":
+      description: The persona.
+      content:
+        application/json:
+          schema:
+            $ref: "../../schemas.yml#/components/schemas/Persona"
+    "400":
+      $ref: "../../schemas.yml#/components/responses/InvalidQuery"
+    "404":
+      $ref: "../../schemas.yml#/components/responses/DocNotFound"

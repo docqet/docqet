@@ -12,16 +12,13 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/render"
 
+	"github.com/exalynt/docket/internal/services"
 	"github.com/exalynt/docket/internal/state"
 )
 
-// StateSource returns the states the UI shows, one per project, in the same
-// order on every call.
-type StateSource func(ctx context.Context) ([]*state.State, error)
-
-// FileStates is a StateSource over the state.json files at paths, read on
-// every call, so a new one shows on reload.
-func FileStates(paths []string) StateSource {
+// FileStates is a source of the state.json files at paths, read on every
+// call, so a new one shows on reload.
+func FileStates(paths []string) services.StateSource {
 	return func(context.Context) ([]*state.State, error) {
 		states := make([]*state.State, 0, len(paths))
 		for _, p := range paths {
@@ -44,11 +41,11 @@ func FileStates(paths []string) StateSource {
 // project's state.json is, beside the page.
 type StatesHandler struct {
 	logger *slog.Logger
-	states StateSource
+	states services.StateSource
 }
 
 // NewStatesHandler serves the states source returns.
-func NewStatesHandler(logger *slog.Logger, source StateSource) *StatesHandler {
+func NewStatesHandler(logger *slog.Logger, source services.StateSource) *StatesHandler {
 	return &StatesHandler{logger: logger, states: source}
 }
 

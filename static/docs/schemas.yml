@@ -216,6 +216,1036 @@ components:
           type: string
           example: this commit hasn't been applied for this project
 
+    # The resources a product's routes return: each doc put together across
+    # the product's projects, with the figures worked out for it.
+
+    StringList:
+      type: array
+      items:
+        type: string
+
+    Maturity:
+      type: object
+      nullable: true
+      description: >-
+        A maturity: a whole percentage, and the level its band is named for.
+        Null where there's none.
+      required: [percent, band]
+      properties:
+        percent:
+          type: integer
+          example: 62
+        band:
+          type: string
+          enum: [prototype, alpha, beta, ga]
+          example: alpha
+
+    Exposure:
+      type: object
+      description: What the gaps open on some capabilities put at stake together.
+      required: [percent, capabilities, band, unacceptable]
+      properties:
+        percent:
+          type: number
+          nullable: true
+          description: Unrounded, 0 to 100, and null with nothing started.
+          example: 38.5
+        capabilities:
+          type: integer
+          description: How many started capabilities it's worked out from.
+          example: 4
+        band:
+          type: string
+          nullable: true
+          enum: [low, minor, moderate, high, null]
+          description: Null with nothing started.
+          example: minor
+        unacceptable:
+          type: boolean
+          description: Whether any gap is unacceptable on one of them.
+
+    ScoredGap:
+      type: object
+      description: >-
+        A gap's score among some capabilities: where it scores highest there,
+        and that score and verdict, null where it doesn't show or has no
+        impact rated.
+      required: [gap, capability, score, verdict]
+      properties:
+        gap:
+          type: string
+          example: capability:room-booking#calendar-needs-a-mouse@hotel-bookings
+        capability:
+          type: string
+          nullable: true
+          example: room-booking
+        score:
+          type: integer
+          nullable: true
+          example: 54
+        verdict:
+          type: string
+          nullable: true
+          enum: [unacceptable, tolerable, acceptable, null]
+          example: tolerable
+
+    RiskSummary:
+      type: object
+      description: What's at stake across some gaps.
+      required: [score, verdict, counts, unrated, gaps]
+      properties:
+        score:
+          type: integer
+          nullable: true
+          description: The highest score, null with none rated.
+          example: 54
+        verdict:
+          type: string
+          nullable: true
+          enum: [unacceptable, tolerable, acceptable, null]
+          description: The highest score's verdict, null with none rated.
+          example: tolerable
+        counts:
+          type: object
+          description: How many gaps fall in each verdict.
+          additionalProperties:
+            type: integer
+          example:
+            unacceptable: 0
+            tolerable: 2
+            acceptable: 1
+        unrated:
+          type: integer
+          description: How many gaps have no impact rated.
+        gaps:
+          type: array
+          description: Each gap, riskiest first, with its score there.
+          items:
+            $ref: "#/components/schemas/ScoredGap"
+
+    Readiness:
+      type: object
+      description: How ready people can rely on some capabilities being, with what's left.
+      required: [percent, band, maturity, exposure, levels, gaps, ready, notReady, notStarted]
+      properties:
+        percent:
+          type: integer
+          nullable: true
+          description: Rounded, and null with nothing started.
+          example: 45
+        band:
+          type: string
+          nullable: true
+          enum: [Unready, Partial, Viable, Ready, null]
+          description: Null with nothing started.
+          example: Partial
+        maturity:
+          type: number
+          nullable: true
+          description: The capabilities' own maturity, unrounded, weighted by level.
+          example: 51.2
+        exposure:
+          $ref: "#/components/schemas/Exposure"
+        levels:
+          $ref: "#/components/schemas/StringList"
+        gaps:
+          $ref: "#/components/schemas/RiskSummary"
+        ready:
+          type: array
+          description: The capabilities that are ready.
+          items:
+            type: string
+        notReady:
+          type: array
+          description: The started capabilities that aren't, with what each still needs.
+          items:
+            $ref: "#/components/schemas/Need"
+        notStarted:
+          type: array
+          description: The capabilities still drafts.
+          items:
+            type: string
+
+    Need:
+      type: object
+      description: >-
+        What a started capability still needs to be ready: to reach Beta, and
+        to close each gap that's unacceptable on it.
+      required: [capability, belowBeta, gaps, decisions]
+      properties:
+        capability:
+          type: string
+          example: room-booking
+        belowBeta:
+          type: boolean
+        gaps:
+          $ref: "#/components/schemas/StringList"
+        decisions:
+          type: array
+          items:
+            $ref: "#/components/schemas/Decision"
+
+    Decision:
+      type: object
+      description: An open decision.
+      required: [topic, question, affects]
+      properties:
+        topic:
+          type: string
+          nullable: true
+          example: Cancellations
+        question:
+          type: string
+          example: Should a late cancellation be charged a night?
+        affects:
+          $ref: "#/components/schemas/StringList"
+
+    HeldDecision:
+      description: An open decision, with the doc it's on.
+      allOf:
+        - $ref: "#/components/schemas/Decision"
+        - type: object
+          required: ["on"]
+          properties:
+            "on":
+              type: string
+              description: >-
+                The doc it's on, as a reference: `domain:`, `feature:`,
+                `capability:`, `mechanism:` or `component:`.
+              example: capability:room-booking
+
+    Confusion:
+      type: object
+      description: What a concept is easily mistaken for.
+      required: [concept, term, summary]
+      properties:
+        concept:
+          type: string
+          nullable: true
+        term:
+          type: string
+          nullable: true
+        summary:
+          type: string
+
+    Contribution:
+      type: object
+      description: What one project says about a doc, in one domain.
+      required: [project, domain, file, name, description, body]
+      properties:
+        project:
+          type: string
+          example: hotel-bookings
+        domain:
+          type: string
+          example: bookings
+        file:
+          type: string
+          example: docket/domains/bookings/capabilities/room-booking.md
+        name:
+          type: string
+        description:
+          type: string
+        body:
+          type: string
+          description: The doc's markdown body.
+        role:
+          type: string
+          nullable: true
+          description: A persona's role.
+        title:
+          type: string
+          nullable: true
+          description: A persona's title.
+        decisions:
+          type: array
+          items:
+            $ref: "#/components/schemas/Decision"
+        why:
+          type: string
+          nullable: true
+          description: Why a rule holds.
+        confusedWith:
+          type: array
+          description: What a concept is easily mistaken for.
+          items:
+            $ref: "#/components/schemas/Confusion"
+
+    Place:
+      type: object
+      description: Where an annotation is, in which project's files.
+      required: [project, file, line, text]
+      properties:
+        project:
+          type: string
+          example: hotel-bookings
+        file:
+          type: string
+          example: internal/bookings/service.go
+        line:
+          type: integer
+          example: 42
+        text:
+          type: string
+
+    Evidence:
+      type: object
+      description: The places that implement or verify a doc.
+      required: [implements, verifies]
+      properties:
+        implements:
+          type: array
+          items:
+            $ref: "#/components/schemas/Place"
+        verifies:
+          type: array
+          items:
+            $ref: "#/components/schemas/Place"
+
+    Doc:
+      type: object
+      description: >-
+        What every doc has: what its first contribution says, and every
+        contribution.
+      required: [id, project, domain, file, name, description, body, from]
+      properties:
+        id:
+          type: string
+          description: >-
+            Its ID, as combining keys it: a rule or concept is
+            `<id>@<domain>`.
+          example: room-booking
+        project:
+          type: string
+          example: hotel-bookings
+        domain:
+          type: string
+          example: bookings
+        file:
+          type: string
+        name:
+          type: string
+          example: Room booking
+        description:
+          type: string
+        body:
+          type: string
+          description: The doc's markdown body.
+        from:
+          type: array
+          description: What each project says about it, in each domain.
+          items:
+            $ref: "#/components/schemas/Contribution"
+
+    ProductProject:
+      type: object
+      description: >-
+        One of a product's projects, from its state, with its maturity from
+        its own features alone.
+      required: [id, name, product, commit, indexedAt, maturity]
+      properties:
+        id:
+          type: string
+          example: hotel-bookings
+        name:
+          type: string
+          example: Hotel Bookings
+        product:
+          type: object
+          required: [id, name]
+          properties:
+            id:
+              type: string
+              example: hotel
+            name:
+              type: string
+              example: Hotel
+        commit:
+          type: string
+          example: 57754415c7c52e1675e2a07edc9def8155be3729
+        indexedAt:
+          type: string
+          format: date-time
+        maturity:
+          $ref: "#/components/schemas/Maturity"
+
+    Product:
+      type: object
+      description: A product, its projects, and the maturity of what's showing.
+      required: [id, name, projects, maturity]
+      properties:
+        id:
+          type: string
+          example: hotel
+        name:
+          type: string
+          example: Hotel
+        projects:
+          type: array
+          items:
+            $ref: "#/components/schemas/ProductProject"
+        maturity:
+          $ref: "#/components/schemas/Maturity"
+
+    Counts:
+      type: object
+      description: How many of each there are, showing.
+      required: [domains, features, capabilities, rules, concepts, personas, initiatives, mechanisms, components, gaps, tradeoffs, decisions, problems]
+      properties:
+        domains:
+          type: integer
+        features:
+          type: integer
+        capabilities:
+          type: object
+          description: By level.
+          additionalProperties:
+            type: integer
+          example:
+            draft: 1
+            prototype: 3
+            alpha: 2
+            beta: 0
+            ga: 0
+        rules:
+          type: integer
+        concepts:
+          type: integer
+        personas:
+          type: integer
+        initiatives:
+          type: integer
+        mechanisms:
+          type: integer
+        components:
+          type: integer
+        gaps:
+          type: integer
+        tradeoffs:
+          type: integer
+        decisions:
+          type: integer
+        problems:
+          type: integer
+
+    Status:
+      type: object
+      description: >-
+        The product at a glance, or what serves a `?for=`: that narrows its
+        maturity, readiness, exposure and risk, but its counts are always the
+        product's, as shown.
+      required: [maturity, readiness, exposure, risk, counts]
+      properties:
+        maturity:
+          $ref: "#/components/schemas/Maturity"
+        readiness:
+          $ref: "#/components/schemas/Readiness"
+        exposure:
+          $ref: "#/components/schemas/Exposure"
+        risk:
+          $ref: "#/components/schemas/RiskSummary"
+        counts:
+          $ref: "#/components/schemas/Counts"
+
+    Domain:
+      description: >-
+        A domain, with its maturity from its parts of features, and the
+        readiness and exposure of every capability with a part in it.
+      allOf:
+        - $ref: "#/components/schemas/Doc"
+        - type: object
+          required: [features, capabilities, maturity, readiness, exposure]
+          properties:
+            features:
+              $ref: "#/components/schemas/StringList"
+            capabilities:
+              $ref: "#/components/schemas/StringList"
+            maturity:
+              $ref: "#/components/schemas/Maturity"
+            readiness:
+              $ref: "#/components/schemas/Readiness"
+            exposure:
+              $ref: "#/components/schemas/Exposure"
+
+    Part:
+      type: object
+      description: One domain's part of a feature.
+      required: [domain, capabilities, maturity]
+      properties:
+        domain:
+          type: string
+          example: bookings
+        capabilities:
+          $ref: "#/components/schemas/StringList"
+        maturity:
+          $ref: "#/components/schemas/Maturity"
+
+    Feature:
+      description: A feature, with its parts and figures.
+      allOf:
+        - $ref: "#/components/schemas/Doc"
+        - type: object
+          required: [capabilities, tradeoffs, parts, maturity, readiness, exposure]
+          properties:
+            capabilities:
+              $ref: "#/components/schemas/StringList"
+            tradeoffs:
+              $ref: "#/components/schemas/StringList"
+            parts:
+              type: array
+              items:
+                $ref: "#/components/schemas/Part"
+            maturity:
+              $ref: "#/components/schemas/Maturity"
+            readiness:
+              $ref: "#/components/schemas/Readiness"
+            exposure:
+              $ref: "#/components/schemas/Exposure"
+
+    Level:
+      type: object
+      description: A capability's level in one domain that builds it.
+      required: [project, domain, level]
+      properties:
+        project:
+          type: string
+          example: hotel-bookings
+        domain:
+          type: string
+          example: bookings
+        level:
+          type: string
+          example: alpha
+
+    TechnicalGap:
+      type: object
+      description: A gap on a mechanism or component a capability is built on.
+      required: [gap, "on"]
+      properties:
+        gap:
+          type: string
+        "on":
+          type: string
+          description: "`mechanism:<id>` or `component:<id>`."
+          example: component:ledger
+
+    Left:
+      type: object
+      description: >-
+        What's left on a capability: its open decisions, its own gaps, and the
+        gaps on what it's built on.
+      required: [decisions, gaps, technical]
+      properties:
+        decisions:
+          type: array
+          items:
+            $ref: "#/components/schemas/Decision"
+        gaps:
+          $ref: "#/components/schemas/StringList"
+        technical:
+          type: array
+          items:
+            $ref: "#/components/schemas/TechnicalGap"
+
+    OutcomeStanding:
+      type: object
+      description: >-
+        How a capability stands on one of the rubric's expected outcomes, with
+        what says so.
+      required: [outcome, standing, gaps, tradeoffs, decisions, by]
+      properties:
+        outcome:
+          type: string
+          example: outcome:security/alpha/secrets-kept
+        standing:
+          type: string
+          enum: [not-expected, gap, tradeoff, open, evidence, trust]
+        gaps:
+          $ref: "#/components/schemas/StringList"
+        tradeoffs:
+          $ref: "#/components/schemas/StringList"
+        decisions:
+          type: array
+          items:
+            $ref: "#/components/schemas/Decision"
+        by:
+          type: array
+          description: The mechanisms and components that meet it.
+          items:
+            type: string
+
+    Capability:
+      description: >-
+        A capability, with its figures, what's left, and how it stands on each
+        rule it follows and each expected outcome.
+      allOf:
+        - $ref: "#/components/schemas/Doc"
+        - type: object
+          required: [personas, initiatives, stability, levels, feature, rules, concepts, gaps, tradeoffs, builtBy, evidence, readiness, exposure, risk, left, ruleStandings, outcomes]
+          properties:
+            personas:
+              $ref: "#/components/schemas/StringList"
+            initiatives:
+              $ref: "#/components/schemas/StringList"
+            stability:
+              type: string
+              description: Its level in short, or draft.
+              example: alpha
+            levels:
+              type: array
+              items:
+                $ref: "#/components/schemas/Level"
+            feature:
+              type: string
+              nullable: true
+              example: reservations
+            rules:
+              $ref: "#/components/schemas/StringList"
+            concepts:
+              $ref: "#/components/schemas/StringList"
+            gaps:
+              $ref: "#/components/schemas/StringList"
+            tradeoffs:
+              $ref: "#/components/schemas/StringList"
+            builtBy:
+              $ref: "#/components/schemas/StringList"
+            evidence:
+              $ref: "#/components/schemas/Evidence"
+            readiness:
+              $ref: "#/components/schemas/Readiness"
+            exposure:
+              $ref: "#/components/schemas/Exposure"
+            risk:
+              $ref: "#/components/schemas/RiskSummary"
+            left:
+              $ref: "#/components/schemas/Left"
+            ruleStandings:
+              type: object
+              description: >-
+                How it stands on each rule it follows, by the rule's ID: gap,
+                evidence or trust.
+              additionalProperties:
+                type: string
+                enum: [gap, evidence, trust]
+            outcomes:
+              type: array
+              items:
+                $ref: "#/components/schemas/OutcomeStanding"
+
+    Rule:
+      description: A rule, with how each capability that follows it stands on it.
+      allOf:
+        - $ref: "#/components/schemas/Doc"
+        - type: object
+          required: [capabilities, concepts, gaps, evidence, standings]
+          properties:
+            capabilities:
+              $ref: "#/components/schemas/StringList"
+            concepts:
+              $ref: "#/components/schemas/StringList"
+            gaps:
+              $ref: "#/components/schemas/StringList"
+            evidence:
+              $ref: "#/components/schemas/Evidence"
+            standings:
+              type: object
+              description: By capability ID.
+              additionalProperties:
+                type: string
+                enum: [gap, evidence, trust]
+
+    Concept:
+      description: A concept.
+      allOf:
+        - $ref: "#/components/schemas/Doc"
+        - type: object
+          required: [capabilities, rules]
+          properties:
+            capabilities:
+              $ref: "#/components/schemas/StringList"
+            rules:
+              $ref: "#/components/schemas/StringList"
+
+    Persona:
+      description: A persona, with the figures of what serves them.
+      allOf:
+        - $ref: "#/components/schemas/Doc"
+        - type: object
+          required: [role, title, image, capabilities, features, initiatives, maturity, readiness, exposure]
+          properties:
+            role:
+              type: string
+              nullable: true
+            title:
+              type: string
+              nullable: true
+            image:
+              type: string
+              nullable: true
+            capabilities:
+              $ref: "#/components/schemas/StringList"
+            features:
+              $ref: "#/components/schemas/StringList"
+            initiatives:
+              $ref: "#/components/schemas/StringList"
+            maturity:
+              $ref: "#/components/schemas/Maturity"
+            readiness:
+              $ref: "#/components/schemas/Readiness"
+            exposure:
+              $ref: "#/components/schemas/Exposure"
+
+    Initiative:
+      description: An initiative, with the figures of its capabilities.
+      allOf:
+        - $ref: "#/components/schemas/Doc"
+        - type: object
+          required: [capabilities, features, personas, maturity, readiness, exposure]
+          properties:
+            capabilities:
+              $ref: "#/components/schemas/StringList"
+            features:
+              $ref: "#/components/schemas/StringList"
+            personas:
+              $ref: "#/components/schemas/StringList"
+            maturity:
+              $ref: "#/components/schemas/Maturity"
+            readiness:
+              $ref: "#/components/schemas/Readiness"
+            exposure:
+              $ref: "#/components/schemas/Exposure"
+
+    Technical:
+      description: A mechanism or a component, with what's at stake in its gaps.
+      allOf:
+        - $ref: "#/components/schemas/Doc"
+        - type: object
+          required: [kind, applies, capabilities, meets, gaps, tradeoffs, evidence, risk]
+          properties:
+            kind:
+              type: string
+              enum: [mechanism, component]
+            applies:
+              type: string
+              enum: [project, product]
+            capabilities:
+              $ref: "#/components/schemas/StringList"
+            meets:
+              $ref: "#/components/schemas/StringList"
+            gaps:
+              $ref: "#/components/schemas/StringList"
+            tradeoffs:
+              $ref: "#/components/schemas/StringList"
+            evidence:
+              $ref: "#/components/schemas/Evidence"
+            risk:
+              $ref: "#/components/schemas/RiskSummary"
+
+    RiskOn:
+      type: object
+      description: How a gap scores on one capability, and why.
+      required: [capability, impact, likelihood, reach, weight, claim, claimFactor, raw, score]
+      properties:
+        capability:
+          type: string
+        impact:
+          type: number
+        likelihood:
+          type: number
+        reach:
+          type: number
+        weight:
+          type: number
+        claim:
+          type: boolean
+        claimFactor:
+          type: number
+        raw:
+          type: number
+        score:
+          type: integer
+
+    Spread:
+      type: object
+      description: How many capabilities a gap has one score on.
+      required: [score, capabilities]
+      properties:
+        score:
+          type: integer
+        capabilities:
+          type: integer
+
+    Risk:
+      type: object
+      description: >-
+        What's at stake in leaving a gap open, on every capability it shows
+        on. Score and verdict are null with no impact rated.
+      required: [score, verdict, claim, capabilities, spread, "on"]
+      properties:
+        score:
+          type: integer
+          nullable: true
+        verdict:
+          type: string
+          nullable: true
+          enum: [unacceptable, tolerable, acceptable, null]
+        claim:
+          type: boolean
+        capabilities:
+          type: integer
+        spread:
+          type: array
+          items:
+            $ref: "#/components/schemas/Spread"
+        "on":
+          type: array
+          items:
+            $ref: "#/components/schemas/RiskOn"
+
+    Affected:
+      type: object
+      description: >-
+        One thing a gap, tradeoff or decision affects, by reference: an
+        expected outcome, with its quality, a rule, a gap or a tradeoff.
+      required: [kind, ref]
+      properties:
+        kind:
+          type: string
+          example: outcome
+        ref:
+          type: string
+          example: outcome:security/alpha/secrets-kept
+        quality:
+          type: string
+          nullable: true
+          example: security
+
+    Gap:
+      type: object
+      description: >-
+        A gap, with its risk, what it affects, and the open decisions that
+        affect it.
+      required: [id, subject, project, domain, affects, impact, likelihood, reach, name, description, places, risk, affected, decisions, within]
+      properties:
+        id:
+          type: string
+          description: Its declared ID, with `@<project>`.
+          example: capability:room-booking#calendar-needs-a-mouse@hotel-bookings
+        subject:
+          type: string
+          description: The doc it's on, as a reference.
+          example: capability:room-booking
+        project:
+          type: string
+        domain:
+          type: string
+        affects:
+          $ref: "#/components/schemas/StringList"
+        impact:
+          type: string
+          nullable: true
+          enum: [negligible, inconvenient, blocking, damaging, null]
+        likelihood:
+          type: string
+          nullable: true
+          enum: [certain, expected, possible, unlikely, null]
+        reach:
+          type: string
+          nullable: true
+          enum: [all, most, some, few, null]
+        name:
+          type: string
+        description:
+          type: string
+        places:
+          type: array
+          items:
+            $ref: "#/components/schemas/Place"
+        risk:
+          $ref: "#/components/schemas/Risk"
+        affected:
+          type: array
+          items:
+            $ref: "#/components/schemas/Affected"
+        decisions:
+          type: array
+          items:
+            $ref: "#/components/schemas/HeldDecision"
+        within:
+          description: >-
+            Its score among the capabilities `?for=` names, on a list read
+            with one, and null otherwise.
+          type: object
+          nullable: true
+          allOf:
+            - $ref: "#/components/schemas/ScoredGap"
+
+    Tradeoff:
+      type: object
+      description: >-
+        A tradeoff, with what it affects and the open decisions that affect
+        it.
+      required: [id, subject, project, domain, affects, name, description, benefit, drawback, places, affected, decisions]
+      properties:
+        id:
+          type: string
+          description: Its declared ID, with `@<project>`.
+        subject:
+          type: string
+          description: The doc it's on, as a reference.
+          example: feature:reservations
+        project:
+          type: string
+        domain:
+          type: string
+        affects:
+          $ref: "#/components/schemas/StringList"
+        name:
+          type: string
+        description:
+          type: string
+        benefit:
+          type: string
+          nullable: true
+        drawback:
+          type: string
+        places:
+          type: array
+          items:
+            $ref: "#/components/schemas/Place"
+        affected:
+          type: array
+          items:
+            $ref: "#/components/schemas/Affected"
+        decisions:
+          type: array
+          items:
+            $ref: "#/components/schemas/HeldDecision"
+
+    SearchResult:
+      type: object
+      description: A doc that matches a search.
+      required: [kind, id, name, description, match]
+      properties:
+        kind:
+          type: string
+          enum: [project, domain, feature, capability, rule, concept, persona, initiative]
+        id:
+          type: string
+          example: room-booking
+        name:
+          type: string
+        description:
+          type: string
+        match:
+          type: string
+          enum: [name, description, body]
+          description: Where it matched.
+
+    Rubric:
+      type: object
+      description: >-
+        The stability rubric: what each stability level expects, as the
+        product's projects were indexed against it.
+      required: [kinds, qualities]
+      properties:
+        kinds:
+          type: array
+          description: The kinds of software an example in the rubric can suit.
+          items:
+            type: object
+            required: [id, name]
+            properties:
+              id:
+                type: string
+                example: api
+              name:
+                type: string
+                example: API
+        qualities:
+          type: array
+          items:
+            $ref: "#/components/schemas/RubricQuality"
+
+    RubricQuality:
+      type: object
+      description: One of the rubric's qualities, with its levels in order.
+      required: [id, name, question, why, levels]
+      properties:
+        id:
+          type: string
+          example: security
+        name:
+          type: string
+          example: Security
+        question:
+          type: string
+        why:
+          type: string
+        levels:
+          type: array
+          items:
+            $ref: "#/components/schemas/RubricLevel"
+
+    RubricLevel:
+      type: object
+      description: What a quality expects at one stability level.
+      required: [level, summary, outcomes, implementation, overengineering]
+      properties:
+        level:
+          type: string
+          example: alpha
+        summary:
+          type: string
+          nullable: true
+        outcomes:
+          type: array
+          items:
+            $ref: "#/components/schemas/RubricOutcome"
+        implementation:
+          type: array
+          items:
+            $ref: "#/components/schemas/RubricExample"
+        overengineering:
+          type: array
+          items:
+            $ref: "#/components/schemas/RubricExample"
+
+    RubricOutcome:
+      type: object
+      description: >-
+        Something that should be true of the work at a level. Its reference is
+        `outcome:<quality>/<level>/<id>`.
+      required: [id, level, text, until, implementation, overengineering]
+      properties:
+        id:
+          type: string
+        level:
+          type: string
+        text:
+          type: string
+        until:
+          type: string
+          nullable: true
+        implementation:
+          type: array
+          items:
+            $ref: "#/components/schemas/RubricExample"
+        overengineering:
+          type: array
+          items:
+            $ref: "#/components/schemas/RubricExample"
+
+    RubricExample:
+      type: object
+      description: An example of meeting an outcome, or of overengineering it.
+      required: [text, kinds]
+      properties:
+        text:
+          type: string
+        kinds:
+          $ref: "#/components/schemas/StringList"
+
   parameters:
     Project:
       name: project
@@ -233,6 +1263,108 @@ components:
       schema:
         type: string
         example: 57754415c7c52e1675e2a07edc9def8155be3729
+    Product:
+      name: product
+      in: path
+      required: true
+      description: >-
+        The product's ID: the one its projects declare, or else the ID of a
+        project that declares none, which is a product of its own.
+      schema:
+        type: string
+        example: hotel
+    ProjectsShown:
+      name: project
+      in: query
+      required: false
+      description: >-
+        Show only these of the product's projects, by ID, separated by
+        commas. A project that isn't the product's is a 400.
+      style: form
+      explode: false
+      schema:
+        type: array
+        items:
+          type: string
+        example: [hotel-bookings, hotel-billing]
+    Initiative:
+      name: initiative
+      in: query
+      required: false
+      description: Show only what's part of this initiative, by ID.
+      schema:
+        type: string
+        example: mvp
+    For:
+      name: for
+      in: query
+      required: false
+      description: >-
+        A reference to a project, persona, initiative, domain, feature or
+        capability, as the CLI's `--for`: count only its capabilities. One
+        that names nothing showing is a 400.
+      schema:
+        type: string
+        example: persona:front-desk-clerk
+    Page:
+      name: page
+      in: query
+      required: false
+      description: The page to return, from 1.
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+    Size:
+      name: size
+      in: query
+      required: false
+      description: How many items a page holds.
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 500
+        default: 100
+    DocID:
+      name: id
+      in: path
+      required: true
+      description: The doc's ID, as it's declared.
+      schema:
+        type: string
+        example: room-booking
+    Domain:
+      name: domain
+      in: path
+      required: true
+      description: The ID of the domain the doc is in.
+      schema:
+        type: string
+        example: bookings
+    GapKey:
+      name: key
+      in: path
+      required: true
+      description: >-
+        The gap's key on the doc it's on: what follows the `#` in its
+        reference.
+      schema:
+        type: string
+        example: calendar-needs-a-mouse
+
+  headers:
+    Link:
+      description: >-
+        Links to the pages around this one, as `first`, `prev`, `next` and
+        `last`. Left out when everything fits on one page.
+      schema:
+        type: string
+        example: '<http://localhost:8080/api/v1/products/hotel/gaps?page=2&size=100>; rel="next"'
+    TotalCount:
+      description: How many items there are across every page.
+      schema:
+        type: integer
+        example: 240
 
   responses:
     BadRequest:
@@ -243,6 +1375,27 @@ components:
             $ref: "#/components/schemas/Error"
     NotFound:
       description: Nothing has been applied for the project, or not that commit.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    InvalidQuery:
+      description: >-
+        A query value isn't one, such as a page or size out of range, or the
+        scope names a project that isn't the product's, or a reference that
+        names nothing showing.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    ProductNotFound:
+      description: There's no such product.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    DocNotFound:
+      description: There's no such product, or no such doc showing in it.
       content:
         application/json:
           schema:

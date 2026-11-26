@@ -1,0 +1,30 @@
+get:
+  operationId: getCapabilityGap
+  x-stability: prototype
+  summary: Get a gap on a capability
+  description: >-
+    A gap on a capability, with its risk on every capability it shows on, what
+    it affects, and the open decisions that affect it.
+    `capability:room-booking#calendar-needs-a-mouse` is at
+    `/capabilities/room-booking/gaps/calendar-needs-a-mouse`.
+  tags:
+    - Products
+  # No sign-in yet: a server is only reachable by its client's people.
+  security: []
+  parameters:
+    - $ref: "../../schemas.yml#/components/parameters/Product"
+    - $ref: "../../schemas.yml#/components/parameters/DocID"
+    - $ref: "../../schemas.yml#/components/parameters/GapKey"
+    - $ref: "../../schemas.yml#/components/parameters/ProjectsShown"
+    - $ref: "../../schemas.yml#/components/parameters/Initiative"
+  responses:
+    "200":
+      description: The gap.
+      content:
+        application/json:
+          schema:
+            $ref: "../../schemas.yml#/components/schemas/Gap"
+    "400":
+      $ref: "../../schemas.yml#/components/responses/InvalidQuery"
+    "404":
+      $ref: "../../schemas.yml#/components/responses/DocNotFound"

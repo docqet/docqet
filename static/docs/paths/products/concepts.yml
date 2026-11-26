@@ -1,0 +1,35 @@
+get:
+  operationId: listConcepts
+  x-stability: prototype
+  summary: List a product's concepts
+  description: >-
+    The product's concepts that are showing, with the capabilities and rules
+    that use them. A concept's ID is `<id>@<domain>`.
+  tags:
+    - Products
+  # No sign-in yet: a server is only reachable by its client's people.
+  security: []
+  parameters:
+    - $ref: "../../schemas.yml#/components/parameters/Product"
+    - $ref: "../../schemas.yml#/components/parameters/ProjectsShown"
+    - $ref: "../../schemas.yml#/components/parameters/Initiative"
+    - $ref: "../../schemas.yml#/components/parameters/Page"
+    - $ref: "../../schemas.yml#/components/parameters/Size"
+  responses:
+    "200":
+      description: The concepts, a page at a time.
+      headers:
+        Link:
+          $ref: "../../schemas.yml#/components/headers/Link"
+        X-Total-Count:
+          $ref: "../../schemas.yml#/components/headers/TotalCount"
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: "../../schemas.yml#/components/schemas/Concept"
+    "400":
+      $ref: "../../schemas.yml#/components/responses/InvalidQuery"
+    "404":
+      $ref: "../../schemas.yml#/components/responses/ProductNotFound"

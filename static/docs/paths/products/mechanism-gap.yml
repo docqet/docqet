@@ -1,0 +1,30 @@
+get:
+  operationId: getMechanismGap
+  x-stability: prototype
+  summary: Get a gap on a mechanism
+  description: >-
+    A gap on a mechanism, with its risk on every capability built on it, what
+    it affects, and the open decisions that affect it.
+    `mechanism:audit-logging#no-retention` is at
+    `/mechanisms/audit-logging/gaps/no-retention`.
+  tags:
+    - Products
+  # No sign-in yet: a server is only reachable by its client's people.
+  security: []
+  parameters:
+    - $ref: "../../schemas.yml#/components/parameters/Product"
+    - $ref: "../../schemas.yml#/components/parameters/DocID"
+    - $ref: "../../schemas.yml#/components/parameters/GapKey"
+    - $ref: "../../schemas.yml#/components/parameters/ProjectsShown"
+    - $ref: "../../schemas.yml#/components/parameters/Initiative"
+  responses:
+    "200":
+      description: The gap.
+      content:
+        application/json:
+          schema:
+            $ref: "../../schemas.yml#/components/schemas/Gap"
+    "400":
+      $ref: "../../schemas.yml#/components/responses/InvalidQuery"
+    "404":
+      $ref: "../../schemas.yml#/components/responses/DocNotFound"

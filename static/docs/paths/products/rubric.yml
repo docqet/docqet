@@ -1,0 +1,26 @@
+get:
+  operationId: getProductRubric
+  x-stability: prototype
+  summary: Get a product's rubric
+  description: >-
+    The stability rubric the product's projects were indexed against: what
+    each stability level expects of each quality.
+  tags:
+    - Products
+  # No sign-in yet: a server is only reachable by its client's people.
+  security: []
+  parameters:
+    - $ref: "../../schemas.yml#/components/parameters/Product"
+    - $ref: "../../schemas.yml#/components/parameters/ProjectsShown"
+    - $ref: "../../schemas.yml#/components/parameters/Initiative"
+  responses:
+    "200":
+      description: The rubric.
+      content:
+        application/json:
+          schema:
+            $ref: "../../schemas.yml#/components/schemas/Rubric"
+    "400":
+      $ref: "../../schemas.yml#/components/responses/InvalidQuery"
+    "404":
+      $ref: "../../schemas.yml#/components/responses/ProductNotFound"

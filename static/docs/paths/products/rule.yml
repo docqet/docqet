@@ -1,0 +1,28 @@
+get:
+  operationId: getRule
+  x-stability: prototype
+  summary: Get a rule
+  description: >-
+    A rule in a domain, with how every capability that follows it stands on
+    it.
+  tags:
+    - Products
+  # No sign-in yet: a server is only reachable by its client's people.
+  security: []
+  parameters:
+    - $ref: "../../schemas.yml#/components/parameters/Product"
+    - $ref: "../../schemas.yml#/components/parameters/Domain"
+    - $ref: "../../schemas.yml#/components/parameters/DocID"
+    - $ref: "../../schemas.yml#/components/parameters/ProjectsShown"
+    - $ref: "../../schemas.yml#/components/parameters/Initiative"
+  responses:
+    "200":
+      description: The rule.
+      content:
+        application/json:
+          schema:
+            $ref: "../../schemas.yml#/components/schemas/Rule"
+    "400":
+      $ref: "../../schemas.yml#/components/responses/InvalidQuery"
+    "404":
+      $ref: "../../schemas.yml#/components/responses/DocNotFound"

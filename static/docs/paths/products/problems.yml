@@ -1,0 +1,36 @@
+get:
+  operationId: listProblems
+  x-stability: prototype
+  summary: List a product's problems
+  description: >-
+    Everything wrong in the docs showing: each project's own problems, and
+    those that only appear once its projects are put together, such as a
+    contradiction or an ID two projects declare.
+  tags:
+    - Products
+  # No sign-in yet: a server is only reachable by its client's people.
+  security: []
+  parameters:
+    - $ref: "../../schemas.yml#/components/parameters/Product"
+    - $ref: "../../schemas.yml#/components/parameters/ProjectsShown"
+    - $ref: "../../schemas.yml#/components/parameters/Initiative"
+    - $ref: "../../schemas.yml#/components/parameters/Page"
+    - $ref: "../../schemas.yml#/components/parameters/Size"
+  responses:
+    "200":
+      description: The problems, a page at a time.
+      headers:
+        Link:
+          $ref: "../../schemas.yml#/components/headers/Link"
+        X-Total-Count:
+          $ref: "../../schemas.yml#/components/headers/TotalCount"
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: "../../schemas.yml#/components/schemas/Problem"
+    "400":
+      $ref: "../../schemas.yml#/components/responses/InvalidQuery"
+    "404":
+      $ref: "../../schemas.yml#/components/responses/ProductNotFound"

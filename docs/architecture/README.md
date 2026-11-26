@@ -2,9 +2,10 @@
 
 _Decisions and direction for `docket`'s Go code: where its logic lives, how
 the CLI and the server share it, and the API the UI reads. Indexing,
-checking, applying states to the server, combining and deriving are built.
-Everything else here is the plan, and may change as the prototype teaches us.
-[The order of work](#order-of-work) says which is which._
+checking, applying states to the server, combining, deriving and the
+resources are built. Everything else here is the plan, and may change as the
+prototype teaches us. [The order of work](#order-of-work) says which is
+which._
 
 **Contents:** [Layers](#layers) · [The parts](#the-parts) · [Order of work](#order-of-work) · [Open decisions](#open-decisions) · [Left out for now](#left-out-for-now)
 
@@ -78,15 +79,18 @@ Each step builds only what its commands need:
    examples.
 2. **Built: `combine` and `derive`**, ported from the UI's TypeScript and
    checked against it figure by figure, for every example product and for
-   Docket. Still to come: the read service and its sources, over the server's
-   store and the working tree.
-3. **`docket ui` serving the API** over the working tree, re-indexing as files
-   change.
+   Docket. Built too: the read service, over the server's store or the
+   states `docket ui` shows. Still to come: `status`, `list` and `show`
+   calling it.
+3. **`docket ui` serving the API** over the working tree. Built: it serves the
+   API over `.docket/state.json` as `docket index` wrote it. Still to come:
+   indexing the working tree itself, and again as files change.
 4. **The server's store.** Built: `docket migrate`, the state repository, the
    whole-state endpoints and `apply`. Still to come: results, with their
    repository and `docket results`.
-5. **The resources**, then the UI moving to them, then the make targets that
-   load the examples.
+5. **The resources.** Built: every resource in [the API](api.md#resources-for-the-ui),
+   with its spec. Still to come: the UI moving to them, then the make targets
+   that load the examples.
 6. **History**: git as an `fs.FS`, `diff`, `log`, `history` and `preview`,
    then `?at=`, changes worked out as states are applied, and the change and
    comparison resources.

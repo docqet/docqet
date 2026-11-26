@@ -4,6 +4,8 @@ github.com/alexliesenfeld/health v0.8.1 h1:wdE3vt+cbJotiR8DGDBZPKHDFoJbAoWEfQTcq
 github.com/alexliesenfeld/health v0.8.1/go.mod h1:TfNP0f+9WQVWMQRzvMUjlws4ceXKEL3WR+6Hp95HUFc=
 github.com/dustin/go-humanize v1.1.0 h1:dbKTrvD0klcbBV/h4AWJdMuZogJACoMlvWIWZ5b2xWg=
 github.com/dustin/go-humanize v1.1.0/go.mod h1:hc1CvRkJMsgxqjmjMQF3QNRAZBwY8AXBAzKYoSX9sFI=
+github.com/exalynt/turn v0.0.0-20261029172916-9f8e283af5fe h1:8KzF2LaU7WX1lgEylps/yVYyEmIGIkbTrnYxb++8IX8=
+github.com/exalynt/turn v0.0.0-20261029172916-9f8e283af5fe/go.mod h1:3dPk5mPCJgif7n7Eznw13a7qqZjiZgP/aWVjkIHgf4g=
 github.com/go-chi/chi/v5 v5.5.0 h1:xdKQ1dJmVJsmgahrXSKhUx8NyVPzpwdlyrrQFpMPJgg=
 github.com/go-chi/chi/v5 v5.5.0/go.mod h1:d1IG7GtKPSjPyBP365PH8sAGVHk3qfB/IhjFNRH1wWM=
 github.com/go-chi/render v1.0.3 h1:AsXqd2a1/INaIfUSKq3G5uA8weYx20FOsM7uSoCyyt4=

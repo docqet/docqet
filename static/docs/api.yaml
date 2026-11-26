@@ -3,11 +3,18 @@ info:
   title: Docket API
   description: >-
     The Docket server's API: what software can do, who it serves, and how
-    ready it is, for the projects applied to it. So far it serves its health,
-    and the endpoints the CLI sends each project's states through and reads
-    them back from. The resources the UI reads come next, as
+    ready it is, for the projects applied to it. It serves its health,
+    the endpoints the CLI sends each project's states through and reads
+    them back from, and the resources the UI reads: each product's docs, put
+    together across its projects, with the figures worked out for them, as
     [the plan](https://github.com/exalynt/docket/blob/main/docs/architecture/api.md)
     describes.
+
+
+    Every list is a bare JSON array, a page at a time: `?page=` picks the
+    page, from 1, and `?size=` how many it holds, 100 unless asked, and at
+    most 500. The `X-Total-Count` header says how many there are in all, and
+    the `Link` header links the pages around it.
 
 
     ## Stability
@@ -57,6 +64,12 @@ tags:
     description: >-
       Each project's states, one per commit on its main branch, as
       `docket apply` sends them and the CLI reads them back.
+  - name: Products
+    description: >-
+      What a product's projects define, put together, with the figures worked
+      out for it: what the UI reads. Every route but the list of products
+      takes `?project=`, to show only some of the product's projects, and
+      `?initiative=`, to show only what's part of one.
 paths:
   /readyz:
     $ref: "./paths/health/readyz.yml"
@@ -68,3 +81,65 @@ paths:
     $ref: "./paths/projects/commit.yml"
   /projects/{project}/commits/{sha}/state:
     $ref: "./paths/projects/commit-state.yml"
+  /products:
+    $ref: "./paths/products/products.yml"
+  /products/{product}:
+    $ref: "./paths/products/product.yml"
+  /products/{product}/status:
+    $ref: "./paths/products/status.yml"
+  /products/{product}/projects:
+    $ref: "./paths/products/projects.yml"
+  /products/{product}/rubric:
+    $ref: "./paths/products/rubric.yml"
+  /products/{product}/domains:
+    $ref: "./paths/products/domains.yml"
+  /products/{product}/domains/{id}:
+    $ref: "./paths/products/domain.yml"
+  /products/{product}/features:
+    $ref: "./paths/products/features.yml"
+  /products/{product}/features/{id}:
+    $ref: "./paths/products/feature.yml"
+  /products/{product}/capabilities:
+    $ref: "./paths/products/capabilities.yml"
+  /products/{product}/capabilities/{id}:
+    $ref: "./paths/products/capability.yml"
+  /products/{product}/capabilities/{id}/gaps/{key}:
+    $ref: "./paths/products/capability-gap.yml"
+  /products/{product}/rules:
+    $ref: "./paths/products/rules.yml"
+  /products/{product}/domains/{domain}/rules/{id}:
+    $ref: "./paths/products/rule.yml"
+  /products/{product}/concepts:
+    $ref: "./paths/products/concepts.yml"
+  /products/{product}/domains/{domain}/concepts/{id}:
+    $ref: "./paths/products/concept.yml"
+  /products/{product}/personas:
+    $ref: "./paths/products/personas.yml"
+  /products/{product}/personas/{id}:
+    $ref: "./paths/products/persona.yml"
+  /products/{product}/initiatives:
+    $ref: "./paths/products/initiatives.yml"
+  /products/{product}/initiatives/{id}:
+    $ref: "./paths/products/initiative.yml"
+  /products/{product}/mechanisms:
+    $ref: "./paths/products/mechanisms.yml"
+  /products/{product}/mechanisms/{id}:
+    $ref: "./paths/products/mechanism.yml"
+  /products/{product}/mechanisms/{id}/gaps/{key}:
+    $ref: "./paths/products/mechanism-gap.yml"
+  /products/{product}/components:
+    $ref: "./paths/products/components.yml"
+  /products/{product}/components/{id}:
+    $ref: "./paths/products/component.yml"
+  /products/{product}/components/{id}/gaps/{key}:
+    $ref: "./paths/products/component-gap.yml"
+  /products/{product}/gaps:
+    $ref: "./paths/products/gaps.yml"
+  /products/{product}/tradeoffs:
+    $ref: "./paths/products/tradeoffs.yml"
+  /products/{product}/decisions:
+    $ref: "./paths/products/decisions.yml"
+  /products/{product}/problems:
+    $ref: "./paths/products/problems.yml"
+  /products/{product}/search:
+    $ref: "./paths/products/search.yml"

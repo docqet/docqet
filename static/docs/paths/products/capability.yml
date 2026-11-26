@@ -1,0 +1,27 @@
+get:
+  operationId: getCapability
+  x-stability: prototype
+  summary: Get a capability
+  description: >-
+    A capability, with its readiness, exposure and risk, what's left on it,
+    and how it stands on each rule it follows and each expected outcome.
+  tags:
+    - Products
+  # No sign-in yet: a server is only reachable by its client's people.
+  security: []
+  parameters:
+    - $ref: "../../schemas.yml#/components/parameters/Product"
+    - $ref: "../../schemas.yml#/components/parameters/DocID"
+    - $ref: "../../schemas.yml#/components/parameters/ProjectsShown"
+    - $ref: "../../schemas.yml#/components/parameters/Initiative"
+  responses:
+    "200":
+      description: The capability.
+      content:
+        application/json:
+          schema:
+            $ref: "../../schemas.yml#/components/schemas/Capability"
+    "400":
+      $ref: "../../schemas.yml#/components/responses/InvalidQuery"
+    "404":
+      $ref: "../../schemas.yml#/components/responses/DocNotFound"

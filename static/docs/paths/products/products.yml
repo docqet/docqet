@@ -1,0 +1,31 @@
+get:
+  operationId: listProducts
+  x-stability: prototype
+  summary: List products
+  description: >-
+    Every product the server has states for, in the order their first projects
+    were applied, each named by its first project. A project that declares no
+    product is a product of its own, named for it.
+  tags:
+    - Products
+  # No sign-in yet: a server is only reachable by its client's people.
+  security: []
+  parameters:
+    - $ref: "../../schemas.yml#/components/parameters/Page"
+    - $ref: "../../schemas.yml#/components/parameters/Size"
+  responses:
+    "200":
+      description: The products, a page at a time.
+      headers:
+        Link:
+          $ref: "../../schemas.yml#/components/headers/Link"
+        X-Total-Count:
+          $ref: "../../schemas.yml#/components/headers/TotalCount"
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: "../../schemas.yml#/components/schemas/Product"
+    "400":
+      $ref: "../../schemas.yml#/components/responses/InvalidQuery"

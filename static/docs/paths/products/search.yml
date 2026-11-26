@@ -1,0 +1,43 @@
+get:
+  operationId: searchProduct
+  x-stability: prototype
+  summary: Search a product's docs
+  description: >-
+    The docs showing whose name, description or body matches, best first, each
+    with where it matched.
+  tags:
+    - Products
+  # No sign-in yet: a server is only reachable by its client's people.
+  security: []
+  parameters:
+    - $ref: "../../schemas.yml#/components/parameters/Product"
+    - $ref: "../../schemas.yml#/components/parameters/ProjectsShown"
+    - $ref: "../../schemas.yml#/components/parameters/Initiative"
+    - name: q
+      in: query
+      required: true
+      description: >-
+        What to search for, in every doc's name, description and body.
+      schema:
+        type: string
+        example: refund
+    - $ref: "../../schemas.yml#/components/parameters/Page"
+    - $ref: "../../schemas.yml#/components/parameters/Size"
+  responses:
+    "200":
+      description: The matching docs, a page at a time.
+      headers:
+        Link:
+          $ref: "../../schemas.yml#/components/headers/Link"
+        X-Total-Count:
+          $ref: "../../schemas.yml#/components/headers/TotalCount"
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: "../../schemas.yml#/components/schemas/SearchResult"
+    "400":
+      $ref: "../../schemas.yml#/components/responses/InvalidQuery"
+    "404":
+      $ref: "../../schemas.yml#/components/responses/ProductNotFound"

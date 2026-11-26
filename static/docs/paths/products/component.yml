@@ -1,0 +1,27 @@
+get:
+  operationId: getComponent
+  x-stability: prototype
+  summary: Get a component
+  description: >-
+    A component, with the capabilities built on it, the outcomes it meets, and
+    what's at stake in its gaps.
+  tags:
+    - Products
+  # No sign-in yet: a server is only reachable by its client's people.
+  security: []
+  parameters:
+    - $ref: "../../schemas.yml#/components/parameters/Product"
+    - $ref: "../../schemas.yml#/components/parameters/DocID"
+    - $ref: "../../schemas.yml#/components/parameters/ProjectsShown"
+    - $ref: "../../schemas.yml#/components/parameters/Initiative"
+  responses:
+    "200":
+      description: The component.
+      content:
+        application/json:
+          schema:
+            $ref: "../../schemas.yml#/components/schemas/Technical"
+    "400":
+      $ref: "../../schemas.yml#/components/responses/InvalidQuery"
+    "404":
+      $ref: "../../schemas.yml#/components/responses/DocNotFound"

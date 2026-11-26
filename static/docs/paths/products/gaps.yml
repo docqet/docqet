@@ -1,0 +1,61 @@
+get:
+  operationId: listGaps
+  x-stability: prototype
+  summary: List a product's gaps
+  description: >-
+    Every gap showing on the product's capabilities, mechanisms and
+    components, with its risk, what it affects, and the open decisions that
+    affect it. `?for=`, `?impact=` and `?sort=` mean what they do for `docket
+    list gaps`. With `?for=`, each gap's `within` says what it puts at stake
+    there.
+  tags:
+    - Products
+  # No sign-in yet: a server is only reachable by its client's people.
+  security: []
+  parameters:
+    - $ref: "../../schemas.yml#/components/parameters/Product"
+    - $ref: "../../schemas.yml#/components/parameters/ProjectsShown"
+    - $ref: "../../schemas.yml#/components/parameters/Initiative"
+    - $ref: "../../schemas.yml#/components/parameters/For"
+    - name: impact
+      in: query
+      required: false
+      description: >-
+        Show only the gaps with these impacts, separated by commas.
+      style: form
+      explode: false
+      schema:
+        type: array
+        items:
+          type: string
+          enum: [negligible, inconvenient, blocking, damaging]
+        example: [blocking, damaging]
+    - name: sort
+      in: query
+      required: false
+      description: >-
+        `risk` puts the riskiest first.
+      schema:
+        type: string
+        enum: [risk]
+        example: risk
+    - $ref: "../../schemas.yml#/components/parameters/Page"
+    - $ref: "../../schemas.yml#/components/parameters/Size"
+  responses:
+    "200":
+      description: The gaps, a page at a time.
+      headers:
+        Link:
+          $ref: "../../schemas.yml#/components/headers/Link"
+        X-Total-Count:
+          $ref: "../../schemas.yml#/components/headers/TotalCount"
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: "../../schemas.yml#/components/schemas/Gap"
+    "400":
+      $ref: "../../schemas.yml#/components/responses/InvalidQuery"
+    "404":
+      $ref: "../../schemas.yml#/components/responses/ProductNotFound"

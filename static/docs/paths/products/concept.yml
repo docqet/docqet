@@ -1,0 +1,27 @@
+get:
+  operationId: getConcept
+  x-stability: prototype
+  summary: Get a concept
+  description: >-
+    A concept in a domain, with the capabilities and rules that use it.
+  tags:
+    - Products
+  # No sign-in yet: a server is only reachable by its client's people.
+  security: []
+  parameters:
+    - $ref: "../../schemas.yml#/components/parameters/Product"
+    - $ref: "../../schemas.yml#/components/parameters/Domain"
+    - $ref: "../../schemas.yml#/components/parameters/DocID"
+    - $ref: "../../schemas.yml#/components/parameters/ProjectsShown"
+    - $ref: "../../schemas.yml#/components/parameters/Initiative"
+  responses:
+    "200":
+      description: The concept.
+      content:
+        application/json:
+          schema:
+            $ref: "../../schemas.yml#/components/schemas/Concept"
+    "400":
+      $ref: "../../schemas.yml#/components/responses/InvalidQuery"
+    "404":
+      $ref: "../../schemas.yml#/components/responses/DocNotFound"

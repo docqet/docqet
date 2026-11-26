@@ -1,0 +1,28 @@
+get:
+  operationId: getProductStatus
+  x-stability: prototype
+  summary: Get a product's status
+  description: >-
+    The product at a glance: its maturity, readiness and exposure, every gap's
+    risk, and how many of each doc there are. With `?for=`, the figures are
+    those of the capabilities it names, as `docket status --for` shows them.
+  tags:
+    - Products
+  # No sign-in yet: a server is only reachable by its client's people.
+  security: []
+  parameters:
+    - $ref: "../../schemas.yml#/components/parameters/Product"
+    - $ref: "../../schemas.yml#/components/parameters/ProjectsShown"
+    - $ref: "../../schemas.yml#/components/parameters/Initiative"
+    - $ref: "../../schemas.yml#/components/parameters/For"
+  responses:
+    "200":
+      description: The status.
+      content:
+        application/json:
+          schema:
+            $ref: "../../schemas.yml#/components/schemas/Status"
+    "400":
+      $ref: "../../schemas.yml#/components/responses/InvalidQuery"
+    "404":
+      $ref: "../../schemas.yml#/components/responses/ProductNotFound"

@@ -40,13 +40,21 @@ GET /api/v1/products
 GET /api/v1/products/{product}
 GET /api/v1/products/{product}/status?initiative=mvp&for=persona:front-desk-clerk
 GET /api/v1/products/{product}/projects
+GET /api/v1/products/{product}/rubric
 GET /api/v1/products/{product}/capabilities?stability=beta&initiative=mvp
 GET /api/v1/products/{product}/capabilities/{id}
 GET /api/v1/products/{product}/capabilities/{id}/gaps/{key}
 GET /api/v1/products/{product}/domains/{domain}/rules/{id}
+GET /api/v1/products/{product}/domains/{domain}/concepts/{id}
 GET /api/v1/products/{product}/gaps?sort=risk&impact=blocking,damaging
-GET /api/v1/products/{product}/features, personas, initiatives, decisions, tradeoffs, mechanisms, components, problems
+GET /api/v1/products/{product}/search?q=refund
+GET /api/v1/products/{product}/domains, features, personas, initiatives, rules, concepts,
+    mechanisms, components, decisions, tradeoffs, problems, and each one by ID
 ```
+
+All but `?at=` are built, in `internal/handlers/http`'s `ProductsHandler`,
+over the read service. `internal/handlers/http/resources.go` lists every
+route and resource.
 
 - **Resources are the product's, not a project's.** What anyone sees is the
   combined product: a feature can be built by two projects, contradictions
@@ -58,7 +66,11 @@ GET /api/v1/products/{product}/features, personas, initiatives, decisions, trade
   nothing out.
 - **Filters are the CLI's flags.** `?initiative=`, `?for=`, `?sort=` and the
   rest mean what `docket list`'s `--initiative`, `--for` and `--sort` mean,
-  since both call the read service.
+  since both call the read service. `?project=a,b` shows only some of a
+  product's projects, as `--project` does.
+- **Search is an endpoint of its own**, since the UI searches every doc's
+  name, description and body, and a reader shouldn't page through every doc
+  to do it.
 - **References become paths.** A gap or tradeoff is nested under the doc it's
   on, since `#` can't be in a path: `capability:room-booking#calendar-needs-a-mouse`
   is `/capabilities/room-booking/gaps/calendar-needs-a-mouse`. A rule or
@@ -148,8 +160,8 @@ The api repository's REST conventions apply:
   `github.com/exalynt/turn`, with `Link` and `X-Total-Count` headers and
   never anything in the body. So filtering, sorting and search are the
   server's job, and a view that wants everything, such as the canvas or the
-  feature map, pages through it. Search is an endpoint of its own when the
-  UI needs it.
+  feature map, pages through it. Resources are worked out in memory, so
+  their lists are numbered pages, `?page=` and `?size=`, of up to 500.
 - **At Prototype, endpoints change in place.** Nothing depends on them yet.
 - **Every endpoint is in the OpenAPI spec** as it's built, with its
   `x-stability`, and shows in the reference at `/docs/api` (see

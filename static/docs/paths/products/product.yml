@@ -1,0 +1,27 @@
+get:
+  operationId: getProduct
+  x-stability: prototype
+  summary: Get a product
+  description: >-
+    A product, with each of its projects' latest state and the maturity of
+    what's showing. It says what every other read of the product is built
+    from.
+  tags:
+    - Products
+  # No sign-in yet: a server is only reachable by its client's people.
+  security: []
+  parameters:
+    - $ref: "../../schemas.yml#/components/parameters/Product"
+    - $ref: "../../schemas.yml#/components/parameters/ProjectsShown"
+    - $ref: "../../schemas.yml#/components/parameters/Initiative"
+  responses:
+    "200":
+      description: The product.
+      content:
+        application/json:
+          schema:
+            $ref: "../../schemas.yml#/components/schemas/Product"
+    "400":
+      $ref: "../../schemas.yml#/components/responses/InvalidQuery"
+    "404":
+      $ref: "../../schemas.yml#/components/responses/ProductNotFound"
