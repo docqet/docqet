@@ -29,7 +29,15 @@ const KINDS: { kind: ScopeKind | "any"; name: string }[] = [
   { kind: "capability", name: "Capabilities" },
 ];
 
-const ONE: Record<ScopeKind, string> = { all: "", project: "Project", persona: "Persona", initiative: "Initiative", domain: "Domain", feature: "Feature", capability: "Capability" };
+const ONE: Record<ScopeKind, string> = {
+  all: "",
+  project: "Project",
+  persona: "Persona",
+  initiative: "Initiative",
+  domain: "Domain",
+  feature: "Feature",
+  capability: "Capability",
+};
 
 /* With no search and every kind, each kind shows its first few, with how many more under the kind's tab. */
 const FEW = 4;

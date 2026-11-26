@@ -28,18 +28,8 @@ export type CapabilityCardProps = {
  * in a narrow column. Editing and dragging are the app's: `grip` is the
  * handle it's picked up by, and `actions` holds its menu.
  */
-export function CapabilityCard({
-  name,
-  level,
-  grip = false,
-  actions,
-  onClick,
-  details,
-  hint,
-}: CapabilityCardProps) {
-  const line = (
-    <CapabilityLabel name={name} level={level} grip={grip} actions={actions} details={details} hint={hint} />
-  );
+export function CapabilityCard({ name, level, grip = false, actions, onClick, details, hint }: CapabilityCardProps) {
+  const line = <CapabilityLabel name={name} level={level} grip={grip} actions={actions} details={details} hint={hint} />;
   return (
     <Card
       component="article"

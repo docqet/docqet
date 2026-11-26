@@ -183,11 +183,7 @@
 
 /* A draft has no level, so no color: a faint hatch, there but not started. */
 .ov-seg-draft {
-  background: repeating-linear-gradient(
-    135deg,
-    color-mix(in srgb, var(--faint) 45%, transparent) 0 2px,
-    transparent 2px 4px
-  );
+  background: repeating-linear-gradient(135deg, color-mix(in srgb, var(--faint) 45%, transparent) 0 2px, transparent 2px 4px);
 }
 
 .ov-legend {

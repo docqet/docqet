@@ -17,8 +17,7 @@ export function ProjectIcon({ size = 14 }: { size?: number }) {
 /* A product to choose in the header. */
 export type ProductChoice = Product;
 
-const indexed = (p: Project) =>
-  new Date(p.indexedAt).toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short" });
+const indexed = (p: Project) => new Date(p.indexedAt).toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short" });
 
 /* The commit a project's repository was indexed at, and when. */
 function Indexed({ project }: { project: Project }) {
@@ -68,8 +67,7 @@ export default function ProductFilter({
   }
 
   const everything = showing.length === all.length;
-  const toggle = (id: string) =>
-    onProjects(ids.includes(id) ? ids.filter((x) => x !== id) : all.map((p) => p.id).filter((x) => x === id || ids.includes(x)));
+  const toggle = (id: string) => onProjects(ids.includes(id) ? ids.filter((x) => x !== id) : all.map((p) => p.id).filter((x) => x === id || ids.includes(x)));
 
   return (
     <div className="project">

@@ -109,7 +109,15 @@ function RuleView({ state, rule, route }: { state: DocketState; rule: Rule; rout
             <Stat
               label="Held"
               value={following.length ? `${held} of ${following.length}` : "—"}
-              note={!following.length ? "Nothing follows it yet" : !held ? "None of them holds to it yet" : withEvidence ? "With evidence" : "On trust: nothing points at it as evidence"}
+              note={
+                !following.length
+                  ? "Nothing follows it yet"
+                  : !held
+                    ? "None of them holds to it yet"
+                    : withEvidence
+                      ? "With evidence"
+                      : "On trust: nothing points at it as evidence"
+              }
               tone={following.length && !notHeld.length ? "ok" : undefined}
               href={docHref("rule", rule.id)}
             />
@@ -121,7 +129,8 @@ function RuleView({ state, rule, route }: { state: DocketState; rule: Rule; rout
               href={docHref("rule", rule.id)}
             />
             <Stat
-              label="Evidence" term="evidence"
+              label="Evidence"
+              term="evidence"
               value={plural(places, "place", "places")}
               note={places ? `${rule.evidence.verifies.length} verify · ${rule.evidence.implements.length} implement` : "Optional: it holds on trust"}
               href={docHref("rule", rule.id, "evidence")}

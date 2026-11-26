@@ -23,7 +23,14 @@ import { withParam, type Route } from "../routes";
  */
 
 /* A label, as a Term when it's one of Docket's words. */
-const labelled = (label: ReactNode, term?: TermId) => (term ? <Term id={term} hoverOnly>{label}</Term> : label);
+const labelled = (label: ReactNode, term?: TermId) =>
+  term ? (
+    <Term id={term} hoverOnly>
+      {label}
+    </Term>
+  ) : (
+    label
+  );
 
 /* A view's scrolling area. `wide` lets a table use the whole width. Sets the tab's title. */
 export function View({ title, wide = false, children }: { title: string; wide?: boolean; children: ReactNode }) {
@@ -141,7 +148,23 @@ export function Tabs({ tabs, current }: { tabs: TabDef[]; current: string }) {
 }
 
 /* A titled part of a page, with how many it holds, a note under the title, and anything at its right, such as a "See all" link. */
-export function Section({ title, term, count, note, aside, id, children }: { title: ReactNode; term?: TermId; count?: number; note?: ReactNode; aside?: ReactNode; id?: string; children: ReactNode }) {
+export function Section({
+  title,
+  term,
+  count,
+  note,
+  aside,
+  id,
+  children,
+}: {
+  title: ReactNode;
+  term?: TermId;
+  count?: number;
+  note?: ReactNode;
+  aside?: ReactNode;
+  id?: string;
+  children: ReactNode;
+}) {
   return (
     <section className="view-section" id={id}>
       <header className="view-section-head">

@@ -11,12 +11,13 @@ import { DocLink } from "./indexParts";
  * common first. Each says what's wrong and links to what it's about.
  */
 export default function ProblemsPage({ state }: { state: DocketState; route: Route }) {
-  const types = [...new Set(state.problems.map((p) => p.type))].sort(
-    (a, b) => rank(a) - rank(b) || count(state, b) - count(state, a) || a.localeCompare(b),
-  );
+  const types = [...new Set(state.problems.map((p) => p.type))].sort((a, b) => rank(a) - rank(b) || count(state, b) - count(state, a) || a.localeCompare(b));
   return (
     <View title="Doc problems" wide>
-      <PageHeader title="Doc problems" lede="What's wrong in the docs? Contradictions between projects first, then mistakes such as links to things that don't exist." />
+      <PageHeader
+        title="Doc problems"
+        lede="What's wrong in the docs? Contradictions between projects first, then mistakes such as links to things that don't exist."
+      />
       {!types.length ? (
         <Empty>No problems: the docs hold together.</Empty>
       ) : (
@@ -59,7 +60,10 @@ const TYPES: Record<string, { name: string; note: string }> = {
   "invalid-frontmatter": { name: "Invalid fields", note: "A required field is missing, or a value isn't allowed, such as a link of the wrong type." },
   "broken-link": { name: "Broken links", note: "A relative link in a doc's body or a text value doesn't resolve." },
   "unlinked-rule": { name: "Rules nothing follows", note: "No capability follows the rule." },
-  "unknown-outcome": { name: "Unknown outcomes", note: "An outcome that a gap, tradeoff or decision affects, or that a mechanism or component says it meets, isn't in the rubric." },
+  "unknown-outcome": {
+    name: "Unknown outcomes",
+    note: "An outcome that a gap, tradeoff or decision affects, or that a mechanism or component says it meets, isn't in the rubric.",
+  },
 };
 
 /* Contradictions, and the problems that are contradictions too, before the rest. */

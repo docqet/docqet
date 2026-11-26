@@ -27,7 +27,21 @@ import {
   type Level,
   type Verdict,
 } from "../state";
-import { PARTS, PART_IDS, acrossRows, filtersFrom, holdersIn, passes, scopeOf, useRowsFor, type Filters, type GapRow, type PartId, type Scope, type ScopeKind } from "./leftScope";
+import {
+  PARTS,
+  PART_IDS,
+  acrossRows,
+  filtersFrom,
+  holdersIn,
+  passes,
+  scopeOf,
+  useRowsFor,
+  type Filters,
+  type GapRow,
+  type PartId,
+  type Scope,
+  type ScopeKind,
+} from "./leftScope";
 import { ScopePicker } from "./ScopePicker";
 import "./left.css";
 import { GapInitiatives } from "../GapRows";
@@ -50,7 +64,15 @@ export default function LeftPage({ state, route }: { state: DocketState; route: 
   const holders = holdersIn(state, holdersOf(state), scope).filter((h) => openDecisions(h.doc).length);
   const decisions = holders.reduce((n, h) => n + openDecisions(h.doc).length, 0);
   const tabs = [
-    { id: "gaps", label: <LeftLabel kind="product-gap" term="gap" size={14} hoverOnly>Gaps</LeftLabel>, count: rows.length },
+    {
+      id: "gaps",
+      label: (
+        <LeftLabel kind="product-gap" term="gap" size={14} hoverOnly>
+          Gaps
+        </LeftLabel>
+      ),
+      count: rows.length,
+    },
     { id: "decisions", label: <LeftLabel kind="decision" size={14} hoverOnly />, count: decisions },
   ];
   const tab = currentTab(route, tabs);
@@ -78,7 +100,11 @@ export default function LeftPage({ state, route }: { state: DocketState; route: 
           <>
             <Stat
               wide
-              label={<LeftLabel kind="product-gap" term="gap" size={13} hoverOnly>Gaps</LeftLabel>}
+              label={
+                <LeftLabel kind="product-gap" term="gap" size={13} hoverOnly>
+                  Gaps
+                </LeftLabel>
+              }
               value={rows.length || "None"}
               note={rows.length ? <GapSpread rows={rows} /> : "Nothing written down to close"}
             />
@@ -208,7 +234,13 @@ function GapsTab({ state, rows, scope, search }: { state: DocketState; rows: Gap
           <GapTable state={state} rows={shown} first={30} />
         ) : order === "subject" ? (
           bySubject(shown.map((r) => ({ ...r, id: r.gap.id }))).map((g) => (
-            <GapGroup key={`${g.type}:${g.id}`} head={<SubjectLink state={state} type={g.type} id={g.id} withLevel />} state={state} rows={g.items} here={g.id} />
+            <GapGroup
+              key={`${g.type}:${g.id}`}
+              head={<SubjectLink state={state} type={g.type} id={g.id} withLevel />}
+              state={state}
+              rows={g.items}
+              here={g.id}
+            />
           ))
         ) : (
           PARTS[order].values.map((v) => {
@@ -242,7 +274,12 @@ function FilterMenu({ part, rows, filters }: { part: PartId; rows: GapRow[]; fil
         {value ? <FilterValue part={part} value={value} /> : null}
         <ExpandMoreRoundedIcon sx={{ fontSize: 16 }} />
       </button>
-      <Menu anchorEl={anchor} open={Boolean(anchor)} onClose={() => setAnchor(null)} slotProps={{ paper: { className: "project-menu" }, list: { className: "project-menu-list" } }}>
+      <Menu
+        anchorEl={anchor}
+        open={Boolean(anchor)}
+        onClose={() => setAnchor(null)}
+        slotProps={{ paper: { className: "project-menu" }, list: { className: "project-menu-list" } }}
+      >
         <MenuItem component="a" href={withParam(part, null)} selected={!value} className="project-menu-item lf-filter-item">
           <span>Any</span>
           <span className="lf-choice-count">{others.length}</span>
@@ -294,7 +331,12 @@ function OrderMenu({ order }: { order: Order }) {
         <strong>{ORDER_NAMES[order]}</strong>
         <ExpandMoreRoundedIcon sx={{ fontSize: 16 }} />
       </button>
-      <Menu anchorEl={anchor} open={Boolean(anchor)} onClose={() => setAnchor(null)} slotProps={{ paper: { className: "project-menu" }, list: { className: "project-menu-list" } }}>
+      <Menu
+        anchorEl={anchor}
+        open={Boolean(anchor)}
+        onClose={() => setAnchor(null)}
+        slotProps={{ paper: { className: "project-menu" }, list: { className: "project-menu-list" } }}
+      >
         {ORDERS.map((o) => (
           <MenuItem key={o} component="a" href={withParam("order", o === "risk" ? null : o)} selected={o === order} className="project-menu-item">
             {ORDER_NAMES[o]}
@@ -382,7 +424,9 @@ function GapLine({ state, row: r, here }: { state: DocketState; row: GapRow; her
       <span role="cell">
         <JudgementBadge part="reach" value={r.reach} inButton />
       </span>
-      <span role="cell">{r.on ? <CapabilityStability level={r.on.capability.stability} name={r.on.capability.name} focusable={false} /> : <span className="lf-default">–</span>}</span>
+      <span role="cell">
+        {r.on ? <CapabilityStability level={r.on.capability.stability} name={r.on.capability.name} focusable={false} /> : <span className="lf-default">–</span>}
+      </span>
       <span role="cell" className="lf-gap">
         <Tip title={plainText(r.gap.description)}>
           <a className="lf-gap-name" href={docHref("gap", r.gap.id)}>
@@ -521,7 +565,17 @@ export function SubjectLink({ state, type, id, withLevel = false }: { state: Doc
  * option, with how many it holds where that's known. The first option is the
  * default, which leaves the param out.
  */
-export function Choice({ label, param: key, value, options }: { label: string; param: string; value: string; options: ([string, string] | [string, string, number])[] }) {
+export function Choice({
+  label,
+  param: key,
+  value,
+  options,
+}: {
+  label: string;
+  param: string;
+  value: string;
+  options: ([string, string] | [string, string, number])[];
+}) {
   return (
     <div className="lf-choice" role="group" aria-label={label}>
       <span className="lf-choice-label">{label}</span>
@@ -536,7 +590,19 @@ export function Choice({ label, param: key, value, options }: { label: string; p
 }
 
 /* A long list cut short: its first `n`, then a button for the rest. `inline` is the smaller button under a group. */
-export function ShowFirst({ n, total, more, inline = false, children }: { n: number; total: number; more: string; inline?: boolean; children: (shown: number) => ReactNode }) {
+export function ShowFirst({
+  n,
+  total,
+  more,
+  inline = false,
+  children,
+}: {
+  n: number;
+  total: number;
+  more: string;
+  inline?: boolean;
+  children: (shown: number) => ReactNode;
+}) {
   const [all, setAll] = useState(false);
   const shown = all ? total : Math.min(n, total);
   return (

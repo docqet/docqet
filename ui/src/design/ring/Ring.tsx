@@ -41,11 +41,7 @@ export function Ring({ percent, size, figure, sx }: { percent: number; size: num
     );
 
   return (
-    <Box
-      component="span"
-      aria-hidden
-      sx={[{ display: "inline-flex", alignItems: "center", gap: 0.75, flexShrink: 0 }, ...(Array.isArray(sx) ? sx : [sx])]}
-    >
+    <Box component="span" aria-hidden sx={[{ display: "inline-flex", alignItems: "center", gap: 0.75, flexShrink: 0 }, ...(Array.isArray(sx) ? sx : [sx])]}>
       <Box component="span" sx={{ position: "relative", display: "inline-grid", placeItems: "center", flexShrink: 0, width: size, height: size }}>
         <Box component="svg" viewBox={`0 0 ${size} ${size}`} sx={{ position: "absolute", inset: 0, transform: "rotate(-90deg)" }}>
           {fills.map((fill, index) => {

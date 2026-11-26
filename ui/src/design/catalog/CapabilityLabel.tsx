@@ -11,15 +11,7 @@ import { Grip } from "../Grip";
  * A Capability's stability: its short mark, with none of it lit for Planned, or
  * "Draft" for one not yet agreed, which has no mark.
  */
-export function CapabilityStability({
-  name,
-  level,
-  focusable = true,
-}: {
-  name: string;
-  level: StabilityMarkLevel | null;
-  focusable?: boolean;
-}) {
+export function CapabilityStability({ name, level, focusable = true }: { name: string; level: StabilityMarkLevel | null; focusable?: boolean }) {
   return level ? (
     <StabilityMark level={level} feature={name} focusable={focusable} size="short" />
   ) : (

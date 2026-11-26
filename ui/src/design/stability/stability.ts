@@ -45,12 +45,10 @@ export const STABILITY: Record<StabilityLevelId, StabilityLevel> = {
     name: "Prototype",
     fullName: "Prototype",
     stability: "Exploring",
-    summary:
-      "Explores an idea so we can choose a direction. Its data may be fake, and it may change completely or be thrown away.",
+    summary: "Explores an idea so we can choose a direction. Its data may be fake, and it may change completely or be thrown away.",
     changes: "Anything can change, or it may be thrown away.",
     bugs: "Only what's being shown is expected to work, and its data may be fake.",
-    forUsers:
-      "React to it and help choose the direction. Don't use it for real work, or trust the data it shows.",
+    forUsers: "React to it and help choose the direction. Don't use it for real work, or trust the data it shows.",
     forEngineers: "Don't build on it. Expect it to be rewritten.",
     colors: { light: "#6f6982", dark: "#aaa4ba" },
     label: {
@@ -67,8 +65,7 @@ export const STABILITY: Record<StabilityLevelId, StabilityLevel> = {
     summary: "Works, but is still taking shape. Expect frequent breaking changes and bugs.",
     changes: "Frequent breaking changes, with no promise of notice.",
     bugs: "Expected, even in the main workflow.",
-    forUsers:
-      "Try it with real work and share feedback. Keep your current way of working as a fallback, and don't keep the only copy of anything there.",
+    forUsers: "Try it with real work and share feedback. Keep your current way of working as a fallback, and don't keep the only copy of anything there.",
     forEngineers: "Build on it only to experiment. Expect its interfaces to change.",
     colors: { light: "#db2777", dark: "#f472b6" },
     label: {
@@ -82,8 +79,7 @@ export const STABILITY: Record<StabilityLevelId, StabilityLevel> = {
     name: "Beta",
     fullName: "Beta",
     stability: "Refining",
-    summary:
-      "Settled enough for real use. Breaking changes and bugs are occasional. We aim to announce breaking changes ahead of time, but can't always.",
+    summary: "Settled enough for real use. Breaking changes and bugs are occasional. We aim to announce breaking changes ahead of time, but can't always.",
     changes: "Occasional breaking changes, announced ahead of time when we can.",
     bugs: "Occasional, mostly at the edges, and fixed as they're found.",
     forUsers: "Use it for real work, with a fallback for anything critical.",
@@ -92,8 +88,7 @@ export const STABILITY: Record<StabilityLevelId, StabilityLevel> = {
     label: {
       name: "stability: beta",
       color: "2563eb",
-      description:
-        "Beta: refining; occasional breaking changes, announced ahead of time when we can",
+      description: "Beta: refining; occasional breaking changes, announced ahead of time when we can",
     },
   },
   ga: {
@@ -103,18 +98,15 @@ export const STABILITY: Record<StabilityLevelId, StabilityLevel> = {
     stability: "Stable",
     summary:
       "Generally available and stable. It keeps working as it does today. Breaking changes are rare, announced ahead of time, and come with time to move over.",
-    changes:
-      "Rare. When one is needed, we aim to announce it well ahead, with a deprecation window.",
+    changes: "Rare. When one is needed, we aim to announce it well ahead, with a deprecation window.",
     bugs: "Rare, and fixed first.",
     forUsers: "Depend on it, including for business-critical work.",
-    forEngineers:
-      "Build on it. Its interfaces are stable, and changes come with notice and time to move.",
+    forEngineers: "Build on it. Its interfaces are stable, and changes come with notice and time to move.",
     colors: { light: "#047857", dark: "#34d399" },
     label: {
       name: "stability: ga",
       color: "047857",
-      description:
-        "GA: generally available and stable; rare breaking changes, announced with a deprecation window",
+      description: "GA: generally available and stable; rare breaking changes, announced with a deprecation window",
     },
   },
 };

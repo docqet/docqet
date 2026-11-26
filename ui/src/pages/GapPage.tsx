@@ -11,17 +11,7 @@ import { STABILITY } from "../design/stability/stability";
 import { docHref, sectionHref, type Route } from "../routes";
 import { View } from "../shell/layout";
 import { HeldDecisions } from "../Fields";
-import {
-  appliesAt,
-  find,
-  riskScore,
-  subjectOf,
-  technicalDoc,
-  verdictOf,
-  type DocketState,
-  type Gap,
-  type Risk,
-} from "../state";
+import { appliesAt, find, riskScore, subjectOf, technicalDoc, verdictOf, type DocketState, type Gap, type Risk } from "../state";
 import { EvidenceList, Missing } from "./RulePage";
 import "./doc.css";
 import { InitiativeTags, initiativesOf } from "../Initiatives";
@@ -56,7 +46,13 @@ function GapView({ state, gap }: { state: DocketState; gap: Gap }) {
           <LeftLabel kind={kind}>{LEFT_KINDS[kind].one}</LeftLabel>
           <span className="dp-faint">in</span>
           <Subject state={state} gap={gap} />
-          <InitiativeTags state={state} ids={initiativesOf(state, risk.on.map((o) => o.capability))} />
+          <InitiativeTags
+            state={state}
+            ids={initiativesOf(
+              state,
+              risk.on.map((o) => o.capability),
+            )}
+          />
         </div>
         <h1 className="dp-gap-title">{gap.name}</h1>
         <Clamped text={gap.description} />
@@ -188,8 +184,14 @@ function claimsOf(gap: Gap, risk: Risk): { breaks: boolean; text: string }[] {
       const by = started.filter((c) => appliesAt(a.outcome, c.stability));
       return [
         by.length
-          ? { breaks: true, text: `It breaks a claim: ${level} expects “${a.outcome.text}”, and ${names(by)} ${by.length === 1 ? "is" : "are"} at a level that does.` }
-          : { breaks: false, text: `It falls short of “${a.outcome.text}”, which ${level} expects, but no capability it's on is at a level that does, so it breaks no claim there.` },
+          ? {
+              breaks: true,
+              text: `It breaks a claim: ${level} expects “${a.outcome.text}”, and ${names(by)} ${by.length === 1 ? "is" : "are"} at a level that does.`,
+            }
+          : {
+              breaks: false,
+              text: `It falls short of “${a.outcome.text}”, which ${level} expects, but no capability it's on is at a level that does, so it breaks no claim there.`,
+            },
       ];
     }
     return [];
@@ -202,7 +204,10 @@ const names = (capabilities: { name: string }[]) =>
   capabilities.length > 3
     ? `${capabilities.length} capabilities it's on`
     : capabilities.length > 1
-      ? `${capabilities.slice(0, -1).map((c) => c.name).join(", ")} and ${capabilities[capabilities.length - 1].name}`
+      ? `${capabilities
+          .slice(0, -1)
+          .map((c) => c.name)
+          .join(", ")} and ${capabilities[capabilities.length - 1].name}`
       : capabilities[0].name;
 
 /* How long a description can be before it's cut to three lines, with a way to read all of it. */

@@ -52,7 +52,15 @@ export function fieldsText(f: Fields): string {
   for (const key of FIELD_KEYS) {
     const value = f[key];
     if (typeof value === "string") parts.push(value);
-    else if (Array.isArray(value)) for (const v of value) parts.push(typeof v === "string" ? v : Object.values(v).filter((x) => typeof x === "string").join(" "));
+    else if (Array.isArray(value))
+      for (const v of value)
+        parts.push(
+          typeof v === "string"
+            ? v
+            : Object.values(v)
+                .filter((x) => typeof x === "string")
+                .join(" "),
+        );
   }
   return parts.join(" ");
 }
@@ -432,11 +440,7 @@ export function domainCapabilities(state: DocketState, domain: Domain): Capabili
 
 /* The contradictions a doc has, and gap or tradeoff IDs its projects both declare, as combining found them. */
 export const contradictionsOf = (state: DocketState, type: string, id: string) =>
-  state.problems.filter(
-    (p) =>
-      (p.type === "contradiction" || p.type === "duplicate-id" || p.type === "in-two-features") &&
-      p.subject === `${type}:${id}`,
-  );
+  state.problems.filter((p) => (p.type === "contradiction" || p.type === "duplicate-id" || p.type === "in-two-features") && p.subject === `${type}:${id}`);
 
 export function find<T extends { id: string }>(list: T[], id: string): T | undefined {
   return list.find((item) => item.id === id);

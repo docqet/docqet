@@ -1,4 +1,4 @@
-.PHONY: help build up down nuke logs migrate run apply examples ui ui-build fix fmt lint vet docs-lint check test
+.PHONY: help build up down nuke logs migrate run apply examples ui ui-build ui-lint fix fmt lint vet docs-lint check test
 
 help: ## Show this help
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-20s\033[0m %s\n", $$1, $$2}'
@@ -52,6 +52,9 @@ ui: ## Run the UI's dev server, over the local server's API: make run, then make
 ui-build: ## Build the UI into ui/dist, for go build to embed
 	cd ui && npm ci && npm run build
 
+ui-lint: ## Lint the UI and check its formatting: cd ui && npm run format fixes it
+	cd ui && npm run lint && npm run format:check
+
 ## --- Quality ---
 
 fix:
@@ -69,7 +72,7 @@ vet:
 docs-lint:
 	npx redocly lint
 
-check: fix fmt vet lint docs-lint ## Everything to check before committing
+check: fix fmt vet lint docs-lint ui-lint ## Everything to check before committing
 
 ## --- Tests ---
 

@@ -13,7 +13,13 @@ import { LevelSpread } from "../stability/StabilitySpread";
  */
 export type MaturitySubject = "feature" | "domain" | "project" | "persona" | "initiative";
 
-export const SUBJECT_NAMES: Record<MaturitySubject, string> = { feature: "Feature", domain: "Domain", project: "Project", persona: "Persona", initiative: "Initiative" };
+export const SUBJECT_NAMES: Record<MaturitySubject, string> = {
+  feature: "Feature",
+  domain: "Domain",
+  project: "Project",
+  persona: "Persona",
+  initiative: "Initiative",
+};
 
 /* What the work is on, in a sentence: "this feature", or "what serves them". */
 export const subjectPhrase = (subject: MaturitySubject) => (subject === "persona" ? "what serves them" : `this ${subject}`);
@@ -44,10 +50,8 @@ export type MaturityDetailsProps = {
  * part is; the closing line sends them to each part's stability for that.
  */
 const BAND_SUMMARIES: Record<StabilityLevelId, string> = {
-  prototype:
-    "Early days. Much of it is still being explored, and could change completely or be dropped.",
-  alpha:
-    "Taking shape. Some of it works, but much is still changing often, so expect bugs and breaking changes.",
+  prototype: "Early days. Much of it is still being explored, and could change completely or be dropped.",
+  alpha: "Taking shape. Some of it works, but much is still changing often, so expect bugs and breaking changes.",
   beta: "Firming up. Enough of it is settled or stable for real use, while other parts are still changing.",
   ga: "Well established. Most of it is stable and supported, while any newer parts settle in.",
 };
@@ -71,9 +75,7 @@ export function MaturityDetails({ progress, subject, count, spread, card = true 
   const capabilities = fromCapabilities(subject);
   return (
     <DetailsCard card={card} width={320}>
-      <DetailsEyebrow>
-        {subject === "persona" ? "Maturity of what serves them" : `${SUBJECT_NAMES[subject]} maturity`}
-      </DetailsEyebrow>
+      <DetailsEyebrow>{subject === "persona" ? "Maturity of what serves them" : `${SUBJECT_NAMES[subject]} maturity`}</DetailsEyebrow>
       <Box sx={{ mt: 1.25, display: "flex", alignItems: "center", gap: 1.5 }}>
         <RingGlyph progress={value} size={56} />
         <Box sx={{ minWidth: 0 }}>
@@ -92,25 +94,21 @@ export function MaturityDetails({ progress, subject, count, spread, card = true 
         </>
       ) : null}
       <Box sx={{ mt: 1.25, color: "text.secondary", fontSize: "0.92em" }}>
-        Maturity is how far along the work on {subjectPhrase(subject)} is, for planning: how close the work under way is to being
-        stable and supported. Whether people can use it is its readiness.
+        Maturity is how far along the work on {subjectPhrase(subject)} is, for planning: how close the work under way is to being stable and supported. Whether
+        people can use it is its readiness.
       </Box>
       <DetailsWorkings>
         {capabilities ? (
           <>
+            <div>Each capability scores by its level: {STABILITY_LEVEL_IDS.map((id) => `${STABILITY[id].name} ${MATURITY_LEVELS[id].score}`).join(", ")}.</div>
             <div>
-              Each capability scores by its level:{" "}
-              {STABILITY_LEVEL_IDS.map((id) => `${STABILITY[id].name} ${MATURITY_LEVELS[id].score}`).join(", ")}.
-            </div>
-            <div>
-              The scores are averaged, weighted so dependable work counts most: one GA as much as 1.5 Betas, 2 Alphas or 3 Prototypes.
-              Drafts don&rsquo;t count.
+              The scores are averaged, weighted so dependable work counts most: one GA as much as 1.5 Betas, 2 Alphas or 3 Prototypes. Drafts don&rsquo;t count.
             </div>
           </>
         ) : (
           <div>
-            Each feature&rsquo;s maturity is averaged, weighted by its band as a capability at that level would be, so dependable
-            features count most. Those not started don&rsquo;t count.
+            Each feature&rsquo;s maturity is averaged, weighted by its band as a capability at that level would be, so dependable features count most. Those not
+            started don&rsquo;t count.
           </div>
         )}
         <div>Each quarter is a band: experimental, emerging, promising and established.</div>

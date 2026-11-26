@@ -21,21 +21,21 @@ const DecisionIcon = LEFT_KINDS.decision.Icon;
 export function StandingMark({ standing, label }: { standing: Standing; label: string }) {
   return (
     <Tip title={label}>
-    <span className="sc-standing" data-standing={standing} role="img" aria-label={label}>
-      {standing === "evidence" ? (
-        <TaskAltRoundedIcon sx={{ fontSize: 16 }} />
-      ) : standing === "trust" ? (
-        <CheckRoundedIcon sx={{ fontSize: 16 }} />
-      ) : standing === "gap" ? (
-        <GapIcon sx={{ fontSize: 15 }} />
-      ) : standing === "tradeoff" ? (
-        <TradeoffIcon sx={{ fontSize: 15 }} />
-      ) : standing === "open" ? (
-        <DecisionIcon sx={{ fontSize: 15 }} />
-      ) : (
-        <RadioButtonUncheckedRoundedIcon sx={{ fontSize: 14 }} />
-      )}
-    </span>
+      <span className="sc-standing" data-standing={standing} role="img" aria-label={label}>
+        {standing === "evidence" ? (
+          <TaskAltRoundedIcon sx={{ fontSize: 16 }} />
+        ) : standing === "trust" ? (
+          <CheckRoundedIcon sx={{ fontSize: 16 }} />
+        ) : standing === "gap" ? (
+          <GapIcon sx={{ fontSize: 15 }} />
+        ) : standing === "tradeoff" ? (
+          <TradeoffIcon sx={{ fontSize: 15 }} />
+        ) : standing === "open" ? (
+          <DecisionIcon sx={{ fontSize: 15 }} />
+        ) : (
+          <RadioButtonUncheckedRoundedIcon sx={{ fontSize: 14 }} />
+        )}
+      </span>
     </Tip>
   );
 }

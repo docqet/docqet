@@ -1,6 +1,7 @@
 import {
   useCallback,
   useEffect,
+  useEffectEvent,
   useImperativeHandle,
   useLayoutEffect,
   useRef,
@@ -49,11 +50,24 @@ type View = { x: number; y: number; zoom: number };
 
 /* Which edges a resize handle moves: -1 the left or top, 1 the right or bottom. */
 const EDGES: Record<string, [number, number]> = {
-  n: [0, -1], ne: [1, -1], e: [1, 0], se: [1, 1], s: [0, 1], sw: [-1, 1], w: [-1, 0], nw: [-1, -1],
+  n: [0, -1],
+  ne: [1, -1],
+  e: [1, 0],
+  se: [1, 1],
+  s: [0, 1],
+  sw: [-1, 1],
+  w: [-1, 0],
+  nw: [-1, -1],
 };
 const RESIZE_CURSORS: Record<string, string> = {
-  n: "ns-resize", s: "ns-resize", e: "ew-resize", w: "ew-resize",
-  ne: "nesw-resize", sw: "nesw-resize", nw: "nwse-resize", se: "nwse-resize",
+  n: "ns-resize",
+  s: "ns-resize",
+  e: "ew-resize",
+  w: "ew-resize",
+  ne: "nesw-resize",
+  sw: "nesw-resize",
+  nw: "nwse-resize",
+  se: "nwse-resize",
 };
 
 /* A press on the canvas, until it's let go: it pans, or moves a card or a group by its grip, or resizes a group. */
@@ -154,7 +168,10 @@ export default function Canvas({
   /* A group's box: around those of its cards that are drawn, and at least as large as it was resized to, or null with none drawn. */
   const groupBox = useCallback(
     (group: CanvasGroup, positions: (id: string) => Pos, own: Record<string, Box> = resized): Box | null => {
-      let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+      let minX = Infinity,
+        minY = Infinity,
+        maxX = -Infinity,
+        maxY = -Infinity;
       for (const id of group.items) {
         const s = sizes?.[id];
         if (!s) continue;
@@ -185,7 +202,10 @@ export default function Canvas({
   const bounds = useCallback(
     (positions: (id: string) => Pos, own?: Record<string, Box>) => {
       if (!sizes || !items.length) return null;
-      let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+      let minX = Infinity,
+        minY = Infinity,
+        maxX = -Infinity,
+        maxY = -Infinity;
       const add = (b: Box) => {
         minX = Math.min(minX, b.x);
         minY = Math.min(minY, b.y);
@@ -236,15 +256,20 @@ export default function Canvas({
       const el = nodes.current.get(id);
       if (el) next[id] = { w: el.offsetWidth, h: el.offsetHeight };
     }
+    // Measuring what was just drawn, then laying out by it, is what a layout effect is for.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setSizes(next);
   }, [items]);
 
   /* The first view, once the cards are measured: the saved one, or everything fitted. */
   const placed = useRef(false);
+  const firstView = useEffectEvent(() => {
+    if (!saved.view) fit(place, true);
+  });
   useLayoutEffect(() => {
     if (!sizes || placed.current) return;
     placed.current = true;
-    if (!saved.view) fit(place, true);
+    firstView();
   }, [sizes]);
 
   /*
@@ -253,8 +278,7 @@ export default function Canvas({
    */
   const fittedFor = useRef(fitKey);
   const pending = useRef<{ ids: string[]; row?: string } | null>(null);
-  useLayoutEffect(() => {
-    if (!sizes || !placed.current) return;
+  const measured = useEffectEvent(() => {
     if (fittedFor.current !== fitKey) {
       fittedFor.current = fitKey;
       fit(place);
@@ -264,6 +288,10 @@ export default function Canvas({
       pending.current = null;
       showNow(p.ids, p.row);
     }
+  });
+  useLayoutEffect(() => {
+    if (!sizes || !placed.current) return;
+    measured();
   }, [sizes]);
 
   /* Keep where the cards are and where the canvas is looking, a moment after they change. */
@@ -316,7 +344,10 @@ export default function Canvas({
     const f = frame.current;
     const drawn = ids.filter((id) => boxOf(id));
     if (!f || !drawn.length) return;
-    let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+    let minX = Infinity,
+      minY = Infinity,
+      maxX = -Infinity,
+      maxY = -Infinity;
     for (const id of drawn) {
       const b = boxOf(id)!;
       minX = Math.min(minX, b.x);

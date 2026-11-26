@@ -32,8 +32,19 @@ export default function DecidedPage({ state, route }: { state: DocketState; rout
         }
         stats={
           <>
-            <Stat label={<LeftLabel kind="tradeoff" size={13} hoverOnly />} value={tradeoffs.length || "None"} note="Limits and technical choices" href={sectionHref("decided")} />
-            <Stat label="Non-goals" term="tradeoff" value={nonGoals.length || "None"} note="What features have decided never to build" href={sectionHref("decided", { tab: "non-goals" })} />
+            <Stat
+              label={<LeftLabel kind="tradeoff" size={13} hoverOnly />}
+              value={tradeoffs.length || "None"}
+              note="Limits and technical choices"
+              href={sectionHref("decided")}
+            />
+            <Stat
+              label="Non-goals"
+              term="tradeoff"
+              value={nonGoals.length || "None"}
+              note="What features have decided never to build"
+              href={sectionHref("decided", { tab: "non-goals" })}
+            />
           </>
         }
       />
@@ -106,4 +117,3 @@ function NonGoalsTab({ state, nonGoals }: { state: DocketState; nonGoals: Tradeo
     </>
   );
 }
-

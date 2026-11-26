@@ -14,7 +14,15 @@ import type { ReactElement, ReactNode } from "react";
 export function Tip({ title, placement, children }: { title: ReactNode; placement?: TooltipProps["placement"]; children: ReactElement }) {
   if (title === null || title === undefined || title === "" || title === false) return children;
   return (
-    <Tooltip title={title} placement={placement} describeChild disableInteractive enterDelay={300} enterNextDelay={150} slotProps={{ tooltip: { sx: { whiteSpace: "pre-line" } } }}>
+    <Tooltip
+      title={title}
+      placement={placement}
+      describeChild
+      disableInteractive
+      enterDelay={300}
+      enterNextDelay={150}
+      slotProps={{ tooltip: { sx: { whiteSpace: "pre-line" } } }}
+    >
       {children}
     </Tooltip>
   );

@@ -39,11 +39,7 @@ export function StabilitySpreadBar({ levels, wide = false }: { levels: Capabilit
   return (
     <span className={`stability-spread-bar${wide ? " wide" : ""}`} aria-hidden>
       {spreadOf(levels).map(({ level, n }) =>
-        level ? (
-          <Box key={level} component="span" sx={levelVar(level)} style={{ flexGrow: n }} />
-        ) : (
-          <span key="draft" data-draft style={{ flexGrow: n }} />
-        ),
+        level ? <Box key={level} component="span" sx={levelVar(level)} style={{ flexGrow: n }} /> : <span key="draft" data-draft style={{ flexGrow: n }} />,
       )}
     </span>
   );

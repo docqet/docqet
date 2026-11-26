@@ -86,7 +86,17 @@ const evidence = (e: api.EvidenceResource): Evidence => ({ implements: e.impleme
 /* Placeholders for the figures, filled in once every doc is there to point at. */
 const noExposure: Exposure = { percent: null, capabilities: 0, band: null, unacceptable: false };
 const noAcross = (): RiskAcross<Gap> => ({ score: null, verdict: null, items: [], counts: { unacceptable: 0, tolerable: 0, acceptable: 0 } });
-const noReadiness = (): Readiness => ({ percent: null, band: null, maturity: null, exposure: noExposure, levels: [], gaps: noAcross(), ready: [], notReady: [], notStarted: [] });
+const noReadiness = (): Readiness => ({
+  percent: null,
+  band: null,
+  maturity: null,
+  exposure: noExposure,
+  levels: [],
+  gaps: noAcross(),
+  ready: [],
+  notReady: [],
+  notStarted: [],
+});
 const noRisk = (g: api.GapResource): Risk => ({
   impact: g.impact as Risk["impact"],
   likelihood: g.likelihood as Risk["likelihood"],
@@ -103,110 +113,123 @@ const noRisk = (g: api.GapResource): Risk => ({
 export function modelOf(r: api.ProductResources, showing: api.Showing): DocketState {
   const state: DocketState = {
     showing,
-    projects: r.projects.map(
-      (p): Project => ({ id: p.id, name: p.name, product: p.product, commit: p.commit, indexedAt: p.indexedAt, maturity: percent(p.maturity), band: band(p.maturity) }),
-    ),
-    domains: r.domains.map((d): Domain => ({ ...doc(d), features: d.features, capabilities: d.capabilities, maturity: percent(d.maturity), band: band(d.maturity), readiness: noReadiness(), exposure: noExposure })),
-    features: r.features.map(
-      (f): Feature => ({
-        ...doc(f),
-        capabilities: f.capabilities,
-        tradeoffs: f.tradeoffs,
-        parts: f.parts.map((p) => ({ domain: p.domain, capabilities: p.capabilities, maturity: percent(p.maturity), band: band(p.maturity) })),
-        maturity: percent(f.maturity),
-        band: band(f.maturity),
-        readiness: noReadiness(),
-        exposure: noExposure,
-      }),
-    ),
-    capabilities: r.capabilities.map(
-      (c): Capability => ({
-        ...doc(c),
-        personas: c.personas,
-        initiatives: c.initiatives,
-        stability: level(c.stability),
-        levels: c.levels.map((l) => ({ project: l.project, domain: l.domain, level: level(l.level) })),
-        feature: c.feature,
-        rules: c.rules,
-        concepts: c.concepts,
-        gaps: c.gaps,
-        tradeoffs: c.tradeoffs,
-        builtBy: c.builtBy,
-        evidence: evidence(c.evidence),
-        readiness: noReadiness(),
-        exposure: noExposure,
-        risk: noAcross(),
-        left: { decisions: [], gaps: [], technical: [] },
-        ruleStandings: c.ruleStandings as Record<string, RuleStanding>,
-        outcomes: {},
-      }),
-    ),
-    rules: r.rules.map(
-      (x): Rule => ({ ...doc(x), capabilities: x.capabilities, concepts: x.concepts, gaps: x.gaps, evidence: evidence(x.evidence), standings: x.standings as Record<string, RuleStanding> }),
-    ),
+    projects: r.projects.map((p): Project => ({
+      id: p.id,
+      name: p.name,
+      product: p.product,
+      commit: p.commit,
+      indexedAt: p.indexedAt,
+      maturity: percent(p.maturity),
+      band: band(p.maturity),
+    })),
+    domains: r.domains.map((d): Domain => ({
+      ...doc(d),
+      features: d.features,
+      capabilities: d.capabilities,
+      maturity: percent(d.maturity),
+      band: band(d.maturity),
+      readiness: noReadiness(),
+      exposure: noExposure,
+    })),
+    features: r.features.map((f): Feature => ({
+      ...doc(f),
+      capabilities: f.capabilities,
+      tradeoffs: f.tradeoffs,
+      parts: f.parts.map((p) => ({ domain: p.domain, capabilities: p.capabilities, maturity: percent(p.maturity), band: band(p.maturity) })),
+      maturity: percent(f.maturity),
+      band: band(f.maturity),
+      readiness: noReadiness(),
+      exposure: noExposure,
+    })),
+    capabilities: r.capabilities.map((c): Capability => ({
+      ...doc(c),
+      personas: c.personas,
+      initiatives: c.initiatives,
+      stability: level(c.stability),
+      levels: c.levels.map((l) => ({ project: l.project, domain: l.domain, level: level(l.level) })),
+      feature: c.feature,
+      rules: c.rules,
+      concepts: c.concepts,
+      gaps: c.gaps,
+      tradeoffs: c.tradeoffs,
+      builtBy: c.builtBy,
+      evidence: evidence(c.evidence),
+      readiness: noReadiness(),
+      exposure: noExposure,
+      risk: noAcross(),
+      left: { decisions: [], gaps: [], technical: [] },
+      ruleStandings: c.ruleStandings as Record<string, RuleStanding>,
+      outcomes: {},
+    })),
+    rules: r.rules.map((x): Rule => ({
+      ...doc(x),
+      capabilities: x.capabilities,
+      concepts: x.concepts,
+      gaps: x.gaps,
+      evidence: evidence(x.evidence),
+      standings: x.standings as Record<string, RuleStanding>,
+    })),
     concepts: r.concepts.map((x): Concept => ({ ...doc(x), capabilities: x.capabilities, rules: x.rules })),
-    personas: r.personas.map(
-      (p): Persona => ({
-        ...doc(p),
-        role: p.role,
-        title: p.title,
-        image: p.image,
-        capabilities: p.capabilities,
-        features: p.features,
-        initiatives: p.initiatives,
-        maturity: percent(p.maturity),
-        band: band(p.maturity),
-        readiness: noReadiness(),
-        exposure: noExposure,
-      }),
-    ),
-    initiatives: r.initiatives.map(
-      (i): Initiative => ({
-        ...doc(i),
-        capabilities: i.capabilities,
-        features: i.features,
-        personas: i.personas,
-        maturity: percent(i.maturity),
-        band: band(i.maturity),
-        readiness: noReadiness(),
-        exposure: noExposure,
-      }),
-    ),
+    personas: r.personas.map((p): Persona => ({
+      ...doc(p),
+      role: p.role,
+      title: p.title,
+      image: p.image,
+      capabilities: p.capabilities,
+      features: p.features,
+      initiatives: p.initiatives,
+      maturity: percent(p.maturity),
+      band: band(p.maturity),
+      readiness: noReadiness(),
+      exposure: noExposure,
+    })),
+    initiatives: r.initiatives.map((i): Initiative => ({
+      ...doc(i),
+      capabilities: i.capabilities,
+      features: i.features,
+      personas: i.personas,
+      maturity: percent(i.maturity),
+      band: band(i.maturity),
+      readiness: noReadiness(),
+      exposure: noExposure,
+    })),
     mechanisms: r.mechanisms.map(technical),
     components: r.components.map(technical),
-    gaps: r.gaps.map(
-      (g): Gap => ({
-        id: g.id,
-        project: g.project,
-        ...(g.domain ? { domain: g.domain } : {}),
-        affects: g.affects,
-        impact: g.impact as Gap["impact"],
-        likelihood: g.likelihood as Gap["likelihood"],
-        reach: g.reach as Gap["reach"],
-        name: g.name,
-        description: g.description,
-        places: g.places,
-        risk: noRisk(g),
-        affected: [],
-        decisions: [],
-      }),
-    ),
-    tradeoffs: r.tradeoffs.map(
-      (t): Tradeoff => ({
-        id: t.id,
-        project: t.project,
-        ...(t.domain ? { domain: t.domain } : {}),
-        affects: t.affects,
-        name: t.name,
-        description: t.description,
-        benefit: t.benefit,
-        drawback: t.drawback,
-        places: t.places,
-        affected: [],
-        decisions: [],
-      }),
-    ),
-    problems: r.problems.map((p) => ({ type: p.type, subject: p.subject, capabilities: p.capabilities, message: p.message, ...(p.domain ? { domain: p.domain } : {}) })),
+    gaps: r.gaps.map((g): Gap => ({
+      id: g.id,
+      project: g.project,
+      ...(g.domain ? { domain: g.domain } : {}),
+      affects: g.affects,
+      impact: g.impact as Gap["impact"],
+      likelihood: g.likelihood as Gap["likelihood"],
+      reach: g.reach as Gap["reach"],
+      name: g.name,
+      description: g.description,
+      places: g.places,
+      risk: noRisk(g),
+      affected: [],
+      decisions: [],
+    })),
+    tradeoffs: r.tradeoffs.map((t): Tradeoff => ({
+      id: t.id,
+      project: t.project,
+      ...(t.domain ? { domain: t.domain } : {}),
+      affects: t.affects,
+      name: t.name,
+      description: t.description,
+      benefit: t.benefit,
+      drawback: t.drawback,
+      places: t.places,
+      affected: [],
+      decisions: [],
+    })),
+    problems: r.problems.map((p) => ({
+      type: p.type,
+      subject: p.subject,
+      capabilities: p.capabilities,
+      message: p.message,
+      ...(p.domain ? { domain: p.domain } : {}),
+    })),
     rubric: r.rubric.qualities.length ? r.rubric : null,
     status: { maturity: percent(r.status.maturity), band: band(r.status.maturity), readiness: noReadiness(), exposure: noExposure, risk: noAcross() },
   };
@@ -248,7 +271,6 @@ export function modelOf(r: api.ProductResources, showing: api.Showing): DocketSt
   };
   return state;
 }
-
 
 /*
  * How the server's figures become the pages', given every doc showing, so
@@ -369,23 +391,32 @@ function technical(t: api.TechnicalResource): TechnicalDoc {
  * of what's showing. Null until they're read, and with no for.
  */
 export function useStatusFor(state: DocketState, forRef: string | null, initiative?: string | null): Status | null {
-  const [status, setStatus] = useState<Status | null>(null);
+  /* What was read, and for which path, so a read for another path shows as null until its own arrives. */
+  const [read, setRead] = useState<{ path: string; status: Status } | null>(null);
   const showing = initiative === undefined ? state.showing : { ...state.showing, initiative };
   const path = forRef ? api.productPath(showing, "/status", { for: forRef }) : null;
   useEffect(() => {
-    setStatus(null);
     if (!path) return;
     let current = true;
     api.getOne<api.StatusResource>(path).then((r) => {
       if (!current) return;
       const { readiness, exposure, across } = converters(state);
-      setStatus({ maturity: r.maturity?.percent ?? null, band: (r.maturity?.band ?? null) as Level | null, readiness: readiness(r.readiness), exposure: exposure(r.exposure), risk: across(r.risk) });
+      setRead({
+        path,
+        status: {
+          maturity: r.maturity?.percent ?? null,
+          band: (r.maturity?.band ?? null) as Level | null,
+          readiness: readiness(r.readiness),
+          exposure: exposure(r.exposure),
+          risk: across(r.risk),
+        },
+      });
     });
     return () => {
       current = false;
     };
   }, [state, path]);
-  return status;
+  return read && read.path === path ? read.status : null;
 }
 
 /* A gap among the capabilities a for names: what it puts at stake there, and where it scores highest. */
@@ -397,29 +428,30 @@ export type GapWithin = { gap: Gap; score: number; verdict: Verdict; on: RiskOn 
  * a project or any other doc. Null until they're read, and with no for.
  */
 export function useGapsFor(state: DocketState, forRef: string | null): GapWithin[] | null {
-  const [gaps, setGaps] = useState<GapWithin[] | null>(null);
+  /* What was read, and for which path, so a read for another path shows as null until its own arrives. */
+  const [read, setRead] = useState<{ path: string; gaps: GapWithin[] } | null>(null);
   const path = forRef ? api.productPath(state.showing, "/gaps", { for: forRef, sort: "risk" }) : null;
   useEffect(() => {
-    setGaps(null);
     if (!path) return;
     let current = true;
     api.getAll<api.GapResource>(path).then((list) => {
       if (!current) return;
       const byId = new Map(state.gaps.map((g) => [g.id, g]));
-      setGaps(
-        list.flatMap((r) => {
+      setRead({
+        path,
+        gaps: list.flatMap((r) => {
           const gap = byId.get(r.id);
           const w = r.within;
           if (!gap || !w) return [];
           return [{ gap, score: w.score, verdict: w.verdict as Verdict, on: gap.risk.on.find((o) => o.capability.id === w.capability) ?? null }];
         }),
-      );
+      });
     });
     return () => {
       current = false;
     };
   }, [state, path]);
-  return gaps;
+  return read && read.path === path ? read.gaps : null;
 }
 
 /*
@@ -442,7 +474,5 @@ export const someOf = (across: RiskAcross<Gap>, keep: (gap: Gap) => boolean): Ri
 /* Some gaps, each scored anywhere it shows, as the server scored it: those a concept's rules don't hold for yet. */
 export const gapsAcross = (gaps: Gap[]): RiskAcross<Gap> =>
   summed(
-    gaps
-      .map((g) => ({ item: g, risk: g.risk, on: g.risk.on[0] ?? null, score: g.risk.score, verdict: g.risk.verdict }))
-      .sort((a, b) => b.score - a.score),
+    gaps.map((g) => ({ item: g, risk: g.risk, on: g.risk.on[0] ?? null, score: g.risk.score, verdict: g.risk.verdict })).sort((a, b) => b.score - a.score),
   );

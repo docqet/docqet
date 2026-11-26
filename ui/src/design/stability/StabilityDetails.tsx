@@ -1,13 +1,6 @@
 import Box from "@mui/material/Box";
 import { DetailsCard, DetailsEyebrow } from "../DetailsPopover";
-import {
-  PLANNED,
-  STABILITY,
-  STABILITY_LEVEL_IDS,
-  levelColor,
-  stabilityStep,
-  type StabilityMarkLevel,
-} from "./stability";
+import { PLANNED, STABILITY, STABILITY_LEVEL_IDS, levelColor, stabilityStep, type StabilityMarkLevel } from "./stability";
 
 export type StabilityDetailsProps = {
   /** A level, or Planned, which sits before them all with no box lit. */
@@ -80,12 +73,7 @@ function LevelBoxes({ level }: { level: StabilityMarkLevel }) {
  * is off), and what stability
  * is. It's the content of StabilityMark's popover, and draws its own card there.
  */
-export function StabilityDetails({
-  level,
-  feature,
-  statement = true,
-  card = true,
-}: StabilityDetailsProps) {
+export function StabilityDetails({ level, feature, statement = true, card = true }: StabilityDetailsProps) {
   const planned = level === PLANNED.id;
   const { fullName, stability, summary } = planned ? PLANNED : STABILITY[level];
   const says = Boolean(feature) && statement;
@@ -135,9 +123,8 @@ export function StabilityDetails({
           color: "text.secondary",
         }}
       >
-        Stability is how much something will still change, and how far you can rely on it today. It
-        moves up from Prototype through Alpha and Beta to General Availability as it&rsquo;s proven
-        in real use.
+        Stability is how much something will still change, and how far you can rely on it today. It moves up from Prototype through Alpha and Beta to General
+        Availability as it&rsquo;s proven in real use.
       </Box>
     </DetailsCard>
   );

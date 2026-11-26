@@ -11,11 +11,7 @@ export function TermDetails({ id }: { id: TermId }) {
       <DetailsEyebrow>What&rsquo;s this?</DetailsEyebrow>
       <Box sx={{ mt: 0.5, fontSize: "1.12em", fontWeight: 700, lineHeight: 1.3 }}>{name}</Box>
       <Box sx={{ mt: 1 }}>{means}</Box>
-      {more ? (
-        <Box sx={{ mt: 1.5, pt: 1.5, borderTop: 1, borderColor: "divider", fontSize: "0.92em", color: "text.secondary" }}>
-          {more}
-        </Box>
-      ) : null}
+      {more ? <Box sx={{ mt: 1.5, pt: 1.5, borderTop: 1, borderColor: "divider", fontSize: "0.92em", color: "text.secondary" }}>{more}</Box> : null}
     </DetailsCard>
   );
 }
@@ -27,17 +23,7 @@ export function TermDetails({ id }: { id: TermId }) {
  * button or link, which already takes focus; `hoverOnly` where a tap does
  * something else, such as a fold's heading.
  */
-export function Term({
-  id,
-  children,
-  focusable = true,
-  hoverOnly = false,
-}: {
-  id: TermId;
-  children?: ReactNode;
-  focusable?: boolean;
-  hoverOnly?: boolean;
-}) {
+export function Term({ id, children, focusable = true, hoverOnly = false }: { id: TermId; children?: ReactNode; focusable?: boolean; hoverOnly?: boolean }) {
   /* Where popovers are off, as in tabs, the word reads plainly, with no dots. */
   if (usePopoversOff()) return <>{children ?? TERMS[id].name}</>;
   return (

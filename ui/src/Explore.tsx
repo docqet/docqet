@@ -27,15 +27,11 @@ import { ReadinessMark } from "./Readiness";
 import { ProjectIcon } from "./ProductFilter";
 import {
   openDecisions,
-  
   outcomesOf,
   tradeoffsById,
   contradictionsOf,
   docDomains,
-  
   domainName,
-  
-  
   find,
   inRiskOrder,
   leftCount,
@@ -44,7 +40,6 @@ import {
   pageHref,
   projectName,
   startedOf,
-  
   type Capability,
   type CapabilityLevel,
   type Contribution,
@@ -61,9 +56,7 @@ import {
   type Left,
   type Persona,
   type Pick,
-  
   type RuleStanding,
-  
   type Target,
 } from "./state";
 import { Tip } from "./design/Tip";
@@ -90,7 +83,6 @@ type Links = {
   isFiltering: (pick: Pick) => boolean;
   onFilter: (pick: Pick) => void;
 };
-
 
 /*
  * The top of any one doc: its kind, its name, what it's part of, its maturity
@@ -197,7 +189,9 @@ export function Head({
               <div className="explore-source-head">
                 {byProject ? null : (
                   <span className="explore-source-from">
-                    <span className="explore-source-label"><Term id="domain" /></span>
+                    <span className="explore-source-label">
+                      <Term id="domain" />
+                    </span>
                     <span className="explore-source-name">
                       <DomainIcon size={14} />
                       {domainName(state, f.domain)}
@@ -205,7 +199,9 @@ export function Head({
                   </span>
                 )}
                 <span className="explore-source-from">
-                  <span className="explore-source-label"><Term id="project" /></span>
+                  <span className="explore-source-label">
+                    <Term id="project" />
+                  </span>
                   <span className="explore-source-name">
                     <ProjectIcon size={14} />
                     {projectName(state, f.project)}
@@ -223,7 +219,6 @@ export function Head({
     </>
   );
 }
-
 
 /* A section's heading, with how many it holds. */
 export function Heading({ children, count }: { children: ReactNode; count?: number }) {
@@ -294,23 +289,11 @@ export function Maturity({
   );
 }
 
-
 /* A capability's level by name: "GA", or "Draft" for one declared and not started. */
 export const levelName = (level: CapabilityLevel) => (level ? STABILITY[level].name : "Draft");
 
-
-
-
 /* Capabilities as rows, each opening in the panel, at their level in `domain` when it's given. */
-export function CapabilityRows({
-  capabilities,
-  domain,
-  onOpen,
-}: {
-  capabilities: Capability[];
-  domain?: string;
-  onOpen: Links["onOpen"];
-}) {
+export function CapabilityRows({ capabilities, domain, onOpen }: { capabilities: Capability[]; domain?: string; onOpen: Links["onOpen"] }) {
   return (
     <ul>
       {capabilities.map((c) => {
@@ -327,8 +310,6 @@ export function CapabilityRows({
   );
 }
 
-
-
 /* A capability's trail: the domains it's in, then its feature. */
 export function CapabilityTrail({ state, capability, onOpen }: { state: DocketState; capability: Capability; onOpen: Links["onOpen"] }) {
   const feature = capability.feature ? find(state.features, capability.feature) : undefined;
@@ -341,14 +322,12 @@ export function CapabilityTrail({ state, capability, onOpen }: { state: DocketSt
   );
 }
 
-
 /* How a rule a capability follows stands, in words, wherever its mark shows. */
 export const RULE_STANDING_LABELS: Record<RuleStanding, string> = {
   evidence: "Held, with evidence",
   trust: "Held, on trust",
   gap: "Not held yet: a gap says so",
 };
-
 
 const countOf = (n: number, one: string, many: string) => (n ? [plural(n, one, many)] : []);
 
@@ -451,30 +430,30 @@ export function GapItem({
   if (detailed)
     return (
       <LeftItem kind={gapKind(gap)}>
-          <div className="gap-head">
-            {subject ? <span className="explore-gap-subject">{subject}</span> : null}
-            <GapKindTag kind={gapKind(gap)} />
-            <GapRisk gap={gap} />
+        <div className="gap-head">
+          {subject ? <span className="explore-gap-subject">{subject}</span> : null}
+          <GapKindTag kind={gapKind(gap)} />
+          <GapRisk gap={gap} />
+        </div>
+        <div className="left-item-text">
+          <InlineMarkdown text={gap.name} />
+        </div>
+        {affected.length || on ? (
+          <div className="gap-affects">
+            <span className="gap-affects-label">Affects</span>
+            {affected.map((a, i) => (
+              <AffectedItem key={i} item={a} />
+            ))}
+            {on ? (
+              <span className="gap-affect">
+                <span className="explore-tag">In</span>
+                <TechnicalLink doc={on} newTab={newTab} />
+                {reachText ? <span className="faint">{reachText.slice(3)}</span> : null}
+              </span>
+            ) : null}
           </div>
-          <div className="left-item-text">
-            <InlineMarkdown text={gap.name} />
-          </div>
-          {affected.length || on ? (
-            <div className="gap-affects">
-              <span className="gap-affects-label">Affects</span>
-              {affected.map((a, i) => (
-                <AffectedItem key={i} item={a} />
-              ))}
-              {on ? (
-                <span className="gap-affect">
-                  <span className="explore-tag">In</span>
-                  <TechnicalLink doc={on} newTab={newTab} />
-                  {reachText ? <span className="faint">{reachText.slice(3)}</span> : null}
-                </span>
-              ) : null}
-            </div>
-          ) : null}
-          <Places state={state} places={gap.places} label="Marked" detailed />
+        ) : null}
+        <Places state={state} places={gap.places} label="Marked" detailed />
       </LeftItem>
     );
   return (
@@ -629,9 +608,7 @@ export function Tradeoffs({
       {list.map((t) => (
         <LeftItem key={t.id} kind="tradeoff">
           <div className="tradeoff-choice left-item-text">
-            <span className="tradeoff-label">
-              We chose
-            </span>
+            <span className="tradeoff-label">We chose</span>
             <InlineMarkdown text={t.name} />
           </div>
           <div className="tradeoff-sides">
@@ -656,7 +633,11 @@ export function Tradeoffs({
     </LeftList>
   );
   if (bare) return items;
-  const heading = <LeftLabel kind="tradeoff" hoverOnly={!detailed}>{title}</LeftLabel>;
+  const heading = (
+    <LeftLabel kind="tradeoff" hoverOnly={!detailed}>
+      {title}
+    </LeftLabel>
+  );
   if (!detailed)
     return (
       <Fold title={heading} count={list.length}>
@@ -756,7 +737,19 @@ export function WhatsLeft({
 export const leftOf = (capability: Capability, technical = true): Left => (technical ? capability.left : { ...capability.left, technical: [] });
 
 /* A doc's open decisions, from each of its sources, as a list under their label. */
-function Decisions({ state, doc, onConcept, onShow, onPick }: { state: DocketState; doc: Doc; onConcept: (id: string) => void; onShow: (target: Target) => void; onPick?: (pick: Pick) => void }) {
+function Decisions({
+  state,
+  doc,
+  onConcept,
+  onShow,
+  onPick,
+}: {
+  state: DocketState;
+  doc: Doc;
+  onConcept: (id: string) => void;
+  onShow: (target: Target) => void;
+  onPick?: (pick: Pick) => void;
+}) {
   if (!openDecisions(doc).length) return null;
   return (
     <div className="explore-left-group">
@@ -933,8 +926,6 @@ export function rubricCounts(state: DocketState, capability: Capability) {
   const n = (standing: string) => standings.filter((s) => s === standing).length;
   return { count: standings.length, notMet: n("gap"), byChoice: n("tradeoff"), open: n("open"), evidence: n("evidence") };
 }
-
-
 
 /* A persona's row: their name, with their role under it. */
 const rowName = (p: Persona) => {

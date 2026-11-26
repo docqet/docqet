@@ -202,7 +202,12 @@ export function JudgementBadge({
         </DetailsCard>
       }
     >
-      <span role="img" aria-label={`${part === "likelihood" ? "Likelihood" : "Reach"}: ${info.names[value].name}`} tabIndex={inButton ? undefined : 0} className="part-tag-focus">
+      <span
+        role="img"
+        aria-label={`${part === "likelihood" ? "Likelihood" : "Reach"}: ${info.names[value].name}`}
+        tabIndex={inButton ? undefined : 0}
+        className="part-tag-focus"
+      >
         <PartTag part={part} value={value} label={labelled} />
       </span>
     </DetailsPopover>

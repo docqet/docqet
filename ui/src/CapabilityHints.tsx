@@ -20,36 +20,31 @@ export function ContradictionHint({ messages, tip = true }: { messages: string[]
 /* After a name, how many open decisions it has. */
 export function DecisionsHint({ count }: { count: number }) {
   return (
-    <CountHint
-      count={count}
-      label={count === 1 ? "1 open decision" : `${count} open decisions`}
-      icon={<LeftMark kind="decision" size={13} decorative />}
-    />
+    <CountHint count={count} label={count === 1 ? "1 open decision" : `${count} open decisions`} icon={<LeftMark kind="decision" size={13} decorative />} />
   );
 }
-
 
 function CountHint({ count, label, icon }: { count: number; label: string; icon: ReactNode }) {
   if (!count) return null;
   return (
     <Tip title={label}>
-    <Box
-      component="span"
-      aria-label={label}
-      sx={{
-        flex: "none",
-        display: "inline-flex",
-        alignItems: "center",
-        gap: 0.25,
-        fontSize: 12,
-        fontWeight: 600,
-        lineHeight: 1,
-        color: "text.secondary",
-      }}
-    >
-      {icon}
-      {count}
-    </Box>
+      <Box
+        component="span"
+        aria-label={label}
+        sx={{
+          flex: "none",
+          display: "inline-flex",
+          alignItems: "center",
+          gap: 0.25,
+          fontSize: 12,
+          fontWeight: 600,
+          lineHeight: 1,
+          color: "text.secondary",
+        }}
+      >
+        {icon}
+        {count}
+      </Box>
     </Tip>
   );
 }

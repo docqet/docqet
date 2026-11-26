@@ -212,7 +212,6 @@ a.page-feature {
   text-decoration: none;
 }
 
-
 /* A maturity as a stat's value: its ring, with the percentage beside it, then its band. */
 .page-stat-maturity {
   display: inline-flex;

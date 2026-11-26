@@ -18,7 +18,13 @@ import { StabilityMark } from "../stability/StabilityMark";
 /* A part's place in its range: a stop for each value, filled up to the current one. `at` is -1 for none, such as a draft's level. */
 function Slider({ stops, at, label }: { stops: number; at: number; label: string }) {
   return (
-    <span className="risk-slider" role="img" aria-label={label} style={{ "--at": Math.max(at, 0) / (stops - 1) } as CSSProperties} data-none={at < 0 || undefined}>
+    <span
+      className="risk-slider"
+      role="img"
+      aria-label={label}
+      style={{ "--at": Math.max(at, 0) / (stops - 1) } as CSSProperties}
+      data-none={at < 0 || undefined}
+    >
       <span className="risk-slider-fill" />
       {Array.from({ length: stops }, (_, n) => (
         <span key={n} className="risk-slider-stop" data-on={n <= at || undefined} data-current={n === at || undefined} />
@@ -92,11 +98,7 @@ export function RiskWorkings({ risk, on, interactive = false }: { risk: Risk; on
       <span className="risk-workings-value risk-workings-level">
         {on.capability.stability ? <StabilityMark level={on.capability.stability} feature={on.capability.name} focusable={interactive} size="long" /> : "Draft"}
       </span>
-      <Slider
-        stops={4}
-        at={on.capability.stability ? STABILITY_LEVEL_IDS.indexOf(on.capability.stability) : -1}
-        label="Prototype, Alpha, Beta, GA"
-      />
+      <Slider stops={4} at={on.capability.stability ? STABILITY_LEVEL_IDS.indexOf(on.capability.stability) : -1} label="Prototype, Alpha, Beta, GA" />
       <span className="risk-workings-factor">× {factor(on.weight)}</span>
       <span className="risk-workings-label">Claims</span>
       <span className="risk-workings-value">{on.claim ? "Breaks one" : "Keeps them"}</span>
@@ -104,21 +106,21 @@ export function RiskWorkings({ risk, on, interactive = false }: { risk: Risk; on
       <span className="risk-workings-factor">× {String(on.claimFactor)}</span>
 
       <span className="risk-workings-total">
-          <span className="risk-workings-total-line">
-            <span className="risk-workings-sum">
-              {[...[on.impact, on.likelihood, on.reach, on.weight].map(factor), String(on.claimFactor)].join(" × ")} = {factor(on.raw)}
-            </span>
-            <span className="risk-on-score" data-verdict={verdictOf(on.score)}>
-              {on.score} of 100
-            </span>
+        <span className="risk-workings-total-line">
+          <span className="risk-workings-sum">
+            {[...[on.impact, on.likelihood, on.reach, on.weight].map(factor), String(on.claimFactor)].join(" × ")} = {factor(on.raw)}
           </span>
-          <ScoreSlider score={on.score} verdict={verdictOf(on.score)} />
-          <span className="risk-workings-scale" aria-hidden>
-            <span>Acceptable</span>
-            <span>Tolerable</span>
-            <span>Unacceptable</span>
+          <span className="risk-on-score" data-verdict={verdictOf(on.score)}>
+            {on.score} of 100
           </span>
         </span>
+        <ScoreSlider score={on.score} verdict={verdictOf(on.score)} />
+        <span className="risk-workings-scale" aria-hidden>
+          <span>Acceptable</span>
+          <span>Tolerable</span>
+          <span>Unacceptable</span>
+        </span>
+      </span>
     </div>
   );
 }

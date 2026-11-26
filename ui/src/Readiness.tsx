@@ -142,8 +142,7 @@ function ReadinessDetails({ readiness, of }: { readiness: Readiness; of: string 
         </>
       ) : null}
       <Box sx={{ mt: 1.25, color: "text.secondary", fontSize: "0.92em" }}>
-        Our view of how ready this is to serve people in production, from the stability levels, gaps and impacts written down, for you
-        to judge.
+        Our view of how ready this is to serve people in production, from the stability levels, gaps and impacts written down, for you to judge.
       </Box>
       <DetailsWorkings>
         <div className="details-workings-sum">

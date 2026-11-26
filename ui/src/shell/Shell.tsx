@@ -57,13 +57,7 @@ export default function Shell({
           <Logo />
         </a>
         <span className="shell-divider" aria-hidden />
-        <ProductFilter
-          showing={state.projects}
-          product={product}
-          products={products}
-          onProduct={onProduct}
-          onProjects={onProjects}
-        />
+        <ProductFilter showing={state.projects} product={product} products={products} onProduct={onProduct} onProjects={onProjects} />
         <ScopeFilter scope={scope} initiatives={state.initiatives} />
         <div className="shell-search">
           <Search state={state} all={product.projects} onSelect={select} />
@@ -102,18 +96,50 @@ function SideNav({ state, at }: { state: DocketState; at: Section }) {
     {
       label: "Product",
       items: [
-        { section: "features", label: "Features", icon: <WidgetsOutlinedIcon />, question: "What can it do? Domains, features and capabilities", count: state.features.length },
-        { section: "personas", label: "Personas", icon: <PersonaIcon size={20} />, question: "Who it serves, and how ready it is for them", count: state.personas.length },
+        {
+          section: "features",
+          label: "Features",
+          icon: <WidgetsOutlinedIcon />,
+          question: "What can it do? Domains, features and capabilities",
+          count: state.features.length,
+        },
+        {
+          section: "personas",
+          label: "Personas",
+          icon: <PersonaIcon size={20} />,
+          question: "Who it serves, and how ready it is for them",
+          count: state.personas.length,
+        },
         ...(state.initiatives.length
-          ? [{ section: "initiatives" as const, label: "Initiatives", icon: <InitiativeIcon size={20} />, question: "Bodies of work, such as the MVP, and how ready each is", count: state.initiatives.length }]
+          ? [
+              {
+                section: "initiatives" as const,
+                label: "Initiatives",
+                icon: <InitiativeIcon size={20} />,
+                question: "Bodies of work, such as the MVP, and how ready each is",
+                count: state.initiatives.length,
+              },
+            ]
           : []),
-        { section: "language", label: "Language", icon: <ConceptIcon size={20} />, question: "What the words mean, and the rules that must hold", count: state.concepts.length + state.rules.length },
+        {
+          section: "language",
+          label: "Language",
+          icon: <ConceptIcon size={20} />,
+          question: "What the words mean, and the rules that must hold",
+          count: state.concepts.length + state.rules.length,
+        },
       ],
     },
     {
       label: "Engineering",
       items: [
-        { section: "built", label: "How it's built", icon: <BuildOutlinedIcon />, question: "Mechanisms and components", count: state.mechanisms.length + state.components.length },
+        {
+          section: "built",
+          label: "How it's built",
+          icon: <BuildOutlinedIcon />,
+          question: "Mechanisms and components",
+          count: state.mechanisms.length + state.components.length,
+        },
       ],
     },
     {
@@ -121,7 +147,13 @@ function SideNav({ state, at }: { state: DocketState; at: Section }) {
       items: [
         { section: "left", label: "What's left", icon: <GapIcon />, question: "Gaps and open decisions, riskiest first", count: state.gaps.length + decisions },
         { section: "decided", label: "Decided", icon: <TaskAltRoundedIcon />, question: "Tradeoffs and non-goals", count: state.tradeoffs.length },
-        { section: "problems", label: "Doc problems", icon: <WarningAmberRoundedIcon />, question: "Contradictions and mistakes in the docs", count: state.problems.length },
+        {
+          section: "problems",
+          label: "Doc problems",
+          icon: <WarningAmberRoundedIcon />,
+          question: "Contradictions and mistakes in the docs",
+          count: state.problems.length,
+        },
       ],
     },
   ];

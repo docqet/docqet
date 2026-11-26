@@ -34,10 +34,7 @@ export default function GlossaryPage({ state, route }: { state: DocketState; rou
 
   return (
     <View title="Glossary">
-      <PageHeader
-        title="Glossary"
-        lede="What Docket's words mean: the terms it labels things with, how stable each level is, and what each level expects."
-      />
+      <PageHeader title="Glossary" lede="What Docket's words mean: the terms it labels things with, how stable each level is, and what each level expects." />
       <Tabs tabs={tabs} current={tab} />
       {tab === "terms" ? <Terms /> : tab === "levels" ? <Levels /> : <RubricReference state={state} />}
     </View>
@@ -172,7 +169,9 @@ function Levels() {
         <h3 id="bands" className="dp-subhead">
           Bands
         </h3>
-        <p className="dp-note">Each quarter of the scale is a band, named for the level it's closest to. A band says what to expect from the whole, never from every part.</p>
+        <p className="dp-note">
+          Each quarter of the scale is a band, named for the level it's closest to. A band says what to expect from the whole, never from every part.
+        </p>
         <div className="dp-bands">
           {STABILITY_LEVEL_IDS.map((id, i) => (
             <article key={id} className="dp-band">
@@ -195,7 +194,8 @@ function Levels() {
         <p className="dp-note">
           Each gap has a risk on each capability it&rsquo;s on, from 0 to 100. A capability is exposed to its riskiest gap&rsquo;s share of the most it could
           be: a certain, damaging gap reaching everyone that breaks a claim its level makes. Several capabilities, as in a feature, domain, project or what
-          serves a persona, count by their level, weighted as in maturity, so exposure on GA counts for most. Drafts don&rsquo;t count. Only the riskiest gap on each capability counts, so closing a lesser one doesn&rsquo;t change it.
+          serves a persona, count by their level, weighted as in maturity, so exposure on GA counts for most. Drafts don&rsquo;t count. Only the riskiest gap on
+          each capability counts, so closing a lesser one doesn&rsquo;t change it.
         </p>
         <p className="dp-note">
           It isn&rsquo;t stability: a level is declared, and exposure never changes it. Promoting a capability can raise its exposure, where its gaps break a
@@ -204,7 +204,9 @@ function Levels() {
         <h3 id="exposure-bands" className="dp-subhead">
           Bands
         </h3>
-        <p className="dp-note">Each quarter of the scale is a band. An unacceptable gap on any of its capabilities makes it at least moderate, whatever the share.</p>
+        <p className="dp-note">
+          Each quarter of the scale is a band. An unacceptable gap on any of its capabilities makes it at least moderate, whatever the share.
+        </p>
         <div className="dp-bands">
           {RISK_BANDS.map((b, i) => (
             <article key={b.id} className="dp-band" data-risk-band={b.id}>
@@ -226,8 +228,8 @@ function Levels() {
       <Section id="readiness" title="Readiness" term="readiness" note={TERMS.readiness.means}>
         <p className="dp-note">{TERMS.readiness.more}</p>
         <p className="dp-note">
-          It's a recommendation, and you're the judge. A capability with something left still needs to reach Beta, where it's below, and to
-          close each gap whose risk on it is unacceptable; every page lists what's left. A draft is not started, and never counts.
+          It's a recommendation, and you're the judge. A capability with something left still needs to reach Beta, where it's below, and to close each gap whose
+          risk on it is unacceptable; every page lists what's left. A draft is not started, and never counts.
         </p>
         <table className="view-table dp-narrow-table">
           <thead>

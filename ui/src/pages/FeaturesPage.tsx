@@ -147,7 +147,12 @@ function CapabilityRow({ state, capability, domain, where }: { state: DocketStat
         <ExposureMark exposure={capability.exposure} risk={capability.risk} of={capability.name} />
       </span>
       <span className="ix-cap-left">
-        <GapsCell gaps={[...new Set(gapsOn(state, capability))]} kind="gap" decisions={openDecisions(capability).length} href={docHref("capability", capability.id, "left")} />
+        <GapsCell
+          gaps={[...new Set(gapsOn(state, capability))]}
+          kind="gap"
+          decisions={openDecisions(capability).length}
+          href={docHref("capability", capability.id, "left")}
+        />
       </span>
       <span className="ix-cap-who">
         <PersonaFaces personas={personas} />
@@ -161,7 +166,19 @@ function CapabilityRow({ state, capability, domain, where }: { state: DocketStat
  * maturity and exposure under the capability rows' Stability and Exposure
  * columns.
  */
-function FoldRow({ className, head, maturity, exposure, children }: { className: string; head: ReactNode; maturity: ReactNode; exposure: ReactNode; children: ReactNode }) {
+function FoldRow({
+  className,
+  head,
+  maturity,
+  exposure,
+  children,
+}: {
+  className: string;
+  head: ReactNode;
+  maturity: ReactNode;
+  exposure: ReactNode;
+  children: ReactNode;
+}) {
   return (
     <details className={`ix-fold ${className}`} open>
       <summary>
@@ -245,7 +262,14 @@ function FeatureBranch({ state, feature, domain }: { state: DocketState; feature
       className="ix-feature"
       maturity={
         part?.maturity == null ? null : (
-          <MaturityRing progress={part.maturity} subject="feature" count={levels.filter(Boolean).length} label={`${feature.name} maturity`} size={22} spread={levels} />
+          <MaturityRing
+            progress={part.maturity}
+            subject="feature"
+            count={levels.filter(Boolean).length}
+            label={`${feature.name} maturity`}
+            size={22}
+            spread={levels}
+          />
         )
       }
       exposure={figures ? <ExposureMark exposure={figures.exposure} risk={figures.risk} of={feature.name} /> : null}

@@ -271,7 +271,9 @@ ul {
   background-image: none;
   border: 1px solid var(--border);
   border-radius: 8px;
-  box-shadow: 0 2px 6px rgb(20 10 50 / 0.08), 0 18px 40px -12px rgb(40 20 100 / 0.32);
+  box-shadow:
+    0 2px 6px rgb(20 10 50 / 0.08),
+    0 18px 40px -12px rgb(40 20 100 / 0.32);
   color: var(--text);
 }
 
@@ -462,7 +464,9 @@ ul {
   font-weight: 500;
   color: var(--faint);
   cursor: pointer;
-  transition: border-color 0.15s, color 0.15s;
+  transition:
+    border-color 0.15s,
+    color 0.15s;
 }
 
 .search-trigger:hover {
@@ -506,7 +510,9 @@ ul {
   background: var(--popover);
   border: 1px solid var(--border);
   border-radius: 12px;
-  box-shadow: 0 2px 6px rgb(20 10 50 / 0.08), 0 32px 72px -16px rgb(40 20 100 / 0.42);
+  box-shadow:
+    0 2px 6px rgb(20 10 50 / 0.08),
+    0 32px 72px -16px rgb(40 20 100 / 0.42);
   overflow: hidden;
   outline: 0;
   animation: search-in 0.16s ease-out;
@@ -678,7 +684,10 @@ kbd {
 
 .slot > .MuiCard-root,
 .slot li[data-capability] {
-  transition: border-color 120ms, box-shadow 120ms, background-color 120ms;
+  transition:
+    border-color 120ms,
+    box-shadow 120ms,
+    background-color 120ms;
 }
 
 /*
@@ -715,7 +724,9 @@ kbd {
   border-radius: 14px;
   background: var(--area);
   border: 1px solid var(--area-border);
-  transition: border-color 120ms, box-shadow 120ms;
+  transition:
+    border-color 120ms,
+    box-shadow 120ms;
 }
 
 .group.openable {
@@ -739,7 +750,9 @@ kbd {
   border-radius: 4px;
   color: var(--faint);
   opacity: 0;
-  transition: opacity 120ms, color 120ms;
+  transition:
+    opacity 120ms,
+    color 120ms;
 }
 
 .group:hover .group-label .grip,
@@ -774,10 +787,18 @@ kbd {
   cursor: ew-resize;
 }
 
-.resize[data-resize="n"] { top: -6px; }
-.resize[data-resize="s"] { bottom: -6px; }
-.resize[data-resize="e"] { right: -6px; }
-.resize[data-resize="w"] { left: -6px; }
+.resize[data-resize="n"] {
+  top: -6px;
+}
+.resize[data-resize="s"] {
+  bottom: -6px;
+}
+.resize[data-resize="e"] {
+  right: -6px;
+}
+.resize[data-resize="w"] {
+  left: -6px;
+}
 
 .resize[data-resize="ne"],
 .resize[data-resize="sw"],
@@ -786,9 +807,21 @@ kbd {
   height: 18px;
 }
 
-.resize[data-resize="ne"] { top: -7px; right: -7px; cursor: nesw-resize; }
-.resize[data-resize="sw"] { bottom: -7px; left: -7px; cursor: nesw-resize; }
-.resize[data-resize="nw"] { top: -7px; left: -7px; cursor: nwse-resize; }
+.resize[data-resize="ne"] {
+  top: -7px;
+  right: -7px;
+  cursor: nesw-resize;
+}
+.resize[data-resize="sw"] {
+  bottom: -7px;
+  left: -7px;
+  cursor: nesw-resize;
+}
+.resize[data-resize="nw"] {
+  top: -7px;
+  left: -7px;
+  cursor: nwse-resize;
+}
 
 .resize[data-resize="se"] {
   bottom: -8px;
@@ -885,10 +918,14 @@ kbd {
 @keyframes flash {
   0%,
   35% {
-    box-shadow: 0 0 0 3px var(--accent), 0 0 32px 4px color-mix(in srgb, var(--accent) 35%, transparent);
+    box-shadow:
+      0 0 0 3px var(--accent),
+      0 0 32px 4px color-mix(in srgb, var(--accent) 35%, transparent);
   }
   100% {
-    box-shadow: 0 0 0 3px transparent, 0 0 32px 4px transparent;
+    box-shadow:
+      0 0 0 3px transparent,
+      0 0 32px 4px transparent;
   }
 }
 
@@ -938,7 +975,10 @@ kbd {
   border: 1px solid var(--border-strong);
   border-radius: 6px;
   cursor: pointer;
-  transition: color 120ms, border-color 120ms, background-color 120ms;
+  transition:
+    color 120ms,
+    border-color 120ms,
+    background-color 120ms;
 }
 
 .filter-toggle:hover {
@@ -969,7 +1009,10 @@ kbd {
   border: 1px solid var(--border);
   border-radius: 8px;
   cursor: pointer;
-  transition: background 120ms, border-color 120ms, box-shadow 120ms;
+  transition:
+    background 120ms,
+    border-color 120ms,
+    box-shadow 120ms;
 }
 
 .stat-maturity + .stat-button {
@@ -993,7 +1036,9 @@ kbd {
   grid-area: chevron;
   justify-self: end;
   color: var(--faint);
-  transition: transform 120ms, color 120ms;
+  transition:
+    transform 120ms,
+    color 120ms;
 }
 
 .stat-button:hover {
@@ -2829,7 +2874,10 @@ a.filter-toggle {
   border: 1px solid var(--border-strong);
   border-radius: 999px;
   line-height: 18px;
-  transition: color 120ms, border-color 120ms, background-color 120ms;
+  transition:
+    color 120ms,
+    border-color 120ms,
+    background-color 120ms;
 }
 
 /* The mark as a box its own size, so it centers on the words rather than sitting on their baseline. */
@@ -4659,11 +4707,7 @@ button.page-table-row:hover .page-table-name strong {
 }
 
 .stability-spread-bar > span[data-draft] {
-  background: repeating-linear-gradient(
-    135deg,
-    color-mix(in srgb, var(--faint) 45%, transparent) 0 2px,
-    transparent 2px 4px
-  );
+  background: repeating-linear-gradient(135deg, color-mix(in srgb, var(--faint) 45%, transparent) 0 2px, transparent 2px 4px);
 }
 
 .stability-spread-mark {
@@ -4813,11 +4857,7 @@ button.page-table-row:hover .page-table-name strong {
 }
 
 .spread-swatch.draft {
-  background: repeating-linear-gradient(
-    135deg,
-    color-mix(in srgb, var(--faint) 70%, transparent) 0 2px,
-    transparent 2px 4px
-  );
+  background: repeating-linear-gradient(135deg, color-mix(in srgb, var(--faint) 70%, transparent) 0 2px, transparent 2px 4px);
   box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--faint) 45%, transparent);
 }
 

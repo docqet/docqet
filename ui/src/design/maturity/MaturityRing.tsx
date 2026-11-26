@@ -35,42 +35,21 @@ export type MaturityRingProps = {
 };
 
 const countLabel = (subject: MaturitySubject, count: number) =>
-  fromCapabilities(subject)
-    ? `${count} ${count === 1 ? "capability" : "capabilities"}`
-    : `${count} ${count === 1 ? "feature" : "features"}`;
+  fromCapabilities(subject) ? `${count} ${count === 1 ? "capability" : "capabilities"}` : `${count} ${count === 1 ? "feature" : "features"}`;
 
 /*
  * A Feature's or a project's maturity, always as a ring (see RingGlyph), so
  * it never looks like a stability mark, with a popover (hover, focus, or
  * tap) saying how mature it is and what that means.
  */
-export function MaturityRing({
-  progress,
-  subject,
-  count,
-  label,
-  size = 52,
-  labelled = false,
-  spread,
-  focusable = true,
-}: MaturityRingProps) {
+export function MaturityRing({ progress, subject, count, label, size = 52, labelled = false, spread, focusable = true }: MaturityRingProps) {
   const value = clampMaturity(progress);
   const band = maturityBand(value);
   const name = label ?? `${SUBJECT_NAMES[subject]} maturity`;
   const across = count === undefined ? "" : `, across ${countLabel(subject, count)}`;
 
   return (
-    <DetailsPopover
-      hoverOnly={!focusable}
-      title={
-        <MaturityDetails
-          progress={value}
-          subject={subject}
-          count={count}
-          spread={spread}
-        />
-      }
-    >
+    <DetailsPopover hoverOnly={!focusable} title={<MaturityDetails progress={value} subject={subject} count={count} spread={spread} />}>
       <Box
         component="span"
         role="img"

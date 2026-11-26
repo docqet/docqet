@@ -4,24 +4,8 @@ import OpenInNewRoundedIcon from "@mui/icons-material/OpenInNewRounded";
 import Box from "@mui/material/Box";
 import { DetailsCard, DetailsEyebrow, DetailsPopover } from "./design/DetailsPopover";
 import { follow } from "./design/markdown/Markdown";
-import {
-  
-  
-  conceptLinked,
-  fieldsText,
-  find,
-  
-  
-  
-  pageHref,
-  type Concept,
-  type DocketState,
-  type Pick,
-  
-} from "./state";
+import { conceptLinked, fieldsText, find, pageHref, type Concept, type DocketState, type Pick } from "./state";
 import { Tip } from "./design/Tip";
-
-
 
 /*
  * A way from a side panel to a doc's detail page, in a tab of its own, so the
@@ -123,5 +107,3 @@ export function related(state: DocketState, concept: Concept): Concept[] {
   ids.delete(concept.id);
   return [...ids].flatMap((id) => find(state.concepts, id) ?? []);
 }
-
-

@@ -31,18 +31,18 @@ A bar across the top says where you are and finds anything: the product and
 its projects, the initiative showing, search, and the glossary of Docket's
 words. A nav down the side picks which question you're asking:
 
-| Section | Answers | Address |
-| --- | --- | --- |
-| Overview | How is it doing? Maturity, readiness and what it still needs, who it's least ready for, where each domain stands, the riskiest gaps | (none) |
-| Map | How does it fit together? Domains, features and capabilities on a canvas, with their personas | `?view=map` |
-| Features | What can it do? Domains, features and capabilities as a tree | `?view=features` |
-| Personas | Who it serves, and how ready it is for each | `?view=personas` |
-| Initiatives | Bodies of work, such as the MVP, and how ready each is | `?view=initiatives` |
-| Language | What the words mean: concepts, and the rules that must hold | `?view=language` |
-| How it's built | Mechanisms and components | `?view=built` |
-| What's left | Gaps and open decisions, for everything or one project, persona, initiative, domain, feature or capability, filtered and ordered by any part of risk | `?view=left&for=persona:<id>` |
-| Decided | Tradeoffs and non-goals | `?view=decided` |
-| Doc problems | Contradictions and mistakes in the docs | `?view=problems` |
+| Section        | Answers                                                                                                                                              | Address                       |
+| -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------- |
+| Overview       | How is it doing? Maturity, readiness and what it still needs, who it's least ready for, where each domain stands, the riskiest gaps                  | (none)                        |
+| Map            | How does it fit together? Domains, features and capabilities on a canvas, with their personas                                                        | `?view=map`                   |
+| Features       | What can it do? Domains, features and capabilities as a tree                                                                                         | `?view=features`              |
+| Personas       | Who it serves, and how ready it is for each                                                                                                          | `?view=personas`              |
+| Initiatives    | Bodies of work, such as the MVP, and how ready each is                                                                                               | `?view=initiatives`           |
+| Language       | What the words mean: concepts, and the rules that must hold                                                                                          | `?view=language`              |
+| How it's built | Mechanisms and components                                                                                                                            | `?view=built`                 |
+| What's left    | Gaps and open decisions, for everything or one project, persona, initiative, domain, feature or capability, filtered and ordered by any part of risk | `?view=left&for=persona:<id>` |
+| Decided        | Tradeoffs and non-goals                                                                                                                              | `?view=decided`               |
+| Doc problems   | Contradictions and mistakes in the docs                                                                                                              | `?view=problems`              |
 
 Every domain, feature, capability, persona, initiative, concept, rule,
 mechanism, component and gap has a page of its own, such as

@@ -22,10 +22,26 @@ export default function InitiativesPage({ state }: { state: DocketState; route: 
         <table className="view-table ix-table">
           <thead>
             <tr>
-              <th><Term id="initiative" hoverOnly>Initiative</Term></th>
-              <th><Term id="readiness" hoverOnly>Readiness</Term></th>
-              <th className="num"><Term id="capability" hoverOnly>Capabilities</Term></th>
-              <th className="num"><Term id="persona" hoverOnly>Personas</Term></th>
+              <th>
+                <Term id="initiative" hoverOnly>
+                  Initiative
+                </Term>
+              </th>
+              <th>
+                <Term id="readiness" hoverOnly>
+                  Readiness
+                </Term>
+              </th>
+              <th className="num">
+                <Term id="capability" hoverOnly>
+                  Capabilities
+                </Term>
+              </th>
+              <th className="num">
+                <Term id="persona" hoverOnly>
+                  Personas
+                </Term>
+              </th>
               <th>Product gaps in it</th>
             </tr>
           </thead>

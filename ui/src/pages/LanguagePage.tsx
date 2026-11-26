@@ -56,9 +56,17 @@ function Concepts({ state, query }: { state: DocketState; query: string }) {
           <table className="view-table ix-table ix-oneline">
             <thead>
               <tr>
-                <th className="ix-col-name"><Term id="concept" hoverOnly>Concept</Term></th>
+                <th className="ix-col-name">
+                  <Term id="concept" hoverOnly>
+                    Concept
+                  </Term>
+                </th>
                 <th>What it means</th>
-                <th className="num ix-col-count"><Term id="capability" hoverOnly>Capabilities</Term></th>
+                <th className="num ix-col-count">
+                  <Term id="capability" hoverOnly>
+                    Capabilities
+                  </Term>
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -109,8 +117,16 @@ function Rules({ state, query }: { state: DocketState; query: string }) {
           <table className="view-table ix-table ix-oneline">
             <thead>
               <tr>
-                <th><Term id="rule" hoverOnly>Rule</Term></th>
-                <th className="num ix-col-count"><Term id="capability" hoverOnly>Capabilities</Term></th>
+                <th>
+                  <Term id="rule" hoverOnly>
+                    Rule
+                  </Term>
+                </th>
+                <th className="num ix-col-count">
+                  <Term id="capability" hoverOnly>
+                    Capabilities
+                  </Term>
+                </th>
                 <th className="ix-col-standing">Held</th>
               </tr>
             </thead>

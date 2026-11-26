@@ -10,16 +10,7 @@ import { LEFT_KINDS, LeftLabel, gapKind } from "./design/left/LeftMark";
 import { InlineMarkdown } from "./design/markdown/Markdown";
 import { StandingMark, type Standing } from "./design/standing/StandingMark";
 import { TechnicalLink, levelName, plural } from "./Explore";
-import {
-  appliesAt,
-  outcomesOf,
-  type Capability,
-  type Rubric,
-  type RubricExample,
-  type ExpectedOutcome,
-  type RubricQuality,
-  type Level,
-} from "./state";
+import { appliesAt, outcomesOf, type Capability, type Rubric, type RubricExample, type ExpectedOutcome, type RubricQuality, type Level } from "./state";
 
 /*
  * The stability rubric, laid out as Exalynt's stability checklist page lays it
@@ -92,9 +83,9 @@ export function StabilityRubric({ rubric, capability }: { rubric: Rubric; capabi
   return (
     <div className="sc">
       <aside className="sc-note">
-        <strong>A guideline, not a gate.</strong> It gives a level the same meaning for everyone, and doesn't replace engineering judgment: what an outcome takes,
-        and whether it applies at all, depends on the software, who uses it and the circumstances. An outcome that applies is met, not applicable, or written
-        down as a gap, GA included.
+        <strong>A guideline, not a gate.</strong> It gives a level the same meaning for everyone, and doesn't replace engineering judgment: what an outcome
+        takes, and whether it applies at all, depends on the software, who uses it and the circumstances. An outcome that applies is met, not applicable, or
+        written down as a gap, GA included.
       </aside>
 
       <p className="sc-pick-label" id="sc-level">
@@ -135,8 +126,8 @@ export function StabilityRubric({ rubric, capability }: { rubric: Rubric; capabi
               </strong>
               {unmet.length ? ` · Not met in ${unmet.join(", ")}` : null}
               {byChoice ? ` · ${byChoice} not met by choice` : null}
-              {open ? ` · ${open} open` : null}. {expected.filter((o) => standing(o) === "evidence").length} with evidence from what it's built on;
-              anything a gap, tradeoff or open decision doesn't name counts as met.
+              {open ? ` · ${open} open` : null}. {expected.filter((o) => standing(o) === "evidence").length} with evidence from what it's built on; anything a
+              gap, tradeoff or open decision doesn't name counts as met.
             </>
           ) : STABILITY_LEVEL_IDS.indexOf(level) > STABILITY_LEVEL_IDS.indexOf(own) ? (
             <>
@@ -303,7 +294,15 @@ function QualityName({ quality }: { quality: RubricQuality }) {
 }
 
 /* Implementation, shown as how meeting it might look, and what may be overengineering: a pill for each, whose popover holds the list. Empty lists are left out. */
-function Guidance({ implementation, overengineering, kindName }: { implementation: RubricExample[]; overengineering: RubricExample[]; kindName: (id: string) => string }) {
+function Guidance({
+  implementation,
+  overengineering,
+  kindName,
+}: {
+  implementation: RubricExample[];
+  overengineering: RubricExample[];
+  kindName: (id: string) => string;
+}) {
   if (!implementation.length && !overengineering.length) return null;
   return (
     <div className="sc-guidance">

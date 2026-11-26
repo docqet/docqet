@@ -99,7 +99,12 @@ export function LeftMark({ kind, size = 16, decorative = false }: { kind: LeftKi
   );
 }
 
-const LEFT_TERMS: Record<LeftKind, TermId> = { "product-gap": "product-gap", "technical-gap": "technical-gap", decision: "open-decision", tradeoff: "tradeoff" };
+const LEFT_TERMS: Record<LeftKind, TermId> = {
+  "product-gap": "product-gap",
+  "technical-gap": "technical-gap",
+  decision: "open-decision",
+  tradeoff: "tradeoff",
+};
 
 /*
  * A kind's mark before a name for it, as a heading, label or tile: by default,
@@ -107,7 +112,19 @@ const LEFT_TERMS: Record<LeftKind, TermId> = { "product-gap": "product-gap", "te
  * word it is when the name isn't the kind's own, such as "Gaps" for both kinds.
  * `hoverOnly` where a tap does something else, such as a fold's heading.
  */
-export function LeftLabel({ kind, size = 15, term, hoverOnly, children }: { kind: LeftKind; size?: number; term?: TermId; hoverOnly?: boolean; children?: ReactNode }) {
+export function LeftLabel({
+  kind,
+  size = 15,
+  term,
+  hoverOnly,
+  children,
+}: {
+  kind: LeftKind;
+  size?: number;
+  term?: TermId;
+  hoverOnly?: boolean;
+  children?: ReactNode;
+}) {
   return (
     <span className="left-label">
       <LeftMark kind={kind} size={size} decorative />

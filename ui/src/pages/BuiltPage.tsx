@@ -41,8 +41,16 @@ function TechnicalTable({ state, kind, docs }: { state: DocketState; kind: Techn
         <tr>
           <th>{kind === "component" ? "Component" : "Mechanism"}</th>
           <th>{kind === "component" ? "Relied on by" : "Applies to"}</th>
-          <th><Term id="technical-gap" hoverOnly>Technical gaps</Term></th>
-          <th className="num"><Term id="tradeoff" hoverOnly>Tradeoffs</Term></th>
+          <th>
+            <Term id="technical-gap" hoverOnly>
+              Technical gaps
+            </Term>
+          </th>
+          <th className="num">
+            <Term id="tradeoff" hoverOnly>
+              Tradeoffs
+            </Term>
+          </th>
           <th className="num">Outcomes met</th>
         </tr>
       </thead>

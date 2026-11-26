@@ -32,7 +32,6 @@ import {
   type Domain,
   type Gap,
   type Level,
-  
 } from "../state";
 import "./overview.css";
 import { GapInitiatives } from "../GapRows";
@@ -86,7 +85,9 @@ export default function OverviewPage({ state }: { state: DocketState; route: Rou
               label="Readiness"
               term="readiness"
               href="#still-needs"
-              value={readiness.percent === null ? <span className="ov-faint">Nothing started</span> : <ReadinessMark readiness={readiness} of="Readiness" inButton />}
+              value={
+                readiness.percent === null ? <span className="ov-faint">Nothing started</span> : <ReadinessMark readiness={readiness} of="Readiness" inButton />
+              }
               note={
                 startedOf(readiness)
                   ? `A recommendation, from ${plural(startedOf(readiness), "started capability", "started capabilities")}${readiness.notStarted.length ? `, ${readiness.notStarted.length} not started` : ""}`
@@ -106,15 +107,14 @@ export default function OverviewPage({ state }: { state: DocketState; route: Rou
                 note={<ReadinessMark readiness={leastReady.readiness} of={`Readiness for ${leastReady.persona.name}`} inButton />}
               />
             ) : null}
-            <Stat label="What's left" term="gap" href={sectionHref("left")} value={<LeftFigure gaps={state.gaps} decisions={decisions} risk={state.status.risk} of="everything" />} />
+            <Stat
+              label="What's left"
+              term="gap"
+              href={sectionHref("left")}
+              value={<LeftFigure gaps={state.gaps} decisions={decisions} risk={state.status.risk} of="everything" />}
+            />
             {state.problems.length ? (
-              <Stat
-                label="Doc problems"
-                href={sectionHref("problems")}
-                tone="warn"
-                value={state.problems.length}
-                note="Contradictions and mistakes to fix"
-              />
+              <Stat label="Doc problems" href={sectionHref("problems")} tone="warn" value={state.problems.length} note="Contradictions and mistakes to fix" />
             ) : null}
           </>
         }
@@ -129,12 +129,28 @@ export default function OverviewPage({ state }: { state: DocketState; route: Rou
         <StillNeeds readiness={readiness} readyText="Ready: every started capability is at Beta or above, with no unacceptable gap." />
       </Section>
 
-      <Section title={<>Where each <Term id="domain">domain</Term> stands</>} count={state.domains.length} note="Its maturity and its capabilities' stability, beside what's left on them and their exposure, least mature first.">
+      <Section
+        title={
+          <>
+            Where each <Term id="domain">domain</Term> stands
+          </>
+        }
+        count={state.domains.length}
+        note="Its maturity and its capabilities' stability, beside what's left on them and their exposure, least mature first."
+      >
         {state.domains.length ? <DomainStability state={state} /> : <Empty>No domains yet.</Empty>}
       </Section>
 
       {personas.length ? (
-        <Section title={<><Term id="readiness">Readiness</Term> by persona</>} count={personas.length} note="How ready the software is for each of them, least ready first.">
+        <Section
+          title={
+            <>
+              <Term id="readiness">Readiness</Term> by persona
+            </>
+          }
+          count={personas.length}
+          note="How ready the software is for each of them, least ready first."
+        >
           <ul className="ov-personas">
             {personas.map(({ persona: p, readiness: r }) => (
               <li key={p.id}>
@@ -149,11 +165,7 @@ export default function OverviewPage({ state }: { state: DocketState; route: Rou
         </Section>
       ) : null}
 
-      <Section
-        title="Riskiest gaps"
-        count={state.gaps.length}
-        aside={state.gaps.length > riskiest.length ? <a href={sectionHref("left")}>See all →</a> : null}
-      >
+      <Section title="Riskiest gaps" count={state.gaps.length} aside={state.gaps.length > riskiest.length ? <a href={sectionHref("left")}>See all →</a> : null}>
         {riskiest.length ? (
           <ul className="ov-gaps">
             {riskiest.map((g) => (
@@ -264,7 +276,14 @@ function DomainStability({ state }: { state: DocketState }) {
                 <span className="ov-count">{levels.length}</span>
               </span>
               <span className="ov-left">
-                <GapsCell gaps={gaps} exposure={{ exposure: domain.exposure, risk: domain.readiness.gaps }} kind="gap" decisions={decisions} of={domain.name} href={docHref("domain", domain.id, "left")} />
+                <GapsCell
+                  gaps={gaps}
+                  exposure={{ exposure: domain.exposure, risk: domain.readiness.gaps }}
+                  kind="gap"
+                  decisions={decisions}
+                  of={domain.name}
+                  href={docHref("domain", domain.id, "left")}
+                />
               </span>
             </li>
           );

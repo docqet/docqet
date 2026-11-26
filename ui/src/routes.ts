@@ -22,9 +22,7 @@ export type Section = (typeof SECTIONS)[number];
 export type DocKind = Exclude<PageAt["kind"], "gaps"> | "rule" | "gap";
 export const DOC_KINDS: DocKind[] = ["domain", "feature", "capability", "concept", "persona", "initiative", "mechanism", "component", "rule", "gap"];
 
-export type Route =
-  | { kind: "section"; section: Section; tab: string | null }
-  | { kind: "doc"; doc: DocKind; id: string; tab: string | null };
+export type Route = { kind: "section"; section: Section; tab: string | null } | { kind: "doc"; doc: DocKind; id: string; tab: string | null };
 
 /* Which side-nav section a doc's page is under, so it stays lit there. */
 const SECTION_OF_DOC: Record<DocKind, Section> = {
@@ -68,8 +66,7 @@ export function showingParams(search = window.location.search): URLSearchParams 
   return params;
 }
 
-const withParams = (params: URLSearchParams, hash?: string) =>
-  `${params.size ? `?${params}` : window.location.pathname}${hash ? `#${hash}` : ""}`;
+const withParams = (params: URLSearchParams, hash?: string) => `${params.size ? `?${params}` : window.location.pathname}${hash ? `#${hash}` : ""}`;
 
 /* A section, such as `?view=left`, with any extra params it takes, such as a filter. The overview needs no view. */
 export function sectionHref(section: Section, extra: Record<string, string | null | undefined> = {}): string {

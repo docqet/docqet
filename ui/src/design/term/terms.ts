@@ -54,8 +54,7 @@ export const TERMS: Record<TermId, TermEntry> = {
   },
   domain: {
     name: "Domain",
-    means:
-      "A part of the business the software serves, with a language of its own: within a domain, each word means one thing.",
+    means: "A part of the business the software serves, with a language of its own: within a domain, each word means one thing.",
     more: "Guest stays and Billing are both domains. A booking is a guest's hold on a room in one, and what they're charged for a stay in the other.",
   },
   feature: {
@@ -78,8 +77,7 @@ export const TERMS: Record<TermId, TermEntry> = {
   },
   concept: {
     name: "Concept",
-    means:
-      "What a term in the domain means: what it is, what it's made of, how it relates to other concepts and what states it moves through.",
+    means: "What a term in the domain means: what it is, what it's made of, how it relates to other concepts and what states it moves through.",
     more: "A booking: “a guest's hold on one room for a stay”.",
   },
   persona: {
@@ -102,8 +100,7 @@ export const TERMS: Record<TermId, TermEntry> = {
   },
   component: {
     name: "Component",
-    means:
-      "One area of the code, and what to know before changing it, named the way the code names it. One component can serve several capabilities.",
+    means: "One area of the code, and what to know before changing it, named the way the code names it. One component can serve several capabilities.",
     more: "A booking app's bookings component is where a room is held and double-booking is prevented. Something that works across the whole project is a mechanism instead.",
   },
   gap: {

@@ -42,19 +42,11 @@ export type StabilityMarkProps = {
  *
  * Docket marks GA too, since its whole point is showing where everything stands.
  */
-export function StabilityMark({
-  level,
-  feature,
-  statement = true,
-  size = "long",
-  focusable = true,
-}: StabilityMarkProps) {
+export function StabilityMark({ level, feature, statement = true, size = "long", focusable = true }: StabilityMarkProps) {
   const { name, stability } = level === PLANNED.id ? PLANNED : STABILITY[level];
   const named = level === PLANNED.id ? name : `${name} stability`;
   return (
-    <DetailsPopover
-      title={<StabilityDetails level={level} feature={feature} statement={statement} />}
-    >
+    <DetailsPopover title={<StabilityDetails level={level} feature={feature} statement={statement} />}>
       <Box
         component="span"
         role={size === "short" ? "img" : undefined}

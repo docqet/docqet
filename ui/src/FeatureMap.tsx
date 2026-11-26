@@ -225,9 +225,7 @@ export function mapGroups(state: DocketState, onOpen: (pick: Pick) => void): Can
               <DomainIcon size={15} />
               <span className="area-name">{domain.name}</span>
               {state.projects.length > 1 ? (
-                <span className="area-projects">
-                  {[...new Set(domain.from.map((f) => f.project))].map((id) => projectName(state, id)).join(" + ")}
-                </span>
+                <span className="area-projects">{[...new Set(domain.from.map((f) => f.project))].map((id) => projectName(state, id)).join(" + ")}</span>
               ) : null}
             </span>
           </Tip>

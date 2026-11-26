@@ -1,16 +1,5 @@
 import Box from "@mui/material/Box";
-import {
-  VERDICTS,
-  exposureText,
-  riskScore,
-  verdictOf,
-  type Gap,
-  type Risk,
-  type RiskAcross,
-  type Exposure,
-  type RiskOn,
-  type Verdict,
-} from "../../state";
+import { VERDICTS, exposureText, riskScore, verdictOf, type Gap, type Risk, type RiskAcross, type Exposure, type RiskOn, type Verdict } from "../../state";
 import { DetailsCard, DetailsEyebrow, DetailsPopover, DetailsWorkings } from "../DetailsPopover";
 import { plainText } from "../markdown/Markdown";
 import { RiskRing } from "./RiskRing";
@@ -115,7 +104,12 @@ export function RiskScore<T extends Gap>({
   if (risk.items.length > 1)
     return (
       <DetailsPopover hoverOnly={inButton} title={<RiskDetails risk={risk} of={of} />}>
-        <span className={`risk-spread-mark${wide ? " wide" : ""}`} role="img" aria-label={`Risk spread: ${verdictCounts(risk)}`} tabIndex={inButton ? undefined : 0}>
+        <span
+          className={`risk-spread-mark${wide ? " wide" : ""}`}
+          role="img"
+          aria-label={`Risk spread: ${verdictCounts(risk)}`}
+          tabIndex={inButton ? undefined : 0}
+        >
           <RiskSpreadBar risk={risk} wide={wide} />
         </span>
       </DetailsPopover>
@@ -265,16 +259,17 @@ function ExposureDetails<T extends Gap>({ risk, exposure, of }: { risk: RiskAcro
         </div>
         <VerdictSpread risk={risk} />
         <Box sx={{ mt: 1.25, color: "text.secondary", fontSize: "0.92em" }}>
-          Exposure is to risk what maturity is to stability: one figure for the whole. It isn&rsquo;t stability. Each capability&rsquo;s level is declared,
-          and says how much people can depend on it; this is what the gaps still open against those levels put at stake.
+          Exposure is to risk what maturity is to stability: one figure for the whole. It isn&rsquo;t stability. Each capability&rsquo;s level is declared, and
+          says how much people can depend on it; this is what the gaps still open against those levels put at stake.
         </Box>
         <DetailsWorkings>
           <div>
-            Each capability is exposed to its riskiest gap&rsquo;s share of the most it could be: a certain, damaging gap reaching everyone that breaks
-            a claim its level makes.
+            Each capability is exposed to its riskiest gap&rsquo;s share of the most it could be: a certain, damaging gap reaching everyone that breaks a claim
+            its level makes.
           </div>
           <div>
-            Its {n} {n === 1 ? "capability" : "capabilities"} then count by their level, GA most, as in maturity. Drafts don&rsquo;t count. Each quarter is a band: low, minor, moderate and high.
+            Its {n} {n === 1 ? "capability" : "capabilities"} then count by their level, GA most, as in maturity. Drafts don&rsquo;t count. Each quarter is a
+            band: low, minor, moderate and high.
           </div>
         </DetailsWorkings>
       </div>
@@ -323,7 +318,12 @@ export function VerdictSpread({ risk }: { risk: RiskAcross<unknown> }) {
  * `inButton` opens it on hover only.
  */
 export function GapRiskMark({ risk, on, inButton = false }: { risk: Risk; on: RiskOn | null; inButton?: boolean }) {
-  if (!on) return <span className="gap-risk-mark risk-score" data-verdict="none">–</span>;
+  if (!on)
+    return (
+      <span className="gap-risk-mark risk-score" data-verdict="none">
+        –
+      </span>
+    );
   const verdict = verdictOf(on.score);
   return (
     <DetailsPopover

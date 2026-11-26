@@ -202,15 +202,7 @@ const MOD = typeof navigator !== "undefined" && /Mac|iPhone|iPad/.test(navigator
  * The arrow keys move through the results, Enter shows one on the canvas, and
  * Esc or a click outside closes it. It keeps what was typed for next time.
  */
-export default function Search({
-  state,
-  all,
-  onSelect,
-}: {
-  state: DocketState;
-  all: Project[];
-  onSelect: (selection: Selection) => void;
-}) {
+export default function Search({ state, all, onSelect }: { state: DocketState; all: Project[]; onSelect: (selection: Selection) => void }) {
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState(0);
@@ -248,14 +240,17 @@ export default function Search({
   }, [entries, q, found]);
   const flat = groups.flatMap((g) => g.results);
 
-  useEffect(() => setActive(0), [found]);
+  /* New results start at the first. */
+  const [activeFor, setActiveFor] = useState(found);
+  if (activeFor !== found) {
+    setActiveFor(found);
+    setActive(0);
+  }
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       const typing =
-        e.target instanceof HTMLInputElement ||
-        e.target instanceof HTMLTextAreaElement ||
-        (e.target instanceof HTMLElement && e.target.isContentEditable);
+        e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement || (e.target instanceof HTMLElement && e.target.isContentEditable);
       if ((e.key === "k" && (e.metaKey || e.ctrlKey)) || (e.key === "/" && !typing)) {
         e.preventDefault();
         setOpen(true);
@@ -280,8 +275,7 @@ export default function Search({
     setOpen(false);
   };
 
-  const placeholder =
-    all.length > 1 ? "Search projects, features, capabilities…" : "Search domains, features, capabilities, rules…";
+  const placeholder = all.length > 1 ? "Search projects, features, capabilities…" : "Search domains, features, capabilities, rules…";
 
   return (
     <>
@@ -294,13 +288,7 @@ export default function Search({
         </span>
       </button>
 
-      <Modal
-        open={open}
-        onClose={() => setOpen(false)}
-        disableAutoFocus
-        disableScrollLock
-        slotProps={{ backdrop: { className: "search-backdrop" } }}
-      >
+      <Modal open={open} onClose={() => setOpen(false)} disableAutoFocus disableScrollLock slotProps={{ backdrop: { className: "search-backdrop" } }}>
         <div className="search" role="dialog" aria-modal aria-label="Search" data-no-pan>
           <label className="search-field">
             <SearchRoundedIcon aria-hidden sx={{ fontSize: 20, color: "text.secondary" }} />
@@ -337,9 +325,7 @@ export default function Search({
 
           <div className="search-results" id="search-results" role="listbox">
             {!q ? (
-              <div className="search-empty">
-                Find a project, domain, feature, capability, rule, concept, or persona, and open it.
-              </div>
+              <div className="search-empty">Find a project, domain, feature, capability, rule, concept, or persona, and open it.</div>
             ) : groups.length ? (
               groups.map((g) => (
                 <div key={g.kind} role="group" aria-label={g.label}>
@@ -360,9 +346,7 @@ export default function Search({
                         <KindIcon kind={entry.kind} />
                         <span className="search-text">
                           <span className="search-title">{highlight(entry.title, terms)}</span>
-                          <span className="search-context">
-                            {entry.from ? `${entry.from} · ${entry.context}` : entry.context}
-                          </span>
+                          <span className="search-context">{entry.from ? `${entry.from} · ${entry.context}` : entry.context}</span>
                         </span>
                         {entry.level ? <LevelMark level={entry.level} /> : entry.level === null ? <span className="faint">Draft</span> : null}
                       </div>
@@ -408,13 +392,7 @@ function KindIcon({ kind }: { kind: Kind }) {
 /* A capability's level in a result, as its mark looks, without a popover of its own. */
 function LevelMark({ level }: { level: Level }) {
   return (
-    <Box
-      component="span"
-      sx={[
-        { display: "inline-flex", alignItems: "center", gap: 0.75, fontSize: 12, fontWeight: 500, flex: "none" },
-        levelColor(level),
-      ]}
-    >
+    <Box component="span" sx={[{ display: "inline-flex", alignItems: "center", gap: 0.75, fontSize: 12, fontWeight: 500, flex: "none" }, levelColor(level)]}>
       <StabilityTrack level={level} />
       {STABILITY[level].name}
     </Box>

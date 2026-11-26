@@ -77,8 +77,7 @@ export function follow(state: DocketState, from: From, href: string): Link {
   const feature = state.features.find(at);
   if (feature) return { target: featureTarget(state, feature.id), pick: { kind: "feature", id: feature.id } };
   const rule = state.rules.find(at);
-  if (rule?.capabilities.length)
-    return { target: capabilityTarget(state, rule.capabilities[0]), pick: { kind: "capability", id: rule.capabilities[0] } };
+  if (rule?.capabilities.length) return { target: capabilityTarget(state, rule.capabilities[0]), pick: { kind: "capability", id: rule.capabilities[0] } };
   return null;
 }
 
@@ -118,7 +117,11 @@ export function Markdown({ text, from, go, className }: { text: string | null | 
           </a>
         );
       return (
-        <button type="button" className="link" onClick={() => ("concept" in to ? go.onConcept(to.concept) : go.onPick ? go.onPick(to.pick) : go.onShow?.(to.target))}>
+        <button
+          type="button"
+          className="link"
+          onClick={() => ("concept" in to ? go.onConcept(to.concept) : go.onPick ? go.onPick(to.pick) : go.onShow?.(to.target))}
+        >
           {children}
         </button>
       );

@@ -114,7 +114,13 @@ export function GapsCell({
   );
   return (
     <span className="ix-gaps">
-      {href ? <a className="ix-gaps-link" href={href}>{counts}</a> : counts}
+      {href ? (
+        <a className="ix-gaps-link" href={href}>
+          {counts}
+        </a>
+      ) : (
+        counts
+      )}
       {gaps.length && exposure ? (
         <ExposureMark exposure={exposure.exposure} risk={exposure.risk} of={of ?? "these"} />
       ) : gaps.length && risk ? (
@@ -198,7 +204,8 @@ export function MaturityStat({
   href?: string;
 }) {
   const across = fromCapabilities(subject) ? (count === 1 ? "1 capability" : `${count} capabilities`) : count === 1 ? "1 feature" : `${count} features`;
-  if (maturity === null || band === null) return <Stat label="Maturity" term="maturity" value={<span className="ix-none">None yet</span>} note="Nothing has a level yet" href={href} />;
+  if (maturity === null || band === null)
+    return <Stat label="Maturity" term="maturity" value={<span className="ix-none">None yet</span>} note="Nothing has a level yet" href={href} />;
   return (
     <Stat
       label="Maturity"

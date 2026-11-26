@@ -88,7 +88,11 @@ export function scopeChoices(state: DocketState): ScopeChoice[] {
   return [
     { kind: "all", key: "all", name: EVERYTHING.name, note: plural(state.projects.length, "project") },
     ...state.projects.map((p) => ({ kind: "project" as const, key: `project:${p.id}`, name: p.name, note: null })),
-    ...byName(state.personas.map((p) => ({ kind: "persona" as const, key: `persona:${p.id}`, ...personaNameAndRole(p) })).map(({ role, ...c }) => ({ ...c, note: role }))),
+    ...byName(
+      state.personas
+        .map((p) => ({ kind: "persona" as const, key: `persona:${p.id}`, ...personaNameAndRole(p) }))
+        .map(({ role, ...c }) => ({ ...c, note: role })),
+    ),
     ...byName(state.initiatives.map((i) => ({ kind: "initiative" as const, key: `initiative:${i.id}`, name: i.name, note: null }))),
     ...byName(state.domains.map((d) => ({ kind: "domain" as const, key: `domain:${d.id}`, name: d.name, note: null }))),
     ...byName(state.features.map((f) => ({ kind: "feature" as const, key: `feature:${f.id}`, name: f.name, note: domains(f.parts.map((p) => p.domain)) }))),

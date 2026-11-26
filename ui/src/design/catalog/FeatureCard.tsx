@@ -60,19 +60,8 @@ export type FeatureCardProps = {
  * Editing and dragging are the app's: each `grip` is the handle it's
  * picked up by, and `actions` hold their menus.
  */
-export function FeatureCard({
-  name,
-  description,
-  capabilities,
-  maturity,
-  grip = false,
-  actions,
-  onAddCapability,
-  footer,
-  hint,
-}: FeatureCardProps) {
-  const progress =
-    maturity !== undefined ? maturity : featureMaturity(capabilities.map((capability) => capability.level));
+export function FeatureCard({ name, description, capabilities, maturity, grip = false, actions, onAddCapability, footer, hint }: FeatureCardProps) {
+  const progress = maturity !== undefined ? maturity : featureMaturity(capabilities.map((capability) => capability.level));
   return (
     <Card
       component="article"
@@ -126,13 +115,7 @@ export function FeatureCard({
             )}
             {actions}
           </Box>
-          {description ? (
-            <Box
-              sx={{ mt: 0.5, ml: "26px", typography: "body2", lineHeight: 1.5, color: "text.secondary" }}
-            >
-              {description}
-            </Box>
-          ) : null}
+          {description ? <Box sx={{ mt: 0.5, ml: "26px", typography: "body2", lineHeight: 1.5, color: "text.secondary" }}>{description}</Box> : null}
         </Box>
       </Box>
 
@@ -180,9 +163,7 @@ export function FeatureCard({
         </Box>
       )}
 
-      {footer ? (
-        <Box sx={{ px: 2, py: 1, borderTop: 1, borderColor: "divider", typography: "body2" }}>{footer}</Box>
-      ) : null}
+      {footer ? <Box sx={{ px: 2, py: 1, borderTop: 1, borderColor: "divider", typography: "body2" }}>{footer}</Box> : null}
 
       {onAddCapability ? (
         <Box sx={{ px: 0.75, py: 0.5, borderTop: 1, borderColor: "divider" }}>

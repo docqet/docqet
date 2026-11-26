@@ -24,9 +24,21 @@ export default function PersonasPage({ state }: { state: DocketState; route: Rou
         <table className="view-table ix-table">
           <thead>
             <tr>
-              <th><Term id="persona" hoverOnly>Persona</Term></th>
-              <th><Term id="readiness" hoverOnly>Readiness</Term></th>
-              <th className="num"><Term id="capability" hoverOnly>Capabilities</Term></th>
+              <th>
+                <Term id="persona" hoverOnly>
+                  Persona
+                </Term>
+              </th>
+              <th>
+                <Term id="readiness" hoverOnly>
+                  Readiness
+                </Term>
+              </th>
+              <th className="num">
+                <Term id="capability" hoverOnly>
+                  Capabilities
+                </Term>
+              </th>
               <th>Product gaps for them</th>
             </tr>
           </thead>
@@ -67,7 +79,13 @@ function PersonaRow({ state, persona }: { state: DocketState; persona: Persona }
         <Num n={capabilities.length} />
       </td>
       <td>
-        <GapsCell gaps={gaps} exposure={{ exposure: persona.exposure, risk: persona.readiness.gaps }} kind="product-gap" of={`what serves ${name}`} href={docHref("persona", persona.id, "left")} />
+        <GapsCell
+          gaps={gaps}
+          exposure={{ exposure: persona.exposure, risk: persona.readiness.gaps }}
+          kind="product-gap"
+          of={`what serves ${name}`}
+          href={docHref("persona", persona.id, "left")}
+        />
       </td>
     </tr>
   );

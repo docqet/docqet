@@ -293,7 +293,24 @@ export async function getProduct(showing: Showing) {
     all<TradeoffResource>("/tradeoffs"),
     all<ProblemResource>("/problems"),
   ]);
-  return { product, status, projects, rubric, domains, features, capabilities, rules, concepts, personas, initiatives, mechanisms, components, gaps, tradeoffs, problems };
+  return {
+    product,
+    status,
+    projects,
+    rubric,
+    domains,
+    features,
+    capabilities,
+    rules,
+    concepts,
+    personas,
+    initiatives,
+    mechanisms,
+    components,
+    gaps,
+    tradeoffs,
+    problems,
+  };
 }
 
 export type ProductResources = Awaited<ReturnType<typeof getProduct>>;

@@ -15,11 +15,7 @@ export function Pie({ percent, size, figure, sx }: { percent: number; size: numb
   const x = r + r * Math.sin(angle);
   const y = r - r * Math.cos(angle);
   return (
-    <Box
-      component="span"
-      aria-hidden
-      sx={[{ display: "inline-flex", alignItems: "center", gap: 0.75, flexShrink: 0 }, ...(Array.isArray(sx) ? sx : [sx])]}
-    >
+    <Box component="span" aria-hidden sx={[{ display: "inline-flex", alignItems: "center", gap: 0.75, flexShrink: 0 }, ...(Array.isArray(sx) ? sx : [sx])]}>
       <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} style={{ display: "block", flexShrink: 0 }}>
         <circle cx={r} cy={r} r={r} fill="currentColor" opacity={0.18} />
         {share >= 1 ? (

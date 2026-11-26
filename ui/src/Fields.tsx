@@ -53,9 +53,7 @@ export function DecisionList({ from, decisions, go }: { from: Contribution; deci
 function DecisionAffects({ state, decision }: { state: DocketState; decision: Decision }) {
   const affected = affectedBy(state, decision);
   if (!affected.length) return null;
-  const riskiest = affected
-    .flatMap((a) => (a.kind === "gap" ? [a.gap.risk] : []))
-    .sort((a, b) => b.score - a.score)[0];
+  const riskiest = affected.flatMap((a) => (a.kind === "gap" ? [a.gap.risk] : [])).sort((a, b) => b.score - a.score)[0];
   return (
     <div className="gap-affects decision-affects">
       <span className="gap-affects-label">Affects</span>

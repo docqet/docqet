@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useEffectEvent, useMemo, useRef, useState } from "react";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import FilterListRoundedIcon from "@mui/icons-material/FilterListRounded";
 import Canvas, { type CanvasHandle } from "../Canvas";
@@ -19,7 +19,6 @@ import {
   targetOf,
   type DocketState,
   type Pick,
-  type Target,
 } from "../state";
 import { Ring } from "../design/ring/Ring";
 import { MATURITY_BANDS } from "../design/maturity/maturity";
@@ -54,29 +53,14 @@ export default function MapPage({ state, layoutKey }: { state: DocketState; layo
     document.title = "Map · Docket";
   }, []);
   const canvas = useRef<CanvasHandle>(null);
-  /* What the peek shows, or null with it closed. */
-  const [peek, setPeek] = useState<Pick | null>(null);
-  const open = useCallback((pick: Pick) => setPeek(pick), []);
-  const close = useCallback(() => setPeek(null), []);
-  /* An address asking to show something, as `?view=map&show=<kind>:<id>`, opens it in the peek, then forgets having been asked. */
-  const search = useSearch();
-  useEffect(() => {
-    const shown = shownInUrl();
-    if (!shown) return;
-    if (isPick(state, shown)) open(shown);
-    navigate(mapHref(), true);
-  }, [search]);
-  /* Something clicked on the map opens without the map moving to it, since it's already in view. */
-  const quiet = useRef(false);
-  const atNow = useRef(peek);
-  atNow.current = peek;
-  const openHere = useCallback(
-    (pick: Pick) => {
-      if (atNow.current?.kind !== pick.kind || atNow.current.id !== pick.id) quiet.current = true;
-      open(pick);
-    },
-    [open],
-  );
+  /*
+   * What the peek shows, or null with it closed, and whether the map moves to
+   * it: not for something clicked on the map, since it's already in view.
+   */
+  const [peekAt, setPeekAt] = useState<{ pick: Pick; move: boolean } | null>(null);
+  const peek = peekAt?.pick ?? null;
+  const openHere = useCallback((pick: Pick) => setPeekAt({ pick, move: false }), []);
+  const close = useCallback(() => setPeekAt(null), []);
   /*
    * What the map is filtered to: it shows only what any of these covers.
    * Filters are set from the peek, for what it's showing, and removed from
@@ -89,31 +73,47 @@ export default function MapPage({ state, layoutKey }: { state: DocketState; layo
   const filtered = useMemo(() => filterBy(state, filters), [state, filters]);
   const items = useMemo(() => mapItems(state, openHere, filtered?.cards), [state, openHere, filtered]);
   const groups = useMemo(() => mapGroups(state, openHere), [state, openHere]);
-  /* Bring something into view. When the filter hides all of it, the filter is cleared first. A domain shows while any of its cards do. */
-  const show = (t: Target) => {
-    canvas.current?.show(t.items, t.row);
+  /* Open something and bring it into view. When the filter hides all of it, the filter is cleared. A domain shows while any of its cards do. */
+  const open = (pick: Pick) => {
+    setPeekAt({ pick, move: true });
     const visible = (id: string) => {
       const group = groups.find((g) => g.id === id);
       return group ? group.items.some((card) => filtered?.cards.has(card)) : filtered?.cards.has(id);
     };
-    if (filtered && !t.items.some(visible)) setFilters([]);
+    if (filtered && !targetOf(state, pick).items.some(visible)) setFilters([]);
   };
-  /* Whatever the peek opens, the map focuses on. */
-  useEffect(() => {
-    if (quiet.current) quiet.current = false;
-    else if (peek) show(targetOf(state, peek));
-  }, [peek?.kind, peek?.id]);
+  /* An address asking to show something, as `?view=map&show=<kind>:<id>`, opens it in the peek, then forgets having been asked. */
+  const search = useSearch();
+  const openShown = useEffectEvent(() => {
+    const shown = shownInUrl();
+    if (!shown) return;
+    if (isPick(state, shown)) open(shown);
+    navigate(mapHref(), true);
+  });
+  // The address is outside React: opening what it names keeps the peek in step with it.
+  // eslint-disable-next-line react-hooks/set-state-in-effect
+  useEffect(() => openShown(), [search]);
+  /* Whatever the peek opens, the map focuses on, once the canvas has drawn it. */
+  const focusPeek = useEffectEvent(() => {
+    if (!peekAt?.move) return;
+    const t = targetOf(state, peekAt.pick);
+    canvas.current?.show(t.items, t.row);
+  });
+  useEffect(() => focusPeek(), [peek?.kind, peek?.id]);
 
   /* What the cards are colored by. */
   const [lens, setLens] = useState<Lens>("stability");
   /* The capabilities lit on the map: those using the concept or serving the persona the peek has open. */
   const litBy: Pick | null = peek && (peek.kind === "concept" || peek.kind === "persona") ? peek : null;
-  const lit = litBy ? ((litBy.kind === "concept" ? find(state.concepts, litBy.id) : find(state.personas, litBy.id))?.capabilities ?? []) : [];
+  const lit = useMemo(
+    () => (litBy ? ((litBy.kind === "concept" ? find(state.concepts, litBy.id) : find(state.personas, litBy.id))?.capabilities ?? []) : []),
+    [state, litBy],
+  );
   const showing = state.projects.map((o) => o.id).join(",");
   /* While a persona is lit, lines from their card to every card with something that serves them. */
   const links = useMemo(
     () => (litBy?.kind === "persona" ? { from: personaCard(litBy.id), to: [...new Set(lit.flatMap((id) => cardsOf(state, id)))] } : null),
-    [state, litBy?.kind, litBy?.id, lit.join(",")],
+    [state, litBy, lit],
   );
 
   return (
@@ -274,12 +274,7 @@ function FilterBar({
               {pickName(state, f)}
             </button>
           </Tip>
-          <button
-            type="button"
-            className="filter-chip-remove"
-            aria-label={`Stop filtering to ${pickName(state, f)}`}
-            onClick={() => onRemove(f)}
-          >
+          <button type="button" className="filter-chip-remove" aria-label={`Stop filtering to ${pickName(state, f)}`} onClick={() => onRemove(f)}>
             <CloseRoundedIcon sx={{ fontSize: 14 }} />
           </button>
         </span>
