@@ -5,7 +5,7 @@ import LayersOutlinedIcon from "@mui/icons-material/LayersOutlined";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 import Popover from "@mui/material/Popover";
 import { NAMES } from "../../../components/names";
-import { DomainIcon } from "../../../FeatureMap";
+import { DomainIcon } from "../../../components/names";
 import { InitiativeIcon } from "../../../components/shell/ScopeFilter";
 import { withParam } from "../../../routes";
 import type { DocketState } from "../../../state";

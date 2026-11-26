@@ -20,7 +20,7 @@ import { PersonaRows } from "./components/Personas";
 import { Places } from "./components/doc/Places";
 import { levelName } from "./components/stability/stability";
 import { Maturity } from "./components/maturity/Maturity";
-import { DomainIcon } from "./FeatureMap";
+import { DomainIcon } from "./components/names";
 import { PersonaAvatar, personaNameAndRole } from "./components/Personas";
 import { ReadinessMark, StillNeeds, needsLine } from "./components/Readiness";
 import { ProjectIcon } from "./components/shell/ProductFilter";

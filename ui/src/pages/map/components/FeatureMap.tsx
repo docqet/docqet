@@ -1,14 +1,13 @@
 import type { MouseEvent } from "react";
-import SpaceDashboardOutlinedIcon from "@mui/icons-material/SpaceDashboardOutlined";
-import { GROUP_HEAD, GROUP_PAD, type CanvasGroup, type CanvasItem, type Pos, type Size } from "./pages/map/components/Canvas";
-import { CapabilityCard } from "./pages/map/components/CapabilityCard";
-import { FeatureCard } from "./pages/map/components/FeatureCard";
-import { MaturityRing } from "./components/maturity/MaturityRing";
-import { ContradictionHint } from "./pages/map/components/CapabilityHints";
-import { ConceptChips, ConceptIcon } from "./components/Concepts";
-import { PersonaCard } from "./components/Personas";
-import { ProjectIcon } from "./components/shell/ProductFilter";
-import { RiskScore } from "./components/risk/RiskScore";
+import { GROUP_HEAD, GROUP_PAD, type CanvasGroup, type CanvasItem, type Pos, type Size } from "./Canvas";
+import { CapabilityCard } from "./CapabilityCard";
+import { FeatureCard } from "./FeatureCard";
+import { MaturityRing } from "../../../components/maturity/MaturityRing";
+import { ContradictionHint } from "./CapabilityHints";
+import { ConceptChips, ConceptIcon } from "../../../components/Concepts";
+import { PersonaCard } from "../../../components/Personas";
+import { ProjectIcon } from "../../../components/shell/ProductFilter";
+import { RiskScore } from "../../../components/risk/RiskScore";
 import {
   capabilityCard,
   conceptsOf,
@@ -29,14 +28,10 @@ import {
   type Gap,
   type Pick,
   type RiskAcross,
-} from "./state";
-import { useStatusFor } from "./model";
-import { Tip } from "./components/Tip";
-
-/* A domain's mark, wherever one is named. */
-export function DomainIcon({ size = 14 }: { size?: number }) {
-  return <SpaceDashboardOutlinedIcon sx={{ fontSize: size, flex: "none", color: "text.secondary" }} />;
-}
+} from "../../../state";
+import { useStatusFor } from "../../../model";
+import { Tip } from "../../../components/Tip";
+import { DomainIcon } from "../../../components/names";
 
 /* A card's width, and the room between cards, as tidy lays them out. A persona's card is narrower. */
 const SLOT = 320;

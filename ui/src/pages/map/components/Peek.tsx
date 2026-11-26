@@ -6,7 +6,7 @@ import FilterListRoundedIcon from "@mui/icons-material/FilterListRounded";
 import WidgetsOutlinedIcon from "@mui/icons-material/WidgetsOutlined";
 import { ConceptIcon } from "../../../components/Concepts";
 import { Maturity } from "../../../components/maturity/Maturity";
-import { DomainIcon } from "../../../FeatureMap";
+import { DomainIcon } from "../../../components/names";
 import { PersonaAvatar, PersonaIcon, personaNameAndRole } from "../../../components/Personas";
 import { ReadinessMark } from "../../../components/Readiness";
 import { docHref, type DocKind } from "../../../routes";

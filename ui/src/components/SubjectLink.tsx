@@ -1,5 +1,5 @@
 import { NAMES, TECHNICAL_NAMES } from "./names";
-import { DomainIcon } from "../FeatureMap";
+import { DomainIcon } from "./names";
 import { CapabilityStability } from "./CapabilityLabel";
 import { docHref, type DocKind } from "../routes";
 import { find, technicalDoc, type Capability, type Doc, type DocketState } from "../state";

@@ -7,7 +7,7 @@ import RuleRoundedIcon from "@mui/icons-material/RuleRounded";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 import WidgetsOutlinedIcon from "@mui/icons-material/WidgetsOutlined";
 import { ConceptIcon } from "./Concepts";
-import { DomainIcon } from "../FeatureMap";
+import { DomainIcon } from "./names";
 import { PersonaAvatar, PersonaIcon } from "./Personas";
 import { InitiativeIcon } from "./shell/ScopeFilter";
 import { GapIcon, LEFT_KINDS, LeftMark, type LeftKind } from "./left/LeftMark";

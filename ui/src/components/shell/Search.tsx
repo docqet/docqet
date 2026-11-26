@@ -10,7 +10,7 @@ import { StabilityTrack } from "../stability/StabilityTrack";
 import { ConceptIcon } from "../Concepts";
 import { PersonaIcon } from "../Personas";
 import { InitiativeIcon } from "./ScopeFilter";
-import { DomainIcon } from "../../FeatureMap";
+import { DomainIcon } from "../names";
 import { ProjectIcon } from "./ProductFilter";
 import { searchProduct, type SearchResultResource } from "../../services/docket/search";
 import {

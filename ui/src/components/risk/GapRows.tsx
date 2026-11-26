@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import BoltOutlinedIcon from "@mui/icons-material/BoltOutlined";
-import { DomainIcon } from "../../FeatureMap";
+import { DomainIcon } from "../names";
 import { Excerpt, plainText } from "../markdown/Markdown";
 import { LeftMark } from "../left/LeftMark";
 import { Tip } from "../Tip";

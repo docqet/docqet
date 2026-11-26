@@ -2,7 +2,7 @@ import { useCallback, useEffect, useEffectEvent, useMemo, useRef, useState } fro
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import FilterListRoundedIcon from "@mui/icons-material/FilterListRounded";
 import Canvas, { type CanvasHandle } from "./components/Canvas";
-import { mapGroups, mapItems, tidyMap } from "../../FeatureMap";
+import { mapGroups, mapItems, tidyMap } from "./components/FeatureMap";
 import Peek, { PICK_KINDS } from "./components/Peek";
 import { navigate, useSearch } from "../../routes";
 import {
