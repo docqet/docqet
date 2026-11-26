@@ -104,23 +104,24 @@ func (v *productValue) IsBoolFlag() bool { return true }
 
 // maxArgs refuses more than max arguments. When --product was given bare and
 // there's one too many, the extra one was most likely meant as its ID, so it
-// says how to write that.
-func maxArgs(max int) cli.BeforeFunc {
-	return func(ctx context.Context, cmd *cli.Command) (context.Context, error) {
+// says how to write that. It's an argument validator rather than a Before, so
+// shell completion, which skips validators, can complete a flag half typed.
+func maxArgs(max int) cli.ArgValidatorFunc {
+	return func(_ context.Context, cmd *cli.Command) error {
 		args := cmd.Args().Slice()
 		if len(args) <= max {
-			return ctx, nil
+			return nil
 		}
 		if given, id := product(cmd); given && id == "" {
-			return ctx, fmt.Errorf("unexpected argument %q: to name a product, write --product=%s", args[max], args[max])
+			return fmt.Errorf("unexpected argument %q: to name a product, write --product=%s", args[max], args[max])
 		}
 		switch max {
 		case 0:
-			return ctx, fmt.Errorf("%s takes no arguments, and was given %d", cmd.Name, len(args))
+			return fmt.Errorf("%s takes no arguments, and was given %d", cmd.Name, len(args))
 		case 1:
-			return ctx, fmt.Errorf("%s takes at most 1 argument, and was given %d", cmd.Name, len(args))
+			return fmt.Errorf("%s takes at most 1 argument, and was given %d", cmd.Name, len(args))
 		default:
-			return ctx, fmt.Errorf("%s takes at most %d arguments, and was given %d", cmd.Name, max, len(args))
+			return fmt.Errorf("%s takes at most %d arguments, and was given %d", cmd.Name, max, len(args))
 		}
 	}
 }

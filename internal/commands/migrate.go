@@ -29,11 +29,11 @@ func databaseFlag() cli.Flag {
 // on a database that's behind.
 func MigrateCommand() *cli.Command {
 	return &cli.Command{
-		Name:     "migrate",
-		Category: serving,
-		Usage:    "Bring the server's database up to this version's schema",
-		Before:   maxArgs(0),
-		Flags:    []cli.Flag{databaseFlag()},
+		Name:         "migrate",
+		Category:     serving,
+		Usage:        "Bring the server's database up to this version's schema",
+		ArgValidator: maxArgs(0),
+		Flags:        []cli.Flag{databaseFlag()},
 		Action: func(ctx context.Context, cmd *cli.Command) error {
 			path := cmd.String("database")
 			db, err := database.Open(ctx, path)

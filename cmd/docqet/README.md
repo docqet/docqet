@@ -11,7 +11,7 @@ working tree or with `--at` a commit: what the [agent kit](../../kit/) needs,
 [`apply`](#docqet-apply), [`serve`](#docqet-serve), the new `docqet migrate`,
 which brings the server's database up to date before it serves, and
 [`ui`](#docqet-ui), which shows a project's `.docqet/state.json` without
-re-indexing. No read takes `--remote` or `--product` yet. The rest answer
+re-indexing, and [`completion`](#docqet-completion). No read takes `--remote` or `--product` yet. The rest answer
 that they aren't built yet and exit 2._
 
 One command for everything Docqet does with a repository: setting it up,
@@ -65,6 +65,7 @@ the server are separate, since they aren't reads.
 | [`docqet init`](#docqet-init) | Make a folder a Docqet project | Setting up |
 | [`docqet kit`](#docqet-kit) | Install, update or remove the agent kit, for the agents the project uses | Setting up |
 | [`docqet index`](#docqet-index) | Write the state for the working tree or a commit | Setting up |
+| [`docqet completion`](#docqet-completion) | Print a shell completion script | Setting up |
 | [`docqet check`](#docqet-check) | Find problems in the docs, annotations and commit trailers | Read |
 | [`docqet touches`](#docqet-touches) | What a set of files or a change is about | Read |
 | [`docqet show`](#docqet-show) | One doc, with everything derived about it | Read |
@@ -221,6 +222,17 @@ run over hundreds of commits. `--at`, [history](#history) and
 
 Reads index whatever they need first, so nobody has to remember to run this.
 It's for tools that want the state file itself.
+
+### `docqet completion`
+
+Prints a script that completes commands and flags, for the shell named.
+Sourcing it from the shell's startup turns completion on, as
+[installing](../../docs/installing.md#shell-completion) shows.
+
+```sh
+docqet completion bash        # or zsh, fish, pwsh
+dqt completion zsh            # completes dqt rather than docqet
+```
 
 ## Reading
 
@@ -828,6 +840,9 @@ docqet list decisions --product=hotel --initiative mvp
 - **No prompts unless it's run in a terminal.** Anything it would ask, it
   takes as a flag, and without one it fails with exit 2 and says which flag.
 - **`-C <dir>`** runs it in another directory, as git's does.
+- **`dqt` is the same command**, a shorter name installed beside it. Run as
+  `dqt`, its help and completion say `dqt`. Docs, scripts and the agent kit
+  always say `docqet`.
 - **It acts on one project**: the one whose `docqet.yaml` is nearest above
   the directory it's run in. In a repository with several projects, run it in
   each one's folder, or point `-C` at it.

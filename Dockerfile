@@ -42,6 +42,8 @@ RUN apk add --no-cache ca-certificates \
  && adduser -S -D -H -u 10001 appuser
 
 COPY --from=builder /go/bin/docqet /usr/local/bin/docqet
+# dqt, the shorter name, is the same command.
+RUN ln -s docqet /usr/local/bin/dqt
 
 # Where the server keeps its SQLite database, on a volume in Compose.
 RUN mkdir -p /var/lib/docqet && chown 10001 /var/lib/docqet

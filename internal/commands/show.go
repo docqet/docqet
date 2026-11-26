@@ -27,8 +27,8 @@ func ShowCommand() *cli.Command {
 scored by risk, its tradeoffs and open decisions, and its body. A gap or
 tradeoff is named by its doc and key, such as capability:room-booking#needs-a-mouse.
 A rule or concept in one domain only can be named without @<domain>.`,
-		Before: maxArgs(1),
-		Flags:  sourceFlags(),
+		ArgValidator: maxArgs(1),
+		Flags:        sourceFlags(),
 		Action: func(ctx context.Context, cmd *cli.Command) error {
 			ref := cmd.Args().First()
 			if ref == "" {

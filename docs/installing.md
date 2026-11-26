@@ -10,6 +10,39 @@ Or, from a checkout of this repository, `make install`. A binary built this
 way has no UI in it unless `make ui-build` ran first, but every command that
 reads or changes a project works.
 
+## `dqt`, the shorter name
+
+`dqt` is the same command under a shorter name: `dqt check` is
+`docqet check`. `make install` and the Docker image install it beside
+`docqet`. After `go install`, link it yourself:
+
+```sh
+ln -sf docqet "$(go env GOPATH)/bin/dqt"   # or $(go env GOBIN), if it's set
+```
+
+A link rather than a shell alias, so completion works for it too. Docs,
+scripts and the agent kit always say `docqet`.
+
+## Shell completion
+
+`docqet completion <shell>` prints a script that completes its commands and
+flags, for bash, zsh, fish or PowerShell. Run as `dqt`, it completes `dqt`.
+Add what you use to your shell's startup:
+
+```sh
+# ~/.bashrc
+source <(docqet completion bash)
+source <(dqt completion bash)
+
+# ~/.zshrc
+source <(docqet completion zsh)
+source <(dqt completion zsh)
+
+# fish
+docqet completion fish > ~/.config/fish/completions/docqet.fish
+dqt completion fish > ~/.config/fish/completions/dqt.fish
+```
+
 ## In a project
 
 In the repository to bring Docqet to:

@@ -28,11 +28,11 @@ const uiAddr = "127.0.0.1:4100"
 // docqet:implements capability:local-viewer
 func UICommand() *cli.Command {
 	return &cli.Command{
-		Name:     "ui",
-		Category: serving,
-		Before:   maxArgs(0),
-		Usage:    "Show the UI over the working tree, on this machine",
-		Flags:    sourceFlags(),
+		Name:         "ui",
+		Category:     serving,
+		ArgValidator: maxArgs(0),
+		Usage:        "Show the UI over the working tree, on this machine",
+		Flags:        sourceFlags(),
 		Action: func(ctx context.Context, cmd *cli.Command) error {
 			if cmd.IsSet("at") || cmd.Bool("remote") || cmd.IsSet("product") || cmd.IsSet("project") {
 				return errors.New("ui's --at, --remote, --product and --project aren't built yet: it shows the working tree only")

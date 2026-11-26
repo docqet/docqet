@@ -7,8 +7,12 @@ help: ## Show this help
 
 VERSION ?= $(shell git describe --tags --always --dirty 2>/dev/null || echo dev)
 
-install: ## Install docqet into your Go bin, to use it in any project (the UI is embedded only if ui/dist is built)
+# Where go install puts it: GOBIN, or GOPATH's bin when that's unset.
+GO_BIN = $(or $(shell go env GOBIN),$(shell go env GOPATH)/bin)
+
+install: ## Install docqet, and dqt beside it, into your Go bin, to use in any project (the UI is embedded only if ui/dist is built)
 	go install -ldflags "-X main.version=$(VERSION)" ./cmd/docqet
+	ln -sf docqet "$(GO_BIN)/dqt"
 
 ## --- Local stack ---
 

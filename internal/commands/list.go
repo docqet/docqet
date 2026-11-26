@@ -29,7 +29,7 @@ func ListCommand() *cli.Command {
 		Description: "Kinds: " + strings.Join(listKinds, ", ") + `.
 Filters narrow the list as the UI's views do. A filter that doesn't apply to a
 kind is refused.`,
-		Before: maxArgs(1),
+		ArgValidator: maxArgs(1),
 		Flags: withSourceFlags(
 			&cli.StringFlag{Name: "stability", Usage: "only at `LEVEL`"},
 			&cli.StringFlag{Name: "initiative", Usage: "only in initiative `ID`"},

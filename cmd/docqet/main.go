@@ -19,7 +19,8 @@ func main() {
 	// Stopped by Ctrl-C or `docker stop`, so a server shuts down cleanly.
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 
-	root := commands.Root(version)
+	// Run as dqt, the shorter name installed beside it, it calls itself dqt.
+	root := commands.Root(commands.Name(os.Args[0]), version)
 	err := root.Run(ctx, os.Args)
 	stop()
 	os.Exit(commands.Finish(root, os.Args, err))

@@ -31,7 +31,7 @@ one level expects, including what lower levels carry up, with the examples of
 overengineering at that level. An outcome's reference shows it with its
 examples. --for and --to list what promoting a capability expects that its
 level doesn't yet, and where each outcome stands: only they read the project.`,
-		Before: maxArgs(1),
+		ArgValidator: maxArgs(1),
 		Flags: withSourceFlags(
 			&cli.StringFlag{Name: "level", Usage: "everything `LEVEL` expects, including what it carries up"},
 			&cli.StringFlag{Name: "for", Usage: "what promoting capability `REF` needs, with --to"},

@@ -36,7 +36,7 @@ the main branch: CI decides when.
 
 A project's first apply sends HEAD alone, unless --from says where to start.
 The server is the one in docqet.yaml's server field, or DOCQET_SERVER.`,
-		Before: maxArgs(0),
+		ArgValidator: maxArgs(0),
 		Flags: []cli.Flag{
 			&cli.StringFlag{Name: "from", Usage: "start at `REV`, for a project's first apply or a backfill"},
 			&cli.BoolFlag{Name: "replace", Usage: "with --from, send again the commits the server already has"},

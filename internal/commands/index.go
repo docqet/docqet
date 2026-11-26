@@ -22,7 +22,7 @@ func IndexCommand() *cli.Command {
 		Description: `Reads the project's docs and annotations and writes its state: the working
 tree's, uncommitted changes included, to .docqet/state.json, or with --at, a
 commit's, read from git without checking it out, to .docqet/history/<sha>.json.`,
-		Before: maxArgs(0),
+		ArgValidator: maxArgs(0),
 		Flags: []cli.Flag{
 			&cli.StringFlag{Name: "at", Usage: "index `REV`, read from git without checking it out"},
 			&cli.BoolFlag{Name: "stdout", Usage: "print the state instead of writing it"},

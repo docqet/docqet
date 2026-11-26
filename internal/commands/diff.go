@@ -24,11 +24,11 @@ import (
 // docqet:implements capability:changes
 func DiffCommand() *cli.Command {
 	return &cli.Command{
-		Name:      "diff",
-		Category:  history,
-		Before:    maxArgs(2),
-		Usage:     "What changed in Docqet between two points",
-		ArgsUsage: "[<from>] [<to>]",
+		Name:         "diff",
+		Category:     history,
+		ArgValidator: maxArgs(2),
+		Usage:        "What changed in Docqet between two points",
+		ArgsUsage:    "[<from>] [<to>]",
 		Description: `Compares two states of the project in Docqet's words. Each point is a commit,
 branch or tag, or a state file. <from> is the last commit when it's left out,
 and <to> is the working tree, or with --staged, what's staged. It lists what a

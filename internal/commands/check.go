@@ -24,7 +24,7 @@ func CheckCommand() *cli.Command {
 		Description: `Indexes the working tree, or with --at a commit, and reports every problem,
 with its file and line where it has one. It exits 1 when there are any. The
 server checks every state it's sent with the same check.`,
-		Before: maxArgs(0),
+		ArgValidator: maxArgs(0),
 		Flags: withSourceFlags(
 			&cli.BoolFlag{Name: "changed", Usage: "only problems in files changed since the main branch"},
 			&cli.StringFlag{Name: "base", Usage: "with --changed, changed since `REV` instead of origin/HEAD"},

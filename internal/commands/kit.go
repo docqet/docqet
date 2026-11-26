@@ -74,10 +74,10 @@ shows what's installed.`,
 		Action: func(ctx context.Context, cmd *cli.Command) error { return kitStatus(cmd) },
 		Commands: []*cli.Command{
 			{
-				Name:   "install",
-				Before: maxArgs(0),
-				Usage:  "Install the kit, for the agents given (most agents, through AGENTS.md, by default), or add agents to it",
-				Flags:  []cli.Flag{agentFlag},
+				Name:         "install",
+				ArgValidator: maxArgs(0),
+				Usage:        "Install the kit, for the agents given (most agents, through AGENTS.md, by default), or add agents to it",
+				Flags:        []cli.Flag{agentFlag},
 				Action: func(ctx context.Context, cmd *cli.Command) error {
 					root, installed, err := kitHere()
 					if err != nil {
@@ -94,10 +94,10 @@ shows what's installed.`,
 				},
 			},
 			{
-				Name:   "remove",
-				Before: maxArgs(0),
-				Usage:  "Remove the kit for the agents given, or with none, remove it entirely",
-				Flags:  []cli.Flag{agentFlag},
+				Name:         "remove",
+				ArgValidator: maxArgs(0),
+				Usage:        "Remove the kit for the agents given, or with none, remove it entirely",
+				Flags:        []cli.Flag{agentFlag},
 				Action: func(ctx context.Context, cmd *cli.Command) error {
 					root, installed, err := kitHere()
 					if err != nil {
@@ -115,9 +115,9 @@ shows what's installed.`,
 				},
 			},
 			{
-				Name:   "update",
-				Before: maxArgs(0),
-				Usage:  "Rewrite the kit for every agent it's installed for, with this docqet's",
+				Name:         "update",
+				ArgValidator: maxArgs(0),
+				Usage:        "Rewrite the kit for every agent it's installed for, with this docqet's",
 				Action: func(ctx context.Context, cmd *cli.Command) error {
 					root, installed, err := kitHere()
 					if err != nil {
@@ -130,15 +130,15 @@ shows what's installed.`,
 				},
 			},
 			{
-				Name:   "status",
-				Before: maxArgs(0),
-				Usage:  "Show which agents the kit is installed for, and whether it's this docqet's",
-				Action: func(ctx context.Context, cmd *cli.Command) error { return kitStatus(cmd) },
+				Name:         "status",
+				ArgValidator: maxArgs(0),
+				Usage:        "Show which agents the kit is installed for, and whether it's this docqet's",
+				Action:       func(ctx context.Context, cmd *cli.Command) error { return kitStatus(cmd) },
 			},
 			{
-				Name:   "check",
-				Before: maxArgs(0),
-				Usage:  "Exit 1 if the kit isn't installed, or isn't this docqet's, for CI",
+				Name:         "check",
+				ArgValidator: maxArgs(0),
+				Usage:        "Exit 1 if the kit isn't installed, or isn't this docqet's, for CI",
 				Action: func(ctx context.Context, cmd *cli.Command) error {
 					root, installed, err := kitHere()
 					if err != nil {
@@ -175,9 +175,9 @@ shows what's installed.`,
 				},
 			},
 			{
-				Name:   "agents",
-				Before: maxArgs(0),
-				Usage:  "List the agents the kit can be installed for",
+				Name:         "agents",
+				ArgValidator: maxArgs(0),
+				Usage:        "List the agents the kit can be installed for",
 				Action: func(ctx context.Context, cmd *cli.Command) error {
 					out := cmd.Root().Writer
 					if cmd.Bool("json") {

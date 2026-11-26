@@ -24,7 +24,7 @@ func InitCommand() *cli.Command {
 		Description: `Writes docqet.yaml in the current folder, and adds .docqet/ to .gitignore. It
 writes no docs: the kit's adopting.md covers bringing Docqet to existing code.
 Then run docqet kit to install the agent kit.`,
-		Before: maxArgs(0),
+		ArgValidator: maxArgs(0),
 		Flags: []cli.Flag{
 			&cli.StringFlag{Name: "id", Usage: "the project's `ID`, in kebab case"},
 			&cli.StringFlag{Name: "name", Usage: "the project's `NAME`, named for the software"},

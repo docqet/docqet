@@ -22,11 +22,11 @@ import (
 // docqet:implements capability:renaming
 func RenameCommand() *cli.Command {
 	return &cli.Command{
-		Name:      "rename",
-		Category:  changing,
-		Before:    maxArgs(2),
-		Usage:     "Change an ID everywhere in the project, and say so in history",
-		ArgsUsage: "<old> <new>",
+		Name:         "rename",
+		Category:     changing,
+		ArgValidator: maxArgs(2),
+		Usage:        "Change an ID everywhere in the project, and say so in history",
+		ArgsUsage:    "<old> <new>",
 		Description: `Changes a doc's ID, a rule's or concept's domain, or a gap's or tradeoff's key,
 and every reference to it in the project's docs' frontmatter and its
 annotations. A doc's file is renamed with it when it's named after the old ID.
