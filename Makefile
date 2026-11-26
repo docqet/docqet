@@ -3,12 +3,12 @@
 help: ## Show this help
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
-## --- The docket command ---
+## --- The docqet command ---
 
 VERSION ?= $(shell git describe --tags --always --dirty 2>/dev/null || echo dev)
 
-install: ## Install docket into your Go bin, to use it in any project (the UI is embedded only if ui/dist is built)
-	go install -ldflags "-X main.version=$(VERSION)" ./cmd/docket
+install: ## Install docqet into your Go bin, to use it in any project (the UI is embedded only if ui/dist is built)
+	go install -ldflags "-X main.version=$(VERSION)" ./cmd/docqet
 
 ## --- Local stack ---
 
@@ -27,27 +27,27 @@ nuke: ## Stop the local stack and destroy its volumes
 logs: ## Follow the server's logs
 	docker compose logs -f app
 
-migrate: ## Bring the local server's database, data/docket.db, up to date
-	go run ./cmd/docket migrate
+migrate: ## Bring the local server's database, data/docqet.db, up to date
+	go run ./cmd/docqet migrate
 
 run: migrate ## Run the server locally, outside Docker, on localhost:8080, with its API docs at /docs/api
-	go run ./cmd/docket serve
+	go run ./cmd/docqet serve
 
-DOCKET_SERVER ?= http://localhost:8080
+DOCQET_SERVER ?= http://localhost:8080
 
-apply: ## Send Docket's own new commits to the local server: DOCKET_SERVER=http://localhost:8090 for Docker's
-	DOCKET_SERVER=$(DOCKET_SERVER) go run ./cmd/docket apply
+apply: ## Send Docqet's own new commits to the local server: DOCQET_SERVER=http://localhost:8090 for Docker's
+	DOCQET_SERVER=$(DOCQET_SERVER) go run ./cmd/docqet apply
 
 # The examples are folders in this repository, not repositories of their own,
 # so each one's state is sent as it is, at this repository's HEAD, rather
-# than by docket apply. Needs jq.
+# than by docqet apply. Needs jq.
 examples: ## Load the examples into the local server, for the UI to show
 	@sha=$$(git rev-parse HEAD); at=$$(git show -s --format=%cI HEAD); \
-	for state in $$(find examples -path '*/.docket/state.json' | sort); do \
+	for state in $$(find examples -path '*/.docqet/state.json' | sort); do \
 		id=$$(jq -r .project.id $$state); \
 		jq -c --arg at "$$at" '{parents: [], committedAt: $$at, trailers: [], state: .}' $$state | \
 			curl -sf -o /dev/null -w "$$id %{http_code}\n" -X PUT -H 'Content-Type: application/json' \
-				--data-binary @- $(DOCKET_SERVER)/api/v1/projects/$$id/commits/$$sha || exit 1; \
+				--data-binary @- $(DOCQET_SERVER)/api/v1/projects/$$id/commits/$$sha || exit 1; \
 	done
 
 ## --- UI ---

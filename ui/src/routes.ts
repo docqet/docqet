@@ -92,7 +92,7 @@ export function withParam(key: string, value: string | null): string {
   return withParams(params);
 }
 
-const NAVIGATED = "docket:navigate";
+const NAVIGATED = "docqet:navigate";
 
 /* Go somewhere in the app without reloading. `replace` swaps the current history entry, for changes back shouldn't step through. */
 export function navigate(href: string, replace = false) {

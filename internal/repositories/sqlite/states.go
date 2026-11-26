@@ -7,7 +7,7 @@ import (
 	"errors"
 	"time"
 
-	"github.com/exalynt/docket/internal/repositories"
+	"github.com/exalynt/docqet/internal/repositories"
 )
 
 // StateRepository keeps applied states in SQLite.

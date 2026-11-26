@@ -1,6 +1,6 @@
-# How `docket` is built
+# How `docqet` is built
 
-_Decisions and direction for `docket`'s Go code: where its logic lives, how
+_Decisions and direction for `docqet`'s Go code: where its logic lives, how
 the CLI and the server share it, and the API the UI reads. Indexing,
 checking, applying states to the server, combining, deriving and the
 resources are built. Everything else here is the plan, and may change as the
@@ -11,8 +11,8 @@ which._
 
 ## Layers
 
-`docket` is layered, from thin entry points down to I/O behind interfaces.
-Most of Docket's logic is computation over docs, not orchestration, so it
+`docqet` is layered, from thin entry points down to I/O behind interfaces.
+Most of Docqet's logic is computation over docs, not orchestration, so it
 lives in pure packages below the services.
 
 ```text
@@ -34,7 +34,7 @@ a client for the server
 - **Services orchestrate.** Each is built with
   `NewXService(...)` from interfaces, and takes `ctx` first. A service only
   exists once there's orchestration to do. Until then, a command may call the
-  core directly, as `docket index` will at first.
+  core directly, as `docqet index` will at first.
 - **The core is the format in Go.** It never touches the filesystem, git, the
   network or a database, so what it works out depends only on what it's
   given. That's what lets the CLI, the server and the UI never disagree, and
@@ -47,12 +47,12 @@ The core's packages:
 
 | Package   | Does                                                                                                    | Built with                          |
 | --------- | ------------------------------------------------------------------------------------------------------- | ----------------------------------- |
-| `state`   | The types of `state.json`, as the [state](../../docket/domains/authoring/concepts/state.md) concept defines them                | `docket index`                      |
-| `index`   | Reads a project's docs and annotations, and works out evidence, reverse links and problems              | `docket index`                      |
-| `check`   | Finds the problems a state shows on its own, for the CLI and the server alike                           | `docket check`, `apply`, the server |
-| `combine` | Puts several projects of one product together, as [Combining](../../docket/domains/reporting/concepts/product.md) describes | `--product`, the server's reads     |
-| `derive`  | Works out maturity, readiness, risk and exposure                                                        | `docket status`, the API            |
-| `diff`    | Compares two states, with the trailers between them                                                     | `docket diff`, `log`, `preview`     |
+| `state`   | The types of `state.json`, as the [state](../../docqet/domains/authoring/concepts/state.md) concept defines them                | `docqet index`                      |
+| `index`   | Reads a project's docs and annotations, and works out evidence, reverse links and problems              | `docqet index`                      |
+| `check`   | Finds the problems a state shows on its own, for the CLI and the server alike                           | `docqet check`, `apply`, the server |
+| `combine` | Puts several projects of one product together, as [Combining](../../docqet/domains/reporting/concepts/product.md) describes | `--product`, the server's reads     |
+| `derive`  | Works out maturity, readiness, risk and exposure                                                        | `docqet status`, the API            |
+| `diff`    | Compares two states, with the trailers between them                                                     | `docqet diff`, `log`, `preview`     |
 
 Each is created when the command that needs it is built, not before, but
 for `combine` and `derive`: they were ported from the UI first, so the read
@@ -74,20 +74,20 @@ service could serve the figures the UI shows, and their callers come with it.
 
 Each step builds only what its commands need:
 
-1. **Built: `state`, `index` and `check`**, with `docket index` and
-   `docket check` over the working tree or a commit, checked against the
+1. **Built: `state`, `index` and `check`**, with `docqet index` and
+   `docqet check` over the working tree or a commit, checked against the
    examples.
 2. **Built: `combine` and `derive`**, ported from the UI's TypeScript and
    checked against it figure by figure, for every example product and for
-   Docket. Built too: the read service, over the server's store or the
-   states `docket ui` shows. Still to come: `status`, `list` and `show`
+   Docqet. Built too: the read service, over the server's store or the
+   states `docqet ui` shows. Still to come: `status`, `list` and `show`
    calling it.
-3. **`docket ui` serving the API** over the working tree. Built: it serves the
-   API over `.docket/state.json` as `docket index` wrote it. Still to come:
+3. **`docqet ui` serving the API** over the working tree. Built: it serves the
+   API over `.docqet/state.json` as `docqet index` wrote it. Still to come:
    indexing the working tree itself, and again as files change.
-4. **The server's store.** Built: `docket migrate`, the state repository, the
+4. **The server's store.** Built: `docqet migrate`, the state repository, the
    whole-state endpoints and `apply`. Still to come: results, with their
-   repository and `docket results`.
+   repository and `docqet results`.
 5. **Built: the resources**, every one in [the API](api.md#resources-for-the-ui),
    with its spec, the UI reading only them, and `make examples`, which loads
    the examples into the local server.
@@ -97,15 +97,15 @@ Each step builds only what its commands need:
 
 ## Open decisions
 
-Open decisions are in Docket's own docs, such as how results and changes are
-modelled, on the [Reporting](../../docket/domains/reporting/domain.md) domain.
+Open decisions are in Docqet's own docs, such as how results and changes are
+modelled, on the [Reporting](../../docqet/domains/reporting/domain.md) domain.
 
 ## Left out for now
 
-What's left out for now is in Docket's own docs, as gaps, tradeoffs and draft
+What's left out for now is in Docqet's own docs, as gaps, tradeoffs and draft
 capabilities: signing in on
-[Applying states](../../docket/domains/reporting/capabilities/applying.md),
-[Trends](../../docket/domains/reporting/capabilities/trends.md),
-`?at=` on the [Local viewer](../../docket/domains/reporting/capabilities/local-viewer.md),
-and how the server is configured on the [Server](../../docket/components/server.md)
+[Applying states](../../docqet/domains/reporting/capabilities/applying.md),
+[Trends](../../docqet/domains/reporting/capabilities/trends.md),
+`?at=` on the [Local viewer](../../docqet/domains/reporting/capabilities/local-viewer.md),
+and how the server is configured on the [Server](../../docqet/components/server.md)
 component.

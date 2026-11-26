@@ -7,9 +7,9 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/exalynt/docket/internal/combine"
-	"github.com/exalynt/docket/internal/derive"
-	"github.com/exalynt/docket/internal/state"
+	"github.com/exalynt/docqet/internal/combine"
+	"github.com/exalynt/docqet/internal/derive"
+	"github.com/exalynt/docqet/internal/state"
 )
 
 var (
@@ -24,7 +24,7 @@ var (
 
 // StateSource is where reads take their states from: the latest state of
 // every project, in the same order on every call. It's each project's latest
-// applied state for docket serve, and .docket/state.json for docket ui.
+// applied state for docqet serve, and .docqet/state.json for docqet ui.
 type StateSource func(ctx context.Context) ([]*state.State, error)
 
 // ReadService answers every read the same way, whoever asks: it takes a

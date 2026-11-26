@@ -1,6 +1,6 @@
-// Package git reads what docket needs from git, by running git: the files of
+// Package git reads what docqet needs from git, by running git: the files of
 // the working tree or of any commit, as an fs.FS, a branch's first-parent
-// line, and each commit's parents, time and Docket trailers.
+// line, and each commit's parents, time and Docqet trailers.
 package git
 
 import (
@@ -57,7 +57,7 @@ func Resolve(ctx context.Context, dir, rev string) (string, error) {
 	return strings.TrimSpace(string(out)), nil
 }
 
-// Commit is what git knows about a commit that docket sends with its state.
+// Commit is what git knows about a commit that docqet sends with its state.
 type Commit struct {
 	SHA         string
 	Parents     []string

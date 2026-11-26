@@ -1,5 +1,5 @@
 // Package static embeds the OpenAPI documentation source served by the docs
-// handler, so the docket binary can serve it without any files on disk at
+// handler, so the docqet binary can serve it without any files on disk at
 // runtime.
 package static
 

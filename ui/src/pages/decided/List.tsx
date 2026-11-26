@@ -1,7 +1,7 @@
 import { LeftLabel } from "../../components/left/LeftMark";
 import { param, sectionHref, type Route } from "../../routes";
 import { Count, Empty, PageHeader, Section, Stat, Tabs, View, currentTab } from "../../components/shell/layout";
-import { bySubject, subjectOf, type DocketState, type Tradeoff } from "../../state";
+import { bySubject, subjectOf, type DocqetState, type Tradeoff } from "../../state";
 import { Choice } from "../../components/Choice";
 import { SubjectLink } from "../../components/SubjectLink";
 import { TradeoffRows } from "../../components/TradeoffRows";
@@ -15,7 +15,7 @@ import { visuallyHidden } from "../left/components/ScopePicker";
  * what a feature has decided never to build. An answered decision is deleted,
  * written as whatever it became, so it isn't here.
  */
-export default function DecidedPage({ state, route }: { state: DocketState; route: Route }) {
+export default function DecidedPage({ state, route }: { state: DocqetState; route: Route }) {
   const tradeoffs = state.tradeoffs.filter((t) => subjectOf(t).type !== "feature");
   const nonGoals = state.tradeoffs.filter((t) => subjectOf(t).type === "feature");
   const tabs = [
@@ -60,7 +60,7 @@ export default function DecidedPage({ state, route }: { state: DocketState; rout
 type Kind = "all" | "product" | "technical";
 
 /* Tradeoffs on capabilities, mechanisms and components, grouped by what they're on, product or technical as the address says. */
-function TradeoffsTab({ state, tradeoffs }: { state: DocketState; tradeoffs: Tradeoff[] }) {
+function TradeoffsTab({ state, tradeoffs }: { state: DocqetState; tradeoffs: Tradeoff[] }) {
   const kind = (param("kind") ?? "all") as Kind;
   const product = tradeoffs.filter((t) => subjectOf(t).type === "capability").length;
   const shown = tradeoffs.filter((t) => kind === "all" || (kind === "product") === (subjectOf(t).type === "capability"));
@@ -107,7 +107,7 @@ function TradeoffsTab({ state, tradeoffs }: { state: DocketState; tradeoffs: Tra
 }
 
 /* Non-goals: tradeoffs on features, grouped by feature. */
-function NonGoalsTab({ state, nonGoals }: { state: DocketState; nonGoals: Tradeoff[] }) {
+function NonGoalsTab({ state, nonGoals }: { state: DocqetState; nonGoals: Tradeoff[] }) {
   if (!nonGoals.length) return <Empty>No non-goals written down.</Empty>;
   return (
     <>

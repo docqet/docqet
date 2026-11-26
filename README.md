@@ -1,6 +1,6 @@
-# docket
+# docqet
 
-<a href="docket/domains/authoring/concepts/stability-level.md"><picture>
+<a href="docqet/domains/authoring/concepts/stability-level.md"><picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/assets/stability-prototype-dark.svg">
   <img src="docs/assets/stability-prototype-light.svg" alt="Stability: Prototype · Exploring" height="18">
 </picture></a>
@@ -9,7 +9,7 @@ What your software is meant to do, written beside the code, linked to the
 evidence of what it actually does, and readable by everyone with a stake in it.
 
 > [!WARNING]
-> Docket is a **Prototype**. Anything here, the format included, may change
+> Docqet is a **Prototype**. Anything here, the format included, may change
 > completely or be thrown away. Don't build on it yet.
 
 ## The problem
@@ -25,7 +25,7 @@ which parts are ready to rely on.
 AI agents now write much of the code. Without the software's purpose and
 rules written down, they guess, and explain the bugs as if they were meant.
 
-## What Docket is
+## What Docqet is
 
 An open format, and the tools that read it, for writing down what your
 software is meant to do: its capabilities, the rules they follow, the people
@@ -36,11 +36,11 @@ they serve, how stable each one is, and the gaps and tradeoffs you know about.
   double-booked", not a database constraint), changed in the same commit as
   the code.
 - **Evidence is linked.** Code and tests point back at what they implement
-  and verify, with comments such as `docket:implements` and `docket:verifies`.
-- **State is derived.** `docket` reads both and works out the rest: each
+  and verify, with comments such as `docqet:implements` and `docqet:verifies`.
+- **State is derived.** `docqet` reads both and works out the rest: each
   rule's evidence, each gap's risk, how mature and ready each part is, and
   any problems in the docs themselves.
-- **The difference is the work.** Where intention and reality differ, Docket
+- **The difference is the work.** Where intention and reality differ, Docqet
   shows it instead of hiding it.
 
 With that, anyone, technical or not, person or agent, can see what the
@@ -54,7 +54,7 @@ code and tests behind each rule.
 - **People who depend on it**, such as product owners, designers, clients and
   support, who need to know what they can rely on without reading code.
 
-Docket works without agents. With them, its [agent kit](kit/) has them read
+Docqet works without agents. With them, its [agent kit](kit/) has them read
 the rules before changing code and keep the docs current as they go. Nothing
 an agent writes counts until a person confirms it.
 
@@ -62,16 +62,16 @@ an agent writes counts until a person confirms it.
 
 Not a task tracker, a test runner, or a score to maximize. It shows what's
 missing and the evidence for what holds; people decide what it means and
-when to act. See [Docket's principles](docs/principles.md).
+when to act. See [Docqet's principles](docs/principles.md).
 
 ## Try it
 
 ```sh
-go install github.com/exalynt/docket/cmd/docket@latest
+go install github.com/exalynt/docqet/cmd/docqet@latest
 
-docket init --id my-app --name "My App"   # writes docket.yaml
-docket kit install                        # the agent kit
-docket check                              # exit 1 on any problem
+docqet init --id my-app --name "My App"   # writes docqet.yaml
+docqet kit install                        # the agent kit
+docqet check                              # exit 1 on any problem
 ```
 
 [Installing](docs/installing.md) covers CI, and
@@ -79,20 +79,20 @@ docket check                              # exit 1 on any problem
 
 ## Learn more
 
-- **The concepts.** The [Authoring](docket/domains/authoring/domain.md) and
-  [Reporting](docket/domains/reporting/domain.md) domains define the format:
+- **The concepts.** The [Authoring](docqet/domains/authoring/domain.md) and
+  [Reporting](docqet/domains/reporting/domain.md) domains define the format:
   capabilities, rules, gaps, stability levels, maturity, readiness and the rest.
-- **[Principles](docs/principles.md):** how Docket supports software
+- **[Principles](docs/principles.md):** how Docqet supports software
   engineering, what it isn't, and what belongs in it.
-- **[Docket's parts](docs/parts.md):** the format, the kit, the `docket` CLI
+- **[Docqet's parts](docs/parts.md):** the format, the kit, the `docqet` CLI
   and server, and where each is today.
-- **[This repository](docs/repository.md):** Docket is documented with
-  Docket, so here's what's Docket's own docs, what's the format, and what's
+- **[This repository](docs/repository.md):** Docqet is documented with
+  Docqet, so here's what's Docqet's own docs, what's the format, and what's
   an example.
 - **[Developing](docs/developing.md)** and
-  [how `docket` is built](docs/architecture/).
+  [how `docqet` is built](docs/architecture/).
 
 ## Contributing
 
 Contributions are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md), and the
-[Code of Conduct](CODE_OF_CONDUCT.md). Docket is [MIT licensed](LICENSE).
+[Code of Conduct](CODE_OF_CONDUCT.md). Docqet is [MIT licensed](LICENSE).

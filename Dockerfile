@@ -34,20 +34,20 @@ ARG VERSION=dev
 
 RUN --mount=type=cache,id=gomod,target=/go/pkg/mod \
     --mount=type=cache,id=gobuild,target=/root/.cache/go-build \
-    go install -trimpath -ldflags "-s -w -X main.version=${VERSION}" ./cmd/docket
+    go install -trimpath -ldflags "-s -w -X main.version=${VERSION}" ./cmd/docqet
 
 FROM alpine:3.24 AS runner
 
 RUN apk add --no-cache ca-certificates \
  && adduser -S -D -H -u 10001 appuser
 
-COPY --from=builder /go/bin/docket /usr/local/bin/docket
+COPY --from=builder /go/bin/docqet /usr/local/bin/docqet
 
 # Where the server keeps its SQLite database, on a volume in Compose.
-RUN mkdir -p /var/lib/docket && chown 10001 /var/lib/docket
+RUN mkdir -p /var/lib/docqet && chown 10001 /var/lib/docqet
 
 # A writable working directory for the non-root user, for any relative paths
-# docket resolves.
+# docqet resolves.
 RUN mkdir -p /app && chown 10001 /app
 WORKDIR /app
 
@@ -55,4 +55,4 @@ USER 10001
 
 EXPOSE 8080
 
-CMD ["docket", "serve"]
+CMD ["docqet", "serve"]

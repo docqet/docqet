@@ -1,4 +1,4 @@
-// Package client talks to a Docket server's API, for the commands that act
+// Package client talks to a Docqet server's API, for the commands that act
 // on the server.
 package client
 
@@ -14,19 +14,19 @@ import (
 	"strings"
 	"time"
 
-	"github.com/exalynt/docket/internal/state"
+	"github.com/exalynt/docqet/internal/state"
 )
 
 // ErrNotFound is returned when the server has nothing for what was asked.
 var ErrNotFound = errors.New("not found on the server")
 
-// Client calls one Docket server.
+// Client calls one Docqet server.
 type Client struct {
 	base string
 	http *http.Client
 }
 
-// New returns a Client for the server at base, such as https://docket.example.com.
+// New returns a Client for the server at base, such as https://docqet.example.com.
 func New(base string) *Client {
 	return &Client{base: strings.TrimRight(base, "/") + "/api/v1", http: &http.Client{Timeout: time.Minute}}
 }

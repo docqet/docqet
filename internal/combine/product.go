@@ -7,7 +7,7 @@
 // derive's.
 package combine
 
-import "github.com/exalynt/docket/internal/state"
+import "github.com/exalynt/docqet/internal/state"
 
 // Draft is the level a draft capability has: declared, not started. It ranks
 // below every stability level.

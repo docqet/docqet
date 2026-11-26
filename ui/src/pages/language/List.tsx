@@ -14,7 +14,7 @@ import { Excerpt } from "../../components/markdown/Markdown";
 import { StandingMark } from "../../components/standing/StandingMark";
 import type { Route } from "../../routes";
 import { Empty, PageHeader, Section, Tabs, View, currentTab, type TabDef } from "../../components/shell/layout";
-import { domainName, find, type Concept, type DocketState, type Rule, type RuleStanding } from "../../state";
+import { domainName, find, type Concept, type DocqetState, type Rule, type RuleStanding } from "../../state";
 import { DocLink, FilterBox, Num, byName, faintSx, matches, numSx, visuallyHiddenSx, wideOnlySx } from "../../components/indexParts";
 
 /*
@@ -23,7 +23,7 @@ import { DocLink, FilterBox, Num, byName, faintSx, matches, numSx, visuallyHidde
  * a box to narrow them by name, since there can be hundreds of rules. How
  * many match is read out as the box narrows them.
  */
-export default function LanguagePage({ state, route }: { state: DocketState; route: Route }) {
+export default function LanguagePage({ state, route }: { state: DocqetState; route: Route }) {
   const tabs: TabDef[] = [
     { id: "concepts", label: "Concepts", term: "concept" as const, count: state.concepts.length },
     { id: "rules", label: "Rules", term: "rule" as const, count: state.rules.length },
@@ -52,7 +52,7 @@ export default function LanguagePage({ state, route }: { state: DocketState; rou
 }
 
 /* Docs grouped by the domain they're written in, in the order domains come, each group's docs A to Z. */
-function byDomain<T extends { domain: string; name: string }>(state: DocketState, docs: T[]): { domain: string; docs: T[] }[] {
+function byDomain<T extends { domain: string; name: string }>(state: DocqetState, docs: T[]): { domain: string; docs: T[] }[] {
   const ids = [...state.domains.map((d) => d.id), ...docs.map((d) => d.domain)];
   return [...new Set(ids)].map((domain) => ({ domain, docs: docs.filter((d) => d.domain === domain).sort(byName) })).filter((g) => g.docs.length);
 }
@@ -70,7 +70,7 @@ const countSx: SystemStyleObject<Theme>[] = [numSx, { width: 110 }, wideOnlySx];
 const fitSx: SystemStyleObject<Theme> = { maxWidth: "100%" };
 
 /* Each domain's concepts: name, what it means, and how many capabilities use it. A phone shows just the names and counts. */
-function Concepts({ state, query }: { state: DocketState; query: string }) {
+function Concepts({ state, query }: { state: DocqetState; query: string }) {
   if (!state.concepts.length) return <Empty>No concepts are written down yet.</Empty>;
   const groups = byDomain(
     state,
@@ -133,7 +133,7 @@ function ConceptRow({ concept }: { concept: Concept }) {
  * capability doesn't hold to yet come first, then the rest A to Z. A phone
  * leaves out how many follow it.
  */
-function Rules({ state, query }: { state: DocketState; query: string }) {
+function Rules({ state, query }: { state: DocqetState; query: string }) {
   if (!state.rules.length) return <Empty>No rules are written down yet.</Empty>;
   const standings = new Map(state.rules.map((r) => [r.id, standingsOf(state, r)]));
   const groups = byDomain(
@@ -189,7 +189,7 @@ function Rules({ state, query }: { state: DocketState; query: string }) {
 /* How many capabilities following a rule hold to it with evidence, on trust, and not yet. */
 type Counts = Record<RuleStanding, number>;
 
-function standingsOf(state: DocketState, rule: Rule): Counts {
+function standingsOf(state: DocqetState, rule: Rule): Counts {
   const counts: Counts = { evidence: 0, trust: 0, gap: 0 };
   for (const id of rule.capabilities) {
     const capability = find(state.capabilities, id);

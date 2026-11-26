@@ -6,13 +6,13 @@ import (
 
 	"github.com/urfave/cli/v3"
 
-	"github.com/exalynt/docket/internal/database"
+	"github.com/exalynt/docqet/internal/database"
 )
 
 // defaultDatabase is where the server keeps its SQLite database when
 // DATABASE_PATH is unset: beside the code for a local run, and ignored by
-// git. The image sets /var/lib/docket/docket.db, on a volume.
-const defaultDatabase = "data/docket.db"
+// git. The image sets /var/lib/docqet/docqet.db, on a volume.
+const defaultDatabase = "data/docqet.db"
 
 // databaseFlag is the server's database, for serve and migrate.
 func databaseFlag() cli.Flag {
@@ -25,7 +25,7 @@ func databaseFlag() cli.Flag {
 }
 
 // MigrateCommand brings the server's database up to this version's schema.
-// It's a step of its own, run before `docket serve`, which refuses to start
+// It's a step of its own, run before `docqet serve`, which refuses to start
 // on a database that's behind.
 func MigrateCommand() *cli.Command {
 	return &cli.Command{

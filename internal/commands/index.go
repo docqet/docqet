@@ -9,8 +9,8 @@ import (
 
 	"github.com/urfave/cli/v3"
 
-	"github.com/exalynt/docket/internal/project"
-	"github.com/exalynt/docket/internal/state"
+	"github.com/exalynt/docqet/internal/project"
+	"github.com/exalynt/docqet/internal/state"
 )
 
 // IndexCommand writes the project's state, for the working tree or a commit.
@@ -20,8 +20,8 @@ func IndexCommand() *cli.Command {
 		Category: settingUp,
 		Usage:    "Write the state for the working tree or a commit",
 		Description: `Reads the project's docs and annotations and writes its state: the working
-tree's, uncommitted changes included, to .docket/state.json, or with --at, a
-commit's, read from git without checking it out, to .docket/history/<sha>.json.`,
+tree's, uncommitted changes included, to .docqet/state.json, or with --at, a
+commit's, read from git without checking it out, to .docqet/history/<sha>.json.`,
 		Before: maxArgs(0),
 		Flags: []cli.Flag{
 			&cli.StringFlag{Name: "at", Usage: "index `REV`, read from git without checking it out"},
@@ -40,7 +40,7 @@ commit's, read from git without checking it out, to .docket/history/<sha>.json.`
 
 			path := project.StatePath(ix.root)
 			if ix.source.When == "commit" {
-				path = filepath.Join(ix.root, ".docket", "history", ix.state.Commit+".json")
+				path = filepath.Join(ix.root, ".docqet", "history", ix.state.Commit+".json")
 			}
 			if err := writeState(path, ix.state); err != nil {
 				return err

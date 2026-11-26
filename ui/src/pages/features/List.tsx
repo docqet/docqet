@@ -22,7 +22,7 @@ import {
   RISK_BANDS,
   type Capability,
   type CapabilityLevel,
-  type DocketState,
+  type DocqetState,
   type Domain,
   type Feature,
 } from "../../state";
@@ -47,7 +47,7 @@ const GROUPS: Group[] = ["domain", "stability", "exposure"];
  * is in `&group=`. Above it, cards for the maturity and risk of every feature
  * showing, and how many capabilities there are.
  */
-export default function FeaturesPage({ state }: { state: DocketState; route: Route }) {
+export default function FeaturesPage({ state }: { state: DocqetState; route: Route }) {
   const asked = new URLSearchParams(window.location.search).get("group") as Group | null;
   const group: Group = asked && GROUPS.includes(asked) ? asked : "domain";
   const overall = state.status.maturity;
@@ -222,7 +222,7 @@ const levelIn = (c: Capability, domain?: string): CapabilityLevel => (domain && 
  * every gap on it, its own and those of what it's built on; and the personas
  * it serves.
  */
-function CapabilityRow({ state, capability, domain, where }: { state: DocketState; capability: Capability; domain?: string; where?: ReactNode }) {
+function CapabilityRow({ state, capability, domain, where }: { state: DocqetState; capability: Capability; domain?: string; where?: ReactNode }) {
   const personas = capability.personas.flatMap((id) => find(state.personas, id) ?? []);
   return (
     <Box component="li" sx={{ ...capabilityRowSx, ...hoverSx }}>
@@ -329,7 +329,7 @@ function FoldRow({
 }
 
 /* Each domain, with its parts of features and their capabilities, then any capabilities in no feature. */
-function DomainTree({ state }: { state: DocketState }) {
+function DomainTree({ state }: { state: DocqetState }) {
   return (
     <Box sx={{ fontSize: 13.5 }}>
       <ColumnHeads first="Domain, feature and capability" />
@@ -340,7 +340,7 @@ function DomainTree({ state }: { state: DocketState }) {
   );
 }
 
-function DomainBranch({ state, domain }: { state: DocketState; domain: Domain }) {
+function DomainBranch({ state, domain }: { state: DocqetState; domain: Domain }) {
   const features = domain.features.flatMap((id) => find(state.features, id) ?? []);
   const loose = domain.capabilities.flatMap((id) => find(state.capabilities, id) ?? []);
   const parts = features.map((f) => partOf(f, domain.id));
@@ -383,7 +383,7 @@ function DomainBranch({ state, domain }: { state: DocketState; domain: Domain })
 }
 
 /* A feature's part in one domain: its maturity and risk there, where else it is, and those capabilities. */
-function FeatureBranch({ state, feature, domain }: { state: DocketState; feature: Feature; domain: string }) {
+function FeatureBranch({ state, feature, domain }: { state: DocqetState; feature: Feature; domain: string }) {
   const part = partOf(feature, domain);
   const capabilities = (part?.capabilities ?? []).flatMap((id) => find(state.capabilities, id) ?? []);
   const elsewhere = feature.parts.filter((p) => p.domain !== domain);
@@ -463,7 +463,7 @@ function FeatureBranch({ state, feature, domain }: { state: DocketState; feature
  * domains is under the lowest. Each says which feature it's in, or which
  * domains when it's in none.
  */
-function ByStability({ state }: { state: DocketState }) {
+function ByStability({ state }: { state: DocqetState }) {
   const levels: CapabilityLevel[] = [null, ...STABILITY_LEVEL_IDS];
   return (
     <>
@@ -485,7 +485,7 @@ function ByStability({ state }: { state: DocketState }) {
  * and riskiest first within each; then those with no gaps, then drafts,
  * which aren't exposed to anything. Each says where it is, as grouped by stability.
  */
-function ByExposure({ state }: { state: DocketState }) {
+function ByExposure({ state }: { state: DocqetState }) {
   const scored = state.capabilities.map((c) => ({ c, exposure: c.exposure, gaps: gapsOn(state, c).length }));
   const groups = [
     ...[...RISK_BANDS].reverse().map((band) => ({
@@ -510,7 +510,7 @@ function ByExposure({ state }: { state: DocketState }) {
 }
 
 /* A group's capabilities, under the column headings, each saying where it is. */
-function CapabilityList({ state, capabilities }: { state: DocketState; capabilities: Capability[] }) {
+function CapabilityList({ state, capabilities }: { state: DocqetState; capabilities: Capability[] }) {
   return (
     <Box sx={{ fontSize: 13.5 }}>
       <ColumnHeads first="Capability" />
@@ -524,7 +524,7 @@ function CapabilityList({ state, capabilities }: { state: DocketState; capabilit
 }
 
 /* Where a capability is: its feature, or else its domains. */
-function whereIs(state: DocketState, c: Capability): string {
+function whereIs(state: DocqetState, c: Capability): string {
   const feature = c.feature ? find(state.features, c.feature) : undefined;
   if (feature) return feature.name;
   return [...new Set(c.levels.map((l) => domainName(state, l.domain)))].join(", ");

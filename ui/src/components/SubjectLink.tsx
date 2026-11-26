@@ -3,7 +3,7 @@ import { NAMES, TECHNICAL_NAMES } from "./names";
 import { DomainIcon } from "./names";
 import { CapabilityStability } from "./CapabilityLabel";
 import { docHref, type DocKind } from "../routes";
-import { find, technicalDoc, type Capability, type Doc, type DocketState } from "../state";
+import { find, technicalDoc, type Capability, type Doc, type DocqetState } from "../state";
 
 const KIND_NAMES = { ...NAMES, ...TECHNICAL_NAMES };
 
@@ -30,7 +30,7 @@ export function SubjectLink({
   withLevel = false,
   quiet = false,
 }: {
-  state: DocketState;
+  state: DocqetState;
   type: string;
   id: string;
   withLevel?: boolean;

@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/exalynt/docket/internal/state"
+	"github.com/exalynt/docqet/internal/state"
 )
 
 // Validate reports whether st is a state at all, as index writes one: the
@@ -17,8 +17,8 @@ func Validate(st *state.State) error {
 	fail := func(format string, args ...any) {
 		errs = append(errs, fmt.Sprintf(format, args...))
 	}
-	if st.Docket != state.Version {
-		fail("docket is %q, and this server reads %q", st.Docket, state.Version)
+	if st.Docqet != state.Version {
+		fail("docqet is %q, and this server reads %q", st.Docqet, state.Version)
 	}
 	if !state.IsKebab(st.Project.ID) || st.Project.Name == "" {
 		fail("the project needs a kebab-case id and a name")
@@ -88,7 +88,7 @@ func Validate(st *state.State) error {
 // Recheck works out st's problems again with Check, keeping only the
 // problems it carries that Check can't find, those found reading files, so
 // what st says about its docs is always this check's own.
-// docket:implements rule:same-problems-everywhere@reporting
+// docqet:implements rule:same-problems-everywhere@reporting
 func Recheck(st *state.State) {
 	var kept []state.Problem
 	for _, p := range st.Problems {

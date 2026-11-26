@@ -4,7 +4,7 @@ import { MORE_ABOUT } from "../../components/markdown/Markdown";
 import { STABILITY } from "../../components/stability/stability";
 import { plural } from "../../components/names";
 import { initiativesOf } from "../../components/Initiatives";
-import { expectedOutcome, gapsById, inRiskOrder, openDecisions, find, type DocketState, type TechnicalDoc } from "../../state";
+import { expectedOutcome, gapsById, inRiskOrder, openDecisions, find, type DocqetState, type TechnicalDoc } from "../../state";
 import { sectionHref, type Route } from "../../routes";
 import { Empty, Section, Stat, Tabs, currentTab, type TabDef } from "../../components/shell/layout";
 import { type DocPageProps } from "../../components/doc/DocPage";
@@ -25,7 +25,7 @@ import { Missing } from "../../components/doc/Missing";
 import { docGo, cardSx, tagSx } from "../../components/doc/DocPage";
 
 /* A mechanism's or component's page, or what shows when it isn't in the projects showing. */
-export default function TechnicalView({ state, kind, id, route }: { state: DocketState; kind: "mechanism" | "component"; id: string; route: Route }) {
+export default function TechnicalView({ state, kind, id, route }: { state: DocqetState; kind: "mechanism" | "component"; id: string; route: Route }) {
   const doc = find(kind === "mechanism" ? state.mechanisms : state.components, id);
   if (!doc) return <Missing kind={kind} id={id} />;
   return <TechnicalPage doc={doc} route={route} {...docGo(state)} />;
@@ -161,7 +161,7 @@ export function TechnicalPage({ doc, route, ...go }: DocPageProps & { doc: Techn
 }
 
 /* What's left about a mechanism or component: its own open decisions and technical gaps. */
-export function leftOnTechnical(state: DocketState, doc: TechnicalDoc): LeftHere {
+export function leftOnTechnical(state: DocqetState, doc: TechnicalDoc): LeftHere {
   const decisions = openDecisions(doc).length;
   return {
     holders: decisions ? [{ kind: doc.kind, doc }] : [],

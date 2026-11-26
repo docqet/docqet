@@ -12,7 +12,7 @@ import (
 
 	"github.com/urfave/cli/v3"
 
-	"github.com/exalynt/docket/internal/project"
+	"github.com/exalynt/docqet/internal/project"
 )
 
 // kitTarget is a place agents read a project's skills from, and the kit's
@@ -23,7 +23,7 @@ type kitTarget struct {
 }
 
 // dir is the kit's skill folder in the target.
-func (t kitTarget) dir() string { return t.Skills + "/docket" }
+func (t kitTarget) dir() string { return t.Skills + "/docqet" }
 
 // kitTargets are the places the kit can be installed, in the order they're
 // written. agents is the default and comes first: when it's installed, the
@@ -58,18 +58,18 @@ var supportedAgents = []supportedAgent{
 }
 
 // KitCommand manages the agent kit in the project: which agents it's
-// installed for, and whether it's this docket's.
-// docket:implements capability:kit-install
+// installed for, and whether it's this docqet's.
+// docqet:implements capability:kit-install
 func KitCommand() *cli.Command {
-	agentFlag := &cli.StringSliceFlag{Name: "agent", Usage: "an agent to install the kit for, such as claude or codex: docket kit agents lists them"}
+	agentFlag := &cli.StringSliceFlag{Name: "agent", Usage: "an agent to install the kit for, such as claude or codex: docqet kit agents lists them"}
 	return &cli.Command{
 		Name:     "kit",
 		Category: settingUp,
 		Usage:    "Install, update or remove the agent kit, for the agents the project uses",
-		Description: `The kit is the docket skill and a block of instructions, built into this
-docket. It's written where each agent the project uses reads it: for most
-agents, the skill in .agents/skills/docket/ and the block in AGENTS.md, and for
-Claude Code, the skill in .claude/skills/docket/. Without a subcommand, it
+		Description: `The kit is the docqet skill and a block of instructions, built into this
+docqet. It's written where each agent the project uses reads it: for most
+agents, the skill in .agents/skills/docqet/ and the block in AGENTS.md, and for
+Claude Code, the skill in .claude/skills/docqet/. Without a subcommand, it
 shows what's installed.`,
 		Action: func(ctx context.Context, cmd *cli.Command) error { return kitStatus(cmd) },
 		Commands: []*cli.Command{
@@ -117,14 +117,14 @@ shows what's installed.`,
 			{
 				Name:   "update",
 				Before: maxArgs(0),
-				Usage:  "Rewrite the kit for every agent it's installed for, with this docket's",
+				Usage:  "Rewrite the kit for every agent it's installed for, with this docqet's",
 				Action: func(ctx context.Context, cmd *cli.Command) error {
 					root, installed, err := kitHere()
 					if err != nil {
 						return err
 					}
 					if len(installed) == 0 {
-						return errors.New("the kit isn't installed here: run docket kit install")
+						return errors.New("the kit isn't installed here: run docqet kit install")
 					}
 					return kitApply(cmd, root, installed, nil)
 				},
@@ -132,13 +132,13 @@ shows what's installed.`,
 			{
 				Name:   "status",
 				Before: maxArgs(0),
-				Usage:  "Show which agents the kit is installed for, and whether it's this docket's",
+				Usage:  "Show which agents the kit is installed for, and whether it's this docqet's",
 				Action: func(ctx context.Context, cmd *cli.Command) error { return kitStatus(cmd) },
 			},
 			{
 				Name:   "check",
 				Before: maxArgs(0),
-				Usage:  "Exit 1 if the kit isn't installed, or isn't this docket's, for CI",
+				Usage:  "Exit 1 if the kit isn't installed, or isn't this docqet's, for CI",
 				Action: func(ctx context.Context, cmd *cli.Command) error {
 					root, installed, err := kitHere()
 					if err != nil {
@@ -149,7 +149,7 @@ shows what's installed.`,
 						if cmd.Bool("json") {
 							writeJSON(out, map[string]any{"installed": []string{}, "upToDate": false})
 						} else {
-							_, _ = fmt.Fprintln(out, "The kit isn't installed here: run docket kit install.")
+							_, _ = fmt.Fprintln(out, "The kit isn't installed here: run docqet kit install.")
 						}
 						return errFound
 					}
@@ -163,7 +163,7 @@ shows what's installed.`,
 					} else {
 						printChanges(out, changes, false)
 						if stale {
-							_, _ = fmt.Fprintln(out, "\nThe project's kit isn't this docket's: run docket kit update.")
+							_, _ = fmt.Fprintln(out, "\nThe project's kit isn't this docqet's: run docqet kit update.")
 						} else {
 							_, _ = fmt.Fprintln(out, "\nThe project's kit is up to date.")
 						}
@@ -215,7 +215,7 @@ func targetsOf(names []string) ([]string, error) {
 			for _, a := range supportedAgents {
 				known = append(known, a.Name)
 			}
-			return nil, fmt.Errorf("docket kit doesn't know the agent %q: it's one of %s", n, strings.Join(known, ", "))
+			return nil, fmt.Errorf("docqet kit doesn't know the agent %q: it's one of %s", n, strings.Join(known, ", "))
 		}
 		targets = append(targets, supportedAgents[i].Target)
 	}
@@ -259,7 +259,7 @@ func kitApply(cmd *cli.Command, root string, targets, named []string) error {
 }
 
 // kitStatus shows which agents the kit is installed for, and whether it's
-// this docket's.
+// this docqet's.
 func kitStatus(cmd *cli.Command) error {
 	root, installed, err := kitHere()
 	if err != nil {
@@ -278,15 +278,15 @@ func kitStatus(cmd *cli.Command) error {
 		return nil
 	}
 	if len(installed) == 0 {
-		_, _ = fmt.Fprintln(out, "The kit isn't installed here. Install it with docket kit install, or for other agents with --agent: docket kit agents lists them.")
+		_, _ = fmt.Fprintln(out, "The kit isn't installed here. Install it with docqet kit install, or for other agents with --agent: docqet kit agents lists them.")
 		return nil
 	}
 	_, _ = fmt.Fprintf(out, "Installed for: %s\n", servedBy(installed))
 	if stale {
-		_, _ = fmt.Fprintln(out, "It isn't this docket's kit: run docket kit update.")
+		_, _ = fmt.Fprintln(out, "It isn't this docqet's kit: run docqet kit update.")
 		printChanges(out, changes, false)
 	} else {
-		_, _ = fmt.Fprintln(out, "It's this docket's kit.")
+		_, _ = fmt.Fprintln(out, "It's this docqet's kit.")
 	}
 	return nil
 }

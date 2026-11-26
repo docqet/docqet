@@ -14,16 +14,16 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/exalynt/docket/internal/check"
-	"github.com/exalynt/docket/internal/project"
-	"github.com/exalynt/docket/internal/state"
+	"github.com/exalynt/docqet/internal/check"
+	"github.com/exalynt/docqet/internal/project"
+	"github.com/exalynt/docqet/internal/state"
 )
 
-// Index reads the project rooted at fsys, the folder with its docket.yaml,
+// Index reads the project rooted at fsys, the folder with its docqet.yaml,
 // and returns its state. The commit and the time it was indexed are the
 // caller's to fill in. Problems in the docs are in the state; an error means
-// the project couldn't be read at all, such as having no docket.yaml.
-// docket:implements capability:indexing component:index rule:docs-with-problems-still-index@authoring
+// the project couldn't be read at all, such as having no docqet.yaml.
+// docqet:implements capability:indexing component:index rule:docs-with-problems-still-index@authoring
 func Index(fsys fs.FS) (*state.State, error) {
 	cfg, err := project.ReadConfig(fsys)
 	if err != nil {
@@ -35,7 +35,7 @@ func Index(fsys fs.FS) (*state.State, error) {
 	}
 
 	st := &state.State{
-		Docket:       state.Version,
+		Docqet:       state.Version,
 		Project:      state.Ident{ID: cfg.Project.ID, Name: cfg.Project.Name},
 		Domains:      []state.Domain{},
 		Features:     []state.Feature{},
@@ -74,7 +74,7 @@ func Index(fsys fs.FS) (*state.State, error) {
 			}
 			return nil
 		}
-		if p == "docket.yaml" || ig.ignored(p, false) {
+		if p == "docqet.yaml" || ig.ignored(p, false) {
 			return nil
 		}
 		data, err := fs.ReadFile(fsys, p)
@@ -111,25 +111,25 @@ func Index(fsys fs.FS) (*state.State, error) {
 }
 
 // skipDir reports whether a folder isn't part of the project: git's and
-// docket's own, and any with a docket.yaml of its own, which is another
+// docqet's own, and any with a docqet.yaml of its own, which is another
 // project.
-// docket:implements rule:nested-projects-are-separate@authoring
+// docqet:implements rule:nested-projects-are-separate@authoring
 func skipDir(fsys fs.FS, p string) bool {
 	switch path.Base(p) {
-	case ".git", ".docket":
+	case ".git", ".docqet":
 		return true
 	}
-	_, err := fs.Stat(fsys, path.Join(p, "docket.yaml"))
+	_, err := fs.Stat(fsys, path.Join(p, "docqet.yaml"))
 	return err == nil
 }
 
 // addEntry adds a doc's entry to the state, with its gaps and tradeoffs.
 func addEntry(st *state.State, d *doc) {
 	fm := d.fm
-	ref := state.DocRef(fm.Docket, fm.ID)
+	ref := state.DocRef(fm.Docqet, fm.ID)
 	name, description := text(fm.Name), text(fm.Description)
 
-	switch fm.Docket {
+	switch fm.Docqet {
 	case state.TypeDomain:
 		st.Domains = append(st.Domains, state.Domain{
 			ID: fm.ID, File: d.file, Name: name, Description: description,
@@ -226,7 +226,7 @@ func addTradeoffs(st *state.State, ref, domain string, ts []tradeoff) {
 // attachAnnotations adds each annotation to what it names: evidence on a
 // rule, capability, mechanism or component, or a place on a gap or tradeoff.
 // It returns the problems with the annotations themselves.
-// docket:implements capability:annotations rule:annotations-name-a-rules-domain@authoring
+// docqet:implements capability:annotations rule:annotations-name-a-rules-domain@authoring
 func attachAnnotations(st *state.State, annotations []annotation) []state.Problem {
 	var problems []state.Problem
 	for _, a := range annotations {
@@ -238,24 +238,24 @@ func attachAnnotations(st *state.State, annotations []annotation) []state.Proble
 			switch a.verb {
 			case verbVerifies, verbImplements:
 				if ref.Key != "" {
-					bad(state.InvalidAnnotation, fmt.Sprintf("docket:%s names %s, a gap or tradeoff: it names a rule, capability, mechanism or component.", a.verb, raw))
+					bad(state.InvalidAnnotation, fmt.Sprintf("docqet:%s names %s, a gap or tradeoff: it names a rule, capability, mechanism or component.", a.verb, raw))
 					continue
 				}
 				found, err := addEvidence(st, ref, a.verb, a.place)
 				switch {
 				case err != nil:
-					bad(state.InvalidAnnotation, fmt.Sprintf("docket:%s names %s: %s", a.verb, raw, err))
+					bad(state.InvalidAnnotation, fmt.Sprintf("docqet:%s names %s: %s", a.verb, raw, err))
 				case !found:
-					bad(state.UnknownID, fmt.Sprintf("docket:%s names %s, which doesn't exist.", a.verb, raw))
+					bad(state.UnknownID, fmt.Sprintf("docqet:%s names %s, which doesn't exist.", a.verb, raw))
 				}
 			case verbGap, verbTradeoff:
 				if ref.Key == "" {
-					bad(state.InvalidAnnotation, fmt.Sprintf("docket:%s names %s, which isn't a %s's ID: it's <doc>#<key>.", a.verb, raw, a.verb))
+					bad(state.InvalidAnnotation, fmt.Sprintf("docqet:%s names %s, which isn't a %s's ID: it's <doc>#<key>.", a.verb, raw, a.verb))
 					continue
 				}
 				id := state.DocRef(ref.Type, ref.ID) + "#" + ref.Key
 				if !addPlace(st, a.verb, id, a.place) {
-					bad(state.UnknownID, fmt.Sprintf("docket:%s names %s, which doesn't exist.", a.verb, raw))
+					bad(state.UnknownID, fmt.Sprintf("docqet:%s names %s, which doesn't exist.", a.verb, raw))
 				}
 			}
 		}

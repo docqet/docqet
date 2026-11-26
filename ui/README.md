@@ -1,34 +1,34 @@
 # UI
 
-How Docket shows things. The UI gets everything from `docket`'s API and works
+How Docqet shows things. The UI gets everything from `docqet`'s API and works
 nothing out itself: the server combines a product's projects and works out
 maturity, readiness and risk, as described below. It's built into the binary,
-and `docket serve` and `docket ui` serve it. It answers, at a
+and `docqet serve` and `docqet ui` serve it. It answers, at a
 glance: what the software can do, who it serves and how far along it is for
 each of them, how stable each capability is, the rules each follows, and what
 the gaps are. A rule shows the code and tests that point at it.
 
 The UI shows a product's projects together, as the server put them together.
-One Docket server serves one client, so every project it shows belongs to
+One Docqet server serves one client, so every project it shows belongs to
 that client, and there's no sign-in yet. See
-[Docket's parts](../docs/parts.md#docket).
+[Docqet's parts](../docs/parts.md#docqet).
 
 ## Running the UI
 
-The dev server passes `/api` on to a running Docket server, so start one and
+The dev server passes `/api` on to a running Docqet server, so start one and
 give it something to show first:
 
 ```sh
 make run                                      # the server, on localhost:8080
-make examples                                 # load the examples into it, or make apply for Docket itself
+make examples                                 # load the examples into it, or make apply for Docqet itself
 cd ui && npm install && npm run dev
-DOCKET_API=http://localhost:8090 npm run dev  # or another server, such as make build's
+DOCQET_API=http://localhost:8090 npm run dev  # or another server, such as make build's
 ```
 
 ### How it's laid out
 
 A bar across the top says where you are and finds anything: the product and
-its projects, the initiative showing, search, and the glossary of Docket's
+its projects, the initiative showing, search, and the glossary of Docqet's
 words. A nav down the side picks which question you're asking:
 
 | Section        | Answers                                                                                                                                              | Address                       |
@@ -74,7 +74,7 @@ the cards sit is this browser's own, for each product.
 ### Several projects
 
 - **Products**: the UI shows one product at a time, the projects whose
-  `docket.yaml` names the same product. The product's name in the top bar
+  `docqet.yaml` names the same product. The product's name in the top bar
   opens a list of every product to switch to, each with its maturity, then
   the product's projects to tick, some or all of them. Everything then covers
   only those, and `?product=<id>&project=<id>,<id>` in the address says which
@@ -126,7 +126,7 @@ Every doc shows what it is apart from its body, the same way everywhere: first
 what it is, from its frontmatter, then its body, the Markdown its authors
 wrote, in its page's About tab. A doc with no body has no About tab.
 
-Each of Docket's words, where it labels something, opens what it means on
+Each of Docqet's words, where it labels something, opens what it means on
 hover. Each stability level, maturity, readiness and impact opens a popover
 saying what it means for that thing. In lists, a capability's stability is
 just its mark.
@@ -168,4 +168,4 @@ decisions and tradeoffs.
   built on meets it), or met on its level's word.
 
 `npm run build` writes the UI to `dist/`, which `go build` embeds in the
-binary, so `docket serve` and `docket ui` serve it beside the API it reads.
+binary, so `docqet serve` and `docqet ui` serve it beside the API it reads.

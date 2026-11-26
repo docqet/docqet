@@ -16,16 +16,16 @@ import { StabilityMark } from "../../components/stability/StabilityMark";
 import { TERMS, type TermId } from "../../components/term/terms";
 import { sectionHref, type Route } from "../../routes";
 import { Empty, PageHeader, Section, Tabs, View, currentTab, type TabDef } from "../../components/shell/layout";
-import { READINESS_BANDS, RISK_BANDS, type RiskBand, type RubricExample, type RubricKind, type RubricLevel, type DocketState } from "../../state";
+import { READINESS_BANDS, RISK_BANDS, type RiskBand, type RubricExample, type RubricKind, type RubricLevel, type DocqetState } from "../../state";
 
 /*
- * What Docket's own words mean, in one place, so a Term's popover isn't the
+ * What Docqet's own words mean, in one place, so a Term's popover isn't the
  * only way to find out: every term, grouped as the domain overview groups
  * them; the stability levels, with maturity, exposure and readiness, which
  * are worked out from them; and the stability rubric as a plain reference. Each term
  * is anchored by its ID, as `?view=glossary#gap`, so anything can link to it.
  */
-export default function GlossaryPage({ state, route }: { state: DocketState; route: Route }) {
+export default function GlossaryPage({ state, route }: { state: DocqetState; route: Route }) {
   const tabs: TabDef[] = [
     { id: "terms", label: "Terms", count: Object.keys(TERMS).length },
     { id: "levels", label: "Stability levels" },
@@ -41,7 +41,7 @@ export default function GlossaryPage({ state, route }: { state: DocketState; rou
 
   return (
     <View title="Glossary">
-      <PageHeader title="Glossary" lede="What Docket's words mean: the terms it labels things with, how stable each level is, and what each level expects." />
+      <PageHeader title="Glossary" lede="What Docqet's words mean: the terms it labels things with, how stable each level is, and what each level expects." />
       <Tabs tabs={tabs} current={tab} />
       {tab === "terms" ? <Terms /> : tab === "levels" ? <Levels /> : <RubricReference state={state} />}
     </View>
@@ -342,7 +342,7 @@ const bandRangeSx: SystemStyleObject<Theme> = { display: "block", mb: 0.75, font
 /* ——— The rubric ——— */
 
 /* The rubric as a plain reference: each quality, then what each level asks of it and the outcomes it expects. A capability's page shows it for that capability. */
-function RubricReference({ state }: { state: DocketState }) {
+function RubricReference({ state }: { state: DocqetState }) {
   const rubric = state.rubric;
   if (!rubric) return <Empty>None of the projects showing has the rubric.</Empty>;
   return (

@@ -1,6 +1,6 @@
 package http
 
-import "github.com/exalynt/docket/internal/state"
+import "github.com/exalynt/docqet/internal/state"
 
 // The resources the UI, and any other tool or agent, reads about a product:
 // each doc put together across the product's projects, with the figures

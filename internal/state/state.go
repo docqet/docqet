@@ -1,14 +1,14 @@
 // Package state holds the types of a project's state, state.json, as the
-// spec's Index output describes them. It's docket's model: what index writes,
+// spec's Index output describes them. It's docqet's model: what index writes,
 // what check validates, what apply sends, and what the server stores.
 package state
 
-// Version is the version of the state format this docket writes and reads.
+// Version is the version of the state format this docqet writes and reads.
 const Version = "0.1"
 
 // State is one project's state, indexed from its docs and annotations.
 type State struct {
-	Docket       string       `json:"docket"`
+	Docqet       string       `json:"docqet"`
 	Project      Ident        `json:"project"`
 	Product      *Ident       `json:"product,omitempty"`
 	Commit       string       `json:"commit"`

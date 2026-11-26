@@ -1,14 +1,14 @@
 import Box from "@mui/material/Box";
 import CodeRoundedIcon from "@mui/icons-material/CodeRounded";
-import { projectName, type EvidencePlace, type DocketState } from "../../state";
+import { projectName, type EvidencePlace, type DocqetState } from "../../state";
 import Tooltip from "@mui/material/Tooltip";
 import { plural } from "../names";
 
 /*
- * Places in the code a gap or tradeoff names, with `docket:gap` or
- * `docket:tradeoff`: each line as written, and its file. In short, how many.
+ * Places in the code a gap or tradeoff names, with `docqet:gap` or
+ * `docqet:tradeoff`: each line as written, and its file. In short, how many.
  */
-export function Places({ state, places, label, detailed = false }: { state: DocketState; places: EvidencePlace[]; label: string; detailed?: boolean }) {
+export function Places({ state, places, label, detailed = false }: { state: DocqetState; places: EvidencePlace[]; label: string; detailed?: boolean }) {
   if (!places.length) return null;
   if (!detailed) return <span>{plural(places.length, `${label} in 1 place`, `${label} in ${places.length} places`).replace(/^\d+ /, "")}</span>;
   const several = state.projects.length > 1;

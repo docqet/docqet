@@ -1,10 +1,10 @@
 import type { ReactNode } from "react";
 import Box from "@mui/material/Box";
 import Tooltip from "@mui/material/Tooltip";
-import { projectName, type DocketState, type EvidencePlace } from "../../state";
+import { projectName, type DocqetState, type EvidencePlace } from "../../state";
 
 /* Places in the code: the line below each annotation, as written, on one line cut short, and its file and line. */
-export function EvidenceList({ state, places, icon }: { state: DocketState; places: EvidencePlace[]; icon: ReactNode }) {
+export function EvidenceList({ state, places, icon }: { state: DocqetState; places: EvidencePlace[]; icon: ReactNode }) {
   const several = state.projects.length > 1;
   return (
     <Box component="ul" sx={{ display: "flex", flexDirection: "column", gap: 1 }}>

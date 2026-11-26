@@ -9,7 +9,7 @@ import type { ReactNode } from "react";
 import { InitiativeTags } from "./Initiatives";
 import type { ExploreKind } from "./names";
 import { useStatusFor } from "../model";
-import { startedOf, type DocketState, type Feature, type Persona, type Pick, type Target } from "../state";
+import { startedOf, type DocqetState, type Feature, type Persona, type Pick, type Target } from "../state";
 import Skeleton from "@mui/material/Skeleton";
 import { ReadFallback } from "./ReadFallback";
 
@@ -56,7 +56,7 @@ export function personaNameAndRole(persona: Persona): { name: string; role: stri
 }
 
 /* A persona on the map: their picture, name and role, and at its right how ready the software is for them, as a feature card has its maturity at its right. Clicking it opens the rest in the side panel. */
-export function PersonaCard({ state, persona }: { state: DocketState; persona: Persona }) {
+export function PersonaCard({ state, persona }: { state: DocqetState; persona: Persona }) {
   const { name, role } = personaNameAndRole(persona);
   const readiness = personaReadiness(state, persona);
   return (
@@ -89,7 +89,7 @@ export function PersonaCard({ state, persona }: { state: DocketState; persona: P
 }
 
 /* How ready the software is for a persona: every capability that lists them, as the server works it out. */
-export const personaReadiness = (_state: DocketState, persona: Persona) => persona.readiness;
+export const personaReadiness = (_state: DocqetState, persona: Persona) => persona.readiness;
 
 /* A persona's row: their name, with their role under it. */
 export const rowName = (p: Persona) => {
@@ -98,7 +98,7 @@ export const rowName = (p: Persona) => {
 };
 
 /* Personas as rows, each opening in the panel, with how ready `feature` is for them when it's given. */
-export function PersonaRows({ state, personas, feature, onOpen }: { state: DocketState; personas: Persona[]; feature?: Feature; onOpen: Links["onOpen"] }) {
+export function PersonaRows({ state, personas, feature, onOpen }: { state: DocqetState; personas: Persona[]; feature?: Feature; onOpen: Links["onOpen"] }) {
   return (
     <ul>
       {personas.map((p) => (
@@ -109,7 +109,7 @@ export function PersonaRows({ state, personas, feature, onOpen }: { state: Docke
 }
 
 /* One persona's row, with how ready `feature` is for them, as the server works it out, when it's given. */
-export function PersonaRow({ state, persona: p, feature, onOpen }: { state: DocketState; persona: Persona; feature?: Feature; onOpen: Links["onOpen"] }) {
+export function PersonaRow({ state, persona: p, feature, onOpen }: { state: DocqetState; persona: Persona; feature?: Feature; onOpen: Links["onOpen"] }) {
   const read = useStatusFor(state, feature ? `persona:${p.id},feature:${feature.id}` : null);
   const readiness = read.data?.readiness ?? null;
   /* Beside the row's button rather than in it, so its popover and a retry are their own to focus and press. */
@@ -204,7 +204,7 @@ export function Row({
 }
 
 export type Links = {
-  state: DocketState;
+  state: DocqetState;
   onOpen: (kind: ExploreKind, id: string | null) => void;
   onConcept: (id: string) => void;
   onShow: (target: Target) => void;

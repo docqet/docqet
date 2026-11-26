@@ -1,4 +1,4 @@
-// Package kit holds the agent development kit, embedded so `docket kit` can
+// Package kit holds the agent development kit, embedded so `docqet kit` can
 // install it into a project.
 package kit
 

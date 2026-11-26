@@ -3,7 +3,7 @@ import Box from "@mui/material/Box";
 import { LeftCounts } from "./left/LeftMark";
 import { linkButtonSx } from "./markdown/Markdown";
 import { RowBody, rowSx } from "./Personas";
-import { openDecisions, pageHref, type TechnicalDoc, type DocketState } from "../state";
+import { openDecisions, pageHref, type TechnicalDoc, type DocqetState } from "../state";
 import { TECHNICAL_NAMES } from "./names";
 
 /*
@@ -29,7 +29,7 @@ export function TechnicalLink({ doc, newTab = false, children }: { doc: Technica
 }
 
 /* Mechanisms and components as rows: each one's name, kind, and how many technical gaps it has. */
-export function TechnicalRows({ docs, newTab = false }: { state: DocketState; docs: TechnicalDoc[]; newTab?: boolean }) {
+export function TechnicalRows({ docs, newTab = false }: { state: DocqetState; docs: TechnicalDoc[]; newTab?: boolean }) {
   return (
     <ul>
       {docs.map((e) => (

@@ -1,0 +1,9 @@
+# The agent kit's skill files, which show example annotations about the hotel
+# examples. They'd otherwise be read as Docqet's own evidence. Only their
+# Markdown is left out, so the Go code beside it can still be annotated.
+# Docqet's own docs need no entry: annotations are never read from a Docqet
+# doc, so the concept docs can show examples freely.
+/kit/**/*.md
+
+# The agent kit's skill, written by docqet kit. Its examples aren't this project's.
+/.claude/skills/docqet/**/*.md

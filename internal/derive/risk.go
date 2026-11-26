@@ -5,7 +5,7 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/exalynt/docket/internal/combine"
+	"github.com/exalynt/docqet/internal/combine"
 )
 
 // ImpactSteps is each impact's step, from negligible up.

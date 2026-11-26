@@ -11,9 +11,9 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/render"
 
-	"github.com/exalynt/docket/internal/combine"
-	"github.com/exalynt/docket/internal/services"
-	"github.com/exalynt/docket/internal/state"
+	"github.com/exalynt/docqet/internal/combine"
+	"github.com/exalynt/docqet/internal/services"
+	"github.com/exalynt/docqet/internal/state"
 )
 
 // impacts are the impacts a gap can be rated, from the least.
@@ -28,7 +28,7 @@ type ProductsHandler struct {
 }
 
 // NewProductsHandler returns a ProductsHandler over reads.
-// docket:implements capability:overview capability:readiness capability:product-view
+// docqet:implements capability:overview capability:readiness capability:product-view
 func NewProductsHandler(logger *slog.Logger, reads *services.ReadService) *ProductsHandler {
 	return &ProductsHandler{logger: logger, reads: reads}
 }

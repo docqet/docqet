@@ -9,7 +9,7 @@ import { PersonaAvatar, personaNameAndRole } from "../../components/Personas";
 import { ReadinessMark } from "../../components/Readiness";
 import { docHref, type Route } from "../../routes";
 import { Empty, PageHeader, View } from "../../components/shell/layout";
-import { find, gapsById, readyShare, type DocketState, type Persona } from "../../state";
+import { find, gapsById, readyShare, type DocqetState, type Persona } from "../../state";
 import { GapsCell, NameLink, Num, numSx, wideOnlySx } from "../../components/indexParts";
 import { InitiativeTags } from "../../components/Initiatives";
 
@@ -21,7 +21,7 @@ import { InitiativeTags } from "../../components/Initiatives";
  * only someone working on the code would notice. A phone leaves out how many
  * capabilities serve them.
  */
-export default function PersonasPage({ state }: { state: DocketState; route: Route }) {
+export default function PersonasPage({ state }: { state: DocqetState; route: Route }) {
   const share = new Map(state.personas.map((p) => [p, readyShare(p.readiness)]));
   const personas = [...state.personas].sort((a, b) => (share.get(a) ?? -1) - (share.get(b) ?? -1));
   return (
@@ -65,7 +65,7 @@ export default function PersonasPage({ state }: { state: DocketState; route: Rou
 }
 
 /* A persona's row: picture, name and role, readiness, how many capabilities serve them, and the product gaps in those. */
-function PersonaRow({ state, persona }: { state: DocketState; persona: Persona }) {
+function PersonaRow({ state, persona }: { state: DocqetState; persona: Persona }) {
   const { name, role } = personaNameAndRole(persona);
   const capabilities = persona.capabilities.flatMap((id) => find(state.capabilities, id) ?? []);
   const gaps = gapsById(state, [...new Set(capabilities.flatMap((c) => c.gaps))]);

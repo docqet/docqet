@@ -1,6 +1,6 @@
 # The UI
 
-_How the UI reads only the server's API. Part of [how `docket` is
+_How the UI reads only the server's API. Part of [how `docqet` is
 built](README.md)._
 
 **The UI reads only the server's API.** It never reads a state file, and works
@@ -8,7 +8,7 @@ out no figure: the server combines a product's projects and derives maturity,
 readiness, risk and exposure, and the UI shows them. State files are the
 CLI's, which writes and sends them, and the server's, which takes them.
 
-- **It loads the product showing at once.** `ui/src/services/docket/` has a
+- **It loads the product showing at once.** `ui/src/services/docqet/` has a
   module for each resource under `/api/v1/products/{product}`, with `client.ts`
   paging through each list and adding `?project=` and `?initiative=` for
   what's showing. `ui/src/model.ts` reads them all and turns them into the
@@ -29,10 +29,10 @@ CLI's, which writes and sends them, and the server's, which takes them.
   it says, and showing only some of a figure's gaps, such as a persona's own,
   are how the UI shows things, not figures. So is coloring a server's number
   by its band or verdict, with the same cutoffs the glossary shows.
-- **`serve` and `docket ui` serve the same API**, from what was applied or
-  from `.docket/state.json`, so the UI can't tell which it's talking to.
+- **`serve` and `docqet ui` serve the same API**, from what was applied or
+  from `.docqet/state.json`, so the UI can't tell which it's talking to.
 - **The UI's dev server passes `/api` on** to a running server: `make run`'s,
-  or `DOCKET_API`'s. `make examples` loads the examples into it. They're
+  or `DOCQET_API`'s. `make examples` loads the examples into it. They're
   folders in this repository rather than repositories of their own, so each
   one's state is sent as it is, at this repository's HEAD.
 - **It's styled from the MUI theme alone.** `ui/src/theme.ts` holds every

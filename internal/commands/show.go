@@ -10,13 +10,13 @@ import (
 
 	"github.com/urfave/cli/v3"
 
-	"github.com/exalynt/docket/internal/combine"
-	"github.com/exalynt/docket/internal/derive"
-	"github.com/exalynt/docket/internal/state"
+	"github.com/exalynt/docqet/internal/combine"
+	"github.com/exalynt/docqet/internal/derive"
+	"github.com/exalynt/docqet/internal/state"
 )
 
 // ShowCommand shows one doc, gap or tradeoff in full.
-// docket:implements capability:cli-reads
+// docqet:implements capability:cli-reads
 func ShowCommand() *cli.Command {
 	return &cli.Command{
 		Name:      "show",

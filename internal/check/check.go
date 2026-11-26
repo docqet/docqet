@@ -14,7 +14,7 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/exalynt/docket/internal/state"
+	"github.com/exalynt/docqet/internal/state"
 )
 
 // Recheckable reports whether p is a problem Check finds, and so one the
@@ -25,7 +25,7 @@ func Recheckable(p state.Problem) bool {
 }
 
 // Check returns every problem st shows on its own, in the order of its docs.
-// docket:implements capability:checking component:check
+// docqet:implements capability:checking component:check
 func Check(st *state.State) []state.Problem {
 	c := newChecker(st)
 	c.domains()

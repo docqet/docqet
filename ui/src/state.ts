@@ -1,8 +1,8 @@
-import type { Showing } from "./services/docket/client";
+import type { Showing } from "./services/docqet/client";
 import { STABILITY_LEVEL_IDS, type StabilityLevelId } from "./components/stability/stability";
 
 /*
- * What the pages hold about the product showing (DocketState): each doc, put
+ * What the pages hold about the product showing (DocqetState): each doc, put
  * together across its projects, with the figures the server works out for
  * it, as model.ts builds them from the server's resources.
  */
@@ -291,7 +291,7 @@ export type Gap = {
   /* What falls short, in a few words, and in a sentence or two. */
   name: string;
   description: string;
-  /* Where it shows in the code, from `docket:gap` annotations. */
+  /* Where it shows in the code, from `docqet:gap` annotations. */
   places: EvidencePlace[];
   /* What's at stake in leaving it open, what it affects, and the open decisions that affect it. */
   risk: Risk;
@@ -313,7 +313,7 @@ export type Tradeoff = {
   benefit: string | null;
   /* What we give up or risk in return. */
   drawback: string;
-  /* The code it explains, from `docket:tradeoff` annotations. */
+  /* The code it explains, from `docqet:tradeoff` annotations. */
   places: EvidencePlace[];
   affected: Affected[];
   decisions: HeldDecision[];
@@ -368,7 +368,7 @@ export type Rubric = { kinds: RubricKind[]; qualities: RubricQuality[] };
 export type Problem = { type: string; subject: string; capabilities: string[]; message: string; domain?: string };
 
 /* What the page shows at once: the projects it's showing, and everything they define, together. */
-export type DocketState = {
+export type DocqetState = {
   projects: Project[];
   domains: Domain[];
   features: Feature[];
@@ -397,7 +397,7 @@ export type Status = { maturity: number | null; band: Level | null; readiness: R
 export type Project = {
   id: string;
   name: string;
-  /* The product it's part of: the one its docket.yaml declares, or else a product of its own, named for it. */
+  /* The product it's part of: the one its docqet.yaml declares, or else a product of its own, named for it. */
   product: { id: string; name: string };
   commit: string;
   indexedAt: string;
@@ -423,23 +423,23 @@ const inDomain = (link: string, domain: string) => (link.includes("@") ? link : 
 export const docProjects = (doc: Doc) => [...new Set(doc.from.map((f) => f.project))];
 /* The domains a doc is written in, each once, in order. */
 export const docDomains = (doc: Doc) => [...new Set(doc.from.map((f) => f.domain))];
-export const domainName = (state: DocketState, id: string) => find(state.domains, id)?.name ?? id;
-export const projectName = (state: DocketState, id: string) => find(state.projects, id)?.name ?? id;
+export const domainName = (state: DocqetState, id: string) => find(state.domains, id)?.name ?? id;
+export const projectName = (state: DocqetState, id: string) => find(state.projects, id)?.name ?? id;
 
 /* A feature's part in a domain, if it has one. */
 export const partOf = (feature: Feature | undefined, domain: string) => feature?.parts.find((p) => p.domain === domain);
 
 /* Capabilities by ID, in the order given, leaving out any not showing. */
-export const capabilitiesById = (state: DocketState, ids: string[]) => ids.flatMap((id) => find(state.capabilities, id) ?? []);
+export const capabilitiesById = (state: DocqetState, ids: string[]) => ids.flatMap((id) => find(state.capabilities, id) ?? []);
 
 /* Every capability with a part in a domain: those in its parts of features, and those in no feature. */
-export function domainCapabilities(state: DocketState, domain: Domain): Capability[] {
+export function domainCapabilities(state: DocqetState, domain: Domain): Capability[] {
   const ids = [...domain.features.flatMap((id) => partOf(find(state.features, id), domain.id)?.capabilities ?? []), ...domain.capabilities];
   return capabilitiesById(state, [...new Set(ids)]);
 }
 
 /* The contradictions a doc has, and gap or tradeoff IDs its projects both declare, as combining found them. */
-export const contradictionsOf = (state: DocketState, type: string, id: string) =>
+export const contradictionsOf = (state: DocqetState, type: string, id: string) =>
   state.problems.filter((p) => (p.type === "contradiction" || p.type === "duplicate-id" || p.type === "in-two-features") && p.subject === `${type}:${id}`);
 
 export function find<T extends { id: string }>(list: T[], id: string): T | undefined {
@@ -447,7 +447,7 @@ export function find<T extends { id: string }>(list: T[], id: string): T | undef
 }
 
 /* Where a rule applies: each capability that follows it, with the feature it's in, if any. */
-export function ruleAppliesTo(state: DocketState, rule: Rule): { capability: Capability; feature: Feature | null }[] {
+export function ruleAppliesTo(state: DocqetState, rule: Rule): { capability: Capability; feature: Feature | null }[] {
   return rule.capabilities.flatMap((id) => {
     const capability = find(state.capabilities, id);
     if (!capability) return [];
@@ -469,7 +469,7 @@ export const domainGroup = (domain: string) => `domain:${domain}`;
 export const personaCard = (persona: string) => `persona:${persona}`;
 
 /* Every card a capability is on: each part of its feature that has it, or its own card in each domain. */
-export function cardsOf(state: DocketState, capabilityId: string): string[] {
+export function cardsOf(state: DocqetState, capabilityId: string): string[] {
   const c = find(state.capabilities, capabilityId);
   if (!c) return [];
   const feature = c.feature ? find(state.features, c.feature) : undefined;
@@ -480,22 +480,22 @@ export function cardsOf(state: DocketState, capabilityId: string): string[] {
 const rowsOf = (capabilityIds: string[]) => capabilityIds.map((id) => `li[data-capability="${CSS.escape(id)}"]`).join(",");
 
 /* Where a capability is on the canvas: its row in every card it's on. */
-export function capabilityTarget(state: DocketState, capabilityId: string): Target {
+export function capabilityTarget(state: DocqetState, capabilityId: string): Target {
   return { items: cardsOf(state, capabilityId), row: rowsOf([capabilityId]) };
 }
 
 /* Where a feature is on the canvas: its card in every domain it spans. */
-export function featureTarget(state: DocketState, featureId: string): Target {
+export function featureTarget(state: DocqetState, featureId: string): Target {
   const f = find(state.features, featureId);
   return { items: (f?.parts ?? []).map((p) => featureCard(featureId, p.domain)) };
 }
 
 /* The capabilities a concept or persona relates to: those that use the concept, or serve the persona. */
-const capabilitiesOf = (state: DocketState, pick: Pick) =>
+const capabilitiesOf = (state: DocqetState, pick: Pick) =>
   (pick.kind === "persona" ? find(state.personas, pick.id) : find(state.concepts, pick.id))?.capabilities ?? [];
 
 /* Where something the panel shows is on the canvas: a domain's region, a feature's or capability's cards, a concept's capabilities' rows, or a persona's card and those of the capabilities that serve them. */
-export function targetOf(state: DocketState, pick: Pick): Target {
+export function targetOf(state: DocqetState, pick: Pick): Target {
   if (pick.kind === "domain") return { items: [domainGroup(pick.id)] };
   if (pick.kind === "feature") return featureTarget(state, pick.id);
   if (pick.kind === "capability") return capabilityTarget(state, pick.id);
@@ -505,11 +505,11 @@ export function targetOf(state: DocketState, pick: Pick): Target {
 }
 
 /* Every doc of a pick's kind. */
-export const pickList = (state: DocketState, kind: Pick["kind"]): Doc[] =>
+export const pickList = (state: DocqetState, kind: Pick["kind"]): Doc[] =>
   ({ domain: state.domains, feature: state.features, capability: state.capabilities, concept: state.concepts, persona: state.personas })[kind];
 
 /* A pick's name, as the filter bar and back button say it. */
-export function pickName(state: DocketState, pick: Pick): string {
+export function pickName(state: DocqetState, pick: Pick): string {
   return find<Doc>(pickList(state, pick.kind), pick.id)?.name ?? pick.id;
 }
 
@@ -517,7 +517,7 @@ export function pickName(state: DocketState, pick: Pick): string {
  * Capabilities grouped by the feature they're in, features in the order
  * the server lists them, then those in no feature under null.
  */
-export function byFeature(state: DocketState, capabilityIds: string[]): { feature: Feature | null; capabilities: Capability[] }[] {
+export function byFeature(state: DocqetState, capabilityIds: string[]): { feature: Feature | null; capabilities: Capability[] }[] {
   const capabilities = capabilityIds.flatMap((id) => find(state.capabilities, id) ?? []);
   const groups = state.features
     .map((feature) => ({ feature: feature as Feature | null, capabilities: capabilities.filter((c) => c.feature === feature.id) }))
@@ -527,13 +527,13 @@ export function byFeature(state: DocketState, capabilityIds: string[]): { featur
 }
 
 /* The concepts some capabilities use, each once, in the order they first come up. */
-export function conceptsOf(state: DocketState, capabilityIds: string[]): Concept[] {
+export function conceptsOf(state: DocqetState, capabilityIds: string[]): Concept[] {
   const ids = new Set(capabilityIds.flatMap((id) => find(state.capabilities, id)?.concepts ?? []));
   return [...ids].flatMap((id) => find(state.concepts, id) ?? []);
 }
 
 /* The concepts a feature's capabilities use. */
-export const featureConcepts = (state: DocketState, feature: Feature) => conceptsOf(state, feature.capabilities);
+export const featureConcepts = (state: DocqetState, feature: Feature) => conceptsOf(state, feature.capabilities);
 
 /*
  * What filtering leaves on the map: everything any of the picks covers. A
@@ -544,7 +544,7 @@ export const featureConcepts = (state: DocketState, feature: Feature) => concept
  */
 export type MapFilter = { capabilities: Set<string>; cards: Set<string> };
 
-export function filterBy(state: DocketState, picks: Pick[]): MapFilter | null {
+export function filterBy(state: DocqetState, picks: Pick[]): MapFilter | null {
   if (!picks.length) return null;
   const capabilities = new Set<string>();
   const cards = new Set<string>();
@@ -621,7 +621,7 @@ export type Affected =
   | { kind: "gap"; gap: Gap }
   | { kind: "tradeoff"; tradeoff: Tradeoff };
 
-export function affectedBy(state: DocketState, item: { affects: string[] }): Affected[] {
+export function affectedBy(state: DocqetState, item: { affects: string[] }): Affected[] {
   return item.affects.flatMap((ref): Affected[] => {
     if (ref.startsWith("outcome:")) {
       const named = expectedOutcome(state.rubric, ref);
@@ -642,7 +642,7 @@ export function affectedBy(state: DocketState, item: { affects: string[] }): Aff
 export type HeldDecision = { decision: Decision; on: DecisionHolder };
 
 /* The concept a link from a doc in `domain` means: the one in the domain it names with `@<domain>`, else its own domain's. */
-export const conceptLinked = (state: DocketState, link: string, domain: string): Concept | undefined => find(state.concepts, inDomain(link, domain));
+export const conceptLinked = (state: DocqetState, link: string, domain: string): Concept | undefined => find(state.concepts, inDomain(link, domain));
 
 /*
  * Whether a capability holds to a rule it follows: not yet, when one of its
@@ -666,17 +666,17 @@ export type TechnicalGap = { gap: Gap; on: TechnicalDoc };
 export type Left = { decisions: Decision[]; gaps: Gap[]; technical: TechnicalGap[] };
 
 /* Gaps or tradeoffs by ID, in the order given. */
-export const gapsById = (state: DocketState, ids: string[]) => ids.flatMap((id) => state.gaps.find((g) => g.id === id) ?? []);
-export const tradeoffsById = (state: DocketState, ids: string[]) => ids.flatMap((id) => state.tradeoffs.find((t) => t.id === id) ?? []);
+export const gapsById = (state: DocqetState, ids: string[]) => ids.flatMap((id) => state.gaps.find((g) => g.id === id) ?? []);
+export const tradeoffsById = (state: DocqetState, ids: string[]) => ids.flatMap((id) => state.tradeoffs.find((t) => t.id === id) ?? []);
 
 /* A mechanism or component by its `mechanism:<id>` or `component:<id>` reference. */
-export function technicalDoc(state: DocketState, ref: string): TechnicalDoc | undefined {
+export function technicalDoc(state: DocqetState, ref: string): TechnicalDoc | undefined {
   const [kind, id] = [ref.slice(0, ref.indexOf(":")), ref.slice(ref.indexOf(":") + 1)];
   return find(kind === "mechanism" ? state.mechanisms : kind === "component" ? state.components : [], id);
 }
 
 /* What a capability is built on: the mechanisms and components that list it. */
-export const builtOn = (state: DocketState, capability: Capability) => capability.builtBy.flatMap((ref) => technicalDoc(state, ref) ?? []);
+export const builtOn = (state: DocqetState, capability: Capability) => capability.builtBy.flatMap((ref) => technicalDoc(state, ref) ?? []);
 
 export const leftCount = (left: Left) => left.decisions.length + left.gaps.length + left.technical.length;
 
@@ -748,7 +748,7 @@ export type Risk = {
 export type NotReady = { capability: Capability; belowBeta: boolean; gaps: Gap[]; decisions: Decision[] };
 
 /* The gaps that show on a capability: its own, and those of the mechanisms and components it's built on. */
-export const gapsOn = (state: DocketState, capability: Capability) => [
+export const gapsOn = (state: DocqetState, capability: Capability) => [
   ...gapsById(state, capability.gaps),
   ...builtOn(state, capability).flatMap((on) => gapsById(state, on.gaps)),
 ];

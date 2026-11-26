@@ -9,7 +9,7 @@ import {
   type Readiness,
   type Capability,
   type Doc,
-  type DocketState,
+  type DocqetState,
   type Gap,
   type RiskAcross,
   type TechnicalDoc,
@@ -157,7 +157,7 @@ export function LeftTab({ left, here, nothing, ...go }: DocGo & { left: LeftHere
 }
 
 /* On a first tab, the few riskiest gaps, with a way to all of them. */
-export function TopGaps({ state, left, here }: { state: DocketState; left: LeftHere; here?: Doc }) {
+export function TopGaps({ state, left, here }: { state: DocqetState; left: LeftHere; here?: Doc }) {
   if (!left.gaps.length) return null;
   const shown = left.gaps.slice(0, 3);
   return (

@@ -12,9 +12,9 @@ import (
 	"regexp"
 	"time"
 
-	"github.com/exalynt/docket/internal/check"
-	"github.com/exalynt/docket/internal/repositories"
-	"github.com/exalynt/docket/internal/state"
+	"github.com/exalynt/docqet/internal/check"
+	"github.com/exalynt/docqet/internal/repositories"
+	"github.com/exalynt/docqet/internal/state"
 )
 
 var (
@@ -27,7 +27,7 @@ var (
 	ErrCommitNotFound = errors.New("services: commit not found")
 )
 
-// StateService takes the states `docket apply` sends, and hands them back.
+// StateService takes the states `docqet apply` sends, and hands them back.
 type StateService struct {
 	states repositories.StateRepository
 	uow    repositories.UnitOfWork
@@ -54,7 +54,7 @@ var shaPattern = regexp.MustCompile(`^(?:[0-9a-f]{40}|[0-9a-f]{64})$`)
 // sent, but for those only files show. It returns ErrInvalidState for a state
 // that isn't one, or that's for another project. created reports whether the
 // commit is new to the server.
-// docket:implements capability:applying component:server rule:applying-twice-changes-nothing@reporting
+// docqet:implements capability:applying component:server rule:applying-twice-changes-nothing@reporting
 func (s *StateService) Apply(ctx context.Context, project, sha string, a state.Applied) (result Applied, created bool, err error) {
 	invalid := func(format string, args ...any) error {
 		return fmt.Errorf("%w: %s", ErrInvalidState, fmt.Sprintf(format, args...))

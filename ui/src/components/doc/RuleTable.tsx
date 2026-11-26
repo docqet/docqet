@@ -10,7 +10,7 @@ import { Excerpt } from "../markdown/Markdown";
 import { Term } from "../term/Term";
 import { StandingMark } from "../standing/StandingMark";
 import { RULE_STANDING_LABELS, plural } from "../names";
-import { type Capability, type DocketState, type Rule } from "../../state";
+import { type Capability, type DocqetState, type Rule } from "../../state";
 import { docHref } from "../../routes";
 import { Empty } from "../shell/layout";
 import { CapabilityTable, cellSubSx, tableCardSx, wideOnly } from "./CapabilityTable";
@@ -24,7 +24,7 @@ export function StandingSummary({
   limit = 8,
   all,
 }: {
-  state: DocketState;
+  state: DocqetState;
   capabilities: Capability[];
   domain?: string;
   limit?: number;

@@ -11,14 +11,14 @@ import (
 
 	"github.com/urfave/cli/v3"
 
-	"github.com/exalynt/docket/internal/combine"
-	"github.com/exalynt/docket/internal/derive"
-	"github.com/exalynt/docket/internal/git"
-	"github.com/exalynt/docket/internal/state"
+	"github.com/exalynt/docqet/internal/combine"
+	"github.com/exalynt/docqet/internal/derive"
+	"github.com/exalynt/docqet/internal/git"
+	"github.com/exalynt/docqet/internal/state"
 )
 
 // TouchesCommand lists what a set of files, or a change, is about.
-// docket:implements capability:touches
+// docqet:implements capability:touches
 func TouchesCommand() *cli.Command {
 	return &cli.Command{
 		Name:      "touches",
@@ -254,7 +254,7 @@ func touchesOf(p *combine.Product, problems []state.Problem, paths []string) tou
 
 func (t touches) print(out io.Writer) {
 	if len(t.Files) == 0 && len(t.Capabilities) == 0 {
-		_, _ = fmt.Fprintln(out, "Nothing in these files is named in Docket.")
+		_, _ = fmt.Fprintln(out, "Nothing in these files is named in Docqet.")
 	}
 	for _, f := range t.Files {
 		_, _ = fmt.Fprintln(out, f.File)

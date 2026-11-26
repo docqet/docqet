@@ -5,7 +5,7 @@ get:
   description: >-
     The product at a glance: its maturity, readiness and exposure, every gap's
     risk, and how many of each doc there are. With `?for=`, the figures are
-    those of the capabilities it names, as `docket status --for` shows them.
+    those of the capabilities it names, as `docqet status --for` shows them.
   tags:
     - Products
   # No sign-in yet: a server is only reachable by its client's people.

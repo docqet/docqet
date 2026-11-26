@@ -58,7 +58,7 @@ components:
       properties:
         key:
           type: string
-          example: Docket-Became
+          example: Docqet-Became
         value:
           type: string
           example: capability:early-arrival -> capability:early-check-in
@@ -82,7 +82,7 @@ components:
         trailers:
           type: array
           description: >-
-            The `Docket-Became` trailers of the commit and of every commit it
+            The `Docqet-Became` trailers of the commit and of every commit it
             brought in, as git reads them.
           items:
             $ref: "#/components/schemas/Trailer"
@@ -147,15 +147,15 @@ components:
     State:
       type: object
       description: >-
-        A project's state, as `docket index` writes it to `state.json`:
+        A project's state, as `docqet index` writes it to `state.json`:
         every doc's entry, its evidence, reverse links and problems, and the
         rubric it was indexed against. The
-        [state concept](https://github.com/exalynt/docket/blob/main/docket/domains/authoring/concepts/state.md)
+        [state concept](https://github.com/exalynt/docqet/blob/main/docqet/domains/authoring/concepts/state.md)
         describes every field.
-      required: [docket, project, commit, indexedAt, summary, problems, rubric]
+      required: [docqet, project, commit, indexedAt, summary, problems, rubric]
       additionalProperties: true
       properties:
-        docket:
+        docqet:
           type: string
           description: The version of the state format.
           example: "0.1"
@@ -436,7 +436,7 @@ components:
           example: bookings
         file:
           type: string
-          example: docket/domains/bookings/capabilities/room-booking.md
+          example: docqet/domains/bookings/capabilities/room-booking.md
         name:
           type: string
         description:
@@ -1241,7 +1241,7 @@ components:
       name: project
       in: path
       required: true
-      description: The project's ID, from its `docket.yaml`.
+      description: The project's ID, from its `docqet.yaml`.
       schema:
         type: string
         example: hotel-bookings

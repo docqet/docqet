@@ -5,24 +5,24 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/exalynt/docket/internal/git"
-	"github.com/exalynt/docket/internal/index"
-	"github.com/exalynt/docket/internal/state"
+	"github.com/exalynt/docqet/internal/git"
+	"github.com/exalynt/docqet/internal/index"
+	"github.com/exalynt/docqet/internal/state"
 )
 
 // becameKey is the trailer that says what something a commit removed became.
-const becameKey = "Docket-Became"
+const becameKey = "Docqet-Became"
 
-// invalidTrailer is the type of a problem with a Docket-Became trailer. It's
+// invalidTrailer is the type of a problem with a Docqet-Became trailer. It's
 // check's own: trailers aren't part of a state, so the indexer never reports
 // one.
 const invalidTrailer = "invalid-trailer"
 
-// checkTrailers checks every Docket-Became trailer in the commits of rng:
+// checkTrailers checks every Docqet-Became trailer in the commits of rng:
 // that it's written as <old> -> <new>, that <old> existed before the commit
-// and <new> exists after it, and that no Docket-Became line is left in a
+// and <new> exists after it, and that no Docqet-Became line is left in a
 // message's body, where git won't read it.
-// docket:implements capability:trailers
+// docqet:implements capability:trailers
 func checkTrailers(ctx context.Context, root, rng string) ([]state.Problem, error) {
 	commits, err := git.Commits(ctx, root, rng)
 	if err != nil {
@@ -43,7 +43,7 @@ func checkTrailers(ctx context.Context, root, rng string) ([]state.Problem, erro
 		}
 		if lines > len(trailers) {
 			problems = append(problems, state.Problem{Type: invalidTrailer, File: where,
-				Message: "a Docket-Became line isn't in the message's trailer block, its last paragraph, so git won't read it"})
+				Message: "a Docqet-Became line isn't in the message's trailer block, its last paragraph, so git won't read it"})
 		}
 		if len(trailers) == 0 {
 			continue
@@ -94,7 +94,7 @@ func idsAround(ctx context.Context, root, sha string) (before, after map[string]
 }
 
 // idsAt returns every reference the project declares at a commit, or none
-// when it had no docket.yaml then.
+// when it had no docqet.yaml then.
 func idsAt(ctx context.Context, root, sha string) (map[string]bool, error) {
 	fsys, err := git.Tree(ctx, root, sha)
 	if err != nil {

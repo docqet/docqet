@@ -9,7 +9,7 @@ describe("parseStay", () => {
     });
   });
 
-  // docket:verifies rule:minimum-stay@guest-stays
+  // docqet:verifies rule:minimum-stay@guest-stays
   it("rejects a stay that ends the day it starts", () => {
     expect(() => parseStay("2026-12-01", "2026-12-01")).toThrow();
   });

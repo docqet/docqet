@@ -6,7 +6,7 @@ import { Term } from "../../components/term/Term";
 import { CapabilityStability } from "../../components/CapabilityLabel";
 import { NAMES, plural } from "../../components/names";
 import { initiativesOf } from "../../components/Initiatives";
-import { bareId, byFeature, domainName, find, type Concept, type DocketState, capabilitiesById } from "../../state";
+import { bareId, byFeature, domainName, find, type Concept, type DocqetState, capabilitiesById } from "../../state";
 import { docHref, type Route } from "../../routes";
 import { Empty, Section, Stat, Tabs, currentTab, type TabDef } from "../../components/shell/layout";
 import { type DocPageProps } from "../../components/doc/DocPage";
@@ -23,7 +23,7 @@ import { Missing } from "../../components/doc/Missing";
 import { docGo, cardSx, Crumb, faintSx } from "../../components/doc/DocPage";
 
 /* A concept's page, or what shows when it isn't in the projects showing. */
-export default function ConceptView({ state, id, route }: { state: DocketState; id: string; route: Route }) {
+export default function ConceptView({ state, id, route }: { state: DocqetState; id: string; route: Route }) {
   const concept = find(state.concepts, id);
   if (!concept) return <Missing kind="concept" id={id} />;
   return <ConceptPage concept={concept} route={route} {...docGo(state)} />;

@@ -10,9 +10,9 @@ import (
 
 	"github.com/urfave/cli/v3"
 
-	"github.com/exalynt/docket/internal/git"
-	"github.com/exalynt/docket/internal/index"
-	"github.com/exalynt/docket/internal/state"
+	"github.com/exalynt/docqet/internal/git"
+	"github.com/exalynt/docqet/internal/index"
+	"github.com/exalynt/docqet/internal/state"
 )
 
 // CheckCommand finds problems in the docs, annotations and commit trailers.
@@ -28,7 +28,7 @@ server checks every state it's sent with the same check.`,
 		Flags: withSourceFlags(
 			&cli.BoolFlag{Name: "changed", Usage: "only problems in files changed since the main branch"},
 			&cli.StringFlag{Name: "base", Usage: "with --changed, changed since `REV` instead of origin/HEAD"},
-			&cli.StringFlag{Name: "commits", Usage: "also check the Docket trailers in `RANGE`, such as origin/main..HEAD"},
+			&cli.StringFlag{Name: "commits", Usage: "also check the Docqet trailers in `RANGE`, such as origin/main..HEAD"},
 		),
 		Action: func(ctx context.Context, cmd *cli.Command) error {
 			if err := notBuiltFlags(cmd.IsSet, "remote", "product", "project"); err != nil {
@@ -102,7 +102,7 @@ func printProblems(cmd *cli.Command, problems []state.Problem) {
 // files it changed, and any other that wasn't there at base, such as an
 // annotation left naming a gap the change removed. base is the main branch,
 // origin/HEAD, when it's "".
-// docket:implements capability:checking
+// docqet:implements capability:checking
 func onlyChanged(ctx context.Context, root, base string, problems []state.Problem) ([]state.Problem, error) {
 	if base == "" {
 		var err error

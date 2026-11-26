@@ -1,4 +1,4 @@
-// Package http contains docket's HTTP handlers. Each mounts its own routes
+// Package http contains docqet's HTTP handlers. Each mounts its own routes
 // with RegisterRoutes, and the serve command decides where.
 package http
 

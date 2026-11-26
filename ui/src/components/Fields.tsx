@@ -14,7 +14,7 @@ import {
   type Affected,
   type Contribution,
   type Decision,
-  type DocketState,
+  type DocqetState,
   type HeldDecision,
   type Tradeoff,
 } from "../state";
@@ -90,7 +90,7 @@ const affectsLabelSx: SystemStyleObject<Theme> = {
 const affectSx: SystemStyleObject<Theme> = { display: "inline-flex", alignItems: "baseline", gap: 0.75, "& code": inlineCodeSx };
 
 /* What waits on a decision's answer, and, where that's gaps, the riskiest of their risks. */
-function DecisionAffects({ state, decision }: { state: DocketState; decision: Decision }) {
+function DecisionAffects({ state, decision }: { state: DocqetState; decision: Decision }) {
   const affected = affectedBy(state, decision);
   if (!affected.length) return null;
   const riskiest = affected.flatMap((a) => (a.kind === "gap" ? [a.gap.risk] : [])).sort((a, b) => b.score - a.score)[0];

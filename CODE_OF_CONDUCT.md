@@ -1,6 +1,6 @@
 # Code of Conduct
 
-Docket follows the
+Docqet follows the
 [Exalynt Code of Conduct](https://github.com/exalynt/community/blob/main/CODE_OF_CONDUCT.md),
 which covers everyone taking part in Exalynt projects: issues, pull requests,
 discussions and any other project space.

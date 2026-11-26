@@ -9,20 +9,20 @@ import (
 
 // ignoreFile is the file at a project's root that leaves files out of it, in
 // gitignore's syntax.
-const ignoreFile = ".docketignore"
+const ignoreFile = ".docqetignore"
 
-// ignorePattern is one line of a .docketignore.
+// ignorePattern is one line of a .docqetignore.
 type ignorePattern struct {
 	re      *regexp.Regexp
 	negate  bool // it starts with !, so a path it matches is part of the project again
 	dirOnly bool // it ends with /, so it matches only folders
 }
 
-// ignore is a project's .docketignore: the files and folders that aren't part
+// ignore is a project's .docqetignore: the files and folders that aren't part
 // of the project, so nothing is read from them, neither docs nor annotations.
 type ignore []ignorePattern
 
-// readIgnore reads the .docketignore at the root of fsys. A project without
+// readIgnore reads the .docqetignore at the root of fsys. A project without
 // one ignores nothing.
 func readIgnore(fsys fs.FS) (ignore, error) {
 	data, err := fs.ReadFile(fsys, ignoreFile)
@@ -122,7 +122,7 @@ func globToRegexp(glob string) string {
 // of the project. The last pattern that matches it decides, as in gitignore.
 // Folders are checked as they're walked, so a file in an ignored folder is
 // never reached, and can't be brought back with !.
-// docket:implements capability:ignoring-files rule:ignored-files-arent-read@authoring
+// docqet:implements capability:ignoring-files rule:ignored-files-arent-read@authoring
 func (ig ignore) ignored(p string, isDir bool) bool {
 	out := false
 	for _, pat := range ig {

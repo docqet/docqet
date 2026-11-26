@@ -1,4 +1,4 @@
-// Package project finds the Docket project a command acts on.
+// Package project finds the Docqet project a command acts on.
 package project
 
 import (
@@ -11,10 +11,10 @@ import (
 	"go.yaml.in/yaml/v3"
 )
 
-// ErrNotInProject is returned when no docket.yaml is found.
-var ErrNotInProject = errors.New("not in a Docket project: no docket.yaml here or in any folder above")
+// ErrNotInProject is returned when no docqet.yaml is found.
+var ErrNotInProject = errors.New("not in a Docqet project: no docqet.yaml here or in any folder above")
 
-// Find returns the folder of the docket.yaml nearest above dir, dir included:
+// Find returns the folder of the docqet.yaml nearest above dir, dir included:
 // the project a command run in dir acts on. It returns ErrNotInProject when
 // there's none.
 func Find(dir string) (string, error) {
@@ -23,7 +23,7 @@ func Find(dir string) (string, error) {
 		return "", err
 	}
 	for {
-		_, err := os.Stat(filepath.Join(dir, "docket.yaml"))
+		_, err := os.Stat(filepath.Join(dir, "docqet.yaml"))
 		if err == nil {
 			return dir, nil
 		}
@@ -41,10 +41,10 @@ func Find(dir string) (string, error) {
 // StatePath is where a project's working tree state is kept, in the project
 // at root.
 func StatePath(root string) string {
-	return filepath.Join(root, ".docket", "state.json")
+	return filepath.Join(root, ".docqet", "state.json")
 }
 
-// Config is a project's docket.yaml.
+// Config is a project's docqet.yaml.
 type Config struct {
 	Project struct {
 		ID   string `yaml:"id"`
@@ -56,26 +56,26 @@ type Config struct {
 		ID   string `yaml:"id"`
 		Name string `yaml:"name"`
 	} `yaml:"product"`
-	// Server is where the project's Docket server is, if it has one.
+	// Server is where the project's Docqet server is, if it has one.
 	Server string `yaml:"server"`
 }
 
-// ReadConfig reads docket.yaml from the root of project. It's an error when
+// ReadConfig reads docqet.yaml from the root of project. It's an error when
 // there's none, or it doesn't name the project.
 func ReadConfig(project fs.FS) (Config, error) {
-	data, err := fs.ReadFile(project, "docket.yaml")
+	data, err := fs.ReadFile(project, "docqet.yaml")
 	if err != nil {
 		return Config{}, err
 	}
 	var cfg Config
 	if err := yaml.Unmarshal(data, &cfg); err != nil {
-		return Config{}, fmt.Errorf("docket.yaml: %w", err)
+		return Config{}, fmt.Errorf("docqet.yaml: %w", err)
 	}
 	if cfg.Project.ID == "" || cfg.Project.Name == "" {
-		return Config{}, errors.New("docket.yaml: project needs an id and a name")
+		return Config{}, errors.New("docqet.yaml: project needs an id and a name")
 	}
 	if cfg.Product != nil && (cfg.Product.ID == "" || cfg.Product.Name == "") {
-		return Config{}, errors.New("docket.yaml: product needs an id and a name")
+		return Config{}, errors.New("docqet.yaml: product needs an id and a name")
 	}
 	return cfg, nil
 }

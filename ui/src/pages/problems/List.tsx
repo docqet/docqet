@@ -8,7 +8,7 @@ import TableRow from "@mui/material/TableRow";
 import { InlineMarkdown } from "../../components/markdown/Markdown";
 import { DOC_KINDS, type DocKind, type Route } from "../../routes";
 import { Empty, PageHeader, Section, View } from "../../components/shell/layout";
-import { find, type Doc, type DocketState, type Problem } from "../../state";
+import { find, type Doc, type DocqetState, type Problem } from "../../state";
 import { DocLink } from "../../components/indexParts";
 
 /*
@@ -17,7 +17,7 @@ import { DocLink } from "../../components/indexParts";
  * settle before anything else reads true, then the other kinds, the most
  * common first. Each says what's wrong and links to what it's about.
  */
-export default function ProblemsPage({ state }: { state: DocketState; route: Route }) {
+export default function ProblemsPage({ state }: { state: DocqetState; route: Route }) {
   const types = [...new Set(state.problems.map((p) => p.type))].sort((a, b) => rank(a) - rank(b) || count(state, b) - count(state, a) || a.localeCompare(b));
   return (
     <View title="Doc problems" wide>
@@ -78,10 +78,10 @@ const TYPES: Record<string, { name: string; note: string }> = {
 /* Contradictions, and the problems that are contradictions too, before the rest. */
 const FIRST = ["contradiction", "in-two-features", "duplicate-id"];
 const rank = (type: string) => (FIRST.includes(type) ? FIRST.indexOf(type) : FIRST.length);
-const count = (state: DocketState, type: string) => state.problems.filter((p) => p.type === type).length;
+const count = (state: DocqetState, type: string) => state.problems.filter((p) => p.type === type).length;
 
 /* What a problem is about, linking to its page when it's showing; else as written. */
-function Subject({ state, problem }: { state: DocketState; problem: Problem }) {
+function Subject({ state, problem }: { state: DocqetState; problem: Problem }) {
   const colon = problem.subject.indexOf(":");
   const type = problem.subject.slice(0, colon);
   const id = problem.subject.slice(colon + 1);
@@ -100,7 +100,7 @@ function Subject({ state, problem }: { state: DocketState; problem: Problem }) {
   );
 }
 
-function docsOf(state: DocketState, kind: DocKind): Doc[] {
+function docsOf(state: DocqetState, kind: DocKind): Doc[] {
   switch (kind) {
     case "domain":
       return state.domains;

@@ -10,7 +10,7 @@ import {
   find,
   type Capability,
   type DecisionHolder,
-  type DocketState,
+  type DocqetState,
   type Domain,
   type Gap,
   type Impact,
@@ -46,7 +46,7 @@ export type Scope = { key: string; kind: ScopeKind; name: string; capabilities: 
 const EVERYTHING: Scope = { key: "all", kind: "all", name: "Everything showing", capabilities: null };
 
 /* The scope an address names, as `<kind>:<id>`, or everything when it names none, or one that isn't showing. */
-export function scopeOf(state: DocketState, value: string | null): Scope {
+export function scopeOf(state: DocqetState, value: string | null): Scope {
   if (!value) return EVERYTHING;
   const colon = value.indexOf(":");
   const kind = value.slice(0, colon) as ScopeKind;
@@ -82,7 +82,7 @@ export function scopeOf(state: DocketState, value: string | null): Scope {
 export type ScopeChoice = { kind: ScopeKind; key: string; name: string; note: string | null };
 
 /* Every scope there is to choose, by kind, everything first, each kind by name. */
-export function scopeChoices(state: DocketState): ScopeChoice[] {
+export function scopeChoices(state: DocqetState): ScopeChoice[] {
   const byName = (xs: ScopeChoice[]) => [...xs].sort((a, b) => a.name.localeCompare(b.name));
   const domains = (ids: string[]) => [...new Set(ids)].map((d) => domainName(state, d)).join(", ") || null;
   return [
@@ -150,7 +150,7 @@ const rowsOf = (scored: Scored[]): GapRow[] =>
  * server, riskiest first, as a read; for a project, those written in it, and
  * for everything, every gap, each with its whole risk, which are already in.
  */
-export function useRowsFor(state: DocketState, scope: Scope): Read<GapRow[]> {
+export function useRowsFor(state: DocqetState, scope: Scope): Read<GapRow[]> {
   const within = useGapsFor(state, scope.capabilities ? scope.key : null);
   if (!scope.capabilities) {
     const rows = rowsOf(
@@ -176,7 +176,7 @@ export const acrossRows = (rows: GapRow[]): RiskAcross<Gap> =>
   summed([...rows].sort((a, b) => b.score - a.score).map((r) => ({ item: r.gap, risk: r.risk, on: r.on, score: r.score, verdict: r.verdict })));
 
 /* The decisions held on the scope: on its capabilities, the features and domains they're in, and what they're built on. */
-export function holdersIn(state: DocketState, holders: DecisionHolder[], scope: Scope): DecisionHolder[] {
+export function holdersIn(state: DocqetState, holders: DecisionHolder[], scope: Scope): DecisionHolder[] {
   if (scope.project) return holders.filter((h) => h.doc.from.some((f) => f.project === scope.project));
   if (!scope.capabilities) return holders;
   const ids = new Set(scope.capabilities.map((c) => c.id));

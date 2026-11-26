@@ -15,7 +15,7 @@ import { StandingMark } from "../../components/standing/StandingMark";
 import { Term } from "../../components/term/Term";
 import { docHref, navigate, type Route } from "../../routes";
 import { Empty, PageHeader, Section, Stat, Tabs, View, currentTab, type TabDef } from "../../components/shell/layout";
-import { byFeature, contradictionsOf, domainName, find, gapsById, projectName, type Capability, type DocketState, type Rule } from "../../state";
+import { byFeature, contradictionsOf, domainName, find, gapsById, projectName, type Capability, type DocqetState, type Rule } from "../../state";
 /* EvidenceList's rules, until it's styled in place. */
 import { EvidenceList } from "../../components/doc/EvidenceList";
 import { Missing } from "../../components/doc/Missing";
@@ -27,20 +27,20 @@ import { InitiativeTags, initiativesOf } from "../../components/Initiatives";
  * to it. Its tabs say where it applies, the evidence that it holds, the
  * concepts it's in the words of, and more about it.
  */
-export default function RulePage({ state, id, route }: { state: DocketState; id: string; route: Route }) {
+export default function RulePage({ state, id, route }: { state: DocqetState; id: string; route: Route }) {
   const rule = find(state.rules, id);
   if (!rule) return <Missing kind="rule" id={id} />;
   return <RuleView state={state} rule={rule} route={route} />;
 }
 
 /* Where links in Markdown go from a doc page: to the page of what they name. */
-export const pageGo = (state: DocketState): Go => ({
+export const pageGo = (state: DocqetState): Go => ({
   state,
   onConcept: (id) => navigate(docHref("concept", id)),
   onPick: (pick) => navigate(docHref(pick.kind, pick.id)),
 });
 
-function RuleView({ state, rule, route }: { state: DocketState; rule: Rule; route: Route }) {
+function RuleView({ state, rule, route }: { state: DocqetState; rule: Rule; route: Route }) {
   const go = pageGo(state);
   const following = rule.capabilities.flatMap((id) => find(state.capabilities, id) ?? []);
   const notHeld = following.filter((c) => rule.standings[c.id] === "gap");
@@ -232,7 +232,7 @@ const nameSx: SystemStyleObject<Theme> = { fontWeight: 600, color: "inherit", te
 const rowNoteSx: SystemStyleObject<Theme> = { fontSize: 13, color: "text.secondary" };
 
 /* Each capability that follows the rule, by feature, with whether it holds to it, and where it doesn't, the gap that says so. */
-function AppliesTo({ state, rule }: { state: DocketState; rule: Rule }) {
+function AppliesTo({ state, rule }: { state: DocqetState; rule: Rule }) {
   const groups = byFeature(state, rule.capabilities);
   if (!groups.length) return <Empty>No capability showing follows this rule yet.</Empty>;
   return (
@@ -254,7 +254,7 @@ function AppliesTo({ state, rule }: { state: DocketState; rule: Rule }) {
   );
 }
 
-function Follower({ state, rule, capability }: { state: DocketState; rule: Rule; capability: Capability }) {
+function Follower({ state, rule, capability }: { state: DocqetState; rule: Rule; capability: Capability }) {
   const standing = rule.standings[capability.id];
   const gaps = gapsById(
     state,
@@ -310,7 +310,7 @@ const VERBS = [
 ] as const;
 
 /* The places that verify or implement the rule. It's the rule's, wherever it applies. */
-function RuleEvidence({ state, rule }: { state: DocketState; rule: Rule }) {
+function RuleEvidence({ state, rule }: { state: DocqetState; rule: Rule }) {
   return (
     <>
       <Box component="p" sx={{ maxWidth: 760, mb: 2, fontSize: 13.5, lineHeight: 1.55, color: "text.secondary" }}>

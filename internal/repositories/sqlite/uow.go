@@ -4,7 +4,7 @@ import (
 	"context"
 	"database/sql"
 
-	"github.com/exalynt/docket/internal/repositories"
+	"github.com/exalynt/docqet/internal/repositories"
 )
 
 // querier is what a repository runs its SQL on: the database, or the

@@ -5,7 +5,7 @@ get:
   description: >-
     The product's capabilities that are showing, each with its figures, what's
     left on it, and how it stands on each rule it follows and each expected
-    outcome. `?stability=` and `?for=` narrow them as `docket list
+    outcome. `?stability=` and `?for=` narrow them as `docqet list
     capabilities` does.
   tags:
     - Products

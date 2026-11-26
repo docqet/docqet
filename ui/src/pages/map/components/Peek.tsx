@@ -26,7 +26,7 @@ import {
   openDecisions,
   pickList,
   type Capability,
-  type DocketState,
+  type DocqetState,
   type Exposure,
   type Gap,
   type Pick,
@@ -75,9 +75,9 @@ type Summary = {
 const leftAcross = (capabilities: Capability[], technical = true) =>
   capabilities.reduce((n, c) => n + (technical ? leftCount(c.left) : c.left.decisions.length + c.left.gaps.length), 0);
 
-const capabilitiesOf = (state: DocketState, ids: string[]) => ids.flatMap((id) => find(state.capabilities, id) ?? []);
+const capabilitiesOf = (state: DocqetState, ids: string[]) => ids.flatMap((id) => find(state.capabilities, id) ?? []);
 
-function summarize(state: DocketState, at: Pick): Summary | null {
+function summarize(state: DocqetState, at: Pick): Summary | null {
   if (at.kind === "capability") {
     const c = find(state.capabilities, at.id);
     if (!c) return null;
@@ -203,7 +203,7 @@ export default function Peek({
   onFilter,
   ref,
 }: {
-  state: DocketState;
+  state: DocqetState;
   at: Pick;
   onClose: () => void;
   /* Whether the map is filtered to it, and filtering to it or not. */

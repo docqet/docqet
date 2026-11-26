@@ -6,7 +6,7 @@ Feature: Engineer profiles
     Given Acme and Globex are clients
     And Ada and Ben are on Platform, which supports Acme
 
-  # docket:verifies rule:who-edits-a-bio@capacity
+  # docqet:verifies rule:who-edits-a-bio@capacity
   Rule: An engineer edits their own bio, and Exalynt's admins can edit anyone's
 
     Example: An engineer edits their own bio
@@ -27,7 +27,7 @@ Feature: Engineer profiles
       Then it's refused
       And Ada has no bio
 
-  # docket:verifies rule:who-sees-a-bio@capacity
+  # docqet:verifies rule:who-sees-a-bio@capacity
   Rule: An engineer's bio is seen by their teammates and by the clients their team supports, and by no other client
 
     Example: The team's client
@@ -45,7 +45,7 @@ Feature: Engineer profiles
       When Globex looks at its teams
       Then Globex sees no one's bio
 
-  # docket:verifies rule:bios-are-at-most-500-characters@capacity
+  # docqet:verifies rule:bios-are-at-most-500-characters@capacity
   Rule: A bio is short, at most 500 characters
 
     Scenario Outline: A bio's length
@@ -57,7 +57,7 @@ Feature: Engineer profiles
         | 500    | kept    |
         | 501    | refused |
 
-  # docket:verifies rule:clearing-a-bio-leaves-none@capacity
+  # docqet:verifies rule:clearing-a-bio-leaves-none@capacity
   Rule: Clearing a bio leaves none
 
     Example: Clearing it

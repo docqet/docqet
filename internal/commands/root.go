@@ -1,5 +1,5 @@
-// Package commands holds every `docket` command, one file each, as
-// cmd/docket/README.md drafts them. Most are scaffolded and not built yet:
+// Package commands holds every `docqet` command, one file each, as
+// cmd/docqet/README.md drafts them. Most are scaffolded and not built yet:
 // they take their drafted flags and answer that they aren't built.
 package commands
 
@@ -43,10 +43,10 @@ const (
 // printed.
 var errFound = errors.New("found what it was asked to fail on")
 
-// Root builds the docket command and every command under it.
+// Root builds the docqet command and every command under it.
 func Root(version string) *cli.Command {
 	root := &cli.Command{
-		Name:    "docket",
+		Name:    "docqet",
 		Usage:   "What software can do, who it serves, and how ready it is",
 		Version: version,
 		Flags: []cli.Flag{
@@ -119,7 +119,7 @@ func Finish(root *cli.Command, args []string, err error) int {
 	if wantsJSON(root, args) {
 		writeJSON(root.Writer, map[string]string{"error": err.Error()})
 	} else {
-		_, _ = fmt.Fprintf(root.ErrWriter, "docket: %s\n", err)
+		_, _ = fmt.Fprintf(root.ErrWriter, "docqet: %s\n", err)
 	}
 	return exitCouldNotRun
 }
@@ -139,7 +139,7 @@ func writeJSON(w io.Writer, v any) {
 
 // notBuilt is what a scaffolded command answers until it's built.
 func notBuilt(cmd *cli.Command) error {
-	return fmt.Errorf("%s isn't built yet: cmd/docket/README.md drafts what it will do", strings.TrimPrefix(cmd.FullName(), "docket "))
+	return fmt.Errorf("%s isn't built yet: cmd/docqet/README.md drafts what it will do", strings.TrimPrefix(cmd.FullName(), "docqet "))
 }
 
 // notBuiltAction is the action of every command not built yet.

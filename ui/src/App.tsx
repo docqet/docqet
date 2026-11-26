@@ -31,10 +31,10 @@ import { ErrorBoundary } from "./components/ErrorBoundary";
 import { ReadError, useDelayed } from "./components/ReadFallback";
 import { ShellSkeleton } from "./components/shell/ShellSkeleton";
 import { loadProduct, useRead } from "./model";
-import { listProducts, type ProductResource } from "./services/docket/products";
+import { listProducts, type ProductResource } from "./services/docqet/products";
 import { scopeOf, scopeParam } from "./scope";
 import Shell from "./components/shell/Shell";
-import type { DocketState, Product } from "./state";
+import type { DocqetState, Product } from "./state";
 
 /* The product and projects named in the address, as `?product=<id>&project=<id>,<id>`. */
 const showingIn = (search: string) => {
@@ -50,7 +50,7 @@ const choiceOf = (p: ProductResource): ProductChoice => ({
 });
 
 /*
- * Docket: one product's projects at a time, in the shell's frame, at the view
+ * Docqet: one product's projects at a time, in the shell's frame, at the view
  * or doc page the address names, all of it read from the server's API. The
  * page can be filtered to some of the product's projects, and to one
  * initiative; the address says which, and the server narrows what it serves
@@ -128,7 +128,7 @@ export default function App() {
           }
         >
           <AlertTitle>The server couldn&rsquo;t be read</AlertTitle>
-          Docket reads everything it shows from the server&rsquo;s API, under <code>/api/v1</code>. Check that the server is running, then try again.
+          Docqet reads everything it shows from the server&rsquo;s API, under <code>/api/v1</code>. Check that the server is running, then try again.
         </Alert>
       </Box>
     );
@@ -141,7 +141,7 @@ export default function App() {
           Nothing to show yet
         </Box>
         <p>
-          No project has been applied to this server. Run <code>docket apply</code> in one, then reload.
+          No project has been applied to this server. Run <code>docqet apply</code> in one, then reload.
         </p>
       </Box>
     );
@@ -176,7 +176,7 @@ export default function App() {
 const pageKey = (route: Route) => (route.kind === "doc" ? `${route.doc}:${route.id}` : route.section) + `|${route.tab ?? ""}`;
 
 /* The view or doc page the address names. */
-function content(state: DocketState, route: Route, layoutKey: string): ReactNode {
+function content(state: DocqetState, route: Route, layoutKey: string): ReactNode {
   if (route.kind === "doc") {
     const { doc, id } = route;
     const props = { state, id, route };

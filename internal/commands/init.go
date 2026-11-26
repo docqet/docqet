@@ -11,19 +11,19 @@ import (
 
 	"github.com/urfave/cli/v3"
 
-	"github.com/exalynt/docket/internal/state"
+	"github.com/exalynt/docqet/internal/state"
 )
 
-// InitCommand makes a folder a Docket project, writing its docket.yaml.
-// docket:implements capability:project-setup
+// InitCommand makes a folder a Docqet project, writing its docqet.yaml.
+// docqet:implements capability:project-setup
 func InitCommand() *cli.Command {
 	return &cli.Command{
 		Name:     "init",
 		Category: settingUp,
-		Usage:    "Make a folder a Docket project",
-		Description: `Writes docket.yaml in the current folder, and adds .docket/ to .gitignore. It
-writes no docs: the kit's adopting.md covers bringing Docket to existing code.
-Then run docket kit to install the agent kit.`,
+		Usage:    "Make a folder a Docqet project",
+		Description: `Writes docqet.yaml in the current folder, and adds .docqet/ to .gitignore. It
+writes no docs: the kit's adopting.md covers bringing Docqet to existing code.
+Then run docqet kit to install the agent kit.`,
 		Before: maxArgs(0),
 		Flags: []cli.Flag{
 			&cli.StringFlag{Name: "id", Usage: "the project's `ID`, in kebab case"},
@@ -44,31 +44,31 @@ Then run docket kit to install the agent kit.`,
 			case productName != "" && product == "":
 				return errors.New("--product-name goes with --product")
 			}
-			if _, err := os.Stat("docket.yaml"); err == nil {
-				return errors.New("this folder already has a docket.yaml")
+			if _, err := os.Stat("docqet.yaml"); err == nil {
+				return errors.New("this folder already has a docqet.yaml")
 			}
 			var b strings.Builder
-			fmt.Fprintf(&b, "# Marks this folder as a Docket project.\nproject:\n  id: %s\n  name: %s\n", id, yamlString(name))
+			fmt.Fprintf(&b, "# Marks this folder as a Docqet project.\nproject:\n  id: %s\n  name: %s\n", id, yamlString(name))
 			if product != "" {
 				if productName == "" {
 					productName = product
 				}
 				fmt.Fprintf(&b, "# The product it's part of, with its other projects.\nproduct:\n  id: %s\n  name: %s\n", product, yamlString(productName))
 			}
-			if err := os.WriteFile("docket.yaml", []byte(b.String()), 0o644); err != nil {
+			if err := os.WriteFile("docqet.yaml", []byte(b.String()), 0o644); err != nil {
 				return err
 			}
 			out := cmd.Root().Writer
-			ignore, err := ensureLines(".gitignore", "# Docket's state, written by docket index.", []string{".docket/"}, ".docket/", "/.docket/")
+			ignore, err := ensureLines(".gitignore", "# Docqet's state, written by docqet index.", []string{".docqet/"}, ".docqet/", "/.docqet/")
 			if err != nil {
 				return err
 			}
 			if cmd.Bool("json") {
-				writeJSON(out, map[string]any{"files": []fileChange{{Path: "docket.yaml", Status: "added"}, {Path: ".gitignore", Status: ignore}}})
+				writeJSON(out, map[string]any{"files": []fileChange{{Path: "docqet.yaml", Status: "added"}, {Path: ".gitignore", Status: ignore}}})
 				return nil
 			}
 			wd, _ := os.Getwd()
-			_, _ = fmt.Fprintf(out, "added     docket.yaml\n%-9s .gitignore\n\n%s is now a Docket project. Run docket kit to install the agent kit.\n", ignore, filepath.Base(wd))
+			_, _ = fmt.Fprintf(out, "added     docqet.yaml\n%-9s .gitignore\n\n%s is now a Docqet project. Run docqet kit to install the agent kit.\n", ignore, filepath.Base(wd))
 			return nil
 		},
 	}

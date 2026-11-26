@@ -1,0 +1,7 @@
+# Marks this repository as a Docqet project: Docqet, documented with Docqet.
+# Its docs are in docqet/. The example projects in examples/ each have a
+# docqet.yaml of their own, so they're projects of their own, not part of
+# this one.
+project:
+  id: docqet
+  name: Docqet

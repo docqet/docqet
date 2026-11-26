@@ -1,7 +1,7 @@
 name: Publish
 
 # Builds the image and pushes it to GitHub's container registry, as
-# ghcr.io/<owner>/docket, tagged with its commit SHA, :latest, and the git tag
+# ghcr.io/<owner>/docqet, tagged with its commit SHA, :latest, and the git tag
 # when the commit has one. Nothing deploys it yet.
 
 on:
@@ -62,7 +62,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      # The image's tags, and the version `docket --version` reports: the git
+      # The image's tags, and the version `docqet --version` reports: the git
       # tag when the commit has one, else the commit SHA.
       - name: Determine tags
         id: meta

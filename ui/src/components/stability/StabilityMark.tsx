@@ -40,7 +40,7 @@ export type StabilityMarkProps = {
  * color, with a popover (hover, focus, or tap) saying how stable it is.
  * It's text, not a badge, sized in em to sit beside the text around it.
  *
- * Docket marks GA too, since its whole point is showing where everything stands.
+ * Docqet marks GA too, since its whole point is showing where everything stands.
  */
 export function StabilityMark({ level, feature, statement = true, size = "long", focusable = true }: StabilityMarkProps) {
   const { name, stability } = level === PLANNED.id ? PLANNED : STABILITY[level];

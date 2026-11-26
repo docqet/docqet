@@ -1,7 +1,7 @@
 # The server's API
 
 _The endpoints the CLI sends and reads whole states through, and the resources
-the UI reads, now and at any point in time. Part of [how `docket` is
+the UI reads, now and at any point in time. Part of [how `docqet` is
 built](README.md)._
 
 The server has two kinds of callers, so it has two kinds of endpoint.
@@ -29,7 +29,7 @@ All but results are built.
   itself, as [Indexing](indexing.md#problems) describes.
 - **The CLI reads whole states** too, for `--product`: it combines the working
   tree with the other projects' states itself, and keeps them in
-  `.docket/product/`. These are its endpoints, not the UI's.
+  `.docqet/product/`. These are its endpoints, not the UI's.
 
 ## Resources, for the UI
 
@@ -65,7 +65,7 @@ route and resource.
   readiness and gaps scored by risk, worked out by `derive`, so the UI works
   nothing out.
 - **Filters are the CLI's flags.** `?initiative=`, `?for=`, `?sort=` and the
-  rest mean what `docket list`'s `--initiative`, `--for` and `--sort` mean,
+  rest mean what `docqet list`'s `--initiative`, `--for` and `--sort` mean,
   since both call the read service. `?project=a,b` shows only some of a
   product's projects, as `--project` does.
 - **Search is an endpoint of its own**, since the UI searches every doc's
@@ -100,7 +100,7 @@ GET /api/v1/products/hotel/gaps?at=2026-10-01T00:00:00Z&sort=risk   as of a time
 - **A commit the server hasn't applied is a `404`.** It never guesses the
   nearest one. Only the main branch's commits are applied, so only they can
   be named.
-- **Every response says the point it was read at**, in a `Docket-At` header,
+- **Every response says the point it was read at**, in a `Docqet-At` header,
   and the UI sends it back as `?at=` on what it asks next. Every list is
   paginated, so without this, a state applied between two pages would mix two
   states in one view. A screen pins its point once, and everything on it is
@@ -110,12 +110,12 @@ GET /api/v1/products/hotel/gaps?at=2026-10-01T00:00:00Z&sort=risk   as of a time
   an envelope around every list.
 
 **How it changed** is resources of their own, the server's side of
-`docket log`, `diff` and the timeline:
+`docqet log`, `diff` and the timeline:
 
 ```text
-GET /api/v1/products/hotel/changes?since=2026-09-01&initiative=mvp   docket log gaps --initiative mvp --since … --remote --product
-GET /api/v1/products/hotel/capabilities/room-booking/changes         docket log capability:room-booking --remote
-GET /api/v1/products/hotel/compare?from=<sha>&to=<sha>               docket diff --remote <from> <to>
+GET /api/v1/products/hotel/changes?since=2026-09-01&initiative=mvp   docqet log gaps --initiative mvp --since … --remote --product
+GET /api/v1/products/hotel/capabilities/room-booking/changes         docqet log capability:room-booking --remote
+GET /api/v1/products/hotel/compare?from=<sha>&to=<sha>               docqet diff --remote <from> <to>
 GET /api/v1/projects/hotel-bookings/commits                          the commits applied, with their times and trailers
 ```
 
@@ -123,8 +123,8 @@ GET /api/v1/projects/hotel-bookings/commits                          the commits
   happened, such as a gap closed, a promotion or a decision answered, and what
   it's about. `/changes` is a paginated list of them, filtered like any other.
   How a change is modelled is still in flux (see
-  [the Reporting domain's decisions](../../docket/domains/reporting/domain.md)).
-- **A comparison** is the net difference between two points, as `docket diff`
+  [the Reporting domain's decisions](../../docqet/domains/reporting/domain.md)).
+- **A comparison** is the net difference between two points, as `docqet diff`
   shows it. It isn't a collection, so it's a read of its own, as GitHub's
   `/compare` is.
 

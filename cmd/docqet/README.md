@@ -1,0 +1,856 @@
+# The `docqet` command
+
+_A draft of what we'll build. Every command here may change or be dropped.
+Each is scaffolded in [`internal/commands`](../../internal/commands/) with the
+flags drafted here, and the global `--json` and `-C`. Built so far, over the
+working tree or with `--at` a commit: what the [agent kit](../../kit/) needs,
+[`init`](#docqet-init), [`kit`](#docqet-kit), [`index`](#docqet-index),
+[`check`](#docqet-check), [`touches`](#docqet-touches),
+[`show`](#docqet-show), [`list`](#docqet-list), [`rubric`](#docqet-rubric),
+[`rename`](#docqet-rename) and [`diff`](#docqet-diff); and
+[`apply`](#docqet-apply), [`serve`](#docqet-serve), the new `docqet migrate`,
+which brings the server's database up to date before it serves, and
+[`ui`](#docqet-ui), which shows a project's `.docqet/state.json` without
+re-indexing. No read takes `--remote` or `--product` yet. The rest answer
+that they aren't built yet and exit 2._
+
+One command for everything Docqet does with a repository: setting it up,
+indexing and checking its docs, answering questions about it, following how
+it's changed, and sending its state and its test results to a Docqet server.
+Engineers use it at the terminal and in hooks, agents use it while they work,
+CI uses it on every push, and people without the repository use it to ask
+the server.
+
+It's a Go program, and the same binary is also the Docqet server and serves
+the UI (see [Docqet's parts](../../docs/parts.md)).
+Everything Docqet works out is worked out in Go, once, so the command, the
+server and the UI never disagree.
+
+**Contents:** [Principles](#principles) · [Commands at a glance](#commands-at-a-glance) · [Where a read comes from](#where-a-read-comes-from) · [Setting up](#setting-up) · [Reading](#reading) · [Renaming](#renaming) · [History](#history) · [Acting on the server](#acting-on-the-server) · [Serving](#serving) · [How clients use it](#how-clients-use-it) · [Conventions](#conventions) · [Left out for now](#left-out-for-now) · [Open questions](#open-questions)
+
+## Principles
+
+- **The repository owns intention, and the server owns what was observed.**
+  Docs, levels, gaps and decisions are only ever declared in the repository.
+  The server holds what happened at each commit: the state indexed from it,
+  and test and QA results. The command never asks the server to change
+  intention, and the server never reads a repository.
+- **History comes from git.** How a gap became a tradeoff, or a capability
+  went from Alpha to Beta, is worked out by indexing commits and comparing
+  them. Nothing records history by hand, and the server's history can always
+  be rebuilt from git.
+- **A read is the same wherever its states come from.** Listing gaps, showing
+  a capability or working out readiness is one computation over some states.
+  Which states, the working tree's, a commit's, the server's, this project's
+  or the whole product's, is chosen with flags on that command, never by
+  something selected earlier. See [Where a read comes from](#where-a-read-comes-from).
+- **It doesn't care where the repository is hosted.** It talks only to git
+  and to the Docqet server over HTTP. It never calls GitHub's, GitLab's or
+  anyone else's API. Posting a comment on a pull request is the CI's job, and
+  the command gives it the text.
+- **Everything local works without a server.** Indexing, checking, reading
+  and history all work offline. A server adds the rest of the product and a
+  shared timeline.
+- **It's written for agents as much as for people.** Every command takes
+  `--json`, says what it's showing, prompts only in a terminal, and uses the
+  same exit codes as every other (see [Conventions](#conventions)).
+
+## Commands at a glance
+
+Reads take the [source flags](#where-a-read-comes-from). Commands that act on
+the server are separate, since they aren't reads.
+
+| Command | What for | Kind |
+| --- | --- | --- |
+| [`docqet init`](#docqet-init) | Make a folder a Docqet project | Setting up |
+| [`docqet kit`](#docqet-kit) | Install, update or remove the agent kit, for the agents the project uses | Setting up |
+| [`docqet index`](#docqet-index) | Write the state for the working tree or a commit | Setting up |
+| [`docqet check`](#docqet-check) | Find problems in the docs, annotations and commit trailers | Read |
+| [`docqet touches`](#docqet-touches) | What a set of files or a change is about | Read |
+| [`docqet show`](#docqet-show) | One doc, with everything derived about it | Read |
+| [`docqet list`](#docqet-list) | Docs, gaps, decisions or tradeoffs, filtered and ordered | Read |
+| [`docqet status`](#docqet-status) | Maturity, readiness and what's left, at a glance | Read |
+| [`docqet rubric`](#docqet-rubric) | What each stability level expects, or what a promotion needs | Read |
+| [`docqet rename`](#docqet-rename) | Change an ID everywhere in the project, and say so in history | Changing |
+| [`docqet diff`](#docqet-diff) | What changed in Docqet between two points | Read |
+| [`docqet log`](#docqet-log) | How one thing changed over time | Read |
+| [`docqet history`](#docqet-history) | Index every commit on a branch, for history offline | Setting up |
+| [`docqet preview`](#docqet-preview) | `diff --remote --product`, for CI | Read |
+| [`docqet login`](#docqet-login) | Sign in to a server, as a person | Server |
+| [`docqet apply`](#docqet-apply) | Send the main branch's new commits to the server | Server |
+| [`docqet results`](#docqet-results) | Send test or QA results for a commit | Server |
+| [`docqet ui`](#docqet-ui) | Show the UI over the working tree, on this machine | Serving |
+| [`docqet serve`](#docqet-serve) | Run the Docqet server | Serving |
+
+## Where a read comes from
+
+Every read is worked out from one or more projects' states. Two questions
+decide which, each with its own flag, and every read takes both.
+
+**When:** whose version of this project.
+
+| Flag | Reads | Needs |
+| --- | --- | --- |
+| _(none)_ | The working tree, uncommitted changes included | The repository |
+| `--at <rev>` | Any commit, branch or tag, indexed from git without checking it out | The repository |
+| `--remote` | The server's latest applied state for this project | The server |
+| `--remote --at <rev>` | What the server applied at that commit | The server |
+
+**Which projects:** this one, or the whole product.
+
+| Flag | Reads |
+| --- | --- |
+| _(none)_ | This project alone |
+| `--product` | This project, combined with every other project in its product, as the server last applied them |
+| `--product=<id>` | The same, naming the product. Outside a repository it's how to say which; inside one it must be the product `docqet.yaml` names |
+| `--project=<id>` | Outside a repository, one project as the server has it |
+
+`--product` means the whole product wherever it's used. Its ID is only ever
+given after `=`, as git's `--color[=when]` is, since without one it's a switch:
+`--product hotel` would read `hotel` as an argument, and says so.
+
+So the same command answers different questions:
+
+```sh
+docqet list gaps                        # this project, as it is on my machine
+docqet list gaps --at v1.4              # this project, at a release
+docqet list gaps --remote               # this project, as the server has it
+docqet list gaps --product             # my working tree, among the rest of the product
+docqet list gaps --remote --product    # the whole product as the server has it: what the UI shows
+```
+
+- **Inside a repository, the working tree is the default**, since it's what
+  engineers and agents want nearly every time.
+- **Outside one, the server is the only source**, so `--remote` is implied,
+  and `--product=<id>` or `--project=<id>` says which. Someone with no clone
+  can still ask: `docqet list gaps --product=hotel`.
+- **Nothing is selected and remembered.** No `docqet use server`, no current
+  context. What a command reads is in the command, so an agent checking its
+  own change can never be shown the server's state by something run earlier,
+  and a script means the same thing every time it's run.
+- **The other projects in `--product` always come from the server**, since
+  their repositories aren't here. They're fetched when needed and kept in
+  `.docqet/product/`, gitignored. When the server can't be reached, the
+  copies kept there are used, and the output says how old they are.
+- **With `--at` and `--product`**, the other projects are as the server had
+  them at that commit's time.
+- **Every read says what it's showing.** Its first line, such as
+  `hotel-bookings · working tree (4f2c9e1 + uncommitted)` or
+  `hotel product · server, applied 2026-11-20 15:04`, and a `source` field
+  in its JSON:
+
+  ```json
+  "source": {
+    "when": "working-tree",
+    "commit": "4f2c9e1",
+    "uncommitted": true,
+    "projects": [
+      { "id": "hotel-bookings", "from": "working-tree" },
+      { "id": "hotel-billing", "from": "server", "commit": "a71c0de", "appliedAt": "2026-11-20T15:04:00Z" }
+    ]
+  }
+  ```
+
+## Setting up
+
+### `docqet init`
+
+Writes `docqet.yaml` in the current folder, making it a project: usually the
+repository's root, or a package's folder in a repository with several. It
+takes the project's ID and name, and the product it's part of, as flags, and
+fails naming the flag it needs when one is missing. It also adds `.docqet/`
+to `.gitignore`. It doesn't write any docs: the kit's `adopting.md` covers
+bringing Docqet to existing code.
+
+```sh
+docqet init --id hotel-bookings --name "Hotel Bookings" --product hotel --product-name Hotel
+```
+
+### `docqet kit`
+
+Manages the [agent kit](../../kit/) in the project: installs it for the
+agents the project uses, updates it, removes it, and checks it. The kit is
+built into the binary, so it's always the one written for this version's
+commands.
+
+```sh
+docqet kit                                  # what it's installed for, and whether it's this docqet's
+docqet kit install                          # for most agents, through AGENTS.md: the default
+docqet kit install --agent claude           # for Claude Code too, or alone on a fresh install
+docqet kit remove --agent claude            # stop installing it for an agent
+docqet kit remove                           # remove it entirely
+docqet kit update                           # rewrite it for every agent it's installed for
+docqet kit check                            # exit 1 if it isn't installed or isn't this version's, for CI
+docqet kit agents                           # the agents it can be installed for
+```
+
+- **Each agent's files go where it reads them.** Every agent but Claude Code
+  reads the skill from `.agents/skills/docqet/` and the block from
+  `AGENTS.md`. Claude Code reads the skill from `.claude/skills/docqet/`, and
+  the block from `CLAUDE.md`, which imports `AGENTS.md` when other agents use
+  the kit too. Each skill folder is a real copy. The kit README lists every
+  agent.
+- **A lock records what it installed**, in `.agents/docqet.lock`, or
+  `.claude/docqet.lock` when the kit is only for Claude Code: the agents'
+  targets, and whether it added the `@AGENTS.md` line. So removing the kit
+  takes out what it wrote, and nothing of the project's.
+- **It owns its skill folders and its block, and nothing else.** It makes the
+  skill folders match the kit exactly, and replaces only what's between the
+  `<!-- docqet-kit:start -->` and `<!-- docqet-kit:end -->` markers. The
+  rest of `AGENTS.md` and `CLAUDE.md` is the project's.
+- **It reports each file** as `added`, `updated`, `removed` or `ok`.
+- **It stops at what it can't safely change**, such as a start marker with no
+  end, or a file where a skill folder should be, and exits 2 saying what to
+  fix.
+
+### `docqet index`
+
+Reads the docs and annotations and writes the project's state, as the
+[state](../../docqet/domains/authoring/concepts/state.md) concept describes. By default it indexes the
+working tree, uncommitted changes included, into `.docqet/state.json`.
+
+```sh
+docqet index                  # working tree → .docqet/state.json
+docqet index --at 4f2c9e1     # a commit, read from git, without checking it out
+docqet index --stdout         # print it instead of writing it
+```
+
+Indexing a commit reads its files straight from git, so it's fast enough to
+run over hundreds of commits. `--at`, [history](#history) and
+[`apply`](#docqet-apply) depend on that.
+
+Reads index whatever they need first, so nobody has to remember to run this.
+It's for tools that want the state file itself.
+
+## Reading
+
+Each of these takes the [source flags](#where-a-read-comes-from). The
+examples show the ones each is most often used with.
+
+### `docqet check`
+
+Reports every [problem](../../docqet/domains/authoring/concepts/problem.md), with the file and line,
+and exits 1 if there are any. Agents run it with `--changed` before they
+finish, as the kit tells them to.
+
+```sh
+docqet check                          # everything in the working tree
+docqet check --changed                # only problems in files changed since the main branch
+docqet check --changed --base v1.4    # changed since some other point
+docqet check --commits origin/main..HEAD   # also check the Docqet trailers in these commits
+docqet check --product               # with the rest of the product
+```
+
+- **`--changed`** keeps hooks and agents focused on their own change in a
+  repository that already has problems. The main branch is `origin/HEAD`
+  unless `--base` says otherwise.
+- **`--commits`** checks every [trailer](#trailers) in a range: that each
+  names something that existed before, and something that exists after, and
+  that none is left in a message's body where git won't read it.
+- **`--product`** resolves a link to a rule another project defines, and
+  finds contradictions with other projects. Without it, a link into another
+  project is reported as `unknown-id`, with a note that it may be defined
+  elsewhere.
+
+### `docqet touches`
+
+Given files, or a change, lists what they're about: the capabilities, rules,
+mechanisms and components their annotations name, the capabilities relying on
+those components, and each capability's level, gaps, tradeoffs and open
+decisions. It's the kit's "Find what the change touches" step as one call.
+
+```sh
+docqet touches src/booking/                  # files or folders
+docqet touches --staged                      # what's staged
+docqet touches --base origin/main            # everything the branch changes
+docqet touches src/billing/ --product --json   # with capabilities other projects declare
+```
+
+```text
+hotel-bookings · working tree (4f2c9e1 + uncommitted)
+
+src/booking/availability.ts
+  implements rule:no-double-booking@guest-stays
+  implements component:bookings
+
+component:bookings
+  relied on by capability:room-booking (beta), capability:early-arrival (alpha)
+
+capability:room-booking   Beta in Guest stays
+  rules      no-double-booking, minimum-stay, same-day-turnover
+  gaps       calendar-needs-a-mouse (blocking, certain, all)
+  tradeoffs  one-room-per-booking
+  decisions  none open
+```
+
+A change at Beta must not break anything, so an agent that sees this knows
+what it has to keep before it plans. It's about files, so it reads a working
+tree or a commit, and never `--remote` alone.
+
+### `docqet show`
+
+One doc, with its frontmatter, its links in both directions, its evidence,
+its gaps scored by risk, and its body as written. With `--remote`, its
+evidence also shows the latest test and QA results for what verifies it.
+
+```sh
+docqet show capability:room-booking
+docqet show rule:no-double-booking@guest-stays --remote --json
+docqet show capability:room-booking#calendar-needs-a-mouse   # a gap
+```
+
+### `docqet list`
+
+Docs of one kind, or gaps, decisions or tradeoffs, with the same filters
+the UI's views have.
+
+```sh
+docqet list capabilities --stability alpha
+docqet list gaps --initiative mvp --sort risk --product
+docqet list gaps --for persona:front-desk-clerk --impact damaging,blocking
+docqet list decisions --domain guest-stays --remote
+docqet list tradeoffs --on component:ledger
+```
+
+### `docqet status`
+
+The overview, in the terminal: capabilities at each level, maturity and
+readiness, what readiness still needs, the riskiest gaps, open decisions and
+problems. `--initiative` and `--for` narrow it as the UI does.
+
+```sh
+docqet status
+docqet status --remote --product --initiative mvp
+docqet status --for persona:front-desk-clerk --json
+```
+
+Maturity, readiness and risk are worked out by readers, not the indexer, so
+the command is a reader too. It's the same Go code the server uses, and the UI
+shows only what that code works out, so `docqet status` and the UI always
+agree.
+
+### `docqet rubric`
+
+The [stability rubric](../../docqet/domains/authoring/concepts/rubric.md): what
+each level expects of the work, quality by quality, with each outcome's
+examples. It's part of the format, so it's built into the binary and is the
+same for every project. Agents read it here, and `check` uses it to validate
+every outcome named in `affects` and `meets`.
+
+```sh
+docqet rubric                                  # every quality, level and outcome
+docqet rubric --level beta                     # everything Beta expects, including what it carries up
+docqet rubric outcome:reliability/beta/data-kept   # one outcome, with its examples
+docqet rubric --for capability:room-booking --to ga   # what promoting it needs
+```
+
+With `--for` and `--to`, it's the first step of promoting a capability: each
+outcome the target level expects that the current one doesn't, and, for each,
+what already affects or meets it, from the capability and the mechanisms and
+components it relies on:
+
+```text
+hotel-bookings · working tree (4f2c9e1)
+
+capability:room-booking   Beta → GA in Guest stays
+
+outcome:reliability/ga/recovery        gap       component:bookings#no-restore-drill (blocking, possible, all)
+outcome:usability/ga/all-accessible    gap       capability:room-booking#calendar-needs-a-mouse (blocking, certain, few)
+outcome:efficiency/ga/speed-targets    open      decision on capability:room-booking: "Does the calendar need to open in under a second?"
+outcome:security/ga/traceable          met       mechanism:audit-log
+outcome:compatibility/ga/stable-interface  —     nothing affects it, so promoting claims it's met
+```
+
+Only `--for` reads the project, so only then does it take the
+[source flags](#where-a-read-comes-from). It never changes a level: that's a
+person's call, made in the capability's doc.
+
+## Renaming
+
+### `docqet rename`
+
+Changes an ID, and every reference to it in the project, and prints the
+[trailer](#trailers) that tells history it's the same thing. Changing an ID is
+a breaking change, and history only follows one that a commit says it should,
+so renaming is always done on purpose, with this command.
+
+```sh
+docqet rename <old> <new>
+```
+
+```sh
+docqet rename capability:early-arrival capability:early-check-in
+docqet rename rule:same-day-turnover@guest-stays rule:same-day-turnover@property   # to another domain
+docqet rename capability:room-booking#needs-mouse capability:room-booking#calendar-needs-a-mouse
+docqet rename capability:early-arrival capability:early-check-in --dry-run          # what would change
+docqet rename capability:early-arrival capability:early-check-in --product         # also list other projects' references
+```
+
+```text
+hotel-bookings · working tree (4f2c9e1)
+
+docqet/domains/guest-stays/capabilities/early-arrival.md
+  → docqet/domains/guest-stays/capabilities/early-check-in.md     id
+docqet/domains/guest-stays/features/front-desk.md                 capabilities
+docqet/components/bookings.md                                     capabilities
+src/booking/arrival.ts:12                                         docqet:implements
+features/arrival.feature:3                                        docqet:verifies
+
+Its gaps and tradeoffs follow it: capability:early-check-in#no-room-ready-alert
+
+Add this trailer when you commit:
+  git commit --trailer "Docqet-Became: capability:early-arrival -> capability:early-check-in"
+```
+
+- **It changes the doc itself**: its `id`, or its `domain` for a rule or
+  concept moving to another domain, or a gap's or tradeoff's key. A doc's
+  file is renamed with it when the file is named after the old ID, as the
+  format recommends, and left alone otherwise.
+- **It changes every reference to it in the project**: links in every doc's
+  frontmatter, every annotation, and the IDs of the doc's own gaps and
+  tradeoffs, which follow it under the same trailer.
+- **It doesn't change what people wrote in a doc's body**, since nothing reads
+  it, and doesn't change other projects. With `--product`, it lists the
+  references in other projects in the product, from the server, so they can
+  be changed there, each in a commit of its own, with no trailer.
+- **It refuses** when the new ID is already taken, since that would make two
+  things one, or when the old one doesn't exist.
+- **It doesn't commit.** It prints the trailer as a `git commit --trailer`
+  argument, and with `--json` returns it as `trailer`, for whoever commits to
+  add, with git's own `--trailer` or by hand.
+
+## History
+
+How each thing changed is worked out from the states of successive commits.
+`diff` compares two of them, and `log` follows one thing through all of them.
+Locally, both index the commits they need from git, and keep them so the next
+run is faster. With `--remote`, they read the server's timeline instead, and
+nothing is indexed here.
+
+### `docqet diff`
+
+What changed in Docqet between two points, in Docqet's words rather than as
+lines: capabilities added, removed or moved between levels, gaps opened and
+closed, decisions answered, rules gaining or losing evidence, new problems.
+
+```sh
+docqet diff [<from>] [<to>]
+```
+
+Each point is a commit, branch or tag, or a state file. `<to>` is the working
+tree when it's left out, and `<from>` is the last commit.
+
+```sh
+docqet diff                       # last commit → working tree: what my change does
+docqet diff --staged              # last commit → what's staged
+docqet diff origin/main           # the main branch → working tree: what the branch does
+docqet diff v1.3 v1.4             # between two commits
+docqet diff a.json b.json         # between two state files
+docqet diff --remote              # what the server has → working tree
+docqet diff --remote v1.3 v1.4    # between two commits, as the server applied them
+```
+
+With `--remote` and no `<from>`, it starts from the newest commit the server
+has applied that's in your history: the main branch where you are, or where
+your branch left it. That's what merging would change, so it's what
+[`preview`](#docqet-preview) shows.
+
+```text
+hotel-bookings · last commit (9b1e004) → working tree
+
+capability:early-arrival     alpha → beta
+gap closed                   capability:room-booking#calendar-needs-a-mouse
+gap removed                  component:ledger#slow-balances
+tradeoff added               component:ledger#balance-worked-out-on-read
+rule:minimum-stay@guest-stays  +1 verifies (src/booking/stay.test.ts:14)
+
+Removed with no trailer yet. If any became something, say so in the commit message:
+  component:ledger#slow-balances
+```
+
+Between commits, it shows what a removed thing became only where a commit's
+`Docqet-Became` [trailer](#trailers) says so, and never guesses:
+
+```text
+hotel-billing · v1.3 → v1.4
+
+decision answered            capability:refunds#where-the-money-goes
+  became                     rule:refund-to-original-card@billing
+  became                     capability:refunds#no-split-refunds
+capability renamed           capability:early-arrival → capability:early-check-in
+```
+
+Anything removed without one is shown as removed, and anything added as
+added. For a change that isn't committed yet, there's no message to read, so
+it lists what the change removes instead, for its author to say in a trailer
+what any of it became. [`docqet rename`](#docqet-rename) prints the trailer
+for a rename itself.
+
+With `--product`, it also shows what only the rest of the product shows: a
+contradiction with another project, a link to another project's doc resolving
+or breaking, or readiness changing for a persona another project also serves.
+
+### `docqet log`
+
+How one thing changed over time, newest first, each change with its commit
+and date.
+
+```sh
+docqet log capability:room-booking
+docqet log capability:room-booking --remote
+docqet log gaps --initiative mvp --since 2026-09-01 --remote --product
+```
+
+```text
+hotel-bookings · main, 0a9f6b3 → 9b1e004
+
+2026-11-20  9b1e004  gap closed            #calendar-needs-a-mouse
+2026-10-02  51ac7d2  promoted              alpha → beta
+2026-09-14  e04f9aa  became tradeoff       #one-room-per-booking  (was a gap)
+2026-08-30  c3d1a88  decision answered     #who-can-book → rule:staff-book-for-guests
+2026-07-11  0a9f6b3  added                 draft
+```
+
+Locally it follows the current branch's first-parent line. With `--remote` it
+follows the main branch as applied.
+
+### `docqet history`
+
+Indexes each commit on a branch's first-parent line into
+`.docqet/history/<sha>.json`, skipping the ones already there. `diff` and
+`log` do this for themselves as they need it, so it's only for building the
+whole history ahead of time, such as before going offline.
+
+```sh
+docqet history                    # the current branch, from its first commit
+docqet history --since 2026-06-01
+docqet history --branch release
+```
+
+### Trailers
+
+A commit says what something it removed became with a `Docqet-Became`
+trailer, one of git's own trailers, beside any others such as `Signed-off-by`.
+The [trailer](../../docqet/domains/authoring/concepts/trailer.md) concept is the whole format.
+
+```text
+Settle refunds to the original card
+
+Docqet-Became: capability:refunds#where-the-money-goes -> rule:refund-to-original-card@billing
+Docqet-Became: capability:refunds#where-the-money-goes -> capability:refunds#no-split-refunds
+```
+
+Git writes and reads them itself, with `git commit --trailer` and
+`%(trailers:key=Docqet-Became)`, and the command reads them the way git does,
+from each message's trailer block. How it uses them:
+
+- **`diff` and `log` read them** to show what became what, and show nothing as
+  having become anything without one.
+- **`rename` prints the one for its rename**, as a `--trailer` argument.
+- **`check --commits` validates them** over a range, and CI runs it on a
+  branch before it merges.
+- **`apply` sends them** with each commit's state, so the server's history has
+  them, including those from commits a merge brought in.
+
+### `docqet preview`
+
+The same as `docqet diff --remote --product`: what merging the working tree's
+branch would change on the server, across the product. It's a name of its
+own because it's what CI runs on every pull request, and `--format markdown`
+gives it text to post there.
+
+```sh
+docqet preview
+docqet preview --format markdown > docqet-preview.md
+```
+
+Without a server, it's `docqet diff` from the merge base with the main
+branch, and says so.
+
+## Acting on the server
+
+The server holds each project's applied state at every commit on its main
+branch, each commit's test and QA results, and the product those projects
+make up. These commands are how anything gets there. They aren't reads, so
+they take no source flags.
+
+### Signing in
+
+Where the server is goes in `docqet.yaml`, since it's not a secret:
+
+```yaml
+server: https://docqet.example.com
+```
+
+Outside a repository, `DOCQET_SERVER` says where it is.
+
+**The first server has no sign-in.** Each client gets a server of their own,
+reachable only by that client's people, such as on a private network, so
+neither credential below exists yet. They're drafted for when sign-in comes.
+There are two kinds of credentials, and neither is ever written into the
+repository:
+
+- **A project token** lets CI apply state and send results for one project,
+  and nothing else. It's made on the server and kept in the CI's secrets as
+  `DOCQET_TOKEN`.
+- **A person's sign-in** lets them read the projects they're allowed to see,
+  from `docqet login`. Every `--remote` and `--product` read uses it, and
+  shows only what they're allowed to see.
+
+#### `docqet login`
+
+Opens the server's sign-in in a browser and keeps the token in the user's
+config directory, outside every repository. `docqet logout` forgets it.
+
+```sh
+docqet login
+```
+
+### `docqet apply`
+
+Sends the main branch's new commits to the server, oldest first:
+
+1. Asks the server for the last commit it has for this project.
+2. Walks from there to `HEAD` along the first-parent line, and indexes each
+   commit.
+3. Collects the trailers from every commit in the range, including commits
+   brought in by a merge, and attaches each to the first-parent commit that
+   brought it in.
+4. Sends each commit's state with its SHA, parents, commit time and trailers.
+
+```sh
+docqet apply                            # in CI, on the main branch
+docqet apply --from 0a9f6b3             # a project's first apply, or a backfill
+docqet apply --from 0a9f6b3 --replace   # re-index and replace, after a format change
+docqet apply --dry-run                  # what would be sent
+```
+
+- **It's run on the main branch only.** CI decides when to run it: the
+  command doesn't try to tell which branch is the main one.
+- **Sending a commit twice changes nothing,** so a retried CI job is
+  harmless, and a job that was skipped is caught up by the next one.
+- **A push of several commits runs CI once,** at its head. Walking from the
+  server's last commit covers every commit in between.
+- **When the server's last commit isn't in the branch's history**, because
+  main was rewritten, it stops and says so, rather than guessing. `--from`
+  then says where to start.
+- **What leaves the repository** is the state: every doc's frontmatter and
+  body, and, for each annotation, its file, line and the one line of code
+  below it. No other code, and nothing about who made each commit.
+
+### `docqet results`
+
+Sends results for a commit, `HEAD` unless `--commit` says otherwise. The
+server keeps them as sent and matches them to Docqet when it shows them, so
+a better matcher later works on old results too.
+
+```sh
+docqet results junit reports/*.xml               # automated tests
+docqet results qa qa-run.json                     # a QA run
+docqet results junit reports/*.xml --commit 9b1e004
+```
+
+- **Test results** are JUnit XML, which nearly every test runner can write.
+  A test case is matched to evidence when its file is an annotated place's
+  file, and its name is in the annotated line's text, such as
+  `it("rejects a stay that ends the day it starts", () => {`. The match is
+  rough on purpose. A rule's evidence then shows whether what verifies it
+  passed at that commit.
+- **QA results** name what they're about directly, so they need no matching:
+
+  ```json
+  {
+    "name": "Busy-season QA, round 2",
+    "url": "https://qa.example.com/runs/412",
+    "results": [
+      { "about": "capability:room-booking", "outcome": "passed" },
+      { "about": "rule:minimum-stay@guest-stays", "outcome": "failed", "note": "Same-day stays accepted on mobile" }
+    ]
+  }
+  ```
+
+Results for a commit that's never applied are kept, and shown once it is.
+
+## Serving
+
+The UI is a web app built into the binary. It shows only what `docqet` gives
+it through its API, and works nothing out itself, so it looks and counts the
+same whichever of these serves it.
+
+### `docqet ui`
+
+Serves the UI over this project, as the [source flags](#where-a-read-comes-from)
+choose, so anyone can see their branch the way the server will show it. It
+re-indexes as files change, so the page follows the working tree.
+
+```sh
+docqet ui                       # the working tree, at http://127.0.0.1:4100
+docqet ui --product            # among the rest of the product, from the server
+docqet ui --at v1.4             # a release
+```
+
+- **It's only reachable from this machine.** It listens on `127.0.0.1`,
+  needs no sign-in, and can't be told to listen anywhere else, so it can never
+  be deployed as the server by mistake.
+- **It only reads.** It never writes to the repository or the server.
+- **It replaces the UI's own dev server** for anyone looking at their docs.
+  Working on the UI itself still uses Vite, against `docqet ui`'s API.
+
+### `docqet serve`
+
+Runs the Docqet server: it takes applied states and results from `apply` and
+`results`, answers `--remote` and `--product` reads, and serves the UI to the
+people allowed to see each project.
+
+```sh
+docqet serve --config /etc/docqet/server.yaml
+```
+
+- **It keeps what it holds in SQLite**, in one file, so it runs with nothing
+  else beside it. A deployment that needs more can bring Postgres when it
+  does.
+- **It serves one client.** Each client gets a server of their own, so one
+  never holds another's projects. It has no sign-in yet, so it must only be
+  reachable by that client's people, such as on a private network.
+- **It's what the image runs** unless told to run another command. The same
+  image runs any other command too, such as `docker run <image> apply` in a
+  CI that works in containers.
+- **It never reads a repository.** Everything it holds was sent to it.
+
+What its API looks like, whole states for the CLI and REST resources for the
+UI, is planned in [How `docqet` is built](../../docs/architecture/api.md).
+How it's configured will be drafted once the commands that talk to it settle.
+
+## How clients use it
+
+### Bringing Docqet to a repository
+
+```sh
+docqet init --id hotel-bookings --name "Hotel Bookings" --product hotel
+docqet kit install
+# write the first docs, with an agent following the kit's adopting.md
+docqet check
+git add docqet.yaml docqet/ .agents/ .claude/ AGENTS.md CLAUDE.md .gitignore
+git commit -m "Adopt Docqet"
+```
+
+### An agent making a change
+
+The kit tells agents to do this. Each step is one command, and each reads the
+working tree unless told otherwise, so the agent is always looking at its own
+change.
+
+```sh
+docqet touches src/booking/ --json     # before planning: what this is about, and its level
+# ... change the code, docs and annotations ...
+docqet check --changed --json          # before finishing: anything broken
+docqet diff --json                     # what the change does to Docqet, for its report
+```
+
+When `diff` lists something the change removed, the agent says what it
+became, if it became anything, with a trailer on the commit: a decision it
+answered, or a gap it turned into a tradeoff. It asks when it isn't sure. When
+it renamed something, it uses `docqet rename`, and passes the `--trailer` that
+prints to `git commit`.
+
+### An engineer's pre-commit hook
+
+```sh
+#!/bin/sh
+exec docqet check --changed --base HEAD
+```
+
+### CI, on any host
+
+The same calls in any CI. Only posting the comment is particular to the host,
+and the CI does that with whatever tool it already has.
+
+```sh
+# On every pull request or merge request
+docqet check --product --commits "$BASE_SHA..HEAD"
+docqet preview --format markdown > docqet-preview.md
+# post docqet-preview.md as a comment: gh, glab, the Bitbucket API, ...
+
+# On every push to the main branch
+docqet apply
+docqet results junit reports/*.xml
+```
+
+### Connecting an existing project to a server
+
+Its history is already in git, so its first apply can start at its first
+commit with Docqet, and the server's timeline goes back that far from day
+one.
+
+```sh
+export DOCQET_TOKEN=...        # the project's token, from the server
+docqet apply --from "$(git log --format=%H --diff-filter=A -- docqet.yaml | tail -1)"
+```
+
+### Asking about the past
+
+```sh
+docqet log capability:room-booking --remote     # when did it reach Beta, and what was left then?
+docqet diff v1.3 v1.4                           # what did this release change, in Docqet's words?
+docqet log gaps --initiative mvp --since 2026-09-01 --remote --product   # what did the MVP close this quarter?
+```
+
+### Checking readiness before a release
+
+```sh
+docqet status --remote --product --initiative mvp
+docqet list gaps --remote --product --initiative mvp --sort risk
+```
+
+### Asking without the repository
+
+A product manager, or an agent working somewhere else, asks the server
+directly. Outside a repository, `--remote` is implied.
+
+```sh
+export DOCQET_SERVER=https://docqet.example.com
+docqet login
+docqet status --product=hotel --for persona:front-desk-clerk
+docqet list decisions --product=hotel --initiative mvp
+```
+
+## Conventions
+
+- **`--json` on every command**, with one documented shape per command.
+  With it, stdout is only JSON, even on failure, and an error is an `error`
+  field.
+- **Every read says what it's showing**, in its first line and in its JSON's
+  `source`, as [Where a read comes from](#where-a-read-comes-from) describes.
+- **Exit codes**: `0` when everything's fine, `1` when it found what it was
+  asked to fail on, such as a problem in `check` or an out-of-date kit in
+  `kit check`, and `2` when it couldn't run: bad usage, not in a project, or
+  a server it couldn't reach or wasn't allowed into.
+- **No prompts unless it's run in a terminal.** Anything it would ask, it
+  takes as a flag, and without one it fails with exit 2 and says which flag.
+- **`-C <dir>`** runs it in another directory, as git's does.
+- **It acts on one project**: the one whose `docqet.yaml` is nearest above
+  the directory it's run in. In a repository with several projects, run it in
+  each one's folder, or point `-C` at it.
+- **References are written as everywhere else**: `<type>:<id>`, a rule or
+  concept with `@<domain>`, a gap, tradeoff or decision with `#<key>`.
+- **Configuration** is `docqet.yaml` for the project, `DOCQET_TOKEN` and
+  `DOCQET_SERVER` in the environment, and the user's config directory for a
+  person's sign-in. Nothing secret is ever read from or written to the
+  repository.
+
+## Left out for now
+
+What's left out on purpose is written down as tradeoffs in Docqet's own docs:
+on the [Commands](../../docqet/mechanisms/commands.md) mechanism, and on the
+features it's about, such as
+[Declaring intention](../../docqet/domains/authoring/features/declaring.md)
+and [Collecting states](../../docqet/domains/reporting/features/collecting.md).
+Signing in is a gap on
+[Applying states](../../docqet/domains/reporting/capabilities/applying.md).
+
+## Open questions
+
+Open questions are decisions in Docqet's own docs, on the capability each is
+about, such as [Trailers](../../docqet/domains/authoring/capabilities/trailers.md),
+[Applying states](../../docqet/domains/reporting/capabilities/applying.md) and
+[Test and QA results](../../docqet/domains/reporting/capabilities/results.md).

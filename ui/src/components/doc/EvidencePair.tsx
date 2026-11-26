@@ -1,10 +1,10 @@
 import Box from "@mui/material/Box";
 import { Places } from "./Places";
-import { type Capability, type DocketState } from "../../state";
+import { type Capability, type DocqetState } from "../../state";
 import { cardSx, faintSx } from "./DocPage";
 
 /* Where the code says it implements or verifies something, from its annotations: what implements it beside what verifies it. */
-export function EvidencePair({ state, doc }: { state: DocketState; doc: { evidence: Capability["evidence"] } }) {
+export function EvidencePair({ state, doc }: { state: DocqetState; doc: { evidence: Capability["evidence"] } }) {
   const side = (label: string, places: Capability["evidence"]["implements"]) => (
     <div>
       <Box component="span" sx={{ display: "block", mb: 0.5, typography: "overline", color: "text.disabled" }}>

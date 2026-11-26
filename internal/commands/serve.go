@@ -13,27 +13,27 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/urfave/cli/v3"
 
-	"github.com/exalynt/docket/internal/database"
-	httphandlers "github.com/exalynt/docket/internal/handlers/http"
-	"github.com/exalynt/docket/internal/logs"
-	"github.com/exalynt/docket/internal/repositories/sqlite"
-	"github.com/exalynt/docket/internal/services"
-	"github.com/exalynt/docket/internal/state"
+	"github.com/exalynt/docqet/internal/database"
+	httphandlers "github.com/exalynt/docqet/internal/handlers/http"
+	"github.com/exalynt/docqet/internal/logs"
+	"github.com/exalynt/docqet/internal/repositories/sqlite"
+	"github.com/exalynt/docqet/internal/services"
+	"github.com/exalynt/docqet/internal/state"
 )
 
 // shutdownTimeout bounds how long in-flight requests have to finish once
 // shutdown starts, before the server stops waiting.
 const shutdownTimeout = 10 * time.Second
 
-// ServeCommand runs the Docket server: it takes each project's states from
-// `docket apply`, keeps them in SQLite and hands them back, and serves the
+// ServeCommand runs the Docqet server: it takes each project's states from
+// `docqet apply`, keeps them in SQLite and hands them back, and serves the
 // API's docs, a readiness probe and the UI, over each project's latest
 // applied state.
 func ServeCommand() *cli.Command {
 	return &cli.Command{
 		Name:     "serve",
 		Category: serving,
-		Usage:    "Run the Docket server",
+		Usage:    "Run the Docqet server",
 		Flags: []cli.Flag{
 			&cli.StringFlag{
 				Name:    "port",
@@ -57,7 +57,7 @@ func ServeCommand() *cli.Command {
 		},
 		Action: func(ctx context.Context, cmd *cli.Command) error {
 			logger := logs.New(os.Stderr, cmd.String("log-level"), cmd.String("log-format"))
-			logger.InfoContext(ctx, "starting docket server", "version", cmd.Root().Version, "database", cmd.String("database"))
+			logger.InfoContext(ctx, "starting docqet server", "version", cmd.Root().Version, "database", cmd.String("database"))
 
 			db, err := database.Open(ctx, cmd.String("database"))
 			if err != nil {
@@ -124,7 +124,7 @@ func router(logger *slog.Logger, source services.StateSource, db *sql.DB) (http.
 }
 
 // latestStates is each project's latest applied state.
-// docket:implements capability:overview
+// docqet:implements capability:overview
 func latestStates(states *services.StateService) services.StateSource {
 	return func(ctx context.Context) ([]*state.State, error) {
 		latest, err := states.ListLatest(ctx)

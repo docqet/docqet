@@ -35,9 +35,9 @@ func withSourceFlags(flags ...cli.Flag) []cli.Flag {
 }
 
 // productFlag is --product[=ID], with usage: the whole product, rather than
-// this project alone. Given bare, it's the product docket.yaml names. With an
+// this project alone. Given bare, it's the product docqet.yaml names. With an
 // ID after =, it's that product, which outside a repository is the only way to
-// say which, and inside one must be the product docket.yaml names. Like git's
+// say which, and inside one must be the product docqet.yaml names. Like git's
 // --color[=when], the ID only follows =, so --product hotel leaves hotel as
 // an argument: maxArgs points that out.
 func productFlag(usage string) cli.Flag {

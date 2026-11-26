@@ -1,7 +1,7 @@
 # Storage
 
 _How the server keeps what it's sent: repositories, SQLite, and keeping states
-small. Part of [how `docket` is built](README.md)._
+small. Part of [how `docqet` is built](README.md)._
 
 The server keeps what it's sent in SQLite, behind repositories. The state
 repository is built, storing each distinct state once by its hash. The results
@@ -45,14 +45,14 @@ repositories:
 
 How results and changes are modelled is still in flux, so these two are
 placeholders, named for now by what they hold (see
-[the Reporting domain's decisions](../../docket/domains/reporting/domain.md)).
+[the Reporting domain's decisions](../../docqet/domains/reporting/domain.md)).
 
 - **Resources never come from a repository.** Capabilities, gaps, readiness
   and the rest aren't stored: the read service works them out from states with
   `combine` and `derive`, then filters, sorts and pages through them in
   memory. `turn` never runs a query itself, so it pages through a list worked
   out in Go as readily as a table. A repository with `ListCapabilities` would
-  move Docket's logic into SQL, where the CLI couldn't use it.
+  move Docqet's logic into SQL, where the CLI couldn't use it.
 - **Projects and products are the state repository's.** Nothing on the server
   declares them: they're each state's header. A project's product can change
   between commits, so each state's row carries it. A repository of their own
@@ -67,7 +67,7 @@ placeholders, named for now by what they hold (see
 - **The read service doesn't depend on `StateRepository`.** It declares the
   small interface it needs, the states of a product at a point, which the
   state repository satisfies on the server and the working tree satisfies on a
-  laptop. The CLI has no repositories: the working tree and `.docket/` are
+  laptop. The CLI has no repositories: the working tree and `.docqet/` are
   files.
 
 ## SQLite
@@ -77,12 +77,12 @@ placeholders, named for now by what they hold (see
 - **`internal/database` opens it and keeps its schema up to date.** Its goose
   migrations are in `internal/database/migrations/`, in a folder for each
   driver: `migrations/sqlite/` for now.
-- **Migrations run from an explicit command**, `docket migrate`, never when
-  the server starts. `docket serve` refuses to start on a database that's
+- **Migrations run from an explicit command**, `docqet migrate`, never when
+  the server starts. `docqet serve` refuses to start on a database that's
   behind. Compose runs `migrate` as a service of its own that the app waits
   for, and `make run` runs it first.
-- **The database is one file**, at `DATABASE_PATH`: `data/docket.db` for a
-  local run, ignored by git, and `/var/lib/docket/docket.db` on a volume in
+- **The database is one file**, at `DATABASE_PATH`: `data/docqet.db` for a
+  local run, ignored by git, and `/var/lib/docqet/docqet.db` on a volume in
   Compose.
 - **Paginating in SQL uses `turn`'s store adapter.** It has no SQLite dialect,
   so if neither of its dialects renders SQLite's keyset queries correctly, we

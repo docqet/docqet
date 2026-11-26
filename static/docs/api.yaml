@@ -1,13 +1,13 @@
 openapi: 3.0.3
 info:
-  title: Docket API
+  title: Docqet API
   description: >-
-    The Docket server's API: what software can do, who it serves, and how
+    The Docqet server's API: what software can do, who it serves, and how
     ready it is, for the projects applied to it. It serves its health,
     the endpoints the CLI sends each project's states through and reads
     them back from, and the resources the UI reads: each product's docs, put
     together across its projects, with the figures worked out for them, as
-    [the plan](https://github.com/exalynt/docket/blob/main/docs/architecture/api.md)
+    [the plan](https://github.com/exalynt/docqet/blob/main/docs/architecture/api.md)
     describes.
 
 
@@ -21,12 +21,12 @@ info:
 
 
     Every endpoint carries a
-    [stability level](https://github.com/exalynt/docket/blob/main/docket/domains/authoring/concepts/stability-level.md):
+    [stability level](https://github.com/exalynt/docqet/blob/main/docqet/domains/authoring/concepts/stability-level.md):
     Prototype, Alpha, Beta, or GA. Below GA it shows as a mark beside the
     endpoint and in the navigation, which says what to expect when you hover,
     focus, or tap it, and every endpoint states it in its `x-stability`
     field. Each group of endpoints shows its
-    [maturity](https://github.com/exalynt/docket/blob/main/docket/domains/reporting/concepts/maturity.md) in the
+    [maturity](https://github.com/exalynt/docqet/blob/main/docqet/domains/reporting/concepts/maturity.md) in the
     navigation, and in the overview under Maturity below: how close its
     endpoints are to being stable and supported.
 
@@ -48,22 +48,22 @@ info:
     ## Signing in
 
 
-    There's no sign-in yet. Each client gets a Docket server of their own,
+    There's no sign-in yet. Each client gets a Docqet server of their own,
     so one never holds another's projects, and it must only be reachable by
     that client's people, such as on a private network.
   version: 0.1.0
 servers:
   - url: http://localhost:8080/api/v1
-    description: Local development, `docket serve`
+    description: Local development, `docqet serve`
   - url: http://127.0.0.1:4100/api/v1
-    description: This machine, `docket ui`
+    description: This machine, `docqet ui`
 tags:
   - name: Health
     description: Service availability checks.
   - name: Projects
     description: >-
       Each project's states, one per commit on its main branch, as
-      `docket apply` sends them and the CLI reads them back.
+      `docqet apply` sends them and the CLI reads them back.
   - name: Products
     description: >-
       What a product's projects define, put together, with the figures worked

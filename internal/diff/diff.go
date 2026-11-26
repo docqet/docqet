@@ -1,5 +1,5 @@
 // Package diff compares two states of a project and says what changed in
-// Docket's words: docs added and removed, capabilities moving between
+// Docqet's words: docs added and removed, capabilities moving between
 // levels, gaps, tradeoffs and decisions added and removed, evidence gained
 // and lost, and problems found and fixed. It's pure: it reads only the
 // states and trailers it's given.
@@ -10,7 +10,7 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/exalynt/docket/internal/state"
+	"github.com/exalynt/docqet/internal/state"
 )
 
 // The kinds of change.
@@ -42,7 +42,7 @@ type Change struct {
 	// Detail is a decision's question, evidence's verb and place, or a
 	// problem's message.
 	Detail string `json:"detail,omitempty"`
-	// Became is what a removed thing became, as Docket-Became trailers say.
+	// Became is what a removed thing became, as Docqet-Became trailers say.
 	Became []string `json:"became,omitempty"`
 }
 
@@ -55,7 +55,7 @@ type Diff struct {
 }
 
 // Compare returns what changed from one state to another. became maps a
-// reference to what Docket-Became trailers say it became.
+// reference to what Docqet-Became trailers say it became.
 func Compare(from, to *state.State, became map[string][]string) Diff {
 	d := Diff{Changes: []Change{}, Unexplained: []string{}}
 	a, b := docsOf(from), docsOf(to)
@@ -277,7 +277,7 @@ func sortedKeys[V any](m map[string]V) []string {
 	return keys
 }
 
-// ParseBecame reads Docket-Became trailer values, <old> -> <new>, into what
+// ParseBecame reads Docqet-Became trailer values, <old> -> <new>, into what
 // each old reference became. Values not written that way are skipped: check
 // --commits reports them.
 func ParseBecame(values []string) map[string][]string {

@@ -5,7 +5,7 @@ put:
   description: >-
     Stores a project's state at a commit on its main branch, replacing any
     stored for that commit, so sending a commit twice changes nothing.
-    `docket apply` sends one for each new commit, oldest first.
+    `docqet apply` sends one for each new commit, oldest first.
 
 
     The server checks the state with the same check the CLI runs. It refuses a
@@ -47,7 +47,7 @@ get:
   summary: Get an applied commit
   description: >-
     One of a project's applied commits, without its state: where it is in
-    history, and its Docket trailers.
+    history, and its Docqet trailers.
   tags:
     - Projects
   # No sign-in yet: a server is only reachable by its client's people.

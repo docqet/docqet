@@ -30,7 +30,7 @@ import {
   subjectOf,
   technicalDoc,
   type CapabilityLevel,
-  type DocketState,
+  type DocqetState,
   type Domain,
   type Gap,
   type Level,
@@ -67,7 +67,7 @@ const nameRowSx: SystemStyleObject<Theme> = { ...rowSx, display: "flex", alignIt
  * the few riskiest gaps. Summary only: every count links on rather than
  * listing.
  */
-export default function OverviewPage({ state }: { state: DocketState; route: Route }) {
+export default function OverviewPage({ state }: { state: DocqetState; route: Route }) {
   const several = state.projects.length > 1;
   const name = several ? (state.projects[0]?.product.name ?? "Product") : (state.projects[0]?.name ?? "Project");
   const { maturity, readiness } = state.status;
@@ -240,7 +240,7 @@ export default function OverviewPage({ state }: { state: DocketState; route: Rou
 }
 
 /* Under the name: which projects, with several, and how much there is. */
-function Lede({ state }: { state: DocketState }) {
+function Lede({ state }: { state: DocqetState }) {
   const sizes = [
     plural(state.domains.length, "domain", "domains"),
     plural(state.features.length, "feature", "features"),
@@ -268,7 +268,7 @@ const draftSwatchSx = (theme: Theme) => ({
 const BAR_ORDER: CapabilityLevel[] = [null, ...STABILITY_LEVEL_IDS];
 
 /* A capability's level in a domain: its own there, as it can differ by domain, or else its overall one. */
-function levelIn(state: DocketState, domain: Domain) {
+function levelIn(state: DocqetState, domain: Domain) {
   return domainCapabilities(state, domain).map((c) => c.levels.find((l) => l.domain === domain.id)?.level ?? c.stability);
 }
 
@@ -281,7 +281,7 @@ const levelLabel = (level: CapabilityLevel) => (level ? STABILITY[level].name : 
  * is which level. Least mature first. Below md, the name and maturity share
  * a line, and the bar and what's left each take one of their own.
  */
-function DomainStability({ state }: { state: DocketState }) {
+function DomainStability({ state }: { state: DocqetState }) {
   const rows = [...state.domains]
     .map((domain) => {
       const capabilities = domainCapabilities(state, domain);
@@ -384,7 +384,7 @@ const onSx: SystemStyleObject<Theme> = {
 };
 
 /* What a gap is on, with its kind's icon and a link to its page: a capability, feature, mechanism or component. */
-function GapOn({ state, gap }: { state: DocketState; gap: Gap }) {
+function GapOn({ state, gap }: { state: DocqetState; gap: Gap }) {
   const { type, id } = subjectOf(gap);
   if (type === "mechanism" || type === "component") {
     const doc = technicalDoc(state, `${type}:${id}`);
@@ -416,7 +416,7 @@ function GapOn({ state, gap }: { state: DocketState; gap: Gap }) {
  * says, linking to its page, and what it's on, with its initiatives under
  * that. On a phone the three stack rather than squeeze.
  */
-function GapRow({ state, gap }: { state: DocketState; gap: Gap }) {
+function GapRow({ state, gap }: { state: DocqetState; gap: Gap }) {
   const risk = gap.risk;
   return (
     <Box

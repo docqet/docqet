@@ -10,16 +10,16 @@ import (
 
 	"github.com/urfave/cli/v3"
 
-	"github.com/exalynt/docket/internal/combine"
-	"github.com/exalynt/docket/internal/derive"
-	"github.com/exalynt/docket/internal/state"
+	"github.com/exalynt/docqet/internal/combine"
+	"github.com/exalynt/docqet/internal/derive"
+	"github.com/exalynt/docqet/internal/state"
 )
 
 // listKinds are what list lists, each by its plural.
 var listKinds = []string{"domains", "features", "capabilities", "rules", "concepts", "personas", "initiatives", "mechanisms", "components", "gaps", "tradeoffs", "decisions"}
 
 // ListCommand lists docs of one kind, or gaps, tradeoffs or decisions.
-// docket:implements capability:cli-reads
+// docqet:implements capability:cli-reads
 func ListCommand() *cli.Command {
 	return &cli.Command{
 		Name:      "list",

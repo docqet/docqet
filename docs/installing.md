@@ -1,9 +1,9 @@
-# Installing docket
+# Installing docqet
 
-`docket` is one Go program. Install it with Go 1.26 or later:
+`docqet` is one Go program. Install it with Go 1.26 or later:
 
 ```sh
-go install github.com/exalynt/docket/cmd/docket@latest   # or @<commit or tag>
+go install github.com/exalynt/docqet/cmd/docqet@latest   # or @<commit or tag>
 ```
 
 Or, from a checkout of this repository, `make install`. A binary built this
@@ -12,17 +12,17 @@ reads or changes a project works.
 
 ## In a project
 
-In the repository to bring Docket to:
+In the repository to bring Docqet to:
 
 ```sh
-docket init --id my-app --name "My App"   # writes docket.yaml
-docket kit install                        # the agent kit; --agent claude for Claude Code
-docket check                              # exit 1 on any problem
+docqet init --id my-app --name "My App"   # writes docqet.yaml
+docqet kit install                        # the agent kit; --agent claude for Claude Code
+docqet check                              # exit 1 on any problem
 ```
 
-The kit's [README](../kit/README.md) says what `docket kit` writes, for which
+The kit's [README](../kit/README.md) says what `docqet kit` writes, for which
 agents, and how they use it, and its
-[`adopting.md`](../kit/skills/docket/adopting.md) how an agent helps write the
+[`adopting.md`](../kit/skills/docqet/adopting.md) how an agent helps write the
 first docs.
 
 ## In CI
@@ -31,6 +31,6 @@ first docs.
 and has no `git`, which the commands that compare with a branch need. On every pull request:
 
 ```sh
-docket check --changed --base "origin/$BASE_BRANCH" --commits "origin/$BASE_BRANCH..HEAD"
-docket kit check     # the kit committed is the one this docket carries
+docqet check --changed --base "origin/$BASE_BRANCH" --commits "origin/$BASE_BRANCH..HEAD"
+docqet kit check     # the kit committed is the one this docqet carries
 ```

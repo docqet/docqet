@@ -5,7 +5,7 @@ get:
   description: >-
     Every gap showing on the product's capabilities, mechanisms and
     components, with its risk, what it affects, and the open decisions that
-    affect it. `?for=`, `?impact=` and `?sort=` mean what they do for `docket
+    affect it. `?for=`, `?impact=` and `?sort=` mean what they do for `docqet
     list gaps`. With `?for=`, each gap's `within` says what it puts at stake
     there.
   tags:

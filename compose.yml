@@ -7,25 +7,25 @@ services:
       context: .
       dockerfile: Dockerfile
       target: runner
-    command: ["docket", "migrate"]
+    command: ["docqet", "migrate"]
     environment:
-      DATABASE_PATH: /var/lib/docket/docket.db
+      DATABASE_PATH: /var/lib/docqet/docqet.db
     volumes:
-      - docket-data:/var/lib/docket
+      - docqet-data:/var/lib/docqet
 
   app:
     build: *build
-    command: ["docket", "serve"]
+    command: ["docqet", "serve"]
     depends_on:
       migrate:
         condition: service_completed_successfully
     environment:
       PORT: "8080"
-      DATABASE_PATH: /var/lib/docket/docket.db
-    # The server's SQLite database lives on the docket-data volume, so it
+      DATABASE_PATH: /var/lib/docqet/docqet.db
+    # The server's SQLite database lives on the docqet-data volume, so it
     # survives restarts; `docker compose down -v` wipes it.
     volumes:
-      - docket-data:/var/lib/docket
+      - docqet-data:/var/lib/docqet
     # Lets the app reach services published on the host as
     # host.docker.internal, on Linux too.
     extra_hosts:
@@ -45,4 +45,4 @@ services:
       start_interval: 2s
 
 volumes:
-  docket-data:
+  docqet-data:

@@ -9,23 +9,23 @@ import (
 
 	"github.com/urfave/cli/v3"
 
-	"github.com/exalynt/docket/internal/logs"
-	"github.com/exalynt/docket/internal/project"
-	"github.com/exalynt/docket/internal/services"
-	"github.com/exalynt/docket/internal/state"
+	"github.com/exalynt/docqet/internal/logs"
+	"github.com/exalynt/docqet/internal/project"
+	"github.com/exalynt/docqet/internal/services"
+	"github.com/exalynt/docqet/internal/state"
 )
 
-// uiAddr is where `docket ui` listens. It's loopback only, and can't be
+// uiAddr is where `docqet ui` listens. It's loopback only, and can't be
 // changed to listen anywhere else, so it can never be deployed as the server
 // by mistake.
 const uiAddr = "127.0.0.1:4100"
 
 // UICommand serves the UI over this project, on this machine only: the
-// server's API, over the project's .docket/state.json as docket index wrote
+// server's API, over the project's .docqet/state.json as docqet index wrote
 // it, read on every request, so re-indexing shows on reload. It doesn't
 // index the working tree itself. Only the working tree can be shown: the
 // source flags answer that they aren't built.
-// docket:implements capability:local-viewer
+// docqet:implements capability:local-viewer
 func UICommand() *cli.Command {
 	return &cli.Command{
 		Name:     "ui",
@@ -48,7 +48,7 @@ func UICommand() *cli.Command {
 			}
 			state := project.StatePath(root)
 			if _, err := os.Stat(state); errors.Is(err, os.ErrNotExist) {
-				return fmt.Errorf("%s has no .docket/state.json to show: run docket index first", root)
+				return fmt.Errorf("%s has no .docqet/state.json to show: run docqet index first", root)
 			}
 
 			logger := logs.New(os.Stderr, "info", "text")

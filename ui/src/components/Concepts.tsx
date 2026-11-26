@@ -4,7 +4,7 @@ import OpenInNewRoundedIcon from "@mui/icons-material/OpenInNewRounded";
 import Box from "@mui/material/Box";
 import { DetailsPopover } from "./popovers/DetailsPopover";
 import { follow } from "./markdown/Markdown";
-import { conceptLinked, fieldsText, find, pageHref, type Concept, type DocketState, type Pick } from "../state";
+import { conceptLinked, fieldsText, find, pageHref, type Concept, type DocqetState, type Pick } from "../state";
 import Tooltip from "@mui/material/Tooltip";
 import { ConceptSummary } from "./popovers/ConceptSummary";
 
@@ -126,7 +126,7 @@ export function ConceptChips({
  * then those that share a rule with it, since a rule that refers to two
  * concepts says how they bear on each other.
  */
-export function related(state: DocketState, concept: Concept): Concept[] {
+export function related(state: DocqetState, concept: Concept): Concept[] {
   const ids = new Set<string>();
   for (const f of concept.from)
     for (const c of f.confusedWith ?? []) {

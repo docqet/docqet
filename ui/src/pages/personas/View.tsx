@@ -4,7 +4,7 @@ import { StabilitySpread } from "../../components/stability/StabilitySpread";
 import { Term } from "../../components/term/Term";
 import { NAMES } from "../../components/names";
 import { PersonaAvatar, personaNameAndRole } from "../../components/Personas";
-import { docDomains, find, type DocketState, type Persona } from "../../state";
+import { docDomains, find, type DocqetState, type Persona } from "../../state";
 import { ExposureStat, MaturityStat } from "../../components/indexParts";
 import { docHref, type Route } from "../../routes";
 import { Empty, Section, Stat, Tabs, currentTab, type TabDef } from "../../components/shell/layout";
@@ -29,7 +29,7 @@ import { Missing } from "../../components/doc/Missing";
 import { docGo, Crumb, levelsSx, lineSx } from "../../components/doc/DocPage";
 
 /* A persona's page, or what shows when it isn't in the projects showing. */
-export default function PersonaView({ state, id, route }: { state: DocketState; id: string; route: Route }) {
+export default function PersonaView({ state, id, route }: { state: DocqetState; id: string; route: Route }) {
   const persona = find(state.personas, id);
   if (!persona) return <Missing kind="persona" id={id} />;
   return <PersonaPage persona={persona} route={route} {...docGo(state)} />;
