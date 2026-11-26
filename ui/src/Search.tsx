@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
-import * as api from "./api";
 import BoltOutlinedIcon from "@mui/icons-material/BoltOutlined";
 import RuleRoundedIcon from "@mui/icons-material/RuleRounded";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
@@ -13,6 +12,7 @@ import { PersonaIcon } from "./Personas";
 import { InitiativeIcon } from "./ScopeFilter";
 import { DomainIcon } from "./FeatureMap";
 import { ProjectIcon } from "./ProductFilter";
+import { searchProduct, type SearchResultResource } from "./services/docket/search";
 import {
   docDomains,
   domainName,
@@ -213,13 +213,12 @@ export default function Search({ state, all, onSelect }: { state: DocketState; a
    * isn't asked at every key. The last results stay until the next arrive.
    */
   const q = query.trim();
-  const [found, setFound] = useState<{ q: string; results: api.SearchResultResource[] } | null>(null);
+  const [found, setFound] = useState<{ q: string; results: SearchResultResource[] } | null>(null);
   useEffect(() => {
     if (!q) return;
     let current = true;
     const timer = setTimeout(() => {
-      api
-        .getAll<api.SearchResultResource>(api.productPath(state.showing, "/search", { q }))
+      searchProduct(state.showing, q)
         .catch(() => [])
         .then((results) => current && setFound({ q, results }));
     }, 150);

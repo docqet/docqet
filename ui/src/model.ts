@@ -6,7 +6,35 @@
  */
 
 import { useEffect, useState } from "react";
-import * as api from "./api";
+import { listCapabilities, type OutcomeStandingResource } from "./services/docket/capabilities";
+import type { Showing } from "./services/docket/client";
+import { listComponents } from "./services/docket/components";
+import { listConcepts } from "./services/docket/concepts";
+import { listDomains } from "./services/docket/domains";
+import { listFeatures } from "./services/docket/features";
+import { listGaps, type GapResource, type RiskOnResource } from "./services/docket/gaps";
+import { listInitiatives } from "./services/docket/initiatives";
+import { listMechanisms } from "./services/docket/mechanisms";
+import { listPersonas } from "./services/docket/personas";
+import { listProblems } from "./services/docket/problems";
+import { listProjects } from "./services/docket/projects";
+import { getRubric } from "./services/docket/rubric";
+import { listRules } from "./services/docket/rules";
+import type {
+  AffectedResource,
+  ContributionResource,
+  DecisionResource,
+  DocResource,
+  EvidenceResource,
+  ExposureResource,
+  HeldDecisionResource,
+  MaturityResource,
+  ReadinessResource,
+  RiskSummaryResource,
+  TechnicalResource,
+} from "./services/docket/shared";
+import { getStatus } from "./services/docket/status";
+import { listTradeoffs } from "./services/docket/tradeoffs";
 import {
   READINESS_BANDS,
   RISK_BANDS,
@@ -35,6 +63,7 @@ import {
   type Risk,
   type RiskAcross,
   type RiskOn,
+  type Rubric,
   type Rule,
   type RuleStanding,
   type Status,
@@ -44,12 +73,12 @@ import {
 } from "./state";
 
 const level = (l: string): CapabilityLevel => (l === "draft" ? null : (l as Level));
-const percent = (m: api.MaturityResource) => m?.percent ?? null;
-const band = (m: api.MaturityResource) => (m ? (m.band as Level) : null);
+const percent = (m: MaturityResource) => m?.percent ?? null;
+const band = (m: MaturityResource) => (m ? (m.band as Level) : null);
 
-const decision = (d: api.DecisionResource): Decision => ({ topic: d.topic, question: d.question, affects: d.affects });
+const decision = (d: DecisionResource): Decision => ({ topic: d.topic, question: d.question, affects: d.affects });
 
-const contribution = (c: api.ContributionResource): Contribution => ({
+const contribution = (c: ContributionResource): Contribution => ({
   project: c.project,
   domain: c.domain,
   file: c.file,
@@ -63,7 +92,7 @@ const contribution = (c: api.ContributionResource): Contribution => ({
 });
 
 /* What every doc has, with its first contribution's fields on it, as the pages read them. */
-function doc(r: api.DocResource): Doc {
+function doc(r: DocResource): Doc {
   const from = r.from.map(contribution);
   const first = from[0];
   return {
@@ -81,7 +110,7 @@ function doc(r: api.DocResource): Doc {
   };
 }
 
-const evidence = (e: api.EvidenceResource): Evidence => ({ implements: e.implements, verifies: e.verifies });
+const evidence = (e: EvidenceResource): Evidence => ({ implements: e.implements, verifies: e.verifies });
 
 /* Placeholders for the figures, filled in once every doc is there to point at. */
 const noExposure: Exposure = { percent: null, capabilities: 0, band: null, unacceptable: false };
@@ -97,7 +126,7 @@ const noReadiness = (): Readiness => ({
   notReady: [],
   notStarted: [],
 });
-const noRisk = (g: api.GapResource): Risk => ({
+const noRisk = (g: GapResource): Risk => ({
   impact: g.impact as Risk["impact"],
   likelihood: g.likelihood as Risk["likelihood"],
   reach: g.reach as Risk["reach"],
@@ -109,8 +138,50 @@ const noRisk = (g: api.GapResource): Risk => ({
   spread: [],
 });
 
+/* Everything about the product showing, as the server serves it, read at once. */
+async function readProduct(showing: Showing) {
+  const [status, projects, rubric, domains, features, capabilities, rules, concepts, personas, initiatives, mechanisms, components, gaps, tradeoffs, problems] =
+    await Promise.all([
+      getStatus(showing),
+      listProjects(showing),
+      getRubric(showing),
+      listDomains(showing),
+      listFeatures(showing),
+      listCapabilities(showing),
+      listRules(showing),
+      listConcepts(showing),
+      listPersonas(showing),
+      listInitiatives(showing),
+      listMechanisms(showing),
+      listComponents(showing),
+      listGaps(showing),
+      listTradeoffs(showing),
+      listProblems(showing),
+    ]);
+  return {
+    status,
+    projects,
+    rubric,
+    domains,
+    features,
+    capabilities,
+    rules,
+    concepts,
+    personas,
+    initiatives,
+    mechanisms,
+    components,
+    gaps,
+    tradeoffs,
+    problems,
+  };
+}
+
+/* The product showing, read from the server and turned into what the pages hold. */
+export const loadProduct = async (showing: Showing) => modelOf(await readProduct(showing), showing);
+
 /* The product showing, from its resources. */
-export function modelOf(r: api.ProductResources, showing: api.Showing): DocketState {
+function modelOf(r: Awaited<ReturnType<typeof readProduct>>, showing: Showing): DocketState {
   const state: DocketState = {
     showing,
     projects: r.projects.map((p): Project => ({
@@ -230,7 +301,7 @@ export function modelOf(r: api.ProductResources, showing: api.Showing): DocketSt
       message: p.message,
       ...(p.domain ? { domain: p.domain } : {}),
     })),
-    rubric: r.rubric.qualities.length ? r.rubric : null,
+    rubric: r.rubric.qualities.length ? (r.rubric as Rubric) : null,
     status: { maturity: percent(r.status.maturity), band: band(r.status.maturity), readiness: noReadiness(), exposure: noExposure, risk: noAcross() },
   };
 
@@ -292,11 +363,11 @@ function converters(state: DocketState) {
   ]);
   const some = <T>(map: Map<string, T>, ids: string[]) => ids.flatMap((id) => map.get(id) ?? []);
 
-  const riskOn = (o: api.RiskOnResource): RiskOn | null => {
+  const riskOn = (o: RiskOnResource): RiskOn | null => {
     const capability = capabilities.get(o.capability);
     return capability ? { ...o, capability } : null;
   };
-  const risk = (g: api.GapResource): Risk => ({
+  const risk = (g: GapResource): Risk => ({
     impact: g.impact as Risk["impact"],
     likelihood: g.likelihood as Risk["likelihood"],
     reach: g.reach as Risk["reach"],
@@ -307,7 +378,7 @@ function converters(state: DocketState) {
     capabilities: g.risk.capabilities,
     spread: g.risk.spread,
   });
-  const across = (a: api.RiskSummaryResource): RiskAcross<Gap> => ({
+  const across = (a: RiskSummaryResource): RiskAcross<Gap> => ({
     score: a.score,
     verdict: a.verdict as Verdict | null,
     items: a.gaps.flatMap((s) => {
@@ -318,13 +389,13 @@ function converters(state: DocketState) {
     }),
     counts: { unacceptable: a.counts.unacceptable ?? 0, tolerable: a.counts.tolerable ?? 0, acceptable: a.counts.acceptable ?? 0 },
   });
-  const exposure = (e: api.ExposureResource): Exposure => ({
+  const exposure = (e: ExposureResource): Exposure => ({
     percent: e.percent,
     capabilities: e.capabilities,
     band: RISK_BANDS.find((b) => b.id === e.band) ?? null,
     unacceptable: e.unacceptable,
   });
-  const readiness = (x: api.ReadinessResource): Readiness => ({
+  const readiness = (x: ReadinessResource): Readiness => ({
     percent: x.percent,
     band: READINESS_BANDS.find((b) => b.name === x.band) ?? null,
     maturity: x.maturity,
@@ -338,11 +409,11 @@ function converters(state: DocketState) {
     }),
     notStarted: some(capabilities, x.notStarted),
   });
-  const held = (d: api.HeldDecisionResource): HeldDecision[] => {
+  const held = (d: HeldDecisionResource): HeldDecision[] => {
     const on = holders.get(d.on);
     return on ? [{ decision: decision(d), on }] : [];
   };
-  const affected = (a: api.AffectedResource): Affected[] => {
+  const affected = (a: AffectedResource): Affected[] => {
     if (a.kind === "outcome") {
       const found = expectedOutcome(state.rubric, a.ref);
       return found ? [{ kind: "outcome", ...found }] : [];
@@ -358,7 +429,7 @@ function converters(state: DocketState) {
     const tradeoff = tradeoffs.get(a.ref);
     return tradeoff ? [{ kind: "tradeoff", tradeoff }] : [];
   };
-  const outcome = (o: api.OutcomeStandingResource): OutcomeStanding => ({
+  const outcome = (o: OutcomeStandingResource): OutcomeStanding => ({
     standing: o.standing as OutcomeStanding["standing"],
     gaps: some(gaps, o.gaps),
     tradeoffs: some(tradeoffs, o.tradeoffs),
@@ -369,7 +440,7 @@ function converters(state: DocketState) {
   return { risk, across, exposure, readiness, held, affected, outcome, gaps, technicals, some };
 }
 
-function technical(t: api.TechnicalResource): TechnicalDoc {
+function technical(t: TechnicalResource): TechnicalDoc {
   return {
     ...doc(t),
     kind: t.kind,
@@ -391,18 +462,19 @@ function technical(t: api.TechnicalResource): TechnicalDoc {
  * of what's showing. Null until they're read, and with no for.
  */
 export function useStatusFor(state: DocketState, forRef: string | null, initiative?: string | null): Status | null {
-  /* What was read, and for which path, so a read for another path shows as null until its own arrives. */
-  const [read, setRead] = useState<{ path: string; status: Status } | null>(null);
-  const showing = initiative === undefined ? state.showing : { ...state.showing, initiative };
-  const path = forRef ? api.productPath(showing, "/status", { for: forRef }) : null;
+  /* What was read, and what for, so a read for something else shows as null until its own arrives. */
+  const [read, setRead] = useState<{ state: DocketState; forRef: string; initiative?: string | null; status: Status } | null>(null);
   useEffect(() => {
-    if (!path) return;
+    if (!forRef) return;
+    const showing = initiative === undefined ? state.showing : { ...state.showing, initiative };
     let current = true;
-    api.getOne<api.StatusResource>(path).then((r) => {
+    getStatus(showing, forRef).then((r) => {
       if (!current) return;
       const { readiness, exposure, across } = converters(state);
       setRead({
-        path,
+        state,
+        forRef,
+        initiative,
         status: {
           maturity: r.maturity?.percent ?? null,
           band: (r.maturity?.band ?? null) as Level | null,
@@ -415,8 +487,8 @@ export function useStatusFor(state: DocketState, forRef: string | null, initiati
     return () => {
       current = false;
     };
-  }, [state, path]);
-  return read && read.path === path ? read.status : null;
+  }, [state, forRef, initiative]);
+  return read && read.state === state && read.forRef === forRef && read.initiative === initiative ? read.status : null;
 }
 
 /* A gap among the capabilities a for names: what it puts at stake there, and where it scores highest. */
@@ -428,17 +500,17 @@ export type GapWithin = { gap: Gap; score: number; verdict: Verdict; on: RiskOn 
  * a project or any other doc. Null until they're read, and with no for.
  */
 export function useGapsFor(state: DocketState, forRef: string | null): GapWithin[] | null {
-  /* What was read, and for which path, so a read for another path shows as null until its own arrives. */
-  const [read, setRead] = useState<{ path: string; gaps: GapWithin[] } | null>(null);
-  const path = forRef ? api.productPath(state.showing, "/gaps", { for: forRef, sort: "risk" }) : null;
+  /* What was read, and what for, so a read for something else shows as null until its own arrives. */
+  const [read, setRead] = useState<{ state: DocketState; forRef: string; gaps: GapWithin[] } | null>(null);
   useEffect(() => {
-    if (!path) return;
+    if (!forRef) return;
     let current = true;
-    api.getAll<api.GapResource>(path).then((list) => {
+    listGaps(state.showing, { for: forRef, sort: "risk" }).then((list) => {
       if (!current) return;
       const byId = new Map(state.gaps.map((g) => [g.id, g]));
       setRead({
-        path,
+        state,
+        forRef,
         gaps: list.flatMap((r) => {
           const gap = byId.get(r.id);
           const w = r.within;
@@ -450,8 +522,8 @@ export function useGapsFor(state: DocketState, forRef: string | null): GapWithin
     return () => {
       current = false;
     };
-  }, [state, path]);
-  return read && read.path === path ? read.gaps : null;
+  }, [state, forRef]);
+  return read && read.state === state && read.forRef === forRef ? read.gaps : null;
 }
 
 /*

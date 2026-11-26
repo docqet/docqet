@@ -8,10 +8,12 @@ out no figure: the server combines a product's projects and derives maturity,
 readiness, risk and exposure, and the UI shows them. State files are the
 CLI's, which writes and sends them, and the server's, which takes them.
 
-- **It loads the product showing at once.** `ui/src/api.ts` reads every list
-  under `/api/v1/products/{product}`, paging through each, with `?project=`
-  and `?initiative=` for what's showing, and `ui/src/model.ts` turns them into
-  the docs the pages hold, with each doc's figures on it.
+- **It loads the product showing at once.** `ui/src/services/docket/` has a
+  module for each resource under `/api/v1/products/{product}`, with `client.ts`
+  paging through each list and adding `?project=` and `?initiative=` for
+  what's showing. `ui/src/model.ts` reads them all and turns them into the
+  docs the pages hold, with each doc's figures on it. Pages and components
+  never call the API themselves.
 - **What no doc's figures cover, it asks for.** Readiness for the capabilities
   in a feature that serve a persona, or in one domain's part of a feature, is
   `/status?for=`, with several references for the capabilities they share.

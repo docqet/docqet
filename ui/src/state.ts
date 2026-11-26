@@ -1,4 +1,4 @@
-import type { Showing } from "./api";
+import type { Showing } from "./services/docket/client";
 import { STABILITY_LEVEL_IDS, type StabilityLevelId } from "./design/stability/stability";
 
 /*

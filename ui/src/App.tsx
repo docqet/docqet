@@ -16,8 +16,8 @@ import ProblemsPage from "./pages/ProblemsPage";
 import RulePage from "./pages/RulePage";
 import type { ProductChoice } from "./ProductFilter";
 import { navigate, routeOf, useSearch, type Route } from "./routes";
-import { getProduct, getProducts, type ProductResource } from "./api";
-import { modelOf } from "./model";
+import { loadProduct } from "./model";
+import { listProducts, type ProductResource } from "./services/docket/products";
 import { scopeOf, scopeParam } from "./scope";
 import Shell from "./shell/Shell";
 import type { DocketState, PageAt, Product } from "./state";
@@ -52,7 +52,7 @@ export default function App() {
   const scope = useMemo(() => scopeOf(search), [search]);
 
   useEffect(() => {
-    getProducts().then(setAll, (e: unknown) => setError(String(e)));
+    listProducts().then(setAll, (e: unknown) => setError(String(e)));
   }, []);
 
   /* Each product, and its projects, to choose from. */
@@ -78,12 +78,10 @@ export default function App() {
     if (!product) return;
     let current = true;
     const showing = { product: product.id, projects: projects ? projects.split(",") : [], initiative };
-    getProduct(showing)
-      .then((r) => modelOf(r, showing))
-      .then(
-        (s) => current && setState(s),
-        (e: unknown) => current && setError(String(e)),
-      );
+    loadProduct(showing).then(
+      (s) => current && setState(s),
+      (e: unknown) => current && setError(String(e)),
+    );
     return () => {
       current = false;
     };
