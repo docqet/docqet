@@ -66,7 +66,7 @@ the server are separate, since they aren't reads.
 | [`docket show`](#docket-show) | One doc, with everything derived about it | Read |
 | [`docket list`](#docket-list) | Docs, gaps, decisions or tradeoffs, filtered and ordered | Read |
 | [`docket status`](#docket-status) | Maturity, readiness and what's left, at a glance | Read |
-| [`docket checklist`](#docket-checklist) | What each stability level expects, or what a promotion needs | Read |
+| [`docket expectations`](#docket-expectations) | What each stability level expects, or what a promotion needs | Read |
 | [`docket rename`](#docket-rename) | Change an ID everywhere in the project, and say so in history | Changing |
 | [`docket diff`](#docket-diff) | What changed in Docket between two points | Read |
 | [`docket log`](#docket-log) | How one thing changed over time | Read |
@@ -187,7 +187,7 @@ docket kit --check   # exit 1 if the project's copy isn't this version's kit, fo
 ### `docket index`
 
 Reads the docs and annotations and writes the project's state, as the
-[spec](../../spec/README.md#index-output) describes. By default it indexes the
+[state](../../docket/domains/authoring/concepts/state.md) concept describes. By default it indexes the
 working tree, uncommitted changes included, into `.docket/state.json`.
 
 ```sh
@@ -210,7 +210,7 @@ examples show the ones each is most often used with.
 
 ### `docket check`
 
-Reports every [problem](../../spec/README.md#problems), with the file and line,
+Reports every [problem](../../docket/domains/authoring/concepts/problem.md), with the file and line,
 and exits 1 if there are any. Agents run it with `--changed` before they
 finish, as the kit tells them to.
 
@@ -310,19 +310,19 @@ the command is a reader too. It's the same Go code the server uses, and the UI
 shows only what that code works out, so `docket status` and the UI always
 agree.
 
-### `docket checklist`
+### `docket expectations`
 
-The [stability checklist](../../spec/README.md#stability-checklist): what
+The [expectations](../../docket/domains/authoring/concepts/expectations.md): what
 each level expects of the work, quality by quality, with each outcome's
-examples. It's part of the spec, so it's built into the binary and is the
+examples. It's part of the format, so it's built into the binary and is the
 same for every project. Agents read it here, and `check` uses it to validate
 every outcome named in `affects` and `meets`.
 
 ```sh
-docket checklist                                  # every quality, level and outcome
-docket checklist --level beta                     # everything Beta expects, including what it carries up
-docket checklist outcome:reliability/beta/data-kept   # one outcome, with its examples
-docket checklist --for capability:room-booking --to ga   # what promoting it needs
+docket expectations                                  # every quality, level and outcome
+docket expectations --level beta                     # everything Beta expects, including what it carries up
+docket expectations outcome:reliability/beta/data-kept   # one outcome, with its examples
+docket expectations --for capability:room-booking --to ga   # what promoting it needs
 ```
 
 With `--for` and `--to`, it's the first step of promoting a capability: each
@@ -386,7 +386,7 @@ Add this trailer when you commit:
 - **It changes the doc itself**: its `id`, or its `domain` for a rule or
   concept moving to another domain, or a gap's or tradeoff's key. A doc's
   file is renamed with it when the file is named after the old ID, as the
-  spec recommends, and left alone otherwise.
+  format recommends, and left alone otherwise.
 - **It changes every reference to it in the project**: links in every doc's
   frontmatter, every annotation, and the IDs of the doc's own gaps and
   tradeoffs, which follow it under the same trailer.
@@ -512,7 +512,7 @@ docket history --branch release
 
 A commit says what something it removed became with a `Docket-Became`
 trailer, one of git's own trailers, beside any others such as `Signed-off-by`.
-The [spec's trailers](../../spec/trailers/) are the whole format.
+The [trailer](../../docket/domains/authoring/concepts/trailer.md) concept is the whole format.
 
 ```text
 Settle refunds to the original card
@@ -602,7 +602,7 @@ Sends the main branch's new commits to the server, oldest first:
 ```sh
 docket apply                            # in CI, on the main branch
 docket apply --from 0a9f6b3             # a project's first apply, or a backfill
-docket apply --from 0a9f6b3 --replace   # re-index and replace, after a spec change
+docket apply --from 0a9f6b3 --replace   # re-index and replace, after a format change
 docket apply --dry-run                  # what would be sent
 ```
 
@@ -821,42 +821,17 @@ docket list decisions --product=hotel --initiative mvp
 
 ## Left out for now
 
-- **A selected context.** No `docket use`, no current stack or server to
-  switch between. Every command says where it reads from, so nothing run
-  earlier changes what it shows.
-- **Writing docs.** No `docket new capability`. Agents write docs directly
-  from the kit's `docs.md`, and people copy one. We'll add it if writing them
-  by hand turns out to be slow.
-- **Remembering trailers.** `rename` prints its trailer, and nothing keeps it
-  for the commit, since nothing a command did earlier changes what another
-  does. A `prepare-commit-msg` hook that adds it can come later, if renames
-  committed without one turn out to be common.
-- **Branch history on the server.** Only the main branch's commits are
-  applied. A branch is shown by `preview`, not stored.
-- **Integrations with hosts or CI services.** No GitHub App, no GitLab
-  integration, no posting comments. They'd each tie Docket to one host.
-- **Changing anything on the server but observations.** There's no command to
-  edit a persona or a gap on the server, and won't be: intention changes in
-  the repository.
-- **Watching for changes**, an editor plugin, or a language server.
-- **Signing in**, project tokens and `docket login`, for now. A server serves
-  one client and is kept off the open internet instead (see
-  [Signing in](#signing-in)).
+What's left out on purpose is written down as tradeoffs in Docket's own docs:
+on the [Commands](../../docket/mechanisms/commands.md) mechanism, and on the
+features it's about, such as
+[Declaring intention](../../docket/domains/authoring/features/declaring.md)
+and [Collecting states](../../docket/domains/reporting/features/collecting.md).
+Signing in is a gap on
+[Applying states](../../docket/domains/reporting/capabilities/applying.md).
 
 ## Open questions
 
-- **Decisions need keys** before `rename`, a trailer or `log` can name one.
-  It's a spec change, an open decision in the
-  [spec's trailers](../../spec/trailers/#open-decisions).
-- **A trailer left out can't be added later.** A rename committed without its
-  trailer reads in history as one thing removed and another added, and the
-  only way to fix it is to rewrite that commit. If that happens often, a later
-  commit could be allowed to say what an earlier one's removal became.
-- **How well test cases can be matched to evidence.** JUnit names a test by
-  its class or file and its name, while an annotation is on a file and line.
-  We'll find out how rough the match is on real projects before making it
-  smarter, or before asking for an annotation format that names the test.
-- **Whether `apply` indexes every commit, or only the head of each push.**
-  Indexing every commit gives the finest history, and should be cheap, since
-  indexing only reads docs and searches for annotations. If it isn't on a
-  large repository, the head of each push and every commit's trailers would do.
+Open questions are decisions in Docket's own docs, on the capability each is
+about, such as [Trailers](../../docket/domains/authoring/capabilities/trailers.md),
+[Applying states](../../docket/domains/reporting/capabilities/applying.md) and
+[Test and QA results](../../docket/domains/reporting/capabilities/results.md).

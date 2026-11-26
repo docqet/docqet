@@ -54,6 +54,7 @@ var shaPattern = regexp.MustCompile(`^(?:[0-9a-f]{40}|[0-9a-f]{64})$`)
 // sent, but for those only files show. It returns ErrInvalidState for a state
 // that isn't one, or that's for another project. created reports whether the
 // commit is new to the server.
+// docket:implements capability:applying component:server rule:applying-twice-changes-nothing@reporting
 func (s *StateService) Apply(ctx context.Context, project, sha string, a state.Applied) (result Applied, created bool, err error) {
 	invalid := func(format string, args ...any) error {
 		return fmt.Errorf("%w: %s", ErrInvalidState, fmt.Sprintf(format, args...))

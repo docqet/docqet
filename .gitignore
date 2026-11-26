@@ -13,9 +13,12 @@ go.work.sum
 # Local compose override
 compose.override.yml
 
-# Build output
+# Build output, from `go build -o bin/ ./cmd/docket`.
 /bin/
-/docket
+
+# Docket's own state, from `docket index` at the root. The examples' state.json
+# files are written by hand, so they're kept.
+/.docket/
 
 # The local server's SQLite database, from `make run`.
 /data/

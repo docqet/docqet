@@ -196,7 +196,7 @@ decisions:
 
 ## What `affects` says
 
-Declaring a level claims every outcome the checklist expects at it, and
+Declaring a level claims every outcome the expectations list at it, and
 following a rule claims the rule holds. A gap, a tradeoff and a decision are
 the three ways of saying "except here", and `affects` says which claim, or
 which other item, each is about. Its meaning comes from what's doing the
@@ -208,7 +208,7 @@ affecting:
 | **Tradeoff** | Not met, by choice | | | |
 | **Decision** | Open: neither claimed nor short | | Waits on its answer | Reopened |
 
-- **Write references**: `outcome:<quality>/<level>/<id>` (`docket checklist`
+- **Write references**: `outcome:<quality>/<level>/<id>` (`docket expectations`
   lists them), `rule:<id>`, with `@<domain>` for another domain's, or a gap's
   or tradeoff's ID.
 - **Never anything else.** The doc an item is on is already what it's about,

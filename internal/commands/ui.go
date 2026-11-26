@@ -22,6 +22,7 @@ const uiAddr = "127.0.0.1:4100"
 // For now it shows the project's .docket/state.json as docket index wrote it,
 // and doesn't re-index as files change. Only the working tree can be
 // shown: the source flags answer that they aren't built.
+// docket:implements capability:local-viewer
 func UICommand() *cli.Command {
 	return &cli.Command{
 		Name:     "ui",

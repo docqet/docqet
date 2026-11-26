@@ -111,7 +111,7 @@ GET /api/v1/projects/hotel-bookings/commits                          the commits
   happened, such as a gap closed, a promotion or a decision answered, and what
   it's about. `/changes` is a paginated list of them, filtered like any other.
   How a change is modelled is still in flux (see
-  [Open decisions](README.md#open-decisions)).
+  [the Reporting domain's decisions](../../docket/domains/reporting/domain.md)).
 - **A comparison** is the net difference between two points, as `docket diff`
   shows it. It isn't a collection, so it's a read of its own, as GitHub's
   `/compare` is.
@@ -128,7 +128,7 @@ On the server:
   is then an ordinary paginated query, rather than diffs worked out across
   hundreds of commits on every request.
 - **Everything stored can be rebuilt**: changes from the states, and the
-  states from git. When `diff` or the spec changes, `apply --replace` rebuilds
+  states from git. When `diff` or the format changes, `apply --replace` rebuilds
   them.
 - **What's worked out for a point never changes**, since the states it's read
   from never do. It can be cached safely if it ever needs to be.

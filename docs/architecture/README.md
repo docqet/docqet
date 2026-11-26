@@ -19,7 +19,7 @@ internal/commands, internal/handlers/http     thin: parse input, call a service,
         │
 internal/services                             orchestration: where states come from, what to do with them
         │
-internal/state, index, check, combine,        the spec in Go: pure functions, no I/O
+internal/state, index, check, combine,        the format in Go: pure functions, no I/O
 derive, diff
         │
 fs.FS, internal/git, repositories/sqlite,     I/O, behind interfaces, each added when a command needs it
@@ -34,7 +34,7 @@ a client for the server
   `NewXService(...)` from interfaces, and takes `ctx` first. A service only
   exists once there's orchestration to do. Until then, a command may call the
   core directly, as `docket index` will at first.
-- **The core is the spec in Go.** It never touches the filesystem, git, the
+- **The core is the format in Go.** It never touches the filesystem, git, the
   network or a database, so what it works out depends only on what it's
   given. That's what lets the CLI, the server and the UI never disagree, and
   lets the server's history be rebuilt from git.
@@ -46,10 +46,10 @@ The core's packages:
 
 | Package   | Does                                                                                                    | Built with                          |
 | --------- | ------------------------------------------------------------------------------------------------------- | ----------------------------------- |
-| `state`   | The types of `state.json`, as the [spec](../../spec/README.md#index-output) defines them                | `docket index`                      |
+| `state`   | The types of `state.json`, as the [state](../../docket/domains/authoring/concepts/state.md) concept defines them                | `docket index`                      |
 | `index`   | Reads a project's docs and annotations, and works out evidence, reverse links and problems              | `docket index`                      |
 | `check`   | Finds the problems a state shows on its own, for the CLI and the server alike                           | `docket check`, `apply`, the server |
-| `combine` | Puts several projects of one product together, as [Combining](../../spec/README.md#combining) describes | `--product`, the server's reads     |
+| `combine` | Puts several projects of one product together, as [Combining](../../docket/domains/reporting/concepts/product.md) describes | `--product`, the server's reads     |
 | `derive`  | Works out maturity, readiness, risk and exposure                                                        | `docket status`, the API            |
 | `diff`    | Compares two states, with the trailers between them                                                     | `docket diff`, `log`, `preview`     |
 
@@ -89,23 +89,15 @@ Each step builds only what its commands need:
 
 ## Open decisions
 
-- **How results and changes are modelled.** Both are needed, and both are in
-  flux: what each one is, what it holds, and what it's called. The model
-  carries into its repository, its type and its resource, so `results` and
-  `/changes` are working names until it settles. Names considered so far:
-  "runs" or "reports" for results, since each `docket results` call sends one
-  JUnit or QA run, and "timeline" or "events" for changes, since the draft
-  calls the server's history its timeline. "History" is taken by
-  `docket history`.
+Open decisions are in Docket's own docs, such as how results and changes are
+modelled, on the [Reporting](../../docket/domains/reporting/domain.md) domain.
 
 ## Left out for now
 
-- **Signing in.** A server serves one client and is kept off the open
-  internet (see [Signing in](../../cmd/docket/README.md#signing-in)).
-- **Trends**, such as maturity over time as a chart. They mean deriving at
-  many points. They'll be worked out from the stored states when a view wants
-  them, and worked out as states are applied if that's slow.
-- **`?at=` on `docket ui`**, which serves the working tree. It needs the
-  history service, so it comes with history.
-- **How the server is configured** beyond its flags and environment
-  variables.
+What's left out for now is in Docket's own docs, as gaps, tradeoffs and draft
+capabilities: signing in on
+[Applying states](../../docket/domains/reporting/capabilities/applying.md),
+[Trends](../../docket/domains/reporting/capabilities/trends.md),
+`?at=` on the [Local viewer](../../docket/domains/reporting/capabilities/local-viewer.md),
+and how the server is configured on the [Server](../../docket/components/server.md)
+component.

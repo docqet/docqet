@@ -1,0 +1,46 @@
+---
+docket: concept
+id: indexer
+domain: authoring
+name: Indexer
+description: >-
+  The program that reads a project's docs and annotations, and writes down
+  everything derived about them, as the project's [state](state.md), for a
+  particular commit.
+confused-with:
+  - term: "The server and the UI"
+    summary: >-
+      the server holds the states it's sent, and the UI shows what `docket` works out from them. Neither reads the repository.
+---
+
+`docket index` is Docket's indexer, but the format belongs to no one tool:
+anyone can write their own. It doesn't parse code, run tests or read their
+results. It reads the [docs](doc.md), finds every
+[annotation](annotation.md) by its text, and works out evidence, reverse
+links and [problems](problem.md).
+
+`docket index` is one. The examples' state is written by hand, to show what
+indexing should produce, and checks `docket index` against it.
+
+## How it's written
+
+Run anywhere in a [project](project.md)'s folder, it indexes that project, the
+one whose `docket.yaml` is nearest above:
+
+```sh
+docket index
+```
+
+It reads `docket.yaml`, every Markdown file in the project whose frontmatter
+has `docket`, wherever it is, and every file in the project for annotations,
+leaving out folders inside it with a `docket.yaml` of their own, and whatever
+the project's `.docketignore` lists. It writes
+`.docket/state.json` beside `docket.yaml`, which is gitignored. Where a doc is
+tells it nothing:
+
+```text
+docket.yaml                    → the project's ID and name
+**/*.md with `docket:`         → docs, links, levels, gaps, tradeoffs
+src/**, test/**, db/**, ...    → annotations
+                               ⇒ .docket/state.json
+```

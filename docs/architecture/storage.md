@@ -45,7 +45,7 @@ repositories:
 
 How results and changes are modelled is still in flux, so these two are
 placeholders, named for now by what they hold (see
-[Open decisions](README.md#open-decisions)).
+[the Reporting domain's decisions](../../docket/domains/reporting/domain.md)).
 
 - **Resources never come from a repository.** Capabilities, gaps, readiness
   and the rest aren't stored: the read service works them out from states with
@@ -105,7 +105,7 @@ it:
 1. **Compress what's stored**, with the standard library's `compress/gzip`.
    State is JSON, which compresses well.
 2. **Store a state's parts by their hashes**, as git stores files in trees:
-   each doc's entry, and the stability checklist, once each by its hash, and a
+   each doc's entry, and the expectations, once each by its hash, and a
    state as the list of them. Most commits change one or two docs, so most of
    each state is already stored. It also catches what whole-state hashing
    misses: a code change that only moves an annotated line changes the state,

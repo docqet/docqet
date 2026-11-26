@@ -46,9 +46,5 @@ it references, `static/docs/stability-marks.js` and `.css`.
 
 ## Known gaps
 
-- **The script depends on Scalar's page structure**, as the api
-  repository's does, and the page loads `@scalar/api-reference` from
-  jsdelivr without a version. A Scalar release can stop the marks, rings and
-  overview appearing, without an error. Nothing tests the rendered page.
-- **Two copies of the script and bundler**, here and in the api repository,
-  kept in step by hand.
+The API docs' gaps are on the [API docs](../../docket/components/api-docs.md)
+component, in Docket's own docs.

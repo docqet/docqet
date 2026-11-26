@@ -88,6 +88,7 @@ func Validate(st *state.State) error {
 // Recheck works out st's problems again with Check, keeping only the
 // problems it carries that Check can't find, those found reading files, so
 // what st says about its docs is always this check's own.
+// docket:implements rule:same-problems-everywhere@reporting
 func Recheck(st *state.State) {
 	var kept []state.Problem
 	for _, p := range st.Problems {

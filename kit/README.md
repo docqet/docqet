@@ -33,7 +33,7 @@ kit/
     ├── docs.md                  # each doc type's fields, and how to write it
     ├── gaps-and-decisions.md    # gaps and rating their impact, tradeoffs, decisions
     ├── annotations.md           # docket:implements, verifies, gap and tradeoff
-    ├── stability.md             # levels, what a change may break, the checklist, promoting
+    ├── stability.md             # levels, what a change may break, the expectations, promoting
     └── adopting.md              # bringing Docket to a repository that doesn't have it
 ```
 
@@ -100,37 +100,21 @@ Some things a project might say:
 
 The kit leaves conventions and standards, such as how a project handles
 errors or writes its tests, to the project's own rules. How the project meets
-a stability checklist outcome is a mechanism or component that `meets` it, in
+an expected outcome is a mechanism or component that `meets` it, in
 the project's technical docs.
 
 ## Keeping it in step with `docket`
 
-The kit restates the spec for agents, and names `docket`'s commands and
+The kit restates the format for agents, and names `docket`'s commands and
 flags. A change to either that changes what an agent writes, reads or runs
-changes the kit in the same commit. The stability checklist isn't copied into
-the kit: it's part of the spec, built into `docket`, and agents read it with
-`docket checklist`.
+changes the kit in the same commit. The expectations isn't copied into
+the kit: it's part of the format, built into `docket`, and agents read it with
+`docket expectations`.
 
 ## Known gaps
 
-- **`docket` would read the kit's examples as annotations.** The spec has
-  `docket` look for annotations in every file that isn't a Docket doc, so the
-  examples in `.agents/skills/docket/` would be reported as annotations naming
-  docs that don't exist. The spec needs to leave the kit out, or agent
-  instructions in general.
-- **Inferred intention has no marker.** The spec hasn't decided how to mark
-  intention an agent worked out from code, so the kit has agents propose it
-  and write it once a person confirms it.
-- **An answered decision can't be named in a trailer.** Decisions have no key
-  yet, an [open decision in the spec](../spec/trailers/#open-decisions), so
-  the kit doesn't ask agents to say what a decision became.
-- **An agent's `docket` may not match the project's kit.** The committed kit
-  is from whichever `docket` last ran `docket kit`, so it can name commands an
-  older `docket` doesn't have, or miss newer ones. `docket kit --check` in CI
-  keeps the project's copy matching CI's `docket`, not every engineer's.
-- **GitHub Copilot may not find the skill.** Sources differ on whether it
-  reads `.agents/skills/` or only `.github/skills/`. It still reads
-  `AGENTS.md`, which points at the skill.
-- **No workflows yet.** Forge's `/implement`, `/promote` and
-  `stability-reviewer` aren't part of the kit. The skill describes promoting
-  as steps an agent follows when a person asks for it.
+The kit's gaps and tradeoffs are on
+[Agent guidance](../docket/domains/authoring/capabilities/agent-guidance.md),
+in Docket's own docs. Installing the kit adds its folder to a project's
+`.docketignore`, so its example annotations aren't read as the project's own
+(see [Installing the kit](../docket/domains/authoring/capabilities/kit-install.md)).

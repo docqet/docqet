@@ -37,8 +37,8 @@ func Index(project fs.FS) (*state.State, error)
   blank lines around it, and every list `[]` rather than `null`.
 - **Evidence and places.** An annotation is recorded as its own line, with
   the text of the first line below it that isn't blank or another
-  annotation, as the [spec](../../spec/annotations/README.md#what-the-indexer-records)
-  says. Every file is scanned in path order, so evidence is ordered by file,
+  annotation, as the [annotation](../../docket/domains/authoring/concepts/annotation.md)
+  concept says. Every file is scanned in path order, so evidence is ordered by file,
   then line.
 - **Reverse links.** A draft claims nothing, so it's left out of the
   capabilities that follow a rule or use a concept, though it still counts
@@ -46,8 +46,9 @@ func Index(project fs.FS) (*state.State, error)
   `unlinked-rule`. A mechanism's capabilities are every capability the
   project declares but drafts, then each its components list.
 - **The summary**, counting a feature written in several domains once.
-- **The checklist**, embedded from `spec/stability/checklist.yml` through the
-  `spec` package, as `ui` and `kit` embed theirs.
+- **The expectations**, embedded from
+  `internal/expectations/expectations.yml` through the `expectations`
+  package, as `ui` and `kit` embed theirs.
 
 ## Problems
 
@@ -56,7 +57,7 @@ way the CLI does:
 
 - **`check.Check` finds what a state shows on its own**: required fields,
   allowed values, links of the wrong type or to nothing, outcomes not in the
-  checklist, duplicate IDs, unlinked rules, capabilities in two features.
+  expectations, duplicate IDs, unlinked rules, capabilities in two features.
   Each is about a doc, gap or tradeoff, its `subject`. `index` runs it on
   what it reads, and the server runs it again on every state it's sent.
 - **`index` finds what only files show**: frontmatter that isn't YAML, a
@@ -71,7 +72,7 @@ way the CLI does:
   again with `Check`, and keeps from what it's sent only the problems with
   no subject, which it can't see.
 
-Every problem also carries its doc's `file`, beyond what the spec lists, so
+Every problem also carries its doc's `file`, beyond what the format lists, so
 `docket check` can say where to fix it.
 
 ## Checking it against the examples

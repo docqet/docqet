@@ -139,7 +139,7 @@ decisions and tradeoffs.
   its risk profile, a section of its own: its risk, how it's worked out from
   its impact, likelihood, reach and stability, whether it breaks a claim
   and why, and its score on each capability it's on. Then its links: the
-  rules and checklist outcomes it affects, the open decisions it waits on,
+  rules and expected outcomes it affects, the open decisions it waits on,
   what it shows on, and where the code marks it.
 - **What's left** is the open decisions and the gaps, and nothing else:
   missing evidence is never something left to do. Counts of it show the gap
@@ -158,11 +158,11 @@ decisions and tradeoffs.
   address.
 - **Tradeoffs** are listed by what they're on, with no risk, since each is
   chosen. Opening one shows its drawback, its benefit where one is written
-  down, the checklist outcomes it falls short of on purpose, and any open
+  down, the expected outcomes it falls short of on purpose, and any open
   decision that reopens it.
 - **Drafts** show as the word Draft, with no mark, and count toward no
   maturity or readiness.
-- **The checklist** marks each outcome not met (a gap affects it), not met by
+- **The expectations** marks each outcome not met (a gap affects it), not met by
   choice (a tradeoff affects it), open (a decision affects it), met with evidence (a mechanism or component the capability is
   built on meets it), or met on its level's word.
 

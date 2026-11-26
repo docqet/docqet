@@ -1,0 +1,7 @@
+# Marks this repository as a Docket project: Docket, documented with Docket.
+# Its docs are in docket/. The example projects in examples/ each have a
+# docket.yaml of their own, so they're projects of their own, not part of
+# this one.
+project:
+  id: docket
+  name: Docket

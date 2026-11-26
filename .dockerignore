@@ -7,7 +7,6 @@ compose.override.yml
 
 # Build and coverage output.
 /bin/
-/docket
 coverage.*
 
 # The docs linter's dependencies, which the image doesn't use.
@@ -17,10 +16,10 @@ coverage.*
 ui/node_modules/
 ui/dist/
 
-# Docs and examples: not part of the image. Only the parts of the spec the
-# binary embeds are kept.
+# Docs, Docket's own Docket docs, and examples: not part of the image. The
+# expectations the binary embeds are in internal/, so they're kept.
 docs/
+/docket/
+/docket.yaml
+/.docketignore
 examples/
-spec/*
-!spec/spec.go
-!spec/stability/

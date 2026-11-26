@@ -23,6 +23,7 @@ import (
 // and returns its state. The commit and the time it was indexed are the
 // caller's to fill in. Problems in the docs are in the state; an error means
 // the project couldn't be read at all, such as having no docket.yaml.
+// docket:implements capability:indexing component:index rule:docs-with-problems-still-index@authoring
 func Index(fsys fs.FS) (*state.State, error) {
 	cfg, err := project.ReadConfig(fsys)
 	if err != nil {
@@ -112,6 +113,7 @@ func Index(fsys fs.FS) (*state.State, error) {
 // skipDir reports whether a folder isn't part of the project: git's and
 // docket's own, and any with a docket.yaml of its own, which is another
 // project.
+// docket:implements rule:nested-projects-are-separate@authoring
 func skipDir(fsys fs.FS, p string) bool {
 	switch path.Base(p) {
 	case ".git", ".docket":
@@ -224,6 +226,7 @@ func addTradeoffs(st *state.State, ref, domain string, ts []tradeoff) {
 // attachAnnotations adds each annotation to what it names: evidence on a
 // rule, capability, mechanism or component, or a place on a gap or tradeoff.
 // It returns the problems with the annotations themselves.
+// docket:implements capability:annotations rule:annotations-name-a-rules-domain@authoring
 func attachAnnotations(st *state.State, annotations []annotation) []state.Problem {
 	var problems []state.Problem
 	for _, a := range annotations {

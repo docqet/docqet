@@ -25,7 +25,7 @@ Every command takes `--json`.
 | Before planning a change         | `docket touches <paths>`, or `--base origin/main` for a whole branch          |
 | Reading one doc, gap or tradeoff | `docket show <reference>`                                                     |
 | Finding docs of a type, or gaps  | `docket list <kind>`, such as `docket list capabilities --domain guest-stays` |
-| What a level expects             | `docket checklist`                                                            |
+| What a level expects             | `docket expectations`                                                            |
 | Changing an ID                   | `docket rename <old> <new>`                                                   |
 | Before finishing                 | `docket check --changed`, then `docket diff`                                  |
 
@@ -161,7 +161,7 @@ person has stated or confirmed it.
 1. **Run `docket check --changed`** and fix every problem it reports in what
    you changed: invalid frontmatter, a link or annotation that doesn't
    resolve, a rule no capability follows, an outcome that isn't in the
-   checklist. Leave problems that were there before your change alone, unless
+   expectations. Leave problems that were there before your change alone, unless
    the task is to fix them. A link into another project is reported as
    `unknown-id` unless you add `--product`.
 2. **Check what it can't**, since it reads frontmatter and annotations, never
@@ -212,7 +212,7 @@ git commit --trailer "Docket-Became: component:ledger#slow-balances -> component
 | Adding or closing a gap, tradeoff or decision           | [gaps-and-decisions.md](gaps-and-decisions.md) |
 | Adding or moving an annotation                          | [annotations.md](annotations.md)               |
 | Deciding what a level allows, or promoting a capability | [stability.md](stability.md)                   |
-| Naming a checklist outcome                              | `docket checklist`                             |
+| Naming an expected outcome                              | `docket expectations`                             |
 | Bringing Docket to a repository that doesn't have it    | [adopting.md](adopting.md)                     |
 
 This project's own instructions win over this skill, wherever they're written,

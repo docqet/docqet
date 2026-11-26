@@ -39,12 +39,12 @@ something they use, changing a type or meaning, tightening validation,
 reworking a workflow they've learned, or editing a migration that's already
 run.
 
-## The stability checklist
+## The expectations
 
-`docket checklist` describes what each level generally expects, in ten
+`docket expectations` describes what each level generally expects, in ten
 qualities, each a question someone asks before depending on the work.
 `--level beta` shows what one level expects, and `<outcome ID>` one outcome
-with its examples. It's part of the spec, built into `docket`, and the same
+with its examples. It's part of the format, built into `docket`, and the same
 for every project.
 Each level includes the outcomes below it, unless an outcome's `until` names
 the last level it applies to. Each outcome is referred to as
@@ -74,7 +74,7 @@ Only when a person tells you to. Then:
 
 1. Confirm the capability, its current level and the target. A skip, such as
    Prototype to Beta, covers each level in between.
-2. Run `docket checklist --for capability:<id> --to <level>`. It lists what
+2. Run `docket expectations --for capability:<id> --to <level>`. It lists what
    the target expects that the current level doesn't, and for each outcome
    the gaps, tradeoffs and decisions that affect it and the mechanisms and
    components that meet it, on the capability and on what it relies on. Go

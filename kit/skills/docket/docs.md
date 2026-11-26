@@ -21,7 +21,7 @@
   sentence, and for a concept a definition in as many sentences as that takes.
 - **Fields go in the order below.** Leave out any that aren't required and
   have nothing to say. `docket check` reports a missing required field, an
-  unknown one, or a value the spec doesn't allow.
+  unknown one, or a value the format doesn't allow.
 - **Field names, IDs and values are kebab case**: `room-booking`,
   `confused-with`, `ga`. A link is a reference, `<type>:<id>`:
   `rule:no-double-booking`.
@@ -238,7 +238,7 @@ description: >-
   How a change gets from the main branch to the hotel's server, and back off
   it again.
 applies: project     # or product: every capability any project in the product serves
-meets:               # checklist outcomes it meets for those capabilities
+meets:               # expected outcomes it meets for those capabilities
   - outcome:reliability/beta/undo-release
 gaps: []
 tradeoffs: []

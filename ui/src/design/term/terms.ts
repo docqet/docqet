@@ -1,7 +1,7 @@
 /*
  * What each of Docket's own words means, for the popover a Term opens. Taken
- * from Docket's concept docs (docs/domain/concepts), shortened to what someone
- * looking at the page needs. Stability and maturity also have popovers of
+ * from Docket's concept docs, in each domain's concepts folder in docket/,
+ * shortened to what someone looking at the page needs. Stability and maturity also have popovers of
  * their own, on their marks; these are for where they label something.
  */
 export type TermId =

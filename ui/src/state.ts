@@ -488,6 +488,7 @@ const band = (m: number | null) => (m === null ? null : maturityBand(m));
  * Then reverse links, parts and maturity are worked out again across
  * everything, and the contradictions between contributions become problems.
  */
+// docket:implements capability:product-view component:ui rule:contradictions-shown@reporting
 export function combine(files: StateFile[]): DocketState {
   const state: DocketState = {
     projects: [],
@@ -1361,6 +1362,7 @@ export type Readiness = {
   notStarted: Capability[];
 };
 
+// docket:implements capability:readiness component:ui
 export function readinessOf(state: DocketState, capabilities: Capability[]): Readiness {
   const exposure = exposureOf(state, capabilities);
   const gaps = riskAcross(state, [...new Set(capabilities.flatMap((c) => gapsOn(state, c)))], capabilities);

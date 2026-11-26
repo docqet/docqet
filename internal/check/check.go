@@ -25,6 +25,7 @@ func Recheckable(p state.Problem) bool {
 }
 
 // Check returns every problem st shows on its own, in the order of its docs.
+// docket:implements capability:checking component:check
 func Check(st *state.State) []state.Problem {
 	c := newChecker(st)
 	c.domains()

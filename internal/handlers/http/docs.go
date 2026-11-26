@@ -26,6 +26,7 @@ type DocsHandler struct {
 // spec in static/docs. It bundles the spec up front, so a broken reference
 // or an operation without a stability level fails here rather than in a
 // reader's browser.
+// docket:implements capability:api-reference component:api-docs
 func NewDocsHandler() (*DocsHandler, error) {
 	sub, err := fs.Sub(static.Docs, "docs")
 	if err != nil {

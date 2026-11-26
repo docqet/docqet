@@ -9,7 +9,7 @@ What your software is meant to do, written beside the code, linked to the
 evidence of what it actually does, and readable by everyone with a stake in it.
 
 > [!WARNING]
-> Docket is a **Prototype**, one of Exalynt's [stability levels](https://readme.exalynt.com/how-it-works/stability-levels). It explores an idea so we can choose a direction. Anything here, the spec included, may change completely or be thrown away. Don't build on it yet.
+> Docket is a **Prototype**, one of Exalynt's [stability levels](https://readme.exalynt.com/how-it-works/stability-levels). It explores an idea so we can choose a direction. Anything here, the format included, may change completely or be thrown away. Don't build on it yet.
 
 Docket is an open format, and the tools that read it, for writing down what
 your software is meant to do: its capabilities, the rules they follow, the
@@ -19,7 +19,15 @@ repository, changed in the same commit as the code. Code and tests point back
 at them as evidence. Tools then show everyone, technical or not, what's
 intended, what's real, and the gap between.
 
-**Contents:** [The problem](#the-problem) · [How it works](#how-it-works) · [Who it's for](#who-its-for) · [How it supports software engineering](#how-it-supports-software-engineering) · [What Docket isn't](#what-docket-isnt) · [Does it belong in Docket?](#does-it-belong-in-docket) · [Proposed architecture](#proposed-architecture) · [Where it is today](#where-it-is-today) · [Open questions](#open-questions) · [Layout](#layout)
+> [!NOTE]
+> **Docket is documented with Docket.** The `docket.yaml` and `docket/` folder
+> at the root of this repository are Docket's own docs, written in its own
+> format: what Docket does, its rules, the concepts that define the format,
+> and its gaps, tradeoffs and open decisions. They aren't `docket`'s code, and
+> [`examples/`](examples/) holds made-up projects of their own. See
+> [Docket documents itself](#docket-documents-itself).
+
+**Contents:** [The problem](#the-problem) · [How it works](#how-it-works) · [Who it's for](#who-its-for) · [How it supports software engineering](#how-it-supports-software-engineering) · [What Docket isn't](#what-docket-isnt) · [Does it belong in Docket?](#does-it-belong-in-docket) · [Proposed architecture](#proposed-architecture) · [Where it is today](#where-it-is-today) · [Open questions](#open-questions) · [Docket documents itself](#docket-documents-itself) · [Layout](#layout)
 
 ## The problem
 
@@ -87,7 +95,7 @@ Docket separates what the software is meant to do from what it does:
   problems, and shows each where it matters, rather than hiding it or quietly
   resolving it. Evidence is optional: it shows how we know something holds,
   and none is never a to-do. See
-  [where intention and reality differ](docs/domain/overview.md#where-intention-and-reality-differ).
+  [where intention and reality differ](docket/domains/reporting/domain.md#where-intention-and-reality-differ).
 
 That makes it easy for anyone, person or agent, technical or not, to:
 
@@ -120,11 +128,14 @@ example to bring Docket to a repository that already exists. Intention taken
 from code repeats what the code does, bugs included, so it's marked as
 unconfirmed, and a person confirms each part before it counts as declared.
 
-[The overview of Docket's concepts](docs/domain/overview.md) shows how they
-fit together: domains, features, capabilities, rules, concepts, personas,
-initiatives, mechanisms and components, open decisions, gaps and tradeoffs, stability levels,
-maturity, readiness and evidence. Each has [a doc of its own](docs/domain/concepts/) that
-defines it precisely, with an example of how it's written down.
+Docket's [Authoring](docket/domains/authoring/domain.md) and
+[Reporting](docket/domains/reporting/domain.md) domains introduce its concepts
+and show how they fit together: domains, features, capabilities, rules,
+concepts, personas, initiatives, mechanisms and components, open decisions,
+gaps and tradeoffs, stability levels and their expectations, maturity,
+readiness and evidence. Each concept has a doc of its own, in its domain's
+`concepts/` folder, that defines it precisely, with an example of how it's
+written down.
 
 ## Who it's for
 
@@ -151,8 +162,8 @@ to build software that delivers value to people, consistently behaves as
 intended, and evolves gracefully.
 
 A discipline is a set of shared standards that people hold each other to.
-Docket gives a project's standards somewhere to live: an open spec for writing
-intention down, a checklist of what each stability level expects, and every
+Docket gives a project's standards somewhere to live: an open format for writing
+intention down, the expectations of each stability level, and every
 change to either reviewed in a pull request alongside the code.
 
 ### What the software should do
@@ -176,7 +187,7 @@ down:
 | **Evaluating tradeoffs**                   | Tradeoffs: what we chose instead of what, with its benefit and drawback                                                              |
 | **Amid uncertainty**                       | Known gaps, open decisions, drafts, and Prototype and Alpha levels, so what isn't known or done yet is said plainly                  |
 | **Deciding at the right moment**           | Open decisions, held where their answer will go until it's time to settle them                                                      |
-| **Deciding how much is enough**            | Each capability's stability level, and the stability checklist: what that level generally expects, and what would be overengineering |
+| **Deciding how much is enough**            | Each capability's stability level, and its expectations: what that level generally expects, and what would be overengineering |
 | **Taking responsibility for the outcomes** | Every decision made in a commit and reviewed in a pull request. Intention an agent writes counts only once a person confirms it      |
 
 Sound judgment rests on evidence and is honest about uncertainty, and Docket
@@ -283,8 +294,8 @@ one probably belongs in another tool, which Docket can link to. For example:
 
 ## Proposed architecture
 
-Docket is planned as three parts: the spec, the agent kit, and `docket`, one
-Go program that does everything else. Only the spec, the kit and an early UI
+Docket is planned as three parts: the format, the agent kit, and `docket`, one
+Go program that does everything else. Only the format, the kit and an early UI
 exist today (see [Where it is today](#where-it-is-today)).
 
 ```mermaid
@@ -331,12 +342,15 @@ which command answers each question, rather than how to answer it by hand.
 The kit is built into `docket`, and `docket kit` installs it into a project
 and keeps it up to date. See [`kit/`](kit/).
 
-### 2. Spec
+### 2. Format
 
-_A better name will come._ The [spec](spec/) is the format: how a repository
-declares the state of its software, in docs, frontmatter and annotations, and
-the shape of the state worked out from it. It belongs to no one tool: `docket`
-is one program that reads it, and anyone can write another.
+_A better name will come._ The format is how a repository declares the state
+of its software, in docs, frontmatter and annotations, and the shape of the
+state worked out from it. It's defined by Docket's own concept docs, starting
+from the [Authoring](docket/domains/authoring/domain.md) domain, and the
+[expectations](internal/expectations/expectations.yml) of each stability level
+are built into `docket`. It belongs to no one tool: `docket` is one program
+that reads it, and anyone can write another.
 
 ### 3. `docket`
 
@@ -405,35 +419,62 @@ always be rebuilt from the repository.
 
 | Part                  | Today                                                                                                                                                                 |
 | --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Spec                  | A draft for review, with example projects laid out as repositories in [`examples/`](examples/). See [`spec/`](spec/).                                                |
+| Format                | A draft for review, defined by Docket's concept docs, starting from the [Authoring](docket/domains/authoring/domain.md) domain, with example projects laid out as repositories in [`examples/`](examples/). |
 | `docket`              | Indexes and checks a project, and applies its states to the server, which keeps them in SQLite and checks them with the same check. The rest of the commands drafted in [`cmd/docket/`](cmd/docket/) exist with their flags, and answer that they aren't built yet. The examples' `state.json` files are written by hand to show what indexing should produce. |
 | UI                    | An early UI in TypeScript that reads `state.json` files directly and works out maturity, readiness and risk itself, until `docket` serves them. See [`ui/`](ui/).     |
 | Agent development kit | A first draft for any agent: an `AGENTS.md` block and a `docket` skill, written for `docket` as drafted, so it can't be installed or used until `docket` is built. See [`kit/`](kit/). |
 
 ## Open questions
 
-Things we haven't decided, to settle as the prototype answers them:
+What we haven't decided yet is written down as open decisions in Docket's
+own docs, on the domain or capability each is about, such as
+[what to call the format](docket/domains/authoring/capabilities/docs-format.md)
+and [how people sign in to a server](docket/domains/reporting/capabilities/applying.md).
+`docket check` at the root of this repository indexes them, and the UI shows
+them.
 
-- **What to call the spec.**
-- **How people sign in** to a server, and what each may see once they have.
-- **How unconfirmed intention is marked in the spec**, so intention an agent
-  wrote from existing code isn't counted as declared until a person confirms
-  it. It's not a draft capability, which a person has declared and nobody has
-  started.
-- **Which other forms of evidence to accept**, beyond test and QA results,
-  such as deploys or pull requests, and how each is linked to the intention
-  it's about.
+## Docket documents itself
+
+We use Docket to build Docket, so this repository is a Docket project as well
+as the home of the format. Docket's own docs define the format too: what a
+capability or a gap is, and how each is written, are concepts of Docket's own
+domains. It's easy to mix up what's Docket's and what's an example, so:
+
+| What                                | Where                                                                | It says                                                                                               |
+| ----------------------------------- | -------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| **Docket, the product**             | [`docket.yaml`](docket.yaml) and [`docket/`](docket/)                 | What Docket does and must never do, in Docket's format: its capabilities, rules, personas, and its gaps, tradeoffs and open decisions |
+| **The format**                      | The concepts in [`docket/domains/*/concepts/`](docket/domains/authoring/concepts/) | What the words mean: what a capability, rule or gap is, and how each is written                       |
+| **The expectations**                | [`internal/expectations/expectations.yml`](internal/expectations/expectations.yml) | What each stability level expects, built into `docket`, and explained by the [expectations](docket/domains/authoring/concepts/expectations.md) concept |
+| **How `docket` is built**           | [`docs/architecture/`](docs/architecture/)                            | How the code is laid out and why, linked from the components in `docket/`                             |
+| **Examples**                        | [`examples/`](examples/)                                              | Other, made-up projects, each a Docket project of its own                                              |
+
+- **What we're working on lives in `docket/`.** Gaps, tradeoffs and open
+  decisions are written there, on the capability, feature, mechanism or
+  component they're about, not as lists in the other docs.
+- **A concept defines a word, and a rule is one Docket follows.** The
+  [rule](docket/domains/authoring/concepts/rule.md) concept says what a rule
+  is in any project. A rule doc in `docket/`, such as "nothing is read from
+  an ignored file", is a rule Docket itself follows.
+- **The examples are separate projects.** Each has a `docket.yaml` of its own,
+  so indexing this repository leaves them out.
+- **[`.docketignore`](.docketignore) leaves out the kit's skill files.** They
+  show example annotations about the hotel projects, which would otherwise
+  be read as Docket's own evidence. Docket's own docs can show examples
+  freely, since annotations are never read from a Docket doc.
+
+`docket check` at the root checks Docket's own docs, and `docket index` then
+`docket ui` shows them.
 
 ## Layout
 
 | Directory                    | What's in it                                                                                                     |
 | ---------------------------- | ---------------------------------------------------------------------------------------------------------------- |
-| [`docs/`](docs/)             | Docket's own docs: [an overview of its concepts](docs/domain/overview.md), and [how `docket` is built](docs/architecture/) |
-| [`spec/`](spec/)             | The format: doc types, frontmatter, IDs, code and test annotations, commit trailers, and the `state.json` schema |
+| [`docket/`](docket/)         | Docket's own Docket docs: what it does, the concepts that define the format, and its gaps, tradeoffs and open decisions (see [Docket documents itself](#docket-documents-itself)) |
+| [`docs/`](docs/)             | [How `docket` is built](docs/architecture/)                                                                       |
 | [`examples/`](examples/)     | Example projects laid out as repositories, each with the `state.json` indexing would produce                     |
 | [`kit/`](kit/)               | The agent development kit: skills and rules that keep docs and annotations current                               |
 | [`cmd/docket/`](cmd/docket/) | `docket`, the Go program that's the CLI and the server, with the draft of its commands                           |
-| `internal/`                  | `docket`'s code                                                                                                  |
+| `internal/`                  | `docket`'s code, and the [expectations](internal/expectations/expectations.yml) it's built with                  |
 | [`ui/`](ui/)                 | The UI `docket` serves, built into the binary                                                                    |
 
 ## Developing
