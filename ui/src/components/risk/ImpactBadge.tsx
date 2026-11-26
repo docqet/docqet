@@ -2,6 +2,8 @@ import CasinoRoundedIcon from "@mui/icons-material/CasinoRounded";
 import CrisisAlertRoundedIcon from "@mui/icons-material/CrisisAlertRounded";
 import GroupsRoundedIcon from "@mui/icons-material/GroupsRounded";
 import Box from "@mui/material/Box";
+import type { Theme } from "@mui/material/styles";
+import type { SystemStyleObject } from "@mui/system";
 import type { ReactNode } from "react";
 import { DetailsEyebrow, DetailsPopover } from "../popovers/DetailsPopover";
 import { ImpactDetails } from "../popovers/ImpactDetails";
@@ -47,10 +49,10 @@ export const IMPACT_NAMES: Record<ImpactId, { name: string; lost: string; test: 
 export type RiskPart = "impact" | "likelihood" | "reach";
 
 export function RiskPartIcon({ part, size = 14 }: { part: RiskPart; size?: number }) {
-  const sx = { fontSize: size };
-  if (part === "impact") return <CrisisAlertRoundedIcon className="risk-tag-icon" sx={sx} aria-hidden />;
-  if (part === "likelihood") return <CasinoRoundedIcon className="risk-tag-icon" sx={sx} aria-hidden />;
-  return <GroupsRoundedIcon className="risk-tag-icon" sx={sx} aria-hidden />;
+  const sx = { flex: "none", fontSize: size, opacity: 0.85 };
+  if (part === "impact") return <CrisisAlertRoundedIcon sx={sx} aria-hidden />;
+  if (part === "likelihood") return <CasinoRoundedIcon sx={sx} aria-hidden />;
+  return <GroupsRoundedIcon sx={sx} aria-hidden />;
 }
 
 /* How likely it is to bite within a year, most first, with the test that sets it. */
@@ -129,38 +131,107 @@ export const PARTS_INFO: Record<RiskPart, PartInfo> = {
   },
 };
 
-/* The attributes that give a value its color: an impact's own, or a likelihood's or reach's hue at its strength, 4 for the most down to 1. */
-const colorOf = (part: RiskPart, value: string) =>
-  part === "impact" ? { "data-part": part, "data-impact": value } : { "data-part": part, "data-step": 4 - PARTS_INFO[part].order.indexOf(value) };
+/*
+ * Each impact's color. Only the two that take the outcome or worse are alarm
+ * colors. Inconvenient is a soft yellow and negligible is neutral, since
+ * they may rightly stay open for good, and a strong tint would make them
+ * read as warnings.
+ */
+const IMPACT_TONES: Record<ImpactId, (theme: Theme) => string> = {
+  damaging: (t) => t.vars.palette.error.main,
+  blocking: (t) => t.vars.palette.impact.blocking,
+  inconvenient: (t) => t.vars.palette.impact.inconvenient,
+  negligible: (t) => t.vars.palette.text.disabled,
+};
 
-/* A value as a tag, without a popover: its part's icon and its name, in its color. `label` names the part first. */
+/*
+ * A value's color: an impact's own, or a likelihood's or reach's by its
+ * place on its scale, in impact's colors: the most (certain, all) as
+ * damaging's, then blocking's, inconvenient's, and the least (unlikely, few)
+ * as negligible's.
+ */
+const toneOf = (part: RiskPart, value: string) =>
+  part === "impact" ? IMPACT_TONES[value as ImpactId] : IMPACT_TONES[IMPACT_ORDER[3 - PARTS_INFO[part].order.indexOf(value)]];
+
+/* A value as a tag, without a popover: its part's icon and its name, in its color, on a tint of it. `label` names the part first. */
 export function PartTag({ part, value, label = false, children }: { part: RiskPart; value: string; label?: boolean; children?: ReactNode }) {
   const info = PARTS_INFO[part];
+  const tone = toneOf(part, value);
   return (
-    <span className={part === "impact" ? "impact-badge" : "judgement-badge"} {...colorOf(part, value)}>
+    <Box
+      component="span"
+      sx={{
+        flex: "none",
+        display: "inline-flex",
+        alignItems: "center",
+        gap: 0.5,
+        pl: "5px",
+        pr: 0.75,
+        fontSize: 12,
+        fontWeight: 650,
+        lineHeight: "20px",
+        letterSpacing: 0,
+        textTransform: "none",
+        whiteSpace: "nowrap",
+        color: tone,
+        bgcolor: (t) => `color-mix(in srgb, ${tone(t)} 14%, transparent)`,
+        borderRadius: "4px",
+      }}
+    >
       <RiskPartIcon part={part} size={13} />
-      {label ? <span className="judgement-badge-label">{part === "impact" ? "Impact" : part === "likelihood" ? "Likelihood" : "Reach"}</span> : null}
+      {label ? (
+        <Box component="span" sx={{ fontWeight: 500, color: "text.secondary" }}>
+          {part === "impact" ? "Impact" : part === "likelihood" ? "Likelihood" : "Reach"}
+        </Box>
+      ) : null}
       {info.names[value].name}
       {children}
-    </span>
+    </Box>
   );
 }
+
+/* What a badge opens from: the tag inside takes the focus ring. */
+const tagFocusSx: SystemStyleObject<Theme> = {
+  display: "inline-flex",
+  flex: "none",
+  borderRadius: "4px",
+  cursor: "help",
+  "&:focus-visible": { outline: 2, outlineColor: "primary.main", outlineOffset: 2 },
+};
 
 /* A part's scale, for its popover: each value as its tag, with its test, this one marked. */
 export function Scale({ part, value }: { part: RiskPart; value: string }) {
   const info = PARTS_INFO[part];
   return (
     <RiskSection label={info.scale}>
-      <ul className="judgement-scale">
+      <Box component="ul" sx={{ display: "flex", flexDirection: "column", gap: 0.5 }}>
         {info.order.map((v) => (
-          <li key={v} data-current={v === value || undefined}>
+          <Box
+            component="li"
+            key={v}
+            aria-current={v === value || undefined}
+            sx={[
+              {
+                display: "grid",
+                gridTemplateColumns: "118px minmax(0, 1fr)",
+                alignItems: "start",
+                gap: 1,
+                px: 0.75,
+                py: 0.5,
+                fontSize: "0.92em",
+                color: "text.secondary",
+                borderRadius: "4px",
+              },
+              v === value && { color: "text.primary", bgcolor: (t) => `color-mix(in srgb, ${t.vars.palette.text.primary} 7%, transparent)` },
+            ]}
+          >
             <span>
               <PartTag part={part} value={v} />
             </span>
             <span>{info.names[v].test}</span>
-          </li>
+          </Box>
         ))}
-      </ul>
+      </Box>
     </RiskSection>
   );
 }
@@ -171,7 +242,7 @@ export function PartHead({ part, value, eyebrow }: { part: RiskPart; value: stri
   return (
     <>
       <DetailsEyebrow>{eyebrow ?? info.eyebrow}</DetailsEyebrow>
-      <Box className="part-ink" {...colorOf(part, value)} sx={{ mt: 1, display: "flex", alignItems: "center", gap: 0.75, fontSize: "1.12em", fontWeight: 700 }}>
+      <Box sx={{ mt: 1, display: "flex", alignItems: "center", gap: 0.75, fontSize: "1.12em", fontWeight: 700, color: toneOf(part, value) }}>
         <RiskPartIcon part={part} size={18} />
         {part === "reach" ? `Reaches ${info.names[value].name.toLowerCase()}` : info.names[value].name}
       </Box>
@@ -195,14 +266,15 @@ export function JudgementBadge({
   const info = PARTS_INFO[part];
   return (
     <DetailsPopover hoverOnly={inButton} title={<JudgementDetails part={part} value={value} />}>
-      <span
+      <Box
+        component="span"
         role="img"
         aria-label={`${part === "likelihood" ? "Likelihood" : "Reach"}: ${info.names[value].name}`}
         tabIndex={inButton ? undefined : 0}
-        className="part-tag-focus"
+        sx={tagFocusSx}
       >
         <PartTag part={part} value={value} label={labelled} />
-      </span>
+      </Box>
     </DetailsPopover>
   );
 }
@@ -251,11 +323,19 @@ export function ImpactBadge({
         </ImpactDetails>
       }
     >
-      <span role="img" aria-label={`Impact: ${name}${judged ? `, ${judged}` : ""}`} tabIndex={inButton ? undefined : 0} className="part-tag-focus">
+      <Box component="span" role="img" aria-label={`Impact: ${name}${judged ? `, ${judged}` : ""}`} tabIndex={inButton ? undefined : 0} sx={tagFocusSx}>
         <PartTag part="impact" value={impact}>
-          {judged ? <span className="impact-badge-judged">{judged}</span> : null}
+          {/* Its likelihood and reach, where they aren't certain and all: quieter, after the name. */}
+          {judged ? (
+            <Box
+              component="span"
+              sx={{ ml: 0.75, pl: 0.75, fontWeight: 500, borderLeft: 1, borderColor: (t) => `color-mix(in srgb, ${IMPACT_TONES[impact](t)} 35%, transparent)` }}
+            >
+              {judged}
+            </Box>
+          ) : null}
         </PartTag>
-      </span>
+      </Box>
     </DetailsPopover>
   );
 }

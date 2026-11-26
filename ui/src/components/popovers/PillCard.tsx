@@ -1,3 +1,4 @@
+import Box from "@mui/material/Box";
 import { type ReactNode } from "react";
 import { DetailsCard, DetailsEyebrow } from "./DetailsPopover";
 
@@ -6,8 +7,12 @@ export function PillCard({ label, info, listLabel, children }: { label: string; 
   return (
     <DetailsCard card width={440}>
       <DetailsEyebrow>{label}</DetailsEyebrow>
-      <p className="sc-pill-info">{info}</p>
-      <p className="sc-list-label">{listLabel}</p>
+      <Box component="p" sx={{ mt: 0.5, color: "text.secondary" }}>
+        {info}
+      </Box>
+      <Box component="p" sx={{ mt: 1.25, mb: 0.5, pt: 1, fontSize: 11, fontWeight: 650, color: "text.disabled", borderTop: 1, borderColor: "divider" }}>
+        {listLabel}
+      </Box>
       {children}
     </DetailsCard>
   );

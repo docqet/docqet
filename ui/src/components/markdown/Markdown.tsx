@@ -1,5 +1,8 @@
 import { useLayoutEffect, useRef, useState } from "react";
 import ExpandMoreRoundedIcon from "@mui/icons-material/ExpandMoreRounded";
+import Box from "@mui/material/Box";
+import type { SxProps, Theme } from "@mui/material/styles";
+import type { ResponsiveStyleValue, SystemStyleObject } from "@mui/system";
 import ReactMarkdown, { type Components } from "react-markdown";
 import rehypeHighlight from "rehype-highlight";
 import remarkGfm from "remark-gfm";
@@ -83,29 +86,119 @@ export function follow(state: DocketState, from: From, href: string): Link {
 
 /* ——— Showing it ——— */
 
+/* A link-looking button, for links that act inside the page: in a concept's teal, underlined faintly until hovered. */
+export const linkButtonSx: SystemStyleObject<Theme> = {
+  p: 0,
+  font: "inherit",
+  color: "concept.main",
+  bgcolor: "transparent",
+  border: 0,
+  cursor: "pointer",
+  textDecoration: "underline",
+  textDecorationColor: (t) => `color-mix(in srgb, ${t.vars.palette.concept.main} 40%, transparent)`,
+  textUnderlineOffset: "2px",
+  "&:hover": { textDecorationColor: "currentColor" },
+};
+
+/* Code inline in text: mono, on a faint wash, in a faint box. */
+export const inlineCodeSx: SystemStyleObject<Theme> = {
+  px: "5px",
+  py: "1px",
+  fontSize: "0.86em",
+  bgcolor: (t) => `color-mix(in srgb, ${t.vars.palette.text.primary} 6%, transparent)`,
+  border: 1,
+  borderColor: (t) => `color-mix(in srgb, ${t.vars.palette.text.primary} 7%, transparent)`,
+  borderRadius: "4px",
+  overflowWrap: "anywhere",
+};
+
+const faintFill = (percent: number) => (t: Theme) => `color-mix(in srgb, ${t.vars.palette.text.primary} ${percent}%, transparent)`;
+
+/*
+ * Markdown as written, styled from its wrapper: headings (a few levels down,
+ * so h3 is the author's h1), lists, code, tables, quotes, images, and code
+ * highlighting in the theme's colors (rehype-highlight's `hljs-*` classes).
+ * A long URL, path or identifier wraps rather than pushing the layout wider.
+ */
+const markdownSx: SystemStyleObject<Theme> = {
+  mt: 1.25,
+  minWidth: 0,
+  fontSize: 13.5,
+  lineHeight: 1.55,
+  color: "text.primary",
+  overflowWrap: "anywhere",
+  "& :is(h3, h4, h5, h6)": { m: "18px 0 6px", fontWeight: 650, lineHeight: 1.35, color: "text.primary" },
+  "& h3": { fontSize: "1.2em" },
+  "& h4": { fontSize: "1.08em" },
+  "& h5": { fontSize: "1em" },
+  "& h6": { fontSize: "0.95em", color: "text.secondary" },
+  "& :is(p, ul, ol, pre)": { m: "0 0 8px" },
+  /* The first child (as :first-child, which emotion warns about), doubled to outweigh the headings' margin. */
+  "&& > :not(* + *)": { mt: 0 },
+  "& > :last-child": { mb: 0 },
+  "& img": { display: "block", maxWidth: "100%", height: "auto", m: "4px 0 12px", borderRadius: "6px" },
+  "& ul": { listStyle: "disc", pl: 2.5 },
+  "& ol": { listStyle: "decimal", pl: 2.75 },
+  "& li + li": { mt: "3px" },
+  "& li::marker": { color: "text.disabled" },
+  "& li > :is(ul, ol, p)": { m: "3px 0 0" },
+  "& ul.contains-task-list": { listStyle: "none", pl: 0.5 },
+  "& .task-list-item input": { m: "0 6px 0 0", verticalAlign: "-1px", accentColor: (t) => t.vars.palette.primary.main },
+  "& strong": { fontWeight: 650 },
+  "& :not(pre) > code": inlineCodeSx,
+  "& pre": {
+    m: "4px 0 12px",
+    px: 1.75,
+    py: 1.5,
+    overflowX: "auto",
+    fontSize: 12.5,
+    lineHeight: 1.55,
+    bgcolor: faintFill(4),
+    border: 1,
+    borderColor: "divider",
+    borderRadius: "8px",
+  },
+  "& pre code": { fontSize: "inherit" },
+  "& blockquote": { m: "0 0 8px", py: "2px", pr: 0, pl: 1.75, color: "text.secondary", borderLeft: 3, borderColor: "surface.borderStrong" },
+  "& hr": { my: 2, mx: 0, border: 0, borderTop: 1, borderColor: "divider" },
+  "& table": { width: "100%", borderCollapse: "collapse", fontSize: "0.93em" },
+  "& :is(th, td)": { px: 1.5, py: "7px", textAlign: "left", verticalAlign: "top", borderBottom: 1, borderColor: "divider" },
+  "& th": { fontWeight: 650, bgcolor: faintFill(3) },
+  "& tr:last-child td": { borderBottom: 0 },
+  "& a": { color: "concept.main" },
+  "& button": linkButtonSx,
+  "& :is(.hljs-comment, .hljs-quote)": { color: "text.disabled", fontStyle: "italic" },
+  "& :is(.hljs-keyword, .hljs-selector-tag, .hljs-built_in, .hljs-type)": { color: "primary.main" },
+  "& :is(.hljs-string, .hljs-regexp, .hljs-symbol)": { color: "concept.main" },
+  "& :is(.hljs-number, .hljs-literal)": { color: "warning.main" },
+  "& :is(.hljs-title, .hljs-attr, .hljs-property)": { color: "persona.main" },
+  "& .hljs-meta": { color: "text.secondary" },
+};
+
 /*
  * Any Markdown, whole. Links resolve from `from`: one to another doc opens it
  * in Docket, one with a scheme opens in a new tab, and one Docket can't place
  * shows as its text. Its headings sit under the heading of whatever shows it,
  * so they keep their order but start a few levels down.
  */
-export function Markdown({ text, from, go, className }: { text: string | null | undefined; from: From; go: Go; className?: string }) {
+export function Markdown({ text, from, go, sx }: { text: string | null | undefined; from: From; go: Go; sx?: SxProps<Theme> }) {
   if (!has(text)) return null;
   const heading =
-    (Tag: "h3" | "h4" | "h5" | "h6", level: string): Components["h1"] =>
-    ({ children, className: own }) => <Tag className={own ? `${level} ${own}` : level}>{children}</Tag>;
+    (Tag: "h3" | "h4" | "h5" | "h6"): Components["h1"] =>
+    ({ children, className: own }) => <Tag className={own}>{children}</Tag>;
   const components: Components = {
-    h1: heading("h3", "md-h1"),
-    h2: heading("h4", "md-h2"),
-    h3: heading("h5", "md-h3"),
-    h4: heading("h6", "md-h4"),
-    h5: heading("h6", "md-h4"),
-    h6: heading("h6", "md-h4"),
+    h1: heading("h3"),
+    h2: heading("h4"),
+    h3: heading("h5"),
+    h4: heading("h6"),
+    h5: heading("h6"),
+    h6: heading("h6"),
     img: ({ src, alt }) => <img src={typeof src === "string" ? src : undefined} alt={alt ?? ""} loading="lazy" />,
+    /* A wide table scrolls inside its own box rather than the page. */
     table: ({ children }) => (
-      <div className="markdown-table">
+      <Box sx={{ m: "4px 0 12px", overflowX: "auto", border: 1, borderColor: "divider", borderRadius: "8px" }}>
         <table>{children}</table>
-      </div>
+      </Box>
     ),
     a: ({ href, children }) => {
       const to = href ? follow(go.state, from, href) : null;
@@ -117,22 +210,19 @@ export function Markdown({ text, from, go, className }: { text: string | null | 
           </a>
         );
       return (
-        <button
-          type="button"
-          className="link"
-          onClick={() => ("concept" in to ? go.onConcept(to.concept) : go.onPick ? go.onPick(to.pick) : go.onShow?.(to.target))}
-        >
+        <button type="button" onClick={() => ("concept" in to ? go.onConcept(to.concept) : go.onPick ? go.onPick(to.pick) : go.onShow?.(to.target))}>
           {children}
         </button>
       );
     },
   };
   return (
-    <div className={className ? `markdown ${className}` : "markdown"}>
+    /* markdown: a hook for a detail page's body panel, which sets it larger, at a readable width. */
+    <Box className="markdown" sx={[markdownSx, ...(Array.isArray(sx) ? sx : [sx])]}>
       <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[[rehypeHighlight, { detect: false }]]} components={components}>
         {text.trim()}
       </ReactMarkdown>
-    </div>
+    </Box>
   );
 }
 
@@ -157,34 +247,76 @@ export function Body({ from, go, limit = 520 }: { from: From; go: Go; limit?: nu
   }, [limit, from.body]);
   if (!has(from.body)) return null;
   const clamped = long && !open;
+  /* The fade: opaque down to 72px from the bottom, then clear. Any opaque color masks the same. */
+  const fade = "linear-gradient(to bottom, currentColor calc(100% - 72px), transparent)";
   return (
-    <div className="doc-body">
-      <div ref={ref} className="doc-body-text" data-clamped={clamped || undefined} style={clamped ? { maxHeight: limit } : undefined}>
+    /* doc-body: a hook for a detail page, which sets the body in a panel of its own. */
+    <Box className="doc-body" sx={{ minWidth: 0 }}>
+      <Box
+        ref={ref}
+        sx={[{ minWidth: 0 }, clamped && { overflow: "hidden", WebkitMaskImage: fade, maskImage: fade }]}
+        style={clamped ? { maxHeight: limit } : undefined}
+      >
         <Markdown text={from.body} from={from} go={go} />
-      </div>
+      </Box>
       {long ? (
-        <button type="button" className="doc-body-toggle" aria-expanded={open} onClick={() => setOpen(!open)}>
+        <Box
+          component="button"
+          type="button"
+          aria-expanded={open}
+          onClick={() => setOpen(!open)}
+          sx={{
+            mt: 0.75,
+            px: 0,
+            py: 0.5,
+            font: "inherit",
+            fontSize: 13,
+            fontWeight: 600,
+            color: "primary.main",
+            cursor: "pointer",
+            bgcolor: "transparent",
+            border: 0,
+            "&:hover": { textDecoration: "underline" },
+          }}
+        >
           {open ? "Show less" : "Show all"}
-        </button>
+        </Box>
       ) : null}
-    </div>
+    </Box>
   );
 }
 
 /* What a doc's body is shown under, wherever it's shown. */
 export const MORE_ABOUT = "More about it";
 
-/* In a side panel: a doc's body, folded under MORE_ABOUT until opened. Nothing when it has none. */
+/* In a side panel: a doc's body, folded under MORE_ABOUT until opened, its heading in the accent with a chevron that turns as it opens. Nothing when it has none. */
 export function MoreAboutFold({ from, go, limit = 360 }: { from: From; go: Go; limit?: number }) {
   if (!has(from.body)) return null;
   return (
-    <details className="explore-fold explore-more">
-      <summary>
+    <Box component="details" sx={{ mt: 1.25, "&[open] > summary > svg": { transform: "rotate(180deg)" } }}>
+      <Box
+        component="summary"
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          gap: "2px",
+          width: "fit-content",
+          fontSize: 12.5,
+          fontWeight: 600,
+          color: "primary.main",
+          listStyle: "none",
+          cursor: "pointer",
+          userSelect: "none",
+          "&::-webkit-details-marker": { display: "none" },
+          "&:hover": { textDecoration: "underline" },
+          "&:focus-visible": { outline: 2, outlineColor: "primary.main", outlineOffset: 2, borderRadius: "4px" },
+        }}
+      >
         {MORE_ABOUT}
-        <ExpandMoreRoundedIcon className="explore-fold-chevron" sx={{ fontSize: 18 }} />
-      </summary>
+        <ExpandMoreRoundedIcon sx={{ fontSize: 18, transition: "transform 120ms ease" }} />
+      </Box>
       <Body from={from} go={go} limit={limit} />
-    </details>
+    </Box>
   );
 }
 
@@ -223,13 +355,17 @@ export function plainText(markdown: string | null | undefined): string {
   return out.join("").replace(/\s+/g, " ").trim();
 }
 
-/* Its first `lines` lines, as text alone, for a row that's a button and so can't hold links. */
-export function Excerpt({ text, lines = 2, className }: { text: string | null | undefined; lines?: number; className?: string }) {
+/* Its first `lines` lines, as text alone, for a row that's a button and so can't hold links. `lines` can differ by breakpoint, `{ xs: 3, sm: 1 }`. */
+export function Excerpt({ text, lines = 2, className }: { text: string | null | undefined; lines?: ResponsiveStyleValue<number>; className?: string }) {
   const words = plainText(text);
   if (!words) return null;
   return (
-    <span className={className ? `markdown-excerpt ${className}` : "markdown-excerpt"} style={{ WebkitLineClamp: lines }}>
+    <Box
+      component="span"
+      className={className}
+      sx={{ display: "-webkit-box", WebkitBoxOrient: "vertical", WebkitLineClamp: lines, overflow: "hidden", overflowWrap: "anywhere" }}
+    >
       {words}
-    </span>
+    </Box>
   );
 }

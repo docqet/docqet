@@ -1,5 +1,9 @@
 import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
 import BoltOutlinedIcon from "@mui/icons-material/BoltOutlined";
+import Box from "@mui/material/Box";
+import type { Theme } from "@mui/material/styles";
+import type { SystemStyleObject } from "@mui/system";
+import type { ReactNode } from "react";
 import { DetailsPopover } from "./popovers/DetailsPopover";
 import { LeftMark, gapKind } from "./left/LeftMark";
 import NorthRoundedIcon from "@mui/icons-material/NorthRounded";
@@ -23,8 +27,9 @@ import { ReadinessDetails } from "./popovers/ReadinessDetails";
 
 const plural = (n: number, one: string, many: string) => `${n} ${n === 1 ? one : many}`;
 
-/* Readiness's color, for its pie and percentage: from grey, not ready at all, toward --ready-high, blended by how ready. */
-export const readinessColor = (percent: number) => `color-mix(in oklch, var(--ready-high) ${Math.min(Math.max(percent, 0), 100)}%, var(--ready-low))`;
+/* Readiness's color, for its pie and percentage: from grey, not ready at all, toward the theme's ready.high, blended by how ready. */
+export const readinessColor = (percent: number) => (theme: Theme) =>
+  `color-mix(in oklch, ${theme.vars.palette.ready.high} ${Math.min(Math.max(percent, 0), 100)}%, ${theme.vars.palette.ready.low})`;
 
 /* Readiness in a few words: "Viable · 59%", or null with nothing started. */
 export function readinessLabel(r: Readiness): string | null {
@@ -40,6 +45,17 @@ export function needsLine(n: NotReady): string {
   ].join(" · ");
   return parts.charAt(0).toUpperCase() + parts.slice(1);
 }
+
+/* A readiness beside a name or in a row: its pie and percentage, then its band. `readiness` is a hook for a header's stat, which lays it out as maturity's and exposure's. */
+const markSx: SystemStyleObject<Theme> = {
+  flex: "none",
+  display: "inline-flex",
+  alignItems: "center",
+  gap: 1,
+  fontSize: 13.5,
+  color: "text.primary",
+  whiteSpace: "nowrap",
+};
 
 /*
  * How ready something is, beside its name or in a row, as maturity and
@@ -68,17 +84,43 @@ export function ReadinessMark({
   if (!started || readiness.percent === null)
     return (
       <Tooltip title={readiness.notStarted.length ? "Only drafts so far, and drafts don't count." : "No capabilities yet."}>
-        <span className="readiness faint">Nothing started</span>
+        <Box component="span" className="readiness" sx={[markSx, { fontWeight: 500, color: "text.disabled" }]}>
+          Nothing started
+        </Box>
       </Tooltip>
     );
   const label = readinessLabel(readiness)!;
+  const color = readinessColor(readiness.percent);
   return (
     <DetailsPopover hoverOnly={inButton} title={<ReadinessDetails readiness={readiness} of={of} />}>
-      <span className="readiness" role="img" aria-label={`${of}: ${label}`} tabIndex={inButton ? undefined : 0}>
-        <Pie percent={readiness.percent} size={size} figure={`${readiness.percent}%`} sx={{ color: readinessColor(readiness.percent) }} />
-        {bare ? null : <strong style={{ color: readinessColor(readiness.percent) }}>{readinessBand(readiness)!.name}</strong>}
-      </span>
+      <Box
+        component="span"
+        className="readiness"
+        role="img"
+        aria-label={`${of}: ${label}`}
+        tabIndex={inButton ? undefined : 0}
+        sx={[markSx, !inButton && { borderRadius: 999, cursor: "help", "&:focus-visible": { outline: "2px solid currentColor", outlineOffset: 2 } }]}
+      >
+        <Pie percent={readiness.percent} size={size} figure={`${readiness.percent}%`} sx={{ color }} />
+        {bare ? null : (
+          <Box component="strong" sx={{ color }}>
+            {readinessBand(readiness)!.name}
+          </Box>
+        )}
+      </Box>
     </DetailsPopover>
+  );
+}
+
+/* A line under what a capability still needs: its mark, a little lower to sit on the words' first line, then what it says. */
+const needSx: SystemStyleObject<Theme> = { display: "flex", alignItems: "flex-start", gap: 0.75, "& > :first-of-type": { mt: "3px" } };
+
+/* The quieter part of a line, after what it says. */
+function Faint({ children }: { children: ReactNode }) {
+  return (
+    <Box component="span" sx={{ color: "text.disabled" }}>
+      {children}
+    </Box>
   );
 }
 
@@ -92,79 +134,108 @@ export function ReadinessMark({
 export function StillNeeds({ readiness, readyText, limit = 8 }: { readiness: Readiness; readyText: string; limit?: number }) {
   const ready = readiness.percent === null ? null : !readiness.notReady.length;
   const row = (n: NotReady) => (
-    <li key={n.capability.id}>
-      <span className="needs-capability">
-        <a href={docHref("capability", n.capability.id)}>
+    <Box
+      component="li"
+      key={n.capability.id}
+      sx={{
+        display: "grid",
+        gridTemplateColumns: { xs: "minmax(0, 1fr)", sm: "minmax(180px, 280px) minmax(0, 1fr)" },
+        alignItems: "start",
+        gap: "4px 16px",
+        py: 1,
+        borderBottom: 1,
+        borderColor: "divider",
+      }}
+    >
+      <Box component="span" sx={{ display: "inline-flex", alignItems: "center", gap: 1, minWidth: 0 }}>
+        <Box
+          component="a"
+          href={docHref("capability", n.capability.id)}
+          sx={{ display: "inline-flex", alignItems: "center", gap: 0.75, minWidth: 0, fontWeight: 600, color: "inherit", textDecoration: "none" }}
+        >
           <BoltOutlinedIcon sx={{ fontSize: 16, color: "primary.main" }} />
           {n.capability.name}
-        </a>
+        </Box>
         <CapabilityStability level={n.capability.stability} name={n.capability.name} focusable={false} />
-      </span>
-      <ul className="needs-what">
+      </Box>
+      <Box component="ul" sx={{ display: "flex", flexDirection: "column", gap: "2px", color: "text.secondary", "& a": { color: "text.primary" } }}>
         {n.belowBeta ? (
-          <li>
-            <span className="needs-mark level" aria-hidden>
+          <Box component="li" sx={needSx}>
+            {/* Reaching Beta: an arrow up, in the text's color, apart from gaps' amber and decisions' violet. */}
+            <Box component="span" aria-hidden sx={{ display: "inline-flex", flex: "none", color: "text.primary" }}>
               <NorthRoundedIcon sx={{ fontSize: 14 }} />
-            </span>
+            </Box>
             <span>
-              Reach Beta <span className="needs-faint">· now {n.capability.stability ? STABILITY[n.capability.stability].name : "a draft"}</span>
+              Reach Beta <Faint>· now {n.capability.stability ? STABILITY[n.capability.stability].name : "a draft"}</Faint>
             </span>
-          </li>
+          </Box>
         ) : null}
         {n.gaps.map((g) => (
-          <li key={g.id}>
+          <Box component="li" key={g.id} sx={needSx}>
             <LeftMark kind={gapKind(g)} size={14} />
             <span>
               Close{" "}
               <a href={docHref("gap", g.id)}>
                 <InlineMarkdown text={g.name} />
               </a>
-              <span className="needs-faint"> · {gapKind(g) === "technical-gap" ? "technical" : "product"}</span>
+              <Faint> · {gapKind(g) === "technical-gap" ? "technical" : "product"}</Faint>
             </span>
-          </li>
+          </Box>
         ))}
+        {/* Open decisions are left to settle, but don't count toward readiness. */}
         {n.decisions.length ? (
-          <li className="needs-aside">
+          <Box component="li" sx={needSx}>
             <LeftMark kind="decision" size={14} />
             <span>
               <a href={docHref("capability", n.capability.id)}>{plural(n.decisions.length, "open decision", "open decisions")}</a>
-              <span className="needs-faint"> · to settle, not counted in readiness</span>
+              <Faint> · to settle, not counted in readiness</Faint>
             </span>
-          </li>
+          </Box>
         ) : null}
-      </ul>
-    </li>
+      </Box>
+    </Box>
   );
   const rest = readiness.notReady.slice(limit);
+  const lineSx: SystemStyleObject<Theme> = { color: "text.secondary", "& a": { color: "text.primary" } };
   return (
-    <div className="needs">
+    <Box sx={{ display: "flex", flexDirection: "column", gap: 1.25, fontSize: 13.5, "& a:hover": { color: "primary.main" } }}>
       {ready === true ? (
-        <p className="needs-ready">
-          <CheckCircleRoundedIcon className="readiness-check" />
+        <Box component="p" sx={{ display: "flex", alignItems: "center", gap: 1, fontWeight: 600, color: "text.primary" }}>
+          <CheckCircleRoundedIcon sx={{ fontSize: 16, color: "text.secondary" }} />
           {readyText}
-        </p>
+        </Box>
       ) : ready === null ? (
-        <p className="needs-line">Nothing started yet, so there&rsquo;s nothing to be ready.</p>
+        <Box component="p" sx={lineSx}>
+          Nothing started yet, so there&rsquo;s nothing to be ready.
+        </Box>
       ) : (
-        <ul className="needs-list">{readiness.notReady.slice(0, limit).map(row)}</ul>
+        <Box component="ul" sx={{ display: "flex", flexDirection: "column" }}>
+          {readiness.notReady.slice(0, limit).map(row)}
+        </Box>
       )}
       {rest.length ? (
-        <details className="needs-more">
-          <summary>{plural(rest.length, "more capability", "more capabilities")} not ready yet</summary>
-          <ul className="needs-list">{rest.map(row)}</ul>
+        <details>
+          <Box component="summary" sx={{ cursor: "pointer", color: "text.secondary" }}>
+            {plural(rest.length, "more capability", "more capabilities")} not ready yet
+          </Box>
+          <Box component="ul" sx={{ display: "flex", flexDirection: "column" }}>
+            {rest.map(row)}
+          </Box>
         </details>
       ) : null}
       {readiness.notStarted.length ? (
-        <p className="needs-line">
-          <span className="needs-label">Not started:</span>{" "}
+        <Box component="p" sx={lineSx}>
+          <Box component="span" sx={{ fontWeight: 600 }}>
+            Not started:
+          </Box>{" "}
           {readiness.notStarted.map((c, i) => (
             <span key={c.id}>
               {i ? ", " : null}
               <a href={docHref("capability", c.id)}>{c.name}</a>
             </span>
           ))}
-        </p>
+        </Box>
       ) : null}
-    </div>
+    </Box>
   );
 }

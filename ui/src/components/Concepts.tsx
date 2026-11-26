@@ -1,6 +1,7 @@
 import { type ReactNode } from "react";
 import MenuBookOutlinedIcon from "@mui/icons-material/MenuBookOutlined";
 import OpenInNewRoundedIcon from "@mui/icons-material/OpenInNewRounded";
+import Box from "@mui/material/Box";
 import { DetailsPopover } from "./popovers/DetailsPopover";
 import { follow } from "./markdown/Markdown";
 import { conceptLinked, fieldsText, find, pageHref, type Concept, type DocketState, type Pick } from "../state";
@@ -9,21 +10,46 @@ import { ConceptSummary } from "./popovers/ConceptSummary";
 
 /*
  * A way from a side panel to a doc's detail page, in a tab of its own, so the
- * map stays where it was in this one.
+ * map stays where it was in this one: an outlined button-like link, lit in a
+ * concept's teal on hover.
  */
 export function PageLink({ pick, children = "Details" }: { pick: Pick; children?: ReactNode }) {
   return (
     <Tooltip title="Open everything about it in a new tab">
-      <a className="filter-toggle page-link" href={pageHref(pick)} target="_blank" rel="noopener">
+      <Box
+        component="a"
+        href={pageHref(pick)}
+        target="_blank"
+        rel="noopener"
+        sx={{
+          display: "inline-flex",
+          alignItems: "center",
+          gap: 0.75,
+          px: 1.25,
+          py: 0.5,
+          font: "inherit",
+          fontSize: 12.5,
+          fontWeight: 600,
+          color: "text.secondary",
+          textDecoration: "none",
+          bgcolor: "transparent",
+          border: 1,
+          borderColor: "surface.borderStrong",
+          borderRadius: "6px",
+          cursor: "pointer",
+          transition: "color 120ms, border-color 120ms, background-color 120ms",
+          "&:hover": { color: "concept.main", borderColor: "concept.main", bgcolor: "concept.soft" },
+        }}
+      >
         <OpenInNewRoundedIcon sx={{ fontSize: 14 }} />
         {children}
-      </a>
+      </Box>
     </Tooltip>
   );
 }
 
 export function ConceptIcon({ size = 16 }: { size?: number }) {
-  return <MenuBookOutlinedIcon sx={{ fontSize: size, flex: "none", color: "var(--concept)" }} />;
+  return <MenuBookOutlinedIcon sx={{ fontSize: size, flex: "none", color: "concept.main" }} />;
 }
 
 /*
@@ -45,23 +71,43 @@ export function ConceptChips({
 }) {
   const repeated = new Set(concepts.map((c) => c.name).filter((name, i, all) => all.indexOf(name) !== i));
   return (
-    <span className="concept-chips">
+    <Box component="span" sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
       {concepts.map((c) => {
         const chip = (
-          <button
+          <Box
+            component="button"
             key={c.id}
             type="button"
-            className="concept-chip"
             data-concept={c.id}
             data-no-pan
             onClick={(e) => {
               e.stopPropagation();
               onOpen(c.id);
             }}
+            sx={{
+              px: 1,
+              py: "1px",
+              font: "inherit",
+              fontSize: 12,
+              fontWeight: 550,
+              lineHeight: "18px",
+              color: "concept.main",
+              bgcolor: "concept.soft",
+              border: 1,
+              borderColor: "transparent",
+              borderRadius: 999,
+              cursor: "pointer",
+              "&:hover": { borderColor: "concept.main" },
+              "&:focus-visible": { outline: 2, outlineColor: "concept.main", outlineOffset: 1 },
+            }}
           >
             {c.name}
-            {scopeOf && repeated.has(c.name) ? <span className="concept-chip-scope">{scopeOf(c)}</span> : null}
-          </button>
+            {scopeOf && repeated.has(c.name) ? (
+              <Box component="span" sx={{ ml: "5px", fontWeight: 450, opacity: 0.75 }}>
+                {scopeOf(c)}
+              </Box>
+            ) : null}
+          </Box>
         );
         return popovers ? (
           <DetailsPopover key={c.id} hoverOnly title={<ConceptSummary concept={c} />}>
@@ -71,7 +117,7 @@ export function ConceptChips({
           chip
         );
       })}
-    </span>
+    </Box>
   );
 }
 

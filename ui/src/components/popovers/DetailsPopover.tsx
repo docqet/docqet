@@ -1,5 +1,7 @@
 import Box from "@mui/material/Box";
 import Tooltip from "@mui/material/Tooltip";
+import type { Theme } from "@mui/material/styles";
+import type { SystemStyleObject } from "@mui/system";
 import { createContext, useContext, type ReactElement, type ReactNode } from "react";
 
 const cleared = {
@@ -115,15 +117,49 @@ export function DetailsEyebrow({ children }: DetailsEyebrowProps) {
 }
 
 /*
+ * The small uppercase label over a part of a popover, such as "Riskiest" or
+ * "6 capabilities by level", fainter and smaller than the eyebrow. It spans
+ * every column where it heads a grid, as in RiskWorkings.
+ */
+export const detailsHeadSx: SystemStyleObject<Theme> = {
+  gridColumn: "1 / -1",
+  mt: 1,
+  fontSize: "0.78em",
+  fontWeight: 600,
+  letterSpacing: "0.08em",
+  textTransform: "uppercase",
+  color: "text.disabled",
+};
+
+export function DetailsHead({ children }: { children: ReactNode }) {
+  return <Box sx={detailsHeadSx}>{children}</Box>;
+}
+
+/*
  * How a figure in a popover is worked out, closing it: a soft panel headed
  * "How it's worked out", in small type. Maturity's, exposure's and
  * readiness's popovers each end with one, so they read alike.
  */
 export function DetailsWorkings({ children }: { children: ReactNode }) {
   return (
-    <div className="details-workings">
-      <div className="details-workings-head">How it&rsquo;s worked out</div>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        gap: 0.75,
+        mt: 1.75,
+        px: 1.5,
+        py: 1.25,
+        fontSize: "0.92em",
+        color: "text.secondary",
+        bgcolor: (t) => `color-mix(in srgb, ${t.vars.palette.text.primary} 5%, transparent)`,
+        borderRadius: "8px",
+      }}
+    >
+      <Box sx={{ fontSize: "0.84em", fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase", color: "text.disabled" }}>
+        How it&rsquo;s worked out
+      </Box>
       {children}
-    </div>
+    </Box>
   );
 }

@@ -30,7 +30,6 @@ import {
   type ScopeKind,
 } from "./components/leftScope";
 import { ScopePicker, visuallyHidden } from "./components/ScopePicker";
-import "../left.css";
 import { GapInitiatives } from "../../components/risk/GapRows";
 import { SubjectLink } from "../../components/SubjectLink";
 import Box from "@mui/material/Box";

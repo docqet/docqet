@@ -6,6 +6,9 @@ import { levelColor } from "../stability/stability";
 import { type CapabilityLevel } from "../../state";
 import Tooltip from "@mui/material/Tooltip";
 
+/* Maturity beside a name. `explore-level` is a hook for a header's stat, which lays it out as exposure's and readiness's. */
+const levelSx = { display: "inline-flex", alignItems: "center", gap: 1, fontSize: 13.5 } as const;
+
 /*
  * Maturity in short, beside a name: its ring, with the percentage, and its
  * band; or why there's none. What it's worked out from, `spread`, is in the
@@ -27,15 +30,17 @@ export function Maturity({
 }) {
   if (value === null)
     return (
-      <span className="explore-level">
+      <Box component="span" className="explore-level" sx={levelSx}>
         <Tooltip title={`No maturity yet: ${of}`}>
-          <span className="faint">No maturity yet</span>
+          <Box component="span" sx={{ color: "text.disabled" }}>
+            No maturity yet
+          </Box>
         </Tooltip>
-      </span>
+      </Box>
     );
   const band = maturityBand(value);
   return (
-    <Box component="span" className="explore-level" sx={levelColor(band)}>
+    <Box component="span" className="explore-level" sx={[levelSx, levelColor(band)]}>
       <MaturityRing progress={value} subject={subject} count={count} size={22} spread={spread} />
       <strong>{MATURITY_BANDS[band]}</strong>
     </Box>

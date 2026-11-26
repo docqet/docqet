@@ -1,3 +1,6 @@
+import Box from "@mui/material/Box";
+import type { Theme } from "@mui/material/styles";
+import type { SystemStyleObject } from "@mui/system";
 import Tooltip from "@mui/material/Tooltip";
 import { docHref } from "../routes";
 import { InitiativeIcon } from "./shell/ScopeFilter";
@@ -13,32 +16,78 @@ export const initiativesOf = (state: DocketState, capabilities: Capability[]): s
   return state.initiatives.filter((i) => ids.has(i.id)).map((i) => i.id);
 };
 
+/* A small tag: the initiative's icon and name, on the accent's soft fill. */
+const tagSx: SystemStyleObject<Theme> = {
+  display: "inline-flex",
+  alignItems: "center",
+  gap: "3px",
+  px: 0.75,
+  fontSize: 11,
+  fontWeight: 500,
+  lineHeight: "16px",
+  color: "text.secondary",
+  bgcolor: "surface.accentSoft",
+  border: 1,
+  borderColor: "divider",
+  borderRadius: 999,
+  whiteSpace: "nowrap",
+  textDecoration: "none",
+};
+
 /*
  * The initiatives something is part of, as small tags beside its name, each
  * linking to the initiative's page. `plain` leaves out the links, for inside
- * a button or link, and `block` puts them on a line of their own, under a
- * name. Nothing when it's in none.
+ * a button or link, `block` puts them on a line of their own, under a
+ * name, and `end` lines them up at the right, as under what a gap is on.
+ * Nothing when it's in none.
  */
-export function InitiativeTags({ state, ids, plain = false, block = false }: { state: DocketState; ids: string[]; plain?: boolean; block?: boolean }) {
+export function InitiativeTags({
+  state,
+  ids,
+  plain = false,
+  block = false,
+  end = false,
+}: {
+  state: DocketState;
+  ids: string[];
+  plain?: boolean;
+  block?: boolean;
+  end?: boolean;
+}) {
   const initiatives = ids.flatMap((id) => find(state.initiatives, id) ?? []);
   if (!initiatives.length) return null;
   return (
-    <span className={block ? "initiative-tags block" : "initiative-tags"} aria-label={`Part of ${initiatives.map((i) => i.name).join(", ")}`}>
+    /* initiative-tags: a hook for the lists that line them up at the right of a row. */
+    <Box
+      component="span"
+      className="initiative-tags"
+      aria-label={`Part of ${initiatives.map((i) => i.name).join(", ")}`}
+      sx={{
+        display: block ? "flex" : "inline-flex",
+        flexWrap: "wrap",
+        alignItems: "center",
+        justifyContent: end ? "flex-end" : undefined,
+        gap: 0.5,
+        m: block ? "4px 0 0" : undefined,
+        ml: block ? undefined : 0.75,
+        verticalAlign: "middle",
+      }}
+    >
       {initiatives.map((i) =>
         plain ? (
-          <span key={i.id} className="initiative-tag">
+          <Box component="span" key={i.id} sx={tagSx}>
             <InitiativeIcon size={11} />
             {i.name}
-          </span>
+          </Box>
         ) : (
           <Tooltip key={i.id} title={i.description}>
-            <a className="initiative-tag" href={docHref("initiative", i.id)}>
+            <Box component="a" href={docHref("initiative", i.id)} sx={[tagSx, { "&:hover": { color: "text.primary", borderColor: "surface.borderStrong" } }]}>
               <InitiativeIcon size={11} />
               {i.name}
-            </a>
+            </Box>
           </Tooltip>
         ),
       )}
-    </span>
+    </Box>
   );
 }

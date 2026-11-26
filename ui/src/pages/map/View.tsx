@@ -308,8 +308,8 @@ function LensBar({ lens, onLens }: { lens: Lens; onLens: (lens: Lens) => void })
       <Box component="span" sx={legendSx}>
         {lens === "risk"
           ? RISK_BANDS.map((b) => (
-              <span key={b.id} data-risk-band={b.id}>
-                <RiskRing percent={b.from + 25} size={LEGEND_RING} figure={false} />
+              <span key={b.id}>
+                <RiskRing percent={b.from + 25} size={LEGEND_RING} figure={false} band={b.id} />
                 {b.name}
               </span>
             ))

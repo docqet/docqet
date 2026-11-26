@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import BalanceRoundedIcon from "@mui/icons-material/BalanceRounded";
 import HelpOutlineRoundedIcon from "@mui/icons-material/HelpOutlineRounded";
+import Box from "@mui/material/Box";
 import { createSvgIcon } from "@mui/material/utils";
 import Tooltip from "@mui/material/Tooltip";
 import { Term } from "../term/Term";
@@ -25,22 +26,40 @@ export const GapIcon = createSvgIcon(
 );
 export type LeftKind = "product-gap" | "technical-gap" | "decision" | "tradeoff";
 
-export const LEFT_KINDS: Record<LeftKind, { one: string; many: string; Icon: typeof GapIcon }> = {
-  "product-gap": { one: "Product gap", many: "Product gaps", Icon: GapIcon },
-  "technical-gap": { one: "Technical gap", many: "Technical gaps", Icon: GapIcon },
-  decision: { one: "Open decision", many: "Open decisions", Icon: HelpOutlineRoundedIcon },
-  tradeoff: { one: "Tradeoff", many: "Tradeoffs", Icon: BalanceRoundedIcon },
+/* Each kind's mark, name and color: gaps amber, open decisions violet, and tradeoffs muted, since they're decided. */
+export const LEFT_KINDS: Record<LeftKind, { one: string; many: string; Icon: typeof GapIcon; color: string }> = {
+  "product-gap": { one: "Product gap", many: "Product gaps", Icon: GapIcon, color: "warning.main" },
+  "technical-gap": { one: "Technical gap", many: "Technical gaps", Icon: GapIcon, color: "warning.main" },
+  decision: { one: "Open decision", many: "Open decisions", Icon: HelpOutlineRoundedIcon, color: "primary.main" },
+  tradeoff: { one: "Tradeoff", many: "Tradeoffs", Icon: BalanceRoundedIcon, color: "text.secondary" },
 };
 
 /* A gap's kind: a product gap is in a domain; a technical gap, on a mechanism or component, isn't. */
 export const gapKind = (gap: { domain?: string }): LeftKind => (gap.domain ? "product-gap" : "technical-gap");
 
-/* A gap's kind, as a label before what it says: "Product" or "Technical". */
+/* A gap's kind, as a label before what it says: "Product" in a gap's amber, or "Technical", quieter. */
 export function GapKindTag({ kind }: { kind: LeftKind }) {
+  const technical = kind === "technical-gap";
   return (
-    <span className="gap-kind-tag" data-kind={kind}>
-      {kind === "technical-gap" ? "Technical" : "Product"}
-    </span>
+    <Box
+      component="span"
+      sx={{
+        display: "inline-block",
+        mr: "7px",
+        px: 0.75,
+        fontSize: 10.5,
+        fontWeight: 650,
+        lineHeight: "17px",
+        letterSpacing: "0.03em",
+        textTransform: "uppercase",
+        verticalAlign: "1px",
+        color: technical ? "text.secondary" : "warning.main",
+        bgcolor: (t) => `color-mix(in srgb, ${technical ? t.vars.palette.text.primary : t.vars.palette.warning.main} ${technical ? 8 : 13}%, transparent)`,
+        borderRadius: "4px",
+      }}
+    >
+      {technical ? "Technical" : "Product"}
+    </Box>
   );
 }
 
@@ -66,35 +85,67 @@ export function GapFilter({ product, technical, show, onShow }: { product: numbe
     const word = kind === "product-gap" ? "product" : "technical";
     return (
       <Tooltip title={show === kind ? "Show all gaps" : `Show only ${word} gaps`}>
-        <button type="button" className="gap-filter-toggle" aria-pressed={show === kind} onClick={() => onShow(show === kind ? "all" : (kind as GapShow))}>
+        <Box
+          component="button"
+          type="button"
+          aria-pressed={show === kind}
+          onClick={() => onShow(show === kind ? "all" : (kind as GapShow))}
+          sx={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "5px",
+            px: "9px",
+            py: "2px",
+            font: "inherit",
+            fontSize: 12,
+            fontWeight: 600,
+            lineHeight: "18px",
+            color: "text.secondary",
+            cursor: "pointer",
+            bgcolor: "transparent",
+            border: 1,
+            borderColor: "surface.borderStrong",
+            borderRadius: 999,
+            transition: "color 120ms, border-color 120ms, background-color 120ms",
+            "& > span": { lineHeight: 0 },
+            "& > span svg": { display: "block" },
+            "&:hover": { color: "text.primary", borderColor: "warning.main" },
+            "&[aria-pressed=true]": {
+              color: "text.primary",
+              bgcolor: (t) => `color-mix(in srgb, ${t.vars.palette.warning.main} 14%, transparent)`,
+              borderColor: "warning.main",
+            },
+          }}
+        >
           <LeftMark kind={kind} size={13} decorative />
           {n} {word}
-        </button>
+        </Box>
       </Tooltip>
     );
   };
   return (
-    <span className="gap-filter" role="group" aria-label="Show gaps">
+    <Box component="span" role="group" aria-label="Show gaps" sx={{ display: "inline-flex", flexWrap: "wrap", gap: 0.75 }}>
       {toggle("product-gap", product)}
       {toggle("technical-gap", technical)}
-    </span>
+    </Box>
   );
 }
 
 /* A kind's mark. `decorative` where its name is already beside it. */
 export function LeftMark({ kind, size = 16, decorative = false }: { kind: LeftKind; size?: number; decorative?: boolean }) {
-  const { one, Icon } = LEFT_KINDS[kind];
+  const { one, Icon, color } = LEFT_KINDS[kind];
+  const sx = { display: "inline-flex", flex: "none", color };
   if (decorative)
     return (
-      <span className="left-mark" data-kind={kind} aria-hidden>
+      <Box component="span" aria-hidden sx={sx}>
         <Icon sx={{ fontSize: size }} />
-      </span>
+      </Box>
     );
   return (
     <Tooltip title={one}>
-      <span className="left-mark" data-kind={kind} role="img" aria-label={one}>
+      <Box component="span" role="img" aria-label={one} sx={sx}>
         <Icon sx={{ fontSize: size }} />
-      </span>
+      </Box>
     </Tooltip>
   );
 }
@@ -126,30 +177,45 @@ export function LeftLabel({
   children?: ReactNode;
 }) {
   return (
-    <span className="left-label">
+    <Box component="span" sx={{ display: "inline-flex", alignItems: "center", gap: 0.75 }}>
       <LeftMark kind={kind} size={size} decorative />
       <Term id={term ?? LEFT_TERMS[kind]} hoverOnly={hoverOnly}>
         {children ?? LEFT_KINDS[kind].many}
       </Term>
-    </span>
+    </Box>
   );
 }
 
-/* Items of what's left or tradeoffs, each a row: its mark, then what it says. `detailed`, as on a detail page, spaces them out and rules them off. */
+/*
+ * Items of what's left or tradeoffs, each a row: its mark, then what it says,
+ * and under that anything more. `detailed`, as on a detail page, spaces them
+ * out and rules them off, each with more under it.
+ */
 export function LeftList({ detailed = false, children }: { detailed?: boolean; children: ReactNode }) {
   return (
-    <ul className="left-list" data-detailed={detailed || undefined}>
+    <Box
+      component="ul"
+      sx={[
+        { display: "flex", flexDirection: "column", minWidth: 0, fontSize: 13.5 },
+        detailed && {
+          "& > li": { gap: 1.5, py: 1.5, "& > span": { mt: "3px" }, "& > div": { gap: 1 } },
+          "& > li:first-of-type": { pt: "2px" },
+          "& > li:last-of-type": { pb: "2px" },
+          "& > li + li": { borderTop: 1, borderColor: "divider" },
+        },
+      ]}
+    >
       {children}
-    </ul>
+    </Box>
   );
 }
 
 export function LeftItem({ kind, children }: { kind: LeftKind; children: ReactNode }) {
   return (
-    <li className="left-item">
+    <Box component="li" sx={{ display: "grid", gridTemplateColumns: "16px minmax(0, 1fr)", gap: 1.25, py: 0.5, "& > span": { mt: "2px" } }}>
       <LeftMark kind={kind} />
-      <div className="left-item-body">{children}</div>
-    </li>
+      <Box sx={{ display: "flex", flexDirection: "column", gap: "3px", minWidth: 0, lineHeight: 1.5 }}>{children}</Box>
+    </Box>
   );
 }
 
@@ -157,14 +223,14 @@ export function LeftItem({ kind, children }: { kind: LeftKind; children: ReactNo
 export function LeftCounts({ counts, lead }: { counts: [LeftKind, number][]; lead?: ReactNode }) {
   const shown = counts.filter(([, n]) => n);
   return (
-    <span className="left-counts">
+    <Box component="span" sx={{ display: "inline-flex", flexWrap: "wrap", alignItems: "center", gap: "2px 10px" }}>
       {lead ? <span>{lead}</span> : null}
       {shown.map(([kind, n]) => (
-        <span key={kind} className="left-count">
+        <Box component="span" key={kind} sx={{ display: "inline-flex", alignItems: "center", gap: 0.5 }}>
           <LeftMark kind={kind} size={13} decorative />
           {n} {(n === 1 ? LEFT_KINDS[kind].one : LEFT_KINDS[kind].many).toLowerCase()}
-        </span>
+        </Box>
       ))}
-    </span>
+    </Box>
   );
 }

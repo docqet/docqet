@@ -1,6 +1,6 @@
 import Box from "@mui/material/Box";
 import type { CapabilityLevel } from "../../state";
-import { DetailsCard, DetailsEyebrow, DetailsWorkings } from "./DetailsPopover";
+import { DetailsCard, DetailsEyebrow, DetailsHead, DetailsWorkings } from "./DetailsPopover";
 import { MATURITY_BANDS, MATURITY_LEVELS, clampMaturity, maturityBand } from "../maturity/maturity";
 import { RingGlyph } from "../maturity/RingGlyph";
 import { STABILITY, STABILITY_LEVEL_IDS, levelColor, type StabilityLevelId } from "../stability/stability";
@@ -86,10 +86,10 @@ export function MaturityDetails({ progress, subject, count, spread, card = true 
       <Box sx={{ mt: 1.25 }}>{BAND_SUMMARIES[band]}</Box>
       {spread?.length ? (
         <>
-          <div className="risk-details-head">
+          <DetailsHead>
             {spread.length} {capabilities ? (spread.length === 1 ? "capability" : "capabilities") : spread.length === 1 ? "feature" : "features"} by{" "}
             {capabilities ? "level" : "maturity"}
-          </div>
+          </DetailsHead>
           <LevelSpread levels={spread} bands={!capabilities} />
         </>
       ) : null}

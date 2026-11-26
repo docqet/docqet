@@ -274,9 +274,8 @@ function Levels() {
         </Box>
         <Box sx={cardGridSx(240)}>
           {RISK_BANDS.map((b, i) => (
-            /* data-risk-band sets --risk-band, the color RiskRing takes. */
-            <Box component="article" key={b.id} data-risk-band={b.id} sx={bandSx}>
-              <RiskRing percent={i * 25 + 12} size={44} />
+            <Box component="article" key={b.id} sx={bandSx}>
+              <RiskRing percent={i * 25 + 12} size={44} band={b.id} />
               <div>
                 <Box component="h3" sx={{ color: RISK_BAND_COLOR[b.id] }}>
                   {b.name}

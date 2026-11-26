@@ -1,15 +1,29 @@
 import Box from "@mui/material/Box";
-import { DetailsCard, DetailsEyebrow, DetailsWorkings } from "./DetailsPopover";
+import type { ReactNode } from "react";
+import { DetailsCard, DetailsEyebrow, DetailsHead, DetailsWorkings } from "./DetailsPopover";
 import { levelColor } from "../stability/stability";
 import { LevelSpread } from "../stability/StabilitySpread";
 import { RingGlyph } from "../maturity/RingGlyph";
 import { MATURITY_BANDS, maturityBand } from "../maturity/maturity";
-import { RiskRing } from "../risk/RiskRing";
+import { RISK_BAND_COLORS, RiskRing } from "../risk/RiskRing";
 import { VerdictSpread } from "../risk/RiskScore";
 import { Pie } from "../ring/Pie";
 import { exposureText, readinessBand, startedOf, type Readiness } from "../../state";
 import { readinessColor } from "../Readiness";
 import { plural } from "../names";
+
+/* One of the two figures readiness is worked out from: its ring, then its name over its band. */
+function Factor({ ring, name, children }: { ring: ReactNode; name: string; children: ReactNode }) {
+  return (
+    <Box sx={{ display: "flex", alignItems: "center", gap: 1.25, minWidth: 0, lineHeight: 1.3 }}>
+      {ring}
+      <div>
+        <Box sx={{ fontSize: "0.92em", color: "text.secondary" }}>{name}</Box>
+        {children}
+      </div>
+    </Box>
+  );
+}
 
 /*
  * Readiness for its popover, laid out as maturity's and exposure's are:
@@ -24,44 +38,37 @@ export function ReadinessDetails({ readiness, of }: { readiness: Readiness; of: 
   const { exposure, levels, gaps } = readiness;
   const maturity = Math.round(readiness.maturity!);
   const band = maturityBand(maturity);
+  const color = readinessColor(readiness.percent!);
   return (
     <DetailsCard card width={320}>
       <DetailsEyebrow>{of}</DetailsEyebrow>
       <Box sx={{ mt: 1.25, display: "flex", alignItems: "center", gap: 1.5 }}>
-        <Pie percent={readiness.percent!} size={56} sx={{ color: readinessColor(readiness.percent!) }} />
+        <Pie percent={readiness.percent!} size={56} sx={{ color }} />
         <div>
-          <Box sx={{ fontSize: "1.12em", fontWeight: 700, color: readinessColor(readiness.percent!) }}>{readinessBand(readiness)!.name}</Box>
-          <Box sx={{ color: readinessColor(readiness.percent!), fontWeight: 600, fontVariantNumeric: "tabular-nums" }}>{readiness.percent}%</Box>
+          <Box sx={{ fontSize: "1.12em", fontWeight: 700, color }}>{readinessBand(readiness)!.name}</Box>
+          <Box sx={{ color, fontWeight: 600, fontVariantNumeric: "tabular-nums" }}>{readiness.percent}%</Box>
         </div>
       </Box>
       <Box sx={{ mt: 1.25 }}>{readinessBand(readiness)!.says}</Box>
-      <div className="readiness-factors">
-        <div className="readiness-factor">
-          <RingGlyph progress={maturity} size={40} />
-          <div>
-            <div className="readiness-factor-name">Maturity</div>
-            <Box component="strong" sx={levelColor(band)}>
-              {MATURITY_BANDS[band]}
-            </Box>
-          </div>
-        </div>
+      <Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 1.5, mt: 1.5 }}>
+        <Factor ring={<RingGlyph progress={maturity} size={40} />} name="Maturity">
+          <Box component="strong" sx={levelColor(band)}>
+            {MATURITY_BANDS[band]}
+          </Box>
+        </Factor>
         {exposure.percent !== null && exposure.band ? (
-          <div className="readiness-factor" data-risk-band={exposure.band.id}>
-            <RiskRing percent={exposure.percent} size={40} />
-            <div>
-              <div className="readiness-factor-name">Exposure</div>
-              <Box component="strong" sx={{ color: "var(--risk-band)" }}>
-                {exposure.band.name}
-              </Box>
-            </div>
-          </div>
+          <Factor ring={<RiskRing percent={exposure.percent} size={40} band={exposure.band.id} />} name="Exposure">
+            <Box component="strong" sx={{ color: RISK_BAND_COLORS[exposure.band.id] }}>
+              {exposure.band.name}
+            </Box>
+          </Factor>
         ) : null}
-      </div>
-      <div className="risk-details-head">{plural(levels.length, "capability", "capabilities")} by level</div>
+      </Box>
+      <DetailsHead>{plural(levels.length, "capability", "capabilities")} by level</DetailsHead>
       <LevelSpread levels={levels} />
       {gaps.items.length ? (
         <>
-          <div className="risk-details-head">{plural(gaps.items.length, "gap", "gaps")} by risk</div>
+          <DetailsHead>{plural(gaps.items.length, "gap", "gaps")} by risk</DetailsHead>
           <VerdictSpread risk={gaps} />
         </>
       ) : null}
@@ -69,9 +76,9 @@ export function ReadinessDetails({ readiness, of }: { readiness: Readiness; of: 
         Our view of how ready this is to serve people in production, from the stability levels, gaps and impacts written down, for you to judge.
       </Box>
       <DetailsWorkings>
-        <div className="details-workings-sum">
+        <Box sx={{ color: "text.primary", fontWeight: 600, fontVariantNumeric: "tabular-nums" }}>
           {maturity}% mature × (1 − {exposureText(exposure.percent ?? 0)} exposure) = {readiness.percent}%
-        </div>
+        </Box>
         <div>
           Its maturity, less the share of the most its open gaps could put at stake, both from its{" "}
           {plural(started, "started capability", "started capabilities")}. Drafts don&rsquo;t count.

@@ -4,7 +4,6 @@ import { Count, Empty, PageHeader, Section, Stat, Tabs, View, currentTab } from 
 import { bySubject, subjectOf, type DocketState, type Tradeoff } from "../../state";
 import { Choice } from "../../components/Choice";
 import { SubjectLink } from "../../components/SubjectLink";
-import "../left.css";
 import { TradeoffRows } from "../../components/TradeoffRows";
 import Box from "@mui/material/Box";
 import { groupHeadSx, groupSx, introSx } from "../left/List";
