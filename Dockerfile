@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 # The UI, built first so the Go build can embed it.
-FROM node:24-alpine AS ui
+FROM node:26-alpine AS ui
 
 WORKDIR /src/ui
 
