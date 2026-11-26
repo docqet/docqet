@@ -7,8 +7,8 @@ import (
 
 	"go.yaml.in/yaml/v3"
 
-	"github.com/exalynt/docqet/internal/rubric"
-	"github.com/exalynt/docqet/internal/state"
+	"github.com/docqet/docqet/internal/rubric"
+	"github.com/docqet/docqet/internal/state"
 )
 
 type rawRubric struct {

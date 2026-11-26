@@ -9,8 +9,8 @@ import (
 
 	"github.com/urfave/cli/v3"
 
-	"github.com/exalynt/docqet/internal/project"
-	"github.com/exalynt/docqet/internal/state"
+	"github.com/docqet/docqet/internal/project"
+	"github.com/docqet/docqet/internal/state"
 )
 
 // IndexCommand writes the project's state, for the working tree or a commit.

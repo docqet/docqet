@@ -4,8 +4,8 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/exalynt/docqet/internal/combine"
-	"github.com/exalynt/docqet/internal/state"
+	"github.com/docqet/docqet/internal/combine"
+	"github.com/docqet/docqet/internal/state"
 )
 
 // OpenDecisions returns the open decisions a doc's contributions list, in

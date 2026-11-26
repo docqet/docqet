@@ -10,10 +10,10 @@ import (
 
 	"github.com/urfave/cli/v3"
 
-	"github.com/exalynt/docqet/internal/combine"
-	"github.com/exalynt/docqet/internal/derive"
-	"github.com/exalynt/docqet/internal/services"
-	"github.com/exalynt/docqet/internal/state"
+	"github.com/docqet/docqet/internal/combine"
+	"github.com/docqet/docqet/internal/derive"
+	"github.com/docqet/docqet/internal/services"
+	"github.com/docqet/docqet/internal/state"
 )
 
 // local is this project's state, read from the working tree or a commit, and

@@ -14,7 +14,7 @@ import (
 
 	"github.com/urfave/cli/v3"
 
-	"github.com/exalynt/docqet/internal/state"
+	"github.com/docqet/docqet/internal/state"
 )
 
 // RenameCommand changes an ID everywhere in the project, and prints the

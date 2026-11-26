@@ -3,7 +3,7 @@
 `docqet` is one Go program. Install it with Go 1.26 or later:
 
 ```sh
-go install github.com/exalynt/docqet/cmd/docqet@latest   # or @<commit or tag>
+go install github.com/docqet/docqet/cmd/docqet@latest   # or @<commit or tag>
 ```
 
 Or, from a checkout of this repository, `make install`. A binary built this

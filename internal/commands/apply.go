@@ -10,12 +10,12 @@ import (
 
 	"github.com/urfave/cli/v3"
 
-	"github.com/exalynt/docqet/internal/check"
-	"github.com/exalynt/docqet/internal/client"
-	"github.com/exalynt/docqet/internal/git"
-	"github.com/exalynt/docqet/internal/index"
-	"github.com/exalynt/docqet/internal/project"
-	"github.com/exalynt/docqet/internal/state"
+	"github.com/docqet/docqet/internal/check"
+	"github.com/docqet/docqet/internal/client"
+	"github.com/docqet/docqet/internal/git"
+	"github.com/docqet/docqet/internal/index"
+	"github.com/docqet/docqet/internal/project"
+	"github.com/docqet/docqet/internal/state"
 )
 
 // becameTrailer is the trailer that says what something a commit removed

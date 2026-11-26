@@ -14,9 +14,9 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/exalynt/docqet/internal/check"
-	"github.com/exalynt/docqet/internal/project"
-	"github.com/exalynt/docqet/internal/state"
+	"github.com/docqet/docqet/internal/check"
+	"github.com/docqet/docqet/internal/project"
+	"github.com/docqet/docqet/internal/state"
 )
 
 // Index reads the project rooted at fsys, the folder with its docqet.yaml,

@@ -11,7 +11,7 @@ import (
 
 	"github.com/urfave/cli/v3"
 
-	"github.com/exalynt/docqet/internal/state"
+	"github.com/docqet/docqet/internal/state"
 )
 
 // InitCommand makes a folder a Docqet project, writing its docqet.yaml.

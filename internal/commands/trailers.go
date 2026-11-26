@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/exalynt/docqet/internal/git"
-	"github.com/exalynt/docqet/internal/index"
-	"github.com/exalynt/docqet/internal/state"
+	"github.com/docqet/docqet/internal/git"
+	"github.com/docqet/docqet/internal/index"
+	"github.com/docqet/docqet/internal/state"
 )
 
 // becameKey is the trailer that says what something a commit removed became.

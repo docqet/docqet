@@ -10,9 +10,9 @@ import (
 
 	"github.com/urfave/cli/v3"
 
-	"github.com/exalynt/docqet/internal/git"
-	"github.com/exalynt/docqet/internal/index"
-	"github.com/exalynt/docqet/internal/state"
+	"github.com/docqet/docqet/internal/git"
+	"github.com/docqet/docqet/internal/index"
+	"github.com/docqet/docqet/internal/state"
 )
 
 // CheckCommand finds problems in the docs, annotations and commit trailers.

@@ -4,8 +4,8 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/exalynt/docqet/internal/combine"
-	"github.com/exalynt/docqet/internal/derive"
+	"github.com/docqet/docqet/internal/combine"
+	"github.com/docqet/docqet/internal/derive"
 )
 
 // ListCapabilities returns the capabilities showing, in the product's order:

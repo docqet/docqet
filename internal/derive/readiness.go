@@ -3,8 +3,8 @@ package derive
 import (
 	"math"
 
-	"github.com/exalynt/docqet/internal/combine"
-	"github.com/exalynt/docqet/internal/state"
+	"github.com/docqet/docqet/internal/combine"
+	"github.com/docqet/docqet/internal/state"
 )
 
 // GapsOn returns the gaps that show on a capability: its own, then those of

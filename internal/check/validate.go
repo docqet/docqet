@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/exalynt/docqet/internal/state"
+	"github.com/docqet/docqet/internal/state"
 )
 
 // Validate reports whether st is a state at all, as index writes one: the
