@@ -10,7 +10,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/render"
 
-	"github.com/exalynt/docqet/static"
+	"github.com/docqet/docqet/static"
 )
 
 // DocsHandler serves the OpenAPI documentation, rendered with Scalar, along

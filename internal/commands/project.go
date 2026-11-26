@@ -8,10 +8,10 @@ import (
 	"os"
 	"time"
 
-	"github.com/exalynt/docqet/internal/git"
-	"github.com/exalynt/docqet/internal/index"
-	"github.com/exalynt/docqet/internal/project"
-	"github.com/exalynt/docqet/internal/state"
+	"github.com/docqet/docqet/internal/git"
+	"github.com/docqet/docqet/internal/index"
+	"github.com/docqet/docqet/internal/project"
+	"github.com/docqet/docqet/internal/state"
 )
 
 // source says which states a read was worked out from, as the first line of

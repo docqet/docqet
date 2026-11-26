@@ -14,7 +14,7 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/exalynt/docqet/internal/state"
+	"github.com/docqet/docqet/internal/state"
 )
 
 // Recheckable reports whether p is a problem Check finds, and so one the

@@ -10,9 +10,9 @@ import (
 
 	"github.com/urfave/cli/v3"
 
-	"github.com/exalynt/docqet/internal/combine"
-	"github.com/exalynt/docqet/internal/derive"
-	"github.com/exalynt/docqet/internal/state"
+	"github.com/docqet/docqet/internal/combine"
+	"github.com/docqet/docqet/internal/derive"
+	"github.com/docqet/docqet/internal/state"
 )
 
 // ShowCommand shows one doc, gap or tradeoff in full.

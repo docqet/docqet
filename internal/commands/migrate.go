@@ -6,7 +6,7 @@ import (
 
 	"github.com/urfave/cli/v3"
 
-	"github.com/exalynt/docqet/internal/database"
+	"github.com/docqet/docqet/internal/database"
 )
 
 // defaultDatabase is where the server keeps its SQLite database when

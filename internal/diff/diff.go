@@ -10,7 +10,7 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/exalynt/docqet/internal/state"
+	"github.com/docqet/docqet/internal/state"
 )
 
 // The kinds of change.

@@ -7,7 +7,7 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/exalynt/docqet/internal/commands"
+	"github.com/docqet/docqet/internal/commands"
 )
 
 // version is stamped at build time:

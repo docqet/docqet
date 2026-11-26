@@ -14,8 +14,8 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/exalynt/docqet/internal/combine"
-	"github.com/exalynt/docqet/internal/state"
+	"github.com/docqet/docqet/internal/combine"
+	"github.com/docqet/docqet/internal/state"
 )
 
 // started reports whether level is a stability level, not a draft. Only

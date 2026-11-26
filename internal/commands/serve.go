@@ -13,12 +13,12 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/urfave/cli/v3"
 
-	"github.com/exalynt/docqet/internal/database"
-	httphandlers "github.com/exalynt/docqet/internal/handlers/http"
-	"github.com/exalynt/docqet/internal/logs"
-	"github.com/exalynt/docqet/internal/repositories/sqlite"
-	"github.com/exalynt/docqet/internal/services"
-	"github.com/exalynt/docqet/internal/state"
+	"github.com/docqet/docqet/internal/database"
+	httphandlers "github.com/docqet/docqet/internal/handlers/http"
+	"github.com/docqet/docqet/internal/logs"
+	"github.com/docqet/docqet/internal/repositories/sqlite"
+	"github.com/docqet/docqet/internal/services"
+	"github.com/docqet/docqet/internal/state"
 )
 
 // shutdownTimeout bounds how long in-flight requests have to finish once

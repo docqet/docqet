@@ -11,9 +11,9 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/render"
 
-	"github.com/exalynt/docqet/internal/repositories"
-	"github.com/exalynt/docqet/internal/services"
-	"github.com/exalynt/docqet/internal/state"
+	"github.com/docqet/docqet/internal/repositories"
+	"github.com/docqet/docqet/internal/services"
+	"github.com/docqet/docqet/internal/state"
 )
 
 // maxStateBytes bounds what a commit's state can be. The largest example,

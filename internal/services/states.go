@@ -12,9 +12,9 @@ import (
 	"regexp"
 	"time"
 
-	"github.com/exalynt/docqet/internal/check"
-	"github.com/exalynt/docqet/internal/repositories"
-	"github.com/exalynt/docqet/internal/state"
+	"github.com/docqet/docqet/internal/check"
+	"github.com/docqet/docqet/internal/repositories"
+	"github.com/docqet/docqet/internal/state"
 )
 
 var (

@@ -12,7 +12,7 @@ import (
 
 	"github.com/urfave/cli/v3"
 
-	"github.com/exalynt/docqet/internal/project"
+	"github.com/docqet/docqet/internal/project"
 )
 
 // kitTarget is a place agents read a project's skills from, and the kit's

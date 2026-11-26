@@ -5,7 +5,7 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/exalynt/docqet/internal/state"
+	"github.com/docqet/docqet/internal/state"
 )
 
 // Combine puts the states of a product's projects together, in the order

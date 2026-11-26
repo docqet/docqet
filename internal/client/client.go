@@ -14,7 +14,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/exalynt/docqet/internal/state"
+	"github.com/docqet/docqet/internal/state"
 )
 
 // ErrNotFound is returned when the server has nothing for what was asked.

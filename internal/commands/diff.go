@@ -13,11 +13,11 @@ import (
 
 	"github.com/urfave/cli/v3"
 
-	"github.com/exalynt/docqet/internal/diff"
-	"github.com/exalynt/docqet/internal/git"
-	"github.com/exalynt/docqet/internal/index"
-	"github.com/exalynt/docqet/internal/project"
-	"github.com/exalynt/docqet/internal/state"
+	"github.com/docqet/docqet/internal/diff"
+	"github.com/docqet/docqet/internal/git"
+	"github.com/docqet/docqet/internal/index"
+	"github.com/docqet/docqet/internal/project"
+	"github.com/docqet/docqet/internal/state"
 )
 
 // DiffCommand shows what changed in Docqet between two points.

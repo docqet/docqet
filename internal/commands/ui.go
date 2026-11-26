@@ -9,10 +9,10 @@ import (
 
 	"github.com/urfave/cli/v3"
 
-	"github.com/exalynt/docqet/internal/logs"
-	"github.com/exalynt/docqet/internal/project"
-	"github.com/exalynt/docqet/internal/services"
-	"github.com/exalynt/docqet/internal/state"
+	"github.com/docqet/docqet/internal/logs"
+	"github.com/docqet/docqet/internal/project"
+	"github.com/docqet/docqet/internal/services"
+	"github.com/docqet/docqet/internal/state"
 )
 
 // uiAddr is where `docqet ui` listens. It's loopback only, and can't be

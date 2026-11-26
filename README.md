@@ -67,7 +67,7 @@ when to act. See [Docqet's principles](docs/principles.md).
 ## Try it
 
 ```sh
-go install github.com/exalynt/docqet/cmd/docqet@latest
+go install github.com/docqet/docqet/cmd/docqet@latest
 
 docqet init --id my-app --name "My App"   # writes docqet.yaml
 docqet kit install                        # the agent kit

@@ -5,7 +5,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/exalynt/docqet/internal/state"
+	"github.com/docqet/docqet/internal/state"
 )
 
 // The verbs an annotation can have.
