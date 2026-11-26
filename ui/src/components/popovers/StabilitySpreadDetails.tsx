@@ -2,7 +2,8 @@ import Box from "@mui/material/Box";
 import type { CapabilityLevel } from "../../state";
 import { DetailsCard, DetailsEyebrow } from "./DetailsPopover";
 import { StabilityTrack } from "../stability/StabilityTrack";
-import { SpreadSwatch, StabilitySpreadBar, levelName, levelVar, spreadOf } from "../stability/StabilitySpread";
+import { SpreadSwatch, StabilitySpreadBar, levelVar, spreadOf } from "../stability/StabilitySpread";
+import { levelName } from "../stability/stability";
 
 export function StabilitySpreadDetails({ levels, of }: { levels: CapabilityLevel[]; of: string }) {
   return (

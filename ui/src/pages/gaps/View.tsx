@@ -1,7 +1,7 @@
 import { Fragment, useState } from "react";
 import BoltOutlinedIcon from "@mui/icons-material/BoltOutlined";
 import CodeRoundedIcon from "@mui/icons-material/CodeRounded";
-import { TECHNICAL_NAMES } from "../../Explore";
+import { TECHNICAL_NAMES } from "../../components/names";
 import { CapabilityStability } from "../../components/CapabilityLabel";
 import { LEFT_KINDS, LeftLabel, gapKind } from "../../components/left/LeftMark";
 import { InlineMarkdown } from "../../components/markdown/Markdown";

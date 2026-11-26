@@ -3,7 +3,7 @@ import FactCheckOutlinedIcon from "@mui/icons-material/FactCheckOutlined";
 import RuleRoundedIcon from "@mui/icons-material/RuleRounded";
 import WarningAmberRoundedIcon from "@mui/icons-material/WarningAmberRounded";
 import { ConceptIcon } from "../../components/Concepts";
-import { RULE_STANDING_LABELS, plural } from "../../Explore";
+import { RULE_STANDING_LABELS, plural } from "../../components/names";
 import { Facets, facets, type Go } from "../../components/Fields";
 import { CapabilityStability } from "../../components/CapabilityLabel";
 import { Body, Excerpt } from "../../components/markdown/Markdown";

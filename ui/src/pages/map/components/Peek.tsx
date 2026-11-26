@@ -5,7 +5,7 @@ import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import FilterListRoundedIcon from "@mui/icons-material/FilterListRounded";
 import WidgetsOutlinedIcon from "@mui/icons-material/WidgetsOutlined";
 import { ConceptIcon } from "../../../components/Concepts";
-import { Maturity } from "../../../Explore";
+import { Maturity } from "../../../components/maturity/Maturity";
 import { DomainIcon } from "../../../FeatureMap";
 import { PersonaAvatar, PersonaIcon, personaNameAndRole } from "../../../components/Personas";
 import { ReadinessMark } from "../../../components/Readiness";

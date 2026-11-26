@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Term } from "../../components/term/Term";
-import { RULE_STANDING_LABELS } from "../../Explore";
+import { RULE_STANDING_LABELS } from "../../components/names";
 import { Excerpt } from "../../components/markdown/Markdown";
 import { StandingMark } from "../../components/standing/StandingMark";
 import type { Route } from "../../routes";

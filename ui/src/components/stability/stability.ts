@@ -140,3 +140,6 @@ export function levelColor(id: StabilityMarkLevel) {
   const { light, dark } = STABILITY[id].colors;
   return (theme: Theme) => ({ color: light, ...theme.applyStyles("dark", { color: dark }) });
 }
+
+/* A capability's level by name: "GA", or "Draft" for one declared and not started. */
+export const levelName = (level: StabilityLevelId | null) => (level ? STABILITY[level].name : "Draft");

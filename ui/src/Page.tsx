@@ -13,22 +13,13 @@ import { LeftLabel } from "./components/left/LeftMark";
 import { Term } from "./components/term/Term";
 import { CapabilityStability } from "./components/CapabilityLabel";
 import { StandingMark } from "./components/standing/StandingMark";
-import {
-  TECHNICAL_NAMES,
-  TechnicalLink,
-  TechnicalRows,
-  LeftSummary,
-  NAMES,
-  PersonaRows,
-  RULE_STANDING_LABELS,
-  Places,
-  rubricCounts,
-  levelName,
-  plural,
-  type ExploreKind,
-  Maturity,
-  leftOf,
-} from "./Explore";
+import { TECHNICAL_NAMES, NAMES, RULE_STANDING_LABELS, plural, type ExploreKind } from "./components/names";
+import { TechnicalLink, TechnicalRows } from "./components/Technical";
+import { LeftSummary, leftOf } from "./components/left/LeftSummary";
+import { PersonaRows } from "./components/Personas";
+import { Places } from "./components/doc/Places";
+import { levelName } from "./components/stability/stability";
+import { Maturity } from "./components/maturity/Maturity";
 import { DomainIcon } from "./FeatureMap";
 import { PersonaAvatar, personaNameAndRole } from "./components/Personas";
 import { ReadinessMark, StillNeeds, needsLine } from "./components/Readiness";
@@ -36,6 +27,7 @@ import { ProjectIcon } from "./components/shell/ProductFilter";
 import { InitiativeIcon } from "./components/shell/ScopeFilter";
 import { InitiativeTags, initiativesOf } from "./components/Initiatives";
 import {
+  outcomesOf,
   bareId,
   builtOn,
   byFeature,
@@ -1925,4 +1917,22 @@ function TechnicalPage({ doc, route, ...go }: PageProps & { doc: TechnicalDoc })
       )}
     </DocView>
   );
+}
+
+/*
+ * How many outcomes a capability's level expects, how many of those a gap
+ * says aren't met, how many a tradeoff says aren't met by choice, how many an
+ * open decision leaves open, and how many
+ * a mechanism or component it's built on says it meets; or null with no
+ * rubric, or for a draft, which claims none. An outcome nothing names counts
+ * as met on its level's word.
+ */
+export function rubricCounts(state: DocketState, capability: Capability) {
+  if (!state.rubric || capability.stability === null) return null;
+  const standings = state.rubric.qualities
+    .flatMap(outcomesOf)
+    .map((o) => capability.outcomes[o.id]?.standing ?? "not-expected")
+    .filter((s) => s !== "not-expected");
+  const n = (standing: string) => standings.filter((s) => s === standing).length;
+  return { count: standings.length, notMet: n("gap"), byChoice: n("tradeoff"), open: n("open"), evidence: n("evidence") };
 }

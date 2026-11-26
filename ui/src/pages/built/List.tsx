@@ -1,4 +1,4 @@
-import { plural } from "../../Explore";
+import { plural } from "../../components/names";
 import { Term } from "../../components/term/Term";
 import { Excerpt } from "../../components/markdown/Markdown";
 import { docHref, type Route } from "../../routes";

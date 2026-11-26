@@ -3,7 +3,11 @@ import Card from "@mui/material/Card";
 import PersonOutlineRoundedIcon from "@mui/icons-material/PersonOutlineRounded";
 import { Grip } from "./Grip";
 import { ReadinessMark } from "./Readiness";
-import { startedOf, type DocketState, type Persona } from "../state";
+import type { ReactNode } from "react";
+import { InitiativeTags } from "./Initiatives";
+import type { ExploreKind } from "./names";
+import { useStatusFor } from "../model";
+import { startedOf, type DocketState, type Feature, type Persona, type Pick, type Target } from "../state";
 
 export function PersonaIcon({ size = 16 }: { size?: number }) {
   return <PersonOutlineRoundedIcon sx={{ fontSize: size, flex: "none", color: "var(--persona)" }} />;
@@ -68,3 +72,77 @@ export function PersonaCard({ state, persona }: { state: DocketState; persona: P
 
 /* How ready the software is for a persona: every capability that lists them, as the server works it out. */
 export const personaReadiness = (_state: DocketState, persona: Persona) => persona.readiness;
+
+/* A persona's row: their name, with their role under it. */
+export const rowName = (p: Persona) => {
+  const { name, role } = personaNameAndRole(p);
+  return { name, summary: role ?? p.description };
+};
+
+/* Personas as rows, each opening in the panel, with how ready `feature` is for them when it's given. */
+export function PersonaRows({ state, personas, feature, onOpen }: { state: DocketState; personas: Persona[]; feature?: Feature; onOpen: Links["onOpen"] }) {
+  return (
+    <ul>
+      {personas.map((p) => (
+        <PersonaRow key={p.id} state={state} persona={p} feature={feature} onOpen={onOpen} />
+      ))}
+    </ul>
+  );
+}
+
+/* One persona's row, with how ready `feature` is for them, as the server works it out, when it's given. */
+export function PersonaRow({ state, persona: p, feature, onOpen }: { state: DocketState; persona: Persona; feature?: Feature; onOpen: Links["onOpen"] }) {
+  const readiness = useStatusFor(state, feature ? `persona:${p.id},feature:${feature.id}` : null)?.readiness ?? null;
+  return (
+    <li>
+      <Row
+        icon={<PersonaAvatar persona={p} size={28} />}
+        {...rowName(p)}
+        tags={<InitiativeTags state={state} ids={p.initiatives} plain />}
+        onClick={() => onOpen("persona", p.id)}
+      >
+        {readiness && feature && startedOf(readiness) ? (
+          <ReadinessMark readiness={readiness} of={`${feature.name}'s readiness for ${personaNameAndRole(p).name}`} inButton />
+        ) : null}
+      </Row>
+    </li>
+  );
+}
+
+export function Row({
+  icon,
+  name,
+  summary,
+  tags,
+  onClick,
+  children,
+}: {
+  icon: ReactNode;
+  name: string;
+  summary?: ReactNode;
+  /* What it's part of, such as its initiatives, under its name. */
+  tags?: ReactNode;
+  onClick: () => void;
+  children?: ReactNode;
+}) {
+  return (
+    <button type="button" className="concept-row" onClick={onClick}>
+      <span style={{ alignSelf: "flex-start", marginTop: 2, display: "inline-flex" }}>{icon}</span>
+      <span className="concept-row-text">
+        <span className="concept-row-name">{name}</span>
+        {summary ? <span className="concept-row-summary">{summary}</span> : null}
+        {tags}
+      </span>
+      {children}
+    </button>
+  );
+}
+
+export type Links = {
+  state: DocketState;
+  onOpen: (kind: ExploreKind, id: string | null) => void;
+  onConcept: (id: string) => void;
+  onShow: (target: Target) => void;
+  isFiltering: (pick: Pick) => boolean;
+  onFilter: (pick: Pick) => void;
+};

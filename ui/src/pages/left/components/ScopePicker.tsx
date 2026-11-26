@@ -4,7 +4,7 @@ import FolderOutlinedIcon from "@mui/icons-material/FolderOutlined";
 import LayersOutlinedIcon from "@mui/icons-material/LayersOutlined";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 import Popover from "@mui/material/Popover";
-import { NAMES } from "../../../Explore";
+import { NAMES } from "../../../components/names";
 import { DomainIcon } from "../../../FeatureMap";
 import { InitiativeIcon } from "../../../components/shell/ScopeFilter";
 import { withParam } from "../../../routes";

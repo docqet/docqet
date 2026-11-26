@@ -3,7 +3,7 @@ import ExpandMoreRoundedIcon from "@mui/icons-material/ExpandMoreRounded";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { DecisionList, type Go } from "../../components/Fields";
-import { NAMES, TECHNICAL_NAMES, plural } from "../../Explore";
+import { NAMES, TECHNICAL_NAMES, plural } from "../../components/names";
 import { CapabilityStability } from "../../components/CapabilityLabel";
 import { Tip } from "../../components/Tip";
 import { GapIcon, LeftLabel } from "../../components/left/LeftMark";

@@ -9,7 +9,7 @@ import { VerdictSpread } from "../risk/RiskScore";
 import { Pie } from "../ring/Pie";
 import { exposureText, readinessBand, startedOf, type Readiness } from "../../state";
 import { readinessColor } from "../Readiness";
-import { plural } from "../../Explore";
+import { plural } from "../names";
 
 /*
  * Readiness for its popover, laid out as maturity's and exposure's are:

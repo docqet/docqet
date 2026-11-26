@@ -3,7 +3,7 @@ import type { Theme } from "@mui/material/styles";
 import type { CapabilityLevel, Level } from "../../state";
 import { DetailsPopover } from "../popovers/DetailsPopover";
 import { MATURITY_BANDS } from "../maturity/maturity";
-import { STABILITY, STABILITY_LEVEL_IDS } from "./stability";
+import { STABILITY, STABILITY_LEVEL_IDS, levelName } from "./stability";
 import { StabilitySpreadDetails } from "../popovers/StabilitySpreadDetails";
 
 /*
@@ -16,8 +16,6 @@ import { StabilitySpreadDetails } from "../popovers/StabilitySpreadDetails";
 
 /* Drafts first, then the levels from Prototype to GA, as the bar runs left to right. */
 const ORDER: CapabilityLevel[] = [null, ...STABILITY_LEVEL_IDS];
-
-export const levelName = (level: CapabilityLevel) => (level ? STABILITY[level].name : "Draft");
 
 /* A level's color as `--level`, in the shade for the color scheme. */
 export const levelVar = (level: Level) => (theme: Theme) => ({

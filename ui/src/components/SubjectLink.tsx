@@ -1,4 +1,4 @@
-import { NAMES, TECHNICAL_NAMES } from "../Explore";
+import { NAMES, TECHNICAL_NAMES } from "./names";
 import { DomainIcon } from "../FeatureMap";
 import { CapabilityStability } from "./CapabilityLabel";
 import { docHref, type DocKind } from "../routes";

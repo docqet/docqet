@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import ExpandMoreRoundedIcon from "@mui/icons-material/ExpandMoreRounded";
-import { Maturity, plural } from "../../Explore";
+import { Maturity } from "../../components/maturity/Maturity";
+import { plural } from "../../components/names";
 import { MaturityRing } from "../../components/maturity/MaturityRing";
 import { ExposureMark } from "../../components/risk/RiskScore";
 import { STABILITY, STABILITY_LEVEL_IDS } from "../../components/stability/stability";

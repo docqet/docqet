@@ -1,7 +1,8 @@
 import Box from "@mui/material/Box";
 import type { Theme } from "@mui/material/styles";
 import { useMemo } from "react";
-import { Maturity, NAMES, TECHNICAL_NAMES, plural } from "../../Explore";
+import { Maturity } from "../../components/maturity/Maturity";
+import { NAMES, TECHNICAL_NAMES, plural } from "../../components/names";
 import { StabilitySpread } from "../../components/stability/StabilitySpread";
 import { ExposureStat, GapsCell, MaturityStat } from "../../components/indexParts";
 import { LeftFigure } from "../../components/risk/GapRows";
