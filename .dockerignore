@@ -17,7 +17,10 @@ coverage.*
 ui/node_modules/
 ui/dist/
 
-# Docs and examples: not part of the image.
+# Docs and examples: not part of the image. Only the parts of the spec the
+# binary embeds are kept.
 docs/
 examples/
-spec/
+spec/*
+!spec/spec.go
+!spec/stability/

@@ -6,6 +6,7 @@ package commands
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -29,12 +30,18 @@ const (
 const (
 	// exitOK is for when everything's fine.
 	exitOK = 0
+	// exitFound is for when a command ran and found what it was asked to fail
+	// on, such as a problem in check.
+	exitFound = 1
 	// exitCouldNotRun is for when a command couldn't run: bad usage, not in a
-	// project, a server it couldn't reach, or a command not built yet. The
-	// draft's exit 1, for a command that ran and found what it was asked to
-	// fail on, comes with the first command that can find something.
+	// project, a server it couldn't reach, or a command not built yet.
 	exitCouldNotRun = 2
 )
+
+// errFound is returned by a command that ran and found what it was asked to
+// fail on, once it has printed what it found. It exits 1, with nothing more
+// printed.
+var errFound = errors.New("found what it was asked to fail on")
 
 // Root builds the docket command and every command under it.
 func Root(version string) *cli.Command {
@@ -104,6 +111,9 @@ func returnUsageErrors(cmd *cli.Command) {
 func Finish(root *cli.Command, args []string, err error) int {
 	if err == nil {
 		return exitOK
+	}
+	if errors.Is(err, errFound) {
+		return exitFound
 	}
 	if wantsJSON(root, args) {
 		writeJSON(root.Writer, map[string]string{"error": err.Error()})

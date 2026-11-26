@@ -3,8 +3,12 @@ package project
 
 import (
 	"errors"
+	"fmt"
+	"io/fs"
 	"os"
 	"path/filepath"
+
+	"go.yaml.in/yaml/v3"
 )
 
 // ErrNotInProject is returned when no docket.yaml is found.
@@ -38,4 +42,40 @@ func Find(dir string) (string, error) {
 // at root.
 func StatePath(root string) string {
 	return filepath.Join(root, ".docket", "state.json")
+}
+
+// Config is a project's docket.yaml.
+type Config struct {
+	Project struct {
+		ID   string `yaml:"id"`
+		Name string `yaml:"name"`
+	} `yaml:"project"`
+	// Product is the software product the project is part of, when it names
+	// one. Without one, the project is a product of its own.
+	Product *struct {
+		ID   string `yaml:"id"`
+		Name string `yaml:"name"`
+	} `yaml:"product"`
+	// Server is where the project's Docket server is, if it has one.
+	Server string `yaml:"server"`
+}
+
+// ReadConfig reads docket.yaml from the root of project. It's an error when
+// there's none, or it doesn't name the project.
+func ReadConfig(project fs.FS) (Config, error) {
+	data, err := fs.ReadFile(project, "docket.yaml")
+	if err != nil {
+		return Config{}, err
+	}
+	var cfg Config
+	if err := yaml.Unmarshal(data, &cfg); err != nil {
+		return Config{}, fmt.Errorf("docket.yaml: %w", err)
+	}
+	if cfg.Project.ID == "" || cfg.Project.Name == "" {
+		return Config{}, errors.New("docket.yaml: project needs an id and a name")
+	}
+	if cfg.Product != nil && (cfg.Product.ID == "" || cfg.Product.Name == "") {
+		return Config{}, errors.New("docket.yaml: product needs an id and a name")
+	}
+	return cfg, nil
 }
