@@ -11,7 +11,7 @@ the gaps are. A rule shows the code and tests that point at it.
 The UI shows a product's projects together, as the server put them together.
 One Docket server serves one client, so every project it shows belongs to
 that client, and there's no sign-in yet. See
-[the proposed architecture](../README.md#3-docket).
+[Docket's parts](../docs/parts.md#docket).
 
 ## Running the UI
 

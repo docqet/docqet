@@ -44,7 +44,7 @@ against these files in CI, with `docket kit check`.
 
 ## Installing it in a project
 
-Install `docket` (see the [README](../README.md#installing-docket)), then, in
+Install `docket` (see [Installing docket](../docs/installing.md)), then, in
 a project with a `docket.yaml`, install the kit for the agents the project
 uses:
 

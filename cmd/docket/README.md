@@ -22,7 +22,7 @@ CI uses it on every push, and people without the repository use it to ask
 the server.
 
 It's a Go program, and the same binary is also the Docket server and serves
-the UI (see [the proposed architecture](../../README.md#proposed-architecture)).
+the UI (see [Docket's parts](../../docs/parts.md)).
 Everything Docket works out is worked out in Go, once, so the command, the
 server and the UI never disagree.
 
