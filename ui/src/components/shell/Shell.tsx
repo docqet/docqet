@@ -9,6 +9,7 @@ import WidgetsOutlinedIcon from "@mui/icons-material/WidgetsOutlined";
 import { ConceptIcon } from "../Concepts";
 import { GapIcon } from "../left/LeftMark";
 import Tooltip from "@mui/material/Tooltip";
+import { ColorSchemeToggle } from "./ColorSchemeToggle";
 import Logo from "./Logo";
 import { PersonaIcon } from "../Personas";
 import ProductFilter, { type ProductChoice } from "./ProductFilter";
@@ -72,6 +73,7 @@ export default function Shell({
             <HelpOutlineRoundedIcon sx={{ fontSize: 20 }} />
           </a>
         </Tooltip>
+        <ColorSchemeToggle />
       </header>
       <SideNav state={state} at={sectionOf(route)} />
       <main className="shell-main">{children}</main>

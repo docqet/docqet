@@ -3,7 +3,7 @@ import type { Theme } from "@mui/material/styles";
 import type { CapabilityLevel, Level } from "../../state";
 import { DetailsPopover } from "../popovers/DetailsPopover";
 import { MATURITY_BANDS } from "../maturity/maturity";
-import { STABILITY, STABILITY_LEVEL_IDS, levelName } from "./stability";
+import { STABILITY_LEVEL_IDS, levelName } from "./stability";
 import { StabilitySpreadDetails } from "../popovers/StabilitySpreadDetails";
 
 /*
@@ -18,10 +18,7 @@ import { StabilitySpreadDetails } from "../popovers/StabilitySpreadDetails";
 const ORDER: CapabilityLevel[] = [null, ...STABILITY_LEVEL_IDS];
 
 /* A level's color as `--level`, in the shade for the color scheme. */
-export const levelVar = (level: Level) => (theme: Theme) => ({
-  "--level": STABILITY[level].colors.light,
-  ...theme.applyStyles("dark", { "--level": STABILITY[level].colors.dark }),
-});
+export const levelVar = (level: Level) => (theme: Theme) => ({ "--level": theme.vars.palette.stability[level] });
 
 /* How many there are at each level, in order, leaving out any with none. */
 export const spreadOf = (levels: CapabilityLevel[]) => ORDER.map((level) => ({ level, n: levels.filter((l) => l === level).length })).filter((s) => s.n);

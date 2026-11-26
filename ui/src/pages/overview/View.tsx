@@ -225,10 +225,7 @@ function Lede({ state }: { state: DocketState }) {
 }
 
 /* A level's color as `--level`, for a bar drawn in it, in the shade for the color scheme. */
-const levelVar = (level: Level) => (theme: Theme) => ({
-  "--level": STABILITY[level].colors.light,
-  ...theme.applyStyles("dark", { "--level": STABILITY[level].colors.dark }),
-});
+const levelVar = (level: Level) => (theme: Theme) => ({ "--level": theme.vars.palette.stability[level] });
 
 /* Draft first, then the levels from Prototype to GA, as the bars run left to right. */
 const BAR_ORDER: CapabilityLevel[] = [null, ...STABILITY_LEVEL_IDS];

@@ -1,83 +1,48 @@
 /*
  * Docket's look: a violet accent on a soft, near-neutral canvas, frosted
- * panels floating over it, Geist throughout. Every color is a token here,
- * redefined for dark mode, which follows the system's setting.
+ * panels floating over it, Geist throughout. Every color comes from the MUI
+ * theme (theme.ts), which defines both schemes and puts the one showing in
+ * `--mui-*` variables. These names keep the stylesheets reading them until
+ * each moves into the components.
  */
 
 :root {
   --font: "Geist Variable", ui-sans-serif, system-ui, sans-serif;
   --mono: "Geist Mono Variable", ui-monospace, SFMono-Regular, Menlo, monospace;
 
-  --bg: #f6f5fb;
-  --dot: #d9d3ec;
-  --panel: rgb(255 255 255 / 0.78);
-  --border: #e6e2f2;
-  --border-strong: #d6d0e8;
-  --text: #16121f;
-  --muted: #615a74;
-  --faint: #9a93ad;
-  --accent: #7c3aed;
-  --accent-soft: #f2ecff;
-  --popover: #ffffff;
-  --shadow: 0 1px 2px rgb(30 16 70 / 0.05), 0 8px 24px -8px rgb(60 30 140 / 0.14);
-  /* Domain concepts: a teal of their own, apart from features and capabilities. */
-  --concept: #0f766e;
-  --concept-soft: rgb(15 118 110 / 0.09);
-  /* Personas: a blue of their own, apart from concepts, features and capabilities. */
-  --persona: #1d4ed8;
-  --persona-soft: rgb(29 78 216 / 0.08);
-  /* Readiness: from a quiet grey, unready, to green, ready. */
-  --ready-low: #6f6982;
-  --ready-high: #047857;
-  /* Areas: a faint violet wash behind their features, darker than the canvas, lighter than a card. */
-  --area: rgb(124 58 237 / 0.045);
-  --area-border: rgb(124 58 237 / 0.16);
-  /* What's lit on the canvas, hovered or open in the side panel. */
-  --lit-ring: 0 0 0 3px color-mix(in srgb, var(--accent) 18%, transparent), 0 8px 24px -14px rgb(60 30 140 / 0.35);
-  --lit-row: color-mix(in srgb, var(--accent) 9%, transparent);
-  /* Contradictions between scopes: an amber that reads as "look at this", not as an error. */
-  --warning: #b45309;
-  /* A rule's tests: passing, or failing. */
-  --ok: #15803d;
-  --bad: #b91c1c;
-  /* A blocking gap's impact: orange, between the warning's amber and the damaging red. */
-  --blocking: #c2410c;
-  /* An inconvenient gap's impact: a soft yellow that marks it without drawing the eye. */
-  --inconvenient: #957a35;
+  --bg: var(--mui-palette-background-default);
+  --dot: var(--mui-palette-surface-dot);
+  --panel: var(--mui-palette-surface-panel);
+  --border: var(--mui-palette-divider);
+  --border-strong: var(--mui-palette-surface-borderStrong);
+  --text: var(--mui-palette-text-primary);
+  --muted: var(--mui-palette-text-secondary);
+  --faint: var(--mui-palette-text-disabled);
+  --accent: var(--mui-palette-primary-main);
+  --accent-soft: var(--mui-palette-surface-accentSoft);
+  --popover: var(--mui-palette-background-paper);
+  --shadow: var(--mui-palette-surface-shadow);
+  --concept: var(--mui-palette-concept-main);
+  --concept-soft: var(--mui-palette-concept-soft);
+  --persona: var(--mui-palette-persona-main);
+  --persona-soft: var(--mui-palette-persona-soft);
+  --ready-low: var(--mui-palette-ready-low);
+  --ready-high: var(--mui-palette-ready-high);
+  --area: var(--mui-palette-area-bg);
+  --area-border: var(--mui-palette-area-border);
+  --lit-ring: var(--mui-palette-lit-ring);
+  --lit-row: var(--mui-palette-lit-row);
+  --warning: var(--mui-palette-warning-main);
+  --ok: var(--mui-palette-success-main);
+  --bad: var(--mui-palette-error-main);
+  --blocking: var(--mui-palette-impact-blocking);
+  --inconvenient: var(--mui-palette-impact-inconvenient);
 
   color-scheme: light;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #0b0a10;
-    --dot: #26212f;
-    --panel: rgb(22 19 30 / 0.74);
-    --border: #262130;
-    --border-strong: #342d42;
-    --text: #f4f1fa;
-    --muted: #aaa2bd;
-    --faint: #6f6882;
-    --accent: #a78bfa;
-    --accent-soft: rgb(167 139 250 / 0.12);
-    --popover: #14111b;
-    --shadow: 0 1px 2px rgb(0 0 0 / 0.4), 0 12px 32px -12px rgb(0 0 0 / 0.7);
-    --concept: #2dd4bf;
-    --concept-soft: rgb(45 212 191 / 0.1);
-    --persona: #60a5fa;
-    --persona-soft: rgb(96 165 250 / 0.12);
-    --ready-low: #aaa4ba;
-    --ready-high: #34d399;
-    --area: rgb(167 139 250 / 0.055);
-    --area-border: rgb(167 139 250 / 0.2);
-    --warning: #fbbf24;
-    --ok: #4ade80;
-    --bad: #f87171;
-    --blocking: #f97316;
-    --inconvenient: #d6c88f;
-
-    color-scheme: dark;
-  }
+:root.dark {
+  color-scheme: dark;
 }
 
 * {

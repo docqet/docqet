@@ -9,7 +9,8 @@ import theme from "./theme";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <ThemeProvider theme={theme}>
+    {/* Light or dark follows the system until someone picks one with the toggle in the top bar, which this browser remembers. */}
+    <ThemeProvider theme={theme} defaultMode="system" noSsr>
       <App />
     </ThemeProvider>
   </StrictMode>,

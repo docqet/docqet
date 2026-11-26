@@ -26,14 +26,6 @@ export type StabilityLevel = {
   forUsers: string;
   /** What engineers building on it can expect. */
   forEngineers: string;
-  /**
-   * Docket's stability palette: lilac grey, pink, blue, and green, the one
-   * place in src/design/ with colors of its own rather than palette roles.
-   * They're part of what a level is, so they look the same under every
-   * theme. `light` is for light surfaces and clears 4.5:1 on white; `dark` is
-   * for dark ones.
-   */
-  colors: { light: string; dark: string };
   /** GitHub label for issues and pull requests that target this level. */
   label: { name: string; color: string; description: string };
 };
@@ -49,7 +41,6 @@ export const STABILITY: Record<StabilityLevelId, StabilityLevel> = {
     bugs: "Only what's being shown is expected to work, and its data may be fake.",
     forUsers: "React to it and help choose the direction. Don't use it for real work, or trust the data it shows.",
     forEngineers: "Don't build on it. Expect it to be rewritten.",
-    colors: { light: "#6f6982", dark: "#aaa4ba" },
     label: {
       name: "stability: prototype",
       color: "6f6982",
@@ -66,7 +57,6 @@ export const STABILITY: Record<StabilityLevelId, StabilityLevel> = {
     bugs: "Expected, even in the main workflow.",
     forUsers: "Try it with real work and share feedback. Keep your current way of working as a fallback, and don't keep the only copy of anything there.",
     forEngineers: "Build on it only to experiment. Expect its interfaces to change.",
-    colors: { light: "#db2777", dark: "#f472b6" },
     label: {
       name: "stability: alpha",
       color: "db2777",
@@ -83,7 +73,6 @@ export const STABILITY: Record<StabilityLevelId, StabilityLevel> = {
     bugs: "Occasional, mostly at the edges, and fixed as they're found.",
     forUsers: "Use it for real work, with a fallback for anything critical.",
     forEngineers: "Build on it, and watch for changes. We aim to announce them ahead of time.",
-    colors: { light: "#2563eb", dark: "#60a5fa" },
     label: {
       name: "stability: beta",
       color: "2563eb",
@@ -101,7 +90,6 @@ export const STABILITY: Record<StabilityLevelId, StabilityLevel> = {
     bugs: "Rare, and fixed first.",
     forUsers: "Depend on it, including for business-critical work.",
     forEngineers: "Build on it. Its interfaces are stable, and changes come with notice and time to move.",
-    colors: { light: "#047857", dark: "#34d399" },
     label: {
       name: "stability: ga",
       color: "047857",
@@ -134,11 +122,13 @@ export function stabilityStep(id: StabilityMarkLevel): number {
   return STABILITY_LEVEL_IDS.indexOf(id as StabilityLevelId) + 1;
 }
 
-/** A level's color as the text color, in the shade for the color scheme it's in. */
+/*
+ * A level's color as the text color, from the theme's stability palette
+ * (lilac grey, pink, blue and green), in the shade for the color scheme.
+ */
 export function levelColor(id: StabilityMarkLevel) {
   if (id === PLANNED.id) return { color: "text.secondary" };
-  const { light, dark } = STABILITY[id].colors;
-  return (theme: Theme) => ({ color: light, ...theme.applyStyles("dark", { color: dark }) });
+  return (theme: Theme) => ({ color: theme.vars.palette.stability[id] });
 }
 
 /* A capability's level by name: "GA", or "Draft" for one declared and not started. */
