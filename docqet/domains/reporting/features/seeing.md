@@ -9,6 +9,7 @@ description: >-
 capabilities:
   - capability:overview
   - capability:readiness
+  - capability:improvements
   - capability:product-view
   - capability:local-viewer
   - capability:cli-reads
