@@ -1,3 +1,10 @@
+import Box from "@mui/material/Box";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
 import { InlineMarkdown } from "../../components/markdown/Markdown";
 import { DOC_KINDS, type DocKind, type Route } from "../../routes";
 import { Empty, PageHeader, Section, View } from "../../components/shell/layout";
@@ -25,24 +32,26 @@ export default function ProblemsPage({ state }: { state: DocketState; route: Rou
           const problems = state.problems.filter((p) => p.type === type).sort((a, b) => a.subject.localeCompare(b.subject));
           return (
             <Section key={type} title={TYPES[type]?.name ?? type} count={problems.length} note={TYPES[type]?.note}>
-              <table className="view-table ix-table">
-                <thead>
-                  <tr>
-                    <th className="ix-col-subject">About</th>
-                    <th>What's wrong</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {problems.map((p, i) => (
-                    <tr key={`${p.subject}:${i}`}>
-                      <td className="ix-col-subject">
-                        <Subject state={state} problem={p} />
-                      </td>
-                      <td>{p.message}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+              <TableContainer>
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell sx={{ width: "34%" }}>About</TableCell>
+                      <TableCell>What's wrong</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {problems.map((p, i) => (
+                      <TableRow key={`${p.subject}:${i}`}>
+                        <TableCell sx={{ width: "34%" }}>
+                          <Subject state={state} problem={p} />
+                        </TableCell>
+                        <TableCell>{p.message}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
             </Section>
           );
         })
@@ -84,7 +93,11 @@ function Subject({ state, problem }: { state: DocketState; problem: Problem }) {
     const doc = find(docsOf(state, type as DocKind), id);
     if (doc) return <DocLink kind={type as DocKind} id={doc.id} name={doc.name} />;
   }
-  return <code className="ix-raw">{problem.subject}</code>;
+  return (
+    <Box component="code" sx={{ fontFamily: "fontFamilyMono", fontSize: 12, color: "text.secondary", overflowWrap: "anywhere" }}>
+      {problem.subject}
+    </Box>
+  );
 }
 
 function docsOf(state: DocketState, kind: DocKind): Doc[] {

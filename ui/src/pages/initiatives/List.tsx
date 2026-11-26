@@ -1,15 +1,22 @@
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
 import { Term } from "../../components/term/Term";
 import { ReadinessMark } from "../../components/Readiness";
 import { docHref, type Route } from "../../routes";
 import { InitiativeIcon } from "../../components/shell/ScopeFilter";
 import { Empty, PageHeader, View } from "../../components/shell/layout";
 import { capabilitiesById, find, gapsById, type Capability, type DocketState, type Initiative } from "../../state";
-import { GapsCell, Num } from "../../components/indexParts";
+import { GapsCell, NameLink, Num, numSx, wideOnlySx } from "../../components/indexParts";
 
 /*
  * The bodies of work, such as the MVP, and how ready each is: a row each,
  * with how many capabilities are in it, who it's for, and the product gaps in its
- * capabilities. Like every page, it counts only the scope showing.
+ * capabilities. Like every page, it counts only the scope showing. A phone
+ * leaves out the counts.
  */
 export default function InitiativesPage({ state }: { state: DocketState; route: Route }) {
   return (
@@ -19,38 +26,40 @@ export default function InitiativesPage({ state }: { state: DocketState; route: 
         lede="Bodies of work, such as the MVP, and how ready each is. The scope at the top shows any one of them on every page."
       />
       {state.initiatives.length ? (
-        <table className="view-table ix-table">
-          <thead>
-            <tr>
-              <th>
-                <Term id="initiative" hoverOnly>
-                  Initiative
-                </Term>
-              </th>
-              <th>
-                <Term id="readiness" hoverOnly>
-                  Readiness
-                </Term>
-              </th>
-              <th className="num">
-                <Term id="capability" hoverOnly>
-                  Capabilities
-                </Term>
-              </th>
-              <th className="num">
-                <Term id="persona" hoverOnly>
-                  Personas
-                </Term>
-              </th>
-              <th>Product gaps in it</th>
-            </tr>
-          </thead>
-          <tbody>
-            {state.initiatives.map((i) => (
-              <Row key={i.id} state={state} initiative={i} />
-            ))}
-          </tbody>
-        </table>
+        <TableContainer>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>
+                  <Term id="initiative" hoverOnly>
+                    Initiative
+                  </Term>
+                </TableCell>
+                <TableCell>
+                  <Term id="readiness" hoverOnly>
+                    Readiness
+                  </Term>
+                </TableCell>
+                <TableCell align="right" sx={[numSx, wideOnlySx]}>
+                  <Term id="capability" hoverOnly>
+                    Capabilities
+                  </Term>
+                </TableCell>
+                <TableCell align="right" sx={[numSx, wideOnlySx]}>
+                  <Term id="persona" hoverOnly>
+                    Personas
+                  </Term>
+                </TableCell>
+                <TableCell>Product gaps in it</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {state.initiatives.map((i) => (
+                <Row key={i.id} state={state} initiative={i} />
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
       ) : (
         <Empty>No initiatives are written down yet.</Empty>
       )}
@@ -67,28 +76,22 @@ function Row({ state, initiative: i }: { state: DocketState; initiative: Initiat
   const personas = i.personas.filter((id) => find(state.personas, id)).length;
   const gaps = gapsById(state, [...new Set(capabilities.flatMap((c) => c.gaps))]);
   return (
-    <tr>
-      <td>
-        <a className="ix-persona" href={href}>
-          <InitiativeIcon size={20} />
-          <span className="ix-persona-text">
-            <span className="ix-doc-name">{name}</span>
-            {note ? <span className="ix-persona-role">{note}</span> : null}
-          </span>
-        </a>
-      </td>
-      <td>
+    <TableRow>
+      <TableCell>
+        <NameLink href={href} mark={<InitiativeIcon size={20} />} name={name} note={note} />
+      </TableCell>
+      <TableCell>
         <ReadinessMark readiness={i.readiness} of={`Readiness of ${name}`} />
-      </td>
-      <td className="num">
+      </TableCell>
+      <TableCell align="right" sx={[numSx, wideOnlySx]}>
         <Num n={capabilities.length} />
-      </td>
-      <td className="num">
+      </TableCell>
+      <TableCell align="right" sx={[numSx, wideOnlySx]}>
         <Num n={personas} />
-      </td>
-      <td>
+      </TableCell>
+      <TableCell>
         <GapsCell gaps={gaps} exposure={{ exposure: i.exposure, risk: i.readiness.gaps }} kind="product-gap" of={name} href={left} />
-      </td>
-    </tr>
+      </TableCell>
+    </TableRow>
   );
 }

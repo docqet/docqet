@@ -1,10 +1,16 @@
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
 import { Term } from "../../components/term/Term";
 import { PersonaAvatar, personaNameAndRole } from "../../components/Personas";
 import { ReadinessMark } from "../../components/Readiness";
 import { docHref, type Route } from "../../routes";
 import { Empty, PageHeader, View } from "../../components/shell/layout";
 import { find, gapsById, readyShare, type DocketState, type Persona } from "../../state";
-import { GapsCell, Num } from "../../components/indexParts";
+import { GapsCell, NameLink, Num, numSx, wideOnlySx } from "../../components/indexParts";
 import { InitiativeTags } from "../../components/Initiatives";
 
 /*
@@ -12,7 +18,8 @@ import { InitiativeTags } from "../../components/Initiatives";
  * persona, least ready first, by their readiness, with
  * how many capabilities serve them and the product gaps in those, the worst
  * one's impact beside them. Those with nothing started come first of all. Technical gaps are left out: they're what
- * only someone working on the code would notice.
+ * only someone working on the code would notice. A phone leaves out how many
+ * capabilities serve them.
  */
 export default function PersonasPage({ state }: { state: DocketState; route: Route }) {
   const share = new Map(state.personas.map((p) => [p, readyShare(p.readiness)]));
@@ -21,33 +28,35 @@ export default function PersonasPage({ state }: { state: DocketState; route: Rou
     <View title="Personas" wide>
       <PageHeader title="Personas" lede="Who does it serve, and is it ready for them? Least ready first." />
       {personas.length ? (
-        <table className="view-table ix-table">
-          <thead>
-            <tr>
-              <th>
-                <Term id="persona" hoverOnly>
-                  Persona
-                </Term>
-              </th>
-              <th>
-                <Term id="readiness" hoverOnly>
-                  Readiness
-                </Term>
-              </th>
-              <th className="num">
-                <Term id="capability" hoverOnly>
-                  Capabilities
-                </Term>
-              </th>
-              <th>Product gaps for them</th>
-            </tr>
-          </thead>
-          <tbody>
-            {personas.map((p) => (
-              <PersonaRow key={p.id} state={state} persona={p} />
-            ))}
-          </tbody>
-        </table>
+        <TableContainer>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>
+                  <Term id="persona" hoverOnly>
+                    Persona
+                  </Term>
+                </TableCell>
+                <TableCell>
+                  <Term id="readiness" hoverOnly>
+                    Readiness
+                  </Term>
+                </TableCell>
+                <TableCell align="right" sx={[numSx, wideOnlySx]}>
+                  <Term id="capability" hoverOnly>
+                    Capabilities
+                  </Term>
+                </TableCell>
+                <TableCell>Product gaps for them</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {personas.map((p) => (
+                <PersonaRow key={p.id} state={state} persona={p} />
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
       ) : (
         <Empty>No personas are written down yet.</Empty>
       )}
@@ -61,24 +70,18 @@ function PersonaRow({ state, persona }: { state: DocketState; persona: Persona }
   const capabilities = persona.capabilities.flatMap((id) => find(state.capabilities, id) ?? []);
   const gaps = gapsById(state, [...new Set(capabilities.flatMap((c) => c.gaps))]);
   return (
-    <tr>
-      <td>
-        <a className="ix-persona" href={docHref("persona", persona.id)}>
-          <PersonaAvatar persona={persona} size={36} />
-          <span className="ix-persona-text">
-            <span className="ix-doc-name">{name}</span>
-            {role ? <span className="ix-persona-role">{role}</span> : null}
-          </span>
-        </a>
+    <TableRow>
+      <TableCell>
+        <NameLink href={docHref("persona", persona.id)} mark={<PersonaAvatar persona={persona} size={36} />} name={name} note={role} />
         <InitiativeTags state={state} ids={persona.initiatives} block />
-      </td>
-      <td>
+      </TableCell>
+      <TableCell>
         <ReadinessMark readiness={persona.readiness} of={`Readiness for ${name}`} />
-      </td>
-      <td className="num">
+      </TableCell>
+      <TableCell align="right" sx={[numSx, wideOnlySx]}>
         <Num n={capabilities.length} />
-      </td>
-      <td>
+      </TableCell>
+      <TableCell>
         <GapsCell
           gaps={gaps}
           exposure={{ exposure: persona.exposure, risk: persona.readiness.gaps }}
@@ -86,7 +89,7 @@ function PersonaRow({ state, persona }: { state: DocketState; persona: Persona }
           of={`what serves ${name}`}
           href={docHref("persona", persona.id, "left")}
         />
-      </td>
-    </tr>
+      </TableCell>
+    </TableRow>
   );
 }

@@ -1,5 +1,9 @@
 import type { ReactNode } from "react";
 import ExpandMoreRoundedIcon from "@mui/icons-material/ExpandMoreRounded";
+import Box from "@mui/material/Box";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import { useTheme, type Theme } from "@mui/material/styles";
+import type { SystemStyleObject } from "@mui/system";
 import { Maturity } from "../../components/maturity/Maturity";
 import { plural } from "../../components/names";
 import { MaturityRing } from "../../components/maturity/MaturityRing";
@@ -22,7 +26,7 @@ import {
   type Domain,
   type Feature,
 } from "../../state";
-import { DocLink, GapsCell, LevelMark, PersonaFaces, ExposureStat } from "../../components/indexParts";
+import { DocLink, GapsCell, LevelMark, PersonaFaces, ExposureStat, ellipsisSx, whereSx } from "../../components/indexParts";
 import { InitiativeTags, initiativesOf } from "../../components/Initiatives";
 import { useStatusFor } from "../../model";
 import Skeleton from "@mui/material/Skeleton";
@@ -47,6 +51,8 @@ export default function FeaturesPage({ state }: { state: DocketState; route: Rou
   const asked = new URLSearchParams(window.location.search).get("group") as Group | null;
   const group: Group = asked && GROUPS.includes(asked) ? asked : "domain";
   const overall = state.status.maturity;
+  /* On a phone the header has no room beside the title, so the grouping goes under it. */
+  const phone = useMediaQuery(useTheme().breakpoints.down("sm"), { noSsr: true });
   return (
     <View title="Features" wide>
       <PageHeader
@@ -77,8 +83,13 @@ export default function FeaturesPage({ state }: { state: DocketState; route: Rou
             />
           </>
         }
-        actions={<GroupToggle group={group} />}
+        actions={phone ? undefined : <GroupToggle group={group} />}
       />
+      {phone ? (
+        <Box sx={{ mb: 2 }}>
+          <GroupToggle group={group} />
+        </Box>
+      ) : null}
       {!state.capabilities.length && !state.domains.length ? (
         <Empty>No domains, features or capabilities are written down yet.</Empty>
       ) : group === "domain" ? (
@@ -97,31 +108,108 @@ const GROUP_NAMES: Record<Group, string> = { domain: "Domain", stability: "Stabi
 /* Group by domain, stability or risk, as links that change `&group=`. */
 function GroupToggle({ group }: { group: Group }) {
   return (
-    <div className="ix-toggle" role="group" aria-label="Group by">
-      <span className="ix-toggle-label">Group by</span>
+    <Box role="group" aria-label="Group by" sx={{ display: "inline-flex", alignItems: "center", gap: "2px", fontSize: 13 }}>
+      <Box component="span" sx={{ mr: 0.75, color: "text.secondary" }}>
+        Group by
+      </Box>
       {GROUPS.map((g) => (
-        <a key={g} href={withParam("group", g === "domain" ? null : g)} aria-current={group === g ? "true" : undefined}>
+        <Box
+          component="a"
+          key={g}
+          href={withParam("group", g === "domain" ? null : g)}
+          aria-current={group === g ? "true" : undefined}
+          sx={{
+            py: 0.5,
+            px: 1.25,
+            border: 1,
+            borderColor: "divider",
+            borderRadius: "6px",
+            color: "text.secondary",
+            textDecoration: "none",
+            "&:hover": { color: "text.primary" },
+            "&[aria-current]": { borderColor: "primary.main", bgcolor: "surface.accentSoft", color: "primary.main", fontWeight: 600 },
+          }}
+        >
           {GROUP_NAMES[g]}
-        </a>
+        </Box>
       ))}
-    </div>
+    </Box>
   );
 }
+
+/*
+ * The tree's rows, its headings, folds and capabilities alike: a name, then
+ * the same columns at the right. On a phone the columns go on a line of
+ * their own under the name, still at the right, so they line up down the
+ * tree, and who it serves is left out.
+ */
+const rowSx: SystemStyleObject<Theme> = {
+  display: "flex",
+  flexWrap: { xs: "wrap", sm: "nowrap" },
+  alignItems: "center",
+  columnGap: 1.5,
+  rowGap: 0.25,
+  borderBottom: 1,
+  borderColor: "divider",
+};
+
+const capabilityRowSx: SystemStyleObject<Theme> = { ...rowSx, minHeight: 36, py: "3px", px: 1 };
+
+/* A row lit faintly under the pointer. */
+const hoverSx: SystemStyleObject<Theme> = {
+  "&:hover": { bgcolor: (t) => `color-mix(in srgb, ${t.vars.palette.text.primary} 2.5%, transparent)` },
+};
+
+/* On a phone, wide enough to fill the line beside a fold's chevron, so the columns go onto the next one. */
+const nameSx: SystemStyleObject<Theme> = {
+  flex: { xs: "1 1 calc(100% - 30px)", sm: 1 },
+  minWidth: 0,
+  display: "flex",
+  alignItems: "baseline",
+  gap: 1.25,
+  overflow: "hidden",
+};
+const markColumnSx: SystemStyleObject<Theme> = { flex: "none", display: "inline-flex", alignItems: "center" };
+const levelSx: SystemStyleObject<Theme> = { ...markColumnSx, width: { xs: 72, sm: 110 }, ml: { xs: "auto", sm: 0 } };
+const riskSx: SystemStyleObject<Theme> = { ...markColumnSx, width: { xs: 64, sm: 80 } };
+const leftSx: SystemStyleObject<Theme> = { flex: "none", width: { xs: 84, sm: 230 } };
+const whoSx: SystemStyleObject<Theme> = { flex: "none", width: 120, display: { xs: "none", sm: "block" } };
+
+/* A capability's or a fold's name, centered on the row, where the rest of the name's line sits on its baseline. */
+const nameLinkSx: SystemStyleObject<Theme> = { alignSelf: "center" };
 
 /* The names of the columns every capability row has, once, at the top. */
 function ColumnHeads({ first }: { first: ReactNode }) {
   return (
-    <div className="ix-cap ix-cap-head">
-      <span className="ix-cap-name">{first}</span>
-      <span className="ix-cap-level">
+    <Box
+      sx={{
+        ...capabilityRowSx,
+        minHeight: 0,
+        py: 1,
+        fontSize: 11,
+        fontWeight: 650,
+        letterSpacing: "0.06em",
+        textTransform: "uppercase",
+        whiteSpace: "nowrap",
+        color: "text.disabled",
+      }}
+    >
+      <Box component="span" sx={nameSx}>
+        {first}
+      </Box>
+      <Box component="span" sx={levelSx}>
         <Term id="stability" />
-      </span>
-      <span className="ix-cap-risk">
+      </Box>
+      <Box component="span" sx={riskSx}>
         <Term id="exposure" />
-      </span>
-      <span className="ix-cap-left">What's left</span>
-      <span className="ix-cap-who">Serves</span>
-    </div>
+      </Box>
+      <Box component="span" sx={leftSx}>
+        What's left
+      </Box>
+      <Box component="span" sx={whoSx}>
+        Serves
+      </Box>
+    </Box>
   );
 }
 
@@ -137,62 +225,105 @@ const levelIn = (c: Capability, domain?: string): CapabilityLevel => (domain && 
 function CapabilityRow({ state, capability, domain, where }: { state: DocketState; capability: Capability; domain?: string; where?: ReactNode }) {
   const personas = capability.personas.flatMap((id) => find(state.personas, id) ?? []);
   return (
-    <li className="ix-cap">
-      <span className="ix-cap-name">
-        <DocLink kind="capability" id={capability.id} name={capability.name} />
+    <Box component="li" sx={{ ...capabilityRowSx, ...hoverSx }}>
+      <Box component="span" sx={nameSx}>
+        <DocLink kind="capability" id={capability.id} name={capability.name} sx={nameLinkSx} />
         <InitiativeTags state={state} ids={capability.initiatives} />
-        {where ? <span className="ix-where">{where}</span> : null}
-      </span>
-      <span className="ix-cap-level">
+        {where ? (
+          <Box component="span" sx={{ ...whereSx, ...ellipsisSx }}>
+            {where}
+          </Box>
+        ) : null}
+      </Box>
+      <Box component="span" sx={levelSx}>
         <LevelMark name={capability.name} level={levelIn(capability, domain)} />
-      </span>
-      <span className="ix-cap-risk">
+      </Box>
+      <Box component="span" sx={riskSx}>
         <ExposureMark exposure={capability.exposure} risk={capability.risk} of={capability.name} />
-      </span>
-      <span className="ix-cap-left">
+      </Box>
+      <Box component="span" sx={leftSx}>
         <GapsCell
           gaps={[...new Set(gapsOn(state, capability))]}
           kind="gap"
           decisions={openDecisions(capability).length}
           href={docHref("capability", capability.id, "left")}
         />
-      </span>
-      <span className="ix-cap-who">
+      </Box>
+      <Box component="span" sx={whoSx}>
         <PersonaFaces personas={personas} />
-      </span>
-    </li>
+      </Box>
+    </Box>
+  );
+}
+
+/* A line under a fold when there's nothing in it. */
+function FoldEmpty({ children }: { children: ReactNode }) {
+  return (
+    <Box component="p" sx={{ m: 0, py: 1.25, px: 1, color: "text.secondary", fontSize: 13, borderBottom: 1, borderColor: "divider" }}>
+      {children}
+    </Box>
   );
 }
 
 /*
  * A row that folds what's under it, open to begin with: its `head`, then its
  * maturity and exposure under the capability rows' Stability and Exposure
- * columns.
+ * columns. A domain's row is a little larger, with more room above it, and
+ * what's under each is indented by about its chevron.
  */
 function FoldRow({
-  className,
+  domain = false,
   head,
   maturity,
   exposure,
   children,
 }: {
-  className: string;
+  domain?: boolean;
   head: ReactNode;
   maturity: ReactNode;
   exposure: ReactNode;
   children: ReactNode;
 }) {
   return (
-    <details className={`ix-fold ${className}`} open>
-      <summary>
-        <ExpandMoreRoundedIcon className="ix-chev" sx={{ fontSize: 18 }} />
-        <span className="ix-cap-name">{head}</span>
-        <span className="ix-cap-level">{maturity}</span>
-        <span className="ix-cap-risk">{exposure}</span>
-        <span className="ix-cap-left" />
-        <span className="ix-cap-who" />
-      </summary>
-      <div className="ix-fold-body">{children}</div>
+    <details open>
+      <Box
+        component="summary"
+        sx={{
+          ...rowSx,
+          ...hoverSx,
+          pt: domain ? "14px" : 1,
+          pr: 1,
+          pb: 1,
+          pl: 0,
+          fontSize: domain ? 15 : undefined,
+          listStyle: "none",
+          cursor: "pointer",
+          "&::-webkit-details-marker": { display: "none" },
+        }}
+      >
+        <ExpandMoreRoundedIcon
+          sx={{
+            flex: "none",
+            fontSize: 18,
+            color: "text.disabled",
+            transform: "rotate(-90deg)",
+            transition: "transform 0.12s",
+            "details[open] > summary > &": { transform: "none" },
+          }}
+        />
+        <Box component="span" sx={nameSx}>
+          {head}
+        </Box>
+        <Box component="span" sx={levelSx}>
+          {maturity}
+        </Box>
+        <Box component="span" sx={riskSx}>
+          {exposure}
+        </Box>
+        <Box component="span" sx={leftSx} />
+        <Box component="span" sx={whoSx} />
+      </Box>
+      <Box sx={{ pl: domain ? 2.75 : 3.25 }}>{children}</Box>
     </details>
   );
 }
@@ -200,12 +331,12 @@ function FoldRow({
 /* Each domain, with its parts of features and their capabilities, then any capabilities in no feature. */
 function DomainTree({ state }: { state: DocketState }) {
   return (
-    <div className="ix-tree">
+    <Box sx={{ fontSize: 13.5 }}>
       <ColumnHeads first="Domain, feature and capability" />
       {state.domains.map((d) => (
         <DomainBranch key={d.id} state={state} domain={d} />
       ))}
-    </div>
+    </Box>
   );
 }
 
@@ -215,7 +346,7 @@ function DomainBranch({ state, domain }: { state: DocketState; domain: Domain })
   const parts = features.map((f) => partOf(f, domain.id));
   return (
     <FoldRow
-      className="ix-domain"
+      domain
       maturity={
         domain.maturity === null ? null : (
           <MaturityRing
@@ -229,18 +360,18 @@ function DomainBranch({ state, domain }: { state: DocketState; domain: Domain })
         )
       }
       exposure={<ExposureMark exposure={domain.exposure} risk={domain.readiness.gaps} of={domain.name} />}
-      head={<DocLink kind="domain" id={domain.id} name={domain.name} />}
+      head={<DocLink kind="domain" id={domain.id} name={domain.name} sx={{ ...nameLinkSx, fontWeight: 700 }} />}
     >
-      {!features.length && !loose.length ? <p className="ix-empty">A part of the business the software doesn't serve yet.</p> : null}
+      {!features.length && !loose.length ? <FoldEmpty>A part of the business the software doesn't serve yet.</FoldEmpty> : null}
       {features.map((f) => (
         <FeatureBranch key={f.id} state={state} feature={f} domain={domain.id} />
       ))}
       {loose.length ? (
-        <div className="ix-loose">
-          <div className="ix-loose-head">
+        <div>
+          <Box sx={{ pt: 1.25, pr: 1, pb: 0.75, pl: 0, fontSize: 12.5, color: "text.secondary", borderBottom: 1, borderColor: "divider" }}>
             In no <Term id="feature">feature</Term>
-          </div>
-          <ul className="ix-caps">
+          </Box>
+          <ul>
             {loose.map((c) => (
               <CapabilityRow key={c.id} state={state} capability={c} domain={domain.id} />
             ))}
@@ -264,7 +395,6 @@ function FeatureBranch({ state, feature, domain }: { state: DocketState; feature
     : { exposure: feature.exposure, risk: feature.readiness.gaps };
   return (
     <FoldRow
-      className="ix-feature"
       maturity={
         part?.maturity == null ? null : (
           <MaturityRing
@@ -286,10 +416,22 @@ function FeatureBranch({ state, feature, domain }: { state: DocketState; feature
       }
       head={
         <>
-          <DocLink kind="feature" id={feature.id} name={feature.name} />
+          <DocLink kind="feature" id={feature.id} name={feature.name} sx={nameLinkSx} />
           <InitiativeTags state={state} ids={initiativesOf(state, capabilities)} />
           {elsewhere.length ? (
-            <span className="ix-meta">
+            <Box
+              component="span"
+              sx={(t) => ({
+                ...whereSx,
+                "& a": {
+                  color: "inherit",
+                  textDecoration: "underline",
+                  textDecorationColor: t.vars.palette.surface.borderStrong,
+                  textUnderlineOffset: "2px",
+                  "&:hover": { color: t.vars.palette.primary.main },
+                },
+              })}
+            >
               {"Also in "}
               {elsewhere.map((p, i) => (
                 <span key={p.domain}>
@@ -297,19 +439,19 @@ function FeatureBranch({ state, feature, domain }: { state: DocketState; feature
                   <a href={docHref("domain", p.domain)}>{domainName(state, p.domain)}</a>
                 </span>
               ))}
-            </span>
+            </Box>
           ) : null}
         </>
       }
     >
       {capabilities.length ? (
-        <ul className="ix-caps">
+        <ul>
           {capabilities.map((c) => (
             <CapabilityRow key={c.id} state={state} capability={c} domain={domain} />
           ))}
         </ul>
       ) : (
-        <p className="ix-empty">No capabilities here yet.</p>
+        <FoldEmpty>No capabilities here yet.</FoldEmpty>
       )}
     </FoldRow>
   );
@@ -330,14 +472,7 @@ function ByStability({ state }: { state: DocketState }) {
         if (!capabilities.length) return null;
         return (
           <Section key={level ?? "draft"} title={level ? STABILITY[level].name : "Draft"} count={capabilities.length}>
-            <div className="ix-tree">
-              <ColumnHeads first="Capability" />
-              <ul className="ix-caps">
-                {capabilities.map((c) => (
-                  <CapabilityRow key={c.id} state={state} capability={c} where={whereIs(state, c)} />
-                ))}
-              </ul>
-            </div>
+            <CapabilityList state={state} capabilities={capabilities} />
           </Section>
         );
       })}
@@ -366,18 +501,25 @@ function ByExposure({ state }: { state: DocketState }) {
       {groups.map(({ key, title, rows }) =>
         rows.length ? (
           <Section key={key} title={title} count={rows.length}>
-            <div className="ix-tree">
-              <ColumnHeads first="Capability" />
-              <ul className="ix-caps">
-                {rows.map(({ c }) => (
-                  <CapabilityRow key={c.id} state={state} capability={c} where={whereIs(state, c)} />
-                ))}
-              </ul>
-            </div>
+            <CapabilityList state={state} capabilities={rows.map(({ c }) => c)} />
           </Section>
         ) : null,
       )}
     </>
+  );
+}
+
+/* A group's capabilities, under the column headings, each saying where it is. */
+function CapabilityList({ state, capabilities }: { state: DocketState; capabilities: Capability[] }) {
+  return (
+    <Box sx={{ fontSize: 13.5 }}>
+      <ColumnHeads first="Capability" />
+      <ul>
+        {capabilities.map((c) => (
+          <CapabilityRow key={c.id} state={state} capability={c} where={whereIs(state, c)} />
+        ))}
+      </ul>
+    </Box>
   );
 }
 

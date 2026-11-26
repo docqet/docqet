@@ -1,5 +1,5 @@
 import { CapabilityStability } from "./CapabilityLabel";
-import type { ReactNode } from "react";
+import type { ChangeEvent, ReactNode } from "react";
 import BoltOutlinedIcon from "@mui/icons-material/BoltOutlined";
 import ExtensionOutlinedIcon from "@mui/icons-material/ExtensionOutlined";
 import HubOutlinedIcon from "@mui/icons-material/HubOutlined";
@@ -17,13 +17,61 @@ import { bareId, type CapabilityLevel, type Exposure, type Gap, type Level, type
 import { ExposureMark, RiskScore } from "./risk/RiskScore";
 import { Stat } from "./shell/layout";
 import Box from "@mui/material/Box";
+import type { Theme } from "@mui/material/styles";
+import type { SystemStyleObject } from "@mui/system";
 import { MaturityRing } from "./maturity/MaturityRing";
 import { fromCapabilities, type MaturitySubject } from "./popovers/MaturityDetails";
 import { MATURITY_BANDS } from "./maturity/maturity";
 import { levelColor } from "./stability/stability";
-import "./index.css";
 
 /* The pieces the index pages share: each kind's mark, counts of what's left, a level, personas, and a filter box. */
+
+/* What's faint: none of something, or nothing yet. */
+export const faintSx: SystemStyleObject<Theme> = { color: "text.disabled" };
+
+/* Text on one line, cut short with an ellipsis when there isn't room. */
+export const ellipsisSx: SystemStyleObject<Theme> = { minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" };
+
+/* A note beside or under a name, such as where something is: smaller, muted, and not bold even in a bold row. */
+export const whereSx: SystemStyleObject<Theme> = { color: "text.secondary", fontSize: 12.5, fontWeight: 400 };
+
+/* A number's cell, and its heading, which right-align (align="right") and never wrap. */
+export const numSx: SystemStyleObject<Theme> = { whiteSpace: "nowrap" };
+
+/* A table column a phone has no room for: its heading and cells show from sm up. */
+export const wideOnlySx: SystemStyleObject<Theme> = { display: { xs: "none", sm: "table-cell" } };
+
+/* Read out but not shown, such as how many a filter leaves. */
+export const visuallyHiddenSx: SystemStyleObject<Theme> = {
+  position: "absolute",
+  width: "1px",
+  height: "1px",
+  p: 0,
+  m: "-1px",
+  overflow: "hidden",
+  clip: "rect(0 0 0 0)",
+  whiteSpace: "nowrap",
+  border: 0,
+};
+
+/* A row's name as a link to its page: a picture or mark, then the name over a line saying more, such as a persona's role. */
+export function NameLink({ href, mark, name, note }: { href: string; mark: ReactNode; name: ReactNode; note?: ReactNode }) {
+  return (
+    <Box component="a" href={href} sx={{ display: "flex", alignItems: "center", gap: 1.25, minWidth: 0 }}>
+      {mark}
+      <Box component="span" sx={{ display: "flex", flexDirection: "column", minWidth: 0 }}>
+        <Box component="span" sx={ellipsisSx}>
+          {name}
+        </Box>
+        {note ? (
+          <Box component="span" sx={whereSx}>
+            {note}
+          </Box>
+        ) : null}
+      </Box>
+    </Box>
+  );
+}
 
 /* Each kind's mark, small, the same as everywhere else it's named. */
 export function KindIcon({ kind, size = 15 }: { kind: DocKind; size?: number }) {
@@ -51,13 +99,29 @@ export function KindIcon({ kind, size = 15 }: { kind: DocKind; size?: number }) 
   }
 }
 
-/* A doc's name as a link to its page, with its kind's mark before it. */
-export function DocLink({ kind, id, name, icon = true }: { kind: DocKind; id: string; name: ReactNode; icon?: boolean }) {
+/* A doc's name as a link to its page, with its kind's mark before it. `sx` adds to its look where it sits. */
+export function DocLink({ kind, id, name, icon = true, sx }: { kind: DocKind; id: string; name: ReactNode; icon?: boolean; sx?: SystemStyleObject<Theme> }) {
   return (
-    <a className="ix-doc" href={docHref(kind, id)}>
+    <Box
+      component="a"
+      href={docHref(kind, id)}
+      sx={{
+        display: "inline-flex",
+        alignItems: "center",
+        gap: "7px",
+        minWidth: 0,
+        color: "text.primary",
+        fontWeight: 600,
+        textDecoration: "none",
+        "&:hover": { color: "primary.main" },
+        ...sx,
+      }}
+    >
       {icon ? <KindIcon kind={kind} /> : null}
-      <span className="ix-doc-name">{name}</span>
-    </a>
+      <Box component="span" sx={ellipsisSx}>
+        {name}
+      </Box>
+    </Box>
   );
 }
 
@@ -71,10 +135,10 @@ export function MiniCount({ kind, n }: { kind: LeftKind | "gap"; n: number }) {
   const name = kind === "gap" ? (n === 1 ? "gap" : "gaps") : (n === 1 ? LEFT_KINDS[kind].one : LEFT_KINDS[kind].many).toLowerCase();
   return (
     <Tooltip title={`${n} ${name}`}>
-      <span className="ix-mini">
+      <Box component="span" sx={{ display: "inline-flex", alignItems: "center", gap: 0.5, fontVariantNumeric: "tabular-nums", color: "text.secondary" }}>
         <LeftMark kind={kind === "gap" ? "product-gap" : kind} size={13} decorative />
         {n}
-      </span>
+      </Box>
     </Tooltip>
   );
 }
@@ -105,7 +169,12 @@ export function GapsCell({
   decisions?: number;
   href?: string;
 }) {
-  if (!gaps.length && !decisions) return <span className="ix-none">None</span>;
+  if (!gaps.length && !decisions)
+    return (
+      <Box component="span" sx={faintSx}>
+        None
+      </Box>
+    );
   const counts = (
     <>
       <MiniCount kind={kind} n={gaps.length} />
@@ -113,11 +182,23 @@ export function GapsCell({
     </>
   );
   return (
-    <span className="ix-gaps">
+    <Box component="span" sx={{ display: "inline-flex", alignItems: "center", gap: 1.25, whiteSpace: "nowrap" }}>
       {href ? (
-        <a className="ix-gaps-link" href={href}>
+        /* The counts link to the page's What's left tab. */
+        <Box
+          component="a"
+          href={href}
+          sx={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "inherit",
+            textDecoration: "none",
+            /* Doubled, so it reads as the counts it holds even in a table cell, whose links are bold. */
+            "&&": { color: "inherit", fontWeight: "inherit", "&:hover": { color: "primary.main" } },
+          }}
+        >
           {counts}
-        </a>
+        </Box>
       ) : (
         counts
       )}
@@ -126,7 +207,7 @@ export function GapsCell({
       ) : gaps.length && risk ? (
         <RiskScore risk={risk} of={of ?? "these"} />
       ) : null}
-    </span>
+    </Box>
   );
 }
 
@@ -135,31 +216,76 @@ export function LevelMark({ name, level }: { name: string; level: CapabilityLeve
   return <CapabilityStability level={level} name={name} />;
 }
 
-/* The personas something serves, as a row of small pictures, each linking to their page; past `max`, how many more. */
+/* The personas something serves, as a row of small, overlapping pictures, each linking to their page; past `max`, how many more. */
 export function PersonaFaces({ personas, max = 4 }: { personas: Persona[]; max?: number }) {
-  if (!personas.length) return <span className="ix-none">No one yet</span>;
+  if (!personas.length)
+    return (
+      <Box component="span" sx={faintSx}>
+        No one yet
+      </Box>
+    );
   const shown = personas.slice(0, max);
   return (
-    <span className="ix-faces">
-      {shown.map((p) => (
+    <Box component="span" sx={{ display: "inline-flex", alignItems: "center" }}>
+      {shown.map((p, i) => (
         <Tooltip key={p.id} title={p.name}>
-          <a href={docHref("persona", p.id)} aria-label={p.name}>
+          <Box
+            component="a"
+            href={docHref("persona", p.id)}
+            aria-label={p.name}
+            sx={{
+              display: "inline-flex",
+              ml: i ? "-5px" : 0,
+              borderRadius: "50%",
+              /* A ring in the page's color, so overlapping pictures stay apart; in the accent under the pointer. */
+              boxShadow: (t) => `0 0 0 2px ${t.vars.palette.background.default}`,
+              "&:hover": { position: "relative", boxShadow: (t) => `0 0 0 2px ${t.vars.palette.primary.main}` },
+            }}
+          >
             <PersonaAvatar persona={p} size={22} />
-          </a>
+          </Box>
         </Tooltip>
       ))}
-      {personas.length > max ? <span className="ix-faces-more">+{personas.length - max}</span> : null}
-    </span>
+      {personas.length > max ? (
+        <Box component="span" sx={{ ml: 0.75, fontSize: 12, color: "text.secondary" }}>
+          +{personas.length - max}
+        </Box>
+      ) : null}
+    </Box>
   );
 }
 
 /* A box to narrow a long list by typing. */
 export function FilterBox({ value, onChange, placeholder }: { value: string; onChange: (value: string) => void; placeholder: string }) {
   return (
-    <label className="ix-filter">
+    <Box
+      component="label"
+      sx={{
+        display: "inline-flex",
+        alignItems: "center",
+        gap: 0.75,
+        width: "min(360px, 100%)",
+        py: 0.75,
+        px: 1.25,
+        border: 1,
+        borderColor: "surface.borderStrong",
+        borderRadius: "8px",
+        bgcolor: "background.paper",
+        /* The box's border is the input's focus ring. */
+        "&:focus-within": { borderColor: "primary.main" },
+      }}
+    >
       <SearchRoundedIcon sx={{ fontSize: 17, color: "text.secondary" }} />
-      <input type="search" value={value} placeholder={placeholder} aria-label={placeholder} onChange={(e) => onChange(e.target.value)} />
-    </label>
+      <Box
+        component="input"
+        type="search"
+        value={value}
+        placeholder={placeholder}
+        aria-label={placeholder}
+        onChange={(e: ChangeEvent<HTMLInputElement>) => onChange(e.target.value)}
+        sx={{ flex: 1, minWidth: 0, border: 0, outline: 0, bgcolor: "transparent", color: "text.primary", font: "inherit", fontSize: 13.5 }}
+      />
+    </Box>
   );
 }
 
@@ -171,7 +297,11 @@ export const matches = (query: string, doc: { id: string; name: string }, more =
 
 /* A plain number, faint at zero. */
 export function Num({ n, children }: { n: number; children?: ReactNode }) {
-  return <span className={n ? undefined : "ix-none"}>{children ?? n}</span>;
+  return (
+    <Box component="span" sx={n ? undefined : faintSx}>
+      {children ?? n}
+    </Box>
+  );
 }
 
 /* By name, A to Z. */
@@ -205,12 +335,25 @@ export function MaturityStat({
 }) {
   const across = fromCapabilities(subject) ? (count === 1 ? "1 capability" : `${count} capabilities`) : count === 1 ? "1 feature" : `${count} features`;
   if (maturity === null || band === null)
-    return <Stat label="Maturity" term="maturity" value={<span className="ix-none">None yet</span>} note="Nothing has a level yet" href={href} />;
+    return (
+      <Stat
+        label="Maturity"
+        term="maturity"
+        value={
+          <Box component="span" sx={faintSx}>
+            None yet
+          </Box>
+        }
+        note="Nothing has a level yet"
+        href={href}
+      />
+    );
   return (
     <Stat
       label="Maturity"
       term="maturity"
       value={
+        /* Stat lays out .stat-maturity as it does the other figures: ring, percentage, then the band. */
         <Box component="span" className="stat-maturity" sx={levelColor(band)}>
           <MaturityRing progress={maturity} subject={subject} count={count} size={22} focusable={!href} label={`Maturity of ${of}`} spread={spread} />
           <strong>{MATURITY_BANDS[band]}</strong>

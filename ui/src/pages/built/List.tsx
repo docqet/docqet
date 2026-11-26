@@ -1,10 +1,17 @@
+import Box from "@mui/material/Box";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
 import { plural } from "../../components/names";
 import { Term } from "../../components/term/Term";
 import { Excerpt } from "../../components/markdown/Markdown";
 import { docHref, type Route } from "../../routes";
 import { Empty, PageHeader, Tabs, View, currentTab, type TabDef } from "../../components/shell/layout";
 import { gapsById, type DocketState, type TechnicalDoc, type TechnicalKind } from "../../state";
-import { DocLink, GapsCell, Num } from "../../components/indexParts";
+import { DocLink, GapsCell, Num, numSx, whereSx, wideOnlySx } from "../../components/indexParts";
 
 /*
  * How the software is meant to be built: its mechanisms and its components,
@@ -32,51 +39,62 @@ export default function BuiltPage({ state, route }: { state: DocketState; route:
   );
 }
 
+/* A row each, worst gap first. A phone leaves out the counts of tradeoffs and outcomes. */
 function TechnicalTable({ state, kind, docs }: { state: DocketState; kind: TechnicalKind; docs: TechnicalDoc[] }) {
   const risk = (d: TechnicalDoc) => d.risk.score ?? -1;
   const rows = [...docs].sort((a, b) => risk(b) - risk(a) || b.gaps.length - a.gaps.length);
   return (
-    <table className="view-table ix-table">
-      <thead>
-        <tr>
-          <th>{kind === "component" ? "Component" : "Mechanism"}</th>
-          <th>{kind === "component" ? "Relied on by" : "Applies to"}</th>
-          <th>
-            <Term id="technical-gap" hoverOnly>
-              Technical gaps
-            </Term>
-          </th>
-          <th className="num">
-            <Term id="tradeoff" hoverOnly>
-              Tradeoffs
-            </Term>
-          </th>
-          <th className="num">Outcomes met</th>
-        </tr>
-      </thead>
-      <tbody>
-        {rows.map((d) => (
-          <tr key={d.id}>
-            <td className="ix-tech-name">
-              <DocLink kind={kind} id={d.id} name={d.name} />
-              <Excerpt text={d.description} lines={1} className="ix-tech-desc" />
-            </td>
-            <td className="ix-nowrap">
-              {plural(d.capabilities.length, "capability", "capabilities")}
-              {kind === "mechanism" ? <span className="ix-where">{d.applies === "product" ? "Across its product" : "Across its project"}</span> : null}
-            </td>
-            <td className="ix-nowrap">
-              <GapsCell gaps={gapsById(state, d.gaps)} risk={d.risk} kind="technical-gap" of={d.name} href={docHref(d.kind, d.id, "left")} />
-            </td>
-            <td className="num">
-              <Num n={d.tradeoffs.length} />
-            </td>
-            <td className="num">
-              <Num n={d.meets.length} />
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
+    <TableContainer>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell>{kind === "component" ? "Component" : "Mechanism"}</TableCell>
+            <TableCell>{kind === "component" ? "Relied on by" : "Applies to"}</TableCell>
+            <TableCell>
+              <Term id="technical-gap" hoverOnly>
+                Technical gaps
+              </Term>
+            </TableCell>
+            <TableCell align="right" sx={[numSx, wideOnlySx]}>
+              <Term id="tradeoff" hoverOnly>
+                Tradeoffs
+              </Term>
+            </TableCell>
+            <TableCell align="right" sx={[numSx, wideOnlySx]}>
+              Outcomes met
+            </TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {rows.map((d) => (
+            <TableRow key={d.id}>
+              <TableCell sx={{ width: "40%" }}>
+                <DocLink kind={kind} id={d.id} name={d.name} />
+                <Box sx={{ mt: "2px", color: "text.secondary", fontSize: 12.5 }}>
+                  <Excerpt text={d.description} lines={1} />
+                </Box>
+              </TableCell>
+              <TableCell sx={{ whiteSpace: "nowrap" }}>
+                {plural(d.capabilities.length, "capability", "capabilities")}
+                {kind === "mechanism" ? (
+                  <Box component="span" sx={{ ...whereSx, display: "block" }}>
+                    {d.applies === "product" ? "Across its product" : "Across its project"}
+                  </Box>
+                ) : null}
+              </TableCell>
+              <TableCell sx={{ whiteSpace: "nowrap" }}>
+                <GapsCell gaps={gapsById(state, d.gaps)} risk={d.risk} kind="technical-gap" of={d.name} href={docHref(d.kind, d.id, "left")} />
+              </TableCell>
+              <TableCell align="right" sx={[numSx, wideOnlySx]}>
+                <Num n={d.tradeoffs.length} />
+              </TableCell>
+              <TableCell align="right" sx={[numSx, wideOnlySx]}>
+                <Num n={d.meets.length} />
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
   );
 }
