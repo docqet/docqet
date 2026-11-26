@@ -406,7 +406,7 @@ always be rebuilt from the repository.
 | Part                  | Today                                                                                                                                                                 |
 | --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Spec                  | A draft for review, with example projects laid out as repositories in [`examples/`](examples/). See [`spec/`](spec/).                                                |
-| `docket`              | Scaffolded: every command drafted in [`cmd/docket/`](cmd/docket/) exists with its flags, but only `serve` and `ui` do anything yet. The examples' `state.json` files are written by hand to show what indexing would produce. |
+| `docket`              | Indexes and checks a project, and applies its states to the server, which keeps them in SQLite and checks them with the same check. The rest of the commands drafted in [`cmd/docket/`](cmd/docket/) exist with their flags, and answer that they aren't built yet. The examples' `state.json` files are written by hand to show what indexing should produce. |
 | UI                    | An early UI in TypeScript that reads `state.json` files directly and works out maturity, readiness and risk itself, until `docket` serves them. See [`ui/`](ui/).     |
 | Agent development kit | A first draft for any agent: an `AGENTS.md` block and a `docket` skill, written for `docket` as drafted, so it can't be installed or used until `docket` is built. See [`kit/`](kit/). |
 
@@ -454,13 +454,32 @@ make ui-build
 go run ./cmd/docket -C examples/hotel-bookings ui
 ```
 
-`docket serve` reads these, each also a flag:
+Index and check a project, then send its state to a local server. The
+examples are folders in this repository, so `apply` sends their state at each
+commit of it:
 
-| Variable     | Flag           | Default | What it does                                     |
-| ------------ | -------------- | ------- | ------------------------------------------------ |
-| `PORT`       | `--port`       | `8080`  | The port it listens on                           |
-| `LOG_LEVEL`  | `--log-level`  | `info`  | The lowest level logged: debug, info, warn, error |
-| `LOG_FORMAT` | `--log-format` | `json`  | `json` for log pipelines, `text` for reading     |
+```sh
+go run ./cmd/docket -C examples/hotel-bookings check          # its problems, exit 1 if any
+go run ./cmd/docket -C examples/hotel-bookings index --stdout # its state
+make run                                                      # migrate, then serve on localhost:8080
+DOCKET_SERVER=http://localhost:8080 go run ./cmd/docket -C examples/hotel-bookings apply
+curl localhost:8080/v1/projects/hotel-bookings/state          # the state the server keeps
+```
+
+`docket index` without `--stdout` writes over an example's hand-written
+`state.json`.
+
+`docket serve` and `docket migrate` read these, each also a flag:
+
+| Variable        | Flag           | Default          | What it does                                      |
+| --------------- | -------------- | ---------------- | ------------------------------------------------- |
+| `PORT`          | `--port`       | `8080`           | The port `serve` listens on                       |
+| `LOG_LEVEL`     | `--log-level`  | `info`           | The lowest level logged: debug, info, warn, error |
+| `LOG_FORMAT`    | `--log-format` | `json`           | `json` for log pipelines, `text` for reading      |
+| `DATABASE_PATH` | `--database`   | `data/docket.db` | The server's SQLite database                      |
+
+`docket apply` sends to the server in the project's `docket.yaml`, as
+`server:`, or in `DOCKET_SERVER`, which wins.
 
 `go build` embeds the UI from `ui/dist`, so run `make ui-build` first to
 serve the real UI. Docker always builds it.

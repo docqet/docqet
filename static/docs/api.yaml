@@ -3,9 +3,9 @@ info:
   title: Docket API
   description: >-
     The Docket server's API: what software can do, who it serves, and how
-    ready it is, for the projects applied to it. Only the server's health is
-    served so far. The endpoints the CLI sends states through and the
-    resources the UI reads come next, as
+    ready it is, for the projects applied to it. So far it serves its health,
+    and the endpoints the CLI sends each project's states through and reads
+    them back from. The resources the UI reads come next, as
     [the plan](https://github.com/exalynt/docket/blob/main/docs/architecture/api.md)
     describes.
 
@@ -53,6 +53,18 @@ servers:
 tags:
   - name: Health
     description: Service availability checks.
+  - name: Projects
+    description: >-
+      Each project's states, one per commit on its main branch, as
+      `docket apply` sends them and the CLI reads them back.
 paths:
   /readyz:
     $ref: "./paths/health/readyz.yml"
+  /projects/{project}:
+    $ref: "./paths/projects/project.yml"
+  /projects/{project}/state:
+    $ref: "./paths/projects/state.yml"
+  /projects/{project}/commits/{sha}:
+    $ref: "./paths/projects/commit.yml"
+  /projects/{project}/commits/{sha}/state:
+    $ref: "./paths/projects/commit-state.yml"

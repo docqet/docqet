@@ -1,12 +1,27 @@
 services:
-  app:
-    build:
+  # Brings the database up to this version's schema, then exits. Migrations
+  # are a step of their own, so the app waits for it rather than migrating as
+  # it starts.
+  migrate:
+    build: &build
       context: .
       dockerfile: Dockerfile
       target: runner
+    command: ["docket", "migrate"]
+    environment:
+      DATABASE_PATH: /var/lib/docket/docket.db
+    volumes:
+      - docket-data:/var/lib/docket
+
+  app:
+    build: *build
     command: ["docket", "serve"]
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
     environment:
       PORT: "8080"
+      DATABASE_PATH: /var/lib/docket/docket.db
     # The server's SQLite database lives on the docket-data volume, so it
     # survives restarts; `docker compose down -v` wipes it.
     volumes:

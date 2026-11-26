@@ -4,7 +4,14 @@ _How the server keeps what it's sent: repositories, SQLite, and keeping states
 small. Part of [how `docket` is built](README.md)._
 
 The server keeps what it's sent in SQLite, behind repositories, as the api
-repository does.
+repository does. The state repository is built, storing each distinct state
+once by its hash. The results and changes repositories are still to come.
+
+**Code:** `internal/repositories` (each repository's interface in a file of
+its own, and what they share in `shared.go`), `internal/repositories/sqlite`
+(each implementation, in a file of the same name), `internal/database`
+(opening the database, and its migrations), `internal/services` (what to
+store, and when).
 
 ## Repositories
 
@@ -67,9 +74,16 @@ placeholders, named for now by what they hold (see
 
 - **The driver is `modernc.org/sqlite`**, which is pure Go, so the image still
   builds with `CGO_ENABLED=0`.
+- **`internal/database` opens it and keeps its schema up to date**, as the
+  api's does. Its goose migrations are in `internal/database/migrations/`, in
+  a folder for each driver: `migrations/sqlite/` for now.
 - **Migrations run from an explicit command**, `docket migrate`, never when
-  the server starts, as the api's rule says. Compose and any deployment run it
-  before `docket serve`. It joins the command draft when the store is built.
+  the server starts, as the api's rule says. `docket serve` refuses to start
+  on a database that's behind. Compose runs `migrate` as a service of its own
+  that the app waits for, and `make run` runs it first.
+- **The database is one file**, at `DATABASE_PATH`: `data/docket.db` for a
+  local run, ignored by git, and `/var/lib/docket/docket.db` on a volume in
+  Compose.
 - **Paginating in SQL uses `turn`'s store adapter.** It has no SQLite dialect,
   so if neither of its dialects renders SQLite's keyset queries correctly, we
   write one, as its `Dialect` interface allows.

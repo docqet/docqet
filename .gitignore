@@ -17,6 +17,9 @@ compose.override.yml
 /bin/
 /docket
 
+# The local server's SQLite database, from `make run`.
+/data/
+
 # The docs linter's dependencies, from the root package.json.
 node_modules/
 

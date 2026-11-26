@@ -1,9 +1,10 @@
 # How `docket` is built
 
 _Decisions and direction for `docket`'s Go code: where its logic lives, how
-the CLI and the server share it, and the API the UI reads. Only the scaffold
-exists today (see [the command draft](../../cmd/docket/README.md)). Everything
-else here is the plan, and may change as the prototype teaches us._
+the CLI and the server share it, and the API the UI reads. Indexing,
+checking and applying states to the server are built. Everything else here
+is the plan, and may change as the prototype teaches us. [The order of
+work](#order-of-work) says which is which._
 
 **Contents:** [Layers](#layers) · [The parts](#the-parts) · [Order of work](#order-of-work) · [Open decisions](#open-decisions) · [Left out for now](#left-out-for-now)
 
@@ -18,7 +19,8 @@ internal/commands, internal/handlers/http     thin: parse input, call a service,
         │
 internal/services                             orchestration: where states come from, what to do with them
         │
-internal/state, index, combine, derive, diff  the spec in Go: pure functions, no I/O
+internal/state, index, check, combine,        the spec in Go: pure functions, no I/O
+derive, diff
         │
 fs.FS, internal/git, repositories/sqlite,     I/O, behind interfaces, each added when a command needs it
 a client for the server
@@ -42,13 +44,14 @@ a client for the server
 
 The core's packages:
 
-| Package   | Does                                                                                                 | Built with                      |
-| --------- | ---------------------------------------------------------------------------------------------------- | ------------------------------- |
-| `state`   | The types of `state.json`, as the [spec](../../spec/README.md#index-output) defines them                | `docket index`                  |
-| `index`   | Reads a project's docs and annotations, and works out evidence, reverse links and problems           | `docket index`                  |
-| `combine` | Puts several projects of one product together, as [Combining](../../spec/README.md#combining) describes | `--product`, the server's reads |
-| `derive`  | Works out maturity, readiness, risk and exposure                                                     | `docket status`, the API        |
-| `diff`    | Compares two states, with the trailers between them                                                  | `docket diff`, `log`, `preview` |
+| Package   | Does                                                                                                    | Built with                          |
+| --------- | ------------------------------------------------------------------------------------------------------- | ----------------------------------- |
+| `state`   | The types of `state.json`, as the [spec](../../spec/README.md#index-output) defines them                | `docket index`                      |
+| `index`   | Reads a project's docs and annotations, and works out evidence, reverse links and problems              | `docket index`                      |
+| `check`   | Finds the problems a state shows on its own, for the CLI and the server alike                           | `docket check`, `apply`, the server |
+| `combine` | Puts several projects of one product together, as [Combining](../../spec/README.md#combining) describes | `--product`, the server's reads     |
+| `derive`  | Works out maturity, readiness, risk and exposure                                                        | `docket status`, the API            |
+| `diff`    | Compares two states, with the trailers between them                                                     | `docket diff`, `log`, `preview`     |
 
 Each is created when the command that needs it is built, not before.
 
@@ -68,14 +71,16 @@ Each is created when the command that needs it is built, not before.
 
 Each step builds only what its commands need:
 
-1. **`state` and `index`**, with `docket index`, checked against the
+1. **Built: `state`, `index` and `check`**, with `docket index` and
+   `docket check` over the working tree or a commit, checked against the
    examples.
-2. **`check`** and the reads over the working tree: the read service, its
-   working tree source, and `derive` as `status` and `list` need it.
+2. **The reads over the working tree**: the read service, its working tree
+   source, and `derive` as `status` and `list` need it.
 3. **`docket ui` serving the API** over the working tree, re-indexing as files
    change.
-4. **The server's store**: `docket migrate`, the state and results
-   repositories, and the whole-state endpoints, with `apply` and `results`.
+4. **The server's store.** Built: `docket migrate`, the state repository, the
+   whole-state endpoints and `apply`. Still to come: results, with their
+   repository and `docket results`.
 5. **The resources**, then the UI moving to them, then the make targets that
    load the examples.
 6. **History**: git as an `fs.FS`, `diff`, `log`, `history` and `preview`,

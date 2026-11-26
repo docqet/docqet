@@ -8,6 +8,7 @@ import (
 	"errors"
 	"log/slog"
 	"net/http"
+	"sync"
 	"time"
 
 	"github.com/alexliesenfeld/health"
@@ -23,27 +24,45 @@ const healthCheckTimeout = time.Second
 var errUnhealthy = errors.New("unhealthy")
 
 // HealthHandler serves the process's readiness probe, for what the process
-// runs: one check for each of its servers. Dependencies get checks of their
-// own once the server has any, such as its SQLite database.
+// runs: one check for each of its servers, and one for each dependency they
+// can't serve without, such as the SQLite database.
 //
 // Checks are added while the server is built, and Start must be called once
 // they all have, before it serves.
 type HealthHandler struct {
-	logger  *slog.Logger
-	servers []health.Check
-	ready   http.Handler
+	logger       *slog.Logger
+	servers      []health.Check
+	dependencies []health.Check
+	ready        http.Handler
+
+	mu        sync.Mutex
+	provider  map[string]string
+	latencies map[string]time.Duration
 }
 
 // NewHealthHandler constructs a HealthHandler with no checks. logger records
 // why a check failed.
 func NewHealthHandler(logger *slog.Logger) *HealthHandler {
-	return &HealthHandler{logger: logger}
+	return &HealthHandler{logger: logger, provider: map[string]string{}, latencies: map[string]time.Duration{}}
 }
 
 // AddServer adds a check for one of the process's servers, reported under
 // name: up while check returns nil, and down when it returns an error.
 func (h *HealthHandler) AddServer(name string, check func(ctx context.Context) error) {
-	h.servers = append(h.servers, health.Check{
+	h.servers = append(h.servers, h.check(name, check))
+}
+
+// AddDependency adds a check for a dependency the servers use, provided by
+// provider (such as "sqlite"), reported under name: up while check returns
+// nil, and down when it returns an error.
+func (h *HealthHandler) AddDependency(name, provider string, check func(ctx context.Context) error) {
+	h.provider[name] = provider
+	h.dependencies = append(h.dependencies, h.check(name, h.timed(name, check)))
+}
+
+// check wraps check so a failure is logged, and reported only as unhealthy.
+func (h *HealthHandler) check(name string, check func(ctx context.Context) error) health.Check {
+	return health.Check{
 		Name: name,
 		Check: func(ctx context.Context) error {
 			if err := check(ctx); err != nil {
@@ -52,15 +71,29 @@ func (h *HealthHandler) AddServer(name string, check func(ctx context.Context) e
 			}
 			return nil
 		},
-	})
+	}
+}
+
+// timed wraps check so how long each call takes, failed or not, is kept as
+// name's latency.
+func (h *HealthHandler) timed(name string, check func(ctx context.Context) error) func(ctx context.Context) error {
+	return func(ctx context.Context) error {
+		start := time.Now()
+		err := check(ctx)
+		h.mu.Lock()
+		h.latencies[name] = time.Since(start)
+		h.mu.Unlock()
+		return err
+	}
 }
 
 // Start builds the checker from the checks added so far.
 func (h *HealthHandler) Start() {
 	h.ready = health.NewHandler(health.NewChecker(
 		health.WithTimeout(healthCheckTimeout),
-		health.WithChecks(h.servers...),
-	), health.WithResultWriter(healthResultWriter{}))
+		health.WithCacheDuration(time.Second),
+		health.WithChecks(append(append([]health.Check{}, h.servers...), h.dependencies...)...),
+	), health.WithResultWriter(healthResultWriter{h}))
 }
 
 // RegisterRoutes mounts the readiness probe. It's the only one anything
@@ -69,7 +102,7 @@ func (h *HealthHandler) RegisterRoutes(r chi.Router) {
 	r.Get("/readyz", h.GetReady)
 }
 
-// GetReady runs the server checks and reports each one's status and the
+// GetReady runs the server and dependency checks and reports each one's status and the
 // overall status: 200 when all are up, 503 when any is down. Results are
 // cached for a second.
 func (h *HealthHandler) GetReady(w http.ResponseWriter, r *http.Request) {
@@ -77,8 +110,11 @@ func (h *HealthHandler) GetReady(w http.ResponseWriter, r *http.Request) {
 }
 
 // healthResultWriter writes a result in the same shape as the api
-// repository's health endpoints.
-type healthResultWriter struct{}
+// repository's health endpoints, with each dependency's provider and last
+// latency.
+type healthResultWriter struct {
+	h *HealthHandler
+}
 
 // healthResult is the JSON body of the health endpoint.
 type healthResult struct {
@@ -89,19 +125,27 @@ type healthResult struct {
 // healthCheckResult is one check in a healthResult.
 type healthCheckResult struct {
 	Status    health.AvailabilityStatus `json:"status"`
+	Provider  string                    `json:"provider,omitempty"`
 	Timestamp time.Time                 `json:"timestamp,omitzero"`
 	Error     string                    `json:"error,omitempty"`
+	LatencyMS *int64                    `json:"latency_ms,omitempty"`
 }
 
-func (healthResultWriter) Write(result *health.CheckerResult, statusCode int, w http.ResponseWriter, _ *http.Request) error {
+func (rw healthResultWriter) Write(result *health.CheckerResult, statusCode int, w http.ResponseWriter, _ *http.Request) error {
 	body := healthResult{Status: result.Status, Details: make(map[string]healthCheckResult, len(result.Details))}
+	rw.h.mu.Lock()
 	for name, check := range result.Details {
-		c := healthCheckResult{Status: check.Status, Timestamp: check.Timestamp}
+		c := healthCheckResult{Status: check.Status, Provider: rw.h.provider[name], Timestamp: check.Timestamp}
 		if check.Error != nil {
 			c.Error = check.Error.Error()
 		}
+		if latency, ok := rw.h.latencies[name]; ok {
+			ms := latency.Milliseconds()
+			c.LatencyMS = &ms
+		}
 		body.Details[name] = c
 	}
+	rw.h.mu.Unlock()
 
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(statusCode)

@@ -1,0 +1,23 @@
+get:
+  operationId: getLatestState
+  x-stability: prototype
+  summary: Get a project's latest state
+  description: >-
+    The project's state at its latest commit by commit time, whole, as
+    `state.json` holds it. Its problems are the ones the server found when it
+    was applied.
+  tags:
+    - Projects
+  # No sign-in yet: a server is only reachable by its client's people.
+  security: []
+  parameters:
+    - $ref: "../../schemas.yml#/components/parameters/Project"
+  responses:
+    "200":
+      description: The state.
+      content:
+        application/json:
+          schema:
+            $ref: "../../schemas.yml#/components/schemas/State"
+    "404":
+      $ref: "../../schemas.yml#/components/responses/NotFound"

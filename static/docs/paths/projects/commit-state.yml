@@ -1,0 +1,23 @@
+get:
+  operationId: getCommitState
+  x-stability: prototype
+  summary: Get a project's state at a commit
+  description: >-
+    The project's state at one of its applied commits, whole, as `state.json`
+    holds it.
+  tags:
+    - Projects
+  # No sign-in yet: a server is only reachable by its client's people.
+  security: []
+  parameters:
+    - $ref: "../../schemas.yml#/components/parameters/Project"
+    - $ref: "../../schemas.yml#/components/parameters/SHA"
+  responses:
+    "200":
+      description: The state.
+      content:
+        application/json:
+          schema:
+            $ref: "../../schemas.yml#/components/schemas/State"
+    "404":
+      $ref: "../../schemas.yml#/components/responses/NotFound"

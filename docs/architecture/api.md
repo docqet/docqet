@@ -13,12 +13,20 @@ A state is the unit the CLI sends and receives: one project, at one commit.
 ```text
 PUT /v1/projects/{project}/commits/{sha}           apply: the state, its parents, commit time and trailers
 PUT /v1/projects/{project}/commits/{sha}/results   results: JUnit or QA
+GET /v1/projects/{project}                         the project, with its latest commit, where apply starts from
 GET /v1/projects/{project}/state                   the latest applied state, whole
+GET /v1/projects/{project}/commits/{sha}           a commit, without its state, so apply can skip one already sent
 GET /v1/projects/{project}/commits/{sha}/state     a commit's state, whole
 ```
 
+All but results are built.
+
 - **`PUT` because sending a commit twice changes nothing**, as `apply` needs,
-  and `apply --replace` replaces it.
+  and `apply --replace` replaces it: `201` for a commit new to the server,
+  `200` for one it had.
+- **The server checks every state it's sent** with the CLI's own check. It
+  refuses one that isn't a state with `400`, and stores the problems it finds
+  itself, as [Indexing](indexing.md#problems) describes.
 - **The CLI reads whole states** too, for `--product`: it combines the working
   tree with the other projects' states itself, and keeps them in
   `.docket/product/`. These are its endpoints, not the UI's.

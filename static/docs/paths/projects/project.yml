@@ -1,0 +1,22 @@
+get:
+  operationId: getProject
+  x-stability: prototype
+  summary: Get a project
+  description: >-
+    A project the server has states for, as of its latest commit by commit
+    time. `docket apply` asks for it to find where to start sending from.
+  tags:
+    - Projects
+  # No sign-in yet: a server is only reachable by its client's people.
+  security: []
+  parameters:
+    - $ref: "../../schemas.yml#/components/parameters/Project"
+  responses:
+    "200":
+      description: The project.
+      content:
+        application/json:
+          schema:
+            $ref: "../../schemas.yml#/components/schemas/Project"
+    "404":
+      $ref: "../../schemas.yml#/components/responses/NotFound"

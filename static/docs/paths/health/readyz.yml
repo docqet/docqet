@@ -5,8 +5,8 @@ get:
   description: >-
     Reports the health of every server the process is running and every
     dependency they use, so the process is taken out of rotation while any is
-    down. It runs one server, `http`, and uses no dependencies yet. Compose's
-    healthcheck.
+    down. It runs one server, `http`, and depends on one thing, its
+    `database`. Compose's healthcheck.
   tags:
     - Health
   # Public: infrastructure probes reach this without a token.

@@ -2,6 +2,7 @@ package commands
 
 import (
 	"context"
+	"database/sql"
 	"errors"
 	"log/slog"
 	"net"
@@ -12,17 +13,20 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/urfave/cli/v3"
 
+	"github.com/exalynt/docket/internal/database"
 	httphandlers "github.com/exalynt/docket/internal/handlers/http"
 	"github.com/exalynt/docket/internal/logs"
+	"github.com/exalynt/docket/internal/repositories/sqlite"
+	"github.com/exalynt/docket/internal/services"
 )
 
 // shutdownTimeout bounds how long in-flight requests have to finish once
 // shutdown starts, before the server stops waiting.
 const shutdownTimeout = 10 * time.Second
 
-// ServeCommand runs the Docket server. For now it serves the UI, over no
-// projects, a readiness probe, and the API's docs: it can't take applied
-// states or results yet, so it holds nothing.
+// ServeCommand runs the Docket server: it takes each project's states from
+// `docket apply`, keeps them in SQLite and hands them back, and serves the
+// API's docs, a readiness probe and the UI, which shows no projects yet.
 func ServeCommand() *cli.Command {
 	return &cli.Command{
 		Name:     "serve",
@@ -47,12 +51,24 @@ func ServeCommand() *cli.Command {
 				Value:   "json",
 				Sources: cli.EnvVars("LOG_FORMAT"),
 			},
+			databaseFlag(),
 		},
 		Action: func(ctx context.Context, cmd *cli.Command) error {
 			logger := logs.New(os.Stderr, cmd.String("log-level"), cmd.String("log-format"))
-			logger.InfoContext(ctx, "starting docket server", "version", cmd.Root().Version)
+			logger.InfoContext(ctx, "starting docket server", "version", cmd.Root().Version, "database", cmd.String("database"))
 
-			handler, err := router(logger, nil)
+			db, err := database.Open(ctx, cmd.String("database"))
+			if err != nil {
+				return err
+			}
+			defer func() { _ = db.Close() }()
+			// Migrations are a step of their own, never run here, so a
+			// database behind this version refuses to serve.
+			if err := database.CheckMigrated(ctx, db); err != nil {
+				return err
+			}
+
+			handler, err := router(logger, nil, db)
 			if err != nil {
 				return err
 			}
@@ -63,8 +79,9 @@ func ServeCommand() *cli.Command {
 
 // router builds the handler `serve` and `ui` serve: the API under /v1, its
 // docs under /docs, the states the UI shows, and the UI under everything
-// else. states are the state.json files to show, one per project.
-func router(logger *slog.Logger, states []string) (http.Handler, error) {
+// else. states are the state.json files to show, one per project. With db,
+// the server's database, the API takes and serves applied states too.
+func router(logger *slog.Logger, states []string, db *sql.DB) (http.Handler, error) {
 	uiHandler, err := httphandlers.NewUIHandler()
 	if err != nil {
 		return nil, err
@@ -78,6 +95,12 @@ func router(logger *slog.Logger, states []string) (http.Handler, error) {
 	// listener is closed, so nothing can ask.
 	health := httphandlers.NewHealthHandler(logger)
 	health.AddServer("http", func(context.Context) error { return nil })
+	var projects *httphandlers.ProjectsHandler
+	if db != nil {
+		health.AddDependency("database", "sqlite", db.PingContext)
+		stateService := services.NewStateService(sqlite.NewStateRepository(db), sqlite.NewUnitOfWork(db))
+		projects = httphandlers.NewProjectsHandler(logger, stateService)
+	}
 	health.Start()
 
 	r := chi.NewRouter()
@@ -85,6 +108,9 @@ func router(logger *slog.Logger, states []string) (http.Handler, error) {
 		// Health stays public so infrastructure probes, such as Compose's
 		// healthcheck, reach it without a token.
 		health.RegisterRoutes(api)
+		if projects != nil {
+			projects.RegisterRoutes(api)
+		}
 	})
 	docsHandler.RegisterRoutes(r)
 	httphandlers.NewStatesHandler(states).RegisterRoutes(r)

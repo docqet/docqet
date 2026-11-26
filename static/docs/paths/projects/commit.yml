@@ -1,0 +1,66 @@
+put:
+  operationId: applyCommit
+  x-stability: prototype
+  summary: Apply a commit's state
+  description: >-
+    Stores a project's state at a commit on its main branch, replacing any
+    stored for that commit, so sending a commit twice changes nothing.
+    `docket apply` sends one for each new commit, oldest first.
+
+
+    The server checks the state with the same check the CLI runs. It refuses a
+    state that isn't one, such as one for another format version or project,
+    with 400. Problems in the docs aren't refused: the server works them out
+    again and stores its own, keeping only those found reading files, which it
+    can't see.
+  tags:
+    - Projects
+  # No sign-in yet: a server is only reachable by its client's people.
+  security: []
+  parameters:
+    - $ref: "../../schemas.yml#/components/parameters/Project"
+    - $ref: "../../schemas.yml#/components/parameters/SHA"
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: "../../schemas.yml#/components/schemas/ApplyCommitRequest"
+  responses:
+    "200":
+      description: The commit was already applied, and its state is replaced.
+      content:
+        application/json:
+          schema:
+            $ref: "../../schemas.yml#/components/schemas/Commit"
+    "201":
+      description: The commit is new to the server.
+      content:
+        application/json:
+          schema:
+            $ref: "../../schemas.yml#/components/schemas/Commit"
+    "400":
+      $ref: "../../schemas.yml#/components/responses/BadRequest"
+get:
+  operationId: getCommit
+  x-stability: prototype
+  summary: Get an applied commit
+  description: >-
+    One of a project's applied commits, without its state: where it is in
+    history, and its Docket trailers.
+  tags:
+    - Projects
+  # No sign-in yet: a server is only reachable by its client's people.
+  security: []
+  parameters:
+    - $ref: "../../schemas.yml#/components/parameters/Project"
+    - $ref: "../../schemas.yml#/components/parameters/SHA"
+  responses:
+    "200":
+      description: The commit.
+      content:
+        application/json:
+          schema:
+            $ref: "../../schemas.yml#/components/schemas/Commit"
+    "404":
+      $ref: "../../schemas.yml#/components/responses/NotFound"

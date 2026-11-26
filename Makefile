@@ -1,4 +1,4 @@
-.PHONY: help build up down nuke logs run ui ui-build fix fmt lint vet docs-lint check test
+.PHONY: help build up down nuke logs migrate run ui ui-build fix fmt lint vet docs-lint check test
 
 help: ## Show this help
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-20s\033[0m %s\n", $$1, $$2}'
@@ -20,7 +20,10 @@ nuke: ## Stop the local stack and destroy its volumes
 logs: ## Follow the server's logs
 	docker compose logs -f app
 
-run: ## Run the server locally, outside Docker, on localhost:8080, with its API docs at /docs/api
+migrate: ## Bring the local server's database, data/docket.db, up to date
+	go run ./cmd/docket migrate
+
+run: migrate ## Run the server locally, outside Docker, on localhost:8080, with its API docs at /docs/api
 	go run ./cmd/docket serve
 
 ## --- UI ---

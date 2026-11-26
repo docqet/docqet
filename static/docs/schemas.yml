@@ -14,13 +14,18 @@ components:
           type: object
           description: >-
             One check per server the process is running (`http`), and one per
-            dependency they use, of which there are none yet.
+            dependency they use (`database`).
           additionalProperties:
             $ref: "#/components/schemas/HealthCheck"
           example:
             http:
               status: up
               timestamp: "2026-11-25T20:00:00Z"
+            database:
+              status: up
+              provider: sqlite
+              timestamp: "2026-11-25T20:00:00Z"
+              latency_ms: 0
 
     HealthCheck:
       type: object
@@ -30,11 +35,215 @@ components:
         status:
           type: string
           enum: [up, down]
+        provider:
+          type: string
+          description: What provides a dependency.
+          example: sqlite
         timestamp:
           type: string
           format: date-time
           description: When the check last ran. Results are cached for a second.
+        latency_ms:
+          type: integer
+          description: How long a dependency's last check took, passed or failed.
+          example: 0
         error:
           type: string
           description: Why the check is down. The cause itself is logged, not returned.
           example: unhealthy
+
+    Trailer:
+      type: object
+      required: [key, value]
+      properties:
+        key:
+          type: string
+          example: Docket-Became
+        value:
+          type: string
+          example: capability:early-arrival -> capability:early-check-in
+
+    ApplyCommitRequest:
+      type: object
+      additionalProperties: false
+      required: [parents, committedAt, trailers, state]
+      properties:
+        parents:
+          type: array
+          description: The commit's parents' full SHAs.
+          items:
+            type: string
+          example: ["e496b9b0f3938d2f75391be063d2b43ebbfc3d81"]
+        committedAt:
+          type: string
+          format: date-time
+          description: When it was committed, which places it in history.
+          example: "2026-11-26T00:25:56Z"
+        trailers:
+          type: array
+          description: >-
+            The `Docket-Became` trailers of the commit and of every commit it
+            brought in, as git reads them.
+          items:
+            $ref: "#/components/schemas/Trailer"
+        state:
+          $ref: "#/components/schemas/State"
+
+    Commit:
+      type: object
+      required: [project, commit, product, parents, committedAt, appliedAt, trailers]
+      properties:
+        project:
+          type: string
+          example: hotel-bookings
+        commit:
+          type: string
+          example: 57754415c7c52e1675e2a07edc9def8155be3729
+        product:
+          type: string
+          nullable: true
+          description: The product the project was part of at this commit.
+          example: hotel
+        parents:
+          type: array
+          items:
+            type: string
+        committedAt:
+          type: string
+          format: date-time
+        appliedAt:
+          type: string
+          format: date-time
+          description: When the server was last sent it.
+        trailers:
+          type: array
+          items:
+            $ref: "#/components/schemas/Trailer"
+
+    Project:
+      type: object
+      required: [id, name, product, lastCommit]
+      properties:
+        id:
+          type: string
+          example: hotel-bookings
+        name:
+          type: string
+          example: Hotel Bookings
+        product:
+          type: object
+          nullable: true
+          required: [id, name]
+          properties:
+            id:
+              type: string
+              example: hotel
+            name:
+              type: string
+              example: Hotel
+        lastCommit:
+          $ref: "#/components/schemas/Commit"
+
+    State:
+      type: object
+      description: >-
+        A project's state, as `docket index` writes it to `state.json`:
+        every doc's entry, its evidence, reverse links and problems, and the
+        stability checklist it was indexed against. The
+        [spec's Index output](https://github.com/exalynt/docket/blob/main/spec/README.md#index-output)
+        describes every field.
+      required: [docket, project, commit, indexedAt, summary, problems, checklist]
+      additionalProperties: true
+      properties:
+        docket:
+          type: string
+          description: The version of the state format.
+          example: "0.1"
+        project:
+          type: object
+          properties:
+            id:
+              type: string
+            name:
+              type: string
+        commit:
+          type: string
+        indexedAt:
+          type: string
+          format: date-time
+        summary:
+          type: object
+          additionalProperties: true
+        problems:
+          type: array
+          items:
+            $ref: "#/components/schemas/Problem"
+        checklist:
+          type: object
+          additionalProperties: true
+
+    Problem:
+      type: object
+      required: [type, subject, capabilities, message]
+      properties:
+        type:
+          type: string
+          enum: [unknown-id, invalid-frontmatter, duplicate-id, broken-link, unlinked-rule, in-two-features, contradiction, invalid-annotation, unknown-outcome]
+        subject:
+          type: string
+          description: >-
+            The doc, gap or tradeoff it's about, or empty for a problem found
+            reading a file, such as an annotation naming nothing.
+          example: rule:no-double-booking
+        capabilities:
+          type: array
+          items:
+            type: string
+        message:
+          type: string
+        domain:
+          type: string
+        file:
+          type: string
+        line:
+          type: integer
+
+    Error:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: string
+          example: this commit hasn't been applied for this project
+
+  parameters:
+    Project:
+      name: project
+      in: path
+      required: true
+      description: The project's ID, from its `docket.yaml`.
+      schema:
+        type: string
+        example: hotel-bookings
+    SHA:
+      name: sha
+      in: path
+      required: true
+      description: The commit's full SHA.
+      schema:
+        type: string
+        example: 57754415c7c52e1675e2a07edc9def8155be3729
+
+  responses:
+    BadRequest:
+      description: The body isn't a valid state, or it's for another project or commit.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    NotFound:
+      description: Nothing has been applied for the project, or not that commit.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"

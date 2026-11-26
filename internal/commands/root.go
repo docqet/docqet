@@ -87,6 +87,7 @@ func Root(version string) *cli.Command {
 			ResultsCommand(),
 			UICommand(),
 			ServeCommand(),
+			MigrateCommand(),
 		},
 	}
 	returnUsageErrors(root)

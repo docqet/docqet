@@ -2,10 +2,13 @@
 
 _A draft of what we'll build. Every command here may change or be dropped.
 Each is scaffolded in [`internal/commands`](../../internal/commands/) with the
-flags drafted here, and the global `--json` and `-C`, but answers that it isn't
-built yet and exits 2. So far only [`serve`](#docket-serve) and
-[`ui`](#docket-ui) do anything, and `ui` shows a project's
-`.docket/state.json` as written, without re-indexing._
+flags drafted here, and the global `--json` and `-C`. Built so far:
+[`index`](#docket-index) and [`check`](#docket-check), over the working tree
+or with `--at` a commit, [`apply`](#docket-apply), [`serve`](#docket-serve),
+the new `docket migrate`, which brings the server's database up to date
+before it serves, and [`ui`](#docket-ui), which shows a project's
+`.docket/state.json` without re-indexing. The rest answer that they aren't
+built yet and exit 2._
 
 One command for everything Docket does with a repository: setting it up,
 indexing and checking its docs, answering questions about it, following how
