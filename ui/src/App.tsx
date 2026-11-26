@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import Logo from "./components/shell/Logo";
-import DetailPage from "./Page";
 import BuiltPage from "./pages/built/List";
 import DecidedPage from "./pages/decided/List";
 import FeaturesPage from "./pages/features/List";
@@ -14,13 +13,20 @@ import InitiativesPage from "./pages/initiatives/List";
 import PersonasPage from "./pages/personas/List";
 import ProblemsPage from "./pages/problems/List";
 import RulePage from "./pages/rules/View";
+import CapabilityView from "./pages/capabilities/View";
+import ConceptView from "./pages/concepts/View";
+import DomainView from "./pages/domains/View";
+import FeatureView from "./pages/features/View";
+import InitiativeView from "./pages/initiatives/View";
+import PersonaView from "./pages/personas/View";
+import TechnicalView from "./pages/built/View";
 import type { ProductChoice } from "./components/shell/ProductFilter";
 import { navigate, routeOf, useSearch, type Route } from "./routes";
 import { loadProduct } from "./model";
 import { listProducts, type ProductResource } from "./services/docket/products";
 import { scopeOf, scopeParam } from "./scope";
 import Shell from "./components/shell/Shell";
-import type { DocketState, PageAt, Product } from "./state";
+import type { DocketState, Product } from "./state";
 
 /* The product and projects named in the address, as `?product=<id>&project=<id>,<id>`. */
 const showingIn = (search: string) => {
@@ -153,10 +159,28 @@ export default function App() {
 function content(state: DocketState, route: Route, layoutKey: string): ReactNode {
   if (route.kind === "doc") {
     const { doc, id } = route;
-    if (doc === "rule") return <RulePage key={id} state={state} id={id} route={route} />;
-    if (doc === "gap") return <GapPage key={id} state={state} id={id} route={route} />;
-    const page = { kind: doc, id } as PageAt;
-    return <DetailPage key={`${doc}:${id}`} state={state} page={page} route={route} />;
+    const props = { state, id, route };
+    switch (doc) {
+      case "rule":
+        return <RulePage key={id} {...props} />;
+      case "gap":
+        return <GapPage key={id} {...props} />;
+      case "capability":
+        return <CapabilityView key={id} {...props} />;
+      case "feature":
+        return <FeatureView key={id} {...props} />;
+      case "domain":
+        return <DomainView key={id} {...props} />;
+      case "persona":
+        return <PersonaView key={id} {...props} />;
+      case "initiative":
+        return <InitiativeView key={id} {...props} />;
+      case "concept":
+        return <ConceptView key={id} {...props} />;
+      case "mechanism":
+      case "component":
+        return <TechnicalView key={`${doc}:${id}`} kind={doc} {...props} />;
+    }
   }
   switch (route.section) {
     case "overview":

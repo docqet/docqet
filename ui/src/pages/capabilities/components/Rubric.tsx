@@ -3,18 +3,18 @@ import LayersOutlinedIcon from "@mui/icons-material/LayersOutlined";
 import LightbulbOutlinedIcon from "@mui/icons-material/LightbulbOutlined";
 import WarningAmberRoundedIcon from "@mui/icons-material/WarningAmberRounded";
 import Switch from "@mui/material/Switch";
-import { DetailsPopover, NoPopovers } from "./components/popovers/DetailsPopover";
-import { STABILITY, STABILITY_LEVEL_IDS } from "./components/stability/stability";
-import { StabilityMark } from "./components/stability/StabilityMark";
-import { LEFT_KINDS, LeftLabel, gapKind } from "./components/left/LeftMark";
-import { InlineMarkdown } from "./components/markdown/Markdown";
-import { StandingMark, type Standing } from "./components/standing/StandingMark";
-import { TechnicalLink } from "./components/Technical";
-import { levelName } from "./components/stability/stability";
-import { plural } from "./components/names";
-import { appliesAt, outcomesOf, type Capability, type Rubric, type RubricExample, type ExpectedOutcome, type RubricQuality, type Level } from "./state";
-import { PillCard } from "./components/popovers/PillCard";
-import { QualityDetails } from "./components/popovers/QualityDetails";
+import { DetailsPopover, NoPopovers } from "../../../components/popovers/DetailsPopover";
+import { STABILITY, STABILITY_LEVEL_IDS } from "../../../components/stability/stability";
+import { StabilityMark } from "../../../components/stability/StabilityMark";
+import { LEFT_KINDS, LeftLabel, gapKind } from "../../../components/left/LeftMark";
+import { InlineMarkdown } from "../../../components/markdown/Markdown";
+import { StandingMark, type Standing } from "../../../components/standing/StandingMark";
+import { TechnicalLink } from "../../../components/Technical";
+import { levelName } from "../../../components/stability/stability";
+import { plural } from "../../../components/names";
+import { appliesAt, outcomesOf, type Capability, type Rubric, type RubricExample, type ExpectedOutcome, type RubricQuality, type Level } from "../../../state";
+import { PillCard } from "../../../components/popovers/PillCard";
+import { QualityDetails } from "../../../components/popovers/QualityDetails";
 
 /*
  * The stability rubric, as a checklist: pick a level to see what it expects, by quality,
