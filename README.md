@@ -1,4 +1,4 @@
-# docqet
+# <picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/logo/docqet-lockup-dark.svg"><img src="docs/assets/logo/docqet-lockup-light.svg" alt="docqet" height="44"></picture>
 
 <a href="docqet/domains/authoring/concepts/stability-level.md"><picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/assets/stability-prototype-dark.svg">
