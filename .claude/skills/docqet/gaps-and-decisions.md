@@ -179,6 +179,9 @@ decisions:
       for the whole stay?
     affects:                          # optional: what's waiting on the answer
       - capability:cancellations#no-shows-charged-nothing
+    impact: inconvenient              # optional, all three or none: see below
+    likelihood: certain               # either answer charges no-shows, who are charged nothing now
+    reach: few
 ```
 
 - **Every decision written down is open**, and counts as what's left.
@@ -193,6 +196,60 @@ decisions:
 - **Stay on the decision's side.** A decision on a domain, feature or
   capability becomes product docs, or their gaps or tradeoffs. One on a
   mechanism or component becomes technical docs, or theirs.
+
+### Rating a decision
+
+A decision uses a gap's three ratings, `impact`, `likelihood` and `reach`,
+and has a risk worked out from them the same way, which counts in exposure
+and so lowers readiness. Answering it is then one of the improvements that
+would raise readiness. The ratings are optional, but all three or none:
+
+- **Rate it when its answer could change what people rely on now.** Leave
+  it unrated when it couldn't, such as what something is called, or a
+  question about something nobody relies on yet. An unrated decision has
+  no risk. Never leave one unrated to keep it out of exposure.
+- **What it `affects` never gives it risk.** It shows what's waiting on the
+  answer, and a gap it affects keeps its own risk. A gap that's really an
+  unsettled question is still written as both, each rated for itself: the
+  gap as what the software does while it's open, the decision as what its
+  answer could change.
+
+The scales are a gap's, with the same values, but **read about the change
+its answer could bring, not about something biting**:
+
+**Impact** is how bad it is for those it reaches if the answer changes what
+they rely on. Ask a gap's questions in order of that change, and stop at the
+first yes:
+
+1. Could it leave something wrong that can't be fully put right, or that
+   someone acted on without knowing, at a cost, such as data kept in a shape
+   the answer rules out, or money worked out on terms it reverses?
+   **`damaging`**
+2. Could it stop someone getting done what they relied on it for, until
+   something else is built? **`blocking`**
+3. Would people adapt, with extra time, a new step or a new way of working,
+   while what they get still comes out right? **`inconvenient`**
+4. Otherwise, **`negligible`**. A decision that's `negligible` is usually
+   better left unrated.
+
+**Likelihood** is how likely it is that the answer changes what the software
+does now, whenever it's given, with no year. When torn, pick the higher:
+
+- `certain`: whatever the answer, what it does now changes, such as a
+  placeholder or a stopgap.
+- `expected`: you'd bet the answer changes what it does now.
+- `possible`: it could go either way.
+- `unlikely`: you'd expect the answer to confirm what it does now.
+
+**Reach** is a gap's, of the people the change would reach.
+
+As with a gap, rate as if people relied on the capability, never lower for
+its level: risk weighs a decision by the level of each capability it counts
+on, so the same question costs little on a Prototype and a lot on GA. A
+decision counts on the capability it's on, every capability of the feature
+or domain it's on, the capabilities relying on the component it's on, or
+every capability the mechanism it's on applies to. Say in your report how
+you rated each decision you add, so a person can correct it.
 
 ## What `affects` says
 
@@ -220,6 +277,10 @@ affecting:
   claim is made: one whose level expects the outcome, or that follows the
   rule. It raises it more the higher the level, and not at all on a
   Prototype.
+- **A rated decision affecting an outcome breaks a claim** on each capability
+  whose level expects it, as a gap does, since nobody can vouch for it while
+  it's open. Its risk comes from its own ratings, never from a gap or
+  tradeoff it affects.
 - **A gap that's really an unsettled question** is written as both: the
   consequence as the gap, and the question as a decision that affects it.
 - **Stay on its side.** Product items affect product gaps and tradeoffs;

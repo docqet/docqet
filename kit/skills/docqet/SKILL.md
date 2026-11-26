@@ -127,7 +127,7 @@ changed, not docs to fill in the structure.
 | Code that an annotation names was deleted or moved                         | Move or remove the annotation with it                                                                                                     |
 
 [gaps-and-decisions.md](gaps-and-decisions.md) covers gaps, tradeoffs and
-decisions, including how to rate a gap's impact, likelihood and reach. [docs.md](docs.md) covers how
+decisions, including how to rate a gap's or decision's impact, likelihood and reach. [docs.md](docs.md) covers how
 to write each doc.
 
 Product docs never name pages, buttons, endpoints, tables or functions, so a
@@ -140,10 +140,10 @@ component's body explains the cause.
 Intention belongs to people. You can propose it, but it counts only once a
 person has stated or confirmed it.
 
-| Who decides | What                                                                                                                                                                                                      |
-| ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| A person    | What the software should do, its rules, who it serves, each capability's level, which feature a capability is in, which initiatives it's part of, whether a gap is closed later or accepted as a tradeoff |
-| You         | Annotations, what a technical doc says about how the code works, gaps you found or left and each one's impact, likelihood and reach, and tradeoffs in how you built something, all listed in your report  |
+| Who decides | What                                                                                                                                                                                                                                          |
+| ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| A person    | What the software should do, its rules, who it serves, each capability's level, which feature a capability is in, which initiatives it's part of, whether a gap is closed later or accepted as a tradeoff                                     |
+| You         | Annotations, what a technical doc says about how the code works, gaps you found or left and each one's impact, likelihood and reach, the ratings of decisions you record, and tradeoffs in how you built something, all listed in your report |
 
 - **The user's request is a decision.** When they say what the software should
   do, write it down. When they say a rule, write the rule.

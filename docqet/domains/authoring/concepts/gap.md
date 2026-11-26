@@ -183,8 +183,9 @@ about. What it means comes from what's doing the affecting:
 | **Decision** | Open: neither claimed nor short | | Waits on it | Reopened |
 
 What each means for a tradeoff and a decision is on
-[Tradeoff](tradeoff.md) and [Open decision](open-decision.md). For all
-three:
+[Tradeoff](tradeoff.md) and [Open decision](open-decision.md). A decision's
+`affects` shows what's waiting on its answer and never gives it risk, which
+comes from its own ratings. For all three:
 
 - **It's a list of references**: `outcome:<quality>/<level>/<id>`,
   `rule:<id>`, with `@<domain>` for a rule in another domain, or a gap's or

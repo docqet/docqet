@@ -6,8 +6,8 @@ name: Readiness
 description: >-
   Our view of how ready the software is to serve people in production, based on
   the engineering judgement written down beside it: each capability's
-  [stability level](../../authoring/concepts/stability-level.md), and its [gaps](../../authoring/concepts/gap.md) and their
-  [risk](risk.md). It's a percentage, with what's still left, and
+  [stability level](../../authoring/concepts/stability-level.md), and its [gaps](../../authoring/concepts/gap.md), rated
+  [open decisions](../../authoring/concepts/open-decision.md) and their [risk](risk.md). It's a percentage, with what's still left, and
   a recommendation: people judge. Nobody writes it down.
 confused-with:
   - concept: "concept:maturity"
@@ -18,12 +18,12 @@ confused-with:
       how much people can depend on one capability, declared.
   - concept: "concept:exposure"
     summary: >-
-      what the open gaps put at stake. Readiness takes it off maturity.
+      what the open gaps and rated decisions put at stake. Readiness takes it off maturity.
 ---
 
 Readiness is the [maturity](maturity.md) of some capabilities less their
-[exposure](exposure.md): how far along the work is, less what the gaps still
-open on it put at stake.
+[exposure](exposure.md): how far along the work is, less what the gaps and
+decisions still open on it put at stake.
 
 ```text
 readiness = maturity × (1 − exposure)
@@ -40,9 +40,13 @@ project's own [maturity](maturity.md), which weighs parts or features by their
 bands. The two can differ: Hotel Bookings is 60% mature, but its readiness
 counts its capabilities' 52%.
 
-Every gap lowers it, through the riskiest gap on each capability. Impact,
-likelihood, reach, stability and broken claims all come in through exposure,
-so a tolerable gap lowers readiness a little, and an unacceptable one a lot.
+Every gap lowers it, and so does every rated open decision, through the
+riskiest gap or decision on each capability. Impact, likelihood, reach,
+stability and broken claims all come in through exposure, so a tolerable
+gap or decision lowers readiness a little, and an unacceptable one a lot. A
+gap lowers it because something falls short; a decision because its answer
+could change what people rely on. A decision with no ratings doesn't lower
+it.
 
 ## What it counts
 
@@ -67,24 +71,29 @@ in a quarter of its own, so it's never mistaken for maturity, and readers
 draw it as a straight bar in the text's color: never a ring, which is
 maturity's, nor in a level's color.
 
-| Readiness | From | What it recommends                                                              |
-| --------- | ---- | ------------------------------------------------------------------------------- |
-| Unready   | 0%   | Most of what they need is still being explored, or its gaps put a lot at stake. |
-| Partial   | 25%  | Some of it can be used, but much of what they need is still taking shape.       |
-| Viable    | 50%  | Enough is settled for them to rely on day to day.                               |
-| Ready     | 75%  | What they need is mostly stable, and little is at stake in what's left open.    |
+| Readiness | From | What it recommends                                                                        |
+| --------- | ---- | ----------------------------------------------------------------------------------------- |
+| Unready   | 0%   | Most of what they need is still being explored, or what's open on it puts a lot at stake. |
+| Partial   | 25%  | Some of it can be used, but much of what they need is still taking shape.                 |
+| Viable    | 50%  | Enough is settled for them to rely on day to day.                                         |
+| Ready     | 75%  | What they need is mostly stable, and little is at stake in what's left open.              |
 
-The quarter comes from the percentage alone. An unacceptable gap lowers it a
-lot, through exposure, and is always in what's left, but doesn't cap it.
+The quarter comes from the percentage alone. An unacceptable gap or
+decision lowers it a lot, through exposure, and is always in what's left,
+but doesn't cap it.
 
 ## What's left
 
 Readers show what it still needs with it. Each started capability below
 Beta, the first level settled enough for real use, needs to reach Beta, and
-each gap that's [unacceptable](risk.md#verdict) on one needs closing. A
-capability at Beta or GA with neither has nothing left. Lesser gaps still
-lower readiness, but aren't left to do: their verdict says they're fine to
-leave open. Drafts are listed as not started.
+each gap that's [unacceptable](risk.md#verdict) on one needs closing, and
+each decision that's unacceptable on one needs answering. A capability at
+Beta or GA with none of those has nothing left. Lesser gaps and decisions
+still lower readiness, but aren't left to do: their verdict says they're
+fine to leave open. Drafts are listed as not started.
+
+What would raise readiness, whether it's left or not, ordered by how much,
+is its [improvements](../capabilities/improvements.md).
 
 ## Reading it
 

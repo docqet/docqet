@@ -5,7 +5,8 @@ domain: authoring
 name: Open decision
 description: >-
   A question about what's intended that hasn't been settled, recorded so it
-  isn't lost or quietly decided in code.
+  isn't lost or quietly decided in code, and rated, when its answer could
+  change what people rely on, by how much that could cost them.
 confused-with:
   - concept: "concept:gap"
     summary: >-
@@ -30,28 +31,101 @@ Open decisions on a capability show on every persona it serves, every
 initiative it's part of, and on its feature and domain, but they're declared
 once.
 
-## No risk of its own
+## What's at stake
 
-A question doesn't happen to anyone, so a decision has no impact and no
-[risk](../../reporting/concepts/risk.md). What does happen is whatever the
-software does while it's open, and that's a [gap](gap.md), rated on its own.
-A gap that's really an unsettled question is written as both: the
-consequence as the gap, and the question as the decision, which affects the
-gap.
+A question doesn't happen to anyone, but the change its answer may bring
+does. People rely on what the software does now, and an answer that changes
+it changes what they relied on. A decision says how much that could cost
+them with the same three ratings a [gap](gap.md#whats-at-stake) has,
+`impact`, `likelihood` and `reach`, and has a
+[risk](../../reporting/concepts/risk.md) worked out from them the same way.
+
+The ratings are optional, but all or none. A decision with none has no
+risk: answering it changes nothing anyone relies on, such as what the
+format is called. A decision with only one or two is
+`invalid-frontmatter`.
+
+### Read about the change, not the question
+
+The scales are a gap's, with the same values, but each is read about what
+the answer could change rather than about something biting:
+
+| Rating         | On a gap                                       | On a decision                                                                |
+| -------------- | ---------------------------------------------- | ---------------------------------------------------------------------------- |
+| **Impact**     | How bad it is for those it reaches, if it bit. | How bad it is for those it reaches, if the answer changes what they rely on. |
+| **Likelihood** | How likely it is to bite within a year.        | How likely it is that the answer changes what the software does now.         |
+| **Reach**      | How many of the people served it would reach.  | How many of the people served the change would reach.                        |
+
+**Impact** asks a gap's four questions, in order, of the change:
+
+1. Could the change leave something wrong that can't be fully put right, or
+   that someone acted on without knowing, at a cost, such as data kept in a
+   shape the answer rules out, or money worked out on terms it reverses?
+   It's `damaging`.
+2. Could it stop someone getting done what they relied on it for, until
+   something else is built? It's `blocking`.
+3. Would people adapt, with extra time, a new step or a new way of working,
+   while what they get still comes out right? It's `inconvenient`.
+4. Otherwise, nothing anyone relies on changes, and it's `negligible`. A
+   decision that would be `negligible`, `unlikely` and `few` is usually one
+   with no ratings at all.
+
+**Likelihood** has no year: it's how likely the answer is to mean changing
+what the software does, whenever it's given.
+
+| Likelihood | The test                                                                           |
+| ---------- | ---------------------------------------------------------------------------------- |
+| `certain`  | Whatever the answer, what it does now changes, such as a placeholder or a stopgap. |
+| `expected` | You'd bet the answer changes what it does now.                                     |
+| `possible` | It could go either way.                                                            |
+| `unlikely` | You'd expect the answer to confirm what it does now.                               |
+
+**Reach** is a gap's, of the people the change would reach.
+
+Like a gap's, the ratings are made as if people relied on the capability,
+never lowered for its level, which risk weighs already. A decision on a
+Prototype is rated as it would be on GA, and scores far lower: questions are
+what a Prototype is for, while GA promises that what people rely on stays as
+it is. One on a draft scores 0, since a draft weighs 0 and nobody relies on
+it yet.
+
+### Where it counts
+
+A decision is scored on every capability it's about:
+
+| Declared on                 | Counts on                          |
+| --------------------------- | ---------------------------------- |
+| [Capability](capability.md) | Itself                             |
+| [Feature](feature.md)       | Its capabilities                   |
+| [Domain](domain.md)         | Every capability with a part in it |
+| [Component](component.md)   | The capabilities relying on it     |
+| [Mechanism](mechanism.md)   | Every capability it applies to     |
+
+On each, it breaks a claim, as a gap does, where it affects an outcome that
+capability's level expects: whether the outcome is met isn't settled, so
+people relying on it are relying on something nobody can vouch for yet.
+
+A rated decision counts in [exposure](../../reporting/concepts/exposure.md)
+beside gaps, so answering it can be one of the
+[improvements](../../reporting/capabilities/improvements.md) that would
+make something more ready.
 
 ## What it affects
 
-What a decision [affects](gap.md#affects) is what's waiting on its answer:
+What a decision [affects](gap.md#affects) is what's waiting on its answer.
+It's there to show the relationship, and never gives the decision risk: a
+decision's risk comes from its own ratings alone, and what it affects keeps
+its own.
 
-- **A gap** waits on it: it can't be closed until it's answered. The gap
-  keeps its own risk, and readers show the decision with the risk of the
-  riskiest gap waiting on it, so the questions with most at stake can be
-  asked first.
+- **A gap** waits on it: it can't be closed until it's answered. A gap
+  that's really an unsettled question is written as both: the consequence
+  as the gap, rated as what the software does while it's open, and the
+  question as the decision, rated as what its answer could change.
 - **A [tradeoff](tradeoff.md)** is reopened by it: the choice is in question
   again, and stays as it is, the current one, until the decision is answered.
 - **A [stability rubric](rubric.md) outcome** is open: whether to meet
   it, or whether it applies, isn't settled, so it's neither claimed nor
-  short.
+  short. A rated decision breaks a claim there, as above.
 
 A decision affects nothing else: the doc it's on is already what it's about.
 
@@ -80,8 +154,9 @@ component in the first place.
 ## How it's written
 
 An open decision is an item in the `decisions` frontmatter field of the doc
-it's on, with its `question` and, optionally, a `topic` of a few words and
-what it `affects`. On the
+it's on, with its `question` and, optionally, a `topic` of a few words, what
+it `affects`, and its `impact`, `likelihood` and `reach`, all three or none.
+On the
 [Guest stays domain](../../../../examples/hotel-bookings/docqet/domains/guest-stays/domain.md):
 
 ```yaml
@@ -128,6 +203,29 @@ decisions:
 
 If restoring is enough, the gap becomes a tradeoff that affects the outcome.
 If not, the gap stays, and the decision is deleted.
+
+None of those is rated, so none has risk. A rated one says what its answer
+could change for the people relying on what's there now. On a group
+bookings capability at Beta, where clerks book a block of rooms on one bill:
+
+```yaml
+decisions:
+  - topic: One bill or one each
+    question: >-
+      Does a group stay on one bill paid by its organiser, or does each guest
+      pay for their own room?
+    impact: damaging
+    likelihood: expected
+    reach: some
+```
+
+It's one bill today. If each guest pays, bills organisers have already
+settled were worked out on terms the answer reverses, so it's `damaging`.
+Organisers keep asking for it, so you'd bet on the change: `expected`. Only
+groups' guests are reached, so it's `some`. On Beta, it scores
+4 × ¾ × ½ × 4 = 6, so 38, `tolerable`: OK to leave for now, but worth
+answering, and answering it would raise readiness wherever group bookings
+counts. The same question on a Prototype scores 3, so 14, `acceptable`.
 
 It's in frontmatter so readers can find, count and show it on every persona,
 initiative, feature and domain it touches. A question written in a doc's body

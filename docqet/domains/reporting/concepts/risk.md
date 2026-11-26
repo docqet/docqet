@@ -4,18 +4,19 @@ id: risk
 domain: reporting
 name: Risk
 description: >-
-  What's at stake in leaving a [gap](../../authoring/concepts/gap.md) open: a score from 0 to 100,
-  worked out from what the gap could do (its impact, how likely it is and how
+  What's at stake in leaving a [gap](../../authoring/concepts/gap.md), or a rated
+  [open decision](../../authoring/concepts/open-decision.md), open: a score from 0 to 100,
+  worked out from what it could do (its impact, how likely it is and how
   many it reaches) and from how much people rely on each capability it shows
-  on (its [stability level](../../authoring/concepts/stability-level.md), and whether the gap breaks a
-  claim made there), with a verdict on whether that's acceptable. Gaps
-  are ordered by it, riskiest first. Nobody writes it down. Across some
-  capabilities, what their gaps put at stake is their
+  on (its [stability level](../../authoring/concepts/stability-level.md), and whether it breaks a
+  claim made there), with a verdict on whether that's acceptable. Gaps and
+  decisions are ordered by it, riskiest first. Nobody writes it down. Across
+  some capabilities, what their gaps and decisions put at stake is their
   [exposure](exposure.md).
 confused-with:
   - concept: "concept:exposure"
     summary: >-
-      what the gaps on some capabilities put at stake together, as a percentage. Risk is one gap's.
+      what the gaps and decisions on some capabilities put at stake together, as a percentage. Risk is one gap's or decision's.
   - concept: "concept:stability-level@authoring"
     summary: >-
       how much you can depend on a capability, as declared. Risk, and exposure, say what's at stake in the gaps still open against it, and never change it.
@@ -36,6 +37,10 @@ hand on every gap, since only people know them:
 - **Impact**: how bad it is for those it reaches when it bites.
 - **Likelihood**: how likely it is to bite within a year.
 - **Reach**: how many of the people the software serves it would reach.
+
+An open decision can be rated with the same three, read about what its
+answer could change rather than about something biting, and then has a risk
+worked out the same way: see [Decisions](#decisions).
 
 Two are about what it's in, and worked out:
 
@@ -163,17 +168,46 @@ Risk is worked out from each gap's `impact`, `likelihood` and `reach`. How to
 rate each, with the tests and where the lines fall, is on
 [gap](../../authoring/concepts/gap.md#whats-at-stake).
 
-## Tradeoffs and decisions
+## Decisions
+
+An [open decision](../../authoring/concepts/open-decision.md) rated with
+`impact`, `likelihood` and `reach` has a risk, worked out exactly as a
+gap's is, with the same steps, factors, weights, scale and verdicts, so the
+two are ordered together, riskiest first. One with no ratings has none.
+
+The numbers are the same, but what they're about isn't. A gap's risk is
+what's at stake while something falls short. A decision's is what's at
+stake in its answer changing what people rely on now:
+
+| Rating         | On a gap                                       | On a decision                                                        |
+| -------------- | ---------------------------------------------- | -------------------------------------------------------------------- |
+| **Impact**     | How bad it is for those it reaches, if it bit. | How bad it is for those it reaches, if the answer changes it.        |
+| **Likelihood** | How likely it is to bite within a year.        | How likely it is that the answer changes what the software does now. |
+| **Reach**      | How many of the people served it would reach.  | How many of the people served the change would reach.                |
+
+The two parts worked out are read the same way for both:
+
+- **Stability** is the level of each capability it counts on: for a
+  decision, the capability it's on, or every capability of the feature,
+  domain, component or mechanism it's on.
+- **It breaks a claim** where it affects an outcome that capability's level
+  expects. For a gap, the outcome isn't met. For a decision, whether it's
+  met isn't settled, so nobody can vouch for it yet.
+
+So a question costs little on a Prototype, where questions are expected and
+nobody relies on what it does, and a lot on GA, which promises that what
+people rely on stays as it is. A decision's verdict reads as a gap's does:
+whether it's OK to leave the question open at the level it's at.
+
+What a decision affects, such as a gap waiting on its answer, never gives it
+risk, and the gap keeps its own. How to rate a decision is on
+[open decision](../../authoring/concepts/open-decision.md#whats-at-stake).
+
+## Tradeoffs
 
 A [tradeoff](../../authoring/concepts/tradeoff.md) has no risk. Risk asks
 whether it's OK to leave a gap open, and a tradeoff is someone's answer: they
-weighed its drawback and chose to live with it. An
-[open decision](../../authoring/concepts/open-decision.md) has none either,
-since a question doesn't happen to anyone: whatever the software does while
-it's open is a gap, rated on its own. A decision is shown with the risk of
-the riskiest gap waiting on it, the gaps it affects, so the questions with
-most at stake can be asked first: deployment's question about undoing a
-schema change has 76 waiting on it.
+weighed its drawback and chose to live with it.
 
 ## Examples
 
@@ -221,7 +255,9 @@ Together, the gaps on Reservations' capabilities give it an exposure of
 ## How it's written
 
 Each gap's `impact`, `likelihood` and `reach` are written in its doc, on the
-[gap](../../authoring/concepts/gap.md). Nothing else is written for risk, and
+[gap](../../authoring/concepts/gap.md), and a rated decision's on the
+[decision](../../authoring/concepts/open-decision.md). Nothing else is
+written for risk, and
 it isn't in [state](../../authoring/concepts/state.md): readers work it out
 once projects are put together, since a mechanism that applies across a
 product shows on every project's capabilities.
