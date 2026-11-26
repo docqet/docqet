@@ -215,7 +215,7 @@ City tax's children corrected by hand are `inconvenient` and happening now,
 so `certain`, reach every clerk, affect a rule city tax follows, and show
 only on city tax, at Alpha: 2 × 3 × 1.125 = 6.75, or 42, `tolerable`. That's
 the ledger's risk too, and the ledger's gap comes first, since it spreads
-further: `42 on 1 · 14 on 1 · 4 on 2`, to city tax's `42 on 1`.
+further: `42 on 1 · 14 on 1 · 4 on 2 · 0 on 1`, to city tax's `42 on 1`.
 
 Together, the gaps on Reservations' capabilities give it an exposure of
 78%, `high`: [exposure](exposure.md#example) shows how.

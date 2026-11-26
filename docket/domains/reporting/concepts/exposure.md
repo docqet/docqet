@@ -55,7 +55,8 @@ impact rated add nothing.
 
 - **A feature's** comes from its capabilities, each counted once, at its level
   in short: the lowest across the domains that build it.
-- **A domain's** comes from every capability with a part in it.
+- **A domain's** comes from every capability with a part in it, each at its
+  level in short too, not its level in that domain.
 - **A project's**, or a product's, comes from every capability showing.
 - **What serves a persona** comes from the capabilities that list them.
 - **An [initiative's](../../authoring/concepts/initiative.md)** comes from the

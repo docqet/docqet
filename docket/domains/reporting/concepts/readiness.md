@@ -34,6 +34,12 @@ the same capabilities, each counted once at its level in short, its lowest
 across the domains that build it, with the same weights and drafts left out,
 so readiness can be read from the two numbers shown beside it.
 
+For a domain, a project or a product, that's the maturity of its
+capabilities themselves, each weighted by its level, not the domain's or
+project's own [maturity](maturity.md), which weighs parts or features by their
+bands. The two can differ: Hotel Bookings is 60% mature, but its readiness
+counts its capabilities' 52%.
+
 Every gap lowers it, through the riskiest gap on each capability. Impact,
 likelihood, reach, stability and broken claims all come in through exposure,
 so a tolerable gap lowers readiness a little, and an unacceptable one a lot.
@@ -66,7 +72,10 @@ maturity's, nor in a level's color.
 | Unready   | 0%   | Most of what they need is still being explored, or its gaps put a lot at stake. |
 | Partial   | 25%  | Some of it can be used, but much of what they need is still taking shape.       |
 | Viable    | 50%  | Enough is settled for them to rely on day to day.                               |
-| Ready     | 75%  | What they need is mostly stable, with nothing unacceptable left open.           |
+| Ready     | 75%  | What they need is mostly stable, and little is at stake in what's left open.    |
+
+The quarter comes from the percentage alone. An unacceptable gap lowers it a
+lot, through exposure, and is always in what's left, but doesn't cap it.
 
 ## What's left
 
@@ -119,7 +128,7 @@ exposure        (75 × 4 + 40 × 4 + 100 × 3 + 50 × 6 + 50 × 2 + 50 × 2) ÷ 
 readiness       59% × (1 − 60%) ≈ 24%
 ```
 
-That's Partial. Late cancellations refunded in full scores 66 at Alpha,
+That's Unready, just short of Partial. Late cancellations refunded in full scores 66 at Alpha,
 tolerable, so it lowers readiness but isn't left to do. What's left is:
 
 ```text
@@ -131,7 +140,7 @@ room status     reach Beta, now Prototype
 ```
 
 Closing those two gaps would leave 26% exposure, mostly from late
-cancellations, and make it 44%, still Partial.
+cancellations, and make it 44%, Partial.
 
 In Hotel Billing, the manager has city tax at Alpha, deposits and daily
 takings at Beta, and night audit at GA: 1185 ÷ 17 ≈ 70% mature, with 18%

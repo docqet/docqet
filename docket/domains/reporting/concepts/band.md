@@ -24,6 +24,10 @@ it:
 | **Promising**    | 50%  | Beta      | Firming up. Enough of it is settled or stable for real use, while other parts are still changing.      |
 | **Established**  | 75%  | GA        | Well established. Most of it is stable and supported, while any newer parts settle in.                 |
 
+A maturity is in the band whose lower bound it has reached, once it's
+rounded to a whole percentage: 25% is Emerging, and so is 24.5%, which rounds
+to 25%.
+
 ## About the whole, not each part
 
 A band tells you what to expect from the whole, never from every part: a few

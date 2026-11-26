@@ -1397,7 +1397,7 @@ export const READINESS_BANDS = [
   { from: 0, name: "Unready", says: "Most of what they need is still being explored, or its gaps put a lot at stake." },
   { from: 25, name: "Partial", says: "Some of it can be used, but much of what they need is still taking shape." },
   { from: 50, name: "Viable", says: "Enough is settled for them to rely on day to day." },
-  { from: 75, name: "Ready", says: "What they need is mostly stable, with nothing unacceptable left open." },
+  { from: 75, name: "Ready", says: "What they need is mostly stable, and little is at stake in what's left open." },
 ] as const;
 
 /* The quarter a readiness falls in, or null with nothing started. */

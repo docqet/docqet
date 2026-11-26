@@ -87,6 +87,8 @@ maturities, worked out the same way:
   capabilities it has.
 - **Parts with no maturity don't count.**
 - **A domain with no part that has a maturity has none.**
+- **Each part's maturity is rounded first**, to a whole percentage as a
+  feature's is, and the domain's average is rounded again.
 
 In the hotel example, Guest stays has Reservations (42%, Emerging), which
 weighs 3, and its part of Front desk (84%, Established), which weighs 6:
@@ -109,9 +111,9 @@ That's Emerging.
 
 ### A project or a product
 
-A project's maturity is worked out the same way from its features, so a
-capability that spans domains still counts once. Hotel Bookings has
-Reservations (42%), Front desk (84%) and Housekeeping (15%):
+A project's maturity is worked out the same way from its features, each
+rounded first, so a capability that spans domains still counts once. Hotel
+Bookings has Reservations (42%), Front desk (84%) and Housekeeping (15%):
 
 ```text
 (42 × 3 + 84 × 6 + 15 × 2) ÷ (3 + 6 + 2) = 660 ÷ 11 = 60%
