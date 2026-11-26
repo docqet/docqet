@@ -3,7 +3,10 @@ import ExpandMoreRoundedIcon from "@mui/icons-material/ExpandMoreRounded";
 import FolderOutlinedIcon from "@mui/icons-material/FolderOutlined";
 import LayersOutlinedIcon from "@mui/icons-material/LayersOutlined";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
+import Box from "@mui/material/Box";
 import Popover from "@mui/material/Popover";
+import type { Theme } from "@mui/material/styles";
+import type { SystemStyleObject } from "@mui/system";
 import { NAMES } from "../../../components/names";
 import { DomainIcon } from "../../../components/names";
 import { InitiativeIcon } from "../../../components/shell/ScopeFilter";
@@ -55,6 +58,7 @@ export function ScopePicker({ state, scope }: { state: DocketState; scope: Scope
   const [query, setQuery] = useState("");
   const [kind, setKind] = useState<ScopeKind | "any">("any");
   const list = useRef<HTMLUListElement>(null);
+  const input = useRef<HTMLInputElement>(null);
   const choices = useMemo(() => scopeChoices(state), [state]);
   const counts = (k: ScopeKind | "any") => (k === "any" ? choices.length - 1 : choices.filter((c) => c.kind === k).length);
   const q = query.trim().toLowerCase();
@@ -95,43 +99,85 @@ export function ScopePicker({ state, scope }: { state: DocketState; scope: Scope
 
   return (
     <>
-      <button type="button" className="lf-scope" onClick={(e) => setAnchor(e.currentTarget)} aria-haspopup="dialog">
-        <span className="lf-scope-label">For</span>
+      <Box
+        component="button"
+        type="button"
+        onClick={(e) => setAnchor(e.currentTarget)}
+        aria-haspopup="dialog"
+        aria-expanded={anchor ? true : undefined}
+        sx={triggerSx}
+      >
+        <Box component="span" sx={{ typography: "overline", color: "text.disabled" }}>
+          For
+        </Box>
         <KindIcon kind={scope.kind} />
-        <span className="lf-scope-name">{scope.name}</span>
-        <ExpandMoreRoundedIcon sx={{ fontSize: 18 }} />
-      </button>
+        <Box
+          component="span"
+          sx={{
+            flex: { xs: 1, sm: "none" },
+            minWidth: 0,
+            overflow: "hidden",
+            fontWeight: 650,
+            textAlign: "left",
+            whiteSpace: "nowrap",
+            textOverflow: "ellipsis",
+          }}
+        >
+          {scope.name}
+        </Box>
+        <ExpandMoreRoundedIcon aria-hidden sx={{ fontSize: 18 }} />
+      </Box>
       <Popover
         anchorEl={anchor}
         open={Boolean(anchor)}
         onClose={close}
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
         transformOrigin={{ vertical: "top", horizontal: "right" }}
-        slotProps={{ paper: { className: "sp-panel" } }}
+        /* The search box takes focus, not the picker around it, so typing searches straight away. */
+        disableAutoFocus
+        slotProps={{ paper: { sx: panelSx }, transition: { onEntering: () => input.current?.focus() } }}
       >
-        <div className="sp-search">
+        <Box sx={{ display: "flex", alignItems: "center", gap: 1, px: 1.5, py: 1.25, borderBottom: 1, borderColor: "divider" }}>
           <SearchRoundedIcon sx={{ fontSize: 18, color: "text.secondary" }} />
-          <input
-            autoFocus
+          <Box
+            component="input"
+            ref={input}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={onKey}
             placeholder="Find a project, persona, domain, feature or capability"
             aria-label="Find what it's for"
+            sx={{
+              flex: 1,
+              minWidth: 0,
+              font: "inherit",
+              fontSize: 14,
+              color: "text.primary",
+              bgcolor: "transparent",
+              border: 0,
+              outline: "none",
+              "&::placeholder": { color: "text.disabled", opacity: 1 },
+            }}
           />
-        </div>
-        <div className="sp-kinds" role="tablist">
+        </Box>
+        <Box role="tablist" sx={{ display: "flex", flexWrap: "wrap", gap: 0.5, px: 1.25, py: 1, borderBottom: 1, borderColor: "divider" }}>
           {KINDS.map((k) => (
-            <button key={k.kind} type="button" role="tab" aria-selected={kind === k.kind} onClick={() => setKind(k.kind)}>
+            <Box component="button" key={k.kind} type="button" role="tab" aria-selected={kind === k.kind} onClick={() => setKind(k.kind)} sx={kindSx}>
               {k.name}
               <span>{counts(k.kind)}</span>
-            </button>
+            </Box>
           ))}
-        </div>
-        <ul className="sp-list" ref={list} onKeyDown={onListKey}>
+        </Box>
+        {/* How many match, said aloud as the search changes. */}
+        <Box component="span" aria-live="polite" sx={visuallyHidden}>
+          {q ? (matching.length ? `${matching.length} ${matching.length === 1 ? "match" : "matches"}` : "Nothing matches") : ""}
+        </Box>
+        <Box component="ul" ref={list} onKeyDown={onListKey} sx={{ maxHeight: "min(420px, 60vh)", p: 0.75, overflowY: "auto" }}>
           {groups.map((g) => (
-            <li key={g.kind} className="sp-group">
-              {g.kind !== "all" && kind === "any" ? <div className="sp-group-head">{KINDS.find((k) => k.kind === g.kind)?.name}</div> : null}
+            <Box component="li" key={g.kind} sx={{ "& + &": { mt: 0.5 } }}>
+              {g.kind !== "all" && kind === "any" ? (
+                <Box sx={{ px: 1, pt: 1, pb: 0.5, typography: "overline", color: "text.disabled" }}>{KINDS.find((k) => k.kind === g.kind)?.name}</Box>
+              ) : null}
               <ul>
                 {g.items.map((c) => (
                   <li key={c.key}>
@@ -140,14 +186,35 @@ export function ScopePicker({ state, scope }: { state: DocketState; scope: Scope
                 ))}
               </ul>
               {g.more ? (
-                <button type="button" className="sp-more" onClick={() => setKind(g.kind)}>
+                <Box
+                  component="button"
+                  type="button"
+                  onClick={() => setKind(g.kind)}
+                  sx={{
+                    mt: "2px",
+                    ml: "36px",
+                    py: "2px",
+                    px: 0,
+                    font: "inherit",
+                    fontSize: 12,
+                    fontWeight: 600,
+                    color: "primary.main",
+                    bgcolor: "transparent",
+                    border: 0,
+                    cursor: "pointer",
+                  }}
+                >
                   {g.more} more
-                </button>
+                </Box>
               ) : null}
-            </li>
+            </Box>
           ))}
-          {!matching.length ? <li className="sp-none">Nothing matches.</li> : null}
-        </ul>
+          {!matching.length ? (
+            <Box component="li" sx={{ px: 1, py: 2, fontSize: 13, color: "text.disabled" }}>
+              Nothing matches.
+            </Box>
+          ) : null}
+        </Box>
       </Popover>
     </>
   );
@@ -155,13 +222,113 @@ export function ScopePicker({ state, scope }: { state: DocketState; scope: Scope
 
 function Choice({ choice: c, current, showKind }: { choice: ScopeChoice; current: boolean; showKind: boolean }): ReactNode {
   return (
-    <a className="sp-item" href={withParam("for", c.kind === "all" ? null : c.key)} aria-current={current || undefined}>
+    <Box component="a" href={withParam("for", c.kind === "all" ? null : c.key)} aria-current={current || undefined} sx={itemSx}>
       <KindIcon kind={c.kind} />
-      <span className="sp-item-text">
-        <span className="sp-item-name">{c.name}</span>
-        {c.note ? <span className="sp-item-note">{c.note}</span> : null}
-      </span>
-      {showKind && c.kind !== "all" ? <span className="sp-item-kind">{ONE[c.kind]}</span> : null}
-    </a>
+      <Box component="span" sx={{ display: "flex", flexDirection: "column", flex: 1, minWidth: 0 }}>
+        <Box component="span" sx={{ fontSize: 13.5, fontWeight: 600, ...clip }}>
+          {c.name}
+        </Box>
+        {c.note ? (
+          <Box component="span" sx={{ fontSize: 12, color: "text.secondary", ...clip }}>
+            {c.note}
+          </Box>
+        ) : null}
+      </Box>
+      {showKind && c.kind !== "all" ? (
+        <Box component="span" sx={{ flex: "none", fontSize: 11, color: "text.disabled" }}>
+          {ONE[c.kind]}
+        </Box>
+      ) : null}
+    </Box>
   );
 }
+
+/* What's only for screen readers, such as a count said aloud. The page's gap count uses it too. */
+export const visuallyHidden: SystemStyleObject<Theme> = {
+  position: "absolute",
+  width: "1px",
+  height: "1px",
+  p: 0,
+  m: "-1px",
+  overflow: "hidden",
+  clip: "rect(0 0 0 0)",
+  whiteSpace: "nowrap",
+  border: 0,
+};
+
+/* One line, cut short. */
+const clip: SystemStyleObject<Theme> = { overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" };
+
+/* The button naming what it's for; on a phone, the width of the page. */
+const triggerSx: SystemStyleObject<Theme> = {
+  display: "inline-flex",
+  alignItems: "center",
+  gap: 1,
+  width: { xs: "100%", sm: "auto" },
+  maxWidth: { sm: 320 },
+  py: "6px",
+  pr: 1.25,
+  pl: 1.5,
+  font: "inherit",
+  fontSize: 13.5,
+  color: "text.primary",
+  bgcolor: "transparent",
+  border: 1,
+  borderColor: "surface.borderStrong",
+  borderRadius: "8px",
+  cursor: "pointer",
+  "&:hover": { borderColor: "text.disabled" },
+};
+
+/* The picker: 440px across, or the width of a phone's screen less its margins. */
+const panelSx: SystemStyleObject<Theme> = {
+  width: 440,
+  maxWidth: "calc(100vw - 32px)",
+  mt: 0.75,
+  color: "text.primary",
+  bgcolor: "background.paper",
+  backgroundImage: "none",
+  border: 1,
+  borderColor: "surface.borderStrong",
+  borderRadius: "10px",
+  boxShadow: 8,
+};
+
+/* A kind's tab, with how many there are, lit in the accent while chosen. */
+const kindSx: SystemStyleObject<Theme> = {
+  display: "inline-flex",
+  alignItems: "center",
+  gap: "5px",
+  py: "3px",
+  px: 1,
+  font: "inherit",
+  fontSize: 12,
+  fontWeight: 600,
+  color: "text.secondary",
+  bgcolor: "transparent",
+  border: "1px solid transparent",
+  borderRadius: "6px",
+  cursor: "pointer",
+  "&:hover": { color: "text.primary" },
+  "& > span": { fontSize: 11, fontVariantNumeric: "tabular-nums", color: "text.disabled" },
+  "&[aria-selected=true]": {
+    color: "primary.main",
+    bgcolor: "surface.accentSoft",
+    borderColor: (t) => `color-mix(in srgb, ${t.vars.palette.primary.main} 45%, transparent)`,
+  },
+};
+
+/* A choice: its icon, its name over what says which one it is, lit under the pointer or focus, and in the accent's soft fill when it's the current one. */
+const itemSx: SystemStyleObject<Theme> = {
+  display: "flex",
+  alignItems: "center",
+  gap: 1.25,
+  px: 1,
+  py: 0.75,
+  color: "text.primary",
+  textDecoration: "none",
+  borderRadius: "6px",
+  outline: "none",
+  "&:hover, &:focus-visible": { bgcolor: (t) => `color-mix(in srgb, ${t.vars.palette.text.primary} 6%, transparent)` },
+  "&[aria-current]": { bgcolor: "surface.accentSoft" },
+};

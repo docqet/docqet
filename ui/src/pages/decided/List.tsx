@@ -6,6 +6,9 @@ import { Choice } from "../../components/Choice";
 import { SubjectLink } from "../../components/SubjectLink";
 import "../left.css";
 import { TradeoffRows } from "../../components/TradeoffRows";
+import Box from "@mui/material/Box";
+import { groupHeadSx, groupSx, introSx } from "../left/List";
+import { visuallyHidden } from "../left/components/ScopePicker";
 
 /*
  * What we chose on purpose, none of it left to do: tradeoffs, each with the
@@ -65,7 +68,7 @@ function TradeoffsTab({ state, tradeoffs }: { state: DocketState; tradeoffs: Tra
   if (!tradeoffs.length) return <Empty>No tradeoffs written down.</Empty>;
   return (
     <>
-      <div className="lf-filters">
+      <Box sx={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "10px 24px", mt: -1, mb: 2.5 }}>
         <Choice
           label="Kind"
           param="kind"
@@ -76,7 +79,11 @@ function TradeoffsTab({ state, tradeoffs }: { state: DocketState; tradeoffs: Tra
             ["technical", "Technical choices", tradeoffs.length - product],
           ]}
         />
-      </div>
+        {/* How many the choice leaves, said aloud as it changes. */}
+        <Box component="span" aria-live="polite" sx={visuallyHidden}>
+          {`${shown.length} of ${tradeoffs.length} tradeoffs`}
+        </Box>
+      </Box>
       <Section
         title="By what they're on"
         count={shown.length}
@@ -84,13 +91,13 @@ function TradeoffsTab({ state, tradeoffs }: { state: DocketState; tradeoffs: Tra
       >
         {shown.length ? (
           bySubject(shown).map((g) => (
-            <div key={`${g.type}:${g.id}`} className="lf-card lf-group">
-              <header className="lf-group-head">
+            <Box key={`${g.type}:${g.id}`} sx={groupSx}>
+              <Box component="header" sx={groupHeadSx}>
                 <SubjectLink state={state} type={g.type} id={g.id} />
                 <Count n={g.items.length} />
-              </header>
+              </Box>
               <TradeoffRows state={state} tradeoffs={g.items} here={{ id: g.id }} />
-            </div>
+            </Box>
           ))
         ) : (
           <Empty>No tradeoffs match.</Empty>
@@ -105,15 +112,17 @@ function NonGoalsTab({ state, nonGoals }: { state: DocketState; nonGoals: Tradeo
   if (!nonGoals.length) return <Empty>No non-goals written down.</Empty>;
   return (
     <>
-      <p className="lf-intro">What a feature has decided never to build, with what that buys and what it costs.</p>
+      <Box component="p" sx={introSx}>
+        What a feature has decided never to build, with what that buys and what it costs.
+      </Box>
       {bySubject(nonGoals).map((g) => (
-        <div key={g.id} className="lf-card lf-group">
-          <header className="lf-group-head">
+        <Box key={g.id} sx={groupSx}>
+          <Box component="header" sx={groupHeadSx}>
             <SubjectLink state={state} type={g.type} id={g.id} />
             <Count n={g.items.length} />
-          </header>
+          </Box>
           <TradeoffRows state={state} tradeoffs={g.items} here={{ id: g.id }} />
-        </div>
+        </Box>
       ))}
     </>
   );

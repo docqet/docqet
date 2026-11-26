@@ -29,14 +29,18 @@ import {
   type Scope,
   type ScopeKind,
 } from "./components/leftScope";
-import { ScopePicker } from "./components/ScopePicker";
+import { ScopePicker, visuallyHidden } from "./components/ScopePicker";
 import "../left.css";
 import { GapInitiatives } from "../../components/risk/GapRows";
 import { SubjectLink } from "../../components/SubjectLink";
 import Box from "@mui/material/Box";
 import LinearProgress from "@mui/material/LinearProgress";
 import Skeleton from "@mui/material/Skeleton";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import { useTheme, type Theme } from "@mui/material/styles";
+import type { SystemStyleObject } from "@mui/system";
 import { ReadError, ReadFallback } from "../../components/ReadFallback";
+import { menuSlots } from "../../components/shell/ProductFilter";
 
 /*
  * What's left to do, and what matters most: the gaps to close and the
@@ -71,6 +75,9 @@ export default function LeftPage({ state, route }: { state: DocketState; route: 
     { id: "decisions", label: <LeftLabel kind="decision" size={14} hoverOnly />, count: decisions },
   ];
   const tab = currentTab(route, tabs);
+  /* On a phone the picker sits over the name, the width of the page, rather than squeezing the name and its sentence at the right. */
+  const phone = useMediaQuery(useTheme().breakpoints.down("sm"), { noSsr: true });
+  const picker = <ScopePicker state={state} scope={scope} />;
   return (
     <View title="What's left" wide>
       <PageHeader
@@ -90,7 +97,8 @@ export default function LeftPage({ state, route }: { state: DocketState; route: 
             purpose isn't left to do: it's under <a href={sectionHref("decided")}>Decided</a>.
           </>
         }
-        actions={<ScopePicker state={state} scope={scope} />}
+        trail={phone ? picker : undefined}
+        actions={phone ? undefined : picker}
         stats={
           <>
             <Stat
@@ -134,26 +142,47 @@ function GapSpread({ rows }: { rows: GapRow[] }) {
   const count = (v: Verdict) => rows.filter((r) => r.verdict === v).length;
   const parts = VERDICTS.filter((v) => count(v));
   return (
-    <span className="lf-gap-spread">
-      <span className="lf-gap-spread-bar">
-        <span className="lf-spread-label">Risk spread</span>
-        <span className="verdict-spread-bar wide" aria-hidden>
+    <Box component="span" sx={{ display: "flex", flexDirection: "column", gap: 1, mt: 0.5 }}>
+      <Box component="span" sx={{ display: "flex", alignItems: "center", gap: 1.25 }}>
+        <Box component="span" sx={{ typography: "overline", color: "text.disabled" }}>
+          Risk spread
+        </Box>
+        <Box component="span" aria-hidden sx={{ display: "flex", flex: 1, gap: "2px", height: 8, borderRadius: "2px" }}>
           {parts.map((v) => (
-            <span key={v} data-verdict={v} style={{ flexGrow: count(v) }} />
+            <Box key={v} component="span" sx={{ flexGrow: count(v), minWidth: 4, borderRadius: "2px", bgcolor: VERDICT_COLOR[v] }} />
           ))}
-        </span>
-      </span>
-      <span className="lf-gap-spread-counts">
+        </Box>
+      </Box>
+      <Box component="span" sx={{ display: "flex", flexWrap: "wrap", gap: "4px 16px" }}>
         {parts.map((v) => (
-          <a key={v} href={withParam("verdict", v)} data-verdict={v}>
+          /* data-verdict colors the bars inside. */
+          <Box
+            component="a"
+            key={v}
+            href={withParam("verdict", v)}
+            data-verdict={v}
+            sx={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 0.75,
+              fontSize: 12.5,
+              color: "text.secondary",
+              textDecoration: "none",
+              "&:hover": { color: "text.primary" },
+              "& strong": { fontWeight: 700, color: VERDICT_COLOR[v] },
+            }}
+          >
             <RiskBars verdict={v} size="small" />
             <strong>{count(v)}</strong> {VERDICT_NAMES[v].name.toLowerCase()}
-          </a>
+          </Box>
         ))}
-      </span>
-    </span>
+      </Box>
+    </Box>
   );
 }
+
+/* Each verdict's color: unacceptable the alarm color, tolerable the soft yellow, and acceptable neutral, since it may rightly stay open for good. */
+const VERDICT_COLOR: Record<Verdict, string> = { unacceptable: "error.main", tolerable: "impact.inconvenient", acceptable: "text.disabled" };
 
 const SCOPE_KINDS: Record<ScopeKind, string> = {
   all: "Everything",
@@ -209,20 +238,26 @@ function GapsTab({ state, rows, scope, search }: { state: DocketState; rows: Gap
   const active = PART_IDS.filter((id) => filters[id]);
   return (
     <>
-      <div className="lf-toolbar">
-        <div className="lf-filter-row" role="group" aria-label="Filters">
-          <span className="lf-choice-label">Filter</span>
+      <Box sx={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: "10px 24px", mt: -1, mb: 2.5 }}>
+        <Box role="group" aria-label="Filters" sx={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 0.75 }}>
+          <Box component="span" sx={{ mr: 0.5, typography: "overline", color: "text.disabled" }}>
+            Filter
+          </Box>
           {PART_IDS.map((id) => (
             <FilterMenu key={id} part={id} rows={rows} filters={filters} />
           ))}
           {active.length ? (
-            <a className="lf-clear" href={clearHref()}>
+            <Box component="a" href={clearHref()} sx={{ ml: 0.5, fontSize: 12.5, color: "primary.main" }}>
               Clear filters
-            </a>
+            </Box>
           ) : null}
-        </div>
+        </Box>
         <OrderMenu order={order} />
-      </div>
+        {/* How many the filters leave, said aloud as they change. */}
+        <Box component="span" aria-live="polite" sx={visuallyHidden}>
+          {active.length ? `${shown.length} of ${plural(rows.length, "gap", "gaps")} match` : plural(rows.length, "gap", "gaps")}
+        </Box>
+      </Box>
       <Section
         title={`Gaps${scope.capabilities ? ` for ${scope.name}` : ""}`}
         count={shown.length}
@@ -274,26 +309,33 @@ function FilterMenu({ part, rows, filters }: { part: PartId; rows: GapRow[]; fil
   const value = filters[part];
   return (
     <>
-      <button type="button" className="lf-filter" data-on={value ? true : undefined} onClick={(e) => setAnchor(e.currentTarget)} aria-haspopup="menu">
+      <Box
+        component="button"
+        type="button"
+        data-on={value ? true : undefined}
+        onClick={(e) => setAnchor(e.currentTarget)}
+        aria-haspopup="menu"
+        aria-expanded={anchor ? true : undefined}
+        sx={filterSx}
+      >
         {!value && (part === "impact" || part === "likelihood" || part === "reach") ? <RiskPartIcon part={part} size={14} /> : null}
         {PARTS[part].label}
         {value ? <FilterValue part={part} value={value} /> : null}
-        <ExpandMoreRoundedIcon sx={{ fontSize: 16 }} />
-      </button>
-      <Menu
-        anchorEl={anchor}
-        open={Boolean(anchor)}
-        onClose={() => setAnchor(null)}
-        slotProps={{ paper: { className: "project-menu" }, list: { className: "project-menu-list" } }}
-      >
-        <MenuItem component="a" href={withParam(part, null)} selected={!value} className="project-menu-item lf-filter-item">
+        <ExpandMoreRoundedIcon aria-hidden sx={{ fontSize: 16 }} />
+      </Box>
+      <Menu anchorEl={anchor} open={Boolean(anchor)} onClose={() => setAnchor(null)} slotProps={menuSlots(anchor)}>
+        <MenuItem component="a" href={withParam(part, null)} selected={!value} sx={filterItemSx}>
           <span>Any</span>
-          <span className="lf-choice-count">{others.length}</span>
+          <Box component="span" sx={countSx}>
+            {others.length}
+          </Box>
         </MenuItem>
         {values.map((v) => (
-          <MenuItem key={v} component="a" href={withParam(part, v)} selected={value === v} className="project-menu-item lf-filter-item">
+          <MenuItem key={v} component="a" href={withParam(part, v)} selected={value === v} sx={filterItemSx}>
             <FilterValue part={part} value={v} />
-            <span className="lf-choice-count">{others.filter((r) => PARTS[part].of(r) === v).length}</span>
+            <Box component="span" sx={countSx}>
+              {others.filter((r) => PARTS[part].of(r) === v).length}
+            </Box>
           </MenuItem>
         ))}
       </Menu>
@@ -301,28 +343,75 @@ function FilterMenu({ part, rows, filters }: { part: PartId; rows: GapRow[]; fil
   );
 }
 
+/* A filter or the order: what it is, then its value where one is chosen, lit in the accent while a value is. */
+const filterSx: SystemStyleObject<Theme> = {
+  display: "inline-flex",
+  alignItems: "center",
+  gap: 0.75,
+  py: "3px",
+  pr: 0.75,
+  pl: 1.25,
+  font: "inherit",
+  fontSize: 12.5,
+  fontWeight: 600,
+  color: "text.secondary",
+  bgcolor: "transparent",
+  border: 1,
+  borderColor: "surface.borderStrong",
+  borderRadius: "6px",
+  cursor: "pointer",
+  "&:hover": { color: "text.primary", borderColor: "text.disabled" },
+  "& strong": { fontWeight: 650, color: "text.primary" },
+  "&[data-on]": {
+    color: "primary.main",
+    bgcolor: "surface.accentSoft",
+    borderColor: (t) => `color-mix(in srgb, ${t.vars.palette.primary.main} 45%, transparent)`,
+    "& strong": { color: "primary.main" },
+  },
+};
+
+/* A value in a filter's menu, with how many gaps it would leave at the right. */
+const filterItemSx: SystemStyleObject<Theme> = { justifyContent: "space-between", gap: 2, minWidth: 200 };
+
+const countSx: SystemStyleObject<Theme> = { fontSize: 11, fontVariantNumeric: "tabular-nums", color: "text.disabled" };
+
 /* A value in a filter's menu or a group's heading, in its color where it has one. */
 function FilterValue({ part, value }: { part: PartId; value: string }) {
   if (part === "verdict")
     return (
-      <span className="lf-verdict-value risk-score" data-verdict={value}>
+      /* data-verdict colors the bars. Acceptable's name stays in the text's color, since its own is faint. */
+      <Box
+        component="span"
+        data-verdict={value}
+        sx={{
+          flex: "none",
+          display: "inline-flex",
+          alignItems: "center",
+          gap: 0.75,
+          fontWeight: 650,
+          lineHeight: "16px",
+          whiteSpace: "nowrap",
+          fontVariantNumeric: "tabular-nums",
+          color: value === "acceptable" ? "text.primary" : VERDICT_COLOR[value as Verdict],
+        }}
+      >
         <RiskBars verdict={value as Verdict} size="small" />
         {valueName(part, value)}
-      </span>
+      </Box>
     );
   if (part === "impact" || part === "likelihood" || part === "reach") return <PartTag part={part} value={value} />;
   if (part === "claim")
     return (
-      <span className="lf-claim-value" data-breaks={value === "breaks" || undefined}>
+      <Box component="span" sx={value === "breaks" ? { fontWeight: 600, color: "warning.main" } : undefined}>
         {valueName(part, value)}
-      </span>
+      </Box>
     );
   if (part === "stability" && value !== "none")
     return (
-      <span className="lf-level-value">
+      <Box component="span" sx={{ display: "inline-flex", alignItems: "center", gap: 1 }}>
         <CapabilityStability level={value as Level} name={valueName(part, value)} focusable={false} />
         {valueName(part, value)}
-      </span>
+      </Box>
     );
   return <span>{valueName(part, value)}</span>;
 }
@@ -332,19 +421,21 @@ function OrderMenu({ order }: { order: Order }) {
   const [anchor, setAnchor] = useState<HTMLElement | null>(null);
   return (
     <>
-      <button type="button" className="lf-filter" onClick={(e) => setAnchor(e.currentTarget)} aria-haspopup="menu">
+      <Box
+        component="button"
+        type="button"
+        onClick={(e) => setAnchor(e.currentTarget)}
+        aria-haspopup="menu"
+        aria-expanded={anchor ? true : undefined}
+        sx={filterSx}
+      >
         Order by
         <strong>{ORDER_NAMES[order]}</strong>
-        <ExpandMoreRoundedIcon sx={{ fontSize: 16 }} />
-      </button>
-      <Menu
-        anchorEl={anchor}
-        open={Boolean(anchor)}
-        onClose={() => setAnchor(null)}
-        slotProps={{ paper: { className: "project-menu" }, list: { className: "project-menu-list" } }}
-      >
+        <ExpandMoreRoundedIcon aria-hidden sx={{ fontSize: 16 }} />
+      </Box>
+      <Menu anchorEl={anchor} open={Boolean(anchor)} onClose={() => setAnchor(null)} slotProps={menuSlots(anchor)}>
         {ORDERS.map((o) => (
-          <MenuItem key={o} component="a" href={withParam("order", o === "risk" ? null : o)} selected={o === order} className="project-menu-item">
+          <MenuItem key={o} component="a" href={withParam("order", o === "risk" ? null : o)} selected={o === order}>
             {ORDER_NAMES[o]}
           </MenuItem>
         ))}
@@ -356,27 +447,27 @@ function OrderMenu({ order }: { order: Order }) {
 /* A group's heading: its value, in its color where it has one. */
 function GroupHead({ part, value }: { part: PartId; value: string }) {
   return (
-    <span className="lf-group-value">
+    <Box component="span" sx={{ fontWeight: 650 }}>
       <FilterValue part={part} value={value} />
-    </span>
+    </Box>
   );
 }
 
 /* A group of gaps under a heading, with how many and how they spread, its first few, then the rest on asking. */
 function GapGroup({ head, state, rows, here }: { head: ReactNode; state: DocketState; rows: GapRow[]; here?: string }) {
   return (
-    <div className="lf-card lf-group">
-      <header className="lf-group-head">
+    <Box sx={groupSx}>
+      <Box component="header" sx={groupHeadSx}>
         {head}
         <Count n={rows.length} />
         {rows.length > 1 ? (
-          <span className="lf-group-risk">
+          <Box component="span" sx={{ ml: "auto" }}>
             <RiskScore risk={acrossRows(rows)} of="this group" />
-          </span>
+          </Box>
         ) : null}
-      </header>
-      <GapTable state={state} rows={rows} first={8} here={here} />
-    </div>
+      </Box>
+      <GapTable state={state} rows={rows} first={8} here={here} bare />
+    </Box>
   );
 }
 
@@ -386,10 +477,17 @@ function GapGroup({ head, state, rows, here }: { head: ReactNode; state: DocketS
  * highest on, its kind and name, whether it breaks a claim, and what it's
  * on. The first `first`, then the rest on asking.
  */
-function GapTable({ state, rows, first, here }: { state: DocketState; rows: GapRow[]; first: number; here?: string }) {
+function GapTable({ state, rows, first, here, bare = false }: { state: DocketState; rows: GapRow[]; first: number; here?: string; bare?: boolean }) {
   return (
-    <div className="lf-table" role="table">
-      <div className="lf-tr lf-th" role="row">
+    <Box
+      role="table"
+      aria-label="Gaps"
+      sx={[
+        { position: "relative", overflow: "hidden", bgcolor: "background.paper", "& > [role=row] + [role=row]": { borderTop: 1, borderColor: "divider" } },
+        !bare && cardSx,
+      ]}
+    >
+      <Box role="row" sx={[trSx, thSx]}>
         <span role="columnheader">Risk</span>
         <span role="columnheader">
           <RiskPartIcon part="impact" size={13} />
@@ -406,18 +504,49 @@ function GapTable({ state, rows, first, here }: { state: DocketState; rows: GapR
         <span role="columnheader">Stability</span>
         <span role="columnheader">Gap</span>
         <span role="columnheader">On</span>
-      </div>
+      </Box>
       <ShowFirst n={first} total={rows.length} more="gaps">
         {(n) => rows.slice(0, n).map((r) => <GapLine key={r.gap.id} state={state} row={r} here={here} />)}
       </ShowFirst>
-    </div>
+    </Box>
   );
 }
+
+/*
+ * A row of the table: on a desktop, a column for each part; from a tablet
+ * down, the marks on one line over the gap and what it's on; on a phone,
+ * the marks wrap.
+ */
+const trSx: SystemStyleObject<Theme> = {
+  display: { xs: "flex", sm: "grid" },
+  flexWrap: "wrap",
+  gridTemplateColumns: { sm: "58px repeat(4, auto) minmax(0, 1fr)", md: "58px 124px 100px 64px 76px minmax(0, 1fr) minmax(0, 220px)" },
+  alignItems: "center",
+  columnGap: { xs: 1, sm: 1.5 },
+  rowGap: { xs: 0.5, md: 1.5 },
+  py: "7px",
+  px: 1.75,
+  fontSize: 13.5,
+  /* Every cell is a span, so these are the impact, likelihood and reach. */
+  "& > :nth-of-type(2), & > :nth-of-type(3), & > :nth-of-type(4)": { justifySelf: "start" },
+};
+
+/* The headings: small, uppercase and faint; from a tablet down, where the columns go, for screen readers only. */
+const thSx: SystemStyleObject<Theme> = {
+  py: 1,
+  fontSize: 11,
+  fontWeight: 650,
+  letterSpacing: "0.06em",
+  textTransform: "uppercase",
+  color: "text.disabled",
+  "& > span": { display: "inline-flex", alignItems: "center", gap: "5px" },
+  "@media (max-width: 899.95px)": visuallyHidden,
+};
 
 function GapLine({ state, row: r, here }: { state: DocketState; row: GapRow; here?: string }) {
   const { type, id } = subjectOf(r.gap);
   return (
-    <div className="lf-tr" role="row">
+    <Box role="row" sx={[trSx, { "&:hover": { bgcolor: (t) => `color-mix(in srgb, ${t.vars.palette.text.primary} 2.5%, transparent)` } }]}>
       <span role="cell">
         <GapRiskMark risk={r.risk} on={r.on} />
       </span>
@@ -431,24 +560,57 @@ function GapLine({ state, row: r, here }: { state: DocketState; row: GapRow; her
         <JudgementBadge part="reach" value={r.reach} inButton />
       </span>
       <span role="cell">
-        {r.on ? <CapabilityStability level={r.on.capability.stability} name={r.on.capability.name} focusable={false} /> : <span className="lf-default">–</span>}
+        {r.on ? (
+          <CapabilityStability level={r.on.capability.stability} name={r.on.capability.name} focusable={false} />
+        ) : (
+          <Box component="span" sx={{ color: "text.disabled" }}>
+            –
+          </Box>
+        )}
       </span>
-      <span role="cell" className="lf-gap">
+      <Box
+        component="span"
+        role="cell"
+        sx={{ display: "flex", flexDirection: "column", minWidth: 0, flexBasis: "100%", gridColumn: { sm: "1 / -1", md: "auto" } }}
+      >
         <Tooltip title={plainText(r.gap.description)}>
-          <a className="lf-gap-name" href={docHref("gap", r.gap.id)}>
+          <Box
+            component="a"
+            href={docHref("gap", r.gap.id)}
+            sx={{ minWidth: 0, color: "text.primary", textDecoration: "none", "&:hover": { color: "primary.main" } }}
+          >
             <Excerpt text={r.gap.name} lines={1} />
-          </a>
+          </Box>
         </Tooltip>
-        <span className="lf-gap-tags">
+        <Box component="span" sx={{ display: "inline-flex", gap: 1, fontSize: 11.5, color: "text.disabled" }}>
           <span>{r.kind === "technical" ? "Technical" : "Product"}</span>
-          {r.claim ? <span className="lf-claim">Breaks a claim</span> : null}
-        </span>
-      </span>
-      <span role="cell" className="lf-on">
+          {r.claim ? (
+            <Box component="span" sx={{ fontWeight: 600, color: "warning.main" }}>
+              Breaks a claim
+            </Box>
+          ) : null}
+        </Box>
+      </Box>
+      {/* lf-on: what it's on and its initiatives read quieter here, and line up at the right, from their own components' rules. */}
+      <Box
+        component="span"
+        role="cell"
+        className="lf-on"
+        sx={{
+          minWidth: 0,
+          flexBasis: "100%",
+          gridColumn: { sm: "1 / -1", md: "auto" },
+          overflow: "hidden",
+          fontSize: 12.5,
+          whiteSpace: "nowrap",
+          textOverflow: "ellipsis",
+          textAlign: { xs: "left", md: "right" },
+        }}
+      >
         {here === id ? null : <SubjectLink state={state} type={type} id={id} />}
         <GapInitiatives state={state} gap={r.gap} />
-      </span>
-    </div>
+      </Box>
+    </Box>
   );
 }
 
@@ -459,9 +621,9 @@ function DecisionsTab({ holders, go }: { holders: DecisionHolder[]; go: Go }) {
   if (!holders.length) return <Empty>No open decisions written down.</Empty>;
   return (
     <>
-      <p className="lf-intro">
+      <Box component="p" sx={introSx}>
         Questions about what's intended that nobody has answered yet. Answering one deletes it, and the answer is written as whatever it became.
-      </p>
+      </Box>
       <HolderGroups
         state={go.state}
         holders={holders}
@@ -478,6 +640,28 @@ function DecisionsTab({ holders, go }: { holders: DecisionHolder[]; go: Go }) {
 }
 
 /* ——— Shared with the Decided page ——— */
+
+/* A line under the tabs saying what a tab holds. */
+export const introSx: SystemStyleObject<Theme> = { maxWidth: 760, mt: -1, mb: 2.5, fontSize: 13.5, color: "text.secondary" };
+
+/* A card: on the paper, ruled, with rounder corners than MUI's Card. */
+export const cardSx: SystemStyleObject<Theme> = { bgcolor: "background.paper", border: 1, borderColor: "divider", borderRadius: "10px" };
+
+/* A group of rows under what they're on, in a card of its own. */
+export const groupSx: SystemStyleObject<Theme> = { ...cardSx, mb: 1.5, overflow: "hidden" };
+
+/* A group's heading: what they're on, how many, and anything else at the right, on a faint band. */
+export const groupHeadSx: SystemStyleObject<Theme> = {
+  display: "flex",
+  flexWrap: "wrap",
+  alignItems: "center",
+  gap: "4px 10px",
+  px: 1.75,
+  py: 1.25,
+  bgcolor: (t) => `color-mix(in srgb, ${t.vars.palette.text.primary} 2.5%, transparent)`,
+  borderBottom: 1,
+  borderColor: "divider",
+};
 
 /* Links in Markdown, such as a concept's, open its page. */
 export const goFor = (state: DocketState): Go => ({
@@ -517,16 +701,16 @@ export function HolderGroups({
     if (!of.length) return null;
     return (
       <Section key={kind} title={`On ${KIND_NAMES[kind].many.toLowerCase()}`} count={of.reduce((n, h) => n + count(h), 0)}>
-        <div className="lf-card">
+        <Box sx={cardSx}>
           {of.map((h) => (
-            <div key={h.doc.id} className="lf-holder">
-              <header className="lf-holder-head">
+            <Box key={h.doc.id} sx={{ px: 2, py: 1.75, "& + &": { borderTop: 1, borderColor: "divider" } }}>
+              <Box component="header" sx={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "4px 10px", mb: 1.25, fontSize: 14 }}>
                 <SubjectLink state={state} type={h.kind} id={h.doc.id} withLevel />
-              </header>
+              </Box>
               {render(h)}
-            </div>
+            </Box>
           ))}
-        </div>
+        </Box>
       </Section>
     );
   });
@@ -552,10 +736,43 @@ export function ShowFirst({
     <>
       {children(shown)}
       {shown < total ? (
-        <button type="button" className={inline ? "lf-more lf-more-inline" : "lf-more"} onClick={() => setAll(true)}>
+        <Box component="button" type="button" onClick={() => setAll(true)} sx={[moreSx, inline && moreInlineSx]}>
           {inline ? `${total - shown} ${more}` : `Show all ${total} ${more}`}
-        </button>
+        </Box>
       ) : null}
     </>
   );
 }
+
+/* The rest of a long list, on asking: a dashed button the width of the list. */
+const moreSx: SystemStyleObject<Theme> = {
+  display: "block",
+  width: "100%",
+  mt: 1.25,
+  p: 1,
+  font: "inherit",
+  fontSize: 13,
+  fontWeight: 600,
+  color: "primary.main",
+  bgcolor: "transparent",
+  border: "1px dashed",
+  borderColor: "surface.borderStrong",
+  borderRadius: "8px",
+  cursor: "pointer",
+  "&:hover": { bgcolor: "surface.accentSoft" },
+};
+
+/* Under a group's few: a quiet line inside its card, lined up with the rows' text on a wider screen. */
+const moreInlineSx: SystemStyleObject<Theme> = {
+  m: 0,
+  pt: "7px",
+  pr: 1.75,
+  pb: "9px",
+  pl: { xs: 1.75, sm: "138px" },
+  textAlign: "left",
+  fontSize: 12.5,
+  border: 0,
+  borderTop: 1,
+  borderColor: "divider",
+  borderRadius: 0,
+};
