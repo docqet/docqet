@@ -288,7 +288,7 @@ export function Section({
   children: ReactNode;
 }) {
   return (
-    <Box component="section" id={id} sx={{ mb: 4, "& .page-card": { px: 2.25, py: 1.75 } }}>
+    <Box component="section" id={id} sx={{ mb: 4 }}>
       <Box component="header" sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1.5 }}>
         <Box
           component="h2"
