@@ -1,5 +1,5 @@
 import { ReadinessMark, StillNeeds } from "../Readiness";
-import { startedOf, type Readiness, type DocketState } from "../../state";
+import { startedOf, type Readiness, type DocqetState } from "../../state";
 import { useStatusFor } from "../../model";
 import { Section, Stat } from "../shell/layout";
 import { tabHref } from "./DocPage";
@@ -44,7 +44,7 @@ export function ReadinessFor({
   of,
   started = false,
 }: {
-  state: DocketState;
+  state: DocqetState;
   forRef: string;
   initiative?: string;
   of: string;

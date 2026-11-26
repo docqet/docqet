@@ -11,16 +11,16 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/render"
 
-	"github.com/exalynt/docket/internal/repositories"
-	"github.com/exalynt/docket/internal/services"
-	"github.com/exalynt/docket/internal/state"
+	"github.com/exalynt/docqet/internal/repositories"
+	"github.com/exalynt/docqet/internal/services"
+	"github.com/exalynt/docqet/internal/state"
 )
 
 // maxStateBytes bounds what a commit's state can be. The largest example,
 // a product of 36 capabilities and 368 rules, is under a megabyte.
 const maxStateBytes = 64 << 20
 
-// ProjectsHandler takes each project's states from `docket apply`, and
+// ProjectsHandler takes each project's states from `docqet apply`, and
 // hands them back whole, as the CLI reads them.
 type ProjectsHandler struct {
 	logger *slog.Logger

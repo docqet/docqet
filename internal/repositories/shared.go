@@ -1,5 +1,5 @@
 // Package repositories declares how the server keeps what it's sent, in
-// docket's terms. Its implementations, such as repositories/sqlite, only
+// docqet's terms. Its implementations, such as repositories/sqlite, only
 // persist: what to store, and when, is the services' to decide.
 package repositories
 

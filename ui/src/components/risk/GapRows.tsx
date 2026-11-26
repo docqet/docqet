@@ -8,7 +8,7 @@ import { Excerpt, plainText } from "../markdown/Markdown";
 import { LeftMark } from "../left/LeftMark";
 import Tooltip from "@mui/material/Tooltip";
 import { docHref } from "../../routes";
-import { VERDICTS, find, subjectOf, technicalDoc, type DocketState, type Gap, type Risk, type RiskAcross, type TechnicalDoc } from "../../state";
+import { VERDICTS, find, subjectOf, technicalDoc, type DocqetState, type Gap, type Risk, type RiskAcross, type TechnicalDoc } from "../../state";
 import { GapRiskMark, RiskBars, RiskScore, VERDICT_NAMES, riskScoreSx } from "./RiskScore";
 import { InitiativeTags } from "../Initiatives";
 import { Count } from "../shell/layout";
@@ -80,7 +80,7 @@ export function GapRows({
   grouped = true,
   allOpen = false,
 }: {
-  state: DocketState;
+  state: DocqetState;
   rows: GapRow[];
   here?: { id: string };
   grouped?: boolean;
@@ -152,7 +152,7 @@ export function GapRows({
   );
 }
 
-function GapLine({ state, row, risk, here, flat = false }: { state: DocketState; row: GapRow; risk: Risk; here?: { id: string }; flat?: boolean }) {
+function GapLine({ state, row, risk, here, flat = false }: { state: DocqetState; row: GapRow; risk: Risk; here?: { id: string }; flat?: boolean }) {
   const { gap } = row;
   const technical = !gap.domain;
   return (
@@ -175,14 +175,14 @@ function GapLine({ state, row, risk, here, flat = false }: { state: DocketState;
 }
 
 /* The initiatives a product gap's capability is part of, at the right under what it's on. A technical gap shows on too many capabilities to say. */
-export function GapInitiatives({ state, gap }: { state: DocketState; gap: Gap }) {
+export function GapInitiatives({ state, gap }: { state: DocqetState; gap: Gap }) {
   const { type, id } = subjectOf(gap);
   const capability = type === "capability" ? find(state.capabilities, id) : undefined;
   return capability ? <InitiativeTags state={state} ids={capability.initiatives} block end /> : null;
 }
 
 /* What a gap is on, as a link, unless it's the page it's shown on. */
-function onLink(state: DocketState, { gap, on }: GapRow, here?: { id: string }): ReactNode {
+function onLink(state: DocqetState, { gap, on }: GapRow, here?: { id: string }): ReactNode {
   const { type, id } = subjectOf(gap);
   if (here && id === here.id) return null;
   if (on || type === "mechanism" || type === "component") {

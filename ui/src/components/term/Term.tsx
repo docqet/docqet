@@ -5,7 +5,7 @@ import { TERMS, type TermId } from "./terms";
 import { TermDetails } from "../popovers/TermDetails";
 
 /*
- * One of Docket's words where it labels something, such as a heading or a
+ * One of Docqet's words where it labels something, such as a heading or a
  * kind, underlined with dots, opening what it means on hover, focus or tap.
  * By default it reads as the word's own name. `focusable={false}` inside a
  * button or link, which already takes focus; `hoverOnly` where a tap does

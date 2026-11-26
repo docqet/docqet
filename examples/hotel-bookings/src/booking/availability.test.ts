@@ -10,7 +10,7 @@ const booked: Booking = {
 };
 
 describe("assertRoomFree", () => {
-  // docket:verifies rule:no-double-booking@guest-stays
+  // docqet:verifies rule:no-double-booking@guest-stays
   it("refuses a room that's booked for one of the nights", () => {
     expect(() => assertRoomFree("12", { checkIn: "2026-12-03", checkOut: "2026-12-05" }, [booked])).toThrow();
   });

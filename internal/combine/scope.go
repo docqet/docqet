@@ -4,7 +4,7 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/exalynt/docket/internal/state"
+	"github.com/exalynt/docqet/internal/state"
 )
 
 // ScopeToInitiative narrows each project's state to one initiative, before

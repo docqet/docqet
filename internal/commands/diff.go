@@ -13,26 +13,26 @@ import (
 
 	"github.com/urfave/cli/v3"
 
-	"github.com/exalynt/docket/internal/diff"
-	"github.com/exalynt/docket/internal/git"
-	"github.com/exalynt/docket/internal/index"
-	"github.com/exalynt/docket/internal/project"
-	"github.com/exalynt/docket/internal/state"
+	"github.com/exalynt/docqet/internal/diff"
+	"github.com/exalynt/docqet/internal/git"
+	"github.com/exalynt/docqet/internal/index"
+	"github.com/exalynt/docqet/internal/project"
+	"github.com/exalynt/docqet/internal/state"
 )
 
-// DiffCommand shows what changed in Docket between two points.
-// docket:implements capability:changes
+// DiffCommand shows what changed in Docqet between two points.
+// docqet:implements capability:changes
 func DiffCommand() *cli.Command {
 	return &cli.Command{
-		Name:      "diff",
-		Category:  history,
-		Before:    maxArgs(2),
-		Usage:     "What changed in Docket between two points",
-		ArgsUsage: "[<from>] [<to>]",
-		Description: `Compares two states of the project in Docket's words. Each point is a commit,
+		Name:         "diff",
+		Category:     history,
+		ArgValidator: maxArgs(2),
+		Usage:        "What changed in Docqet between two points",
+		ArgsUsage:    "[<from>] [<to>]",
+		Description: `Compares two states of the project in Docqet's words. Each point is a commit,
 branch or tag, or a state file. <from> is the last commit when it's left out,
 and <to> is the working tree, or with --staged, what's staged. It lists what a
-change removed with no Docket-Became trailer saying what it became, for its
+change removed with no Docqet-Became trailer saying what it became, for its
 author to say in the commit.`,
 		Flags: withSourceFlags(
 			&cli.BoolFlag{Name: "staged", Usage: "compare the last commit with what's staged"},
@@ -134,7 +134,7 @@ func statePoint(ctx context.Context, root, p string, staged bool) (point, error)
 	}
 	st, err := index.Index(fsys)
 	if errors.Is(err, fs.ErrNotExist) && sha != "" {
-		// Before the project had a docket.yaml, it declared nothing.
+		// Before the project had a docqet.yaml, it declared nothing.
 		return point{state: &state.State{}, label: label, sha: sha}, nil
 	}
 	if err != nil {
@@ -143,7 +143,7 @@ func statePoint(ctx context.Context, root, p string, staged bool) (point, error)
 	return point{state: st, label: label, sha: sha}, nil
 }
 
-// becameBetween reads the Docket-Became trailers of the commits between two
+// becameBetween reads the Docqet-Became trailers of the commits between two
 // points: from from's commit to to's, or to HEAD when to isn't a commit.
 func becameBetween(ctx context.Context, root string, from, to point) (map[string][]string, error) {
 	if from.sha == "" {
@@ -170,7 +170,7 @@ func becameBetween(ctx context.Context, root string, from, to point) (map[string
 
 func printDiff(out io.Writer, d diff.Diff) {
 	if len(d.Changes) == 0 {
-		_, _ = fmt.Fprintln(out, "Nothing changed in Docket.")
+		_, _ = fmt.Fprintln(out, "Nothing changed in Docqet.")
 		return
 	}
 	tw := tabwriter.NewWriter(out, 0, 0, 2, ' ', 0)

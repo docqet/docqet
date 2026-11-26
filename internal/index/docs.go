@@ -10,13 +10,13 @@ import (
 
 	"go.yaml.in/yaml/v3"
 
-	"github.com/exalynt/docket/internal/state"
+	"github.com/exalynt/docqet/internal/state"
 )
 
 // frontmatter is every field any doc type can have, as written. Which fields
 // a type reads is decided as each entry is built; check validates them.
 type frontmatter struct {
-	Docket       string         `yaml:"docket"`
+	Docqet       string         `yaml:"docqet"`
 	ID           string         `yaml:"id"`
 	Domain       string         `yaml:"domain"`
 	Name         string         `yaml:"name"`
@@ -72,14 +72,14 @@ type decision struct {
 	Affects  []string `yaml:"affects"`
 }
 
-// doc is one Docket doc read from a file.
+// doc is one Docqet doc read from a file.
 type doc struct {
 	file string
 	fm   frontmatter
 	body string
 }
 
-var docketField = regexp.MustCompile(`(?m)^docket\s*:`)
+var docqetField = regexp.MustCompile(`(?m)^docqet\s*:`)
 
 // splitFrontmatter returns a Markdown file's frontmatter and body, and the
 // line the frontmatter's first line is on. ok is false when the file has no
@@ -116,12 +116,12 @@ func splitFrontmatter(data []byte) (fm, body []byte, ok bool) {
 // lineOfError is how yaml.v3 says where an error is.
 var lineOfError = regexp.MustCompile(`^(?:yaml: )?line (\d+): (.*)$`)
 
-// readDoc reads file as a Docket doc. isDoc is false when it isn't one: no
-// frontmatter, or none naming a `docket` type. A doc that can't be read, such
+// readDoc reads file as a Docqet doc. isDoc is false when it isn't one: no
+// frontmatter, or none naming a `docqet` type. A doc that can't be read, such
 // as one whose frontmatter isn't YAML, is a doc with problems and no entry.
 func readDoc(file string, data []byte) (d *doc, isDoc bool, problems []state.Problem) {
 	fmText, body, ok := splitFrontmatter(data)
-	if !ok || !docketField.Match(fmText) {
+	if !ok || !docqetField.Match(fmText) {
 		return nil, false, nil
 	}
 	// The frontmatter starts on the file's second line, after its ---.
@@ -145,11 +145,11 @@ func readDoc(file string, data []byte) (d *doc, isDoc bool, problems []state.Pro
 	fm.line, fm.entryLines = fieldLines(&node, at)
 
 	switch {
-	case !isDocType(fm.Docket):
-		return nil, true, append(problems, fileProblem(state.InvalidFrontmatter, file, fm.line["docket"],
-			fmt.Sprintf("docket is %q, which isn't a doc type: it's one of domain, feature, capability, rule, concept, persona, initiative, mechanism or component", fm.Docket)))
+	case !isDocType(fm.Docqet):
+		return nil, true, append(problems, fileProblem(state.InvalidFrontmatter, file, fm.line["docqet"],
+			fmt.Sprintf("docqet is %q, which isn't a doc type: it's one of domain, feature, capability, rule, concept, persona, initiative, mechanism or component", fm.Docqet)))
 	case fm.ID == "":
-		return nil, true, append(problems, fileProblem(state.InvalidFrontmatter, file, fm.line["docket"], "A doc needs an id."))
+		return nil, true, append(problems, fileProblem(state.InvalidFrontmatter, file, fm.line["docqet"], "A doc needs an id."))
 	}
 
 	// Gaps and tradeoffs need a key to be one: without one, there's nothing to

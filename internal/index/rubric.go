@@ -7,8 +7,8 @@ import (
 
 	"go.yaml.in/yaml/v3"
 
-	"github.com/exalynt/docket/internal/rubric"
-	"github.com/exalynt/docket/internal/state"
+	"github.com/exalynt/docqet/internal/rubric"
+	"github.com/exalynt/docqet/internal/state"
 )
 
 type rawRubric struct {
@@ -56,7 +56,7 @@ func (e *rawExample) UnmarshalYAML(node *yaml.Node) error {
 	return node.Decode((*plain)(e))
 }
 
-// Rubric is the rubric built into docket, as state holds it.
+// Rubric is the rubric built into docqet, as state holds it.
 // It's the same for every project, so it's read once.
 var Rubric = sync.OnceValues(func() (state.Rubric, error) {
 	var raw rawRubric

@@ -21,7 +21,7 @@ import {
   type Capability,
   type CapabilityLevel,
   type Doc,
-  type DocketState,
+  type DocqetState,
   type TechnicalKind,
   type PageAt,
   type Persona,
@@ -32,7 +32,7 @@ import { docHref, navigate, withParam, type Route } from "../../routes";
 import { PageHeader, View } from "../shell/layout";
 
 export type DocGo = {
-  state: DocketState;
+  state: DocqetState;
   onOpen: (kind: ExploreKind, id: string | null) => void;
   onConcept: (id: string) => void;
   onPick: (pick: Pick) => void;
@@ -164,7 +164,7 @@ export function DocHeader({
   marks,
   stats,
 }: {
-  state: DocketState;
+  state: DocqetState;
   kind: Pick["kind"] | TechnicalKind | "initiative";
   doc: Doc;
   title?: ReactNode;
@@ -242,7 +242,7 @@ export function DocHeader({
 }
 
 /* A domain in a trail, as a link to its page. */
-export function DomainCrumb({ state, id }: { state: DocketState; id: string }) {
+export function DomainCrumb({ state, id }: { state: DocqetState; id: string }) {
   return (
     <Crumb href={docHref("domain", id)} icon={<DomainIcon size={14} />}>
       {domainName(state, id)}
@@ -251,7 +251,7 @@ export function DomainCrumb({ state, id }: { state: DocketState; id: string }) {
 }
 
 /* The domains something spans, as links. */
-export function DomainTrail({ state, domains }: { state: DocketState; domains: string[] }) {
+export function DomainTrail({ state, domains }: { state: DocqetState; domains: string[] }) {
   if (!domains.length) return <span>In no domain</span>;
   return (
     <>
@@ -323,7 +323,7 @@ export function Avatars({ personas }: { personas: Persona[] }) {
 }
 
 /* Where links on a doc page go: to the page of what they name. */
-export function docGo(state: DocketState): DocGo {
+export function docGo(state: DocqetState): DocGo {
   const onGo = (pick: PageAt) => navigate(pageHref(pick));
   return {
     state,

@@ -9,7 +9,7 @@ import { ReadinessMark } from "../../components/Readiness";
 import { docHref, type Route } from "../../routes";
 import { InitiativeIcon } from "../../components/shell/ScopeFilter";
 import { Empty, PageHeader, View } from "../../components/shell/layout";
-import { capabilitiesById, find, gapsById, type Capability, type DocketState, type Initiative } from "../../state";
+import { capabilitiesById, find, gapsById, type Capability, type DocqetState, type Initiative } from "../../state";
 import { GapsCell, NameLink, Num, numSx, wideOnlySx } from "../../components/indexParts";
 
 /*
@@ -18,7 +18,7 @@ import { GapsCell, NameLink, Num, numSx, wideOnlySx } from "../../components/ind
  * capabilities. Like every page, it counts only the scope showing. A phone
  * leaves out the counts.
  */
-export default function InitiativesPage({ state }: { state: DocketState; route: Route }) {
+export default function InitiativesPage({ state }: { state: DocqetState; route: Route }) {
   return (
     <View title="Initiatives" wide>
       <PageHeader
@@ -68,7 +68,7 @@ export default function InitiativesPage({ state }: { state: DocketState; route: 
 }
 
 /* An initiative's row: the name, readiness, how many capabilities and personas are in it, and the product gaps in those capabilities. */
-function Row({ state, initiative: i }: { state: DocketState; initiative: Initiative }) {
+function Row({ state, initiative: i }: { state: DocqetState; initiative: Initiative }) {
   const { name, description: note } = i;
   const href = docHref("initiative", i.id);
   const left = docHref("initiative", i.id, "left");

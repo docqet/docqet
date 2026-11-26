@@ -14,7 +14,7 @@ import { STABILITY } from "../../components/stability/stability";
 import { docHref, sectionHref, type Route } from "../../routes";
 import { View } from "../../components/shell/layout";
 import { HeldDecisions } from "../../components/Fields";
-import { appliesAt, find, riskScore, subjectOf, technicalDoc, verdictOf, type DocketState, type Gap, type Risk, type Verdict } from "../../state";
+import { appliesAt, find, riskScore, subjectOf, technicalDoc, verdictOf, type DocqetState, type Gap, type Risk, type Verdict } from "../../state";
 import { EvidenceList } from "../../components/doc/EvidenceList";
 import { Missing } from "../../components/doc/Missing";
 /* EvidenceList's rules, until it's styled in place. */
@@ -28,7 +28,7 @@ import { InitiativeTags, initiativesOf } from "../../components/Initiatives";
  * expected outcomes it falls short of, the open decisions it waits on, and
  * where the code marks it.
  */
-export default function GapPage({ state, id }: { state: DocketState; id: string; route: Route }) {
+export default function GapPage({ state, id }: { state: DocqetState; id: string; route: Route }) {
   const gap = state.gaps.find((g) => g.id === id);
   if (!gap) return <Missing kind="gap" id={id} />;
   return <GapView state={state} gap={gap} />;
@@ -37,7 +37,7 @@ export default function GapPage({ state, id }: { state: DocketState; id: string;
 /* The rubric reference's place for an outcome's quality, on the glossary. */
 const qualityHref = (quality: string) => `${sectionHref("glossary", { tab: "rubric" })}#${quality}`;
 
-function GapView({ state, gap }: { state: DocketState; gap: Gap }) {
+function GapView({ state, gap }: { state: DocqetState; gap: Gap }) {
   const kind = gapKind(gap);
   const risk = gap.risk;
   const affected = gap.affected;
@@ -356,7 +356,7 @@ function Clamped({ text }: { text: string }) {
 }
 
 /* What a gap is on, as a link with its kind's icon: a capability, with its stability, or a mechanism or component. */
-function Subject({ state, gap }: { state: DocketState; gap: Gap }) {
+function Subject({ state, gap }: { state: DocqetState; gap: Gap }) {
   const { type, id } = subjectOf(gap);
   if (type === "capability") {
     const capability = find(state.capabilities, id);

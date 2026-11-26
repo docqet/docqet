@@ -43,7 +43,7 @@ func IsKebab(s string) bool {
 	return kebab.MatchString(s)
 }
 
-// The doc types, as `docket` names them.
+// The doc types, as `docqet` names them.
 const (
 	TypeDomain     = "domain"
 	TypeFeature    = "feature"

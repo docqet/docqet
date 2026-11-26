@@ -1,9 +1,0 @@
-# The agent kit's skill files, which show example annotations about the hotel
-# examples. They'd otherwise be read as Docket's own evidence. Only their
-# Markdown is left out, so the Go code beside it can still be annotated.
-# Docket's own docs need no entry: annotations are never read from a Docket
-# doc, so the concept docs can show examples freely.
-/kit/**/*.md
-
-# The agent kit's skill, written by docket kit. Its examples aren't this project's.
-/.claude/skills/docket/**/*.md

@@ -7,7 +7,7 @@ import { plural } from "../../components/names";
 import { PersonaRows } from "../../components/Personas";
 import { Maturity } from "../../components/maturity/Maturity";
 import { initiativesOf } from "../../components/Initiatives";
-import { domainName, featureConcepts, find, type DocketState, type Feature, levelInDomain } from "../../state";
+import { domainName, featureConcepts, find, type DocqetState, type Feature, levelInDomain } from "../../state";
 import { ExposureStat, MaturityStat } from "../../components/indexParts";
 import { type Route } from "../../routes";
 import { Empty, Section, Stat, Tabs, currentTab, type TabDef } from "../../components/shell/layout";
@@ -35,7 +35,7 @@ import { Missing } from "../../components/doc/Missing";
 import { docGo, faintSx, levelsSx, lineSx } from "../../components/doc/DocPage";
 
 /* A feature's page, or what shows when it isn't in the projects showing. */
-export default function FeatureView({ state, id, route }: { state: DocketState; id: string; route: Route }) {
+export default function FeatureView({ state, id, route }: { state: DocqetState; id: string; route: Route }) {
   const feature = find(state.features, id);
   if (!feature) return <Missing kind="feature" id={id} />;
   return <FeaturePage feature={feature} route={route} {...docGo(state)} />;
@@ -202,5 +202,5 @@ export function FeaturePage({ feature, route, ...go }: DocPageProps & { feature:
 }
 
 /* The levels of a feature's capabilities in one domain, at their levels there. */
-export const partLevels = (state: DocketState, ids: string[], domain: string) =>
+export const partLevels = (state: DocqetState, ids: string[], domain: string) =>
   ids.flatMap((id) => find(state.capabilities, id) ?? []).map((c) => levelInDomain(c, domain));

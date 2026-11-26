@@ -11,26 +11,26 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/exalynt/docket/kit"
+	"github.com/exalynt/docqet/kit"
 )
 
 // The markers around the kit's block in a project's AGENTS.md or CLAUDE.md.
 const (
-	kitStart = "<!-- docket-kit:start -->"
-	kitEnd   = "<!-- docket-kit:end -->"
+	kitStart = "<!-- docqet-kit:start -->"
+	kitEnd   = "<!-- docqet-kit:end -->"
 )
 
 // skillsPlaceholder is what the kit's block writes in place of the folder
 // that holds the project's skills, filled in when it's installed.
 const skillsPlaceholder = "{{skills}}"
 
-// ignoreComment heads the kit's lines in .docketignore.
-const ignoreComment = "# The agent kit's skill, written by docket kit. Its examples aren't this project's."
+// ignoreComment heads the kit's lines in .docqetignore.
+const ignoreComment = "# The agent kit's skill, written by docqet kit. Its examples aren't this project's."
 
-// kitLock is what docket kit records about what it installed, so it changes
+// kitLock is what docqet kit records about what it installed, so it changes
 // and removes only what it wrote: the targets, and whether it added the
-// @AGENTS.md line to CLAUDE.md. It's in .agents/docket.lock, or in
-// .claude/docket.lock when the kit is only for Claude Code.
+// @AGENTS.md line to CLAUDE.md. It's in .agents/docqet.lock, or in
+// .claude/docqet.lock when the kit is only for Claude Code.
 type kitLock struct {
 	Targets  []string
 	Imported bool
@@ -38,7 +38,7 @@ type kitLock struct {
 }
 
 // kitLockPaths are where the lock can be, in the order they're looked at.
-var kitLockPaths = []string{".agents/docket.lock", ".claude/docket.lock"}
+var kitLockPaths = []string{".agents/docqet.lock", ".claude/docqet.lock"}
 
 // lockPathFor is where the lock goes for targets.
 func lockPathFor(targets []string) string {
@@ -49,7 +49,7 @@ func lockPathFor(targets []string) string {
 }
 
 // readKitLock reads the project's lock. Without one, the kit was installed by
-// a docket from before it kept one, or isn't installed: its targets are the
+// a docqet from before it kept one, or isn't installed: its targets are the
 // skill folders that are there, and it's taken not to have added anything
 // else.
 func readKitLock(root string) (kitLock, error) {
@@ -84,7 +84,7 @@ func readKitLock(root string) (kitLock, error) {
 
 // lockText is the lock's content for targets.
 func lockText(targets []string, imported bool) string {
-	text := "# Written by docket kit: what it installed, so it changes and removes only\n" +
+	text := "# Written by docqet kit: what it installed, so it changes and removes only\n" +
 		"# what it wrote. Don't edit it.\n" +
 		"targets: " + strings.Join(targets, " ") + "\n"
 	if imported {
@@ -115,7 +115,7 @@ func applyKit(root string, targets []string, check bool) ([]fileChange, error) {
 	if err != nil {
 		return nil, err
 	}
-	skill, err := fs.Sub(kit.Files, "skills/docket")
+	skill, err := fs.Sub(kit.Files, "skills/docqet")
 	if err != nil {
 		return nil, err
 	}
@@ -207,12 +207,12 @@ func applyKit(root string, targets []string, check bool) ([]fileChange, error) {
 		return nil, err
 	}
 	changes = append(changes, c...)
-	status, err := syncIgnore(filepath.Join(root, ".docketignore"), want, unwanted, check)
+	status, err := syncIgnore(filepath.Join(root, ".docqetignore"), want, unwanted, check)
 	if err != nil {
 		return nil, err
 	}
 	if status != "" {
-		changes = append(changes, fileChange{Path: ".docketignore", Status: status})
+		changes = append(changes, fileChange{Path: ".docqetignore", Status: status})
 	}
 	return changes, nil
 }
@@ -304,7 +304,7 @@ func syncDir(root, dir string, src fs.FS, check bool) ([]fileChange, error) {
 			}
 		}
 	} else if err == nil && !info.IsDir() {
-		return nil, fmt.Errorf("%s isn't a folder: move it away, and run docket kit again", dir)
+		return nil, fmt.Errorf("%s isn't a folder: move it away, and run docqet kit again", dir)
 	}
 	var changes []fileChange
 	want := map[string]bool{}
@@ -423,7 +423,7 @@ func markers(name, text string) (i, j int, found bool, err error) {
 	case start == 0 && end == 0:
 		return 0, 0, false, nil
 	case start != 1 || end != 1 || strings.Index(text, kitEnd) < strings.Index(text, kitStart):
-		return 0, 0, false, fmt.Errorf("%s has to have one %s and one %s after it: fix the markers, and run docket kit again", name, kitStart, kitEnd)
+		return 0, 0, false, fmt.Errorf("%s has to have one %s and one %s after it: fix the markers, and run docqet kit again", name, kitStart, kitEnd)
 	}
 	i = strings.Index(text, kitStart)
 	j = strings.Index(text, kitEnd) + len(kitEnd)
@@ -529,10 +529,10 @@ func importAgents(file string, create, check bool) (status string, exists bool, 
 	return "updated", true, writeUnlessCheck(file, text+"@AGENTS.md\n", check)
 }
 
-// syncIgnore makes the project's .docketignore leave out the kit's skill
+// syncIgnore makes the project's .docqetignore leave out the kit's skill
 // folders in want, since the skill's example annotations would otherwise be
 // read as the project's own, and no longer list those in unwanted. It returns
-// "" when there's no .docketignore and nothing to add to one.
+// "" when there's no .docqetignore and nothing to add to one.
 func syncIgnore(file string, want, unwanted []string, check bool) (string, error) {
 	data, err := os.ReadFile(file)
 	exists := err == nil

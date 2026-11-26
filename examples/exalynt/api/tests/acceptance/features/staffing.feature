@@ -2,7 +2,7 @@ Feature: Staffing
   Each scheduled block gets one engineer: an eligible engineer claims it from
   the client's shared queue, or an admin assigns it.
 
-  # docket:verifies rule:listing-an-engineers-blocks@capacity
+  # docqet:verifies rule:listing-an-engineers-blocks@capacity
   Rule: The blocks an engineer is on can be listed across every client, and narrowed to a range of weeks
 
     Background:
@@ -19,7 +19,7 @@ Feature: Staffing
       When Exalynt lists the blocks Ada is on from the week of June 1 to the week of June 7
       Then only Ada's block for Acme is listed
 
-  # docket:verifies rule:claiming-staffs-the-block-directly@capacity
+  # docqet:verifies rule:claiming-staffs-the-block-directly@capacity
   Rule: Claiming puts the engineer straight on the block, with no team-held step in between
 
     Example: Claiming an open block
@@ -29,7 +29,7 @@ Feature: Staffing
       Then Ada is on the block
       And it's among the blocks Ada is on
 
-  # docket:verifies rule:claiming-requires-eligibility@capacity
+  # docqet:verifies rule:claiming-requires-eligibility@capacity
   Rule: An engineer must be eligible to claim a block: on a team assigned to its client
 
     Example: A team that doesn't support the client
@@ -39,7 +39,7 @@ Feature: Staffing
       Then the claim is refused
       And nobody is on the block
 
-  # docket:verifies rule:claims-must-fit-availability@capacity
+  # docqet:verifies rule:claims-must-fit-availability@capacity
   Rule: A block can't be claimed by an engineer whose availability that week can't fit it alongside what they already have
 
     Example: Their week is full
@@ -57,7 +57,7 @@ Feature: Staffing
       When Ada tries to claim the block
       Then the claim is refused
 
-  # docket:verifies rule:no-claiming-an-assigned-block@capacity
+  # docqet:verifies rule:no-claiming-an-assigned-block@capacity
   Rule: An engineer can't claim a block someone else is on
 
     Example: Another engineer is on it
@@ -67,7 +67,7 @@ Feature: Staffing
       Then the claim is refused
       And the other engineer is on the block
 
-  # docket:verifies rule:late-claims-during-the-preferred-week@capacity
+  # docqet:verifies rule:late-claims-during-the-preferred-week@capacity
   Rule: A block nobody's on can still be claimed during its week
 
     Example: Claiming late
@@ -76,7 +76,7 @@ Feature: Staffing
       When Ada claims the block
       Then Ada is on the block
 
-  # docket:verifies rule:lapsed-blocks-must-be-moved-first@capacity
+  # docqet:verifies rule:lapsed-blocks-must-be-moved-first@capacity
   Rule: Once its week ends, a block nobody's on can't be claimed until it's moved
 
     Example: Its week has ended
@@ -86,7 +86,7 @@ Feature: Staffing
       Then the claim is refused
       And nobody is on the block
 
-  # docket:verifies rule:unclaiming-before-the-week-starts@capacity
+  # docqet:verifies rule:unclaiming-before-the-week-starts@capacity
   Rule: An engineer can unclaim a block they're on until its week starts
 
     Example: Unclaiming before the week starts
@@ -110,7 +110,7 @@ Feature: Staffing
       Then the unclaim is refused
       And the other engineer is on the block
 
-  # docket:verifies rule:warned-before-stranding-another-block@capacity
+  # docqet:verifies rule:warned-before-stranding-another-block@capacity
   Rule: An engineer is told before claiming a block that leaves another of that week's blocks with nobody who can take it
 
     Background:
@@ -128,7 +128,7 @@ Feature: Staffing
       Then Ada is on Globex's block
       And Acme's block is still scheduled next week, with nobody on it
 
-  # docket:verifies rule:leaving-a-clients-teams-releases-its-upcoming-blocks@capacity
+  # docqet:verifies rule:leaving-a-clients-teams-releases-its-upcoming-blocks@capacity
   Rule: An engineer who leaves a client's teams comes off its blocks whose week hasn't started
 
     Example: Removed from the team

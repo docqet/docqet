@@ -1,6 +1,6 @@
 package derive
 
-import "github.com/exalynt/docket/internal/combine"
+import "github.com/exalynt/docqet/internal/combine"
 
 // RiskBand is a quarter of the exposure scale: how much the gaps still open
 // on some capabilities put at stake.

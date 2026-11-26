@@ -11,7 +11,7 @@ import { Excerpt } from "../markdown/Markdown";
 import { Term } from "../term/Term";
 import { LeftSummary, leftOf } from "../left/LeftSummary";
 import { InitiativeTags } from "../Initiatives";
-import { find, leftCount, type Capability, type DocketState } from "../../state";
+import { find, leftCount, type Capability, type DocqetState } from "../../state";
 import { docHref } from "../../routes";
 import { Empty } from "../shell/layout";
 import { LevelName, faintSx } from "./DocPage";
@@ -47,7 +47,7 @@ export function CapabilityTable({
   technical = true,
   compact = false,
 }: {
-  state: DocketState;
+  state: DocqetState;
   capabilities: Capability[];
   domain?: string;
   technical?: boolean;

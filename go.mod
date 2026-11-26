@@ -1,4 +1,4 @@
-module github.com/exalynt/docket
+module github.com/exalynt/docqet
 
 go 1.26.6
 

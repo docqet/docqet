@@ -10,7 +10,7 @@ import { Term } from "../../components/term/Term";
 import { Excerpt } from "../../components/markdown/Markdown";
 import { docHref, type Route } from "../../routes";
 import { Empty, PageHeader, Tabs, View, currentTab, type TabDef } from "../../components/shell/layout";
-import { gapsById, type DocketState, type TechnicalDoc, type TechnicalKind } from "../../state";
+import { gapsById, type DocqetState, type TechnicalDoc, type TechnicalKind } from "../../state";
 import { DocLink, GapsCell, Num, numSx, whereSx, wideOnlySx } from "../../components/indexParts";
 
 /*
@@ -19,7 +19,7 @@ import { DocLink, GapsCell, Num, numSx, whereSx, wideOnlySx } from "../../compon
  * with the worst one's impact, and how many tradeoffs and expected outcomes
  * it has. The one with the worst gap comes first.
  */
-export default function BuiltPage({ state, route }: { state: DocketState; route: Route }) {
+export default function BuiltPage({ state, route }: { state: DocqetState; route: Route }) {
   const tabs: TabDef[] = [
     { id: "mechanisms", label: "Mechanisms", term: "mechanism" as const, count: state.mechanisms.length },
     { id: "components", label: "Components", term: "component" as const, count: state.components.length },
@@ -40,7 +40,7 @@ export default function BuiltPage({ state, route }: { state: DocketState; route:
 }
 
 /* A row each, worst gap first. A phone leaves out the counts of tradeoffs and outcomes. */
-function TechnicalTable({ state, kind, docs }: { state: DocketState; kind: TechnicalKind; docs: TechnicalDoc[] }) {
+function TechnicalTable({ state, kind, docs }: { state: DocqetState; kind: TechnicalKind; docs: TechnicalDoc[] }) {
   const risk = (d: TechnicalDoc) => d.risk.score ?? -1;
   const rows = [...docs].sort((a, b) => risk(b) - risk(a) || b.gaps.length - a.gaps.length);
   return (

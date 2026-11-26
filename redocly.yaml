@@ -9,5 +9,5 @@ extends:
 rules:
   # A private API, with no license to name.
   info-license: off
-  # The only servers listed are local: `docket serve` and `docket ui`.
+  # The only servers listed are local: `docqet serve` and `docqet ui`.
   no-server-example.com: off

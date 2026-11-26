@@ -10,7 +10,7 @@ import { TechnicalRows } from "../../components/Technical";
 import { PersonaRows } from "../../components/Personas";
 import { levelName } from "../../components/stability/stability";
 import { ReadinessMark, needsLine } from "../../components/Readiness";
-import { outcomesOf, builtOn, docDomains, domainName, find, nextLevel, projectName, type Capability, type DocketState } from "../../state";
+import { outcomesOf, builtOn, docDomains, domainName, find, nextLevel, projectName, type Capability, type DocqetState } from "../../state";
 import { ExposureStat } from "../../components/indexParts";
 import { docHref, type Route } from "../../routes";
 import { Section, Stat, Tabs, currentTab, type TabDef } from "../../components/shell/layout";
@@ -36,7 +36,7 @@ import { Missing } from "../../components/doc/Missing";
 import { docGo, cardSx, Crumb, faintSx, levelsSx, lineSx } from "../../components/doc/DocPage";
 
 /* A capability's page, or what shows when it isn't in the projects showing. */
-export default function CapabilityView({ state, id, route }: { state: DocketState; id: string; route: Route }) {
+export default function CapabilityView({ state, id, route }: { state: DocqetState; id: string; route: Route }) {
   const capability = find(state.capabilities, id);
   if (!capability) return <Missing kind="capability" id={id} />;
   return <CapabilityPage capability={capability} route={route} {...docGo(state)} />;
@@ -296,7 +296,7 @@ export function CapabilityPage({ capability, route, ...go }: DocPageProps & { ca
  * rubric, or for a draft, which claims none. An outcome nothing names counts
  * as met on its level's word.
  */
-export function rubricCounts(state: DocketState, capability: Capability) {
+export function rubricCounts(state: DocqetState, capability: Capability) {
   if (!state.rubric || capability.stability === null) return null;
   const standings = state.rubric.qualities
     .flatMap(outcomesOf)

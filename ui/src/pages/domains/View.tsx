@@ -9,7 +9,7 @@ import { Term } from "../../components/term/Term";
 import { CapabilityStability } from "../../components/CapabilityLabel";
 import { NAMES, plural } from "../../components/names";
 import { initiativesOf } from "../../components/Initiatives";
-import { domainName, domainCapabilities, find, partOf, type DocketState, type Domain, levelInDomain } from "../../state";
+import { domainName, domainCapabilities, find, partOf, type DocqetState, type Domain, levelInDomain } from "../../state";
 import { ExposureStat, MaturityStat } from "../../components/indexParts";
 import { docHref, type Route } from "../../routes";
 import { Empty, Section, Stat, Tabs, currentTab, type TabDef } from "../../components/shell/layout";
@@ -51,7 +51,7 @@ const featureCardSx: SystemStyleObject<Theme> = {
 };
 
 /* A domain's page, or what shows when it isn't in the projects showing. */
-export default function DomainView({ state, id, route }: { state: DocketState; id: string; route: Route }) {
+export default function DomainView({ state, id, route }: { state: DocqetState; id: string; route: Route }) {
   const domain = find(state.domains, id);
   if (!domain) return <Missing kind="domain" id={id} />;
   return <DomainPage domain={domain} route={route} {...docGo(state)} />;

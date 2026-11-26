@@ -7,7 +7,7 @@ import { STABILITY } from "./stability/stability";
 import { sectionHref, docHref } from "../routes";
 import { HeldDecisions } from "./Fields";
 import { kindSx, onSx, rowSx } from "./risk/GapRows";
-import { expectedOutcome, find, outcomesAffected, subjectOf, technicalDoc, type DocketState, type Tradeoff } from "../state";
+import { expectedOutcome, find, outcomesAffected, subjectOf, technicalDoc, type DocqetState, type Tradeoff } from "../state";
 
 /*
  * Tradeoffs, easy to take in however many there are, the way GapRows shows
@@ -18,7 +18,7 @@ import { expectedOutcome, find, outcomesAffected, subjectOf, technicalDoc, type 
  * so, and opens to the question. What it's on is named unless that's the
  * page it's shown on (`here`).
  */
-export function TradeoffRows({ state, tradeoffs, here }: { state: DocketState; tradeoffs: Tradeoff[]; here?: { id: string } }) {
+export function TradeoffRows({ state, tradeoffs, here }: { state: DocqetState; tradeoffs: Tradeoff[]; here?: { id: string } }) {
   return (
     <Box component="ul" sx={{ display: "flex", flexDirection: "column" }}>
       {tradeoffs.map((t) => (
@@ -42,7 +42,7 @@ function Side({ side, children }: { side?: keyof typeof SIDE_COLORS; children: R
   );
 }
 
-function TradeoffLine({ state, tradeoff: t, here }: { state: DocketState; tradeoff: Tradeoff; here?: { id: string } }) {
+function TradeoffLine({ state, tradeoff: t, here }: { state: DocqetState; tradeoff: Tradeoff; here?: { id: string } }) {
   const { type } = subjectOf(t);
   const named = outcomesAffected(t).flatMap((id) => expectedOutcome(state.rubric, id) ?? []);
   const reopened = t.decisions;
@@ -132,7 +132,7 @@ function TradeoffLine({ state, tradeoff: t, here }: { state: DocketState; tradeo
 }
 
 /* What a tradeoff is on, as a link, unless it's the page it's shown on. */
-function onLink(state: DocketState, t: Tradeoff, here?: { id: string }): ReactNode {
+function onLink(state: DocqetState, t: Tradeoff, here?: { id: string }): ReactNode {
   const { type, id } = subjectOf(t);
   if (here && id === here.id) return null;
   if (type === "capability") {

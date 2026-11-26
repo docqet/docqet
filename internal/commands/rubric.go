@@ -11,27 +11,27 @@ import (
 
 	"github.com/urfave/cli/v3"
 
-	"github.com/exalynt/docket/internal/combine"
-	"github.com/exalynt/docket/internal/derive"
-	"github.com/exalynt/docket/internal/index"
-	"github.com/exalynt/docket/internal/state"
+	"github.com/exalynt/docqet/internal/combine"
+	"github.com/exalynt/docqet/internal/derive"
+	"github.com/exalynt/docqet/internal/index"
+	"github.com/exalynt/docqet/internal/state"
 )
 
 // RubricCommand shows the stability rubric: what each level expects.
-// docket:implements capability:rubric
+// docqet:implements capability:rubric
 func RubricCommand() *cli.Command {
 	return &cli.Command{
 		Name:      "rubric",
 		Category:  reading,
 		Usage:     "What each stability level expects",
 		ArgsUsage: "[outcome:<quality>/<level>/<id>]",
-		Description: `Shows the stability rubric, which is built into docket and the same for every
+		Description: `Shows the stability rubric, which is built into docqet and the same for every
 project: every quality and the outcomes each level expects. --level shows what
 one level expects, including what lower levels carry up, with the examples of
 overengineering at that level. An outcome's reference shows it with its
 examples. --for and --to list what promoting a capability expects that its
 level doesn't yet, and where each outcome stands: only they read the project.`,
-		Before: maxArgs(1),
+		ArgValidator: maxArgs(1),
 		Flags: withSourceFlags(
 			&cli.StringFlag{Name: "level", Usage: "everything `LEVEL` expects, including what it carries up"},
 			&cli.StringFlag{Name: "for", Usage: "what promoting capability `REF` needs, with --to"},
@@ -50,7 +50,7 @@ level doesn't yet, and where each outcome stands: only they read the project.`,
 			if ref := cmd.Args().First(); ref != "" {
 				o, q := derive.ExpectedOutcome(&rubric, ref)
 				if o == nil {
-					return fmt.Errorf("%s isn't an outcome in the rubric: docket rubric lists them", ref)
+					return fmt.Errorf("%s isn't an outcome in the rubric: docqet rubric lists them", ref)
 				}
 				if asJSON {
 					writeJSON(out, map[string]any{"quality": q.ID, "outcome": o})

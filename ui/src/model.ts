@@ -6,20 +6,20 @@
  */
 
 import { useEffect, useEffectEvent, useState } from "react";
-import { listCapabilities, type OutcomeStandingResource } from "./services/docket/capabilities";
-import { isAbort, type Showing } from "./services/docket/client";
-import { listComponents } from "./services/docket/components";
-import { listConcepts } from "./services/docket/concepts";
-import { listDomains } from "./services/docket/domains";
-import { listFeatures } from "./services/docket/features";
-import { listGaps, type GapResource, type RiskOnResource } from "./services/docket/gaps";
-import { listInitiatives } from "./services/docket/initiatives";
-import { listMechanisms } from "./services/docket/mechanisms";
-import { listPersonas } from "./services/docket/personas";
-import { listProblems } from "./services/docket/problems";
-import { listProjects } from "./services/docket/projects";
-import { getRubric } from "./services/docket/rubric";
-import { listRules } from "./services/docket/rules";
+import { listCapabilities, type OutcomeStandingResource } from "./services/docqet/capabilities";
+import { isAbort, type Showing } from "./services/docqet/client";
+import { listComponents } from "./services/docqet/components";
+import { listConcepts } from "./services/docqet/concepts";
+import { listDomains } from "./services/docqet/domains";
+import { listFeatures } from "./services/docqet/features";
+import { listGaps, type GapResource, type RiskOnResource } from "./services/docqet/gaps";
+import { listInitiatives } from "./services/docqet/initiatives";
+import { listMechanisms } from "./services/docqet/mechanisms";
+import { listPersonas } from "./services/docqet/personas";
+import { listProblems } from "./services/docqet/problems";
+import { listProjects } from "./services/docqet/projects";
+import { getRubric } from "./services/docqet/rubric";
+import { listRules } from "./services/docqet/rules";
 import type {
   AffectedResource,
   ContributionResource,
@@ -32,9 +32,9 @@ import type {
   ReadinessResource,
   RiskSummaryResource,
   TechnicalResource,
-} from "./services/docket/shared";
-import { getStatus } from "./services/docket/status";
-import { listTradeoffs } from "./services/docket/tradeoffs";
+} from "./services/docqet/shared";
+import { getStatus } from "./services/docqet/status";
+import { listTradeoffs } from "./services/docqet/tradeoffs";
 import {
   READINESS_BANDS,
   RISK_BANDS,
@@ -47,7 +47,7 @@ import {
   type Decision,
   type DecisionHolder,
   type Doc,
-  type DocketState,
+  type DocqetState,
   type Domain,
   type Evidence,
   type Exposure,
@@ -181,8 +181,8 @@ async function readProduct(showing: Showing, signal?: AbortSignal) {
 export const loadProduct = async (showing: Showing, signal?: AbortSignal) => modelOf(await readProduct(showing, signal), showing);
 
 /* The product showing, from its resources. */
-function modelOf(r: Awaited<ReturnType<typeof readProduct>>, showing: Showing): DocketState {
-  const state: DocketState = {
+function modelOf(r: Awaited<ReturnType<typeof readProduct>>, showing: Showing): DocqetState {
+  const state: DocqetState = {
     showing,
     projects: r.projects.map((p): Project => ({
       id: p.id,
@@ -347,7 +347,7 @@ function modelOf(r: Awaited<ReturnType<typeof readProduct>>, showing: Showing): 
  * How the server's figures become the pages', given every doc showing, so
  * each figure's capabilities and gaps can be found among them.
  */
-function converters(state: DocketState) {
+function converters(state: DocqetState) {
   const byId = <T extends { id: string }>(list: T[]) => new Map(list.map((x) => [x.id, x]));
   const capabilities = byId(state.capabilities);
   const gaps = byId(state.gaps);
@@ -512,7 +512,7 @@ export function useRead<T>(key: string | null, read: (signal: AbortSignal) => Pr
  * feature, as `feature:<id>,domain:<id>`. With initiative, within that
  * initiative instead of what's showing. With no for, nothing is read.
  */
-export function useStatusFor(state: DocketState, forRef: string | null, initiative?: string | null): Read<Status> {
+export function useStatusFor(state: DocqetState, forRef: string | null, initiative?: string | null): Read<Status> {
   return useRead(forRef ? `${idOf(state)}|${forRef}|${initiative ?? ""}` : null, async (signal) => {
     const showing = initiative === undefined ? state.showing : { ...state.showing, initiative };
     const r = await getStatus(showing, forRef!, signal);
@@ -535,7 +535,7 @@ export type GapWithin = { gap: Gap; score: number; verdict: Verdict; on: RiskOn 
  * each scored there, as the server works them out: what's left for a persona,
  * a project or any other doc. With no for, nothing is read.
  */
-export function useGapsFor(state: DocketState, forRef: string | null): Read<GapWithin[]> {
+export function useGapsFor(state: DocqetState, forRef: string | null): Read<GapWithin[]> {
   return useRead(forRef ? `${idOf(state)}|${forRef}` : null, async (signal) => {
     const list = await listGaps(state.showing, { for: forRef!, sort: "risk" }, signal);
     const byId = new Map(state.gaps.map((g) => [g.id, g]));

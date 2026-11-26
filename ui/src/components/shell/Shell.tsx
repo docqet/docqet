@@ -24,7 +24,7 @@ import ScopeFilter, { InitiativeIcon } from "./ScopeFilter";
 import type { Scope } from "../../scope";
 import { followLink, navigate, sectionHref, sectionOf, docHref, type Route, type Section } from "../../routes";
 import Search, { type Selection } from "./Search";
-import { openDecisions, pageHref, type DocketState, type Product } from "../../state";
+import { openDecisions, pageHref, type DocqetState, type Product } from "../../state";
 
 /*
  * Every view's frame: a bar across the top that says where the reader is and
@@ -46,7 +46,7 @@ export default function Shell({
   onProjects,
   children,
 }: {
-  state: DocketState;
+  state: DocqetState;
   product: Product;
   products: ProductChoice[];
   scope: Scope;
@@ -108,7 +108,7 @@ export default function Shell({
         <Box sx={{ flex: 1, display: "flex", justifyContent: { xs: "flex-end", sm: "center" }, minWidth: 0 }}>
           <Search state={state} all={product.projects} onSelect={select} />
         </Box>
-        <Tooltip title="What Docket's words mean">
+        <Tooltip title="What Docqet's words mean">
           <Box
             component="a"
             href={sectionHref("glossary")}
@@ -153,7 +153,7 @@ export default function Shell({
 type NavItem = { section: Section; label: string; icon: ReactNode; question: string; count?: number };
 
 /* Which question the reader is asking: a link per section, grouped, each with how many it holds. `onGo` runs when one is chosen, to close the drawer. */
-function SideNav({ state, at, onGo }: { state: DocketState; at: Section; onGo: () => void }) {
+function SideNav({ state, at, onGo }: { state: DocqetState; at: Section; onGo: () => void }) {
   const decisions = [...state.domains, ...state.features, ...state.capabilities, ...state.mechanisms, ...state.components].reduce(
     (n, doc) => n + openDecisions(doc).length,
     0,

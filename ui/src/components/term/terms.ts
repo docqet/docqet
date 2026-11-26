@@ -1,6 +1,6 @@
 /*
- * What each of Docket's own words means, for the popover a Term opens. Taken
- * from Docket's concept docs, in each domain's concepts folder in docket/,
+ * What each of Docqet's own words means, for the popover a Term opens. Taken
+ * from Docqet's concept docs, in each domain's concepts folder in docqet/,
  * shortened to what someone looking at the page needs. Stability and maturity also have popovers of
  * their own, on their marks; these are for where they label something.
  */
@@ -43,13 +43,13 @@ export const TERMS: Record<TermId, TermEntry> = {
   project: {
     name: "Project",
     means:
-      "One piece of software that describes itself to Docket: a folder marked by a docket.yaml, often a repository, or one package in a repository with several. Its docs say what the software can do and the rules it follows; its code and tests do it and prove it.",
+      "One piece of software that describes itself to Docqet: a folder marked by a docqet.yaml, often a repository, or one package in a repository with several. Its docs say what the software can do and the rules it follows; its code and tests do it and prove it.",
     more: "A hotel's booking app is one project; its billing service is another. Each is indexed on its own, then shown together as their product.",
   },
   product: {
     name: "Software product",
     means:
-      "The end result of one or more pieces of software working together to accomplish a high-level goal, such as a web app, a mobile app and the API behind them. Each piece is a project, and Docket shows a product's projects together, as one picture.",
+      "The end result of one or more pieces of software working together to accomplish a high-level goal, such as a web app, a mobile app and the API behind them. Each piece is a project, and Docqet shows a product's projects together, as one picture.",
     more: "A hotel's booking app and its billing service make one product, Hotel.",
   },
   domain: {
@@ -183,6 +183,6 @@ export const TERMS: Record<TermId, TermEntry> = {
   contradiction: {
     name: "Contradiction",
     means:
-      "Two projects that should agree and don't, such as describing the same thing differently. Docket shows it, naming the projects, instead of choosing one.",
+      "Two projects that should agree and don't, such as describing the same thing differently. Docqet shows it, naming the projects, instead of choosing one.",
   },
 };

@@ -1,5 +1,5 @@
-// Package commands holds every `docket` command, one file each, as
-// cmd/docket/README.md drafts them. Most are scaffolded and not built yet:
+// Package commands holds every `docqet` command, one file each, as
+// cmd/docqet/README.md drafts them. Most are scaffolded and not built yet:
 // they take their drafted flags and answer that they aren't built.
 package commands
 
@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"path/filepath"
 	"slices"
 	"strings"
 
@@ -43,12 +44,37 @@ const (
 // printed.
 var errFound = errors.New("found what it was asked to fail on")
 
-// Root builds the docket command and every command under it.
-func Root(version string) *cli.Command {
+// The command's name, and the shorter one installed beside it.
+const (
+	longName  = "docqet"
+	shortName = "dqt"
+)
+
+// Name is what to call the command, from how it was run: dqt when it was run
+// as dqt, so its help and completion use the name that was typed, and docqet
+// otherwise.
+func Name(arg0 string) string {
+	base := strings.TrimSuffix(filepath.Base(arg0), ".exe")
+	if base == shortName {
+		return shortName
+	}
+	return longName
+}
+
+// Root builds the command, called name, and every command under it.
+func Root(name, version string) *cli.Command {
 	root := &cli.Command{
-		Name:    "docket",
+		Name:    name,
 		Usage:   "What software can do, who it serves, and how ready it is",
 		Version: version,
+		// `completion <shell>` prints a script that completes the command
+		// under the name it was run as.
+		EnableShellCompletion: true,
+		ConfigureShellCompletionCommand: func(cmd *cli.Command) {
+			cmd.Hidden = false
+			cmd.Category = settingUp
+			cmd.Usage = "Print a script that completes commands and flags in bash, zsh, fish or PowerShell"
+		},
 		Flags: []cli.Flag{
 			&cli.BoolFlag{
 				Name:  "json",
@@ -119,7 +145,7 @@ func Finish(root *cli.Command, args []string, err error) int {
 	if wantsJSON(root, args) {
 		writeJSON(root.Writer, map[string]string{"error": err.Error()})
 	} else {
-		_, _ = fmt.Fprintf(root.ErrWriter, "docket: %s\n", err)
+		_, _ = fmt.Fprintf(root.ErrWriter, "%s: %s\n", root.Name, err)
 	}
 	return exitCouldNotRun
 }
@@ -139,7 +165,7 @@ func writeJSON(w io.Writer, v any) {
 
 // notBuilt is what a scaffolded command answers until it's built.
 func notBuilt(cmd *cli.Command) error {
-	return fmt.Errorf("%s isn't built yet: cmd/docket/README.md drafts what it will do", strings.TrimPrefix(cmd.FullName(), "docket "))
+	return fmt.Errorf("%s isn't built yet: cmd/docqet/README.md drafts what it will do", strings.TrimPrefix(cmd.FullName(), cmd.Root().Name+" "))
 }
 
 // notBuiltAction is the action of every command not built yet.

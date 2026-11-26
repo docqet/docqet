@@ -3,10 +3,10 @@ package http
 import (
 	"strings"
 
-	"github.com/exalynt/docket/internal/combine"
-	"github.com/exalynt/docket/internal/derive"
-	"github.com/exalynt/docket/internal/services"
-	"github.com/exalynt/docket/internal/state"
+	"github.com/exalynt/docqet/internal/combine"
+	"github.com/exalynt/docqet/internal/derive"
+	"github.com/exalynt/docqet/internal/services"
+	"github.com/exalynt/docqet/internal/state"
 )
 
 // The builders here translate what combine puts together, and what derive

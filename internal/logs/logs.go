@@ -1,4 +1,4 @@
-// Package logs builds docket's structured logger (log/slog). Only the
+// Package logs builds docqet's structured logger (log/slog). Only the
 // commands that serve log: the rest print their results instead.
 package logs
 

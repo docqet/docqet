@@ -19,12 +19,12 @@ import { withParam, type Route } from "../../routes";
  * Summary first, details on demand: a page leads with its header, and a count
  * links to where those things are listed rather than listing them inline.
  *
- * Where a label is one of Docket's words, such as Rules or Readiness, `term`
+ * Where a label is one of Docqet's words, such as Rules or Readiness, `term`
  * makes it a Term, opening what the word means on hover. It's hover only, so
  * a tap or click still does what the tab or tile does.
  */
 
-/* A label, as a Term when it's one of Docket's words. */
+/* A label, as a Term when it's one of Docqet's words. */
 const labelled = (label: ReactNode, term?: TermId) =>
   term ? (
     <Term id={term} hoverOnly>
@@ -37,7 +37,7 @@ const labelled = (label: ReactNode, term?: TermId) =>
 /* A view's scrolling area. `wide` lets a table use the whole width. Sets the tab's title. `data-view` marks it for a doc page to scroll back to its top. */
 export function View({ title, wide = false, children }: { title: string; wide?: boolean; children: ReactNode }) {
   useEffect(() => {
-    document.title = `${title} · Docket`;
+    document.title = `${title} · Docqet`;
   }, [title]);
   return (
     <Box data-view sx={{ height: "100%", overflowY: "auto" }}>

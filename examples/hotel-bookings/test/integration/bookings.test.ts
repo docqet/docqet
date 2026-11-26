@@ -8,7 +8,7 @@ beforeAll(async () => (db = await testDatabase()));
 afterAll(() => db.end());
 
 describe("saveBooking", () => {
-  // docket:verifies rule:no-double-booking@guest-stays
+  // docqet:verifies rule:no-double-booking@guest-stays
   it("is refused by the database when the room is taken that night", async () => {
     await saveBooking(db, { id: "b1", roomId: "12", stay: { checkIn: "2026-12-01", checkOut: "2026-12-04" }, status: "confirmed" });
     await expect(

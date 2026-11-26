@@ -1,12 +1,12 @@
 import type { Booking, Stay } from "./stay";
 
 // Stays are half-open: the check-out date isn't a night of the stay.
-// docket:implements rule:same-day-turnover@guest-stays
+// docqet:implements rule:same-day-turnover@guest-stays
 export function overlaps(a: Stay, b: Stay): boolean {
   return a.checkIn < b.checkOut && b.checkIn < a.checkOut;
 }
 
-// docket:implements rule:no-double-booking@guest-stays component:bookings
+// docqet:implements rule:no-double-booking@guest-stays component:bookings
 export function assertRoomFree(roomId: string, stay: Stay, existing: Booking[]): void {
   const clash = existing.find(
     (booking) =>

@@ -16,10 +16,10 @@ coverage.*
 ui/node_modules/
 ui/dist/
 
-# Docs, Docket's own Docket docs, and examples: not part of the image. The
+# Docs, Docqet's own Docqet docs, and examples: not part of the image. The
 # rubric the binary embeds is in internal/, so it's kept.
 docs/
-/docket/
-/docket.yaml
-/.docketignore
+/docqet/
+/docqet.yaml
+/.docqetignore
 examples/

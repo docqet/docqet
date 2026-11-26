@@ -5,7 +5,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/exalynt/docket/internal/state"
+	"github.com/exalynt/docqet/internal/state"
 )
 
 // The verbs an annotation can have.
@@ -16,7 +16,7 @@ const (
 	verbTradeoff   = "tradeoff"
 )
 
-// annotation is one docket:<verb> comment, with the place it's on.
+// annotation is one docqet:<verb> comment, with the place it's on.
 type annotation struct {
 	verb  string
 	refs  []string
@@ -25,7 +25,7 @@ type annotation struct {
 	place state.Place
 }
 
-var annotationPattern = regexp.MustCompile(`docket:(verifies|implements|gap|tradeoff)[ \t]+(.*)$`)
+var annotationPattern = regexp.MustCompile(`docqet:(verifies|implements|gap|tradeoff)[ \t]+(.*)$`)
 
 // parseAnnotation finds an annotation on a line: its verb and the references
 // it names. Nothing is parsed around it, so it works in any comment syntax:
@@ -48,11 +48,11 @@ func parseAnnotation(line string) (verb string, refs []string, ok bool) {
 	return m[1], refs, true
 }
 
-// scanAnnotations finds every annotation in a file that isn't a Docket doc.
+// scanAnnotations finds every annotation in a file that isn't a Docqet doc.
 // Each is on the first line below it that isn't blank or another annotation,
 // and is recorded as its own line with that line's text, as the spec says.
 func scanAnnotations(file string, data []byte) []annotation {
-	if isBinary(data) || !bytes.Contains(data, []byte("docket:")) {
+	if isBinary(data) || !bytes.Contains(data, []byte("docqet:")) {
 		return nil
 	}
 	lines := strings.Split(strings.ReplaceAll(string(data), "\r\n", "\n"), "\n")

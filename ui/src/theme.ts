@@ -4,11 +4,11 @@ import { createTheme, type Shadows } from "@mui/material/styles";
 import type { StabilityLevelId } from "./components/stability/stability";
 
 /*
- * Docket's colors beyond MUI's own roles. Each is defined for both schemes
+ * Docqet's colors beyond MUI's own roles. Each is defined for both schemes
  * below, and reaches components as `theme.vars.palette.<name>` and the
  * stylesheets as `--mui-palette-<name>-<key>`.
  */
-type DocketPalette = {
+type DocqetPalette = {
   /* The canvas and its panels: the dots behind the map, frosted panels, stronger borders, the accent's soft fill, and a card's shadow. */
   surface: { dot: string; panel: string; borderStrong: string; accentSoft: string; shadow: string };
   /* Domain concepts: a teal of their own, apart from features and capabilities. */
@@ -31,9 +31,9 @@ type DocketPalette = {
 
 declare module "@mui/material/styles" {
   // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-  interface Palette extends DocketPalette {}
+  interface Palette extends DocqetPalette {}
   // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-  interface PaletteOptions extends Partial<DocketPalette> {}
+  interface PaletteOptions extends Partial<DocqetPalette> {}
   /* Code, paths and identifiers: `sx={{ fontFamily: "fontFamilyMono" }}`. */
   interface TypographyVariants {
     fontFamilyMono: string;
@@ -46,7 +46,7 @@ declare module "@mui/material/styles" {
 const brand = { light: "#a78bfa", main: "#7c3aed", dark: "#5b21b6", mark: "#ffffff", dot: "#f0abfc" };
 
 /*
- * Docket's MUI theme: violet and fuchsia, Geist, cards with tight 8px
+ * Docqet's MUI theme: violet and fuchsia, Geist, cards with tight 8px
  * corners. `shape` is 3px, so the popover's card, which DetailsPopover rounds
  * to 2.5 units, comes to about 7px. Light or dark follows the system's
  * setting until someone picks one.

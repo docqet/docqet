@@ -15,7 +15,7 @@ import { PersonaIcon } from "../Personas";
 import { InitiativeIcon } from "./ScopeFilter";
 import { DomainIcon } from "../names";
 import { ProjectIcon } from "./ProductFilter";
-import { searchProduct, type SearchResultResource } from "../../services/docket/search";
+import { searchProduct, type SearchResultResource } from "../../services/docqet/search";
 import {
   docDomains,
   domainName,
@@ -23,14 +23,14 @@ import {
   docProjects,
   projectName,
   ruleAppliesTo,
-  type DocketState,
+  type DocqetState,
   type Level,
   type Project,
   type Rule,
   type Pick,
 } from "../../state";
 import LinearProgress from "@mui/material/LinearProgress";
-import { isAbort } from "../../services/docket/client";
+import { isAbort } from "../../services/docqet/client";
 import { ReadError, useDelayed } from "../ReadFallback";
 
 /*
@@ -75,7 +75,7 @@ const plural = (n: number, one: string, many: string) => `${n} ${n === 1 ? one :
  * capabilities in several: "Reservations: Room booking, Group bookings ·
  * Front desk: Check-in". Capabilities in no feature are named on their own.
  */
-function appliesTo(state: DocketState, rule: Rule): string {
+function appliesTo(state: DocqetState, rule: Rule): string {
   const groups = new Map<string | null, string[]>();
   for (const { capability, feature } of ruleAppliesTo(state, rule)) {
     const key = feature?.name ?? null;
@@ -90,7 +90,7 @@ function appliesTo(state: DocketState, rule: Rule): string {
  * show when it has several. With several projects showing, everything else
  * says which projects define it.
  */
-function index(state: DocketState, all: Project[]): Entry[] {
+function index(state: DocqetState, all: Project[]): Entry[] {
   const several = state.projects.length > 1;
   const from = (...ids: string[]) => (several ? ids.map((id) => projectName(state, id)).join(", ") : undefined);
   const projects: Entry[] =
@@ -110,7 +110,7 @@ function index(state: DocketState, all: Project[]): Entry[] {
   return [...projects, ...entries(state).map((e) => (several ? { ...e, from: from(...e.projects) } : e))];
 }
 
-function entries(state: DocketState): (Entry & { projects: string[] })[] {
+function entries(state: DocqetState): (Entry & { projects: string[] })[] {
   /* "Guest stays + Billing": the domains something is written in. Found by them too. */
   const domains = (ids: string[]) => ids.map((id) => domainName(state, id)).join(" + ");
   return [
@@ -212,7 +212,7 @@ const MOD = typeof navigator !== "undefined" && /Mac|iPhone|iPad/.test(navigator
  * The arrow keys move through the results, Enter shows one on the canvas, and
  * Esc or a click outside closes it. It keeps what was typed for next time.
  */
-export default function Search({ state, all, onSelect }: { state: DocketState; all: Project[]; onSelect: (selection: Selection) => void }) {
+export default function Search({ state, all, onSelect }: { state: DocqetState; all: Project[]; onSelect: (selection: Selection) => void }) {
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState(0);

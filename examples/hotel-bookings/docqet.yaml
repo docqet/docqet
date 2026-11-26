@@ -1,0 +1,8 @@
+# Marks this repository as a Docqet project. Its docs are in docqet/.
+project:
+  id: hotel-bookings
+  name: Hotel Bookings
+# The product it's part of, with the hotel's other projects.
+product:
+  id: hotel
+  name: Hotel

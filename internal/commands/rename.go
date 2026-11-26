@@ -14,24 +14,24 @@ import (
 
 	"github.com/urfave/cli/v3"
 
-	"github.com/exalynt/docket/internal/state"
+	"github.com/exalynt/docqet/internal/state"
 )
 
 // RenameCommand changes an ID everywhere in the project, and prints the
 // trailer that tells history it's the same thing.
-// docket:implements capability:renaming
+// docqet:implements capability:renaming
 func RenameCommand() *cli.Command {
 	return &cli.Command{
-		Name:      "rename",
-		Category:  changing,
-		Before:    maxArgs(2),
-		Usage:     "Change an ID everywhere in the project, and say so in history",
-		ArgsUsage: "<old> <new>",
+		Name:         "rename",
+		Category:     changing,
+		ArgValidator: maxArgs(2),
+		Usage:        "Change an ID everywhere in the project, and say so in history",
+		ArgsUsage:    "<old> <new>",
 		Description: `Changes a doc's ID, a rule's or concept's domain, or a gap's or tradeoff's key,
 and every reference to it in the project's docs' frontmatter and its
 annotations. A doc's file is renamed with it when it's named after the old ID.
 A doc's gaps and tradeoffs follow it. Bodies aren't changed, since nothing
-reads them. It prints the Docket-Became trailer to commit the rename with.`,
+reads them. It prints the Docqet-Became trailer to commit the rename with.`,
 		Flags: []cli.Flag{
 			&cli.BoolFlag{Name: "dry-run", Usage: "show what would change, without changing it"},
 			productFlag("also list the rest of the product's references, from the server"),
@@ -272,7 +272,7 @@ func (p *renamePlan) collectFiles(st *state.State) {
 
 var (
 	refToken   = regexp.MustCompile(`(?:^|[^a-zA-Z0-9_./:-])((?:domain|feature|capability|rule|concept|persona|initiative|mechanism|component):[a-z0-9]+(?:-[a-z0-9]+)*(?:@[a-z0-9]+(?:-[a-z0-9]+)*)?(?:#[a-z0-9]+(?:-[a-z0-9]+)*)?)`)
-	annotation = regexp.MustCompile(`docket:(?:implements|verifies|gap|tradeoff)[ \t]`)
+	annotation = regexp.MustCompile(`docqet:(?:implements|verifies|gap|tradeoff)[ \t]`)
 	topKey     = regexp.MustCompile(`^([a-z][a-z-]*):`)
 	itemID     = regexp.MustCompile(`^(\s*-\s+id:\s*)([a-z0-9-]+)(\s*(?:#.*)?)$`)
 )

@@ -10,17 +10,17 @@ import (
 
 	"github.com/urfave/cli/v3"
 
-	"github.com/exalynt/docket/internal/check"
-	"github.com/exalynt/docket/internal/client"
-	"github.com/exalynt/docket/internal/git"
-	"github.com/exalynt/docket/internal/index"
-	"github.com/exalynt/docket/internal/project"
-	"github.com/exalynt/docket/internal/state"
+	"github.com/exalynt/docqet/internal/check"
+	"github.com/exalynt/docqet/internal/client"
+	"github.com/exalynt/docqet/internal/git"
+	"github.com/exalynt/docqet/internal/index"
+	"github.com/exalynt/docqet/internal/project"
+	"github.com/exalynt/docqet/internal/state"
 )
 
 // becameTrailer is the trailer that says what something a commit removed
 // became.
-const becameTrailer = "Docket-Became"
+const becameTrailer = "Docqet-Became"
 
 // ApplyCommand sends the main branch's new commits to the server.
 func ApplyCommand() *cli.Command {
@@ -30,13 +30,13 @@ func ApplyCommand() *cli.Command {
 		Usage:    "Send the main branch's new commits to the server",
 		Description: `Asks the server for the last commit it has for this project, then indexes
 each commit after it on HEAD's first-parent line, oldest first, read from git,
-and sends each one's state with its parents, commit time and Docket trailers.
+and sends each one's state with its parents, commit time and Docqet trailers.
 Sending a commit twice changes nothing, so a retried job is harmless. Run it on
 the main branch: CI decides when.
 
 A project's first apply sends HEAD alone, unless --from says where to start.
-The server is the one in docket.yaml's server field, or DOCKET_SERVER.`,
-		Before: maxArgs(0),
+The server is the one in docqet.yaml's server field, or DOCQET_SERVER.`,
+		ArgValidator: maxArgs(0),
 		Flags: []cli.Flag{
 			&cli.StringFlag{Name: "from", Usage: "start at `REV`, for a project's first apply or a backfill"},
 			&cli.BoolFlag{Name: "replace", Usage: "with --from, send again the commits the server already has"},
@@ -70,12 +70,12 @@ func apply(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	server := os.Getenv("DOCKET_SERVER")
+	server := os.Getenv("DOCQET_SERVER")
 	if server == "" {
 		server = cfg.Server
 	}
 	if server == "" {
-		return errors.New("no server to send to: set server in docket.yaml, or DOCKET_SERVER")
+		return errors.New("no server to send to: set server in docqet.yaml, or DOCQET_SERVER")
 	}
 	if !git.IsRepository(ctx, root) {
 		return errors.New("apply sends commits, so the project must be in a git repository")
@@ -189,7 +189,7 @@ func applyCommit(ctx context.Context, cmd *cli.Command, srv *client.Client, root
 	}
 	st, err := index.Index(fsys)
 	if errors.Is(err, fs.ErrNotExist) {
-		return sent{}, errors.New("the project has no docket.yaml at this commit")
+		return sent{}, errors.New("the project has no docqet.yaml at this commit")
 	}
 	if err != nil {
 		return sent{}, err
@@ -197,7 +197,7 @@ func applyCommit(ctx context.Context, cmd *cli.Command, srv *client.Client, root
 	st.Commit = sha
 	st.IndexedAt = time.Now().UTC().Format(time.RFC3339)
 	// The server refuses a state that isn't one with this same check, so a
-	// state that fails it here is docket's bug, not the project's.
+	// state that fails it here is docqet's bug, not the project's.
 	if err := check.Validate(st); err != nil {
 		return sent{}, fmt.Errorf("the state indexed isn't valid: %w", err)
 	}

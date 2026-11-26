@@ -8,7 +8,7 @@ import rehypeHighlight from "rehype-highlight";
 import remarkGfm from "remark-gfm";
 import remarkParse from "remark-parse";
 import { unified } from "unified";
-import { capabilityTarget, featureTarget, type DocketState, type Pick, type Target } from "../../state";
+import { capabilityTarget, featureTarget, type DocqetState, type Pick, type Target } from "../../state";
 
 /*
  * Markdown, wherever the UI shows it: a doc's body (a capability's, feature's,
@@ -39,7 +39,7 @@ import { capabilityTarget, featureTarget, type DocketState, type Pick, type Targ
 
 /* Where links go: to a concept, to a capability or feature on the map, or, with `onPick`, as on a detail page, to its page. */
 export type Go = {
-  state: DocketState;
+  state: DocqetState;
   onConcept: (id: string) => void;
   onShow?: (target: Target) => void;
   onPick?: (pick: Pick) => void;
@@ -69,7 +69,7 @@ export type Link = { concept: string } | { target: Target; pick: Pick } | { href
  * web page, or nowhere this page can show. Links stay in the doc's own
  * project, whose repository its paths are relative to.
  */
-export function follow(state: DocketState, from: From, href: string): Link {
+export function follow(state: DocqetState, from: From, href: string): Link {
   if (/^[a-z]+:/i.test(href)) return { href };
   const file = resolve(from.file, href);
   const at = (d: { file: string; project: string }) => d.file === file && d.project === from.project;
@@ -177,7 +177,7 @@ const markdownSx: SystemStyleObject<Theme> = {
 
 /*
  * Any Markdown, whole. Links resolve from `from`: one to another doc opens it
- * in Docket, one with a scheme opens in a new tab, and one Docket can't place
+ * in Docqet, one with a scheme opens in a new tab, and one Docqet can't place
  * shows as its text. Its headings sit under the heading of whatever shows it,
  * so they keep their order but start a few levels down.
  */

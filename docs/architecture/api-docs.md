@@ -1,9 +1,9 @@
 # API docs
 
-_The reference at `GET /docs/api`, on both `docket serve` and `docket ui`:
+_The reference at `GET /docs/api`, on both `docqet serve` and `docqet ui`:
 the OpenAPI spec bundled into one document, rendered by Scalar, with each
 endpoint's stability and each group's maturity drawn on top by our own
-script. Part of [how `docket` is built](README.md)._
+script. Part of [how `docqet` is built](README.md)._
 
 **Code:** `internal/handlers/http/docs.go` (the page), `docs_bundle.go`
 (bundling, and every operation's level), `static/docs/api.yaml` and the files
@@ -17,7 +17,7 @@ it references, `static/docs/stability-marks.js` and `.css`.
 - The bundler gives each operation below GA an `x-badges` badge, ending its
   name with an invisible U+2060 so the script can find exactly those badges.
   It also writes every operation's level, each tag's levels, and the tags'
-  navigation order into `window.DOCKET_STABILITY` on the page. The script
+  navigation order into `window.DOCQET_STABILITY` on the page. The script
   needs that because Scalar only draws a tag's operations once it's opened.
 - `stability-marks.js` watches Scalar's DOM and, as it renders, swaps those
   badges for stability marks, adds a mark to each operation and a maturity
@@ -32,7 +32,7 @@ it references, `static/docs/stability-marks.js` and `.css`.
 ## Gotchas
 
 - The levels, their colors and wording, and how maturity is weighted are
-  Docket's own, defined in the UI's `stability.ts` and `maturity.ts` and in
+  Docqet's own, defined in the UI's `stability.ts` and `maturity.ts` and in
   the server's Go. `stability-marks.js` and `api.yaml` repeat them, so a
   change to one is a change to all of them.
 - Scalar's markdown styles start with `.scalar-app .markdown`, and are loaded
@@ -43,5 +43,5 @@ it references, `static/docs/stability-marks.js` and `.css`.
 
 ## Known gaps
 
-The API docs' gaps are on the [API docs](../../docket/components/api-docs.md)
-component, in Docket's own docs.
+The API docs' gaps are on the [API docs](../../docqet/components/api-docs.md)
+component, in Docqet's own docs.

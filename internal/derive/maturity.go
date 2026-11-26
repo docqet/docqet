@@ -3,7 +3,7 @@ package derive
 import (
 	"math"
 
-	"github.com/exalynt/docket/internal/combine"
+	"github.com/exalynt/docqet/internal/combine"
 )
 
 // LevelScore is what a capability at a level adds to a maturity: its score,

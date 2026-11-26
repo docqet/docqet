@@ -1,11 +1,11 @@
 # The model
 
 _There's one model, `state`, and the types that aren't it live with what makes
-them. Part of [how `docket` is built](README.md)._
+them. Part of [how `docqet` is built](README.md)._
 
 **There's no `models` package. `state` is the model.** A models package pays
 off when an app's models differ from what crosses each boundary, rows in the
-database and resources in the API. Docket's model is defined by the format, and it's the
+database and resources in the API. Docqet's model is defined by the format, and it's the
 same shape everywhere it goes: what the CLI prints with `--json`, what
 `apply` sends, what the server stores, and what the UI reads today. A
 separate package would hold the same types again.

@@ -13,7 +13,7 @@ import { GapRiskMark, RiskBars, RiskScore, VERDICT_NAMES } from "../../component
 import { STABILITY } from "../../components/stability/stability";
 import { docHref, navigate, sectionHref, withParam, type Route } from "../../routes";
 import { Count, Empty, PageHeader, Section, Stat, Tabs, View, currentTab } from "../../components/shell/layout";
-import { VERDICTS, bySubject, openDecisions, subjectOf, type DecisionHolder, type DocketState, type Level, type Verdict } from "../../state";
+import { VERDICTS, bySubject, openDecisions, subjectOf, type DecisionHolder, type DocqetState, type Level, type Verdict } from "../../state";
 import {
   PARTS,
   PART_IDS,
@@ -51,7 +51,7 @@ import { menuSlots } from "../../components/shell/ProductFilter";
  * and by kind, and ordered by any of them, riskiest first within each. All of
  * it is in the address, so a view can be linked to.
  */
-export default function LeftPage({ state, route }: { state: DocketState; route: Route }) {
+export default function LeftPage({ state, route }: { state: DocqetState; route: Route }) {
   const go = goFor(state);
   const search = new URLSearchParams(window.location.search);
   const scope = scopeOf(state, search.get("for"));
@@ -228,7 +228,7 @@ const ORDER_NAMES: Record<Order, string> = {
 };
 
 /* The gaps in the scope, filtered as the address says, in its order, as a table with every part of each one's risk. */
-function GapsTab({ state, rows, scope, search }: { state: DocketState; rows: GapRow[]; scope: Scope; search: URLSearchParams }) {
+function GapsTab({ state, rows, scope, search }: { state: DocqetState; rows: GapRow[]; scope: Scope; search: URLSearchParams }) {
   const filters = filtersFrom(search);
   const order: Order = (ORDERS as readonly string[]).includes(search.get("order") ?? "") ? (search.get("order") as Order) : "risk";
   const shown = rows.filter((r) => passes(r, filters));
@@ -450,7 +450,7 @@ function GroupHead({ part, value }: { part: PartId; value: string }) {
 }
 
 /* A group of gaps under a heading, with how many and how they spread, its first few, then the rest on asking. */
-function GapGroup({ head, state, rows, here }: { head: ReactNode; state: DocketState; rows: GapRow[]; here?: string }) {
+function GapGroup({ head, state, rows, here }: { head: ReactNode; state: DocqetState; rows: GapRow[]; here?: string }) {
   return (
     <Box sx={groupSx}>
       <Box component="header" sx={groupHeadSx}>
@@ -473,7 +473,7 @@ function GapGroup({ head, state, rows, here }: { head: ReactNode; state: DocketS
  * highest on, its kind and name, whether it breaks a claim, and what it's
  * on. The first `first`, then the rest on asking.
  */
-function GapTable({ state, rows, first, here, bare = false }: { state: DocketState; rows: GapRow[]; first: number; here?: string; bare?: boolean }) {
+function GapTable({ state, rows, first, here, bare = false }: { state: DocqetState; rows: GapRow[]; first: number; here?: string; bare?: boolean }) {
   return (
     <Box
       role="table"
@@ -539,7 +539,7 @@ const thSx = (t: Theme): SystemStyleObject<Theme> => ({
   [t.breakpoints.down("md")]: visuallyHidden,
 });
 
-function GapLine({ state, row: r, here }: { state: DocketState; row: GapRow; here?: string }) {
+function GapLine({ state, row: r, here }: { state: DocqetState; row: GapRow; here?: string }) {
   const { type, id } = subjectOf(r.gap);
   return (
     <Box role="row" sx={[trSx, { "&:hover": { bgcolor: (t) => `color-mix(in srgb, ${t.vars.palette.text.primary} 2.5%, transparent)` } }]}>
@@ -659,14 +659,14 @@ export const groupHeadSx: SystemStyleObject<Theme> = {
 };
 
 /* Links in Markdown, such as a concept's, open its page. */
-export const goFor = (state: DocketState): Go => ({
+export const goFor = (state: DocqetState): Go => ({
   state,
   onConcept: (id) => navigate(docHref("concept", id)),
   onPick: (pick) => navigate(docHref(pick.kind, pick.id)),
 });
 
 /* Every doc that can hold decisions, by kind, in the spec's order. */
-export function holdersOf(state: DocketState): DecisionHolder[] {
+export function holdersOf(state: DocqetState): DecisionHolder[] {
   return [
     ...state.domains.map((doc) => ({ kind: "domain" as const, doc })),
     ...state.features.map((doc) => ({ kind: "feature" as const, doc })),
@@ -686,7 +686,7 @@ export function HolderGroups({
   count,
   render,
 }: {
-  state: DocketState;
+  state: DocqetState;
   holders: DecisionHolder[];
   count: (h: DecisionHolder) => number;
   render: (h: DecisionHolder) => ReactNode;

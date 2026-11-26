@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/exalynt/docket/internal/state"
+	"github.com/exalynt/docqet/internal/state"
 )
 
 // AppliedCommit is a project's state at a commit on its main branch, as

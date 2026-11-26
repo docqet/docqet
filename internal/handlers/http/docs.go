@@ -10,7 +10,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/render"
 
-	"github.com/exalynt/docket/static"
+	"github.com/exalynt/docqet/static"
 )
 
 // DocsHandler serves the OpenAPI documentation, rendered with Scalar, along
@@ -26,7 +26,7 @@ type DocsHandler struct {
 // spec in static/docs. It bundles the spec up front, so a broken reference
 // or an operation without a stability level fails here rather than in a
 // reader's browser.
-// docket:implements capability:api-reference component:api-docs
+// docqet:implements capability:api-reference component:api-docs
 func NewDocsHandler() (*DocsHandler, error) {
 	sub, err := fs.Sub(static.Docs, "docs")
 	if err != nil {
@@ -61,7 +61,7 @@ var docsTemplate = template.Must(template.New("docs").Parse(`<!DOCTYPE html>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Docket API Documentation</title>
+    <title>Docqet API Documentation</title>
     <link rel="stylesheet" href="stability-marks.css">
   </head>
   <body>
@@ -76,7 +76,7 @@ var docsTemplate = template.Must(template.New("docs").Parse(`<!DOCTYPE html>
       });
     </script>
     <script>
-      window.DOCKET_STABILITY = {{.Stability}};
+      window.DOCQET_STABILITY = {{.Stability}};
     </script>
     <script src="stability-marks.js"></script>
   </body>

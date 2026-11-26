@@ -4,7 +4,7 @@ import type { ResponsiveStyleValue } from "@mui/system";
 import { useId } from "react";
 
 /*
- * Docket's mark, a geometric "d" on a violet tile with a status light, and
+ * Docqet's mark, a geometric "d" on a violet tile with a status light, and
  * its wordmark. The tile is the theme's brand colors, the same in both
  * schemes, since it holds up on light and dark backgrounds alike.
  */
@@ -47,7 +47,7 @@ export default function Logo({ wordmark = "inline" }: { wordmark?: ResponsiveSty
           color: "transparent",
         }}
       >
-        docket
+        docqet
       </Box>
     </Box>
   );

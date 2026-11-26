@@ -2,7 +2,7 @@ import Box from "@mui/material/Box";
 import { DetailsCard, DetailsEyebrow } from "./DetailsPopover";
 import { TERMS, type TermId } from "../term/terms";
 
-/* What one of Docket's words means: its name, what it is, and an example. The content of Term's popover. */
+/* What one of Docqet's words means: its name, what it is, and an example. The content of Term's popover. */
 export function TermDetails({ id }: { id: TermId }) {
   const { name, means, more } = TERMS[id];
   return (

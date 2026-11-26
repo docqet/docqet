@@ -1,4 +1,4 @@
-// Draws stability the way Docket's UI does (its StabilityMark and
+// Draws stability the way Docqet's UI does (its StabilityMark and
 // MaturityRing), each with a popover (hover, focus, or tap) saying what it
 // means:
 //
@@ -9,23 +9,23 @@
 //     leaves Scalar's own pill in place if it cannot.
 //   - Each operation in the navigation gets a short StabilityMark, the Track
 //     alone, and each tag a MaturityRing worked out from its operations'
-//     levels. The docs page puts every level in window.DOCKET_STABILITY,
+//     levels. The docs page puts every level in window.DOCQET_STABILITY,
 //     since the navigation only draws a tag's operations once it's opened.
 //   - The introduction's Maturity section gets an overview: the whole API's
 //     maturity, how many endpoints are at each level, and every tag's
 //     MaturityRing, each linking to its tag.
 //
-// The levels and maturity's rules are Docket's own, as the UI's stability.ts
+// The levels and maturity's rules are Docqet's own, as the UI's stability.ts
 // and maturity.ts define them; keep this in step with those.
 (() => {
   // U+2060 WORD JOINER: invisible, so a badge reads normally if this script
   // never runs. Keep in step with stabilityMark in internal/handlers.
   const STABILITY_MARK = "⁠";
 
-  const STABILITY_DOCS_URL = "https://github.com/exalynt/docket/blob/main/docket/domains/authoring/concepts/stability-level.md";
-  const MATURITY_DOCS_URL = "https://github.com/exalynt/docket/blob/main/docket/domains/reporting/concepts/maturity.md";
+  const STABILITY_DOCS_URL = "https://github.com/exalynt/docqet/blob/main/docqet/domains/authoring/concepts/stability-level.md";
+  const MATURITY_DOCS_URL = "https://github.com/exalynt/docqet/blob/main/docqet/domains/reporting/concepts/maturity.md";
 
-  const { operations = {}, tags = {}, order = [] } = window.DOCKET_STABILITY || {};
+  const { operations = {}, tags = {}, order = [] } = window.DOCQET_STABILITY || {};
 
   // Each level, and the maturity band named for it, which takes its color.
   const LEVELS = [
@@ -429,7 +429,7 @@
   function overview() {
     const all = Object.values(operations);
     const progress = maturity(all);
-    const ring = maturityRing("Docket API", all, 56);
+    const ring = maturityRing("Docqet API", all, 56);
     ring.tabIndex = 0;
     const counts = el(
       "div",

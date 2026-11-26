@@ -3,7 +3,7 @@ Feature: Earnings and payouts
   their available teammates, their team lead, and the partnership that
   introduced the client, each paid to their own payout account.
 
-  # docket:verifies rule:shares-earned-at-fulfillment@pay
+  # docqet:verifies rule:shares-earned-at-fulfillment@pay
   Rule: A block's shares are earned when it's fulfilled, and not before
 
     Example: Started, not yet fulfilled
@@ -16,7 +16,7 @@ Feature: Earnings and payouts
       When Ada reads her earnings
       Then her engineer share of the block is earned
 
-  # docket:verifies rule:payout-basis-per-capacity-unit@pay rule:coupons-never-change-shares@pay
+  # docqet:verifies rule:payout-basis-per-capacity-unit@pay rule:coupons-never-change-shares@pay
   Rule: A block's payout basis is its capacity units × $1,750, and its price never enters it
 
     Scenario Outline: <type> block
@@ -30,7 +30,7 @@ Feature: Earnings and payouts
         | Core      | $3,750 | $3,500 |
         | Dedicated | $7,000 | $7,000 |
 
-  # docket:verifies rule:engineer-earns-the-engineer-share@pay
+  # docqet:verifies rule:engineer-earns-the-engineer-share@pay
   Rule: The engineer on a block when it's fulfilled earns the Engineer Share of their Engineer Agreement
 
     Example: A Core block
@@ -45,7 +45,7 @@ Feature: Earnings and payouts
       When Ada reads her earnings
       Then she earns $2,187.50 in US dollars as the block's engineer
 
-  # docket:verifies rule:team-leads-earn-team-lead-share@pay
+  # docqet:verifies rule:team-leads-earn-team-lead-share@pay
   Rule: The engineer's team lead earns the Team Lead Share of their own agreement, but not on their own block
 
     Example: A Core block
@@ -62,7 +62,7 @@ Feature: Earnings and payouts
       When Lena reads her earnings
       Then her only share of her block is as its engineer
 
-  # docket:verifies rule:available-teammates-earn-team-support-share@pay
+  # docqet:verifies rule:available-teammates-earn-team-support-share@pay
   Rule: Each available teammate earns the Team Support Share of their own agreement
 
     Background:
@@ -89,7 +89,7 @@ Feature: Earnings and payouts
       When Lena reads her earnings
       Then her only share of Ada's block is as team lead
 
-  # docket:verifies rule:unlisted-shares-earn-nothing@pay
+  # docqet:verifies rule:unlisted-shares-earn-nothing@pay
   Rule: A share someone's agreement in effect doesn't list, or having none in effect, earns them nothing
 
     Example: No agreement in effect
@@ -137,7 +137,7 @@ Feature: Earnings and payouts
       When Ada marks it fulfilled
       Then Grace's partnership earns nothing on it
 
-  # docket:verifies rule:shares-dont-reduce-each-other@pay rule:unclaimed-shares-stay-with-exalynt@pay rule:exalynt-bears-partnership-earnings@pay
+  # docqet:verifies rule:shares-dont-reduce-each-other@pay rule:unclaimed-shares-stay-with-exalynt@pay rule:exalynt-bears-partnership-earnings@pay
   Rule: Each share is worked out on its own, so no share reduces another
 
     Example: Every share on one block
@@ -153,7 +153,7 @@ Feature: Earnings and payouts
       When Ada marks it fulfilled
       Then Ada earns $2,100, Lena $175, and Grace's partnership $175 on it
 
-  # docket:verifies rule:partnership-share-earned-at-fulfillment@pay rule:partnerships-earn-under-their-agreement-in-effect@pay rule:partnership-share-of-payout-basis@pay rule:unfulfilled-capacity-earns-partnerships-nothing@pay
+  # docqet:verifies rule:partnership-share-earned-at-fulfillment@pay rule:partnerships-earn-under-their-agreement-in-effect@pay rule:partnership-share-of-payout-basis@pay rule:unfulfilled-capacity-earns-partnerships-nothing@pay
   Rule: A partnership earns the Referral Share of its Partner Agreement on its client's blocks, once each is fulfilled
 
     Background:
@@ -176,7 +176,7 @@ Feature: Earnings and payouts
       When Ada marks it fulfilled
       Then Grace's partnership earns nothing on it
 
-  # docket:verifies rule:each-share-rounds-on-its-own@pay
+  # docqet:verifies rule:each-share-rounds-on-its-own@pay
   Rule: Each share rounds on its own
 
     Example: A share that falls on half a cent
@@ -185,7 +185,7 @@ Feature: Earnings and payouts
       When Ada marks it fulfilled
       Then Grace's partnership earns $39.38 on it
 
-  # docket:verifies rule:engineering-capacity-is-the-only-basis@pay
+  # docqet:verifies rule:engineering-capacity-is-the-only-basis@pay
   Rule: A partnership earns on every kind of Engineering Capacity its clients buy
 
     Scenario Outline: A <type> block
@@ -200,7 +200,7 @@ Feature: Earnings and payouts
         | Core      | $175   |
         | Dedicated | $350   |
 
-  # docket:verifies rule:attribution-at-purchase-decides-the-partnership@pay
+  # docqet:verifies rule:attribution-at-purchase-decides-the-partnership@pay
   Rule: A block earns for the partnership its client was attributed to when it bought the block
 
     Background:
@@ -219,7 +219,7 @@ Feature: Earnings and payouts
       When Ada marks it fulfilled
       Then Grace's partnership earns nothing on it
 
-  # docket:verifies rule:earning-window-opens-at-first-purchase@pay rule:earning-windows-never-reset-or-pause@pay
+  # docqet:verifies rule:earning-window-opens-at-first-purchase@pay rule:earning-windows-never-reset-or-pause@pay
   Rule: A client's earning window opens at the first block it buys while attributed to the partnership, and lasts as long as the partnership's Earning Window
 
     Background:
@@ -255,7 +255,7 @@ Feature: Earnings and payouts
       When Ada marks it fulfilled
       Then Grace's partnership earns $175 on it
 
-  # docket:verifies rule:partners-see-only-their-partnerships-earnings@pay
+  # docqet:verifies rule:partners-see-only-their-partnerships-earnings@pay
   Rule: A partner sees only their own partnership's earnings
 
     Example: Two partnerships

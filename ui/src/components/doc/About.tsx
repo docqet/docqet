@@ -6,7 +6,7 @@ import { Facets, facets } from "../Fields";
 import { Body } from "../markdown/Markdown";
 import { DomainIcon } from "../names";
 import { ProjectIcon } from "../shell/ProductFilter";
-import { domainName, projectName, type Contribution, type Doc, type DocketState } from "../../state";
+import { domainName, projectName, type Contribution, type Doc, type DocqetState } from "../../state";
 import { Section } from "../shell/layout";
 import { Crumb, type DocGo } from "./DocPage";
 
@@ -34,7 +34,7 @@ const sourceSx: SystemStyleObject<Theme> = {
 };
 
 /* Above what a source says, where several define it: the domain, where they differ, and the project it's from. */
-export function SourceFrom({ state, doc, from }: { state: DocketState; doc: Doc; from: Contribution }) {
+export function SourceFrom({ state, doc, from }: { state: DocqetState; doc: Doc; from: Contribution }) {
   return (
     <Box
       sx={{

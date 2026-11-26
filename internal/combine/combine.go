@@ -5,7 +5,7 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/exalynt/docket/internal/state"
+	"github.com/exalynt/docqet/internal/state"
 )
 
 // Combine puts the states of a product's projects together, in the order
@@ -23,7 +23,7 @@ import (
 // Then reverse links and parts are worked out again across everything, and
 // contradictions between contributions, and gaps or tradeoffs two projects
 // both declare, become problems. It never changes the states it's given.
-// docket:implements capability:product-view rule:contradictions-shown@reporting
+// docqet:implements capability:product-view rule:contradictions-shown@reporting
 func Combine(states []*state.State) *Product {
 	c := newCombiner()
 	for _, st := range states {

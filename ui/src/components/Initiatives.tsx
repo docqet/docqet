@@ -4,14 +4,14 @@ import type { SystemStyleObject } from "@mui/system";
 import Tooltip from "@mui/material/Tooltip";
 import { docHref } from "../routes";
 import { InitiativeIcon } from "./shell/ScopeFilter";
-import { find, type Capability, type DocketState } from "../state";
+import { find, type Capability, type DocqetState } from "../state";
 
 /*
  * The initiatives some capabilities are part of, each once, in the order
  * state lists them: what a feature, domain, rule, concept or gap is part of,
  * worked out from its capabilities.
  */
-export const initiativesOf = (state: DocketState, capabilities: Capability[]): string[] => {
+export const initiativesOf = (state: DocqetState, capabilities: Capability[]): string[] => {
   const ids = new Set(capabilities.flatMap((c) => c.initiatives));
   return state.initiatives.filter((i) => ids.has(i.id)).map((i) => i.id);
 };
@@ -48,7 +48,7 @@ export function InitiativeTags({
   block = false,
   end = false,
 }: {
-  state: DocketState;
+  state: DocqetState;
   ids: string[];
   plain?: boolean;
   block?: boolean;

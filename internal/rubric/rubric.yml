@@ -1,10 +1,10 @@
 # The stability rubric: the outcomes each quality of the work is expected to
 # reach at each stability level, so the people depending on a capability and
 # the people and agents building it share the same picture of what its level
-# means. It's part of the format, built into docket, so it's the same for
+# means. It's part of the format, built into docqet, so it's the same for
 # every project, whatever kind of software it is, and no project copies or
 # changes it. The rubric concept, in
-# docket/domains/authoring/concepts/rubric.md, explains it.
+# docqet/domains/authoring/concepts/rubric.md, explains it.
 #
 # It's a guideline, not a gate:
 #

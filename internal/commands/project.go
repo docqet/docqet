@@ -8,10 +8,10 @@ import (
 	"os"
 	"time"
 
-	"github.com/exalynt/docket/internal/git"
-	"github.com/exalynt/docket/internal/index"
-	"github.com/exalynt/docket/internal/project"
-	"github.com/exalynt/docket/internal/state"
+	"github.com/exalynt/docqet/internal/git"
+	"github.com/exalynt/docqet/internal/index"
+	"github.com/exalynt/docqet/internal/project"
+	"github.com/exalynt/docqet/internal/state"
 )
 
 // source says which states a read was worked out from, as the first line of
@@ -104,7 +104,7 @@ func indexHere(ctx context.Context, at string) (indexed, error) {
 
 	st, err := index.Index(fsys)
 	if errors.Is(err, fs.ErrNotExist) && at != "" {
-		return indexed{}, fmt.Errorf("the project has no docket.yaml at %s", short(src.Commit))
+		return indexed{}, fmt.Errorf("the project has no docqet.yaml at %s", short(src.Commit))
 	}
 	if err != nil {
 		return indexed{}, err
@@ -119,7 +119,7 @@ func indexHere(ctx context.Context, at string) (indexed, error) {
 func notBuiltFlags(isSet func(string) bool, names ...string) error {
 	for _, name := range names {
 		if isSet(name) {
-			return fmt.Errorf("--%s isn't built yet: cmd/docket/README.md drafts what it will do", name)
+			return fmt.Errorf("--%s isn't built yet: cmd/docqet/README.md drafts what it will do", name)
 		}
 	}
 	return nil

@@ -3,8 +3,8 @@ package derive
 import (
 	"math"
 
-	"github.com/exalynt/docket/internal/combine"
-	"github.com/exalynt/docket/internal/state"
+	"github.com/exalynt/docqet/internal/combine"
+	"github.com/exalynt/docqet/internal/state"
 )
 
 // GapsOn returns the gaps that show on a capability: its own, then those of
@@ -68,7 +68,7 @@ type Readiness struct {
 // exposure, maturity × (1 − exposure), with those that have nothing left,
 // those that still need something and what, and the drafts, not started,
 // which never count.
-// docket:implements capability:readiness
+// docqet:implements capability:readiness
 func ReadinessOf(p *combine.Product, capabilities []*combine.Capability) Readiness {
 	var gaps []*combine.Gap
 	seen := map[*combine.Gap]bool{}

@@ -24,7 +24,7 @@ import {
   partOf,
   type Capability,
   type Doc,
-  type DocketState,
+  type DocqetState,
   type Domain,
   type Exposure,
   type Feature,
@@ -52,7 +52,7 @@ const ROW_RING = 22;
  * risk lens colors its row or card by: that risk's band, as View's lens styles read it.
  * Clicking it opens it in the peek.
  */
-function line(state: DocketState, c: Capability, domain: string) {
+function line(state: DocqetState, c: Capability, domain: string) {
   const here = c.levels.find((l) => l.domain === domain)?.level ?? c.stability;
   const contradictions = contradictionsOf(state, "capability", c.id).map((p) => p.message);
   const { risk, exposure } = c;
@@ -98,7 +98,7 @@ const opener = (onOpen: (pick: Pick) => void, pick: Pick) => (e: MouseEvent<HTML
  * `cards`, only those are on the map, as a filter leaves them. Clicking a
  * card, or a capability's row on one, calls `onOpen` with it.
  */
-export function mapItems(state: DocketState, onOpen: (pick: Pick) => void, cards?: Set<string>): CanvasItem[] {
+export function mapItems(state: DocqetState, onOpen: (pick: Pick) => void, cards?: Set<string>): CanvasItem[] {
   const header = (doc: Doc, type: string, domain: string) => {
     /* A capability's own card says so on its line instead. */
     const problems = type === "capability" ? [] : contradictionsOf(state, type, doc.id).map((p) => p.message);
@@ -222,7 +222,7 @@ const cardsIn = (domain: Domain) => [
  * whichever of its cards are on the map, so one with none drawn has none.
  * Clicking it calls `onOpen` with it.
  */
-export function mapGroups(state: DocketState, onOpen: (pick: Pick) => void): CanvasGroup[] {
+export function mapGroups(state: DocqetState, onOpen: (pick: Pick) => void): CanvasGroup[] {
   return state.domains.map((domain) => {
     const parts = domain.features.flatMap((id) => {
       const f = find(state.features, id);
@@ -296,7 +296,7 @@ function AreaMarks({ risk, exposure, of }: { risk: RiskAcross<Gap> | undefined; 
  * part is all of it, or else the server's for the feature's capabilities in
  * that domain.
  */
-function PartMarks({ state, feature, domain }: { state: DocketState; feature: Feature; domain: string }) {
+function PartMarks({ state, feature, domain }: { state: DocqetState; feature: Feature; domain: string }) {
   const whole = feature.parts.length < 2;
   const read = useStatusFor(state, whole ? null : `feature:${feature.id},domain:${domain}`);
   if (whole) return <AreaMarks risk={feature.readiness.gaps} exposure={feature.exposure} of={feature.name} />;
@@ -326,7 +326,7 @@ function pack(ids: string[], columns: number, x: number, y: number, height: (id:
  * into whichever column is shortest so far. With `cards`, only those are laid
  * out, so a filtered map packs together.
  */
-export function tidyMap(state: DocketState, sizes: Record<string, Size>, cards?: Set<string>): Record<string, Pos> {
+export function tidyMap(state: DocqetState, sizes: Record<string, Size>, cards?: Set<string>): Record<string, Pos> {
   const height = (id: string) => sizes[id]?.h ?? 0;
   const positions: Record<string, Pos> = {};
   const domains = state.domains.map((d) => cardsIn(d).filter((id) => !cards || cards.has(id))).filter((ids) => ids.length);

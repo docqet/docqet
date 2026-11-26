@@ -6,7 +6,7 @@ import (
 
 	"github.com/go-chi/chi/v5"
 
-	"github.com/exalynt/docket/ui"
+	"github.com/exalynt/docqet/ui"
 )
 
 // UIHandler serves the UI built into the binary.

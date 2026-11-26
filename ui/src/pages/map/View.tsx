@@ -22,7 +22,7 @@ import {
   pickName,
   shownInUrl,
   targetOf,
-  type DocketState,
+  type DocqetState,
   type Pick,
   type RiskBand,
 } from "../../state";
@@ -51,13 +51,13 @@ const LENSES: { id: Lens; label: string; tip: string }[] = [
  * cards are colored by. Where the cards sit is this browser's own, for each
  * product, under `layoutKey`.
  */
-export default function MapPage({ state, layoutKey }: { state: DocketState; layoutKey: string }) {
+export default function MapPage({ state, layoutKey }: { state: DocqetState; layoutKey: string }) {
   const header = useRef<HTMLDivElement>(null);
   /* On a phone, the peek is a sheet across the bottom rather than a panel at the right. */
   const phone = useMediaQuery(useTheme().breakpoints.down("sm"), { noSsr: true });
   const sheet = useRef<HTMLElement>(null);
   useEffect(() => {
-    document.title = "Map · Docket";
+    document.title = "Map · Docqet";
   }, []);
   const canvas = useRef<CanvasHandle>(null);
   /*
@@ -130,7 +130,7 @@ export default function MapPage({ state, layoutKey }: { state: DocketState; layo
         items={items}
         groups={groups}
         tidy={(sizes) => tidyMap(state, sizes, filtered?.cards)}
-        storageKey={`docket.layout.v4:${layoutKey}`}
+        storageKey={`docqet.layout.v4:${layoutKey}`}
         clearOf={header}
         clearRight={peek && !phone ? PEEK_ROOM : 0}
         clearUnder={peek && phone ? sheet : undefined}
@@ -265,7 +265,7 @@ function fadedSx(capabilities: Set<string>): SystemStyleObject<Theme> {
 }
 
 /* Whether a pick names something showing. */
-function isPick(state: DocketState, pick: Pick): boolean {
+function isPick(state: DocqetState, pick: Pick): boolean {
   return pickList(state, pick.kind).some((d) => d.id === pick.id);
 }
 
@@ -364,7 +364,7 @@ function FilterBar({
   onRemove,
   onClear,
 }: {
-  state: DocketState;
+  state: DocqetState;
   filters: Pick[];
   onOpen: (at: Pick) => void;
   onRemove: (pick: Pick) => void;

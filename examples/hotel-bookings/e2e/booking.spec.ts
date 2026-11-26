@@ -6,7 +6,7 @@ test.beforeEach(async ({ request }) => {
   });
 });
 
-// docket:verifies rule:no-double-booking@guest-stays
+// docqet:verifies rule:no-double-booking@guest-stays
 test("a clerk can't book a room that's taken", async ({ page }) => {
   await page.goto("/bookings/new");
   await page.getByLabel("Room").fill("12");
@@ -16,7 +16,7 @@ test("a clerk can't book a room that's taken", async ({ page }) => {
   await expect(page.getByRole("alert")).toHaveText("Room 12 is already booked for part of that stay");
 });
 
-// docket:verifies capability:room-booking
+// docqet:verifies capability:room-booking
 test("a clerk books a free room for a guest", async ({ page }) => {
   await page.goto("/bookings/new");
   await page.getByLabel("Room").fill("14");

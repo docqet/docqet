@@ -1,8 +1,0 @@
-# Marks this repository as a Docket project. Its docs are in docket/.
-project:
-  id: hotel-billing
-  name: Hotel Billing
-# The product it's part of, with the hotel's other projects.
-product:
-  id: hotel
-  name: Hotel

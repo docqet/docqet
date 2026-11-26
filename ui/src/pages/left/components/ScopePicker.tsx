@@ -11,7 +11,7 @@ import { NAMES } from "../../../components/names";
 import { DomainIcon } from "../../../components/names";
 import { InitiativeIcon } from "../../../components/shell/ScopeFilter";
 import { withParam } from "../../../routes";
-import type { DocketState } from "../../../state";
+import type { DocqetState } from "../../../state";
 import { scopeChoices, type Scope, type ScopeChoice, type ScopeKind } from "./leftScope";
 
 /*
@@ -53,7 +53,7 @@ function KindIcon({ kind }: { kind: ScopeKind }) {
   return <>{NAMES[kind].icon}</>;
 }
 
-export function ScopePicker({ state, scope }: { state: DocketState; scope: Scope }) {
+export function ScopePicker({ state, scope }: { state: DocqetState; scope: Scope }) {
   const [anchor, setAnchor] = useState<HTMLElement | null>(null);
   const [query, setQuery] = useState("");
   const [kind, setKind] = useState<ScopeKind | "any">("any");
