@@ -4,7 +4,7 @@ import { MaturityRing } from "./MaturityRing";
 import type { MaturitySubject } from "../popovers/MaturityDetails";
 import { levelColor } from "../stability/stability";
 import { type CapabilityLevel } from "../../state";
-import { Tip } from "../Tip";
+import Tooltip from "@mui/material/Tooltip";
 
 /*
  * Maturity in short, beside a name: its ring, with the percentage, and its
@@ -28,9 +28,9 @@ export function Maturity({
   if (value === null)
     return (
       <span className="explore-level">
-        <Tip title={`No maturity yet: ${of}`}>
+        <Tooltip title={`No maturity yet: ${of}`}>
           <span className="faint">No maturity yet</span>
-        </Tip>
+        </Tooltip>
       </span>
     );
   const band = maturityBand(value);

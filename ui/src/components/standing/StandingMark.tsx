@@ -2,7 +2,7 @@ import CheckRoundedIcon from "@mui/icons-material/CheckRounded";
 import RadioButtonUncheckedRoundedIcon from "@mui/icons-material/RadioButtonUncheckedRounded";
 import TaskAltRoundedIcon from "@mui/icons-material/TaskAltRounded";
 import { GapIcon, LEFT_KINDS } from "../left/LeftMark";
-import { Tip } from "../Tip";
+import Tooltip from "@mui/material/Tooltip";
 
 /*
  * Whether something declared holds, the same wherever it shows: an expected
@@ -20,7 +20,7 @@ const DecisionIcon = LEFT_KINDS.decision.Icon;
 
 export function StandingMark({ standing, label }: { standing: Standing; label: string }) {
   return (
-    <Tip title={label}>
+    <Tooltip title={label}>
       <span className="sc-standing" data-standing={standing} role="img" aria-label={label}>
         {standing === "evidence" ? (
           <TaskAltRoundedIcon sx={{ fontSize: 16 }} />
@@ -36,6 +36,6 @@ export function StandingMark({ standing, label }: { standing: Standing; label: s
           <RadioButtonUncheckedRoundedIcon sx={{ fontSize: 14 }} />
         )}
       </span>
-    </Tip>
+    </Tooltip>
   );
 }

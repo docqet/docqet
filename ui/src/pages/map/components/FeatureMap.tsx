@@ -30,7 +30,7 @@ import {
   type RiskAcross,
 } from "../../../state";
 import { useStatusFor } from "../../../model";
-import { Tip } from "../../../components/Tip";
+import Tooltip from "@mui/material/Tooltip";
 import { DomainIcon } from "../../../components/names";
 
 /* A card's width, and the room between cards, as tidy lays them out. A persona's card is narrower. */
@@ -112,12 +112,12 @@ export function mapItems(state: DocketState, onOpen: (pick: Pick) => void, cards
           </>
         ) : null}
         {elsewhere.length ? (
-          <Tip title="This feature spans domains: each has its part">
+          <Tooltip title="This feature spans domains: each has its part">
             <span className="card-elsewhere">
               <DomainIcon size={13} />
               Also in {elsewhere.map((p) => domainName(state, p.domain)).join(", ")}
             </span>
-          </Tip>
+          </Tooltip>
         ) : null}
         <ContradictionHint messages={problems} />
       </span>
@@ -214,7 +214,7 @@ export function mapGroups(state: DocketState, onOpen: (pick: Pick) => void): Can
       onOpen: () => onOpen({ kind: "domain", id: domain.id }),
       label: (
         <>
-          <Tip title="Domain">
+          <Tooltip title="Domain">
             <span className="area-text">
               <DomainIcon size={15} />
               <span className="area-name">{domain.name}</span>
@@ -222,7 +222,7 @@ export function mapGroups(state: DocketState, onOpen: (pick: Pick) => void): Can
                 <span className="area-projects">{[...new Set(domain.from.map((f) => f.project))].map((id) => projectName(state, id)).join(" + ")}</span>
               ) : null}
             </span>
-          </Tip>
+          </Tooltip>
           <span className="area-marks" data-no-pan>
             <AreaMarks risk={domain.readiness.gaps} exposure={domain.exposure} of={domain.name} />
           </span>

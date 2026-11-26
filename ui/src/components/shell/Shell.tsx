@@ -8,7 +8,7 @@ import WarningAmberRoundedIcon from "@mui/icons-material/WarningAmberRounded";
 import WidgetsOutlinedIcon from "@mui/icons-material/WidgetsOutlined";
 import { ConceptIcon } from "../Concepts";
 import { GapIcon } from "../left/LeftMark";
-import { Tip } from "../Tip";
+import Tooltip from "@mui/material/Tooltip";
 import Logo from "./Logo";
 import { PersonaIcon } from "../Personas";
 import ProductFilter, { type ProductChoice } from "./ProductFilter";
@@ -62,7 +62,7 @@ export default function Shell({
         <div className="shell-search">
           <Search state={state} all={product.projects} onSelect={select} />
         </div>
-        <Tip title="What Docket's words mean">
+        <Tooltip title="What Docket's words mean">
           <a
             className="shell-icon-link"
             href={sectionHref("glossary")}
@@ -71,7 +71,7 @@ export default function Shell({
           >
             <HelpOutlineRoundedIcon sx={{ fontSize: 20 }} />
           </a>
-        </Tip>
+        </Tooltip>
       </header>
       <SideNav state={state} at={sectionOf(route)} />
       <main className="shell-main">{children}</main>
@@ -163,7 +163,7 @@ function SideNav({ state, at }: { state: DocketState; at: Section }) {
         <div key={i} className="shell-side-group">
           {g.label ? <div className="shell-side-label">{g.label}</div> : null}
           {g.items.map((item) => (
-            <Tip key={item.section} title={item.question} placement="right">
+            <Tooltip key={item.section} title={item.question} placement="right">
               <a className="shell-side-item" href={sectionHref(item.section)} aria-current={at === item.section ? "page" : undefined}>
                 <span className="shell-side-icon" aria-hidden>
                   {item.icon}
@@ -171,7 +171,7 @@ function SideNav({ state, at }: { state: DocketState; at: Section }) {
                 <span className="shell-side-name">{item.label}</span>
                 {item.count ? <span className="shell-side-count">{item.count}</span> : null}
               </a>
-            </Tip>
+            </Tooltip>
           ))}
         </div>
       ))}

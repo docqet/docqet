@@ -4,7 +4,7 @@ import OpenInNewRoundedIcon from "@mui/icons-material/OpenInNewRounded";
 import { DetailsPopover } from "./popovers/DetailsPopover";
 import { follow } from "./markdown/Markdown";
 import { conceptLinked, fieldsText, find, pageHref, type Concept, type DocketState, type Pick } from "../state";
-import { Tip } from "./Tip";
+import Tooltip from "@mui/material/Tooltip";
 import { ConceptSummary } from "./popovers/ConceptSummary";
 
 /*
@@ -13,12 +13,12 @@ import { ConceptSummary } from "./popovers/ConceptSummary";
  */
 export function PageLink({ pick, children = "Details" }: { pick: Pick; children?: ReactNode }) {
   return (
-    <Tip title="Open everything about it in a new tab">
+    <Tooltip title="Open everything about it in a new tab">
       <a className="filter-toggle page-link" href={pageHref(pick)} target="_blank" rel="noopener">
         <OpenInNewRoundedIcon sx={{ fontSize: 14 }} />
         {children}
       </a>
-    </Tip>
+    </Tooltip>
   );
 }
 

@@ -24,7 +24,7 @@ import {
   type Persona,
   type Pick,
 } from "../../state";
-import { Tip } from "../Tip";
+import Tooltip from "@mui/material/Tooltip";
 import { docHref, navigate, withParam, type Route } from "../../routes";
 import { PageHeader, View } from "../shell/layout";
 import "./page.css";
@@ -193,11 +193,11 @@ export function Avatars({ personas }: { personas: Persona[] }) {
   return (
     <span className="page-avatars">
       {personas.slice(0, MAX_AVATARS).map((p) => (
-        <Tip key={p.id} title={personaNameAndRole(p).name}>
+        <Tooltip key={p.id} title={personaNameAndRole(p).name}>
           <span>
             <PersonaAvatar persona={p} size={26} />
           </span>
-        </Tip>
+        </Tooltip>
       ))}
       {more > 0 ? <span className="page-avatars-more">+{more}</span> : null}
     </span>

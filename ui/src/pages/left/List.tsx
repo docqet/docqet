@@ -5,7 +5,7 @@ import MenuItem from "@mui/material/MenuItem";
 import { DecisionList, type Go } from "../../components/Fields";
 import { NAMES, TECHNICAL_NAMES, plural } from "../../components/names";
 import { CapabilityStability } from "../../components/CapabilityLabel";
-import { Tip } from "../../components/Tip";
+import Tooltip from "@mui/material/Tooltip";
 import { GapIcon, LeftLabel } from "../../components/left/LeftMark";
 import { Excerpt, plainText } from "../../components/markdown/Markdown";
 import { IMPACT_NAMES, ImpactBadge, JudgementBadge, LIKELIHOOD_NAMES, PartTag, REACH_NAMES, RiskPartIcon } from "../../components/risk/ImpactBadge";
@@ -416,11 +416,11 @@ function GapLine({ state, row: r, here }: { state: DocketState; row: GapRow; her
         {r.on ? <CapabilityStability level={r.on.capability.stability} name={r.on.capability.name} focusable={false} /> : <span className="lf-default">–</span>}
       </span>
       <span role="cell" className="lf-gap">
-        <Tip title={plainText(r.gap.description)}>
+        <Tooltip title={plainText(r.gap.description)}>
           <a className="lf-gap-name" href={docHref("gap", r.gap.id)}>
             <Excerpt text={r.gap.name} lines={1} />
           </a>
-        </Tip>
+        </Tooltip>
         <span className="lf-gap-tags">
           <span>{r.kind === "technical" ? "Technical" : "Product"}</span>
           {r.claim ? <span className="lf-claim">Breaks a claim</span> : null}

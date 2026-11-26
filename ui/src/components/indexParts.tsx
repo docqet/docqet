@@ -11,7 +11,7 @@ import { DomainIcon } from "./names";
 import { PersonaAvatar, PersonaIcon } from "./Personas";
 import { InitiativeIcon } from "./shell/ScopeFilter";
 import { GapIcon, LEFT_KINDS, LeftMark, type LeftKind } from "./left/LeftMark";
-import { Tip } from "./Tip";
+import Tooltip from "@mui/material/Tooltip";
 import { docHref, type DocKind } from "../routes";
 import { bareId, type CapabilityLevel, type Exposure, type Gap, type Level, type Persona, type RiskAcross } from "../state";
 import { ExposureMark, RiskScore } from "./risk/RiskScore";
@@ -70,12 +70,12 @@ export function MiniCount({ kind, n }: { kind: LeftKind | "gap"; n: number }) {
   if (!n) return null;
   const name = kind === "gap" ? (n === 1 ? "gap" : "gaps") : (n === 1 ? LEFT_KINDS[kind].one : LEFT_KINDS[kind].many).toLowerCase();
   return (
-    <Tip title={`${n} ${name}`}>
+    <Tooltip title={`${n} ${name}`}>
       <span className="ix-mini">
         <LeftMark kind={kind === "gap" ? "product-gap" : kind} size={13} decorative />
         {n}
       </span>
-    </Tip>
+    </Tooltip>
   );
 }
 
@@ -142,11 +142,11 @@ export function PersonaFaces({ personas, max = 4 }: { personas: Persona[]; max?:
   return (
     <span className="ix-faces">
       {shown.map((p) => (
-        <Tip key={p.id} title={p.name}>
+        <Tooltip key={p.id} title={p.name}>
           <a href={docHref("persona", p.id)} aria-label={p.name}>
             <PersonaAvatar persona={p} size={22} />
           </a>
-        </Tip>
+        </Tooltip>
       ))}
       {personas.length > max ? <span className="ix-faces-more">+{personas.length - max}</span> : null}
     </span>

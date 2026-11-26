@@ -59,9 +59,17 @@ const theme = createTheme({
         }),
       },
     },
+    /*
+     * A plain tooltip: a few words on hover or focus about what something is
+     * or does, describing what it's on rather than naming it, so a button
+     * keeps the name its words or aria-label give it. Text with line breaks
+     * keeps them. (A card that opens on hover is a DetailsPopover.)
+     */
     MuiTooltip: {
+      defaultProps: { describeChild: true, disableInteractive: true, enterDelay: 300, enterNextDelay: 150 },
       styleOverrides: {
         tooltip: {
+          whiteSpace: "pre-line",
           fontSize: 12,
           fontWeight: 500,
           borderRadius: 4,

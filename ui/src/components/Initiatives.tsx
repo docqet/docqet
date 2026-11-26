@@ -1,4 +1,4 @@
-import { Tip } from "./Tip";
+import Tooltip from "@mui/material/Tooltip";
 import { docHref } from "../routes";
 import { InitiativeIcon } from "./shell/ScopeFilter";
 import { find, type Capability, type DocketState } from "../state";
@@ -31,12 +31,12 @@ export function InitiativeTags({ state, ids, plain = false, block = false }: { s
             {i.name}
           </span>
         ) : (
-          <Tip key={i.id} title={i.description}>
+          <Tooltip key={i.id} title={i.description}>
             <a className="initiative-tag" href={docHref("initiative", i.id)}>
               <InitiativeIcon size={11} />
               {i.name}
             </a>
-          </Tip>
+          </Tooltip>
         ),
       )}
     </span>

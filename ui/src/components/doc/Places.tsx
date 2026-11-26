@@ -1,6 +1,6 @@
 import CodeRoundedIcon from "@mui/icons-material/CodeRounded";
 import { projectName, type EvidencePlace, type DocketState } from "../../state";
-import { Tip } from "../Tip";
+import Tooltip from "@mui/material/Tooltip";
 import { plural } from "../names";
 
 /*
@@ -19,9 +19,9 @@ export function Places({ state, places, label, detailed = false }: { state: Dock
             <CodeRoundedIcon sx={{ fontSize: 14 }} />
           </span>
           <span className="page-place">
-            <Tip title={e.text}>
+            <Tooltip title={e.text}>
               <code>{e.text}</code>
-            </Tip>
+            </Tooltip>
             <span className="page-place-where">
               {e.file}:{e.line}
               {several && e.project ? ` · ${projectName(state, e.project)}` : ""}

@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import BalanceRoundedIcon from "@mui/icons-material/BalanceRounded";
 import HelpOutlineRoundedIcon from "@mui/icons-material/HelpOutlineRounded";
 import { createSvgIcon } from "@mui/material/utils";
-import { Tip } from "../Tip";
+import Tooltip from "@mui/material/Tooltip";
 import { Term } from "../term/Term";
 import type { TermId } from "../term/terms";
 
@@ -65,12 +65,12 @@ export function GapFilter({ product, technical, show, onShow }: { product: numbe
   const toggle = (kind: LeftKind, n: number) => {
     const word = kind === "product-gap" ? "product" : "technical";
     return (
-      <Tip title={show === kind ? "Show all gaps" : `Show only ${word} gaps`}>
+      <Tooltip title={show === kind ? "Show all gaps" : `Show only ${word} gaps`}>
         <button type="button" className="gap-filter-toggle" aria-pressed={show === kind} onClick={() => onShow(show === kind ? "all" : (kind as GapShow))}>
           <LeftMark kind={kind} size={13} decorative />
           {n} {word}
         </button>
-      </Tip>
+      </Tooltip>
     );
   };
   return (
@@ -91,11 +91,11 @@ export function LeftMark({ kind, size = 16, decorative = false }: { kind: LeftKi
       </span>
     );
   return (
-    <Tip title={one}>
+    <Tooltip title={one}>
       <span className="left-mark" data-kind={kind} role="img" aria-label={one}>
         <Icon sx={{ fontSize: size }} />
       </span>
-    </Tip>
+    </Tooltip>
   );
 }
 

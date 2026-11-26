@@ -24,7 +24,7 @@ import { Ring } from "../../components/ring/Ring";
 import { MATURITY_BANDS } from "../../components/maturity/maturity";
 import { RiskRing } from "../../components/risk/RiskRing";
 import { STABILITY_LEVEL_IDS, levelColor } from "../../components/stability/stability";
-import { Tip } from "../../components/Tip";
+import Tooltip from "@mui/material/Tooltip";
 import "./map.css";
 
 /*
@@ -214,11 +214,11 @@ function LensBar({ lens, onLens }: { lens: Lens; onLens: (lens: Lens) => void })
       <span className="lens-label">Show</span>
       <span className="lens-choices">
         {LENSES.map((l) => (
-          <Tip key={l.id} title={l.tip}>
+          <Tooltip key={l.id} title={l.tip}>
             <button type="button" aria-pressed={lens === l.id} onClick={() => onLens(l.id)}>
               {l.label}
             </button>
-          </Tip>
+          </Tooltip>
         ))}
       </span>
       {lens === "risk" ? (
@@ -268,12 +268,12 @@ function FilterBar({
       <span className="filter-bar-label">Showing only</span>
       {filters.map((f) => (
         <span key={`${f.kind}:${f.id}`} className="filter-chip">
-          <Tip title={`${PICK_KINDS[f.kind].one}: peek at it`}>
+          <Tooltip title={`${PICK_KINDS[f.kind].one}: peek at it`}>
             <button type="button" className="filter-chip-name" onClick={() => onOpen(f)}>
               {PICK_KINDS[f.kind].icon(15)}
               {pickName(state, f)}
             </button>
-          </Tip>
+          </Tooltip>
           <button type="button" className="filter-chip-remove" aria-label={`Stop filtering to ${pickName(state, f)}`} onClick={() => onRemove(f)}>
             <CloseRoundedIcon sx={{ fontSize: 14 }} />
           </button>

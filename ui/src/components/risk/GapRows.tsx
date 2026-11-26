@@ -3,7 +3,7 @@ import BoltOutlinedIcon from "@mui/icons-material/BoltOutlined";
 import { DomainIcon } from "../names";
 import { Excerpt, plainText } from "../markdown/Markdown";
 import { LeftMark } from "../left/LeftMark";
-import { Tip } from "../Tip";
+import Tooltip from "@mui/material/Tooltip";
 import { docHref } from "../../routes";
 import { VERDICTS, find, subjectOf, technicalDoc, type DocketState, type Gap, type Risk, type RiskAcross, type TechnicalDoc } from "../../state";
 import { GapRiskMark, RiskBars, RiskScore, VERDICT_NAMES } from "./RiskScore";
@@ -82,11 +82,11 @@ function GapLine({ state, row, risk, here }: { state: DocketState; row: GapRow; 
     <li className="gr-row">
       <GapRiskMark risk={risk} on={risk.on[0] ?? null} />
       <span className="gr-kind">{technical ? "Technical" : "Product"}</span>
-      <Tip title={plainText(gap.description)}>
+      <Tooltip title={plainText(gap.description)}>
         <a className="gr-summary" href={docHref("gap", gap.id)}>
           <Excerpt text={gap.name} lines={1} />
         </a>
-      </Tip>
+      </Tooltip>
       <span className="gr-on">
         {onLink(state, row, here)}
         <GapInitiatives state={state} gap={gap} />

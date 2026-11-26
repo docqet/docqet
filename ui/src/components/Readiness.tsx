@@ -6,7 +6,7 @@ import NorthRoundedIcon from "@mui/icons-material/NorthRounded";
 import { InlineMarkdown } from "./markdown/Markdown";
 import { STABILITY } from "./stability/stability";
 import { CapabilityStability } from "./CapabilityLabel";
-import { Tip } from "./Tip";
+import Tooltip from "@mui/material/Tooltip";
 import { Pie } from "./ring/Pie";
 import { docHref } from "../routes";
 import { readinessBand, startedOf, type NotReady, type Readiness } from "../state";
@@ -67,9 +67,9 @@ export function ReadinessMark({
   const started = startedOf(readiness);
   if (!started || readiness.percent === null)
     return (
-      <Tip title={readiness.notStarted.length ? "Only drafts so far, and drafts don't count." : "No capabilities yet."}>
+      <Tooltip title={readiness.notStarted.length ? "Only drafts so far, and drafts don't count." : "No capabilities yet."}>
         <span className="readiness faint">Nothing started</span>
-      </Tip>
+      </Tooltip>
     );
   const label = readinessLabel(readiness)!;
   return (

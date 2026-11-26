@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import Box from "@mui/material/Box";
 import WarningAmberRoundedIcon from "@mui/icons-material/WarningAmberRounded";
 import { LeftMark } from "../../../components/left/LeftMark";
-import { Tip } from "../../../components/Tip";
+import Tooltip from "@mui/material/Tooltip";
 
 /*
  * A warning after a name, for something with a contradiction; what it is shows
@@ -11,9 +11,9 @@ import { Tip } from "../../../components/Tip";
 export function ContradictionHint({ messages, tip = true }: { messages: string[]; tip?: boolean }) {
   if (!messages.length) return null;
   return (
-    <Tip title={tip ? messages.join("\n") : undefined}>
+    <Tooltip title={tip ? messages.join("\n") : undefined}>
       <WarningAmberRoundedIcon aria-label={messages.join(" ")} sx={{ flex: "none", fontSize: 15, color: "var(--warning)" }} />
-    </Tip>
+    </Tooltip>
   );
 }
 
@@ -27,7 +27,7 @@ export function DecisionsHint({ count }: { count: number }) {
 function CountHint({ count, label, icon }: { count: number; label: string; icon: ReactNode }) {
   if (!count) return null;
   return (
-    <Tip title={label}>
+    <Tooltip title={label}>
       <Box
         component="span"
         aria-label={label}
@@ -45,6 +45,6 @@ function CountHint({ count, label, icon }: { count: number; label: string; icon:
         {icon}
         {count}
       </Box>
-    </Tip>
+    </Tooltip>
   );
 }

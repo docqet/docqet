@@ -8,6 +8,7 @@ const cleared = {
   backgroundColor: "transparent",
   border: 0,
   boxShadow: "none",
+  whiteSpace: "normal",
 };
 
 /*
@@ -42,7 +43,8 @@ export function DetailsPopover({ title, hoverOnly = false, children }: DetailsPo
       describeChild
       enterTouchDelay={0}
       leaveTouchDelay={8000}
-      enterDelay={hoverOnly ? 250 : undefined}
+      enterDelay={hoverOnly ? 250 : 100}
+      enterNextDelay={0}
       disableInteractive={hoverOnly}
       disableTouchListener={hoverOnly}
       title={title}

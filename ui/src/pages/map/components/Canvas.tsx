@@ -13,7 +13,7 @@ import {
   type RefObject,
 } from "react";
 import { Grip } from "../../../components/Grip";
-import { Tip } from "../../../components/Tip";
+import Tooltip from "@mui/material/Tooltip";
 
 const MIN_ZOOM = 0.3;
 const MAX_ZOOM = 1.6;
@@ -621,11 +621,11 @@ export default function Canvas({
         <button type="button" onClick={() => zoomMiddle((z) => z / 1.2)} aria-label="Zoom out">
           −
         </button>
-        <Tip title="Back to 100%">
+        <Tooltip title="Back to 100%">
           <button type="button" className="zoom-level" onClick={() => zoomMiddle(() => 1)}>
             {Math.round(view.zoom * 100)}%
           </button>
-        </Tip>
+        </Tooltip>
         <button type="button" onClick={() => zoomMiddle((z) => z * 1.2)} aria-label="Zoom in">
           +
         </button>
@@ -633,11 +633,11 @@ export default function Canvas({
         <button type="button" className="text-button" onClick={fitAll}>
           Fit
         </button>
-        <Tip title="Put every card back in its tidy place">
+        <Tooltip title="Put every card back in its tidy place">
           <button type="button" className="text-button" onClick={tidyUp}>
             Tidy
           </button>
-        </Tip>
+        </Tooltip>
       </div>
     </div>
   );
