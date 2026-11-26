@@ -1,0 +1,40 @@
+components:
+  schemas:
+    HealthStatus:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          enum: [up, down]
+          description: up when every check is up, and down when any is down.
+          example: up
+        details:
+          type: object
+          description: >-
+            One check per server the process is running (`http`), and one per
+            dependency they use, of which there are none yet.
+          additionalProperties:
+            $ref: "#/components/schemas/HealthCheck"
+          example:
+            http:
+              status: up
+              timestamp: "2026-11-25T20:00:00Z"
+
+    HealthCheck:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          enum: [up, down]
+        timestamp:
+          type: string
+          format: date-time
+          description: When the check last ran. Results are cached for a second.
+        error:
+          type: string
+          description: Why the check is down. The cause itself is logged, not returned.
+          example: unhealthy

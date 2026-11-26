@@ -21,8 +21,8 @@ import (
 const shutdownTimeout = 10 * time.Second
 
 // ServeCommand runs the Docket server. For now it serves the UI, over no
-// projects, and a readiness probe: it can't take applied states or results
-// yet, so it holds nothing.
+// projects, a readiness probe, and the API's docs: it can't take applied
+// states or results yet, so it holds nothing.
 func ServeCommand() *cli.Command {
 	return &cli.Command{
 		Name:     "serve",
@@ -52,7 +52,7 @@ func ServeCommand() *cli.Command {
 			logger := logs.New(os.Stderr, cmd.String("log-level"), cmd.String("log-format"))
 			logger.InfoContext(ctx, "starting docket server", "version", cmd.Root().Version)
 
-			handler, err := router(nil)
+			handler, err := router(logger, nil)
 			if err != nil {
 				return err
 			}
@@ -61,19 +61,32 @@ func ServeCommand() *cli.Command {
 	}
 }
 
-// router builds the handler `serve` and `ui` serve: the API under /v1, the
-// states the UI shows, and the UI under everything else. states are the
-// state.json files to show, one per project.
-func router(states []string) (http.Handler, error) {
+// router builds the handler `serve` and `ui` serve: the API under /v1, its
+// docs under /docs, the states the UI shows, and the UI under everything
+// else. states are the state.json files to show, one per project.
+func router(logger *slog.Logger, states []string) (http.Handler, error) {
 	uiHandler, err := httphandlers.NewUIHandler()
 	if err != nil {
 		return nil, err
 	}
+	docsHandler, err := httphandlers.NewDocsHandler()
+	if err != nil {
+		return nil, err
+	}
+
+	// The one server's check is always up: once it stops serving, its
+	// listener is closed, so nothing can ask.
+	health := httphandlers.NewHealthHandler(logger)
+	health.AddServer("http", func(context.Context) error { return nil })
+	health.Start()
 
 	r := chi.NewRouter()
 	r.Route("/v1", func(api chi.Router) {
-		httphandlers.NewHealthHandler().RegisterRoutes(api)
+		// Health stays public so infrastructure probes, such as Compose's
+		// healthcheck, reach it without a token.
+		health.RegisterRoutes(api)
 	})
+	docsHandler.RegisterRoutes(r)
 	httphandlers.NewStatesHandler(states).RegisterRoutes(r)
 	uiHandler.RegisterRoutes(r)
 	return r, nil

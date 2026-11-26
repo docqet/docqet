@@ -74,6 +74,19 @@ jobs:
       # tsc -b, then Vite: type errors fail here.
       - run: npm run build
 
+  docs-lint:
+    name: API docs lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      # Lints static/docs with redocly.yaml and .redocly.lint-ignore.yaml.
+      - run: npx redocly lint
+
   docker-build:
     name: Docker build
     runs-on: ubuntu-latest

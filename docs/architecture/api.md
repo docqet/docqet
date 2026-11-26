@@ -143,3 +143,6 @@ The api repository's REST conventions apply:
   feature map, pages through it. Search is an endpoint of its own when the
   UI needs it.
 - **At Prototype, endpoints change in place.** Nothing depends on them yet.
+- **Every endpoint is in the OpenAPI spec** as it's built, with its
+  `x-stability`, and shows in the reference at `/docs/api` (see
+  [API docs](api-docs.md)).

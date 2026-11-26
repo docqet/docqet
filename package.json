@@ -1,0 +1,11 @@
+{
+  "name": "docket-docs",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "lint:docs": "redocly lint"
+  },
+  "devDependencies": {
+    "@redocly/cli": "^2.71.0"
+  }
+}

@@ -16,3 +16,9 @@ compose.override.yml
 # Build output
 /bin/
 /docket
+
+# The docs linter's dependencies, from the root package.json.
+node_modules/
+
+# Snapshots, screenshots and console logs the Playwright MCP server writes.
+.playwright-mcp/

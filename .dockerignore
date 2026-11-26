@@ -10,6 +10,9 @@ compose.override.yml
 /docket
 coverage.*
 
+# The docs linter's dependencies, which the image doesn't use.
+/node_modules/
+
 # The UI's dependencies and build, which the image installs and builds itself.
 ui/node_modules/
 ui/dist/

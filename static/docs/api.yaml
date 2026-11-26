@@ -1,0 +1,58 @@
+openapi: 3.0.3
+info:
+  title: Docket API
+  description: >-
+    The Docket server's API: what software can do, who it serves, and how
+    ready it is, for the projects applied to it. Only the server's health is
+    served so far. The endpoints the CLI sends states through and the
+    resources the UI reads come next, as
+    [the plan](https://github.com/exalynt/docket/blob/main/docs/architecture/api.md)
+    describes.
+
+
+    ## Stability
+
+
+    Every endpoint carries an Exalynt
+    [stability level](https://readme.exalynt.com/how-it-works/stability-levels):
+    Prototype, Alpha, Beta, or GA. Below GA it shows as a mark beside the
+    endpoint and in the navigation, which says what to expect when you hover,
+    focus, or tap it, and every endpoint states it in its `x-stability`
+    field. Each group of endpoints shows its
+    [maturity](https://readme.exalynt.com/how-it-works/maturity) in the
+    navigation, and in the overview under Maturity below: how close its
+    endpoints are to being stable and supported.
+
+
+    **Prototype** endpoints explore an idea: they may change completely or be
+    removed, without notice. Endpoints move up a level as they settle, and
+    only GA endpoints promise no breaking changes within `/v1`.
+
+
+    ## Maturity
+
+
+    How close the API as a whole, and each group of endpoints, is to being
+    stable and supported, worked out from its endpoints' stability levels.
+    A group's maturity is a guide: before relying on an endpoint, check its
+    own stability.
+
+
+    ## Signing in
+
+
+    There's no sign-in yet. Each client gets a Docket server of their own,
+    so one never holds another's projects, and it must only be reachable by
+    that client's people, such as on a private network.
+  version: 0.1.0
+servers:
+  - url: http://localhost:8080/v1
+    description: Local development, `docket serve`
+  - url: http://127.0.0.1:4100/v1
+    description: This machine, `docket ui`
+tags:
+  - name: Health
+    description: Service availability checks.
+paths:
+  /readyz:
+    $ref: "./paths/health/readyz.yml"

@@ -50,7 +50,7 @@ func UICommand() *cli.Command {
 			logger := logs.New(os.Stderr, "info", "text")
 			logger.InfoContext(ctx, "showing the project's state as it is, without re-indexing", "state", state, "url", "http://"+uiAddr)
 
-			handler, err := router([]string{state})
+			handler, err := router(logger, []string{state})
 			if err != nil {
 				return err
 			}

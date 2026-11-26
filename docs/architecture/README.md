@@ -60,6 +60,7 @@ Each is created when the command that needs it is built, not before.
 | [Indexing](indexing.md)        | `Index(fs.FS)`, reading YAML, and checking the indexer against the examples                         |
 | [Reads](reads.md)              | The read service and its sources of states, so every reader shows the same thing                    |
 | [The server's API](api.md)     | Whole states for the CLI, REST resources for the UI, reading at a point and how things changed      |
+| [API docs](api-docs.md)        | The reference at `/docs/api`: the OpenAPI spec, rendered by Scalar with each endpoint's stability   |
 | [Storage](storage.md)          | Repositories, SQLite and migrations, and keeping states small                                       |
 | [The UI](ui.md)                | Moving the UI to read only from the server's API                                                    |
 
@@ -103,4 +104,3 @@ Each step builds only what its commands need:
   history service, so it comes with history.
 - **How the server is configured** beyond its flags and environment
   variables.
-- **An OpenAPI spec.** It comes with the resources, once their shape settles.
