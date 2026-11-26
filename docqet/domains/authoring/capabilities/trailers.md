@@ -6,7 +6,7 @@ name: Trailers
 description: >-
   Commits say what a doc, gap or decision they removed became, so history can
   follow it.
-stability: draft
+stability: prototype
 personas: [persona:engineer, persona:coding-agent]
 concepts: [concept:trailer]
 decisions:
