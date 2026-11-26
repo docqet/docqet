@@ -712,13 +712,13 @@ export function TechnicalRows({ docs, newTab = false }: { state: DocketState; do
 /*
  * What's still open about a capability, near the top so it's read first:
  * decisions nobody has made, its product gaps, and the technical gaps of what
- * it's built on; then how much of what its level expects is met, and `expectations`, a way to the
+ * it's built on; then how much of what its level expects is met, and `rubric`, a way to the
  * whole of it. With `detailed`, as on its detail page, each gap says more.
  */
 export function WhatsLeft({
   state,
   capability,
-  expectations,
+  rubric,
   detailed = false,
   onConcept,
   onShow,
@@ -726,7 +726,7 @@ export function WhatsLeft({
 }: {
   state: DocketState;
   capability: Capability;
-  expectations?: ReactNode;
+  rubric?: ReactNode;
   detailed?: boolean;
   onConcept: (id: string) => void;
   onShow: (target: Target) => void;
@@ -734,7 +734,7 @@ export function WhatsLeft({
 }) {
   const left = leftIn(state, capability);
   const n = leftCount(left);
-  const counts = expectationCounts(state, capability);
+  const counts = rubricCounts(state, capability);
   return (
     <section className="explore-left">
       <Heading count={n || undefined}>What's left</Heading>
@@ -744,18 +744,18 @@ export function WhatsLeft({
         <p className="concepts-empty">Nothing open: no open decisions or gaps are written down.</p>
       )}
       {counts ? (
-        <p className="explore-left-expectations">
+        <p className="explore-left-rubric">
           <span>
             {counts.count - counts.notMet - counts.byChoice - counts.open} of the {counts.count} outcomes {levelName(capability.stability)} expects are met
             {counts.evidence ? `, ${counts.evidence} with evidence` : ""}
             {counts.byChoice ? `, ${counts.byChoice} not met by choice` : ""}
             {counts.open ? `, ${counts.open} open` : ""}.
           </span>
-          {expectations}
+          {rubric}
         </p>
       ) : capability.stability === null ? (
-        <p className="explore-left-expectations">
-          <span>A draft: declared, and not started, so it claims none of the expectations yet.</span>
+        <p className="explore-left-rubric">
+          <span>A draft: declared, and not started, so it claims nothing in the rubric yet.</span>
         </p>
       ) : null}
     </section>
@@ -924,12 +924,12 @@ export function LeftRollup({
  * says aren't met, how many a tradeoff says aren't met by choice, how many an
  * open decision leaves open, and how many
  * a mechanism or component it's built on says it meets; or null with no
- * expectations, or for a draft, which claims none. An outcome nothing names counts
+ * rubric, or for a draft, which claims none. An outcome nothing names counts
  * as met on its level's word.
  */
-export function expectationCounts(state: DocketState, capability: Capability) {
-  if (!state.expectations || capability.stability === null) return null;
-  const standings = state.expectations.qualities
+export function rubricCounts(state: DocketState, capability: Capability) {
+  if (!state.rubric || capability.stability === null) return null;
+  const standings = state.rubric.qualities
     .flatMap(outcomesOf)
     .map((o) => outcomeStanding(state, capability, o).standing)
     .filter((s) => s !== "not-expected");

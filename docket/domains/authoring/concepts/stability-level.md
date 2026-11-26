@@ -31,7 +31,7 @@ rely on before they rely on it.
 | GA        | Stable     | Generally available and stable. It keeps working as it does today. Breaking changes are rare, announced ahead of time, and come with time to move over. |
 
 What each level generally expects, quality by quality, is in the
-[expectations](expectations.md).
+[stability rubric](rubric.md).
 
 - **A level describes how much you can depend on the work, not how good it
   is.** A prototype that answers its question quickly is good work.
@@ -55,7 +55,7 @@ A capability declared but not started yet is a **draft**, such as the
 [waitlist](../../../../examples/hotel-bookings/docket/domains/guest-stays/capabilities/waitlist.md)
 or
 [refunds](../../../../examples/hotel-billing/docket/domains/billing/capabilities/refunds.md).
-It isn't a level: it claims nothing, in the expectations or anywhere else,
+It isn't a level: it claims nothing, in the stability rubric or anywhere else,
 and counts toward no maturity or readiness. Readers show it as the word
 Draft, with no level's mark.
 

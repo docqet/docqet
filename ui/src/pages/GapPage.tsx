@@ -43,8 +43,8 @@ export default function GapPage({ state, id }: { state: DocketState; id: string;
   return <GapView state={state} gap={gap} />;
 }
 
-/* The expectations reference's place for an outcome's quality, on the glossary. */
-const qualityHref = (quality: string) => `${sectionHref("glossary", { tab: "expectations" })}#${quality}`;
+/* The rubric reference's place for an outcome's quality, on the glossary. */
+const qualityHref = (quality: string) => `${sectionHref("glossary", { tab: "rubric" })}#${quality}`;
 
 function GapView({ state, gap }: { state: DocketState; gap: Gap }) {
   const kind = gapKind(gap);

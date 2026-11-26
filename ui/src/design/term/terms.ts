@@ -28,7 +28,7 @@ export type TermId =
   | "readiness"
   | "stability"
   | "maturity"
-  | "expectations"
+  | "rubric"
   | "contradiction";
 
 export type TermEntry = {
@@ -177,8 +177,8 @@ export const TERMS: Record<TermId, TermEntry> = {
       "How far along a feature, domain or project is: how much of the work under way is stable and supported, as a percentage worked out from its capabilities' stability. Stable capabilities count for more, and drafts don't count. It falls in one of four bands.",
     more: "It's about the whole, not each part, and starting new work lowers it without anything getting worse. It doesn't say whether people can rely on it: that's readiness.",
   },
-  "expectations": {
-    name: "Expectations",
+  rubric: {
+    name: "Stability rubric",
     means:
       "What each stability level generally expects, grouped by quality such as usability, reliability and security, so the people depending on a capability and the people building it share the same picture of its level.",
     more: "“A bad release can be undone” is one of Beta's outcomes.",

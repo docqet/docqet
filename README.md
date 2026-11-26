@@ -132,7 +132,7 @@ Docket's [Authoring](docket/domains/authoring/domain.md) and
 [Reporting](docket/domains/reporting/domain.md) domains introduce its concepts
 and show how they fit together: domains, features, capabilities, rules,
 concepts, personas, initiatives, mechanisms and components, open decisions,
-gaps and tradeoffs, stability levels and their expectations, maturity,
+gaps and tradeoffs, stability levels and their rubric, maturity,
 readiness and evidence. Each concept has a doc of its own, in its domain's
 `concepts/` folder, that defines it precisely, with an example of how it's
 written down.
@@ -163,7 +163,7 @@ intended, and evolves gracefully.
 
 A discipline is a set of shared standards that people hold each other to.
 Docket gives a project's standards somewhere to live: an open format for writing
-intention down, the expectations of each stability level, and every
+intention down, the stability rubric that says what each level means, and every
 change to either reviewed in a pull request alongside the code.
 
 ### What the software should do
@@ -187,7 +187,7 @@ down:
 | **Evaluating tradeoffs**                   | Tradeoffs: what we chose instead of what, with its benefit and drawback                                                              |
 | **Amid uncertainty**                       | Known gaps, open decisions, drafts, and Prototype and Alpha levels, so what isn't known or done yet is said plainly                  |
 | **Deciding at the right moment**           | Open decisions, held where their answer will go until it's time to settle them                                                      |
-| **Deciding how much is enough**            | Each capability's stability level, and its expectations: what that level generally expects, and what would be overengineering |
+| **Deciding how much is enough**            | Each capability's stability level, and the stability rubric: what that level generally expects, and what would be overengineering |
 | **Taking responsibility for the outcomes** | Every decision made in a commit and reviewed in a pull request. Intention an agent writes counts only once a person confirms it      |
 
 Sound judgment rests on evidence and is honest about uncertainty, and Docket
@@ -348,8 +348,8 @@ _A better name will come._ The format is how a repository declares the state
 of its software, in docs, frontmatter and annotations, and the shape of the
 state worked out from it. It's defined by Docket's own concept docs, starting
 from the [Authoring](docket/domains/authoring/domain.md) domain, and the
-[expectations](internal/expectations/expectations.yml) of each stability level
-are built into `docket`. It belongs to no one tool: `docket` is one program
+[stability rubric](internal/rubric/rubric.yml), which says what each
+stability level means, is built into `docket`. It belongs to no one tool: `docket` is one program
 that reads it, and anyone can write another.
 
 ### 3. `docket`
@@ -444,7 +444,7 @@ domains. It's easy to mix up what's Docket's and what's an example, so:
 | ----------------------------------- | -------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
 | **Docket, the product**             | [`docket.yaml`](docket.yaml) and [`docket/`](docket/)                 | What Docket does and must never do, in Docket's format: its capabilities, rules, personas, and its gaps, tradeoffs and open decisions |
 | **The format**                      | The concepts in [`docket/domains/*/concepts/`](docket/domains/authoring/concepts/) | What the words mean: what a capability, rule or gap is, and how each is written                       |
-| **The expectations**                | [`internal/expectations/expectations.yml`](internal/expectations/expectations.yml) | What each stability level expects, built into `docket`, and explained by the [expectations](docket/domains/authoring/concepts/expectations.md) concept |
+| **The stability rubric**            | [`internal/rubric/rubric.yml`](internal/rubric/rubric.yml) | What each stability level expects, built into `docket`, and explained by the [stability rubric](docket/domains/authoring/concepts/rubric.md) concept |
 | **How `docket` is built**           | [`docs/architecture/`](docs/architecture/)                            | How the code is laid out and why, linked from the components in `docket/`                             |
 | **Examples**                        | [`examples/`](examples/)                                              | Other, made-up projects, each a Docket project of its own                                              |
 
@@ -474,7 +474,7 @@ domains. It's easy to mix up what's Docket's and what's an example, so:
 | [`examples/`](examples/)     | Example projects laid out as repositories, each with the `state.json` indexing would produce                     |
 | [`kit/`](kit/)               | The agent development kit: skills and rules that keep docs and annotations current                               |
 | [`cmd/docket/`](cmd/docket/) | `docket`, the Go program that's the CLI and the server, with the draft of its commands                           |
-| `internal/`                  | `docket`'s code, and the [expectations](internal/expectations/expectations.yml) it's built with                  |
+| `internal/`                  | `docket`'s code, and the [stability rubric](internal/rubric/rubric.yml) it's built with                  |
 | [`ui/`](ui/)                 | The UI `docket` serves, built into the binary                                                                    |
 
 ## Developing

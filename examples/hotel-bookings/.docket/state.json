@@ -906,7 +906,7 @@
     }
   ],
   "problems": [],
-  "expectations": {
+  "rubric": {
     "kinds": [
       {
         "id": "web-app",

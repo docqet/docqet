@@ -66,7 +66,7 @@ the server are separate, since they aren't reads.
 | [`docket show`](#docket-show) | One doc, with everything derived about it | Read |
 | [`docket list`](#docket-list) | Docs, gaps, decisions or tradeoffs, filtered and ordered | Read |
 | [`docket status`](#docket-status) | Maturity, readiness and what's left, at a glance | Read |
-| [`docket expectations`](#docket-expectations) | What each stability level expects, or what a promotion needs | Read |
+| [`docket rubric`](#docket-rubric) | What each stability level expects, or what a promotion needs | Read |
 | [`docket rename`](#docket-rename) | Change an ID everywhere in the project, and say so in history | Changing |
 | [`docket diff`](#docket-diff) | What changed in Docket between two points | Read |
 | [`docket log`](#docket-log) | How one thing changed over time | Read |
@@ -310,19 +310,19 @@ the command is a reader too. It's the same Go code the server uses, and the UI
 shows only what that code works out, so `docket status` and the UI always
 agree.
 
-### `docket expectations`
+### `docket rubric`
 
-The [expectations](../../docket/domains/authoring/concepts/expectations.md): what
+The [stability rubric](../../docket/domains/authoring/concepts/rubric.md): what
 each level expects of the work, quality by quality, with each outcome's
 examples. It's part of the format, so it's built into the binary and is the
 same for every project. Agents read it here, and `check` uses it to validate
 every outcome named in `affects` and `meets`.
 
 ```sh
-docket expectations                                  # every quality, level and outcome
-docket expectations --level beta                     # everything Beta expects, including what it carries up
-docket expectations outcome:reliability/beta/data-kept   # one outcome, with its examples
-docket expectations --for capability:room-booking --to ga   # what promoting it needs
+docket rubric                                  # every quality, level and outcome
+docket rubric --level beta                     # everything Beta expects, including what it carries up
+docket rubric outcome:reliability/beta/data-kept   # one outcome, with its examples
+docket rubric --for capability:room-booking --to ga   # what promoting it needs
 ```
 
 With `--for` and `--to`, it's the first step of promoting a capability: each

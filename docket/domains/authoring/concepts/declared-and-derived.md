@@ -20,7 +20,7 @@ confused-with:
 - **Derived**: worked out by the [indexer](indexer.md), or by readers.
   [Evidence](evidence.md), [maturity](../../reporting/concepts/maturity.md), [bands](../../reporting/concepts/band.md),
   [readiness](../../reporting/concepts/readiness.md), [risk](../../reporting/concepts/risk.md), the
-  standing of each outcome in [the expectations](expectations.md), reverse
+  standing of each outcome in [the stability rubric](rubric.md), reverse
   links and [problems](problem.md). Nobody edits it by hand.
 
 Intention is only ever declared in a repository, so it's reviewed with the

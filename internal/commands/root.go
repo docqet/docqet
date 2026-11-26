@@ -77,7 +77,7 @@ func Root(version string) *cli.Command {
 			ShowCommand(),
 			ListCommand(),
 			StatusCommand(),
-			ExpectationsCommand(),
+			RubricCommand(),
 			RenameCommand(),
 			DiffCommand(),
 			LogCommand(),

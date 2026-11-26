@@ -49,7 +49,7 @@ Two are about what it's in, and worked out:
   [affects](../../authoring/concepts/gap.md) a
   [rule](../../authoring/concepts/rule.md) that capability follows, or an
   outcome that capability's level
-  [expects](../../authoring/concepts/expectations.md), so that outcome shows
+  [expects](../../authoring/concepts/rubric.md), so that outcome shows
   as not met there. Following a rule claims it holds, and declaring a level
   claims what it expects, so people depending on that capability are
   relying on something that isn't true yet. How much that matters grows with

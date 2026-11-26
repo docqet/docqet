@@ -26,7 +26,7 @@ type State struct {
 	Gaps         []Gap        `json:"gaps"`
 	Tradeoffs    []Tradeoff   `json:"tradeoffs"`
 	Problems     []Problem    `json:"problems"`
-	Expectations Expectations `json:"expectations"`
+	Rubric       Rubric       `json:"rubric"`
 }
 
 // Ident is a project's or product's ID and name.
@@ -271,20 +271,20 @@ const (
 	UnknownOutcome     = "unknown-outcome"
 )
 
-// Expectations are what each stability level expects, as the project was
-// indexed against them.
-type Expectations struct {
+// Rubric is the stability rubric: what each stability level expects, as the
+// project was indexed against it.
+type Rubric struct {
 	Kinds     []Kind    `json:"kinds"`
 	Qualities []Quality `json:"qualities"`
 }
 
-// Kind is a kind of software an example in the expectations can suit.
+// Kind is a kind of software an example in the rubric can suit.
 type Kind struct {
 	ID   string `json:"id"`
 	Name string `json:"name"`
 }
 
-// Quality is one of the expectations' qualities, with its levels in order.
+// Quality is one of the rubric's qualities, with its levels in order.
 type Quality struct {
 	ID       string  `json:"id"`
 	Name     string  `json:"name"`

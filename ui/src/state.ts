@@ -292,14 +292,14 @@ export const subjectOf = (item: { id: string }) => {
 };
 
 /*
- * The expectations: what each level generally means and expects, by
+ * The stability rubric: what each level generally means and expects, by
  * quality, with an entry for every level. An outcome applies from its level
  * up, through `until` where a higher level replaces it. An entry without
  * outcomes expects nothing new at its level, and only guides. It's a
  * guideline, not a gate: implementation and overengineering are examples to
  * judge by.
  */
-export type ExpectationExample = { text: string; kinds: string[] };
+export type RubricExample = { text: string; kinds: string[] };
 export type ExpectedOutcome = {
   /* Its reference, as what affects or meets it names it: `outcome:<quality>/<level>/<id>`. */
   id: string;
@@ -307,22 +307,22 @@ export type ExpectedOutcome = {
   text: string;
   until: Level | null;
   /* How meeting it might look ("How it might look"), each with the kinds of software it may suit, or none where it isn't tagged. */
-  implementation: ExpectationExample[];
+  implementation: RubricExample[];
   /* Work that may be more than its level needs, tagged the same way. */
-  overengineering: ExpectationExample[];
+  overengineering: RubricExample[];
 };
-export type ExpectationLevel = {
+export type RubricLevel = {
   level: Level;
   /* How much the level asks of the quality, in a sentence, or null where it expects nothing. */
   summary: string | null;
   outcomes: ExpectedOutcome[];
   /* Only where it has no outcomes: how work on the quality might look at this level. */
-  implementation: ExpectationExample[];
-  overengineering: ExpectationExample[];
+  implementation: RubricExample[];
+  overengineering: RubricExample[];
 };
-export type ExpectationQuality = { id: string; name: string; question: string; why: string; levels: ExpectationLevel[] };
-export type ExpectationKind = { id: string; name: string };
-export type Expectations = { kinds: ExpectationKind[]; qualities: ExpectationQuality[] };
+export type RubricQuality = { id: string; name: string; question: string; why: string; levels: RubricLevel[] };
+export type RubricKind = { id: string; name: string };
+export type Rubric = { kinds: RubricKind[]; qualities: RubricQuality[] };
 
 /* What the indexer found wrong. `domain` is that of the doc it's about, if it's about one. */
 export type Problem = { type: string; subject: string; capabilities: string[]; message: string; domain?: string };
@@ -342,8 +342,8 @@ export type DocketState = {
   gaps: Gap[];
   tradeoffs: Tradeoff[];
   problems: Problem[];
-  /* The expectations, the same for every project: the first project's, or null if none has one. */
-  expectations: Expectations | null;
+  /* The rubric, the same for every project: the first project's, or null if none has one. */
+  rubric: Rubric | null;
 };
 
 /* A place where software is defined, as its state.json's header has it, with its maturity, worked out from its features alone. */
@@ -394,8 +394,8 @@ export type StateFile = {
   /* State written before a tradeoff had one benefit and one drawback has lists of each instead. */
   tradeoffs?: (Omit<Tradeoff, "benefit" | "drawback"> & Partial<Tradeoff> & { benefits?: string[]; drawbacks?: string[] })[];
   problems: Problem[];
-  /* Missing from state written before the expectations. */
-  expectations?: Expectations;
+  /* Missing from state written before the rubric. */
+  rubric?: Rubric;
 };
 
 /* A project's header, from its state.json. Its maturity is worked out once its features are put together (see combine). */
@@ -504,7 +504,7 @@ export function combine(files: StateFile[]): DocketState {
     gaps: [],
     tradeoffs: [],
     problems: [],
-    expectations: files.find((f) => f.expectations)?.expectations ?? null,
+    rubric: files.find((f) => f.rubric)?.rubric ?? null,
   };
   /* Rule and concept links as declared, to resolve once every domain is in. */
   const pending: { from: Doc & { rules?: string[]; concepts: string[] }; domain: string; rules: string[]; concepts: string[] }[] = [];
@@ -1044,11 +1044,11 @@ export const levelInDomain = (c: Capability, domain: string): CapabilityLevel =>
 export const nextLevel = (level: CapabilityLevel): Level | null => LEVEL_ORDER[rank(level) + 1] ?? null;
 
 /* Every outcome of a quality, in level order. */
-export const outcomesOf = (quality: ExpectationQuality) => quality.levels.flatMap((l) => l.outcomes);
+export const outcomesOf = (quality: RubricQuality) => quality.levels.flatMap((l) => l.outcomes);
 
 /* An expected outcome, with its quality, by its reference: `outcome:<quality>/<level>/<id>`. */
-export function expectedOutcome(expectations: Expectations | null, id: string): { outcome: ExpectedOutcome; quality: ExpectationQuality } | undefined {
-  for (const quality of expectations?.qualities ?? []) {
+export function expectedOutcome(rubric: Rubric | null, id: string): { outcome: ExpectedOutcome; quality: RubricQuality } | undefined {
+  for (const quality of rubric?.qualities ?? []) {
     const outcome = outcomesOf(quality).find((o) => o.id === id);
     if (outcome) return { outcome, quality };
   }
@@ -1068,7 +1068,7 @@ export type DecisionHolder = { kind: "domain" | "feature" | "capability" | "mech
  * is left out.
  */
 export type Affected =
-  | { kind: "outcome"; outcome: ExpectedOutcome; quality: ExpectationQuality }
+  | { kind: "outcome"; outcome: ExpectedOutcome; quality: RubricQuality }
   | { kind: "rule"; rule: Rule }
   | { kind: "gap"; gap: Gap }
   | { kind: "tradeoff"; tradeoff: Tradeoff };
@@ -1076,7 +1076,7 @@ export type Affected =
 export function affectedBy(state: DocketState, item: { affects: string[] }): Affected[] {
   return item.affects.flatMap((ref): Affected[] => {
     if (ref.startsWith("outcome:")) {
-      const named = expectedOutcome(state.expectations, ref);
+      const named = expectedOutcome(state.rubric, ref);
       return named ? [{ kind: "outcome", ...named }] : [];
     }
     if (ref.startsWith("rule:")) {
@@ -1278,7 +1278,7 @@ export type Risk = {
 
 /* How a gap scores on one capability, as riskOf works it out. */
 function riskOn(state: DocketState, item: Gap): (capability: Capability) => RiskOn {
-  const outcomes = outcomesAffected(item).flatMap((id) => expectedOutcome(state.expectations, id)?.outcome ?? []);
+  const outcomes = outcomesAffected(item).flatMap((id) => expectedOutcome(state.rubric, id)?.outcome ?? []);
   const rules = rulesAffected(item);
   const impact = item.impact ? IMPACT_STEPS[item.impact] : 0;
   const likelihood = LIKELIHOOD_FACTORS[item.likelihood ?? "certain"];

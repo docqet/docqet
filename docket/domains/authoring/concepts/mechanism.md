@@ -65,7 +65,7 @@ others.
 
 - **The technical [gaps](gap.md), [tradeoffs](tradeoff.md) and
   [open decisions](open-decision.md) about it.**
-- **The outcomes it meets**, from the [expectations](expectations.md), for
+- **The outcomes it meets**, from the [stability rubric](rubric.md), for
   every capability it applies to. Each of them then shows the outcome as met,
   with evidence, and the mechanism's [evidence](evidence.md) is the proof.
 

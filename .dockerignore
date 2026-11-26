@@ -17,7 +17,7 @@ ui/node_modules/
 ui/dist/
 
 # Docs, Docket's own Docket docs, and examples: not part of the image. The
-# expectations the binary embeds are in internal/, so they're kept.
+# rubric the binary embeds is in internal/, so it's kept.
 docs/
 /docket/
 /docket.yaml

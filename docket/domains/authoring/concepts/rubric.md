@@ -1,8 +1,8 @@
 ---
 docket: concept
-id: expectations
+id: rubric
 domain: authoring
-name: Expectations
+name: Stability rubric
 description: >-
   What each [stability level](stability-level.md) generally means and expects,
   so the people depending on a capability and the people building it share the
@@ -13,29 +13,29 @@ confused-with:
       nothing fails when an outcome isn't met. It's a shared picture of what a level means, for people to judge by.
 ---
 
-A stability level says in one word how stable something is. The expectations
-say what that word means, quality by quality, for the people depending on a
-capability and the people and agents building it.
+A stability level says in one word how stable something is. The stability
+rubric says what that word means, quality by quality, for the people
+depending on a capability and the people and agents building it.
 
-They're part of the format, defined once in Docket, so they're the same for
-every project and every tool that reads Docket, whatever kind of software it
-is. A project doesn't copy them, change them or configure them.
+It's part of the format, defined once in Docket, so it's the same for every
+project and every tool that reads Docket, whatever kind of software it is. A
+project doesn't copy it, change it or configure it.
 
 ## A guideline, not a gate
 
 - **Not every box needs checking.** Work can be called a level, GA included,
   with outcomes unmet. What's unmet is written down as a known [gap](gap.md),
   or a [tradeoff](tradeoff.md), so everyone can see it.
-- **They don't replace engineering judgment.** The engineer decides what fits
+- **It doesn't replace engineering judgment.** The engineer decides what fits
   the work, and judgment about the work wins over the wording of any
   outcome.
-- **They apply differently to every project.** What an outcome takes, and
+- **It applies differently to every project.** What an outcome takes, and
   whether it applies at all, depends on the software, who uses it, and the
   circumstances.
 
 ## Qualities
 
-The expectations have ten qualities, each a question someone asks before
+The rubric has ten qualities, each a question someone asks before
 depending on the work. Lower levels ask for little, enough to learn whether
 the work is worth doing, and each level adds to the ones below it as more
 people come to rely on the work:
@@ -134,12 +134,12 @@ A draft has no level, so it claims none of it.
 
 ## How it's written
 
-The expectations are in
-[`internal/expectations/expectations.yml`](../../../../internal/expectations/expectations.yml),
-in Docket's own repository. They're embedded in `docket`, so each build
+The rubric is in
+[`internal/rubric/rubric.yml`](../../../../internal/rubric/rubric.yml),
+in Docket's own repository. It's embedded in `docket`, so each build
 carries the version it was built with, and in every [state](state.md), so a
-reader has the version the state was indexed with. Agents read them with
-`docket expectations`. An outcome, under its quality and level, shortened:
+reader has the version the state was indexed with. Agents read it with
+`docket rubric`. An outcome, under its quality and level, shortened:
 
 ```yaml
   - id: reliability

@@ -37,7 +37,7 @@ them a database constraint.
   is neither a problem nor something left to do.
 - **A rule's evidence is about every capability that follows it.**
 - **A mechanism's or component's evidence is also the evidence for the
-  [expectations](expectations.md) outcomes it `meets`.**
+  [stability rubric](rubric.md) outcomes it `meets`.**
 
 ## How it's written
 

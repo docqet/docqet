@@ -49,7 +49,7 @@ What a decision [affects](gap.md#affects) is what's waiting on its answer:
   asked first.
 - **A [tradeoff](tradeoff.md)** is reopened by it: the choice is in question
   again, and stays as it is, the current one, until the decision is answered.
-- **An [expectations](expectations.md) outcome** is open: whether to meet
+- **A [stability rubric](rubric.md) outcome** is open: whether to meet
   it, or whether it applies, isn't settled, so it's neither claimed nor
   short.
 

@@ -149,10 +149,10 @@ components:
       description: >-
         A project's state, as `docket index` writes it to `state.json`:
         every doc's entry, its evidence, reverse links and problems, and the
-        expectations it was indexed against. The
+        rubric it was indexed against. The
         [state concept](https://github.com/exalynt/docket/blob/main/docket/domains/authoring/concepts/state.md)
         describes every field.
-      required: [docket, project, commit, indexedAt, summary, problems, expectations]
+      required: [docket, project, commit, indexedAt, summary, problems, rubric]
       additionalProperties: true
       properties:
         docket:
@@ -178,7 +178,7 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/Problem"
-        expectations:
+        rubric:
           type: object
           additionalProperties: true
 

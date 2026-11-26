@@ -52,7 +52,7 @@ with each list cut down to its keys:
   "domains": [], "features": [], "personas": [], "initiatives": [],
   "capabilities": [], "rules": [], "concepts": [], "mechanisms": [],
   "components": [], "gaps": [], "tradeoffs": [], "problems": [],
-  "expectations": {}
+  "rubric": {}
 }
 ```
 
@@ -116,8 +116,8 @@ with each list cut down to its keys:
   and `places`, from `docket:tradeoff` annotations.
 - **`problems`**: everything the indexer found wrong, each about a doc with
   that doc's `domain` (see [problem](problem.md)).
-- **`expectations`**: [the expectations](expectations.md) the project was
-  indexed against, so the UI can show them beside each capability. It's the
+- **`rubric`**: [the stability rubric](rubric.md) the project was
+  indexed against, so the UI can show it beside each capability. It's the
   YAML's `kinds`, and its `qualities`, each with its `levels` as a list in
   level order. Each level has its `level`, `summary` as `null` where it has
   none, and its `outcomes`, `implementation` and `overengineering`, each a

@@ -81,8 +81,8 @@ it, follows **[rules](concepts/rule.md)**, and uses
 **[concepts](concepts/concept.md)**. Rules and concepts belong to a domain,
 and mean what they say there. A capability refers to the ones it follows and
 uses, so one rule can apply to many capabilities, in different features and
-domains. What each level generally means and expects is its
-**[expectations](concepts/expectations.md)**.
+domains. What each level generally means and expects is in the
+**[stability rubric](concepts/rubric.md)**.
 
 A **[persona](concepts/persona.md)** is a type of person the software serves,
 such as a front desk clerk. Each capability says which personas it serves, so
@@ -341,8 +341,8 @@ In the order to read them, across both domains.
 
 - [Stability level](concepts/stability-level.md): how much people can depend
   on a capability.
-- [Expectations](concepts/expectations.md): what each level generally means
-  and expects.
+- [Stability rubric](concepts/rubric.md): what each level generally
+  means and expects.
 - [Maturity](../reporting/concepts/maturity.md): how far along a feature,
   domain, project, initiative, or what serves a persona, is.
 - [Band](../reporting/concepts/band.md): the quarter of the maturity scale

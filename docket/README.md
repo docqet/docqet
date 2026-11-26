@@ -28,18 +28,17 @@ are the definition of the format. There's no separate spec.
 - **A rule, capability or gap here is Docket's own.** A rule doc in
   [`domains/authoring/rules/`](domains/authoring/rules/), such as "nothing is
   read from an ignored file", is a rule Docket itself follows.
-- **The [expectations](domains/authoring/concepts/expectations.md)** of each
-  stability level are data `docket` is built with, so they live with the
-  code, in
-  [`internal/expectations/expectations.yml`](../internal/expectations/expectations.yml).
-  The concept explains them.
+- **The [stability rubric](domains/authoring/concepts/rubric.md)** is data
+  `docket` is built with, so it lives with the code, in
+  [`internal/rubric/rubric.yml`](../internal/rubric/rubric.yml).
+  The concept explains it.
 
 ## What's here, and what isn't
 
 | Here, in `docket/`                                         | Elsewhere                                                                                            |
 | ---------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
 | What Docket does: its domains, features and capabilities   | `docket`'s code: [`internal/`](../internal/), [`cmd/`](../cmd/), [`ui/`](../ui/)                     |
-| What the format's words mean: its concepts                 | The expectations' data: [`internal/expectations/`](../internal/expectations/)                        |
+| What the format's words mean: its concepts                 | The stability rubric's data: [`internal/rubric/`](../internal/rubric/)                        |
 | The rules Docket follows, such as "a draft claims nothing" | How `docket`'s code is laid out and why: [`docs/architecture/`](../docs/architecture/)               |
 | Who Docket is for: its personas                            | The agent kit that `docket kit` installs: [`kit/`](../kit/)                                          |
 | Docket's gaps, tradeoffs and open decisions                | Made-up projects that show the format: [`examples/`](../examples/), each a Docket project of its own |

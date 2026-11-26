@@ -2260,7 +2260,7 @@ kbd {
   margin-top: 2px;
 }
 
-.explore-left-expectations {
+.explore-left-rubric {
   display: flex;
   flex-wrap: wrap;
   gap: 2px 8px;
@@ -2269,7 +2269,7 @@ kbd {
   color: var(--muted);
 }
 
-.explore-left-expectations a {
+.explore-left-rubric a {
   color: var(--accent);
 }
 
@@ -3290,7 +3290,7 @@ button.page-table-row:hover .page-table-name strong {
 }
 
 /*
- * The expectations, laid out as Exalynt's stability checklist page lays them out:
+ * The stability rubric, laid out as Exalynt's stability checklist page lays it out:
  * a note that it's a guideline, a level picker, then each quality with its
  * outcomes, and popovers for how meeting one might look, what may be
  * overengineering, and what it builds on.

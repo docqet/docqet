@@ -10,7 +10,7 @@ capabilities:
   - capability:docs-format
   - capability:annotations
   - capability:ignoring-files
-  - capability:expectations
+  - capability:rubric
   - capability:project-setup
   - capability:renaming
   - capability:trailers

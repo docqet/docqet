@@ -78,7 +78,7 @@ What's left is the open decisions and the gaps, and nothing else. Everything
 else declared is taken to hold: a gap is how we say part of it doesn't yet.
 Everything declared, such as what a capability does, each rule it follows,
 and each outcome its level
-[expects](../authoring/concepts/expectations.md), is a claim, and each claim
+[expects](../authoring/concepts/rubric.md), is a claim, and each claim
 is in one of these standings:
 
 | Standing                | When                                                                                    |

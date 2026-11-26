@@ -29,7 +29,7 @@ func Index(fsys fs.FS) (*state.State, error) {
 	if err != nil {
 		return nil, err
 	}
-	expectations, err := Expectations()
+	rubric, err := Rubric()
 	if err != nil {
 		return nil, err
 	}
@@ -49,7 +49,7 @@ func Index(fsys fs.FS) (*state.State, error) {
 		Gaps:         []state.Gap{},
 		Tradeoffs:    []state.Tradeoff{},
 		Problems:     []state.Problem{},
-		Expectations: expectations,
+		Rubric:       rubric,
 	}
 	if cfg.Product != nil {
 		st.Product = &state.Ident{ID: cfg.Product.ID, Name: cfg.Product.Name}

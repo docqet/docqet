@@ -46,8 +46,8 @@ func Index(project fs.FS) (*state.State, error)
   `unlinked-rule`. A mechanism's capabilities are every capability the
   project declares but drafts, then each its components list.
 - **The summary**, counting a feature written in several domains once.
-- **The expectations**, embedded from
-  `internal/expectations/expectations.yml` through the `expectations`
+- **The rubric**, embedded from
+  `internal/rubric/rubric.yml` through the `rubric`
   package, as `ui` and `kit` embed theirs.
 
 ## Problems
@@ -57,7 +57,7 @@ way the CLI does:
 
 - **`check.Check` finds what a state shows on its own**: required fields,
   allowed values, links of the wrong type or to nothing, outcomes not in the
-  expectations, duplicate IDs, unlinked rules, capabilities in two features.
+  rubric, duplicate IDs, unlinked rules, capabilities in two features.
   Each is about a doc, gap or tradeoff, its `subject`. `index` runs it on
   what it reads, and the server runs it again on every state it's sent.
 - **`index` finds what only files show**: frontmatter that isn't YAML, a

@@ -8,21 +8,21 @@ import { StabilityMark } from "../design/stability/StabilityMark";
 import { TERMS, type TermId } from "../design/term/terms";
 import { sectionHref, type Route } from "../routes";
 import { Empty, PageHeader, Section, Tabs, View, currentTab, type TabDef } from "../shell/layout";
-import { READINESS_BANDS, RISK_BANDS, type ExpectationExample, type ExpectationKind, type ExpectationLevel, type DocketState } from "../state";
+import { READINESS_BANDS, RISK_BANDS, type RubricExample, type RubricKind, type RubricLevel, type DocketState } from "../state";
 import "./doc.css";
 
 /*
  * What Docket's own words mean, in one place, so a Term's popover isn't the
  * only way to find out: every term, grouped as the domain overview groups
  * them; the stability levels, with maturity, exposure and readiness, which
- * are worked out from them; and the expectations as a plain reference. Each term
+ * are worked out from them; and the stability rubric as a plain reference. Each term
  * is anchored by its ID, as `?view=glossary#gap`, so anything can link to it.
  */
 export default function GlossaryPage({ state, route }: { state: DocketState; route: Route }) {
   const tabs: TabDef[] = [
     { id: "terms", label: "Terms", count: Object.keys(TERMS).length },
     { id: "levels", label: "Stability levels" },
-    { id: "expectations", label: "Expectations", term: "expectations" as const, count: state.expectations?.qualities.length },
+    { id: "rubric", label: "Rubric", term: "rubric" as const, count: state.rubric?.qualities.length },
   ];
   const tab = currentTab(route, tabs);
 
@@ -39,7 +39,7 @@ export default function GlossaryPage({ state, route }: { state: DocketState; rou
         lede="What Docket's words mean: the terms it labels things with, how stable each level is, and what each level expects."
       />
       <Tabs tabs={tabs} current={tab} />
-      {tab === "terms" ? <Terms /> : tab === "levels" ? <Levels /> : <ExpectationsReference state={state} />}
+      {tab === "terms" ? <Terms /> : tab === "levels" ? <Levels /> : <RubricReference state={state} />}
     </View>
   );
 }
@@ -51,7 +51,7 @@ const GROUPS: { title: string; ids: TermId[] }[] = [
   { title: "The product", ids: ["product", "project", "contradiction", "domain", "feature", "capability", "rule", "concept", "persona"] },
   { title: "How it's built", ids: ["mechanism", "component"] },
   { title: "Where intention and reality differ", ids: ["open-decision", "gap", "product-gap", "technical-gap", "tradeoff", "risk", "spread"] },
-  { title: "Stability and readiness", ids: ["stability", "maturity", "exposure", "expectations", "readiness"] },
+  { title: "Stability and readiness", ids: ["stability", "maturity", "exposure", "rubric", "readiness"] },
   { title: "Evidence", ids: ["evidence"] },
 ];
 
@@ -113,7 +113,7 @@ function Levels() {
         <div className="dp-levels">
           <article id="draft" className="dp-level">
             <h3 className="dp-level-draft">Draft</h3>
-            <p>Declared and not started. It has no level, so it claims none of the expectations, or anything else, and counts toward no maturity or readiness.</p>
+            <p>Declared and not started. It has no level, so it claims nothing in the rubric, or anything else, and counts toward no maturity or readiness.</p>
           </article>
           {STABILITY_LEVEL_IDS.map((id) => {
             const level = STABILITY[id];
@@ -253,12 +253,12 @@ function Levels() {
   );
 }
 
-/* ——— The expectations ——— */
+/* ——— The rubric ——— */
 
-/* The expectations as a plain reference: each quality, then what each level asks of it and the outcomes it expects. A capability's page shows it for that capability. */
-function ExpectationsReference({ state }: { state: DocketState }) {
-  const expectations = state.expectations;
-  if (!expectations) return <Empty>None of the projects showing has the expectations.</Empty>;
+/* The rubric as a plain reference: each quality, then what each level asks of it and the outcomes it expects. A capability's page shows it for that capability. */
+function RubricReference({ state }: { state: DocketState }) {
+  const rubric = state.rubric;
+  if (!rubric) return <Empty>None of the projects showing has the rubric.</Empty>;
   return (
     <>
       <p className="dp-note">
@@ -267,20 +267,20 @@ function ExpectationsReference({ state }: { state: DocketState }) {
         stands against its own level.
       </p>
       <nav className="dp-index" aria-label="Qualities">
-        {expectations.qualities.map((q) => (
+        {rubric.qualities.map((q) => (
           <a key={q.id} href={`#${q.id}`}>
             {q.name}
           </a>
         ))}
       </nav>
-      {expectations.qualities.map((q) => (
+      {rubric.qualities.map((q) => (
         <section key={q.id} id={q.id} className="dp-quality">
           <h2>{q.name}</h2>
           <p className="dp-quality-question">{q.question}</p>
           <p className="dp-note">{q.why}</p>
           <ol className="dp-quality-levels">
             {q.levels.map((l) => (
-              <QualityLevel key={l.level} level={l} kinds={expectations.kinds} />
+              <QualityLevel key={l.level} level={l} kinds={rubric.kinds} />
             ))}
           </ol>
         </section>
@@ -289,7 +289,7 @@ function ExpectationsReference({ state }: { state: DocketState }) {
   );
 }
 
-function QualityLevel({ level, kinds }: { level: ExpectationLevel; kinds: ExpectationKind[] }) {
+function QualityLevel({ level, kinds }: { level: RubricLevel; kinds: RubricKind[] }) {
   return (
     <li className="dp-quality-level">
       <div className="dp-quality-level-head">
@@ -318,9 +318,9 @@ function QualityLevel({ level, kinds }: { level: ExpectationLevel; kinds: Expect
 }
 
 /* How meeting it might look, and what may be overengineering at its level, each folded. */
-function Guidance({ implementation, overengineering, kinds }: { implementation: ExpectationExample[]; overengineering: ExpectationExample[]; kinds: ExpectationKind[] }) {
+function Guidance({ implementation, overengineering, kinds }: { implementation: RubricExample[]; overengineering: RubricExample[]; kinds: RubricKind[] }) {
   if (!implementation.length && !overengineering.length) return null;
-  const fold = (title: string, list: ExpectationExample[]) =>
+  const fold = (title: string, list: RubricExample[]) =>
     list.length ? (
       <details className="dp-guidance">
         <summary>

@@ -1,7 +1,7 @@
 import { Fragment, useEffect, useRef, type ReactNode } from "react";
 import RuleRoundedIcon from "@mui/icons-material/RuleRounded";
 import WarningAmberRoundedIcon from "@mui/icons-material/WarningAmberRounded";
-import { StabilityExpectations } from "./Expectations";
+import { StabilityRubric } from "./Rubric";
 import { ConceptChips, ConceptIcon, related } from "./Concepts";
 import { DecisionList, Facets, facets } from "./Fields";
 import { Body, Excerpt, MORE_ABOUT } from "./design/markdown/Markdown";
@@ -24,7 +24,7 @@ import {
   RULE_STANDING_LABELS,
   Places,
   
-  expectationCounts,
+  rubricCounts,
   levelName,
   plural,
   type ExploreKind,
@@ -174,7 +174,7 @@ const tabHref = (tab: string) => withParam("tab", tab);
 
 /*
  * A doc's page: its view, which lands at its top when it opens and whenever
- * its tab changes, or at the section its address names, such as #expectations.
+ * its tab changes, or at the section its address names, such as #rubric.
  */
 function DocView({ title, route, children }: { title: string; route: Route; children: ReactNode }) {
   const top = useRef<HTMLDivElement>(null);
@@ -790,8 +790,8 @@ function CapabilityPage({ capability, route, ...go }: PageProps & { capability: 
   const personas = capability.personas.flatMap((id) => find(state.personas, id) ?? []);
   const level = capability.stability;
   const next = nextLevel(level);
-  const counts = expectationCounts(state, capability);
-  const adds = next ? (state.expectations?.qualities ?? []).flatMap((q) => q.levels).filter((l) => l.level === next).reduce((n, l) => n + l.outcomes.length, 0) : 0;
+  const counts = rubricCounts(state, capability);
+  const adds = next ? (state.rubric?.qualities ?? []).flatMap((q) => q.levels).filter((l) => l.level === next).reduce((n, l) => n + l.outcomes.length, 0) : 0;
   const feature = capability.feature ? find(state.features, capability.feature) : undefined;
   const on = builtOn(state, capability);
   const places = capability.evidence.implements.length + capability.evidence.verifies.length;
@@ -806,13 +806,13 @@ function CapabilityPage({ capability, route, ...go }: PageProps & { capability: 
     { id: "overview", label: "Overview" },
     { id: "left", label: "What's left", term: "gap" as const, count: leftTotal(left) || undefined },
     ...(rules.length ? [{ id: "rules", label: "Rules", term: "rule" as const, count: rules.length }] : []),
-    ...(state.expectations ? [{ id: "stability", label: "Stability", term: "expectations" as const }] : []),
+    ...(state.rubric ? [{ id: "stability", label: "Stability", term: "rubric" as const }] : []),
     ...(on.length || places ? [{ id: "built", label: "How it's built", count: on.length || undefined }] : []),
     ...(decided ? [{ id: "decided", label: "Decided", count: decided }] : []),
     ...(hasBody(capability) ? [{ id: "about", label: "About" }] : []),
   ];
-  /* Links to the expectations can name them as a section, #expectations, or as older ones did, #checklist. */
-  const tab = currentTab(!route.tab && ["#checklist", "#expectations"].includes(window.location.hash) ? { ...route, tab: "stability" } : route, tabs);
+  /* Links to the rubric can name it as a section, #rubric, or as older ones did, #expectations or #checklist. */
+  const tab = currentTab(!route.tab && ["#checklist", "#expectations", "#rubric"].includes(window.location.hash) ? { ...route, tab: "stability" } : route, tabs);
   const met = counts ? counts.count - counts.notMet - counts.byChoice - counts.open : 0;
 
   return (
@@ -865,14 +865,14 @@ function CapabilityPage({ capability, route, ...go }: PageProps & { capability: 
             />
             {counts ? (
               <Stat
-                label="Expectations" term="expectations"
+                label="Rubric" term="rubric"
                 value={`${met} of ${counts.count}`}
                 note={`${levelName(level)} outcomes met${counts.byChoice ? `, ${counts.byChoice} not by choice` : ""}${counts.open ? `, ${counts.open} open` : ""}`}
                 tone={counts.notMet ? "warn" : "ok"}
                 href={tabHref("stability")}
               />
             ) : (
-              <Stat label="Expectations" term="expectations" value="Not started" note="A draft claims nothing on it yet" href={state.expectations ? tabHref("stability") : undefined} />
+              <Stat label="Rubric" term="rubric" value="Not started" note="A draft claims nothing on it yet" href={state.rubric ? tabHref("stability") : undefined} />
             )}
             <Stat
               label="Built on" term="component"
@@ -904,7 +904,7 @@ function CapabilityPage({ capability, route, ...go }: PageProps & { capability: 
               {next ? (
                 <>
                   Next is {STABILITY[next].name}, which adds {plural(adds, "outcome", "outcomes")} to meet.{" "}
-                  {state.expectations ? <a href={tabHref("stability")}>See the expectations</a> : null}
+                  {state.rubric ? <a href={tabHref("stability")}>See the rubric</a> : null}
                 </>
               ) : (
                 "GA is the top level."
@@ -944,9 +944,9 @@ function CapabilityPage({ capability, route, ...go }: PageProps & { capability: 
         >
           <RuleTable rules={rules} capability={capability} />
         </Section>
-      ) : tab === "stability" && state.expectations ? (
-        <Section title={<Term id="expectations">Expectations</Term>} id="expectations">
-          <StabilityExpectations key={capability.id} state={state} expectations={state.expectations} capability={capability} />
+      ) : tab === "stability" && state.rubric ? (
+        <Section title={<Term id="rubric">Stability rubric</Term>} id="rubric">
+          <StabilityRubric key={capability.id} state={state} rubric={state.rubric} capability={capability} />
         </Section>
       ) : tab === "built" ? (
         <>
@@ -1621,7 +1621,7 @@ function ConceptPage({ concept, route, ...go }: PageProps & { concept: Concept }
 function TechnicalPage({ doc, route, ...go }: PageProps & { doc: TechnicalDoc }) {
   const { state } = go;
   const capabilities = doc.capabilities.flatMap((id) => find(state.capabilities, id) ?? []);
-  const outcomes = doc.meets.flatMap((id) => expectedOutcome(state.expectations, id) ?? []);
+  const outcomes = doc.meets.flatMap((id) => expectedOutcome(state.rubric, id) ?? []);
   const places = doc.evidence.implements.length + doc.evidence.verifies.length;
   const left = leftOnTechnical(state, doc);
   const decided = doc.tradeoffs.length;
@@ -1670,7 +1670,7 @@ function TechnicalPage({ doc, route, ...go }: PageProps & { doc: TechnicalDoc })
             <Section
               title="Outcomes it meets"
               count={outcomes.length}
-              note="For each capability it serves, these count as met on its expectations, with the places in the code as evidence, unless a gap names one."
+              note="For each capability it serves, these count as met on its rubric, with the places in the code as evidence, unless a gap names one."
             >
               <div className="page-card">
                 <ul className="explore-left-list">

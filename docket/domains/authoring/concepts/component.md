@@ -29,7 +29,7 @@ Something that works across the whole project, such as deployment, is a
 A component is a technical doc, as a mechanism is: it lists the capabilities
 that rely on it, and holds its technical [gaps](gap.md), [tradeoffs](tradeoff.md) and
 [open decisions](open-decision.md), and any outcomes from the
-[expectations](expectations.md) it meets. What it holds, and what it leaves to
+[stability rubric](rubric.md) it meets. What it holds, and what it leaves to
 the code, is in [how it's built](../domain.md#how-its-built). Most areas of the
 code need none.
 

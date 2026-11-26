@@ -896,7 +896,7 @@
       "message": "Capability client-agreements doesn't exist."
     }
   ],
-  "expectations": {
+  "rubric": {
     "kinds": [
       {
         "id": "web-app",

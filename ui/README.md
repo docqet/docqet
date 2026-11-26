@@ -162,7 +162,7 @@ decisions and tradeoffs.
   decision that reopens it.
 - **Drafts** show as the word Draft, with no mark, and count toward no
   maturity or readiness.
-- **The expectations** marks each outcome not met (a gap affects it), not met by
+- **The stability rubric** marks each outcome not met (a gap affects it), not met by
   choice (a tradeoff affects it), open (a decision affects it), met with evidence (a mechanism or component the capability is
   built on meets it), or met on its level's word.
 

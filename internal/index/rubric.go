@@ -7,11 +7,11 @@ import (
 
 	"go.yaml.in/yaml/v3"
 
-	"github.com/exalynt/docket/internal/expectations"
+	"github.com/exalynt/docket/internal/rubric"
 	"github.com/exalynt/docket/internal/state"
 )
 
-type rawExpectations struct {
+type rawRubric struct {
 	Kinds []struct {
 		ID   string `yaml:"id"`
 		Name string `yaml:"name"`
@@ -40,7 +40,7 @@ type rawOutcome struct {
 	Overengineering []rawExample `yaml:"overengineering"`
 }
 
-// rawExample is an example as the expectations write it: its text alone, or
+// rawExample is an example as the rubric writes it: its text alone, or
 // its text and kinds.
 type rawExample struct {
 	Text  string   `yaml:"text"`
@@ -56,14 +56,14 @@ func (e *rawExample) UnmarshalYAML(node *yaml.Node) error {
 	return node.Decode((*plain)(e))
 }
 
-// Expectations are the expectations built into docket, as state holds them.
-// They're the same for every project, so they're read once.
-var Expectations = sync.OnceValues(func() (state.Expectations, error) {
-	var raw rawExpectations
-	if err := yaml.Unmarshal(expectations.YAML, &raw); err != nil {
-		return state.Expectations{}, fmt.Errorf("the expectations: %w", err)
+// Rubric is the rubric built into docket, as state holds it.
+// It's the same for every project, so it's read once.
+var Rubric = sync.OnceValues(func() (state.Rubric, error) {
+	var raw rawRubric
+	if err := yaml.Unmarshal(rubric.YAML, &raw); err != nil {
+		return state.Rubric{}, fmt.Errorf("the rubric: %w", err)
 	}
-	out := state.Expectations{Kinds: []state.Kind{}, Qualities: []state.Quality{}}
+	out := state.Rubric{Kinds: []state.Kind{}, Qualities: []state.Quality{}}
 	for _, k := range raw.Kinds {
 		out.Kinds = append(out.Kinds, state.Kind{ID: k.ID, Name: k.Name})
 	}

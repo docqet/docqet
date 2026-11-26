@@ -33,7 +33,7 @@ closed, for example, is an `unknown-id`.
 | `in-two-features`     | More than one feature lists the same capability. |
 | `contradiction`       | Contributions that should agree don't, as [contradiction](../../reporting/concepts/contradiction.md) describes. |
 | `invalid-annotation`  | An annotation names a rule without its domain. |
-| `unknown-outcome`     | An outcome in a gap's, tradeoff's or decision's `affects`, or in `meets`, isn't an outcome in [the expectations](expectations.md). |
+| `unknown-outcome`     | An outcome in a gap's, tradeoff's or decision's `affects`, or in `meets`, isn't an outcome in [the stability rubric](rubric.md). |
 
 `in-two-features` is a contradiction too, when the listings are in different
 projects. [Combining](../../reporting/concepts/product.md#combining) raises

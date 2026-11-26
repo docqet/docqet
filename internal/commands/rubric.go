@@ -2,12 +2,12 @@ package commands
 
 import "github.com/urfave/cli/v3"
 
-// ExpectationsCommand shows what each stability level expects, or what a
+// RubricCommand shows what each stability level expects, or what a
 // promotion needs. Only --for reads the project, so only then do the source
 // flags apply.
-func ExpectationsCommand() *cli.Command {
+func RubricCommand() *cli.Command {
 	return &cli.Command{
-		Name:      "expectations",
+		Name:      "rubric",
 		Category:  reading,
 		Before:    maxArgs(1),
 		Usage:     "What each stability level expects, or what a promotion needs",

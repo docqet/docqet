@@ -105,7 +105,7 @@ it:
 1. **Compress what's stored**, with the standard library's `compress/gzip`.
    State is JSON, which compresses well.
 2. **Store a state's parts by their hashes**, as git stores files in trees:
-   each doc's entry, and the expectations, once each by its hash, and a
+   each doc's entry, and the rubric, once each by its hash, and a
    state as the list of them. Most commits change one or two docs, so most of
    each state is already stored. It also catches what whole-state hashing
    misses: a code change that only moves an annotated line changes the state,

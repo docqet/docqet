@@ -13617,7 +13617,7 @@
       "domain": "accounts"
     }
   ],
-  "expectations": {
+  "rubric": {
     "kinds": [
       {
         "id": "web-app",

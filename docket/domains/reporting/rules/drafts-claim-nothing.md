@@ -9,4 +9,4 @@ why: >-
 ---
 
 A draft counts toward no maturity or readiness, and claims none of the
-expectations' outcomes.
+stability rubric's outcomes.

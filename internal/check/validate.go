@@ -73,8 +73,8 @@ func Validate(st *state.State) error {
 			fail("every problem needs a type")
 		}
 	}
-	if len(st.Expectations.Qualities) == 0 {
-		fail("the state carries no expectations")
+	if len(st.Rubric.Qualities) == 0 {
+		fail("the state carries no rubric")
 	}
 	if len(errs) == 0 {
 		return nil

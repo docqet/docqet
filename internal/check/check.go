@@ -55,7 +55,7 @@ func newChecker(st *state.State) *checker {
 	for _, d := range st.Domains {
 		c.domain[d.ID] = true
 	}
-	for _, q := range st.Expectations.Qualities {
+	for _, q := range st.Rubric.Qualities {
 		for _, l := range q.Levels {
 			for _, o := range l.Outcomes {
 				c.outcome[o.ID] = true
@@ -394,7 +394,7 @@ func (c *checker) outcomes(s subject, field string, refs []string) {
 			continue
 		}
 		if !c.outcome[raw] {
-			c.add(state.UnknownOutcome, s, "%s lists %s, which isn't an outcome in the expectations.", field, raw)
+			c.add(state.UnknownOutcome, s, "%s lists %s, which isn't an outcome in the rubric.", field, raw)
 		}
 	}
 }

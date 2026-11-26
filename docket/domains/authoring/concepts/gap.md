@@ -169,7 +169,7 @@ tenant's data.
 
 The docs make claims by being written: declaring a
 [level](stability-level.md) claims every outcome the
-[expectations](expectations.md) expect at it, and following a rule claims
+[stability rubric](rubric.md) expects at it, and following a rule claims
 the rule holds. A gap, a tradeoff and an
 [open decision](open-decision.md) are the three ways of saying "except
 here", and `affects` is how each says which claim, or which other item, it's

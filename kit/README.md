@@ -33,7 +33,7 @@ kit/
     ├── docs.md                  # each doc type's fields, and how to write it
     ├── gaps-and-decisions.md    # gaps and rating their impact, tradeoffs, decisions
     ├── annotations.md           # docket:implements, verifies, gap and tradeoff
-    ├── stability.md             # levels, what a change may break, the expectations, promoting
+    ├── stability.md             # levels, what a change may break, the rubric, promoting
     └── adopting.md              # bringing Docket to a repository that doesn't have it
 ```
 
@@ -107,9 +107,9 @@ the project's technical docs.
 
 The kit restates the format for agents, and names `docket`'s commands and
 flags. A change to either that changes what an agent writes, reads or runs
-changes the kit in the same commit. The expectations isn't copied into
+changes the kit in the same commit. The rubric isn't copied into
 the kit: it's part of the format, built into `docket`, and agents read it with
-`docket expectations`.
+`docket rubric`.
 
 ## Known gaps
 

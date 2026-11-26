@@ -29,7 +29,7 @@ export function TradeoffRows({ state, tradeoffs, here }: { state: DocketState; t
 
 function TradeoffLine({ state, tradeoff: t, here }: { state: DocketState; tradeoff: Tradeoff; here?: { id: string } }) {
   const { type } = subjectOf(t);
-  const named = outcomesAffected(t).flatMap((id) => expectedOutcome(state.expectations, id) ?? []);
+  const named = outcomesAffected(t).flatMap((id) => expectedOutcome(state.rubric, id) ?? []);
   const reopened = decisionsAffecting(state, t.id);
   return (
     <li>
@@ -64,7 +64,7 @@ function TradeoffLine({ state, tradeoff: t, here }: { state: DocketState; tradeo
                 <dt>Falls short of</dt>
                 <dd>
                   &ldquo;{n.outcome.text}&rdquo;{" "}
-                  <a href={`${sectionHref("glossary", { tab: "expectations" })}#${n.quality.id}`}>
+                  <a href={`${sectionHref("glossary", { tab: "rubric" })}#${n.quality.id}`}>
                     {n.quality.name} &middot; {STABILITY[n.outcome.level].name}
                   </a>
                 </dd>

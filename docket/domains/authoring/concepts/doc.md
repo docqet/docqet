@@ -198,8 +198,8 @@ Everything else names a doc by its **reference**, its type and ID.
   `component:ledger#balance-worked-out-on-read`.
 - **An outcome's reference** is `outcome:` and its quality, level and own ID:
   `outcome:usability/beta/everyone`. Outcomes are what a level expects, in
-  [the expectations](expectations.md). The expectations are part of the
-  format, so they're the same in every project, and in no domain.
+  [the stability rubric](rubric.md). The rubric is part of the
+  format, so it's the same in every project, and in no domain.
 
 ## Name and description
 
@@ -247,7 +247,7 @@ Each field is defined by the concept it's about:
   found in the code by their [annotations](annotation.md), and a capability
   through the mechanisms that apply to it and the components that list it.
 - **`applies`** says what a [mechanism](mechanism.md) applies to.
-- **`meets`** lists the outcomes of [the expectations](expectations.md) a
+- **`meets`** lists the outcomes of [the stability rubric](rubric.md) a
   mechanism or component meets.
 - **`decisions`** lists the [open decisions](open-decision.md) on a domain,
   feature, capability, mechanism or component.

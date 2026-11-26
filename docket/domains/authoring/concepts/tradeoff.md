@@ -55,7 +55,7 @@ A tradeoff answers the question code can't: is this deliberate? Code that
 looks wrong on purpose points at its tradeoff, so neither a person nor an
 agent "fixes" it.
 
-When the choice means falling short of an [expectations](expectations.md)
+When the choice means falling short of a [stability rubric](rubric.md)
 outcome on purpose, the tradeoff [affects](gap.md#affects) it, and the
 outcome shows as not met by choice rather than met, so it's neither claimed
 nor taken for a gap.
@@ -80,7 +80,7 @@ on. Each has:
 - **`description`**: what we chose, and what we didn't.
 - **`benefit`**: what we hope to get by choosing it.
 - **`drawback`**: what we give up or risk in return.
-- **Optionally, `affects`**: the expectations outcomes it falls short of.
+- **Optionally, `affects`**: the rubric's outcomes it falls short of.
 
 The description, benefit and drawback are each a sentence or two. On the
 [ledger](../../../../examples/hotel-billing/docket/components/ledger.md):
