@@ -24,6 +24,7 @@ import (
 // caller's to fill in. Problems in the docs are in the state; an error means
 // the project couldn't be read at all, such as having no docqet.yaml.
 // docqet:implements capability:indexing component:index rule:docs-with-problems-still-index@authoring
+// docqet:implements rule:same-files-same-state@authoring
 func Index(fsys fs.FS) (*state.State, error) {
 	cfg, err := project.ReadConfig(fsys)
 	if err != nil {

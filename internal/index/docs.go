@@ -119,6 +119,7 @@ var lineOfError = regexp.MustCompile(`^(?:yaml: )?line (\d+): (.*)$`)
 // readDoc reads file as a Docqet doc. isDoc is false when it isn't one: no
 // frontmatter, or none naming a `docqet` type. A doc that can't be read, such
 // as one whose frontmatter isn't YAML, is a doc with problems and no entry.
+// docqet:implements capability:docs-format rule:location-means-nothing@authoring
 func readDoc(file string, data []byte) (d *doc, isDoc bool, problems []state.Problem) {
 	fmText, body, ok := splitFrontmatter(data)
 	if !ok || !docqetField.Match(fmText) {

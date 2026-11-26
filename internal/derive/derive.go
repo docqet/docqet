@@ -20,6 +20,7 @@ import (
 
 // started reports whether level is a stability level, not a draft. Only
 // started capabilities count toward a figure.
+// docqet:implements rule:drafts-claim-nothing@reporting
 func started(level string) bool {
 	return combine.Rank(level) > 0
 }

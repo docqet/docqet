@@ -359,6 +359,7 @@ func (c *checker) inDomain(s subject, domain string) {
 // links checks each link in field is a reference to a doc of type typ that
 // exists. A rule or concept is looked for in the domain it names, or naming
 // none, in from, the domain of the doc it's in.
+// docqet:implements rule:product-never-names-implementation@authoring
 func (c *checker) links(s subject, field string, refs []string, typ, from string) {
 	for _, raw := range refs {
 		ref, ok := state.ParseRef(raw)

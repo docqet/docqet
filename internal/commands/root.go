@@ -62,6 +62,7 @@ func Name(arg0 string) string {
 }
 
 // Root builds the command, called name, and every command under it.
+// docqet:implements mechanism:commands
 func Root(name, version string) *cli.Command {
 	root := &cli.Command{
 		Name:    name,

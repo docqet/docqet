@@ -1,3 +1,5 @@
+// docqet:implements component:ui
+
 // Package ui holds the built UI, embedded so the docqet binary can serve it.
 //
 // `npm run build` writes it to dist. A fresh clone has only dist/.gitkeep, so
