@@ -2,9 +2,9 @@
 
 _Decisions and direction for `docket`'s Go code: where its logic lives, how
 the CLI and the server share it, and the API the UI reads. Indexing,
-checking and applying states to the server are built. Everything else here
-is the plan, and may change as the prototype teaches us. [The order of
-work](#order-of-work) says which is which._
+checking, applying states to the server, combining and deriving are built.
+Everything else here is the plan, and may change as the prototype teaches us.
+[The order of work](#order-of-work) says which is which._
 
 **Contents:** [Layers](#layers) · [The parts](#the-parts) · [Order of work](#order-of-work) · [Open decisions](#open-decisions) · [Left out for now](#left-out-for-now)
 
@@ -53,7 +53,9 @@ The core's packages:
 | `derive`  | Works out maturity, readiness, risk and exposure                                                        | `docket status`, the API            |
 | `diff`    | Compares two states, with the trailers between them                                                     | `docket diff`, `log`, `preview`     |
 
-Each is created when the command that needs it is built, not before.
+Each is created when the command that needs it is built, not before, but
+for `combine` and `derive`: they were ported from the UI first, so the read
+service could serve the figures the UI shows, and their callers come with it.
 
 ## The parts
 
@@ -74,8 +76,10 @@ Each step builds only what its commands need:
 1. **Built: `state`, `index` and `check`**, with `docket index` and
    `docket check` over the working tree or a commit, checked against the
    examples.
-2. **The reads over the working tree**: the read service, its working tree
-   source, and `derive` as `status` and `list` need it.
+2. **Built: `combine` and `derive`**, ported from the UI's TypeScript and
+   checked against it figure by figure, for every example product and for
+   Docket. Still to come: the read service and its sources, over the server's
+   store and the working tree.
 3. **`docket ui` serving the API** over the working tree, re-indexing as files
    change.
 4. **The server's store.** Built: `docket migrate`, the state repository, the
