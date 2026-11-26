@@ -3215,12 +3215,6 @@ a.initiative-tag:hover {
 
 /* Under what a gap is on, in a column aligned to the right. */
 .gr-on .initiative-tags,
-.lf-on .initiative-tags,
-.ov-gap-on .initiative-tags {
+.lf-on .initiative-tags {
   justify-content: flex-end;
-}
-
-.ov-gap-on {
-  min-width: 0;
-  text-align: right;
 }

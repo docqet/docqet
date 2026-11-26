@@ -1,5 +1,6 @@
 import Box from "@mui/material/Box";
 import type { Theme } from "@mui/material/styles";
+import type { SystemStyleObject } from "@mui/system";
 import { useMemo } from "react";
 import { Maturity } from "../../components/maturity/Maturity";
 import { NAMES, TECHNICAL_NAMES, plural } from "../../components/names";
@@ -34,8 +35,28 @@ import {
   type Gap,
   type Level,
 } from "../../state";
-import "./overview.css";
 import { GapInitiatives } from "../../components/risk/GapRows";
+
+/* What isn't there yet, said quietly: "Nothing started", "No capabilities". */
+const faintSx: SystemStyleObject<Theme> = { color: "text.disabled", fontWeight: 500, fontSize: 13 };
+
+/* A name that cuts off with an ellipsis rather than wrapping. */
+const ellipsisSx: SystemStyleObject<Theme> = { minWidth: 0, overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" };
+
+/* A row's name, linking to its page: the row's text until hovered. */
+const nameLinkSx: SystemStyleObject<Theme> = {
+  ...ellipsisSx,
+  color: "inherit",
+  fontWeight: 600,
+  textDecoration: "none",
+  "&:hover": { color: "primary.main" },
+};
+
+/* A line in one of the overview's lists, ruled off from the next. All plain rows, no folds. */
+const rowSx: SystemStyleObject<Theme> = { py: 1, fontSize: 13.5, borderBottom: 1, borderColor: "divider" };
+
+/* A persona's or a project's line: the name filling the space, with its marks after it. */
+const nameRowSx: SystemStyleObject<Theme> = { ...rowSx, display: "flex", alignItems: "center", gap: 1.25, "& > a": { flex: 1 } };
 
 /*
  * How the product is doing, at a glance, with no panning: its maturity, how
@@ -87,7 +108,13 @@ export default function OverviewPage({ state }: { state: DocketState; route: Rou
               term="readiness"
               href="#still-needs"
               value={
-                readiness.percent === null ? <span className="ov-faint">Nothing started</span> : <ReadinessMark readiness={readiness} of="Readiness" inButton />
+                readiness.percent === null ? (
+                  <Box component="span" sx={faintSx}>
+                    Nothing started
+                  </Box>
+                ) : (
+                  <ReadinessMark readiness={readiness} of="Readiness" inButton />
+                )
               }
               note={
                 startedOf(readiness)
@@ -102,7 +129,9 @@ export default function OverviewPage({ state }: { state: DocketState; route: Rou
                 value={
                   <>
                     <PersonaAvatar persona={leastReady.persona} size={26} />
-                    <span className="ov-ellipsis">{leastReady.persona.name}</span>
+                    <Box component="span" sx={ellipsisSx}>
+                      {leastReady.persona.name}
+                    </Box>
                   </>
                 }
                 note={<ReadinessMark readiness={leastReady.readiness} of={`Readiness for ${leastReady.persona.name}`} inButton />}
@@ -152,23 +181,24 @@ export default function OverviewPage({ state }: { state: DocketState; route: Rou
           count={personas.length}
           note="How ready the software is for each of them, least ready first."
         >
-          <ul className="ov-personas">
+          {/* Side by side where there's room, each column at least 320px, or the whole width on a phone. */}
+          <Box component="ul" sx={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(320px, 100%), 1fr))", columnGap: 4 }}>
             {personas.map(({ persona: p, readiness: r }) => (
-              <li key={p.id}>
+              <Box component="li" key={p.id} sx={nameRowSx}>
                 <PersonaAvatar persona={p} size={32} />
-                <a className="ov-link ov-ellipsis" href={docHref("persona", p.id)}>
+                <Box component="a" href={docHref("persona", p.id)} sx={nameLinkSx}>
                   {p.name}
-                </a>
+                </Box>
                 <ReadinessMark readiness={r} of={`Readiness for ${p.name}`} />
-              </li>
+              </Box>
             ))}
-          </ul>
+          </Box>
         </Section>
       ) : null}
 
       <Section title="Riskiest gaps" count={state.gaps.length} aside={state.gaps.length > riskiest.length ? <a href={sectionHref("left")}>See all →</a> : null}>
         {riskiest.length ? (
-          <ul className="ov-gaps">
+          <ul>
             {riskiest.map((g) => (
               <GapRow key={g.id} state={state} gap={g} />
             ))}
@@ -180,25 +210,27 @@ export default function OverviewPage({ state }: { state: DocketState; route: Rou
 
       {several ? (
         <Section title={<Term id="project">Projects</Term>} count={state.projects.length}>
-          <ul className="ov-projects">
+          <ul>
             {state.projects.map((p) => (
-              <li key={p.id}>
-                <a className="ov-link ov-ellipsis" href={sectionHref("overview", { project: p.id })}>
+              <Box component="li" key={p.id} sx={nameRowSx}>
+                <Box component="a" href={sectionHref("overview", { project: p.id })} sx={nameLinkSx}>
                   {p.name}
-                </a>
+                </Box>
                 {p.maturity !== null ? (
                   <>
                     <MaturityRing progress={p.maturity} subject="project" size={24} label={`${p.name} maturity`} />
                     {p.band ? (
-                      <Box component="span" className="ov-band" sx={levelColor(p.band)}>
+                      <Box component="span" sx={[{ fontSize: 14, fontWeight: 650 }, levelColor(p.band)]}>
                         {MATURITY_BANDS[p.band]}
                       </Box>
                     ) : null}
                   </>
                 ) : (
-                  <span className="ov-faint">No maturity yet</span>
+                  <Box component="span" sx={faintSx}>
+                    No maturity yet
+                  </Box>
                 )}
-              </li>
+              </Box>
             ))}
           </ul>
         </Section>
@@ -224,8 +256,13 @@ function Lede({ state }: { state: DocketState }) {
   );
 }
 
-/* A level's color as `--level`, for a bar drawn in it, in the shade for the color scheme. */
-const levelVar = (level: Level) => (theme: Theme) => ({ "--level": theme.vars.palette.stability[level] });
+/* A key's square in a level's color, in the shade for the color scheme. */
+const levelSwatchSx = (level: Level) => (theme: Theme) => ({ bgcolor: theme.vars.palette.stability[level] });
+
+/* A draft has no level, so no color: a faint hatch, there but not started, as the bar draws it. */
+const draftSwatchSx = (theme: Theme) => ({
+  backgroundImage: `repeating-linear-gradient(135deg, color-mix(in srgb, ${theme.vars.palette.text.disabled} 45%, transparent) 0 2px, transparent 2px 4px)`,
+});
 
 /* Draft first, then the levels from Prototype to GA, as the bars run left to right. */
 const BAR_ORDER: CapabilityLevel[] = [null, ...STABILITY_LEVEL_IDS];
@@ -241,7 +278,8 @@ const levelLabel = (level: CapabilityLevel) => (level ? STABILITY[level].name : 
  * Where each domain stands, a line each: its maturity, its capabilities as a
  * bar split by stability level, and what's left on them, as the same marks
  * and counts the Features list uses. One key under the list says which color
- * is which level. Least mature first.
+ * is which level. Least mature first. Below md, the name and maturity share
+ * a line, and the bar and what's left each take one of their own.
  */
 function DomainStability({ state }: { state: DocketState }) {
   const rows = [...state.domains]
@@ -255,13 +293,23 @@ function DomainStability({ state }: { state: DocketState }) {
     .sort((a, b) => (a.domain.maturity ?? -1) - (b.domain.maturity ?? -1));
   return (
     <>
-      <ul className="ov-domains">
+      <ul>
         {rows.map(({ domain, levels, gaps, decisions }) => {
           return (
-            <li key={domain.id}>
-              <a className="ov-link ov-ellipsis" href={docHref("domain", domain.id)}>
+            <Box
+              component="li"
+              key={domain.id}
+              sx={{
+                ...rowSx,
+                display: "grid",
+                gridTemplateColumns: { xs: "minmax(0, 1fr) auto", md: "minmax(120px, 220px) 150px minmax(120px, 1fr) 210px" },
+                alignItems: "center",
+                gap: 2,
+              }}
+            >
+              <Box component="a" href={docHref("domain", domain.id)} sx={nameLinkSx}>
                 {domain.name}
-              </a>
+              </Box>
               <Maturity
                 value={domain.maturity}
                 subject="domain"
@@ -269,11 +317,34 @@ function DomainStability({ state }: { state: DocketState }) {
                 of="none of its capabilities has a level yet"
                 spread={domain.features.map((id) => partOf(find(state.features, id), domain.id)?.band ?? null)}
               />
-              <span className="ov-bar-cell">
-                {levels.length ? <StabilitySpread levels={levels} of={domain.name} wide /> : <span className="ov-faint">No capabilities</span>}
-                <span className="ov-count">{levels.length}</span>
-              </span>
-              <span className="ov-left">
+              {/* Its capabilities as a bar split by level, with how many there are. */}
+              <Box
+                component="span"
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 1.25,
+                  minWidth: 0,
+                  gridColumn: { xs: "1 / -1", md: "auto" },
+                  "& > .stability-spread-mark": { flex: 1 },
+                }}
+              >
+                {levels.length ? (
+                  <StabilitySpread levels={levels} of={domain.name} wide />
+                ) : (
+                  <Box component="span" sx={faintSx}>
+                    No capabilities
+                  </Box>
+                )}
+                <Box component="span" sx={{ fontSize: 12.5, fontVariantNumeric: "tabular-nums", textAlign: "right", color: "text.secondary" }}>
+                  {levels.length}
+                </Box>
+              </Box>
+              {/* What's left in it, as the Features list shows it, linking to its What's left tab. */}
+              <Box
+                component="span"
+                sx={{ display: "flex", justifyContent: { xs: "flex-start", md: "flex-end" }, gridColumn: { xs: "1 / -1", md: "auto" }, whiteSpace: "nowrap" }}
+              >
                 <GapsCell
                   gaps={gaps}
                   exposure={{ exposure: domain.exposure, risk: domain.readiness.gaps }}
@@ -282,22 +353,35 @@ function DomainStability({ state }: { state: DocketState }) {
                   of={domain.name}
                   href={docHref("domain", domain.id, "left")}
                 />
-              </span>
-            </li>
+              </Box>
+            </Box>
           );
         })}
       </ul>
-      <div className="ov-legend" aria-hidden>
+      <Box aria-hidden sx={{ display: "flex", flexWrap: "wrap", gap: "6px 16px", mt: 1.5, fontSize: 12, color: "text.secondary" }}>
         {BAR_ORDER.map((level) => (
-          <span key={level ?? "draft"}>
-            {level ? <Box component="span" className="ov-swatch" sx={levelVar(level)} /> : <span className="ov-swatch ov-seg-draft" />}
+          <Box component="span" key={level ?? "draft"} sx={{ display: "inline-flex", alignItems: "center", gap: 0.75 }}>
+            <Box component="span" sx={[{ width: 10, height: 10, borderRadius: "3px" }, level ? levelSwatchSx(level) : draftSwatchSx]} />
             {levelLabel(level)}
-          </span>
+          </Box>
         ))}
-      </div>
+      </Box>
     </>
   );
 }
+
+/* What a gap is on, quieter than the gap itself, its icon kept whole as the name cuts off. */
+const onSx: SystemStyleObject<Theme> = {
+  display: "inline-flex",
+  alignItems: "center",
+  gap: 0.75,
+  minWidth: 0,
+  fontSize: 12.5,
+  color: "text.secondary",
+  textDecoration: "none",
+  "& svg": { flex: "none" },
+  "&:hover": { color: "primary.main" },
+};
 
 /* What a gap is on, with its kind's icon and a link to its page: a capability, feature, mechanism or component. */
 function GapOn({ state, gap }: { state: DocketState; gap: Gap }) {
@@ -305,39 +389,70 @@ function GapOn({ state, gap }: { state: DocketState; gap: Gap }) {
   if (type === "mechanism" || type === "component") {
     const doc = technicalDoc(state, `${type}:${id}`);
     return (
-      <a className="ov-on" href={docHref(type, id)}>
+      <Box component="a" href={docHref(type, id)} sx={onSx}>
         {TECHNICAL_NAMES[type].icon}
-        <span className="ov-ellipsis">{doc?.name ?? id}</span>
-      </a>
+        <Box component="span" sx={ellipsisSx}>
+          {doc?.name ?? id}
+        </Box>
+      </Box>
     );
   }
   if (type === "capability" || type === "feature") {
     const doc = type === "capability" ? find(state.capabilities, id) : find(state.features, id);
     return (
-      <a className="ov-on" href={docHref(type, id)}>
+      <Box component="a" href={docHref(type, id)} sx={onSx}>
         {NAMES[type].icon}
-        <span className="ov-ellipsis">{doc?.name ?? id}</span>
-      </a>
+        <Box component="span" sx={ellipsisSx}>
+          {doc?.name ?? id}
+        </Box>
+      </Box>
     );
   }
   return null;
 }
 
-/* One of the riskiest gaps: its risk, opening how it's worked out, what it says, linking to its page, and what it's on. */
+/*
+ * One of the riskiest gaps: its risk, opening how it's worked out, what it
+ * says, linking to its page, and what it's on, with its initiatives under
+ * that. On a phone the three stack rather than squeeze.
+ */
 function GapRow({ state, gap }: { state: DocketState; gap: Gap }) {
   const risk = gap.risk;
   return (
-    <li>
-      <span className="ov-gap-impact">
+    <Box
+      component="li"
+      sx={{
+        ...rowSx,
+        py: 1.25,
+        display: "grid",
+        gridTemplateColumns: { xs: "minmax(0, 1fr)", sm: "130px minmax(0, 1fr) minmax(0, 220px)" },
+        alignItems: "center",
+        gap: { xs: 0.75, sm: 2 },
+      }}
+    >
+      <Box component="span" sx={{ display: "inline-flex" }}>
         <GapRiskMark risk={risk} on={risk.on[0] ?? null} />
-      </span>
-      <a className="ov-gap-summary" href={docHref("gap", gap.id)}>
+      </Box>
+      <Box
+        component="a"
+        href={docHref("gap", gap.id)}
+        sx={{
+          display: "-webkit-box",
+          overflow: "hidden",
+          WebkitBoxOrient: "vertical",
+          WebkitLineClamp: 2,
+          lineHeight: 1.45,
+          color: "inherit",
+          textDecoration: "none",
+          "&:hover": { color: "primary.main" },
+        }}
+      >
         <InlineMarkdown text={gap.name} />
-      </a>
-      <span className="ov-gap-on">
+      </Box>
+      <Box component="span" sx={{ minWidth: 0, textAlign: "right", "& .initiative-tags": { justifyContent: "flex-end" } }}>
         <GapOn state={state} gap={gap} />
         <GapInitiatives state={state} gap={gap} />
-      </span>
-    </li>
+      </Box>
+    </Box>
   );
 }
