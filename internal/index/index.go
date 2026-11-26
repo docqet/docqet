@@ -470,12 +470,25 @@ func appendNew(l []string, s string) []string {
 
 var markdownLink = regexp.MustCompile(`\[[^\]]*\]\(([^)\s]+)(?:\s+"[^"]*")?\)`)
 
+// codeSpan is inline code, whose links are examples.
+var codeSpan = regexp.MustCompile("`[^`]*`")
+
 // brokenLinks finds the relative links in a doc, in its frontmatter's text
 // values and its body, that don't resolve from its file. A link out of the
 // project's folder can't be checked, so it's left alone.
 func brokenLinks(fsys fs.FS, file string, data []byte) []state.Problem {
 	var problems []state.Problem
+	inFence := false
 	for i, line := range strings.Split(string(data), "\n") {
+		// A link in a code block or a code span is an example, not a link.
+		if trimmed := strings.TrimSpace(line); strings.HasPrefix(trimmed, "```") || strings.HasPrefix(trimmed, "~~~") {
+			inFence = !inFence
+			continue
+		}
+		if inFence {
+			continue
+		}
+		line = codeSpan.ReplaceAllString(line, "")
 		for _, m := range markdownLink.FindAllStringSubmatch(line, -1) {
 			target := m[1]
 			if strings.Contains(target, "://") || strings.HasPrefix(target, "mailto:") || strings.HasPrefix(target, "#") {
