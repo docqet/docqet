@@ -1,3 +1,7 @@
+import type { ReactNode } from "react";
+import Box from "@mui/material/Box";
+import type { Theme } from "@mui/material/styles";
+import type { SystemStyleObject } from "@mui/system";
 import CodeRoundedIcon from "@mui/icons-material/CodeRounded";
 import FactCheckOutlinedIcon from "@mui/icons-material/FactCheckOutlined";
 import RuleRoundedIcon from "@mui/icons-material/RuleRounded";
@@ -12,6 +16,7 @@ import { Term } from "../../components/term/Term";
 import { docHref, navigate, type Route } from "../../routes";
 import { Empty, PageHeader, Section, Stat, Tabs, View, currentTab, type TabDef } from "../../components/shell/layout";
 import { byFeature, contradictionsOf, domainName, find, gapsById, projectName, type Capability, type DocketState, type Rule } from "../../state";
+/* EvidenceList's rules, until it's styled in place. */
 import "../doc.css";
 import { EvidenceList } from "../../components/doc/EvidenceList";
 import { Missing } from "../../components/doc/Missing";
@@ -117,21 +122,37 @@ function RuleView({ state, rule, route }: { state: DocketState; rule: Rule; rout
       />
 
       {problems.map((p) => (
-        <p key={p.message} className="dp-warning">
+        <Box
+          component="p"
+          key={p.message}
+          sx={{
+            display: "flex",
+            alignItems: "flex-start",
+            gap: 1,
+            mt: -1,
+            mb: 2,
+            px: 1.5,
+            py: 1.25,
+            fontSize: 13.5,
+            color: "warning.main",
+            bgcolor: (t) => `color-mix(in srgb, ${t.vars.palette.warning.main} 8%, transparent)`,
+            borderRadius: "8px",
+          }}
+        >
           <WarningAmberRoundedIcon sx={{ fontSize: 17, flex: "none" }} />
           {p.message}
-        </p>
+        </Box>
       ))}
 
       {fielded.length ? (
-        <div className="dp-fields">
+        <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5, mb: 2 }}>
           {fielded.map((f, i) => (
             <div key={i}>
-              {several ? <span className="dp-source">{projectName(state, f.project)}</span> : null}
+              {several ? <Source>{projectName(state, f.project)}</Source> : null}
               <Facets items={facets("rule", f, go)} />
             </div>
           ))}
-        </div>
+        </Box>
       ) : null}
 
       <Tabs tabs={tabs} current={tab} />
@@ -141,33 +162,75 @@ function RuleView({ state, rule, route }: { state: DocketState; rule: Rule; rout
       ) : tab === "evidence" ? (
         <RuleEvidence state={state} rule={rule} />
       ) : tab === "concepts" ? (
-        <ul className="dp-list">
+        <Box component="ul" sx={listSx}>
           {concepts.map((c) => (
-            <li key={c.id} className="dp-row">
+            <Box component="li" key={c.id} sx={rowSx}>
               <ConceptIcon size={16} />
-              <span className="dp-row-main">
-                <a className="dp-name" href={docHref("concept", c.id)}>
+              <Box component="span" sx={rowMainSx}>
+                <Box component="a" href={docHref("concept", c.id)} sx={nameSx}>
                   {c.name}
-                </a>
-                {c.description ? <span className="dp-row-note">{c.description}</span> : null}
-              </span>
-              {c.domain !== rule.domain ? <span className="dp-row-aside">{domainName(state, c.domain)}</span> : null}
-            </li>
+                </Box>
+                {c.description ? (
+                  <Box component="span" sx={rowNoteSx}>
+                    {c.description}
+                  </Box>
+                ) : null}
+              </Box>
+              {c.domain !== rule.domain ? (
+                <Box component="span" sx={{ flex: "none", fontSize: 12.5, color: "text.disabled" }}>
+                  {domainName(state, c.domain)}
+                </Box>
+              ) : null}
+            </Box>
           ))}
-        </ul>
+        </Box>
       ) : (
-        <div className="dp-about">
+        <Box sx={{ display: "flex", flexDirection: "column", gap: 2.5, maxWidth: 760 }}>
           {written.map((f, i) => (
             <div key={i}>
-              {several ? <span className="dp-source">{projectName(state, f.project)}</span> : null}
+              {several ? <Source>{projectName(state, f.project)}</Source> : null}
               <Body from={f} go={go} limit={2000} />
             </div>
           ))}
-        </div>
+        </Box>
       )}
     </View>
   );
 }
+
+/* Which project a part of the rule comes from, where more than one says something about it. */
+function Source({ children }: { children: ReactNode }) {
+  return (
+    <Box component="span" sx={{ display: "block", mb: 0.75, fontSize: 12, fontWeight: 600, color: "text.disabled" }}>
+      {children}
+    </Box>
+  );
+}
+
+/* A list of rows in a card, each ruled off from the one before. */
+const listSx: SystemStyleObject<Theme> = {
+  bgcolor: "background.paper",
+  border: 1,
+  borderColor: "divider",
+  borderRadius: "10px",
+  "& > li + li": { borderTop: 1, borderColor: "divider" },
+};
+
+/* A row: its mark or icon, then what it is, and anything at its right. */
+const rowSx: SystemStyleObject<Theme> = {
+  display: "flex",
+  alignItems: "flex-start",
+  gap: 1.25,
+  px: 1.75,
+  py: 1.5,
+  "& > svg": { flex: "none", mt: "2px" },
+};
+
+const rowMainSx: SystemStyleObject<Theme> = { display: "flex", flexDirection: "column", gap: 0.5, flex: 1, minWidth: 0 };
+
+const nameSx: SystemStyleObject<Theme> = { fontWeight: 600, color: "inherit", textDecoration: "none", "&:hover": { color: "primary.main" } };
+
+const rowNoteSx: SystemStyleObject<Theme> = { fontSize: 13, color: "text.secondary" };
 
 /* Each capability that follows the rule, by feature, with whether it holds to it, and where it doesn't, the gap that says so. */
 function AppliesTo({ state, rule }: { state: DocketState; rule: Rule }) {
@@ -181,11 +244,11 @@ function AppliesTo({ state, rule }: { state: DocketState; rule: Rule }) {
           title={feature ? <a href={docHref("feature", feature.id)}>{feature.name}</a> : "In no feature"}
           count={capabilities.length}
         >
-          <ul className="dp-list">
+          <Box component="ul" sx={listSx}>
             {capabilities.map((c) => (
               <Follower key={c.id} state={state} rule={rule} capability={c} />
             ))}
-          </ul>
+          </Box>
         </Section>
       ))}
     </>
@@ -199,24 +262,46 @@ function Follower({ state, rule, capability }: { state: DocketState; rule: Rule;
     rule.gaps.filter((g) => capability.gaps.includes(g)),
   );
   return (
-    <li className="dp-row">
-      <StandingMark standing={standing} label={RULE_STANDING_LABELS[standing]} />
-      <span className="dp-row-main">
-        <span className="dp-row-head">
-          <a className="dp-name" href={docHref("capability", capability.id)}>
+    <Box component="li" sx={rowSx}>
+      <Box component="span" sx={{ display: "inline-flex", flex: "none" }}>
+        <StandingMark standing={standing} label={RULE_STANDING_LABELS[standing]} />
+      </Box>
+      <Box component="span" sx={rowMainSx}>
+        <Box component="span" sx={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "4px 10px" }}>
+          <Box component="a" href={docHref("capability", capability.id)} sx={nameSx}>
             {capability.name}
-          </a>
+          </Box>
           <CapabilityStability level={capability.stability} name={capability.name} />
           <InitiativeTags state={state} ids={capability.initiatives} />
-        </span>
-        <span className="dp-row-note">{RULE_STANDING_LABELS[standing]}</span>
+        </Box>
+        <Box component="span" sx={rowNoteSx}>
+          {RULE_STANDING_LABELS[standing]}
+        </Box>
+        {/* A gap that says it doesn't hold to the rule yet, linking to its page. */}
         {gaps.map((g) => (
-          <a key={g.id} className="dp-gap-link" href={docHref("gap", g.id)}>
+          <Box
+            component="a"
+            key={g.id}
+            href={docHref("gap", g.id)}
+            sx={{
+              display: "block",
+              px: 1.25,
+              py: 0.75,
+              fontSize: 13,
+              color: "text.primary",
+              textDecoration: "none",
+              borderLeft: 2,
+              borderColor: "warning.main",
+              bgcolor: (t) => `color-mix(in srgb, ${t.vars.palette.warning.main} 6%, transparent)`,
+              borderRadius: "0 6px 6px 0",
+              "&:hover": { bgcolor: (t) => `color-mix(in srgb, ${t.vars.palette.warning.main} 12%, transparent)` },
+            }}
+          >
             <Excerpt text={g.name} lines={2} />
-          </a>
+          </Box>
         ))}
-      </span>
-    </li>
+      </Box>
+    </Box>
   );
 }
 
@@ -229,10 +314,10 @@ const VERBS = [
 function RuleEvidence({ state, rule }: { state: DocketState; rule: Rule }) {
   return (
     <>
-      <p className="dp-note">
+      <Box component="p" sx={{ maxWidth: 760, mb: 2, fontSize: 13.5, lineHeight: 1.55, color: "text.secondary" }}>
         Places in the repository annotated as verifying or implementing this rule. Evidence is optional: where there's none, the rule holds on trust, unless a
         gap says otherwise. It's the rule's evidence, so it counts for every capability that follows it.
-      </p>
+      </Box>
       {VERBS.map(({ verb, title, icon }) => (
         <Section key={verb} title={title} count={rule.evidence[verb].length}>
           {rule.evidence[verb].length ? <EvidenceList state={state} places={rule.evidence[verb]} icon={icon} /> : <Empty>None.</Empty>}
