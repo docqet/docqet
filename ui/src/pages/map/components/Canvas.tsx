@@ -12,8 +12,11 @@ import {
   type Ref,
   type RefObject,
 } from "react";
-import { Grip } from "../../../components/Grip";
+import Box from "@mui/material/Box";
 import Tooltip from "@mui/material/Tooltip";
+import { keyframes, type SxProps, type Theme } from "@mui/material/styles";
+import type { SystemStyleObject } from "@mui/system";
+import { Grip } from "../../../components/Grip";
 
 const MIN_ZOOM = 0.3;
 const MAX_ZOOM = 1.6;
@@ -94,6 +97,10 @@ type Saved = { positions: Record<string, Pos>; groups?: Record<string, Box>; vie
 const clearBelow = (frame: HTMLElement, over: HTMLElement | null) =>
   over ? Math.max(0, over.getBoundingClientRect().bottom - frame.getBoundingClientRect().top) : 0;
 
+/* How far up the frame the content has to stay above `under`, such as a sheet over its bottom, or 0 with none. */
+const clearAbove = (frame: HTMLElement, under: HTMLElement | null) =>
+  under ? Math.max(0, frame.getBoundingClientRect().bottom - under.getBoundingClientRect().top) : 0;
+
 const clamp = (zoom: number) => Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, zoom));
 
 /*
@@ -111,8 +118,8 @@ const clamp = (zoom: number) => Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, zoom));
  * `groups` are regions behind cards, each wrapping its own, and `show` can
  * bring one of them into view too. `links` draws a line from one card to each
  * of some others, under the cards, such as from a persona to what serves them.
- * `lens` is set on the canvas as `data-lens`, for the page's styles to color
- * the cards by, without them rebuilding.
+ * `sx` is the page's styles for what's on the canvas, such as which marks a
+ * lens shows or what's lit, so they change without the cards rebuilding.
  */
 export default function Canvas({
   items,
@@ -123,7 +130,8 @@ export default function Canvas({
   fitKey,
   links,
   clearRight = 0,
-  lens,
+  clearUnder,
+  sx,
   ref,
 }: {
   items: CanvasItem[];
@@ -137,7 +145,9 @@ export default function Canvas({
   links?: { from: string; to: string[] } | null;
   /* How much of the frame's right edge a panel floating over it covers, so what's shown is centered in the rest. */
   clearRight?: number;
-  lens?: string;
+  /* A panel floating over the frame's bottom, such as a sheet on a phone, so what's shown is centered above it. */
+  clearUnder?: RefObject<HTMLElement | null>;
+  sx?: SxProps<Theme>;
   ref?: Ref<CanvasHandle>;
 }) {
   const frame = useRef<HTMLDivElement>(null);
@@ -357,7 +367,8 @@ export default function Canvas({
     }
     const b = { x: minX, y: minY, w: maxX - minX, h: maxY - minY };
     const top = clearBelow(f, clearOf.current) + PAD / 2;
-    const room = f.clientHeight - top - PAD;
+    const bottom = clearAbove(f, clearUnder?.current ?? null);
+    const room = f.clientHeight - top - (bottom ? bottom + PAD / 2 : PAD);
     /*
      * One card: close enough to read. Several, or a group: far enough out to
      * take them all in, where they fit.
@@ -371,10 +382,10 @@ export default function Canvas({
     if (drawn.length === 1) setTop(drawn[0]);
     setFlash(drawn);
     const rows = row ? drawn.flatMap((id) => [...(nodes.current.get(id)?.querySelectorAll(row) ?? [])]) : [];
-    for (const el of rows) el.classList.add("flash-row");
+    for (const el of rows) el.setAttribute("data-flash", "");
     setTimeout(() => {
       setFlash((current) => (current === drawn ? [] : current));
-      for (const el of rows) el.classList.remove("flash-row");
+      for (const el of rows) el.removeAttribute("data-flash");
     }, FLASH_MS);
   }
 
@@ -522,10 +533,9 @@ export default function Canvas({
   const inTopGroup = new Set(groups.find((g) => g.id === topGroup)?.items ?? []);
 
   return (
-    <div
+    <Box
       ref={frame}
-      className={`canvas${active ? " dragging" : ""}`}
-      data-lens={lens}
+      sx={[frameSx, active ? draggingSx : null, ...(Array.isArray(sx) ? sx : [sx])]}
       style={{
         backgroundSize: `${DOT * view.zoom}px ${DOT * view.zoom}px`,
         backgroundPosition: `${view.x}px ${view.y}px`,
@@ -544,19 +554,22 @@ export default function Canvas({
         transform: the cards are laid out at the size they're shown, so their
         text is drawn as crisply as the rest of the page's, not shrunk from
         another size. Inside, everything is in canvas units, placed by left
-        and top, which the zoom scales.
+        and top, which the zoom scales. No will-change: with it, the browser
+        scales one bitmap of the cards on zoom, and their text blurs.
       */}
-      <div className="world" style={{ transform: `translate(${Math.round(view.x)}px, ${Math.round(view.y)}px)` }}>
+      <Box sx={cornerSx} style={{ transform: `translate(${Math.round(view.x)}px, ${Math.round(view.y)}px)` }}>
         {/* --zoom lets what keeps its size on screen, such as a resize handle, undo the zoom. */}
-        <div className="world-zoom" style={{ zoom: view.zoom, "--zoom": view.zoom } as CSSProperties}>
+        <Box sx={cornerSx} style={{ zoom: view.zoom, "--zoom": view.zoom } as CSSProperties}>
           {tidied
             ? groups.map((group) => {
                 const b = groupBox(group, place);
                 return b ? (
-                  <div
+                  /* `group` is how a press finds the group it's on, and how the page lights one. */
+                  <Box
                     key={group.id}
                     data-id={group.id}
-                    className={`group${group.onOpen ? " openable" : ""}${active?.id === group.id ? " lifted" : ""}${flash.includes(group.id) ? " flash" : ""}`}
+                    className="group"
+                    sx={[groupSx, group.onOpen ? openableSx : null, active?.id === group.id ? liftedGroupSx : null, flash.includes(group.id) ? flashSx : null]}
                     style={{
                       left: b.x,
                       top: b.y,
@@ -570,39 +583,41 @@ export default function Canvas({
                       group.onOpen?.();
                     }}
                   >
-                    <div className="group-label">
+                    <Box sx={groupLabelSx}>
                       <Grip />
                       {group.label}
-                    </div>
+                    </Box>
                     {Object.keys(EDGES).map((edge) => (
-                      <div key={edge} className="resize" data-resize={edge} />
+                      <Box key={edge} data-resize={edge} sx={[resizeSx, RESIZE_SX[edge]]} />
                     ))}
-                  </div>
+                  </Box>
                 ) : null;
               })
             : null}
           {linkPaths.length ? (
-            <svg className="links" aria-hidden>
+            <Box component="svg" aria-hidden sx={linksSx}>
               {linkPaths.map((l) => (
                 <g key={l.id}>
                   <path d={l.d} />
                   <circle cx={l.x2} cy={l.y2} r={4} />
                 </g>
               ))}
-            </svg>
+            </Box>
           ) : null}
           {items.map(({ id, node }) => {
             const p = place(id);
             const lifted = active?.kind === "card" && active.id === id;
             return (
-              <div
+              /* `item` is how a press finds the card it's on. */
+              <Box
                 key={id}
-                ref={(el) => {
+                ref={(el: HTMLDivElement | null) => {
                   if (el) nodes.current.set(id, el);
                   else nodes.current.delete(id);
                 }}
                 data-id={id}
-                className={`item${lifted ? " lifted" : ""}${flash.includes(id) ? " flash" : ""}`}
+                className="item"
+                sx={[itemSx, lifted ? { boxShadow: 8 } : null, flash.includes(id) ? flashSx : null]}
                 style={{
                   left: p.x,
                   top: p.y,
@@ -611,37 +626,234 @@ export default function Canvas({
                 }}
               >
                 {node}
-              </div>
+              </Box>
             );
           })}
-        </div>
-      </div>
+        </Box>
+      </Box>
 
-      <div className="zoom panel" data-no-pan>
-        <button type="button" onClick={() => zoomMiddle((z) => z / 1.2)} aria-label="Zoom out">
+      <Box sx={[panelSx, zoomSx]} data-no-pan>
+        <Box component="button" type="button" sx={zoomButtonSx} onClick={() => zoomMiddle((z) => z / 1.2)} aria-label="Zoom out">
           −
-        </button>
+        </Box>
         <Tooltip title="Back to 100%">
-          <button type="button" className="zoom-level" onClick={() => zoomMiddle(() => 1)}>
+          <Box
+            component="button"
+            type="button"
+            sx={[zoomButtonSx, { minWidth: 52, fontVariantNumeric: "tabular-nums", color: "text.secondary" }]}
+            onClick={() => zoomMiddle(() => 1)}
+          >
             {Math.round(view.zoom * 100)}%
-          </button>
+          </Box>
         </Tooltip>
-        <button type="button" onClick={() => zoomMiddle((z) => z * 1.2)} aria-label="Zoom in">
+        <Box component="button" type="button" sx={zoomButtonSx} onClick={() => zoomMiddle((z) => z * 1.2)} aria-label="Zoom in">
           +
-        </button>
-        <span className="zoom-divider" aria-hidden />
-        <button type="button" className="text-button" onClick={fitAll}>
+        </Box>
+        <Box component="span" aria-hidden sx={{ width: "1px", height: 18, mx: 0.5, bgcolor: "surface.borderStrong" }} />
+        <Box component="button" type="button" sx={[zoomButtonSx, { fontWeight: 600 }]} onClick={fitAll}>
           Fit
-        </button>
+        </Box>
         <Tooltip title="Put every card back in its tidy place">
-          <button type="button" className="text-button" onClick={tidyUp}>
+          <Box component="button" type="button" sx={[zoomButtonSx, { fontWeight: 600 }]} onClick={tidyUp}>
             Tidy
-          </button>
+          </Box>
         </Tooltip>
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 }
+
+/*
+ * A panel floating over the canvas, such as the zoom controls or the page's
+ * bars: frosted, so the canvas shows through it faintly.
+ */
+export const panelSx: SystemStyleObject<Theme> = {
+  bgcolor: "surface.panel",
+  border: 1,
+  borderColor: "divider",
+  borderRadius: "8px",
+  boxShadow: (t) => t.vars.palette.surface.shadow,
+  backdropFilter: "blur(14px) saturate(1.4)",
+  WebkitBackdropFilter: "blur(14px) saturate(1.4)",
+  cursor: "default",
+};
+
+/* The canvas fills the view it's in, its dots drawn at its zoom and offset. */
+const frameSx: SystemStyleObject<Theme> = {
+  position: "absolute",
+  inset: 0,
+  overflow: "hidden",
+  cursor: "grab",
+  touchAction: "none",
+  userSelect: "none",
+  bgcolor: "background.default",
+  backgroundImage: (t) => `radial-gradient(${t.vars.palette.surface.dot} 1.1px, transparent 1.3px)`,
+  "& .item .grip:hover, & .group .grip:hover": { color: "text.primary" },
+  /* A row just brought into view, lit up for a moment. */
+  "& [data-flash]": { animation: (t) => `${flashRow(t)} 1.8s ease-out` },
+};
+
+/* While something is dragged, the cursor Canvas sets holds over everything it passes. */
+const draggingSx: SystemStyleObject<Theme> = { "& *": { cursor: "inherit !important" } };
+
+/* The world, moved by the view's offset, and inside it the world at its zoom: both from the canvas's top left. */
+const cornerSx: SystemStyleObject<Theme> = { position: "absolute", top: 0, left: 0 };
+
+/* A card, or a group, just brought into view, lit up for a moment; and a row in one. */
+const flashRing = (t: Theme) => keyframes`
+  0%, 35% {
+    box-shadow: 0 0 0 3px ${t.vars.palette.primary.main}, 0 0 32px 4px color-mix(in srgb, ${t.vars.palette.primary.main} 35%, transparent);
+  }
+  100% {
+    box-shadow: 0 0 0 3px transparent, 0 0 32px 4px transparent;
+  }
+`;
+const flashRow = (t: Theme) => keyframes`
+  0%, 35% {
+    background-color: color-mix(in srgb, ${t.vars.palette.primary.main} 22%, transparent);
+  }
+  100% {
+    background-color: transparent;
+  }
+`;
+const flashSx: SystemStyleObject<Theme> = { animation: (t) => `${flashRing(t)} 1.8s ease-out` };
+
+/* Each card sits at its own place on the canvas, set by Canvas. Its grip drags it, and a click opens it. */
+const itemSx: SystemStyleObject<Theme> = {
+  position: "absolute",
+  top: 0,
+  left: 0,
+  cursor: "pointer",
+  borderRadius: "8px",
+  transition: "box-shadow 120ms",
+};
+
+/*
+ * A domain: a wash behind its cards, sized by Canvas to wrap them or larger,
+ * with its grip, name and maturity in the room above them. Its grip moves it
+ * with its cards, its edges resize it, a click opens it, and dragging
+ * anywhere else on it moves the canvas, as the background does. Its grip
+ * waits in the margin left of its name, showing only while the domain is
+ * hovered or dragged.
+ */
+const groupSx: SystemStyleObject<Theme> = {
+  position: "absolute",
+  top: 0,
+  left: 0,
+  borderRadius: "14px",
+  bgcolor: "area.bg",
+  border: 1,
+  borderColor: "area.border",
+  transition: "border-color 120ms, box-shadow 120ms",
+  "&:hover > :first-of-type > .grip": { opacity: 1 },
+  "&:hover > [data-resize=se]::after": { opacity: 0.7 },
+  "& > [data-resize=se]:hover::after": { opacity: 1 },
+};
+const openableSx: SystemStyleObject<Theme> = {
+  cursor: "pointer",
+  "&:hover": { borderColor: "primary.main", boxShadow: (t) => t.vars.palette.lit.ring },
+};
+const liftedGroupSx: SystemStyleObject<Theme> = { boxShadow: 8, "& > :first-of-type > .grip": { opacity: 1 } };
+
+/* One line in the room above the cards, lined up with them. */
+const groupLabelSx: SystemStyleObject<Theme> = {
+  position: "absolute",
+  top: 10,
+  left: 18,
+  right: 14,
+  height: 24,
+  display: "flex",
+  alignItems: "center",
+  gap: 1,
+  "& > .grip": {
+    position: "absolute",
+    left: "-21px",
+    p: "3px",
+    borderRadius: "4px",
+    color: "text.disabled",
+    opacity: 0,
+    transition: "opacity 120ms, color 120ms",
+  },
+};
+
+/*
+ * The edges and corners a domain is resized by, straddling its border. They
+ * keep the same size on screen at any zoom, undoing the canvas's (--zoom, set
+ * by Canvas), so they're as easy to catch zoomed out as in. The bottom right
+ * corner, the one most reached for, is the largest and shows a mark on hover.
+ */
+const resizeSx: SystemStyleObject<Theme> = { position: "absolute", zoom: "calc(1 / var(--zoom, 1))" };
+const along = { left: 16, right: 16, height: 12, cursor: "ns-resize" };
+const upright = { top: 16, bottom: 16, width: 12, cursor: "ew-resize" };
+const corner = { width: 18, height: 18 };
+const RESIZE_SX: Record<string, SystemStyleObject<Theme>> = {
+  n: { ...along, top: -6 },
+  s: { ...along, bottom: -6 },
+  e: { ...upright, right: -6 },
+  w: { ...upright, left: -6 },
+  ne: { ...corner, top: -7, right: -7, cursor: "nesw-resize" },
+  sw: { ...corner, bottom: -7, left: -7, cursor: "nesw-resize" },
+  nw: { ...corner, top: -7, left: -7, cursor: "nwse-resize" },
+  se: {
+    bottom: -8,
+    right: -8,
+    width: 26,
+    height: 26,
+    cursor: "nwse-resize",
+    "&::after": {
+      content: '""',
+      position: "absolute",
+      right: 10,
+      bottom: 10,
+      width: 10,
+      height: 10,
+      borderRight: "2.5px solid",
+      borderBottom: "2.5px solid",
+      borderColor: "primary.main",
+      borderBottomRightRadius: "5px",
+      opacity: 0,
+      transition: "opacity 120ms",
+    },
+  },
+};
+
+/* Lines from one card to others, under the cards, in the persona's color. */
+const linksSx: SystemStyleObject<Theme> = {
+  position: "absolute",
+  top: 0,
+  left: 0,
+  width: "1px",
+  height: "1px",
+  overflow: "visible",
+  pointerEvents: "none",
+  "& path": { fill: "none", stroke: (t) => t.vars.palette.persona.main, strokeWidth: 2, strokeDasharray: "6 5", opacity: 0.7 },
+  "& circle": { fill: (t) => t.vars.palette.persona.main },
+};
+
+/* The zoom controls, at the canvas's bottom right. */
+const zoomSx: SystemStyleObject<Theme> = {
+  position: "absolute",
+  right: 16,
+  bottom: 16,
+  display: "flex",
+  alignItems: "center",
+  p: 0.5,
+  gap: "2px",
+};
+
+const zoomButtonSx: SystemStyleObject<Theme> = {
+  font: "inherit",
+  fontSize: 13,
+  color: "text.primary",
+  bgcolor: "transparent",
+  border: 0,
+  borderRadius: "5px",
+  height: 30,
+  minWidth: 30,
+  px: 1,
+  cursor: "pointer",
+  "&:hover": { bgcolor: "surface.accentSoft", color: "primary.main" },
+};
 
 /* The saved layout. Storage can be unavailable or hold anything, so a failure just means none. */
 function readSaved(key: string): Saved {

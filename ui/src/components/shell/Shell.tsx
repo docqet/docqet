@@ -142,8 +142,6 @@ export default function Shell({
           position: "relative",
           minHeight: 0,
           overflow: "hidden",
-          /* What the map fixes to the window sits in the view's area instead. */
-          "& .canvas, & .zoom": { position: "absolute" },
         }}
       >
         {children}

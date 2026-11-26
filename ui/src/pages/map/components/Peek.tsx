@@ -1,4 +1,7 @@
-import { useEffect, type ReactNode } from "react";
+import { useEffect, type ReactNode, type Ref } from "react";
+import Box from "@mui/material/Box";
+import type { Theme } from "@mui/material/styles";
+import type { SystemStyleObject } from "@mui/system";
 import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
 import BoltOutlinedIcon from "@mui/icons-material/BoltOutlined";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
@@ -31,6 +34,7 @@ import {
 } from "../../../state";
 import { gapsAcross, someOf } from "../../../model";
 import { InitiativeTags, initiativesOf } from "../../../components/Initiatives";
+import { panelSx } from "./Canvas";
 
 /* Each kind's icon and name, as the peek and the map's filter bar say them. */
 export const PICK_KINDS: Record<Pick["kind"], { one: string; icon: (size: number) => ReactNode }> = {
@@ -82,7 +86,13 @@ function summarize(state: DocketState, at: Pick): Summary | null {
     return {
       name: c.name,
       initiatives: c.initiatives,
-      mark: c.stability ? <StabilityMark level={c.stability} feature={c.name} size="extra-long" /> : <span className="faint">Draft</span>,
+      mark: c.stability ? (
+        <StabilityMark level={c.stability} feature={c.name} size="extra-long" />
+      ) : (
+        <Box component="span" sx={{ color: "text.disabled" }}>
+          Draft
+        </Box>
+      ),
       figures: [
         { label: "What's left", value: leftCount(c.left), tab: "left" },
         { label: "Rules held", value: rules.length ? `${held} / ${rules.length}` : 0, tab: "rules" },
@@ -182,7 +192,8 @@ function summarize(state: DocketState, at: Pick): Summary | null {
  * name and level, maturity or readiness, its one sentence, three figures,
  * each linking to where its page lists them, its three riskiest gaps, and the
  * way to its page, where the rest is. It can filter the map to itself. Esc or
- * its close button closes it.
+ * its close button closes it. On a phone, it's a sheet across the bottom of
+ * the map instead, which `ref` lets the map keep what it shows above.
  */
 export default function Peek({
   state,
@@ -190,6 +201,7 @@ export default function Peek({
   onClose,
   filtering,
   onFilter,
+  ref,
 }: {
   state: DocketState;
   at: Pick;
@@ -197,6 +209,7 @@ export default function Peek({
   /* Whether the map is filtered to it, and filtering to it or not. */
   filtering: boolean;
   onFilter: () => void;
+  ref?: Ref<HTMLElement>;
 }) {
   /* Esc closes it, unless it's closing a popover or clearing the search. */
   useEffect(() => {
@@ -218,76 +231,207 @@ export default function Peek({
   const riskiest = risk?.items.slice(0, 3) ?? [];
 
   return (
-    <aside className="panel peek" data-no-pan aria-label={`${kind.one}: ${s.name}`}>
-      <header className="peek-kind">
+    <Box component="aside" ref={ref} sx={[panelSx, peekSx]} data-no-pan aria-label={`${kind.one}: ${s.name}`}>
+      <Box component="header" sx={{ display: "flex", alignItems: "center", gap: 0.75, fontSize: 12.5, fontWeight: 600, color: "text.secondary" }}>
         {kind.icon(15)}
         <Term id={at.kind}>{kind.one}</Term>
-        {s.where ? <span className="faint">in {s.where}</span> : null}
-        <button type="button" className="icon-button peek-close" onClick={onClose} aria-label="Close">
+        {s.where ? (
+          <Box component="span" sx={{ color: "text.disabled" }}>
+            in {s.where}
+          </Box>
+        ) : null}
+        <Box component="button" type="button" sx={closeSx} onClick={onClose} aria-label="Close">
           <CloseRoundedIcon sx={{ fontSize: 18 }} />
-        </button>
-      </header>
+        </Box>
+      </Box>
 
-      <div className="peek-title">
+      <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mt: "-4px" }}>
         {s.picture}
         <div>
-          <h2 className="peek-name">{s.name}</h2>
-          {s.role ? <div className="peek-role">{s.role}</div> : null}
+          <Box component="h2" sx={{ fontSize: 19, fontWeight: 700, lineHeight: 1.25, letterSpacing: "-0.01em", overflowWrap: "anywhere" }}>
+            {s.name}
+          </Box>
+          {s.role ? <Box sx={{ mt: "2px", fontSize: 13, color: "text.secondary" }}>{s.role}</Box> : null}
         </div>
-      </div>
+      </Box>
       <InitiativeTags state={state} ids={s.initiatives ?? initiativesOf(state, s.within ?? [])} block />
-      {s.mark ? <div className="peek-mark">{s.mark}</div> : null}
+      {s.mark ? <Box sx={{ display: "flex", alignItems: "center", fontSize: 14 }}>{s.mark}</Box> : null}
       {doc?.description ? (
-        <p className="peek-description">
+        <Box component="p" sx={{ color: "text.secondary", lineHeight: 1.5 }}>
           <InlineMarkdown text={doc.description} />
-        </p>
+        </Box>
       ) : null}
 
-      <div className="peek-figures">
+      <Box sx={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 0.75 }}>
         {s.figures.map((f) => (
-          <a key={f.label} className="peek-figure" href={page(f.tab)}>
-            <span className="peek-figure-value">{f.value}</span>
-            <span className="peek-figure-label">{f.label}</span>
-          </a>
+          <Box key={f.label} component="a" sx={figureSx} href={page(f.tab)}>
+            <Box component="span" sx={{ fontSize: 18, fontWeight: 700, fontVariantNumeric: "tabular-nums", lineHeight: 1.2 }}>
+              {f.value}
+            </Box>
+            <Box component="span" sx={{ fontSize: 11.5, lineHeight: 1.3, color: "text.secondary" }}>
+              {f.label}
+            </Box>
+          </Box>
         ))}
-      </div>
+      </Box>
 
       {risk && riskiest.length ? (
-        <section className="peek-gaps">
-          <h3>
+        <section>
+          <Box component="h3" sx={{ display: "flex", alignItems: "center", gap: 0.75, mb: 0.75, typography: "overline", color: "text.disabled" }}>
             Riskiest <Term id="gap">gaps</Term>
-            <RiskScore risk={risk} exposure={s.exposure} of={s.of ?? s.name} />
-          </h3>
-          <ul>
+            <Box component="span" sx={{ display: "inline-flex", letterSpacing: 0, textTransform: "none" }}>
+              <RiskScore risk={risk} exposure={s.exposure} of={s.of ?? s.name} />
+            </Box>
+          </Box>
+          <Box component="ul" sx={{ display: "flex", flexDirection: "column" }}>
             {riskiest.map(({ item: g, risk: r, on }) => (
               <li key={g.id}>
-                <a href={docHref("gap", g.id)}>
-                  <GapRiskMark risk={r} on={on} inButton />
-                  <span className="peek-gap-summary">
+                <Box component="a" sx={gapSx} href={docHref("gap", g.id)}>
+                  {/* Each gap's risk the same width, so the names line up. */}
+                  <Box component="span" sx={{ flex: "none", display: "flex", alignItems: "center", minWidth: 46, height: 19 }}>
+                    <GapRiskMark risk={r} on={on} inButton />
+                  </Box>
+                  <Box
+                    component="span"
+                    sx={{ fontSize: 13, lineHeight: 1.45, display: "-webkit-box", WebkitBoxOrient: "vertical", WebkitLineClamp: 2, overflow: "hidden" }}
+                  >
                     <InlineMarkdown text={g.name} />
-                  </span>
-                </a>
+                  </Box>
+                </Box>
               </li>
             ))}
-          </ul>
+          </Box>
           {risk.items.length > riskiest.length ? (
-            <a className="link peek-more" href={page("left")}>
+            <Box component="a" sx={[linkSx, { display: "inline-block", mt: 0.5, fontSize: 12.5 }]} href={page("left")}>
               All {risk.items.length} gaps
-            </a>
+            </Box>
           ) : null}
         </section>
       ) : null}
 
-      <footer className="peek-actions">
-        <a className="peek-open" href={page()}>
+      <Box component="footer" sx={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 1, pt: 0.5 }}>
+        <Box component="a" sx={openSx} href={page()}>
           Open page
           <ArrowForwardRoundedIcon sx={{ fontSize: 17 }} />
-        </a>
-        <button type="button" className="peek-filter" aria-pressed={filtering} onClick={onFilter}>
+        </Box>
+        <Box component="button" type="button" sx={filterButtonSx} aria-pressed={filtering} onClick={onFilter}>
           <FilterListRoundedIcon sx={{ fontSize: 15 }} />
           {filtering ? "Stop filtering to this" : "Filter the map to this"}
-        </button>
-      </footer>
-    </aside>
+        </Box>
+      </Box>
+    </Box>
   );
 }
+
+/* A link, or a button that looks like one, for what acts inside the page, in the concepts' teal. */
+export const linkSx: SystemStyleObject<Theme> = {
+  font: "inherit",
+  color: "concept.main",
+  bgcolor: "transparent",
+  border: 0,
+  p: 0,
+  cursor: "pointer",
+  textDecoration: "underline",
+  textDecorationColor: (t) => `color-mix(in srgb, ${t.vars.palette.concept.main} 40%, transparent)`,
+  textUnderlineOffset: "2px",
+  "&:hover": { textDecorationColor: "currentColor" },
+};
+
+/*
+ * At the right of the map, above the zoom controls, its height its content's.
+ * On a phone, a sheet across the map's bottom, over the zoom controls, as
+ * tall as its content up to a little over half the map.
+ */
+const peekSx: SystemStyleObject<Theme> = {
+  position: "absolute",
+  zIndex: 5,
+  display: "flex",
+  flexDirection: "column",
+  gap: 1.5,
+  p: "12px 16px 16px",
+  overflowY: "auto",
+  bgcolor: "background.paper",
+  top: { xs: "auto", sm: 12 },
+  right: { xs: 0, sm: 12 },
+  bottom: { xs: 0, sm: "auto" },
+  left: { xs: 0, sm: "auto" },
+  width: { xs: "auto", sm: 340 },
+  maxWidth: { sm: "calc(100% - 24px)" },
+  maxHeight: { xs: "55%", sm: "calc(100% - 80px)" },
+  borderRadius: { xs: "14px 14px 0 0", sm: "8px" },
+  borderWidth: { xs: "1px 0 0", sm: "1px" },
+};
+
+const closeSx: SystemStyleObject<Theme> = {
+  display: "inline-grid",
+  placeItems: "center",
+  width: 28,
+  height: 28,
+  ml: "auto",
+  mr: -1,
+  p: 0,
+  color: "text.secondary",
+  bgcolor: "transparent",
+  border: 0,
+  borderRadius: "5px",
+  cursor: "pointer",
+  "&:hover": { color: "text.primary", bgcolor: "surface.accentSoft" },
+};
+
+/* One of the three figures, linking to where its page lists them. */
+const figureSx: SystemStyleObject<Theme> = {
+  display: "flex",
+  flexDirection: "column",
+  gap: "2px",
+  p: "8px 10px",
+  border: 1,
+  borderColor: "divider",
+  borderRadius: "7px",
+  color: "inherit",
+  textDecoration: "none",
+  "&:hover": { borderColor: "primary.main", bgcolor: "surface.accentSoft" },
+};
+
+/* A gap's row, lit while hovered, reaching into the panel's padding. */
+const gapSx: SystemStyleObject<Theme> = {
+  display: "flex",
+  alignItems: "flex-start",
+  gap: 1.25,
+  p: "7px 8px",
+  mx: -1,
+  borderRadius: "6px",
+  color: "inherit",
+  textDecoration: "none",
+  "&:hover": { bgcolor: (t) => `color-mix(in srgb, ${t.vars.palette.text.primary} 4%, transparent)` },
+};
+
+/* The way to its page, the panel's one filled button. */
+const openSx: SystemStyleObject<Theme> = {
+  display: "inline-flex",
+  alignItems: "center",
+  gap: 0.75,
+  height: 34,
+  px: 1.75,
+  fontWeight: 600,
+  color: "background.paper",
+  bgcolor: "primary.main",
+  borderRadius: "7px",
+  textDecoration: "none",
+  "&:hover": { bgcolor: (t) => `color-mix(in srgb, ${t.vars.palette.primary.main} 86%, ${t.vars.palette.text.primary})` },
+};
+
+const filterButtonSx: SystemStyleObject<Theme> = {
+  display: "inline-flex",
+  alignItems: "center",
+  gap: "5px",
+  p: "4px 6px",
+  font: "inherit",
+  fontSize: 12.5,
+  color: "text.secondary",
+  bgcolor: "transparent",
+  border: 0,
+  borderRadius: "5px",
+  cursor: "pointer",
+  "&:hover": { color: "text.primary", bgcolor: "surface.accentSoft" },
+  "&[aria-pressed=true]": { color: "primary.main" },
+};

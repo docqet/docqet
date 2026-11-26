@@ -1,9 +1,14 @@
 import { useCallback, useEffect, useEffectEvent, useMemo, useRef, useState } from "react";
+import Box from "@mui/material/Box";
+import Tooltip from "@mui/material/Tooltip";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import { useTheme, type Theme } from "@mui/material/styles";
+import type { SystemStyleObject } from "@mui/system";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import FilterListRoundedIcon from "@mui/icons-material/FilterListRounded";
-import Canvas, { type CanvasHandle } from "./components/Canvas";
+import Canvas, { panelSx, type CanvasHandle } from "./components/Canvas";
 import { mapGroups, mapItems, tidyMap } from "./components/FeatureMap";
-import Peek, { PICK_KINDS } from "./components/Peek";
+import Peek, { PICK_KINDS, linkSx } from "./components/Peek";
 import { navigate, useSearch } from "../../routes";
 import {
   RISK_BANDS,
@@ -19,13 +24,12 @@ import {
   targetOf,
   type DocketState,
   type Pick,
+  type RiskBand,
 } from "../../state";
 import { Ring } from "../../components/ring/Ring";
 import { MATURITY_BANDS } from "../../components/maturity/maturity";
 import { RiskRing } from "../../components/risk/RiskRing";
 import { STABILITY_LEVEL_IDS, levelColor } from "../../components/stability/stability";
-import Tooltip from "@mui/material/Tooltip";
-import "./map.css";
 
 /*
  * What the map shows on its cards, one at a time: each shows only its own
@@ -49,6 +53,9 @@ const LENSES: { id: Lens; label: string; tip: string }[] = [
  */
 export default function MapPage({ state, layoutKey }: { state: DocketState; layoutKey: string }) {
   const header = useRef<HTMLDivElement>(null);
+  /* On a phone, the peek is a sheet across the bottom rather than a panel at the right. */
+  const phone = useMediaQuery(useTheme().breakpoints.down("sm"), { noSsr: true });
+  const sheet = useRef<HTMLElement>(null);
   useEffect(() => {
     document.title = "Map · Docket";
   }, []);
@@ -125,21 +132,20 @@ export default function MapPage({ state, layoutKey }: { state: DocketState; layo
         tidy={(sizes) => tidyMap(state, sizes, filtered?.cards)}
         storageKey={`docket.layout.v4:${layoutKey}`}
         clearOf={header}
-        clearRight={peek ? PEEK_ROOM : 0}
+        clearRight={peek && !phone ? PEEK_ROOM : 0}
+        clearUnder={peek && phone ? sheet : undefined}
         fitKey={`${showing}|${filters.map((f) => `${f.kind}:${f.id}`).join(",")}`}
         links={links}
-        lens={lens}
+        sx={[lensSx(lens), litSx(lit, litBy?.kind === "persona" ? "persona" : "concept"), focusSx(peek), filtered ? fadedSx(filtered.capabilities) : null]}
       />
-      {lit.length ? <LitCapabilities ids={lit} color={litBy?.kind === "persona" ? "persona" : "concept"} /> : null}
-      <FocusStyle at={peek} />
-      {filtered ? <FilterStyle capabilities={filtered.capabilities} /> : null}
-      <div className="map-top" ref={header} data-peek={peek ? "" : undefined}>
+      <Box ref={header} sx={[topSx, peek ? { right: { sm: PEEK_ROOM } } : null]}>
         <LensBar lens={lens} onLens={setLens} />
         {filters.length ? <FilterBar state={state} filters={filters} onOpen={open} onRemove={toggleFilter} onClear={() => setFilters([])} /> : null}
-      </div>
+      </Box>
       {peek ? (
         <Peek
           key={`${peek.kind}:${peek.id}`}
+          ref={sheet}
           state={state}
           at={peek}
           onClose={close}
@@ -151,49 +157,111 @@ export default function MapPage({ state, layoutKey }: { state: DocketState; layo
   );
 }
 
-/* How much of the map's right edge the peek covers, with the room around it: its width in map.css, and 12px either side. */
+/* How much of the map's right edge the peek covers, with the room around it: its width in Peek, and 12px either side. */
 const PEEK_ROOM = 340 + 24;
+
+/*
+ * Across the top of the canvas: what the cards are colored by, and the
+ * filters, if any. The canvas fits its content below it. With the peek open
+ * at the right, it stops short of it.
+ */
+const topSx: SystemStyleObject<Theme> = {
+  position: "absolute",
+  top: 12,
+  left: 12,
+  right: 12,
+  display: "flex",
+  flexWrap: "wrap",
+  alignItems: "flex-start",
+  gap: 1,
+  pointerEvents: "none",
+  zIndex: 4,
+  "& > *": { pointerEvents: "auto" },
+};
+
+/*
+ * The styles below are the canvas's, from the page: rules rather than props,
+ * so the cards don't rebuild when what's lit or shown changes.
+ */
+
+/* Each exposure band's color. */
+const BAND_COLOR: Record<RiskBand["id"], (t: Theme) => string> = {
+  low: (t) => t.vars.palette.text.disabled,
+  minor: (t) => t.vars.palette.impact.inconvenient,
+  moderate: (t) => t.vars.palette.impact.blocking,
+  high: (t) => t.vars.palette.error.main,
+};
+
+/*
+ * The risk lens tints rows, and the cards of capabilities in no feature, from
+ * each one's exposure: data-risk-band, the band of the exposure its gaps give
+ * it. Low exposure gets the bar alone. Tinted under the card's own background,
+ * and at a lower specificity than hovering or what the peek has open, which
+ * stay on top.
+ */
+const RISK_TINTS: SystemStyleObject<Theme> = Object.fromEntries(
+  RISK_BANDS.map((b) => [
+    `& li:where([data-risk-band="${b.id}"]), & .slot:where([data-risk-band="${b.id}"]) > .MuiCard-root`,
+    {
+      boxShadow: (t: Theme) => `inset 3px 0 ${BAND_COLOR[b.id](t)}`,
+      backgroundImage: (t: Theme) => {
+        if (b.id === "low") return "none";
+        const tint = `color-mix(in srgb, ${BAND_COLOR[b.id](t)} 13%, transparent)`;
+        return `linear-gradient(${tint}, ${tint})`;
+      },
+    },
+  ]),
+);
+
+/*
+ * Each lens shows only its own marks on the canvas: stability marks and
+ * maturity, or exposure. The peek shows them all, and a persona's readiness
+ * always shows on their card. Nothing to show, such as no gaps or only
+ * drafts, takes no room.
+ */
+function lensSx(lens: Lens): SystemStyleObject<Theme> {
+  return {
+    "& .lens-risk:empty": { display: "none" },
+    ...(lens === "stability" ? { "& .lens-risk": { display: "none !important" } } : { "& .lens-stability": { display: "none !important" } }),
+    ...(lens === "risk" ? RISK_TINTS : {}),
+  };
+}
 
 /*
  * While a concept or persona is lit, the capabilities that use it or serve
  * them are lit on the canvas, rows and cards alike, in its color, so where it
- * matters can be seen at a glance. A style rule rather than props, so the
- * cards don't rebuild.
+ * matters can be seen at a glance.
  */
-function LitCapabilities({ ids, color }: { ids: string[]; color: "concept" | "persona" }) {
+function litSx(ids: string[], color: "concept" | "persona"): SystemStyleObject<Theme> | null {
   if (!ids.length) return null;
-  const rows = ids.map((id) => `li[data-capability="${CSS.escape(id)}"]`).join(",");
-  const cards = ids.map((id) => `.slot[data-capability="${CSS.escape(id)}"]`).join(",");
-  return (
-    <style>{`${rows}{background:var(--${color}-soft);box-shadow:inset 3px 0 var(--${color})}${cards}{border-radius:10px;outline:2px solid var(--${color});outline-offset:2px}`}</style>
-  );
+  const rows = ids.map((id) => `& li[data-capability="${CSS.escape(id)}"]`).join(",");
+  const cards = ids.map((id) => `& .slot[data-capability="${CSS.escape(id)}"]`).join(",");
+  return {
+    [rows]: { bgcolor: `${color}.soft`, boxShadow: (t: Theme) => `inset 3px 0 ${t.vars.palette[color].main}` },
+    [cards]: { borderRadius: "10px", outline: (t: Theme) => `2px solid ${t.vars.palette[color].main}`, outlineOffset: "2px" },
+  };
 }
 
 /*
  * What the peek has open is lit on the map just as it is while hovered: a
- * domain's region, a feature's cards, or a capability's rows and cards. A
- * style rule rather than props, so the cards don't rebuild. Its declarations
- * are the hover rules' in styles.css.
+ * domain's region, a feature's cards, or a capability's rows and cards. Its
+ * look is the hover rules' in FeatureMap and Canvas.
  */
-const LIT = "border-color:var(--accent);box-shadow:var(--lit-ring)";
-const LIT_ROW = "background-color:var(--lit-row);box-shadow:inset 3px 0 var(--accent)";
-function FocusStyle({ at }: { at: Pick | null }) {
+const LIT: SystemStyleObject<Theme> = { borderColor: "primary.main", boxShadow: (t) => t.vars.palette.lit.ring };
+const LIT_ROW: SystemStyleObject<Theme> = { bgcolor: "lit.row", boxShadow: (t) => `inset 3px 0 ${t.vars.palette.primary.main}` };
+function focusSx(at: Pick | null): SystemStyleObject<Theme> | null {
   if (!at || at.kind === "concept") return null;
-  if (at.kind === "persona") return <style>{`.slot[data-persona="${CSS.escape(at.id)}"]>.MuiCard-root{${LIT}}`}</style>;
   const id = CSS.escape(at.id);
-  const rule =
-    at.kind === "domain"
-      ? `.group[data-id="${CSS.escape(domainGroup(at.id))}"]{${LIT}}`
-      : at.kind === "feature"
-        ? `.slot[data-feature="${id}"]>.MuiCard-root{${LIT}}`
-        : `.slot[data-capability="${id}"]>.MuiCard-root{${LIT}}li[data-capability="${id}"]{${LIT_ROW}}`;
-  return <style>{rule}</style>;
+  if (at.kind === "persona") return { [`& .slot[data-persona="${id}"] > .MuiCard-root`]: LIT };
+  if (at.kind === "domain") return { [`& .group[data-id="${CSS.escape(domainGroup(at.id))}"]`]: LIT };
+  if (at.kind === "feature") return { [`& .slot[data-feature="${id}"] > .MuiCard-root`]: LIT };
+  return { [`& .slot[data-capability="${id}"] > .MuiCard-root`]: LIT, [`& li[data-capability="${id}"]`]: LIT_ROW };
 }
 
 /* While the map is filtered, the capabilities on a card left on it that nothing filtered to covers are faded. */
-function FilterStyle({ capabilities }: { capabilities: Set<string> }) {
-  const rows = [...capabilities].map((id) => `li[data-capability="${CSS.escape(id)}"]`).join(",");
-  return <style>{`li[data-capability]{opacity:.38}${rows ? `${rows}{opacity:1}` : ""}`}</style>;
+function fadedSx(capabilities: Set<string>): SystemStyleObject<Theme> {
+  const rows = [...capabilities].map((id) => `& li[data-capability="${CSS.escape(id)}"]`).join(",");
+  return { "& li[data-capability]": { opacity: 0.38 }, ...(rows ? { [rows]: { opacity: 1 } } : {}) };
 }
 
 /* Whether a pick names something showing. */
@@ -206,48 +274,88 @@ const LEGEND_RING = 14;
 
 /*
  * What the map shows, floating over the top left of the canvas: one view at
- * a time, with what each color means beside it.
+ * a time, as a segmented control, with what each color means beside it.
  */
 function LensBar({ lens, onLens }: { lens: Lens; onLens: (lens: Lens) => void }) {
   return (
-    <div className="panel lens-bar" data-no-pan role="group" aria-label="Show on the map">
-      <span className="lens-label">Show</span>
-      <span className="lens-choices">
+    <Box
+      sx={[panelSx, { display: "flex", flexWrap: "wrap", alignItems: "center", gap: "6px 10px", p: "4px 6px 4px 10px", maxWidth: "100%" }]}
+      data-no-pan
+      role="group"
+      aria-label="Show on the map"
+    >
+      <Box component="span" sx={{ fontSize: 12.5, color: "text.secondary" }}>
+        Show
+      </Box>
+      <Box
+        component="span"
+        sx={{
+          display: "inline-flex",
+          p: "2px",
+          gap: "2px",
+          borderRadius: "6px",
+          bgcolor: (t) => `color-mix(in srgb, ${t.vars.palette.text.primary} 5%, transparent)`,
+        }}
+      >
         {LENSES.map((l) => (
           <Tooltip key={l.id} title={l.tip}>
-            <button type="button" aria-pressed={lens === l.id} onClick={() => onLens(l.id)}>
+            <Box component="button" type="button" sx={choiceSx} aria-pressed={lens === l.id} onClick={() => onLens(l.id)}>
               {l.label}
-            </button>
+            </Box>
           </Tooltip>
         ))}
-      </span>
-      {lens === "risk" ? (
-        <span className="lens-legend">
-          {RISK_BANDS.map((b) => (
-            <span key={b.id} data-risk-band={b.id}>
-              <RiskRing percent={b.from + 25} size={LEGEND_RING} figure={false} />
-              {b.name}
-            </span>
-          ))}
-        </span>
-      ) : (
-        <span className="lens-legend">
-          {STABILITY_LEVEL_IDS.map((id, n) => (
-            <span key={id}>
-              <Ring percent={(n + 1) * 25} size={LEGEND_RING} sx={levelColor(id)} />
-              {MATURITY_BANDS[id]}
-            </span>
-          ))}
-        </span>
-      )}
-    </div>
+      </Box>
+      <Box component="span" sx={legendSx}>
+        {lens === "risk"
+          ? RISK_BANDS.map((b) => (
+              <span key={b.id} data-risk-band={b.id}>
+                <RiskRing percent={b.from + 25} size={LEGEND_RING} figure={false} />
+                {b.name}
+              </span>
+            ))
+          : STABILITY_LEVEL_IDS.map((id, n) => (
+              <span key={id}>
+                <Ring percent={(n + 1) * 25} size={LEGEND_RING} sx={levelColor(id)} />
+                {MATURITY_BANDS[id]}
+              </span>
+            ))}
+      </Box>
+    </Box>
   );
 }
 
+/* One of the lens bar's choices. */
+const choiceSx: SystemStyleObject<Theme> = {
+  font: "inherit",
+  fontSize: 12.5,
+  fontWeight: 550,
+  height: 26,
+  px: 1.25,
+  color: "text.secondary",
+  bgcolor: "transparent",
+  border: 0,
+  borderRadius: "4px",
+  cursor: "pointer",
+  "&:hover:not(:disabled)": { color: "text.primary" },
+  "&[aria-pressed=true]": { color: "primary.main", bgcolor: "background.paper", boxShadow: 1 },
+};
+
+/* What each color means. */
+const legendSx: SystemStyleObject<Theme> = {
+  display: "inline-flex",
+  flexWrap: "wrap",
+  alignItems: "center",
+  gap: "4px 12px",
+  fontSize: 12,
+  color: "text.secondary",
+  "& > span": { display: "inline-flex", alignItems: "center", gap: "5px" },
+};
+
 /*
- * The filters the map has, across the top of the canvas: each one's name,
- * which peeks at it, and a way to take it away, or all of them. Filters are
- * only set from the peek, for what it's showing.
+ * The filters the map has, as a row of its own across the top of the
+ * canvas, under the lens bar: each one's name, which peeks at it, and its ×,
+ * which takes it away, or all of them. Filters are only set from the peek,
+ * for what it's showing.
  */
 function FilterBar({
   state,
@@ -263,27 +371,87 @@ function FilterBar({
   onClear: () => void;
 }) {
   return (
-    <div className="panel filter-bar" data-no-pan role="region" aria-label="Filters">
+    <Box
+      sx={[
+        panelSx,
+        {
+          flex: "1 0 100%",
+          display: "flex",
+          flexWrap: "wrap",
+          alignItems: "center",
+          gap: 0.75,
+          p: "6px 10px",
+          borderColor: (t) => `color-mix(in srgb, ${t.vars.palette.primary.main} 35%, ${t.vars.palette.divider})`,
+        },
+      ]}
+      data-no-pan
+      role="region"
+      aria-label="Filters"
+    >
       <FilterListRoundedIcon sx={{ fontSize: 17, color: "text.secondary" }} />
-      <span className="filter-bar-label">Showing only</span>
+      <Box component="span" sx={{ fontSize: 12.5, color: "text.secondary", mr: "2px" }}>
+        Showing only
+      </Box>
       {filters.map((f) => (
-        <span key={`${f.kind}:${f.id}`} className="filter-chip">
+        <Box
+          key={`${f.kind}:${f.id}`}
+          component="span"
+          sx={{
+            display: "inline-flex",
+            alignItems: "center",
+            maxWidth: "100%",
+            borderRadius: 999,
+            bgcolor: "surface.accentSoft",
+            border: 1,
+            borderColor: (t) => `color-mix(in srgb, ${t.vars.palette.primary.main} 30%, transparent)`,
+          }}
+        >
           <Tooltip title={`${PICK_KINDS[f.kind].one}: peek at it`}>
-            <button type="button" className="filter-chip-name" onClick={() => onOpen(f)}>
+            <Box component="button" type="button" sx={chipNameSx} onClick={() => onOpen(f)}>
               {PICK_KINDS[f.kind].icon(15)}
               {pickName(state, f)}
-            </button>
+            </Box>
           </Tooltip>
-          <button type="button" className="filter-chip-remove" aria-label={`Stop filtering to ${pickName(state, f)}`} onClick={() => onRemove(f)}>
+          <Box component="button" type="button" sx={chipRemoveSx} aria-label={`Stop filtering to ${pickName(state, f)}`} onClick={() => onRemove(f)}>
             <CloseRoundedIcon sx={{ fontSize: 14 }} />
-          </button>
-        </span>
+          </Box>
+        </Box>
       ))}
       {filters.length > 1 ? (
-        <button type="button" className="link filter-bar-clear" onClick={onClear}>
+        <Box component="button" type="button" sx={[linkSx, { ml: 0.5, fontSize: 12.5 }]} onClick={onClear}>
           Clear filters
-        </button>
+        </Box>
       ) : null}
-    </div>
+    </Box>
   );
 }
+
+/* A filter's name, which peeks at it. */
+const chipNameSx: SystemStyleObject<Theme> = {
+  display: "inline-flex",
+  alignItems: "center",
+  gap: "5px",
+  minWidth: 0,
+  p: "3px 4px 3px 9px",
+  border: 0,
+  bgcolor: "transparent",
+  font: "inherit",
+  fontSize: 13,
+  fontWeight: 550,
+  color: "text.primary",
+  textAlign: "left",
+  cursor: "pointer",
+  "&:hover": { textDecoration: "underline" },
+};
+
+/* A filter's ×. */
+const chipRemoveSx: SystemStyleObject<Theme> = {
+  display: "inline-flex",
+  alignItems: "center",
+  p: "4px 7px 4px 3px",
+  border: 0,
+  bgcolor: "transparent",
+  color: "text.secondary",
+  cursor: "pointer",
+  "&:hover": { color: "text.primary" },
+};

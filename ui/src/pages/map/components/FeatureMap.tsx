@@ -1,4 +1,7 @@
 import type { MouseEvent } from "react";
+import Box from "@mui/material/Box";
+import type { Theme } from "@mui/material/styles";
+import type { SystemStyleObject } from "@mui/system";
 import { GROUP_HEAD, GROUP_PAD, type CanvasGroup, type CanvasItem, type Pos, type Size } from "./Canvas";
 import { CapabilityCard } from "./CapabilityCard";
 import { FeatureCard } from "./FeatureCard";
@@ -46,7 +49,7 @@ const ROW_RING = 22;
 /*
  * A capability's line on a card in a domain: its name, any contradiction, the
  * exposure from its gaps, and its level in that domain. `data` is what the map's
- * risk lens colors its row or card by: that risk's band, as map.css reads it.
+ * risk lens colors its row or card by: that risk's band, as View's lens styles read it.
  * Clicking it opens it in the peek.
  */
 function line(state: DocketState, c: Capability, domain: string) {
@@ -106,7 +109,7 @@ export function mapItems(state: DocketState, onOpen: (pick: Pick) => void, cards
     const ownProjects = state.projects.length > 1 && !(projects.length === domainProjects.size && projects.every((id) => domainProjects.has(id)));
     if (!ownProjects && !problems.length && !elsewhere.length) return null;
     return (
-      <span className="card-project">
+      <Box component="span" sx={{ display: "flex", alignItems: "center", gap: "5px", m: "0 0 6px 2px", color: "text.disabled", fontSize: 12, fontWeight: 500 }}>
         {ownProjects ? (
           <>
             <ProjectIcon size={13} />
@@ -115,14 +118,14 @@ export function mapItems(state: DocketState, onOpen: (pick: Pick) => void, cards
         ) : null}
         {elsewhere.length ? (
           <Tooltip title="This feature spans domains: each has its part">
-            <span className="card-elsewhere">
+            <Box component="span" sx={{ display: "inline-flex", alignItems: "center", gap: "3px", cursor: "help" }}>
               <DomainIcon size={13} />
               Also in {elsewhere.map((p) => domainName(state, p.domain)).join(", ")}
-            </span>
+            </Box>
           </Tooltip>
         ) : null}
         <ContradictionHint messages={problems} />
-      </span>
+      </Box>
     );
   };
   const items: CanvasItem[] = state.domains.flatMap((domain) => [
@@ -134,10 +137,10 @@ export function mapItems(state: DocketState, onOpen: (pick: Pick) => void, cards
         {
           id: capabilityCard(c.id, domain.id),
           node: (
-            <div className="slot" data-capability={c.id} {...data} onClick={opener(onOpen, { kind: "capability", id: c.id })}>
+            <Box className="slot" sx={slotSx} data-capability={c.id} {...data} onClick={opener(onOpen, { kind: "capability", id: c.id })}>
               {header(c, "capability", domain.id)}
               <CapabilityCard grip {...row} />
-            </div>
+            </Box>
           ),
         },
       ];
@@ -151,7 +154,7 @@ export function mapItems(state: DocketState, onOpen: (pick: Pick) => void, cards
         {
           id: featureCard(feature.id, domain.id),
           node: (
-            <div className="slot" data-feature={feature.id} onClick={opener(onOpen, { kind: "feature", id: feature.id })}>
+            <Box className="slot" sx={slotSx} data-feature={feature.id} onClick={opener(onOpen, { kind: "feature", id: feature.id })}>
               {header(feature, "feature", domain.id)}
               <FeatureCard
                 grip
@@ -164,14 +167,14 @@ export function mapItems(state: DocketState, onOpen: (pick: Pick) => void, cards
                 })}
                 footer={
                   concepts.length ? (
-                    <span className="feature-concepts">
+                    <Box component="span" sx={{ display: "flex", alignItems: "flex-start", gap: 1, "& > svg": { mt: "3px" } }}>
                       <ConceptIcon size={15} />
                       <ConceptChips concepts={concepts} onOpen={(id) => onOpen({ kind: "concept", id })} />
-                    </span>
+                    </Box>
                   ) : undefined
                 }
               />
-            </div>
+            </Box>
           ),
         },
       ];
@@ -181,14 +184,30 @@ export function mapItems(state: DocketState, onOpen: (pick: Pick) => void, cards
     items.push({
       id: personaCard(p.id),
       node: (
-        <div className="slot persona-slot" data-persona={p.id} onClick={opener(onOpen, { kind: "persona", id: p.id })}>
+        <Box className="slot" sx={[slotSx, { width: PERSONA_SLOT }]} data-persona={p.id} onClick={opener(onOpen, { kind: "persona", id: p.id })}>
           <PersonaCard state={state} persona={p} />
-        </div>
+        </Box>
       ),
     });
   }
   return cards ? items.filter((item) => cards.has(item.id)) : items;
 }
+
+/*
+ * A card's place on the map, `slot` to the page's rules for what's lit. What
+ * can be clicked lights up while hovered, the same as while it's open in the
+ * peek (focusSx, in View): a card, or a capability's row in one, on its own.
+ * A row's grip, buttons and marks keep their own clicks.
+ */
+const slotSx: SystemStyleObject<Theme> = {
+  width: SLOT,
+  "& > .MuiCard-root, & li[data-capability]": { transition: "border-color 120ms, box-shadow 120ms, background-color 120ms" },
+  "&:hover:not(:has(li[data-capability]:hover, button:hover)) > .MuiCard-root": {
+    borderColor: "primary.main",
+    boxShadow: (t) => t.vars.palette.lit.ring,
+  },
+  "& li[data-capability]:hover": { bgcolor: "lit.row", boxShadow: (t) => `inset 3px 0 ${t.vars.palette.primary.main}` },
+};
 
 /* A domain's cards on the map: its capabilities in no feature, then its parts of features. */
 const cardsIn = (domain: Domain) => [
@@ -217,19 +236,24 @@ export function mapGroups(state: DocketState, onOpen: (pick: Pick) => void): Can
       label: (
         <>
           <Tooltip title="Domain">
-            <span className="area-text">
+            <Box component="span" sx={{ display: "flex", alignItems: "center", gap: 0.75, minWidth: 0 }}>
               <DomainIcon size={15} />
-              <span className="area-name">{domain.name}</span>
+              <Box component="span" sx={[ellipsisSx, { flex: "0 1 auto", fontSize: 15, fontWeight: 700, color: "text.primary" }]}>
+                {domain.name}
+              </Box>
               {state.projects.length > 1 ? (
-                <span className="area-projects">{[...new Set(domain.from.map((f) => f.project))].map((id) => projectName(state, id)).join(" + ")}</span>
+                /* The projects that define it, when several are showing. */
+                <Box component="span" sx={[ellipsisSx, { flex: "0 3 auto", fontSize: 12, color: "text.disabled" }]}>
+                  {[...new Set(domain.from.map((f) => f.project))].map((id) => projectName(state, id)).join(" + ")}
+                </Box>
               ) : null}
-            </span>
+            </Box>
           </Tooltip>
-          <span className="area-marks" data-no-pan>
+          <Box component="span" sx={{ display: "contents", "& > .lens-risk": areaEndSx }} data-no-pan>
             <AreaMarks risk={domain.readiness.gaps} exposure={domain.exposure} of={domain.name} />
-          </span>
+          </Box>
           {domain.maturity !== null ? (
-            <span className="area-maturity lens-stability" data-no-pan>
+            <Box component="span" className="lens-stability" sx={areaEndSx} data-no-pan>
               <MaturityRing
                 progress={domain.maturity}
                 subject="domain"
@@ -238,13 +262,18 @@ export function mapGroups(state: DocketState, onOpen: (pick: Pick) => void): Can
                 size={24}
                 spread={domain.features.map((id) => partOf(find(state.features, id), domain.id)?.band ?? null)}
               />
-            </span>
+            </Box>
           ) : null}
         </>
       ),
     };
   });
 }
+
+const ellipsisSx: SystemStyleObject<Theme> = { minWidth: 0, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" };
+
+/* At the right of the domain's line, as what the map shows sits at the right of every card and row: only the lens's own shows, so only it takes the room. */
+const areaEndSx: SystemStyleObject<Theme> = { flex: "none", ml: "auto", cursor: "default" };
 
 /*
  * What the map shows about a feature's or domain's capabilities beyond

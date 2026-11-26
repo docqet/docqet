@@ -12,7 +12,7 @@ export function ContradictionHint({ messages, tip = true }: { messages: string[]
   if (!messages.length) return null;
   return (
     <Tooltip title={tip ? messages.join("\n") : undefined}>
-      <WarningAmberRoundedIcon aria-label={messages.join(" ")} sx={{ flex: "none", fontSize: 15, color: "var(--warning)" }} />
+      <WarningAmberRoundedIcon aria-label={messages.join(" ")} sx={{ flex: "none", fontSize: 15, color: "warning.main" }} />
     </Tooltip>
   );
 }
