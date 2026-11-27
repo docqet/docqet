@@ -28,7 +28,7 @@ This repository records what its software is meant to do with Docqet.
 `docqet.yaml` marks it. Its docs, usually in `docqet/`, are the Markdown files
 whose frontmatter has `docqet`. Problem docs, personas and problems, say why
 the software exists, in the words of the people it's for. Product docs say
-what it should do, in the domain's words. Technical docs, mechanisms and
+what it should do, in the business's words. Technical docs, mechanisms and
 components, say how it's meant to be built, in the code's words. Comments in code, tests and config
 point back at them: `docqet:implements`, `docqet:verifies`, `docqet:gap` and
 `docqet:tradeoff`. Keep all of it true as you work.

@@ -9,7 +9,7 @@ import (
 )
 
 // ImprovementKind is what an improvement does: promote a capability to its
-// next level, promote every capability in a feature or a domain to its next
+// next level, promote every capability in a feature or an area to its next
 // level, close a gap, or answer a rated decision.
 type ImprovementKind string
 
@@ -17,7 +17,7 @@ type ImprovementKind string
 const (
 	Promote        ImprovementKind = "promote"
 	PromoteFeature ImprovementKind = "promote-feature"
-	PromoteDomain  ImprovementKind = "promote-domain"
+	PromoteArea    ImprovementKind = "promote-area"
 	Close          ImprovementKind = "close"
 	Answer         ImprovementKind = "answer"
 )
@@ -27,7 +27,7 @@ const (
 // be: whether it's worth doing is for people to judge.
 //
 // A promotion names the capability and the level it would reach. Promoting
-// a feature or a domain names it, and takes each of its capabilities to its
+// a feature or an area names it, and takes each of its capabilities to its
 // own next level. Closing a gap names the gap,
 // and answering a decision the decision. Capabilities is where it changes
 // something among those counted: those promoted, or those the gap or
@@ -40,7 +40,7 @@ type Improvement struct {
 	Capability   *combine.Capability
 	To           string
 	Feature      *combine.Feature
-	Domain       *combine.Domain
+	Area         *combine.Area
 	Gap          *combine.Gap
 	Decision     *HeldDecision
 	Capabilities []*combine.Capability
@@ -59,7 +59,7 @@ type figures struct {
 
 // figuresOf returns the figures of some started capabilities' parts, or
 // false with none started.
-func figuresOf(parts []capabilityPart) (figures, bool) {
+func figuresOf(parts []capabilityShare) (figures, bool) {
 	score, matWeights, exposed, weights := 0.0, 0.0, 0.0, 0.0
 	for _, c := range parts {
 		score += c.score * c.matWeight
@@ -81,7 +81,7 @@ const gainsNothing = 1e-9
 // improve returns an improvement with what readiness, maturity and exposure
 // would be once some capabilities' parts are changed, and how much it
 // gains on base, or false when it would raise nothing.
-func improve(i Improvement, base figures, changed []capabilityPart) (Improvement, bool) {
+func improve(i Improvement, base figures, changed []capabilityShare) (Improvement, bool) {
 	f, ok := figuresOf(changed)
 	if !ok {
 		return i, false
@@ -99,20 +99,20 @@ func improve(i Improvement, base figures, changed []capabilityPart) (Improvement
 
 // promotedPart returns a started capability's part at its next level, or
 // false at GA.
-func promotedPart(p *combine.Product, part capabilityPart) (capabilityPart, bool) {
+func promotedPart(p *combine.Product, part capabilityShare) (capabilityShare, bool) {
 	next := NextLevel(part.capability.Stability)
 	if next == "" {
-		return capabilityPart{}, false
+		return capabilityShare{}, false
 	}
 	c := *part.capability
 	c.Stability = next
-	return partOfCapability(p, &c)
+	return shareOfCapability(p, &c)
 }
 
 // promoteSeveral returns promoting each of some capabilities, by where they
 // are in parts, to its next level, as one improvement, or false when fewer
 // than two can be promoted or it would raise nothing.
-func promoteSeveral(p *combine.Product, parts []capabilityPart, base figures, i Improvement, these []int) (Improvement, bool) {
+func promoteSeveral(p *combine.Product, parts []capabilityShare, base figures, i Improvement, these []int) (Improvement, bool) {
 	changed := slices.Clone(parts)
 	for _, n := range these {
 		if promoted, ok := promotedPart(p, parts[n]); ok {
@@ -140,9 +140,9 @@ func promoteSeveral(p *combine.Product, parts []capabilityPart, base figures, i 
 // anywhere raises nothing yet, and an unrated decision never does.
 // Promoting several at once is worked out with the areas, in areasOf.
 // docqet:implements capability:improvements
-func improvementsOf(p *combine.Product, parts []capabilityPart, base figures) []Improvement {
+func improvementsOf(p *combine.Product, parts []capabilityShare, base figures) []Improvement {
 	var out []Improvement
-	add := func(i Improvement, changed []capabilityPart) {
+	add := func(i Improvement, changed []capabilityShare) {
 		if i, ok := improve(i, base, changed); ok {
 			out = append(out, i)
 		}

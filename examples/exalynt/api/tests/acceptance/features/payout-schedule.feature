@@ -1,7 +1,7 @@
 Feature: Payout schedule
   Earnings wait to be released, then go to each payee's payout account.
 
-  # docqet:verifies rule:expected-pay-visible-from-assignment@pay
+  # docqet:verifies rule:expected-pay-visible-from-assignment
   Rule: From assignment, people can see what a block will pay them
 
     Example: The engineer
@@ -16,7 +16,7 @@ Feature: Payout schedule
       Then Lena sees $175 to come as team lead on Ada's block
       And Ben sees $105 to come as team support on Ada's block
 
-  # docqet:verifies rule:people-see-only-their-own-earnings@pay
+  # docqet:verifies rule:people-see-only-their-own-earnings
   Rule: People see only their own earnings
 
     Example: A lead reads their earnings
@@ -25,7 +25,7 @@ Feature: Payout schedule
       When Lena reads her earnings
       Then she sees her team-lead share and not Ada's engineer share
 
-  # docqet:verifies rule:each-earning-shows-where-it-stands@pay
+  # docqet:verifies rule:each-earning-shows-where-it-stands
   Rule: Each earning shows where it stands, and earnings on hold say what to fix
 
     Example: Not yet fulfilled
@@ -51,7 +51,7 @@ Feature: Payout schedule
       When Ada reads her earnings
       Then her earnings from the block are on hold, saying what needs fixing
 
-  # docqet:verifies rule:earnings-are-paid-out-when-approved@pay
+  # docqet:verifies rule:earnings-are-paid-out-when-approved
   Rule: Exalynt aims for weekly payouts, each covering all unsent earnings fulfilled by the end of the previous Sunday, UTC
 
     Example: Fulfilled in time
@@ -76,7 +76,7 @@ Feature: Payout schedule
       When an admin reads the payouts waiting to be released
       Then Ada is due $2,100
 
-  # docqet:verifies rule:admins-release-payouts@pay
+  # docqet:verifies rule:admins-release-payouts
   Rule: An admin sees and releases each run, and nothing is sent without that
 
     Example: Before release
@@ -89,7 +89,7 @@ Feature: Payout schedule
       When an admin releases the payouts
       Then a payout of $2,100 is sent to Ada
 
-  # docqet:verifies rule:one-payout-per-payee-per-run@pay
+  # docqet:verifies rule:one-payout-per-payee-per-run
   Rule: A payee gets one payout per run, covering any number of earnings
 
     Example: Two blocks and team support
@@ -99,7 +99,7 @@ Feature: Payout schedule
       Then Ada receives one payout of $4,305
       And each line shows its block, client, basis, percentage, and amount
 
-  # docqet:verifies rule:earnings-are-sent-only-once@pay
+  # docqet:verifies rule:earnings-are-sent-only-once
   Rule: Earnings are only ever sent once
 
     Example: Releasing again
@@ -107,7 +107,7 @@ Feature: Payout schedule
       When an admin releases the payouts
       Then Ada receives no second payout for those earnings
 
-  # docqet:verifies rule:payouts-go-to-the-current-account@pay
+  # docqet:verifies rule:payouts-go-to-the-current-account
   Rule: A payout goes to the payee's account when it's sent
 
     Example: The account changes before release
@@ -121,7 +121,7 @@ Feature: Payout schedule
       When Ada changes her payout account
       Then the sent payout still shows the account it went to
 
-  # docqet:verifies rule:how-a-payouts-status-progresses@pay
+  # docqet:verifies rule:how-a-payouts-status-progresses
   Rule: A payout is Processing once sent, Paid when the payment provider posts it, and Failed if it's returned
 
     Example: Sent
@@ -139,7 +139,7 @@ Feature: Payout schedule
       When the payment provider returns it because the bank refused it
       Then the payout is Failed and says why
 
-  # docqet:verifies rule:payouts-are-in-us-dollars@pay
+  # docqet:verifies rule:payouts-are-in-us-dollars
   Rule: Payouts are sent in US dollars
 
     Example: A payee abroad
@@ -147,7 +147,7 @@ Feature: Payout schedule
       When an admin releases the payouts
       Then the payout is sent in US dollars
 
-  # docqet:verifies rule:earnings-show-payout-outcome@pay
+  # docqet:verifies rule:earnings-show-payout-outcome
   Rule: Earnings show whether they're waiting, processing, paid, or failed
 
     Scenario Outline: Earnings follow their payout
@@ -166,7 +166,7 @@ Feature: Payout schedule
       When Ada reads her earnings
       Then her earnings show waiting
 
-  # docqet:verifies rule:who-sees-payout-status@pay
+  # docqet:verifies rule:who-sees-payout-status
   Rule: People see their own payouts, and an admin sees everyone's
 
     Example: Another engineer
@@ -179,7 +179,7 @@ Feature: Payout schedule
       When an admin reads the payouts that have been sent
       Then they see Ada's payout
 
-  # docqet:verifies rule:partnerships-earn-without-a-payout-account@pay rule:earnings-wait-for-a-valid-account@pay
+  # docqet:verifies rule:partnerships-earn-without-a-payout-account rule:earnings-wait-for-a-valid-account
   Rule: Earnings wait while their payee has no valid account, then go in the first payout after it's valid
 
     Example: No account
@@ -200,7 +200,7 @@ Feature: Payout schedule
       When an admin reads the payouts waiting to be released
       Then Grace's partnership's earnings are listed on hold, with why
 
-  # docqet:verifies rule:failed-payouts-are-sent-again@pay
+  # docqet:verifies rule:failed-payouts-are-sent-again
   Rule: A failed payout's earnings go out in a new payout, and the failed one says why and links to it
 
     Example: Sent again
@@ -210,7 +210,7 @@ Feature: Payout schedule
       Then Ada receives a new payout of those earnings
       And the failed payout says why it failed and links to the new one
 
-  # docqet:verifies rule:canceled-payouts-leave-earnings-unsent@pay
+  # docqet:verifies rule:canceled-payouts-leave-earnings-unsent
   Rule: A payout canceled before any money leaves is Canceled, and its earnings stay unsent
 
     Example: Canceled by the payment provider
@@ -219,7 +219,7 @@ Feature: Payout schedule
       Then the payout is Canceled
       And its earnings are waiting to be sent again
 
-  # docqet:verifies rule:no-minimum-payout@pay
+  # docqet:verifies rule:no-minimum-payout
   Rule: There's no minimum payout
 
     Example: A small amount
@@ -227,7 +227,7 @@ Feature: Payout schedule
       When an admin releases the payouts
       Then Ada receives a payout of $105
 
-  # docqet:verifies rule:earnings-are-paid-after-leaving@pay
+  # docqet:verifies rule:earnings-are-paid-after-leaving
   Rule: Earnings are still paid after someone leaves
 
     Example: Left the team
@@ -236,7 +236,7 @@ Feature: Payout schedule
       When an admin releases the payouts
       Then a payout of $2,100 is sent to Ada
 
-  # docqet:verifies rule:sent-payouts-never-change@pay
+  # docqet:verifies rule:sent-payouts-never-change
   Rule: What a sent payout lists never changes
 
     Example: The payout basis changes afterward
@@ -244,7 +244,7 @@ Feature: Payout schedule
       When the payout basis per capacity unit changes
       Then Ada's payout still lists $2,100
 
-  # docqet:verifies rule:earnings-belong-to-the-partnership@pay rule:partnership-earnings-are-paid-separately@pay
+  # docqet:verifies rule:earnings-belong-to-the-partnership rule:partnership-earnings-are-paid-separately
   Rule: A partnership's earnings are its own, paid to its payout account and never its manager's
 
     Example: The manager is also an engineer
@@ -255,7 +255,7 @@ Feature: Payout schedule
       Then a payout of $175 is sent to Grace's partnership, to its own account
       And Grace receives no payout for it
 
-  # docqet:verifies rule:partners-see-only-their-partnerships-payouts@pay
+  # docqet:verifies rule:partners-see-only-their-partnerships-payouts
   Rule: A partner sees only their own partnership's payouts, and an admin sees them without the account
 
     Example: Two partnerships

@@ -242,7 +242,7 @@ type Scored struct {
 }
 
 // Across is what's at stake across some gaps, as in a capability, feature,
-// domain, persona or component: each gap scored there, riskiest first, the
+// area, persona or component: each gap scored there, riskiest first, the
 // highest of those and its verdict, and how many fall in each verdict. Score
 // is nil, and Verdict "", with no gaps.
 type Across struct {

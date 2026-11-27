@@ -1,6 +1,6 @@
 # <picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/logo/docqet-lockup-dark.svg"><img src="docs/assets/logo/docqet-lockup-light.svg" alt="docqet" height="44"></picture>
 
-<a href="docqet/domains/authoring/concepts/stability-level.md"><picture>
+<a href="docqet/concepts/stability-level.md"><picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/assets/stability-prototype-dark.svg">
   <img src="docs/assets/stability-prototype-light.svg" alt="Stability: Prototype · Exploring" height="18">
 </picture></a>
@@ -34,7 +34,7 @@ software is meant to do: its capabilities, the rules they follow, the people
 they serve, how stable each one is, and the gaps and tradeoffs you know about.
 
 - **Intention is declared.** Each capability, rule or gap is a small Markdown
-  doc in the repository, in the domain's words ("a room can't be
+  doc in the repository, in the business's words ("a room can't be
   double-booked", not a database constraint), changed in the same commit as
   the code.
 - **Evidence is linked.** Code and tests point back at what they implement
@@ -81,8 +81,9 @@ docqet check                              # exit 1 on any finding but advisory o
 
 ## Learn more
 
-- **The concepts.** The [Authoring](docqet/domains/authoring/domain.md) and
-  [Understanding](docqet/domains/understanding/domain.md) domains define the
+- **The concepts.** The [Authoring](docqet/areas/authoring.md) and
+  [Understanding](docqet/areas/understanding.md) areas, and their
+  [concepts](docqet/concepts/), define the
   format: capabilities, rules, gaps, stability levels, maturity, readiness and
   the rest.
 - **[Principles](docs/principles.md):** how Docqet supports software

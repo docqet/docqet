@@ -9,7 +9,6 @@ description: >-
 role: Client Admin
 title: Director of operations
 image: https://randomuser.me/api/portraits/women/44.jpg
-initiatives: [initiative:mvp, initiative:notifications, initiative:conversation-spaces, initiative:operations-and-ownership]
 ---
 
 ## Needs

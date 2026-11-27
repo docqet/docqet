@@ -3,7 +3,7 @@ Feature: Conversations
   client's space, with the messaging provider, in conversations they start
   by hand, each on a subject of its own. What's said stays with the provider.
 
-  # docqet:verifies rule:conversations-start-by-hand-on-a-subject@capacity
+  # docqet:verifies rule:conversations-start-by-hand-on-a-subject
   Rule: Conversations start by hand, on a subject
 
     Example: A block bought has none
@@ -21,7 +21,7 @@ Feature: Conversations
       When Ada starts a conversation on it about "Test data"
       Then the block has conversations about "Rate file format" and "Test data"
 
-  # docqet:verifies rule:a-subject-is-used-once-on-a-block@capacity
+  # docqet:verifies rule:a-subject-is-used-once-on-a-block
   Rule: A subject is used once on a block
 
     Example: The same subject again
@@ -35,7 +35,7 @@ Feature: Conversations
       Then the block has a conversation about "Rate file format"
       And the block's conversations are only those about "Rate file format"
 
-  # docqet:verifies rule:none-start-on-a-fulfilled-block@capacity
+  # docqet:verifies rule:none-start-on-a-fulfilled-block
   Rule: None start on a fulfilled block
 
     Example: Fulfilled
@@ -43,7 +43,7 @@ Feature: Conversations
       When Ada starts a conversation on it about "Follow-up"
       Then it's refused as fulfilled
 
-  # docqet:verifies rule:anyone-at-the-client-or-on-a-team-supporting-it-starts-its-blocks-conversations@capacity
+  # docqet:verifies rule:anyone-at-the-client-or-on-a-team-supporting-it-starts-its-blocks-conversations
   Rule: Anyone at the client, or on a team supporting it, starts its blocks' conversations
 
     Example: Someone at the client
@@ -61,7 +61,7 @@ Feature: Conversations
       When Cy, on a team that doesn't support Acme, starts a conversation on it about "Kickoff"
       Then it isn't found
 
-  # docqet:verifies rule:a-blocks-conversations-are-for-its-client-and-the-teams-supporting-it@capacity
+  # docqet:verifies rule:a-blocks-conversations-are-for-its-client-and-the-teams-supporting-it
   Rule: A block's conversations are for its client and the teams supporting it
 
     Example: The client

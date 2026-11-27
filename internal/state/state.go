@@ -4,7 +4,7 @@
 package state
 
 // Version is the version of the state format this docqet writes and reads.
-const Version = "0.4"
+const Version = "0.5"
 
 // State is one project's state, indexed from its docs and annotations.
 type State struct {
@@ -14,7 +14,7 @@ type State struct {
 	Commit       string       `json:"commit"`
 	IndexedAt    string       `json:"indexedAt"`
 	Summary      Summary      `json:"summary"`
-	Domains      []Domain     `json:"domains"`
+	Areas        []Area       `json:"areas"`
 	Features     []Feature    `json:"features"`
 	Personas     []Persona    `json:"personas"`
 	Problems     []Problem    `json:"problems"`
@@ -39,7 +39,7 @@ type Ident struct {
 
 // Summary is the state at a glance.
 type Summary struct {
-	Domains      int             `json:"domains"`
+	Areas        int             `json:"areas"`
 	Features     int             `json:"features"`
 	Personas     int             `json:"personas"`
 	Problems     int             `json:"problems"`
@@ -95,34 +95,36 @@ type Evidence struct {
 	Verifies   []Place `json:"verifies"`
 }
 
-// Domain is a domain doc.
-type Domain struct {
+// Area is an area doc: a plain grouping of features. Its features, those
+// that name it, are worked out, not declared.
+type Area struct {
 	ID          string     `json:"id"`
 	File        string     `json:"file"`
 	Name        string     `json:"name"`
 	Description string     `json:"description"`
+	Features    []string   `json:"features"`
 	Decisions   []Decision `json:"decisions"`
 	Body        string     `json:"body"`
 }
 
-// Feature is a feature doc, in one domain.
+// Feature is a feature doc. It names the area it's in, if any. Its
+// capabilities, those that name it, are worked out, not declared.
 type Feature struct {
 	ID           string     `json:"id"`
-	Domain       string     `json:"domain"`
 	File         string     `json:"file"`
 	Name         string     `json:"name"`
 	Description  string     `json:"description"`
+	Area         *string    `json:"area"`
 	Capabilities []string   `json:"capabilities"`
 	Tradeoffs    []string   `json:"tradeoffs"`
 	Decisions    []Decision `json:"decisions"`
 	Body         string     `json:"body"`
 }
 
-// Capability is a capability doc, in one domain. Its personas are worked out
-// from the problems it solves, not declared.
+// Capability is a capability doc. It names the feature it's in, if any. Its
+// personas are worked out from the problems it solves, not declared.
 type Capability struct {
 	ID          string     `json:"id"`
-	Domain      string     `json:"domain"`
 	File        string     `json:"file"`
 	Name        string     `json:"name"`
 	Description string     `json:"description"`
@@ -140,10 +142,9 @@ type Capability struct {
 	Body        string     `json:"body"`
 }
 
-// Rule is a rule doc, in one domain.
+// Rule is a rule doc. Its ID is one across the product.
 type Rule struct {
 	ID           string   `json:"id"`
-	Domain       string   `json:"domain"`
 	File         string   `json:"file"`
 	Name         string   `json:"name"`
 	Capabilities []string `json:"capabilities"`
@@ -154,10 +155,9 @@ type Rule struct {
 	Body         string   `json:"body"`
 }
 
-// Concept is a concept doc, in one domain.
+// Concept is a concept doc. Its ID is one across the product.
 type Concept struct {
 	ID           string      `json:"id"`
-	Domain       string      `json:"domain"`
 	File         string      `json:"file"`
 	Name         string      `json:"name"`
 	Description  string      `json:"description"`
@@ -175,7 +175,8 @@ type Confusion struct {
 	Summary string  `json:"summary"`
 }
 
-// Persona is a persona doc. Personas are in no domain.
+// Persona is a persona doc. Its initiatives, those that name it, are worked
+// out.
 type Persona struct {
 	ID           string   `json:"id"`
 	File         string   `json:"file"`
@@ -192,7 +193,7 @@ type Persona struct {
 }
 
 // Problem is a problem doc: a pain point the personas it names share, said
-// without naming the software. Problems are in no domain. Its capabilities,
+// without naming the software. Its capabilities,
 // those that solve it, are worked out, not declared.
 type Problem struct {
 	ID           string   `json:"id"`
@@ -205,7 +206,7 @@ type Problem struct {
 	Body         string   `json:"body"`
 }
 
-// Initiative is an initiative doc. Initiatives are in no domain.
+// Initiative is an initiative doc. It names the personas its work is for.
 type Initiative struct {
 	ID           string   `json:"id"`
 	File         string   `json:"file"`
@@ -218,8 +219,8 @@ type Initiative struct {
 }
 
 // Constraint is a constraint doc: something imposed from outside that any
-// solution must respect, such as a law, a contract or a physical fact.
-// Constraints are in no domain. The rules and mechanisms that respect it are
+// solution must respect, such as a law, a contract or a physical fact. The
+// rules and mechanisms that respect it are
 // worked out, not declared.
 type Constraint struct {
 	ID          string   `json:"id"`
@@ -269,7 +270,6 @@ type Component struct {
 // its doc's reference and its key: capability:room-booking#needs-a-mouse.
 type Gap struct {
 	ID          string   `json:"id"`
-	Domain      string   `json:"domain,omitempty"`
 	Affects     []string `json:"affects"`
 	Impact      string   `json:"impact"`
 	Likelihood  string   `json:"likelihood"`
@@ -283,7 +283,6 @@ type Gap struct {
 // component.
 type Tradeoff struct {
 	ID          string   `json:"id"`
-	Domain      string   `json:"domain,omitempty"`
 	Affects     []string `json:"affects"`
 	Name        string   `json:"name"`
 	Description string   `json:"description"`
@@ -293,7 +292,7 @@ type Tradeoff struct {
 }
 
 // Finding is something wrong in the docs or annotations. A finding about a
-// doc names it as its subject, with its domain. One found reading files, such
+// doc names it as its subject. One found reading files, such
 // as an annotation naming nothing, or frontmatter that isn't valid YAML, has
 // no subject, and says where it is with File and Line instead.
 type Finding struct {
@@ -301,7 +300,6 @@ type Finding struct {
 	Subject      string   `json:"subject"`
 	Capabilities []string `json:"capabilities"`
 	Message      string   `json:"message"`
-	Domain       string   `json:"domain,omitempty"`
 	File         string   `json:"file,omitempty"`
 	Line         int      `json:"line,omitempty"`
 }

@@ -150,7 +150,7 @@ components:
         A project's state, as `docqet index` writes it to `state.json`:
         every doc's entry, its evidence, reverse links and findings, and the
         rubric it was indexed against. The
-        [state concept](https://github.com/docqet/docqet/blob/main/docqet/domains/authoring/concepts/state.md)
+        [state concept](https://github.com/docqet/docqet/blob/main/docqet/concepts/state.md)
         describes every field.
       required: [docqet, project, commit, indexedAt, summary, findings, rubric]
       additionalProperties: true
@@ -158,7 +158,7 @@ components:
         docqet:
           type: string
           description: The version of the state format.
-          example: "0.4"
+          example: "0.5"
         project:
           type: object
           properties:
@@ -200,8 +200,6 @@ components:
           items:
             type: string
         message:
-          type: string
-        domain:
           type: string
         file:
           type: string
@@ -326,7 +324,7 @@ components:
       description: >-
         How ready people can rely on some capabilities being, with its
         improvements: what would raise it, most first.
-      required: [percent, band, maturity, exposure, levels, gaps, started, notStarted, improvements, areas]
+      required: [percent, band, maturity, exposure, levels, gaps, started, notStarted, improvements, parts]
       properties:
         percent:
           type: integer
@@ -364,33 +362,33 @@ components:
           description: What would raise it, one thing at a time, most first. Only what would raise it is listed.
           items:
             $ref: "#/components/schemas/Improvement"
-        areas:
+        parts:
           type: array
           description: >-
             Where it could rise, one level below what it's of, by how far,
-            most first: a product's domains, a domain's, persona's or
+            most first: a product's areas, an area's, persona's or
             initiative's features, a feature's capabilities, or a
             capability's steps, with each gap or decision that spans more
             than one of them. Only what would raise it is listed.
           items:
-            $ref: "#/components/schemas/Area"
+            $ref: "#/components/schemas/Part"
 
-    Area:
+    Part:
       type: object
       description: >-
-        Somewhere a readiness could rise, with how far: a domain, feature or
+        Somewhere a readiness could rise, with how far: an area, feature or
         capability, or one step. Potentials overlap, a capability can be in
-        more than one area, so they don't add up.
-      required: [kind, domain, feature, capability, capabilities, potential, next]
+        more than one part, so they don't add up.
+      required: [kind, area, feature, capability, capabilities, potential, next]
       properties:
         kind:
           type: string
-          enum: [domain, feature, capability, gap, decision, promotion]
+          enum: [area, feature, capability, gap, decision, promotion]
           example: feature
-        domain:
+        area:
           type: string
           nullable: true
-          description: The domain it is, null otherwise.
+          description: The area it is, null otherwise.
           example: guest-stays
         feature:
           type: string
@@ -425,13 +423,13 @@ components:
       description: >-
         Something that would raise a readiness, and by how much: promoting a
         capability to its next level, promoting every capability in a feature
-        or a domain to its next level, closing a gap, or answering a rated
+        or an area to its next level, closing a gap, or answering a rated
         decision. It's what could be done, not what has to be.
-      required: [kind, capability, from, to, feature, domain, gap, decision, capabilities, readiness, maturity, exposure, gain, band]
+      required: [kind, capability, from, to, feature, area, gap, decision, capabilities, readiness, maturity, exposure, gain, band]
       properties:
         kind:
           type: string
-          enum: [promote, promote-feature, promote-domain, close, answer]
+          enum: [promote, promote-feature, promote-area, close, answer]
           example: close
         capability:
           type: string
@@ -453,10 +451,10 @@ components:
           nullable: true
           description: The feature whose capabilities a promote-feature promotes, each to its next level, null otherwise.
           example: front-desk
-        domain:
+        area:
           type: string
           nullable: true
-          description: The domain whose capabilities a promote-domain promotes, each to its next level, null otherwise.
+          description: The area whose capabilities a promote-area promotes, each to its next level, null otherwise.
           example: guest-stays
         gap:
           type: string
@@ -471,7 +469,7 @@ components:
             - $ref: "#/components/schemas/HeldDecision"
         capabilities:
           type: array
-          description: Where it changes something among those counted, and for a promote-feature or promote-domain, the capabilities it promotes.
+          description: Where it changes something among those counted, and for a promote-feature or promote-area, the capabilities it promotes.
           items:
             type: string
         readiness:
@@ -539,7 +537,7 @@ components:
             "on":
               type: string
               description: >-
-                The doc it's on, as a reference: `domain:`, `feature:`,
+                The doc it's on, as a reference: `area:`, `feature:`,
                 `capability:`, `mechanism:` or `component:`.
               example: capability:room-booking
             risk:
@@ -568,18 +566,15 @@ components:
 
     Contribution:
       type: object
-      description: What one project says about a doc, in one domain.
-      required: [project, domain, file, name, description, body]
+      description: What one project says about a doc.
+      required: [project, file, name, description, body]
       properties:
         project:
           type: string
           example: hotel-bookings
-        domain:
-          type: string
-          example: bookings
         file:
           type: string
-          example: docqet/domains/bookings/capabilities/room-booking.md
+          example: docqet/capabilities/room-booking.md
         name:
           type: string
         description:
@@ -645,20 +640,15 @@ components:
       description: >-
         What every doc has: what its first contribution says, and every
         contribution.
-      required: [id, project, domain, file, name, description, body, from]
+      required: [id, project, file, name, description, body, from]
       properties:
         id:
           type: string
-          description: >-
-            Its ID, as combining keys it: a rule or concept is
-            `<id>@<domain>`.
+          description: Its ID, one across the product.
           example: room-booking
         project:
           type: string
           example: hotel-bookings
-        domain:
-          type: string
-          example: bookings
         file:
           type: string
         name:
@@ -671,7 +661,7 @@ components:
           description: The doc's markdown body.
         from:
           type: array
-          description: What each project says about it, in each domain.
+          description: What each project says about it.
           items:
             $ref: "#/components/schemas/Contribution"
 
@@ -728,9 +718,9 @@ components:
     Counts:
       type: object
       description: How many of each there are, showing.
-      required: [domains, features, capabilities, rules, concepts, personas, problems, constraints, initiatives, mechanisms, components, gaps, tradeoffs, decisions, findings]
+      required: [areas, features, capabilities, rules, concepts, personas, problems, constraints, initiatives, mechanisms, components, gaps, tradeoffs, decisions, findings]
       properties:
-        domains:
+        areas:
           type: integer
         features:
           type: integer
@@ -789,10 +779,10 @@ components:
         counts:
           $ref: "#/components/schemas/Counts"
 
-    Domain:
+    Area:
       description: >-
-        A domain, with its maturity from its parts of features, and the
-        readiness and exposure of every capability with a part in it.
+        An area, a grouping of features, with its maturity from its features,
+        and the readiness and exposure of every capability in them.
       allOf:
         - $ref: "#/components/schemas/Doc"
         - type: object
@@ -809,34 +799,23 @@ components:
             exposure:
               $ref: "#/components/schemas/Exposure"
 
-    Part:
-      type: object
-      description: One domain's part of a feature.
-      required: [domain, capabilities, maturity]
-      properties:
-        domain:
-          type: string
-          example: bookings
-        capabilities:
-          $ref: "#/components/schemas/StringList"
-        maturity:
-          $ref: "#/components/schemas/Maturity"
-
     Feature:
-      description: A feature, with its parts and figures.
+      description: >-
+        A feature, with the area it names, the capabilities that name it, by
+        name, and its figures.
       allOf:
         - $ref: "#/components/schemas/Doc"
         - type: object
-          required: [capabilities, tradeoffs, parts, maturity, readiness, exposure]
+          required: [area, capabilities, tradeoffs, maturity, readiness, exposure]
           properties:
+            area:
+              type: string
+              nullable: true
+              example: guest-stays
             capabilities:
               $ref: "#/components/schemas/StringList"
             tradeoffs:
               $ref: "#/components/schemas/StringList"
-            parts:
-              type: array
-              items:
-                $ref: "#/components/schemas/Part"
             maturity:
               $ref: "#/components/schemas/Maturity"
             readiness:
@@ -846,15 +825,12 @@ components:
 
     Level:
       type: object
-      description: A capability's level in one domain that builds it.
-      required: [project, domain, level]
+      description: A capability's level in one project that writes it.
+      required: [project, level]
       properties:
         project:
           type: string
           example: hotel-bookings
-        domain:
-          type: string
-          example: bookings
         level:
           type: string
           example: alpha
@@ -1223,7 +1199,7 @@ components:
       description: >-
         A gap, with its risk, what it affects, and the open decisions that
         affect it.
-      required: [id, subject, project, domain, affects, impact, likelihood, reach, name, description, places, risk, affected, decisions, within]
+      required: [id, subject, project, affects, impact, likelihood, reach, name, description, places, risk, affected, decisions, within]
       properties:
         id:
           type: string
@@ -1234,8 +1210,6 @@ components:
           description: The doc it's on, as a reference.
           example: capability:room-booking
         project:
-          type: string
-        domain:
           type: string
         affects:
           $ref: "#/components/schemas/StringList"
@@ -1280,7 +1254,7 @@ components:
       description: >-
         A tradeoff, with what it affects and the open decisions that affect
         it.
-      required: [id, subject, project, domain, affects, name, description, benefit, drawback, places, affected, decisions]
+      required: [id, subject, project, affects, name, description, benefit, drawback, places, affected, decisions]
       properties:
         id:
           type: string
@@ -1290,8 +1264,6 @@ components:
           description: The doc it's on, as a reference.
           example: feature:reservations
         project:
-          type: string
-        domain:
           type: string
         affects:
           $ref: "#/components/schemas/StringList"
@@ -1324,7 +1296,7 @@ components:
       properties:
         kind:
           type: string
-          enum: [project, domain, feature, capability, rule, concept, persona, problem, constraint, initiative]
+          enum: [project, area, feature, capability, rule, concept, persona, problem, constraint, initiative]
         id:
           type: string
           example: room-booking
@@ -1496,7 +1468,7 @@ components:
       required: false
       description: >-
         A reference to a project, persona, problem, constraint, initiative,
-        domain, feature or capability, as the CLI's `--for`: count only its capabilities.
+        area, feature or capability, as the CLI's `--for`: count only its capabilities.
         Several, separated by commas, count
         only the capabilities they all share, such as
         `persona:front-desk-clerk,feature:front-desk`. One that names nothing
@@ -1531,14 +1503,6 @@ components:
       schema:
         type: string
         example: room-booking
-    Domain:
-      name: domain
-      in: path
-      required: true
-      description: The ID of the domain the doc is in.
-      schema:
-        type: string
-        example: bookings
     GapKey:
       name: key
       in: path

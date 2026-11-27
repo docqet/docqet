@@ -5,7 +5,7 @@ Feature: Capacity purchasing
   Background:
     Given Acme and Globex are clients
 
-  # docqet:verifies rule:blocks-stay-within-their-organization@capacity
+  # docqet:verifies rule:blocks-stay-within-their-organization
   Rule: A client can't reach another organization's blocks
 
     Background:
@@ -25,7 +25,7 @@ Feature: Capacity purchasing
       When Globex schedules Acme's block
       Then it isn't found
 
-  # docqet:verifies rule:capacity-types-listed-smallest-first@capacity
+  # docqet:verifies rule:capacity-types-listed-smallest-first
   Rule: The capacity types are listed smallest first, each with a description
 
     Example: Listing the types
@@ -33,7 +33,7 @@ Feature: Capacity purchasing
       Then they are Flex, Core and Dedicated, in that order
       And each has a description
 
-  # docqet:verifies rule:buying-only-defined-capacity-types@capacity
+  # docqet:verifies rule:buying-only-defined-capacity-types
   Rule: A client can only buy a defined capacity type
 
     Example: A type that doesn't exist
@@ -41,7 +41,7 @@ Feature: Capacity purchasing
       Then the purchase is refused
       And Acme has no capacity and no invoices
 
-  # docqet:verifies rule:capacity-is-never-shown-as-hours@capacity
+  # docqet:verifies rule:capacity-is-never-shown-as-hours
   Rule: Capacity is shown in blocks and units, never as hours spent, reserved or remaining, or a price per hour
 
     Example: What a client reads
@@ -49,7 +49,7 @@ Feature: Capacity purchasing
       When Acme reads its block and the capacity types
       Then nothing it reads is a count of hours or a price per hour
 
-  # docqet:verifies rule:clients-never-choose-who-works@capacity
+  # docqet:verifies rule:clients-never-choose-who-works
   Rule: Clients never choose who works a block
 
     Example: A client tries to put an engineer on a block
@@ -57,7 +57,7 @@ Feature: Capacity purchasing
       When an Admin of Acme puts an engineer on the block
       Then it's refused
 
-  # docqet:verifies rule:buying-before-having-a-team@capacity
+  # docqet:verifies rule:buying-before-having-a-team
   Rule: A client can buy before it has a team, and its blocks wait until it can schedule them
 
     Example: No team yet
@@ -65,7 +65,7 @@ Feature: Capacity purchasing
       When Acme buys a block
       Then the block is available and in no week
 
-  # docqet:verifies rule:blocks-are-bought-then-scheduled@capacity
+  # docqet:verifies rule:blocks-are-bought-then-scheduled
   Rule: A block is bought, then scheduled
 
     Example: From purchase to a week
@@ -73,7 +73,7 @@ Feature: Capacity purchasing
       When Acme buys a block and schedules it into that week
       Then the block shows with that week in Acme's capacity
 
-  # docqet:verifies rule:block-numbers-are-per-organization@capacity
+  # docqet:verifies rule:block-numbers-are-per-organization
   Rule: Blocks are numbered in turn within each organization, and keep their number
 
     Example: Several bought at once
@@ -90,7 +90,7 @@ Feature: Capacity purchasing
       When Globex buys a block
       Then it is numbered BLK-0001
 
-  # docqet:verifies rule:retrying-a-purchase-never-charges-twice@capacity
+  # docqet:verifies rule:retrying-a-purchase-never-charges-twice
   Rule: Retrying a purchase never charges twice
 
     Example: Retrying one that went through

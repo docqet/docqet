@@ -6,7 +6,7 @@ test.beforeEach(async ({ request }) => {
   });
 });
 
-// docqet:verifies rule:no-double-booking@guest-stays
+// docqet:verifies rule:no-double-booking
 test("a clerk can't book a room that's taken", async ({ page }) => {
   await page.goto("/bookings/new");
   await page.getByLabel("Room").fill("12");

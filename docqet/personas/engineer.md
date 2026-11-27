@@ -12,8 +12,8 @@ image: https://randomuser.me/api/portraits/women/44.jpg
 
 ## Knows
 
-The codebase and its conventions, git, and the CI it runs in. Knows the domain
-from working in it, not always in the business's own words.
+The codebase and its conventions, git, and the CI it runs in. Knows the
+business from working in it, not always in its own words.
 
 ## Context
 

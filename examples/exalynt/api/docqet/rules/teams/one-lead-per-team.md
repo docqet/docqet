@@ -1,0 +1,8 @@
+---
+docqet: rule
+id: one-lead-per-team
+name: One lead per team
+---
+
+A team has at most one lead, so making someone its lead makes the old lead an
+ordinary member.

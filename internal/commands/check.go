@@ -5,7 +5,6 @@ import (
 	"errors"
 	"fmt"
 	"strconv"
-	"strings"
 	"text/tabwriter"
 
 	"github.com/urfave/cli/v3"
@@ -86,12 +85,7 @@ func printFindings(cmd *cli.Command, findings []state.Finding) {
 		if p.Line > 0 {
 			where += ":" + strconv.Itoa(p.Line)
 		}
-		about := p.Subject
-		// A rule's or concept's ID is one in its domain, so it's shown with it.
-		if p.Domain != "" && (strings.HasPrefix(about, "rule:") || strings.HasPrefix(about, "concept:")) {
-			about += "@" + p.Domain
-		}
-		_, _ = fmt.Fprintf(tw, "%s\t%s\t%s\t%s\n", where, p.Type, about, p.Message)
+		_, _ = fmt.Fprintf(tw, "%s\t%s\t%s\t%s\n", where, p.Type, p.Subject, p.Message)
 	}
 	_ = tw.Flush()
 	noun := "findings"

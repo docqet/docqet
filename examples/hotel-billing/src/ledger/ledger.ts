@@ -10,7 +10,7 @@ export type Line = {
 
 export type Bill = { id: string; status: "open" | "closed"; lines: Line[] };
 
-// docqet:implements component:ledger rule:closed-bills-dont-change@billing
+// docqet:implements component:ledger rule:closed-bills-dont-change
 export function post(bill: Bill, line: Line): void {
   if (bill.status === "closed") {
     throw new Error(`Bill ${bill.id} is closed`);
@@ -18,7 +18,7 @@ export function post(bill: Bill, line: Line): void {
   bill.lines.push(line);
 }
 
-// docqet:implements rule:charges-are-never-changed@billing
+// docqet:implements rule:charges-are-never-changed
 // docqet:gap component:ledger#corrections-of-corrections-untested
 export function correct(bill: Bill, line: Line, id: string, businessDay: string): void {
   post(bill, {

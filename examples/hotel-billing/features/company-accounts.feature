@@ -1,6 +1,6 @@
 Feature: Company accounts
 
-  # docqet:verifies rule:credit-limit@finance
+  # docqet:verifies rule:credit-limit
   Rule: A company can't go over its credit limit
 
     Scenario: A bill within the limit moves to the company

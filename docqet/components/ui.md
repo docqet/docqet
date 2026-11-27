@@ -14,7 +14,7 @@ capabilities:
   - capability:product-view
   - capability:seeing-findings
   - capability:choices
-  - capability:domain-language
+  - capability:language
   - capability:how-its-built
   - capability:preview
 ---

@@ -5,8 +5,9 @@ import (
 	"strings"
 )
 
-// Ref is a reference, parsed: <type>:<id>, with @<domain> for a rule or
-// concept in another domain, and #<key> for a gap or tradeoff on a doc.
+// Ref is a reference, parsed: <type>:<id>, with #<key> for a gap or tradeoff
+// on a doc. Domain is an @<domain> written after the ID, as rules and
+// concepts once were, so a reader can say docs have no domain now.
 type Ref struct {
 	Type   string
 	ID     string
@@ -45,7 +46,7 @@ func IsKebab(s string) bool {
 
 // The doc types, as `docqet` names them.
 const (
-	TypeDomain     = "domain"
+	TypeArea       = "area"
 	TypeFeature    = "feature"
 	TypeCapability = "capability"
 	TypeRule       = "rule"

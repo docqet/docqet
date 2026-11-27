@@ -95,22 +95,28 @@ func levelName(level string) string {
 	}
 }
 
-// domainName is a domain's name, or its ID when it has no doc.
-func domainName(p *combine.Product, id string) string {
-	if d := p.Domain(id); d != nil && d.Name != "" {
-		return d.Name
-	}
-	return id
-}
-
-// levelsOf is a capability's level in each domain that builds it, such as
-// "Beta in Guest stays".
+// levelsOf is a capability's level in each project that writes it, such as
+// "Beta", or "Beta in Hotel Bookings" when it's written in several.
 func levelsOf(p *combine.Product, c *combine.Capability) []string {
 	var out []string
 	for _, l := range c.Levels {
-		out = append(out, fmt.Sprintf("%s in %s", levelName(l.Level), domainName(p, l.Domain)))
+		if len(c.Levels) == 1 {
+			out = append(out, levelName(l.Level))
+			continue
+		}
+		out = append(out, fmt.Sprintf("%s in %s", levelName(l.Level), projectName(p, l.Project)))
 	}
 	return out
+}
+
+// projectName is a project's name, or its ID when it isn't one showing.
+func projectName(p *combine.Product, id string) string {
+	for _, pr := range p.Projects {
+		if pr.ID == id {
+			return pr.Name
+		}
+	}
+	return id
 }
 
 // declared is a gap's or tradeoff's ID as it's declared and written in an
@@ -130,66 +136,6 @@ func keyOf(id string) string {
 		return after
 	}
 	return id
-}
-
-// ruleRef is a combined rule's or concept's reference, as rule:<id>@<domain>.
-func ruleRef(typ, key string) string {
-	return typ + ":" + key
-}
-
-// inDomain writes a rule's or concept's key, <id>@<domain>, as a link from
-// a doc in domain: without the domain when it's the same.
-func inDomain(key, domain string) string {
-	if id, d, ok := strings.Cut(key, "@"); ok && d == domain {
-		return id
-	}
-	return key
-}
-
-// resolveKey finds the combined key of a rule or concept a reference names:
-// <id>@<domain> as written, or the only one with that ID when it has no
-// domain.
-func resolveKey(r state.Ref, keys []string) (string, error) {
-	if r.Domain != "" {
-		key := r.ID + "@" + r.Domain
-		for _, k := range keys {
-			if k == key {
-				return k, nil
-			}
-		}
-		return "", fmt.Errorf("%s:%s isn't in this project", r.Type, key)
-	}
-	var found []string
-	for _, k := range keys {
-		if strings.HasPrefix(k, r.ID+"@") {
-			found = append(found, k)
-		}
-	}
-	switch len(found) {
-	case 0:
-		return "", fmt.Errorf("%s:%s isn't in this project", r.Type, r.ID)
-	case 1:
-		return found[0], nil
-	default:
-		return "", fmt.Errorf("%s:%s is in several domains: say which, such as %s:%s", r.Type, r.ID, r.Type, found[0])
-	}
-}
-
-// ruleKeys and conceptKeys are the product's rules' and concepts' keys.
-func ruleKeys(p *combine.Product) []string {
-	keys := make([]string, len(p.Rules))
-	for i, r := range p.Rules {
-		keys[i] = r.ID
-	}
-	return keys
-}
-
-func conceptKeys(p *combine.Product) []string {
-	keys := make([]string, len(p.Concepts))
-	for i, c := range p.Concepts {
-		keys[i] = c.ID
-	}
-	return keys
 }
 
 // gapView is a gap as reads show it.

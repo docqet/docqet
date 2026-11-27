@@ -25,8 +25,7 @@ func ShowCommand() *cli.Command {
 		ArgsUsage: "<reference>",
 		Description: `Shows one doc with its fields, its links both ways, its evidence, its gaps
 scored by risk, its tradeoffs and open decisions, and its body. A gap or
-tradeoff is named by its doc and key, such as capability:room-booking#needs-a-mouse.
-A rule or concept in one domain only can be named without @<domain>.`,
+tradeoff is named by its doc and key, such as capability:room-booking#needs-a-mouse.`,
 		ArgValidator: maxArgs(1),
 		Flags:        sourceFlags(),
 		Action: func(ctx context.Context, cmd *cli.Command) error {
@@ -137,47 +136,35 @@ func showOf(p *combine.Product, ref string) (*shown, error) {
 			if rule := p.Rule(key); rule != nil {
 				standing = " (" + string(derive.RuleStandingOf(c, rule)) + ")"
 			}
-			rules = append(rules, "rule:"+inDomain(key, c.Domain)+standing)
+			rules = append(rules, "rule:"+key+standing)
 		}
 		s.add("rules", rules...)
-		var concepts []string
-		for _, key := range c.Concepts {
-			concepts = append(concepts, "concept:"+inDomain(key, c.Domain))
-		}
-		s.add("concepts", concepts...)
+		s.add("concepts", prefixed("concept:", c.Concepts)...)
 		s.add("built by", c.BuiltBy...)
 		s.items(p, c.Gaps, c.Tradeoffs, ref, c.Doc)
 		s.Evidence = evidenceOf(c.Evidence)
 		return s, nil
 	case state.TypeRule:
-		key, err := resolveKey(r, ruleKeys(p))
-		if err != nil {
-			return nil, err
+		rule := p.Rule(r.ID)
+		if rule == nil {
+			return nil, notFound
 		}
-		rule := p.Rule(key)
-		s := docShown(rule.Doc, r.Type, "rule:"+key)
-		s.add("domain", "domain:"+rule.Domain)
+		s := docShown(rule.Doc, r.Type, ref)
 		if len(rule.From) > 0 && rule.From[0].Why != nil {
 			s.add("why", oneLine(*rule.From[0].Why, 1000))
 		}
 		s.add("respects", prefixed("constraint:", rule.Respects)...)
 		s.add("followed by", prefixed("capability:", rule.Capabilities)...)
-		var concepts []string
-		for _, k := range rule.Concepts {
-			concepts = append(concepts, "concept:"+inDomain(k, rule.Domain))
-		}
-		s.add("concepts", concepts...)
+		s.add("concepts", prefixed("concept:", rule.Concepts)...)
 		s.add("gaps on it", declaredAll(rule.Gaps)...)
 		s.Evidence = evidenceOf(rule.Evidence)
 		return s, nil
 	case state.TypeConcept:
-		key, err := resolveKey(r, conceptKeys(p))
-		if err != nil {
-			return nil, err
+		c := p.Concept(r.ID)
+		if c == nil {
+			return nil, notFound
 		}
-		c := p.Concept(key)
-		s := docShown(c.Doc, r.Type, "concept:"+key)
-		s.add("domain", "domain:"+c.Domain)
+		s := docShown(c.Doc, r.Type, ref)
 		s.add("used by", prefixed("capability:", c.Capabilities)...)
 		s.add("rules", prefixed("rule:", c.Rules)...)
 		for _, f := range c.From {
@@ -193,15 +180,14 @@ func showOf(p *combine.Product, ref string) (*shown, error) {
 			}
 		}
 		return s, nil
-	case state.TypeDomain:
-		d := p.Domain(r.ID)
-		if d == nil {
+	case state.TypeArea:
+		a := p.Area(r.ID)
+		if a == nil {
 			return nil, notFound
 		}
-		s := docShown(d.Doc, r.Type, ref)
-		s.add("features", prefixed("feature:", d.Features)...)
-		s.add("capabilities in no feature", prefixed("capability:", d.Capabilities)...)
-		s.items(p, nil, nil, ref, d.Doc)
+		s := docShown(a.Doc, r.Type, ref)
+		s.add("features", prefixed("feature:", a.Features)...)
+		s.items(p, nil, nil, ref, a.Doc)
 		return s, nil
 	case state.TypeFeature:
 		f := p.Feature(r.ID)
@@ -209,6 +195,9 @@ func showOf(p *combine.Product, ref string) (*shown, error) {
 			return nil, notFound
 		}
 		s := docShown(f.Doc, r.Type, ref)
+		if f.Area != nil {
+			s.add("area", "area:"+*f.Area)
+		}
 		var caps []string
 		for _, id := range f.Capabilities {
 			if c := p.Capability(id); c != nil {
@@ -291,7 +280,7 @@ func showOf(p *combine.Product, ref string) (*shown, error) {
 		s.Evidence = evidenceOf(t.Evidence)
 		return s, nil
 	}
-	return nil, fmt.Errorf("%s isn't a type of doc: it's one of domain, feature, capability, rule, concept, persona, problem, constraint, initiative, mechanism or component", r.Type)
+	return nil, fmt.Errorf("%s isn't a type of doc: it's one of area, feature, capability, rule, concept, persona, problem, constraint, initiative, mechanism or component", r.Type)
 }
 
 // docShown starts a shown doc with what every doc has.
@@ -320,9 +309,6 @@ func (s *shown) items(p *combine.Product, gaps, tradeoffs []string, on string, d
 // showItem shows a gap or tradeoff on its own.
 func showItem(p *combine.Product, r state.Ref) (*shown, error) {
 	doc := state.DocRef(r.Type, r.ID)
-	if r.Domain != "" {
-		doc += "@" + r.Domain
-	}
 	ref := doc + "#" + r.Key
 	if g := p.Gap(gapID(p, doc, r.Key)); g != nil {
 		v := gapViewOf(p, g)

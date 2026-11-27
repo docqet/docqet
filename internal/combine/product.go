@@ -14,9 +14,8 @@ import "github.com/docqet/docqet/internal/state"
 const Draft = "draft"
 
 // Product is the states of the projects being shown, put together. IDs are
-// as the UI's combining keys them: a domain, feature, capability, persona,
-// initiative, mechanism or component keeps its own ID; a rule or concept is
-// <id>@<domain>; a gap or tradeoff is its declared ID with @<project>, such as
+// as the UI's combining keys them: every doc keeps its own ID, one across the
+// product; a gap or tradeoff is its declared ID with @<project>, such as
 // capability:room-booking#no-waitlist@hotel-bookings, since its key is its
 // project's.
 type Product struct {
@@ -24,7 +23,7 @@ type Product struct {
 	Name     string
 	Projects []Project
 
-	Domains      []*Domain
+	Areas        []*Area
 	Features     []*Feature
 	Capabilities []*Capability
 	Rules        []*Rule
@@ -53,12 +52,9 @@ type Project struct {
 	IndexedAt string
 }
 
-// Contribution is what one project says about a doc, in one domain. A
-// persona, initiative, mechanism or component is in no domain, so its
-// contributions' Domain is "".
+// Contribution is what one project says about a doc.
 type Contribution struct {
 	Project     string
-	Domain      string
 	File        string
 	Name        string
 	Description string
@@ -82,7 +78,6 @@ type Contribution struct {
 type Doc struct {
 	ID          string
 	Project     string // the first contribution's
-	Domain      string // the first contribution's
 	File        string
 	Name        string
 	Description string
@@ -102,39 +97,32 @@ type Evidence struct {
 	Verifies   []Place
 }
 
-// Domain is a part of the business. One that docs are written in, with no
-// domain doc of its own, has no contributions and is named by its ID.
-type Domain struct {
+// Area is a grouping of features. Its features are those that name it, by
+// name.
+type Area struct {
 	Doc
-	Features     []string // the features it has a part in, in the order they come up
-	Capabilities []string // the capabilities in no feature that it builds part of
+	Features []string
 }
 
-// Part is one domain's part of a feature: the capabilities that domain builds
-// or lists in its own doc of the feature.
-type Part struct {
-	Domain       string
-	Capabilities []string
-}
-
-// Feature is a job the product does, with its part in each domain.
+// Feature is a part of what the product offers. Area is the area it names,
+// the first project's where projects differ. Its capabilities are those that
+// name it, by name.
 type Feature struct {
 	Doc
+	Area         *string
 	Capabilities []string
 	Tradeoffs    []string
-	Parts        []Part
 }
 
-// LevelIn is a capability's level in one domain that builds it, and the
-// project that says so. Level is a stability level, or Draft.
+// LevelIn is a capability's level in one project that writes it. Level is a
+// stability level, or Draft.
 type LevelIn struct {
 	Project string
-	Domain  string
 	Level   string
 }
 
-// Capability is something the product can do, built in one or more domains.
-// Its personas are those of the problems it solves.
+// Capability is something the product can do, written in one or more
+// projects. Its personas are those of the problems it solves.
 type Capability struct {
 	Doc
 	Solves      []string
@@ -144,9 +132,9 @@ type Capability struct {
 	// all.
 	Stability string
 	Levels    []LevelIn
-	Feature   *string  // the first feature that lists it, or nil
-	Rules     []string // as <id>@<domain>
-	Concepts  []string // as <id>@<domain>
+	Feature   *string // the feature it names, the first project's where they differ, or nil
+	Rules     []string
+	Concepts  []string
 	Gaps      []string
 	Tradeoffs []string
 	// BuiltBy is the mechanisms that apply to it and the components that list
@@ -155,21 +143,21 @@ type Capability struct {
 	Evidence Evidence
 }
 
-// Rule is a rule of a domain.
+// Rule is something the software promises always or never holds.
 type Rule struct {
 	Doc
 	Capabilities []string // every capability that follows it
-	Concepts     []string // as <id>@<domain>
+	Concepts     []string
 	Respects     []string // the constraints it respects
 	Gaps         []string // the gaps that affect it
 	Evidence     Evidence
 }
 
-// Concept is a word of a domain's language.
+// Concept is what a word means.
 type Concept struct {
 	Doc
 	Capabilities []string
-	Rules        []string // as <id>@<domain>
+	Rules        []string
 }
 
 // Persona is a type of person the product serves.
@@ -181,7 +169,7 @@ type Persona struct {
 	Problems     []string // every problem that names it
 	Capabilities []string // every capability that serves it
 	Features     []string // the features those are in
-	Initiatives  []string
+	Initiatives  []string // every initiative that names them
 }
 
 // Problem is a pain point the personas it names share.
@@ -197,7 +185,7 @@ type Problem struct {
 type Constraint struct {
 	Doc
 	Source     *string
-	Rules      []string // every rule that respects it, as <id>@<domain>
+	Rules      []string // every rule that respects it
 	Mechanisms []string // every mechanism that respects it
 }
 
@@ -206,7 +194,7 @@ type Initiative struct {
 	Doc
 	Capabilities []string // every capability that lists it
 	Features     []string // the features those are in
-	Personas     []string // every persona that lists it
+	Personas     []string // the personas it names
 }
 
 // The kinds of technical doc.
@@ -231,11 +219,10 @@ type Technical struct {
 }
 
 // Gap is a known gap, with the project that declares it. A rule it affects
-// is resolved to rule:<id>@<domain>, and one that isn't there is left out.
+// that isn't there is left out.
 type Gap struct {
 	ID          string
 	Project     string
-	Domain      string // a product gap's; a technical gap has none
 	Affects     []string
 	Impact      string
 	Likelihood  string
@@ -249,7 +236,6 @@ type Gap struct {
 type Tradeoff struct {
 	ID          string
 	Project     string
-	Domain      string
 	Affects     []string
 	Name        string
 	Description string
@@ -267,9 +253,9 @@ func find[T any](list []*T, id string, idOf func(*T) string) *T {
 	return nil
 }
 
-// Domain returns the domain with id, or nil.
-func (p *Product) Domain(id string) *Domain {
-	return find(p.Domains, id, func(d *Domain) string { return d.ID })
+// Area returns the area with id, or nil.
+func (p *Product) Area(id string) *Area {
+	return find(p.Areas, id, func(a *Area) string { return a.ID })
 }
 
 // Feature returns the feature with id, or nil.
@@ -292,12 +278,12 @@ func (p *Product) Constraint(id string) *Constraint {
 	return find(p.Constraints, id, func(cn *Constraint) string { return cn.ID })
 }
 
-// Rule returns the rule with key, <id>@<domain>, or nil.
+// Rule returns the rule with id, or nil.
 func (p *Product) Rule(key string) *Rule {
 	return find(p.Rules, key, func(r *Rule) string { return r.ID })
 }
 
-// Concept returns the concept with key, <id>@<domain>, or nil.
+// Concept returns the concept with id, or nil.
 func (p *Product) Concept(key string) *Concept {
 	return find(p.Concepts, key, func(c *Concept) string { return c.ID })
 }

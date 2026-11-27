@@ -8,7 +8,6 @@ description: >-
 role: Client Billing
 title: Controller
 image: https://randomuser.me/api/portraits/men/22.jpg
-initiatives: [initiative:mvp, initiative:notifications]
 ---
 
 ## Needs

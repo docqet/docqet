@@ -3,7 +3,7 @@ Feature: Fulfillment
   when the work is done. Nobody else reviews it. A block can have a focus
   saying what its work is about.
 
-  # docqet:verifies rule:engineers-start-their-blocks-from-the-start-of-the-week@capacity
+  # docqet:verifies rule:engineers-start-their-blocks-from-the-start-of-the-week
   Rule: A block's engineer starts it, from the start of its week
 
     Example: Its week has started
@@ -22,7 +22,7 @@ Feature: Fulfillment
       When Ben, on Ada's team, starts it
       Then it's refused
 
-  # docqet:verifies rule:engineers-mark-their-blocks-fulfilled@capacity
+  # docqet:verifies rule:engineers-mark-their-blocks-fulfilled
   Rule: A block's engineer marks it fulfilled
 
     Background:
@@ -37,7 +37,7 @@ Feature: Fulfillment
       Then it's refused
       And the block is in progress
 
-  # docqet:verifies rule:started-before-fulfilled@capacity
+  # docqet:verifies rule:started-before-fulfilled
   Rule: A block must be started before it's marked fulfilled
 
     Example: Not started
@@ -45,7 +45,7 @@ Feature: Fulfillment
       When Ada marks it fulfilled
       Then it's refused as not started
 
-  # docqet:verifies rule:fulfilled-is-final@capacity
+  # docqet:verifies rule:fulfilled-is-final
   Rule: Marking it fulfilled is final
 
     Example: Marking it again
@@ -53,7 +53,7 @@ Feature: Fulfillment
       When Ada marks it fulfilled
       Then it's refused as already fulfilled
 
-  # docqet:verifies rule:clients-follow-a-blocks-status@capacity
+  # docqet:verifies rule:clients-follow-a-blocks-status
   Rule: Clients follow a block's status
 
     Example: Started, it's in progress to the client
@@ -71,7 +71,7 @@ Feature: Fulfillment
       When an Admin of Acme marks it fulfilled
       Then it's refused
 
-  # docqet:verifies rule:a-focus-is-its-own-record@capacity
+  # docqet:verifies rule:a-focus-is-its-own-record
   Rule: A focus is its own record, on any of its client's blocks
 
     Example: Adding one
@@ -118,7 +118,7 @@ Feature: Fulfillment
       When Ada adds a focus with no title
       Then it's refused for having no title
 
-  # docqet:verifies rule:who-changes-a-focus@capacity
+  # docqet:verifies rule:who-changes-a-focus
   Rule: Only someone who can manage its block, or its client, changes a focus
 
     Example: A teammate who isn't on the block
@@ -182,7 +182,7 @@ Feature: Fulfillment
       When a member of Acme who reads its blocks but can't change focuses renames the focus
       Then it's refused
 
-  # docqet:verifies rule:focus-attachments-are-the-clients@capacity
+  # docqet:verifies rule:focus-attachments-are-the-clients
   Rule: A focus's attachments are its client's objects
 
     Example: Attaching a file of the client's
@@ -195,7 +195,7 @@ Feature: Fulfillment
       When Ada attaches "rates.csv" to her block's focus
       Then it's refused
 
-  # docqet:verifies rule:engineers-post-updates-on-their-blocks@capacity
+  # docqet:verifies rule:engineers-post-updates-on-their-blocks
   Rule: A block's engineer posts updates on it
 
     Example: Posting an update
@@ -223,7 +223,7 @@ Feature: Fulfillment
       When Ada posts an update with a file of Globex's
       Then it's refused
 
-  # docqet:verifies rule:only-its-writer-changes-an-update@capacity
+  # docqet:verifies rule:only-its-writer-changes-an-update
   Rule: Only its writer changes an update
 
     Background:
@@ -241,7 +241,7 @@ Feature: Fulfillment
       When Ada deletes it
       Then the update stays on the block, emptied, saying it was deleted and when
 
-  # docqet:verifies rule:clients-read-a-blocks-updates@capacity
+  # docqet:verifies rule:clients-read-a-blocks-updates
   Rule: Clients read a block's updates
 
     Example: Its client
@@ -254,7 +254,7 @@ Feature: Fulfillment
       When Globex reads the block's updates
       Then the block isn't found
 
-  # docqet:verifies rule:starting-a-block-records-who-and-when@capacity
+  # docqet:verifies rule:starting-a-block-records-who-and-when
   Rule: Starting a block records who started it and when
 
     Example: Started by its engineer

@@ -107,13 +107,13 @@ func idsAt(ctx context.Context, root, sha string) (map[string]bool, error) {
 	return declaredIDs(st), nil
 }
 
-// declaredIDs is every reference a state declares: its docs, a rule or
-// concept with its domain, and its gaps' and tradeoffs' IDs.
+// declaredIDs is every reference a state declares: its docs, and its gaps'
+// and tradeoffs' IDs.
 func declaredIDs(st *state.State) map[string]bool {
 	ids := map[string]bool{}
 	add := func(typ, id string) { ids[state.DocRef(typ, id)] = true }
-	for _, d := range st.Domains {
-		add(state.TypeDomain, d.ID)
+	for _, a := range st.Areas {
+		add(state.TypeArea, a.ID)
 	}
 	for _, f := range st.Features {
 		add(state.TypeFeature, f.ID)
@@ -122,10 +122,10 @@ func declaredIDs(st *state.State) map[string]bool {
 		add(state.TypeCapability, c.ID)
 	}
 	for _, r := range st.Rules {
-		add(state.TypeRule, r.ID+"@"+r.Domain)
+		add(state.TypeRule, r.ID)
 	}
 	for _, c := range st.Concepts {
-		add(state.TypeConcept, c.ID+"@"+c.Domain)
+		add(state.TypeConcept, c.ID)
 	}
 	for _, p := range st.Personas {
 		add(state.TypePersona, p.ID)
@@ -154,19 +154,20 @@ func declaredIDs(st *state.State) map[string]bool {
 	return ids
 }
 
-// hasID reports whether ids has ref. A rule or concept named without its
-// domain matches one in any domain.
+// hasID reports whether ids has ref. Rules and concepts were once written
+// with @<domain>, as older commits' trailers name them, so a domain is
+// ignored.
 func hasID(ids map[string]bool, ref string) bool {
 	if ids[ref] {
 		return true
 	}
 	r, _ := state.ParseRef(ref)
-	if (r.Type == state.TypeRule || r.Type == state.TypeConcept) && r.Domain == "" && r.Key == "" {
-		for id := range ids {
-			if strings.HasPrefix(id, ref+"@") {
-				return true
-			}
-		}
+	if r.Domain == "" {
+		return false
 	}
-	return false
+	id := state.DocRef(r.Type, r.ID)
+	if r.Key != "" {
+		id += "#" + r.Key
+	}
+	return ids[id]
 }

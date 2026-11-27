@@ -40,17 +40,17 @@ func (h *ProductsHandler) RegisterRoutes(r chi.Router) {
 	r.Get("/products/{product}/status", h.GetStatus)
 	r.Get("/products/{product}/projects", h.ListProjects)
 	r.Get("/products/{product}/rubric", h.GetRubric)
-	r.Get("/products/{product}/domains", h.ListDomains)
-	r.Get("/products/{product}/domains/{id}", h.GetDomain)
+	r.Get("/products/{product}/areas", h.ListAreas)
+	r.Get("/products/{product}/areas/{id}", h.GetArea)
 	r.Get("/products/{product}/features", h.ListFeatures)
 	r.Get("/products/{product}/features/{id}", h.GetFeature)
 	r.Get("/products/{product}/capabilities", h.ListCapabilities)
 	r.Get("/products/{product}/capabilities/{id}", h.GetCapability)
 	r.Get("/products/{product}/capabilities/{id}/gaps/{key}", h.getNestedGap(state.TypeCapability))
 	r.Get("/products/{product}/rules", h.ListRules)
-	r.Get("/products/{product}/domains/{domain}/rules/{id}", h.GetRule)
+	r.Get("/products/{product}/rules/{id}", h.GetRule)
 	r.Get("/products/{product}/concepts", h.ListConcepts)
-	r.Get("/products/{product}/domains/{domain}/concepts/{id}", h.GetConcept)
+	r.Get("/products/{product}/concepts/{id}", h.GetConcept)
 	r.Get("/products/{product}/personas", h.ListPersonas)
 	r.Get("/products/{product}/personas/{id}", h.GetPersona)
 	r.Get("/products/{product}/problems", h.ListProblems)
@@ -115,16 +115,16 @@ func (h *ProductsHandler) GetStatus(w http.ResponseWriter, r *http.Request) {
 	render.JSON(w, r, newStatusResource(v, within, groupingFor(r.URL.Query().Get("for"))))
 }
 
-// groupingFor returns what a readiness's areas are for what a ?for= names:
-// one level below the finest thing it names. Domains with nothing named or
-// a project, features for a domain, persona or initiative, capabilities for
-// a feature, and steps for a capability.
+// groupingFor returns what a readiness's parts are for what a ?for= names:
+// one level below the finest thing it names. Areas with nothing named or
+// a project, features for an area, persona, problem, constraint or
+// initiative, capabilities for a feature, and steps for a capability.
 func groupingFor(refs string) derive.Grouping {
-	by := derive.ByDomain
+	by := derive.ByArea
 	for ref := range strings.SplitSeq(refs, ",") {
 		r, _ := state.ParseRef(strings.TrimSpace(ref))
 		switch r.Type {
-		case state.TypeDomain, state.TypePersona, state.TypeProblem, state.TypeConstraint, state.TypeInitiative:
+		case state.TypeArea, state.TypePersona, state.TypeProblem, state.TypeConstraint, state.TypeInitiative:
 			by = max(by, derive.ByFeature)
 		case state.TypeFeature:
 			by = max(by, derive.ByCapability)
@@ -163,24 +163,24 @@ func (h *ProductsHandler) GetRubric(w http.ResponseWriter, r *http.Request) {
 	render.JSON(w, r, rubric)
 }
 
-// ListDomains lists the domains showing.
+// ListAreas lists the areas showing.
 // docqet:implements capability:overview
-func (h *ProductsHandler) ListDomains(w http.ResponseWriter, r *http.Request) {
+func (h *ProductsHandler) ListAreas(w http.ResponseWriter, r *http.Request) {
 	if v, ok := h.view(w, r); ok {
-		writePage(w, r, build(v.Domains, func(d *combine.Domain) DomainResource { return newDomainResource(v.Product, d) }))
+		writePage(w, r, build(v.Areas, func(a *combine.Area) AreaResource { return newAreaResource(v.Product, a) }))
 	}
 }
 
-// GetDomain returns a domain.
+// GetArea returns an area.
 // docqet:implements capability:overview
-func (h *ProductsHandler) GetDomain(w http.ResponseWriter, r *http.Request) {
+func (h *ProductsHandler) GetArea(w http.ResponseWriter, r *http.Request) {
 	if v, ok := h.view(w, r); ok {
 		id := chi.URLParam(r, "id")
-		if d := v.Domain(id); d != nil {
-			render.JSON(w, r, newDomainResource(v.Product, d))
+		if a := v.Area(id); a != nil {
+			render.JSON(w, r, newAreaResource(v.Product, a))
 			return
 		}
-		notShowing(w, r, state.DocRef(state.TypeDomain, id))
+		notShowing(w, r, state.DocRef(state.TypeArea, id))
 	}
 }
 
@@ -258,44 +258,44 @@ func (h *ProductsHandler) getNestedGap(typ string) http.HandlerFunc {
 }
 
 // ListRules lists the rules showing.
-// docqet:implements capability:domain-language
+// docqet:implements capability:language
 func (h *ProductsHandler) ListRules(w http.ResponseWriter, r *http.Request) {
 	if v, ok := h.view(w, r); ok {
 		writePage(w, r, build(v.Rules, func(x *combine.Rule) RuleResource { return newRuleResource(v.Product, x) }))
 	}
 }
 
-// GetRule returns a domain's rule.
-// docqet:implements capability:domain-language
+// GetRule returns a rule.
+// docqet:implements capability:language
 func (h *ProductsHandler) GetRule(w http.ResponseWriter, r *http.Request) {
 	if v, ok := h.view(w, r); ok {
-		key := chi.URLParam(r, "id") + "@" + chi.URLParam(r, "domain")
-		if x := v.Rule(key); x != nil {
+		id := chi.URLParam(r, "id")
+		if x := v.Rule(id); x != nil {
 			render.JSON(w, r, newRuleResource(v.Product, x))
 			return
 		}
-		notShowing(w, r, state.DocRef(state.TypeRule, key))
+		notShowing(w, r, state.DocRef(state.TypeRule, id))
 	}
 }
 
 // ListConcepts lists the concepts showing.
-// docqet:implements capability:domain-language
+// docqet:implements capability:language
 func (h *ProductsHandler) ListConcepts(w http.ResponseWriter, r *http.Request) {
 	if v, ok := h.view(w, r); ok {
 		writePage(w, r, build(v.Concepts, newConceptResource))
 	}
 }
 
-// GetConcept returns a domain's concept.
-// docqet:implements capability:domain-language
+// GetConcept returns a concept.
+// docqet:implements capability:language
 func (h *ProductsHandler) GetConcept(w http.ResponseWriter, r *http.Request) {
 	if v, ok := h.view(w, r); ok {
-		key := chi.URLParam(r, "id") + "@" + chi.URLParam(r, "domain")
-		if c := v.Concept(key); c != nil {
+		id := chi.URLParam(r, "id")
+		if c := v.Concept(id); c != nil {
 			render.JSON(w, r, newConceptResource(c))
 			return
 		}
-		notShowing(w, r, state.DocRef(state.TypeConcept, key))
+		notShowing(w, r, state.DocRef(state.TypeConcept, id))
 	}
 }
 

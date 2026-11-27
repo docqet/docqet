@@ -45,21 +45,19 @@ intention yet, so:
 Start small, with one feature the person cares about, rather than the whole
 repository:
 
-1. **The domains.** Ask, or propose from how the business talks about itself,
-   not from how the code is split up. Most projects have one or two.
-2. **The personas** the feature is for, and **the problems** they have that
+1. **The personas** the feature is for, and **the problems** they have that
    it's there to solve, in their words and never naming the software. Only a
    person can usually say these: propose them from the code and docs, and ask.
-3. **The feature and its capabilities**, each as one sentence saying who does
+2. **The feature and its capabilities**, each as one sentence saying who does
    what, at its level, with the problems it `solves`. Capabilities asked for
    but not started are drafts. One whose problem nobody can say yet can leave
    `solves` out: it's reported as an advisory finding, which doesn't fail the
    check, and serves nobody until its problem is written.
-4. **The rules** they follow, each with its `why`, which only a person can
+3. **The rules** they follow, each with its `why`, which only a person can
    usually give. A rule without a known why is worth asking about.
-5. **The gaps** people already know about, and the tradeoffs they've already
+4. **The gaps** people already know about, and the tradeoffs they've already
    made.
-6. **Annotations** on the code and tests that implement or verify those rules
+5. **Annotations** on the code and tests that implement or verify those rules
    and capabilities, as you go.
 
 Technical docs come last and only where the code can't say something. Most of
@@ -77,4 +75,4 @@ pointer behind, rather than keeping two copies.
 Anything this project does differently from the kit goes in its own agent
 instructions, outside the kit's block in `AGENTS.md`. Write it down there
 when it's settled, such as which project holds the product docs for the
-product, or what the project's domains are.
+product, or how its features are grouped into areas.

@@ -207,7 +207,7 @@ docqet kit agents                           # the agents it can be installed for
 ### `docqet index`
 
 Reads the docs and annotations and writes the project's state, as the
-[state](../../docqet/domains/authoring/concepts/state.md) concept describes. By default it indexes the
+[state](../../docqet/concepts/state.md) concept describes. By default it indexes the
 working tree, uncommitted changes included, into `.docqet/state.json`.
 
 ```sh
@@ -241,7 +241,7 @@ examples show the ones each is most often used with.
 
 ### `docqet check`
 
-Reports every [finding](../../docqet/domains/authoring/concepts/finding.md), with the file and line,
+Reports every [finding](../../docqet/concepts/finding.md), with the file and line,
 and exits 1 if there are any but advisory ones, such as a capability that
 solves no problem yet. Agents run it with `--changed` before they finish, as
 the kit tells them to.
@@ -323,7 +323,7 @@ docqet list problems
 docqet list constraints
 docqet list gaps --initiative mvp --sort risk --product
 docqet list gaps --for persona:front-desk-clerk --impact damaging,blocking
-docqet list decisions --domain guest-stays --remote
+docqet list decisions --area guest-stays --remote
 docqet list tradeoffs --on component:ledger
 ```
 
@@ -346,7 +346,7 @@ agree.
 
 ### `docqet rubric`
 
-The [stability rubric](../../docqet/domains/authoring/concepts/rubric.md): what
+The [stability rubric](../../docqet/concepts/rubric.md): what
 each level expects of the work, quality by quality, with each outcome's
 examples. It's part of the format, so it's built into the binary and is the
 same for every project. Agents read it here, and `check` uses it to validate
@@ -395,7 +395,6 @@ docqet rename <old> <new>
 
 ```sh
 docqet rename capability:early-arrival capability:early-check-in
-docqet rename rule:same-day-turnover@guest-stays rule:same-day-turnover@property   # to another domain
 docqet rename capability:room-booking#needs-mouse capability:room-booking#calendar-needs-a-mouse
 docqet rename capability:early-arrival capability:early-check-in --dry-run          # what would change
 docqet rename capability:early-arrival capability:early-check-in --product         # also list other projects' references
@@ -404,9 +403,8 @@ docqet rename capability:early-arrival capability:early-check-in --product      
 ```text
 hotel-bookings · working tree (4f2c9e1)
 
-docqet/domains/guest-stays/capabilities/early-arrival.md
-  → docqet/domains/guest-stays/capabilities/early-check-in.md     id
-docqet/domains/guest-stays/features/front-desk.md                 capabilities
+docqet/capabilities/early-arrival.md
+  → docqet/capabilities/early-check-in.md                         id
 docqet/components/bookings.md                                     capabilities
 src/booking/arrival.ts:12                                         docqet:implements
 features/arrival.feature:3                                        docqet:verifies
@@ -417,8 +415,7 @@ Add this trailer when you commit:
   git commit --trailer "Docqet-Became: capability:early-arrival -> capability:early-check-in"
 ```
 
-- **It changes the doc itself**: its `id`, or its `domain` for a rule or
-  concept moving to another domain, or a gap's or tradeoff's key. A doc's
+- **It changes the doc itself**: its `id`, or a gap's or tradeoff's key. A doc's
   file is renamed with it when the file is named after the old ID, as the
   format recommends, and left alone otherwise.
 - **It changes every reference to it in the project**: links in every doc's
@@ -546,7 +543,7 @@ docqet history --branch release
 
 A commit says what something it removed became with a `Docqet-Became`
 trailer, one of git's own trailers, beside any others such as `Signed-off-by`.
-The [trailer](../../docqet/domains/authoring/concepts/trailer.md) concept is the whole format.
+The [trailer](../../docqet/concepts/trailer.md) concept is the whole format.
 
 ```text
 Settle refunds to the original card
@@ -849,8 +846,8 @@ docqet list decisions --product=hotel --initiative mvp
 - **It acts on one project**: the one whose `docqet.yaml` is nearest above
   the directory it's run in. In a repository with several projects, run it in
   each one's folder, or point `-C` at it.
-- **References are written as everywhere else**: `<type>:<id>`, a rule or
-  concept with `@<domain>`, a gap, tradeoff or decision with `#<key>`.
+- **References are written as everywhere else**: `<type>:<id>`, a gap,
+  tradeoff or decision with `#<key>`.
 - **Configuration** is `docqet.yaml` for the project, `DOCQET_TOKEN` and
   `DOCQET_SERVER` in the environment, and the user's config directory for a
   person's sign-in. Nothing secret is ever read from or written to the
@@ -861,14 +858,14 @@ docqet list decisions --product=hotel --initiative mvp
 What's left out on purpose is written down as tradeoffs in Docqet's own docs:
 on the [Commands](../../docqet/mechanisms/commands.md) mechanism, and on the
 features it's about, such as
-[Declaring intention](../../docqet/domains/authoring/features/declaring.md)
-and [Sharing one view](../../docqet/domains/understanding/features/sharing.md).
+[Declaring intention](../../docqet/features/declaring.md)
+and [Sharing one view](../../docqet/features/sharing.md).
 Signing in is a gap on
-[Applying states](../../docqet/domains/understanding/capabilities/applying.md).
+[Applying states](../../docqet/capabilities/applying.md).
 
 ## Open questions
 
 Open questions are decisions in Docqet's own docs, on the capability each is
-about, such as [Trailers](../../docqet/domains/authoring/capabilities/trailers.md),
-[Applying states](../../docqet/domains/understanding/capabilities/applying.md) and
-[Test and QA results](../../docqet/domains/understanding/capabilities/results.md).
+about, such as [Trailers](../../docqet/capabilities/trailers.md),
+[Applying states](../../docqet/capabilities/applying.md) and
+[Test and QA results](../../docqet/capabilities/results.md).

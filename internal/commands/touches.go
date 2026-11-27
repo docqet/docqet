@@ -154,7 +154,7 @@ func touchesOf(p *combine.Product, findings []state.Finding, paths []string) tou
 		evidence(c.Evidence, state.DocRef(state.TypeCapability, c.ID))
 	}
 	for _, r := range p.Rules {
-		evidence(r.Evidence, ruleRef(state.TypeRule, r.ID))
+		evidence(r.Evidence, state.DocRef(state.TypeRule, r.ID))
 	}
 	for _, t := range append(append([]*combine.Technical{}, p.Mechanisms...), p.Components...) {
 		evidence(t.Evidence, t.Kind+":"+t.ID)
@@ -198,7 +198,7 @@ func touchesOf(p *combine.Product, findings []state.Finding, paths []string) tou
 		}
 	}
 	for _, r := range p.Rules {
-		if named[ruleRef(state.TypeRule, r.ID)] {
+		if named[state.DocRef(state.TypeRule, r.ID)] {
 			for _, c := range r.Capabilities {
 				touched[c] = true
 			}
@@ -235,9 +235,7 @@ func touchesOf(p *combine.Product, findings []state.Finding, paths []string) tou
 			Rules: []string{}, Gaps: []gapView{}, Tradeoffs: []tradeoffView{},
 			Decisions: decisionViews("", derive.OpenDecisions(c.Doc)),
 		}
-		for _, r := range c.Rules {
-			tc.Rules = append(tc.Rules, inDomain(r, c.Domain))
-		}
+		tc.Rules = append(tc.Rules, c.Rules...)
 		for _, g := range gapsOf(p, c.Gaps) {
 			tc.Gaps = append(tc.Gaps, gapViewOf(p, g))
 		}

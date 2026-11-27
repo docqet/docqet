@@ -127,7 +127,7 @@ func newReadinessResource(p *combine.Product, r derive.Readiness) ReadinessResou
 		Started:      r.Started,
 		NotStarted:   capabilityIDs(r.NotStarted),
 		Improvements: make([]ImprovementResource, len(r.Improvements)),
-		Areas:        make([]AreaResource, len(r.Areas)),
+		Parts:        make([]PartResource, len(r.Parts)),
 	}
 	if b := r.Band(); b != nil {
 		res.Band = &b.Name
@@ -135,16 +135,16 @@ func newReadinessResource(p *combine.Product, r derive.Readiness) ReadinessResou
 	for i, im := range r.Improvements {
 		res.Improvements[i] = newImprovementResource(p, im)
 	}
-	for i, a := range r.Areas {
-		res.Areas[i] = newAreaResource(p, a)
+	for i, a := range r.Parts {
+		res.Parts[i] = newPartResource(p, a)
 	}
 	return res
 }
 
-func newAreaResource(p *combine.Product, a derive.Area) AreaResource {
-	r := AreaResource{Kind: string(a.Kind), Capabilities: capabilityIDs(a.Capabilities), Potential: a.Potential}
-	if a.Domain != nil {
-		r.Domain = &a.Domain.ID
+func newPartResource(p *combine.Product, a derive.Part) PartResource {
+	r := PartResource{Kind: string(a.Kind), Capabilities: capabilityIDs(a.Capabilities), Potential: a.Potential}
+	if a.Area != nil {
+		r.Area = &a.Area.ID
 	}
 	if a.Feature != nil {
 		r.Feature = &a.Feature.ID
@@ -175,8 +175,8 @@ func newImprovementResource(p *combine.Product, im derive.Improvement) Improveme
 	if im.Feature != nil {
 		r.Feature = &im.Feature.ID
 	}
-	if im.Domain != nil {
-		r.Domain = &im.Domain.ID
+	if im.Area != nil {
+		r.Area = &im.Area.ID
 	}
 	if im.Gap != nil {
 		r.Gap = &im.Gap.ID
@@ -207,7 +207,6 @@ func newDocResource(d combine.Doc) DocResource {
 	r := DocResource{
 		ID:          d.ID,
 		Project:     d.Project,
-		Domain:      d.Domain,
 		File:        d.File,
 		Name:        d.Name,
 		Description: d.Description,
@@ -217,7 +216,6 @@ func newDocResource(d combine.Doc) DocResource {
 	for i, f := range d.From {
 		c := ContributionResource{
 			Project:     f.Project,
-			Domain:      f.Domain,
 			File:        f.File,
 			Name:        f.Name,
 			Description: f.Description,
@@ -280,7 +278,7 @@ func newStatusResource(v *services.View, within []*combine.Capability, by derive
 	}
 
 	counts := CountsResource{
-		Domains:      len(p.Domains),
+		Areas:        len(p.Areas),
 		Features:     len(p.Features),
 		Capabilities: map[string]int{combine.Draft: 0},
 		Rules:        len(p.Rules),
@@ -312,13 +310,14 @@ func newStatusResource(v *services.View, within []*combine.Capability, by derive
 	}
 }
 
-func newDomainResource(p *combine.Product, d *combine.Domain) DomainResource {
-	readiness := derive.ReadinessOf(p, derive.DomainCapabilities(p, d), derive.ByFeature)
-	return DomainResource{
-		DocResource:  newDocResource(d.Doc),
-		Features:     list(d.Features),
-		Capabilities: list(d.Capabilities),
-		Maturity:     newMaturityResource(derive.DomainMaturity(p, d)),
+func newAreaResource(p *combine.Product, a *combine.Area) AreaResource {
+	caps := derive.AreaCapabilities(p, a)
+	readiness := derive.ReadinessOf(p, caps, derive.ByFeature)
+	return AreaResource{
+		DocResource:  newDocResource(a.Doc),
+		Features:     list(a.Features),
+		Capabilities: capabilityIDs(caps),
+		Maturity:     newMaturityResource(derive.AreaMaturity(p, a)),
 		Readiness:    newReadinessResource(p, readiness),
 		Exposure:     newExposureResource(readiness.Exposure),
 	}
@@ -326,23 +325,15 @@ func newDomainResource(p *combine.Product, d *combine.Domain) DomainResource {
 
 func newFeatureResource(p *combine.Product, f *combine.Feature) FeatureResource {
 	readiness := derive.ReadinessOf(p, derive.CapabilitiesByID(p, f.Capabilities), derive.ByCapability)
-	r := FeatureResource{
+	return FeatureResource{
 		DocResource:  newDocResource(f.Doc),
+		Area:         f.Area,
 		Capabilities: list(f.Capabilities),
 		Tradeoffs:    list(f.Tradeoffs),
-		Parts:        make([]PartResource, len(f.Parts)),
 		Maturity:     newMaturityResource(derive.FeatureMaturity(p, f)),
 		Readiness:    newReadinessResource(p, readiness),
 		Exposure:     newExposureResource(readiness.Exposure),
 	}
-	for i, part := range f.Parts {
-		r.Parts[i] = PartResource{
-			Domain:       part.Domain,
-			Capabilities: list(part.Capabilities),
-			Maturity:     newMaturityResource(derive.PartMaturity(p, part)),
-		}
-	}
-	return r
 }
 
 func newCapabilityResource(p *combine.Product, c *combine.Capability) CapabilityResource {
@@ -375,7 +366,7 @@ func newCapabilityResource(p *combine.Product, c *combine.Capability) Capability
 		Outcomes:      []OutcomeStandingResource{},
 	}
 	for i, l := range c.Levels {
-		r.Levels[i] = LevelResource{Project: l.Project, Domain: l.Domain, Level: l.Level}
+		r.Levels[i] = LevelResource{Project: l.Project, Level: l.Level}
 	}
 	for i, t := range open.Technical {
 		r.Open.Technical[i] = TechnicalGapResource{Gap: t.Gap.ID, On: state.DocRef(t.On.Kind, t.On.ID)}
@@ -548,7 +539,6 @@ func newGapResource(p *combine.Product, g *combine.Gap, within *derive.Scored) G
 		ID:          g.ID,
 		Subject:     subjectOf(g.ID),
 		Project:     g.Project,
-		Domain:      g.Domain,
 		Affects:     list(g.Affects),
 		Impact:      g.Impact,
 		Likelihood:  g.Likelihood,
@@ -600,7 +590,6 @@ func newTradeoffResource(p *combine.Product, t *combine.Tradeoff) TradeoffResour
 		ID:          t.ID,
 		Subject:     subjectOf(t.ID),
 		Project:     t.Project,
-		Domain:      t.Domain,
 		Affects:     list(t.Affects),
 		Name:        t.Name,
 		Description: t.Description,
@@ -618,7 +607,6 @@ func newFindingResource(pr state.Finding) FindingResource {
 		Subject:      pr.Subject,
 		Capabilities: list(pr.Capabilities),
 		Message:      pr.Message,
-		Domain:       pr.Domain,
 		File:         pr.File,
 		Line:         pr.Line,
 		Advisory:     state.Advisory(pr.Type),

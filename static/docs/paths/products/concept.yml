@@ -3,14 +3,13 @@ get:
   x-stability: prototype
   summary: Get a concept
   description: >-
-    A concept in a domain, with the capabilities and rules that use it.
+    A concept, with the capabilities and rules that use it.
   tags:
     - Products
   # No sign-in yet: a server is only reachable by its client's people.
   security: []
   parameters:
     - $ref: "../../schemas.yml#/components/parameters/Product"
-    - $ref: "../../schemas.yml#/components/parameters/Domain"
     - $ref: "../../schemas.yml#/components/parameters/DocID"
     - $ref: "../../schemas.yml#/components/parameters/ProjectsShown"
     - $ref: "../../schemas.yml#/components/parameters/Initiative"

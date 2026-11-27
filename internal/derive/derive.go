@@ -1,10 +1,10 @@
 // Package derive works out the figures nobody writes down from a combined
 // product: maturity and its bands, each gap's risk and verdict, exposure,
-// readiness, and its improvements. They're the understanding domain's
+// readiness, and its improvements. They're the understanding area's
 // concepts, worked out as the UI works them out, with its numbers. It's pure: what it returns
 // depends only on the product it's given.
 //
-// A figure for some capabilities, such as a domain's or a persona's
+// A figure for some capabilities, such as an area's or a persona's
 // readiness, takes the capabilities it counts, so what's showing is decided
 // before it: by which projects and initiative were combined, and by which
 // capabilities are passed in.
@@ -20,7 +20,7 @@ import (
 
 // started reports whether level is a stability level, not a draft. Only
 // started capabilities count toward a figure.
-// docqet:implements rule:drafts-claim-nothing@understanding
+// docqet:implements rule:drafts-claim-nothing
 func started(level string) bool {
 	return combine.Rank(level) > 0
 }
@@ -33,17 +33,6 @@ func AppliesAt(o state.Outcome, level string) bool {
 	}
 	r := combine.Rank(level)
 	return combine.Rank(o.Level) <= r && (o.Until == nil || combine.Rank(*o.Until) >= r)
-}
-
-// LevelInDomain returns a capability's level in a domain: its own there, as
-// it can differ by domain, or else its level in short.
-func LevelInDomain(c *combine.Capability, domain string) string {
-	for _, l := range c.Levels {
-		if l.Domain == domain {
-			return l.Level
-		}
-	}
-	return c.Stability
 }
 
 // NextLevel returns the level after level: Prototype after a draft, or ""
@@ -97,16 +86,16 @@ func CapabilitiesByID(p *combine.Product, ids []string) []*combine.Capability {
 	return out
 }
 
-// DomainCapabilities returns every capability with a part in a domain: those
-// in its parts of features, then those in no feature, each once.
-func DomainCapabilities(p *combine.Product, d *combine.Domain) []*combine.Capability {
+// AreaCapabilities returns every capability in an area's features, each
+// once.
+func AreaCapabilities(p *combine.Product, a *combine.Area) []*combine.Capability {
 	var ids []string
-	for _, id := range d.Features {
-		if part := partOf(p.Feature(id), d.ID); part != nil {
-			ids = appendNew(ids, part.Capabilities...)
+	for _, id := range a.Features {
+		if f := p.Feature(id); f != nil {
+			ids = appendNew(ids, f.Capabilities...)
 		}
 	}
-	return CapabilitiesByID(p, appendNew(ids, d.Capabilities...))
+	return CapabilitiesByID(p, ids)
 }
 
 // PersonaCapabilities returns the capabilities that list a persona: what a
@@ -156,19 +145,6 @@ func PersonaCapabilitiesIn(p *combine.Product, persona *combine.Persona, f *comb
 		}
 	}
 	return CapabilitiesByID(p, ids)
-}
-
-// partOf returns a feature's part in a domain, or nil.
-func partOf(f *combine.Feature, domain string) *combine.Part {
-	if f == nil {
-		return nil
-	}
-	for i := range f.Parts {
-		if f.Parts[i].Domain == domain {
-			return &f.Parts[i]
-		}
-	}
-	return nil
 }
 
 // subjectOf returns what a gap or tradeoff is on, from its ID: capability

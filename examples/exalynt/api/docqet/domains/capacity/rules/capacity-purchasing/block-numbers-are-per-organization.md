@@ -1,8 +1,0 @@
----
-docqet: rule
-id: block-numbers-are-per-organization
-domain: capacity
-name: Block numbers are per organization
----
-
-Blocks are numbered in turn within each organization, and keep their number.

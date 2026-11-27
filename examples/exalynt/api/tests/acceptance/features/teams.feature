@@ -5,7 +5,7 @@ Feature: Teams
   Background:
     Given Acme and Globex are clients
 
-  # docqet:verifies rule:only-exalynt-makes-teams@capacity
+  # docqet:verifies rule:only-exalynt-makes-teams
   Rule: Only Exalynt makes teams
 
     Example: Exalynt makes a team
@@ -17,7 +17,7 @@ Feature: Teams
       Then it's refused
       And there is no team called Platform
 
-  # docqet:verifies rule:team-names-are-unique@capacity
+  # docqet:verifies rule:team-names-are-unique
   Rule: Team names are unique, ignoring case and surrounding spaces
 
     Example: A name already taken
@@ -25,7 +25,7 @@ Feature: Teams
       When Exalynt makes a team called " platform "
       Then it's refused
 
-  # docqet:verifies rule:clients-can-have-several-teams@capacity
+  # docqet:verifies rule:clients-can-have-several-teams
   Rule: A client can have several teams, and sees each by name, with its own members and its own lead
 
     Example: Two teams
@@ -35,7 +35,7 @@ Feature: Teams
       Then Acme sees Platform, with Ada leading and Ben
       And Acme sees Data, with Cy leading
 
-  # docqet:verifies rule:teams-can-support-several-clients@capacity
+  # docqet:verifies rule:teams-can-support-several-clients
   Rule: A team can support several clients, and Exalynt sees every client a team is assigned to
 
     Example: A team with two clients
@@ -43,7 +43,7 @@ Feature: Teams
       When Exalynt looks at Platform
       Then Platform supports Acme and Globex
 
-  # docqet:verifies rule:clients-cant-see-a-teams-other-clients@capacity
+  # docqet:verifies rule:clients-cant-see-a-teams-other-clients
   Rule: A client sees only itself among a team's clients, never which others the team works with
 
     Example: A shared team
@@ -51,7 +51,7 @@ Feature: Teams
       When Acme looks at its teams
       Then Acme sees Platform supporting only Acme
 
-  # docqet:verifies rule:clients-see-only-their-supporting-teams@capacity
+  # docqet:verifies rule:clients-see-only-their-supporting-teams
   Rule: A client sees only teams that support it
 
     Example: Asking for another client's teams
@@ -76,7 +76,7 @@ Feature: Teams
       When Acme looks at its teams
       Then Acme sees no teams
 
-  # docqet:verifies rule:member-access-to-teams-follows-role@capacity
+  # docqet:verifies rule:member-access-to-teams-follows-role
   Rule: A client's members see its teams only if their role lets them
 
     Example: A Billing member
@@ -84,7 +84,7 @@ Feature: Teams
       When a Billing member of Acme looks at Acme's teams
       Then it's refused
 
-  # docqet:verifies rule:exalynts-view-of-teams@capacity
+  # docqet:verifies rule:exalynts-view-of-teams
   Rule: Naming a client, Exalynt sees that client's teams and every client each supports; naming none, every team
 
     Example: Naming a client
@@ -98,7 +98,7 @@ Feature: Teams
       When Exalynt looks at every team
       Then Exalynt sees Data, Platform and Tools
 
-  # docqet:verifies rule:only-exalynt-assigns-teams@capacity
+  # docqet:verifies rule:only-exalynt-assigns-teams
   Rule: Only Exalynt assigns teams to clients and takes them off
 
     Example: Exalynt assigns a team
@@ -118,7 +118,7 @@ Feature: Teams
       Then it's refused
       And Platform supports Acme
 
-  # docqet:verifies rule:repeat-assignment-changes-nothing@capacity
+  # docqet:verifies rule:repeat-assignment-changes-nothing
   Rule: Assigning a team to a client it already supports changes nothing
 
     Example: Assigning it again
@@ -126,7 +126,7 @@ Feature: Teams
       When Exalynt assigns Platform to Acme again
       Then Platform supports Acme, once
 
-  # docqet:verifies rule:what-counts-as-a-team-update@capacity
+  # docqet:verifies rule:what-counts-as-a-team-update
   Rule: A team counts as updated when its engineers or clients change
 
     Example: Adding an engineer
@@ -151,7 +151,7 @@ Feature: Teams
       When Exalynt assigns Platform to Acme again
       Then Platform has not been updated
 
-  # docqet:verifies rule:removing-one-team-keeps-the-others@capacity
+  # docqet:verifies rule:removing-one-team-keeps-the-others
   Rule: Taking a client off one of its teams leaves it its other teams
 
     Example: Two teams, one taken off
@@ -159,7 +159,7 @@ Feature: Teams
       When Exalynt takes Acme off Platform
       Then Acme sees only Data
 
-  # docqet:verifies rule:deleted-teams-disappear-for-clients@capacity
+  # docqet:verifies rule:deleted-teams-disappear-for-clients
   Rule: Once a team is deleted, its clients no longer see it
 
     Example: A deleted team
@@ -167,7 +167,7 @@ Feature: Teams
       When Exalynt deletes Platform
       Then Acme sees only Data
 
-  # docqet:verifies rule:members-are-listed-lead-first@capacity
+  # docqet:verifies rule:members-are-listed-lead-first
   Rule: A team's members are listed lead first, each with their name and email address
 
     Example: Listing members
@@ -176,7 +176,7 @@ Feature: Teams
       Then Ben is listed first
       And each member is shown with their name and email address
 
-  # docqet:verifies rule:one-team-per-engineer@capacity
+  # docqet:verifies rule:one-team-per-engineer
   Rule: An engineer belongs to at most one team, so putting them on another moves them off their old one
 
     Example: Moving teams
@@ -185,7 +185,7 @@ Feature: Teams
       Then Ada is on Data
       And Ada is no longer on Platform
 
-  # docqet:verifies rule:one-lead-per-team@capacity
+  # docqet:verifies rule:one-lead-per-team
   Rule: A team has at most one lead, so making someone its lead makes the old lead an ordinary member
 
     Example: A new lead
@@ -194,7 +194,7 @@ Feature: Teams
       Then Ben leads Platform
       And Ada is on Platform, not leading
 
-  # docqet:verifies rule:a-departing-lead-leaves-no-lead@capacity
+  # docqet:verifies rule:a-departing-lead-leaves-no-lead
   Rule: When a team's lead moves to another team, their old team is left with no lead, and they lead the new team only if put on it as lead
 
     Example: Moved as a member
@@ -209,7 +209,7 @@ Feature: Teams
       Then Platform has no lead
       And Ada leads Data
 
-  # docqet:verifies rule:removed-members-leave-every-clients-view@capacity
+  # docqet:verifies rule:removed-members-leave-every-clients-view
   Rule: Taking someone off a team takes them off every client's view of it
 
     Example: Taken off a shared team
@@ -217,7 +217,7 @@ Feature: Teams
       When Exalynt takes Ben off Platform
       Then neither Acme nor Globex sees Ben on Platform
 
-  # docqet:verifies rule:removing-someone-already-gone@capacity
+  # docqet:verifies rule:removing-someone-already-gone
   Rule: Taking someone off a team they've already left finds nothing to take them off
 
     Example: Already off
@@ -225,7 +225,7 @@ Feature: Teams
       When Exalynt takes Ada off Platform
       Then there's no one to take off
 
-  # docqet:verifies rule:only-exalynts-people-join-teams@capacity
+  # docqet:verifies rule:only-exalynts-people-join-teams
   Rule: Only Exalynt's own people can be on a team, and someone who leaves Exalynt is no longer shown on it
 
     Example: Putting a client's member on a team

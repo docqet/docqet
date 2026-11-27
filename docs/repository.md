@@ -7,8 +7,8 @@ what's an example, so this says which is which._
 | What                      | Where                                                                                 | It says                                                                                                                                                  |
 | ------------------------- | ------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Docqet, the product**   | [`docqet.yaml`](../docqet.yaml) and [`docqet/`](../docqet/)                           | What Docqet does and must never do, in Docqet's format: its personas and problems, capabilities, rules, and its gaps, tradeoffs and open decisions                    |
-| **The format**            | The concepts in [`docqet/domains/*/concepts/`](../docqet/domains/authoring/concepts/) | What the words mean: what a capability, rule or gap is, and how each is written                                                                          |
-| **The stability rubric**  | [`internal/rubric/rubric.yml`](../internal/rubric/rubric.yml)                         | What each stability level expects, built into `docqet`, and explained by the [stability rubric](../docqet/domains/authoring/concepts/rubric.md) concept |
+| **The format**            | The concepts in [`docqet/concepts/`](../docqet/concepts/) | What the words mean: what a capability, rule or gap is, and how each is written                                                                          |
+| **The stability rubric**  | [`internal/rubric/rubric.yml`](../internal/rubric/rubric.yml)                         | What each stability level expects, built into `docqet`, and explained by the [stability rubric](../docqet/concepts/rubric.md) concept |
 | **How `docqet` is built** | [`docs/architecture/`](architecture/)                                                 | How the code is laid out and why, linked from the components in `docqet/`                                                                                |
 | **Examples**              | [`examples/`](../examples/)                                                           | Other, made-up projects, each a Docqet project of its own                                                                                                |
 
@@ -16,7 +16,7 @@ what's an example, so this says which is which._
   decisions are written there, on the capability, feature, mechanism or
   component they're about, not as lists in other docs.
 - **A concept defines a word, and a rule is one Docqet follows.** The
-  [rule](../docqet/domains/authoring/concepts/rule.md) concept says what a
+  [rule](../docqet/concepts/rule.md) concept says what a
   rule is in any project. A rule doc in `docqet/`, such as "nothing is read
   from an ignored file", is a rule Docqet itself follows.
 - **The examples are separate projects.** Each has a `docqet.yaml` of its

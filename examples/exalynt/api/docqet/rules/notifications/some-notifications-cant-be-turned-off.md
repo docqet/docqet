@@ -1,0 +1,10 @@
+---
+docqet: rule
+id: some-notifications-cant-be-turned-off
+name: Some notifications can't be turned off
+respects: [constraint:no-unwanted-bulk-email]
+---
+
+Some notifications can't be turned off: a moved preferred week, a failed
+payment, and a payout account that needs attention. The person still chooses
+which channel they go to.

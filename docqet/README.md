@@ -15,21 +15,21 @@ mean, and what we're working on: its gaps, tradeoffs and open decisions.
 ## The format is defined here
 
 Docqet's own concepts are the format's words: capability, rule, gap,
-maturity and the rest. So the concept docs in each domain's `concepts/` folder
-are the definition of the format. There's no separate spec.
+maturity and the rest. So the concept docs in [`concepts/`](concepts/) are
+the definition of the format. There's no separate spec.
 
-- **Start with the domains.** [Authoring](domains/authoring/domain.md)
+- **Start with the areas.** [Authoring](areas/authoring.md)
   introduces declaring intention, keeping it current, and how the concepts
-  fit together. [Understanding](domains/understanding/domain.md) introduces
+  fit together. [Understanding](areas/understanding.md) introduces
   the questions Docqet answers for everyone involved, and what it works out
   to answer them: maturity, readiness, risk and improvements.
 - **A concept defines a word for any project.** The
-  [rule](domains/authoring/concepts/rule.md) concept says what a rule is
+  [rule](concepts/rule.md) concept says what a rule is
   wherever Docqet is used.
 - **A rule, capability or gap here is Docqet's own.** A rule doc in
-  [`domains/authoring/rules/`](domains/authoring/rules/), such as "nothing is
+  [`rules/`](rules/), such as "nothing is
   read from an ignored file", is a rule Docqet itself follows.
-- **The [stability rubric](domains/authoring/concepts/rubric.md)** is data
+- **The [stability rubric](concepts/rubric.md)** is data
   `docqet` is built with, so it lives with the code, in
   [`internal/rubric/rubric.yml`](../internal/rubric/rubric.yml).
   The concept explains it.
@@ -38,7 +38,7 @@ are the definition of the format. There's no separate spec.
 
 | Here, in `docqet/`                                         | Elsewhere                                                                                            |
 | ---------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
-| What Docqet does: its domains, features and capabilities   | `docqet`'s code: [`internal/`](../internal/), [`cmd/`](../cmd/), [`ui/`](../ui/)                     |
+| What Docqet does: its areas, features and capabilities     | `docqet`'s code: [`internal/`](../internal/), [`cmd/`](../cmd/), [`ui/`](../ui/)                     |
 | What the format's words mean: its concepts                 | The stability rubric's data: [`internal/rubric/`](../internal/rubric/)                        |
 | The rules Docqet follows, such as "a draft claims nothing" | How `docqet`'s code is laid out and why: [`docs/architecture/`](../docs/architecture/)               |
 | Who Docqet is for: its personas                            | The agent kit that `docqet kit` installs: [`kit/`](../kit/)                                          |
@@ -48,18 +48,18 @@ are the definition of the format. There's no separate spec.
 
 ```text
 docqet/
+├── areas/
+│   ├── authoring.md       declaring intention and evidence, and keeping both current: the entry point to the format
+│   └── understanding.md   what everyone involved can learn from it: where it stands, what it means, what changed
+├── features/
+├── capabilities/
+├── rules/                 what Docqet must always or never do
+├── concepts/              the format's words: doc, capability, rule, gap, maturity, readiness…
 ├── personas/              who Docqet is for
-├── domains/
-│   ├── authoring/         declaring intention and evidence, and keeping both current
-│   │   ├── domain.md      the entry point to the format
-│   │   ├── concepts/      the format's words: doc, capability, rule, gap, annotation…
-│   │   ├── features/
-│   │   ├── capabilities/
-│   │   └── rules/
-│   └── understanding/     what everyone involved can learn from it: where it stands, what it means, what changed
-│       └── …              the same, with maturity, readiness, risk and exposure as concepts
+├── problems/              the pain points they share
+├── constraints/           what's imposed on Docqet from outside
 ├── mechanisms/            how something works across docqet's code
-└── components/            one area of docqet's code, linked to docs/architecture/
+└── components/            one part of docqet's code, linked to docs/architecture/
 ```
 
 ## Working with it

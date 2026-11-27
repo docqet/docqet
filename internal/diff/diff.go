@@ -143,32 +143,18 @@ func (d *Diff) items(old, new map[string]bool, added, removed string, became map
 	}
 }
 
-// levels records each capability whose level changed in a domain.
+// levels records each capability whose level changed.
 func (d *Diff) levels(from, to *state.State) {
 	old := map[string]string{}
 	for _, c := range from.Capabilities {
-		old[c.ID+"@"+c.Domain] = c.Stability
+		old[c.ID] = c.Stability
 	}
 	for _, c := range to.Capabilities {
-		was, ok := old[c.ID+"@"+c.Domain]
+		was, ok := old[c.ID]
 		if ok && was != c.Stability {
-			ref := state.DocRef(state.TypeCapability, c.ID)
-			if multiDomain(to, c.ID) {
-				ref += " in " + c.Domain
-			}
-			d.Changes = append(d.Changes, Change{Kind: Level, Ref: ref, From: was, To: c.Stability})
+			d.Changes = append(d.Changes, Change{Kind: Level, Ref: state.DocRef(state.TypeCapability, c.ID), From: was, To: c.Stability})
 		}
 	}
-}
-
-func multiDomain(st *state.State, id string) bool {
-	n := 0
-	for _, c := range st.Capabilities {
-		if c.ID == id {
-			n++
-		}
-	}
-	return n > 1
 }
 
 // docOf is what diff compares of a doc: its evidence and decisions.
@@ -177,8 +163,7 @@ type docOf struct {
 	decisions []state.Decision
 }
 
-// docsOf is every doc in a state, by reference. A capability written in
-// several domains is one doc.
+// docsOf is every doc in a state, by reference.
 func docsOf(st *state.State) map[string]docOf {
 	docs := map[string]docOf{}
 	add := func(typ, id string, e *state.Evidence, ds []state.Decision) {
@@ -190,8 +175,8 @@ func docsOf(st *state.State) map[string]docOf {
 		prev.decisions = append(prev.decisions, ds...)
 		docs[ref] = prev
 	}
-	for _, x := range st.Domains {
-		add(state.TypeDomain, x.ID, nil, x.Decisions)
+	for _, x := range st.Areas {
+		add(state.TypeArea, x.ID, nil, x.Decisions)
 	}
 	for _, x := range st.Features {
 		add(state.TypeFeature, x.ID, nil, x.Decisions)
@@ -200,10 +185,10 @@ func docsOf(st *state.State) map[string]docOf {
 		add(state.TypeCapability, x.ID, &st.Capabilities[i].Evidence, x.Decisions)
 	}
 	for i, x := range st.Rules {
-		add(state.TypeRule, x.ID+"@"+x.Domain, &st.Rules[i].Evidence, nil)
+		add(state.TypeRule, x.ID, &st.Rules[i].Evidence, nil)
 	}
 	for _, x := range st.Concepts {
-		add(state.TypeConcept, x.ID+"@"+x.Domain, nil, nil)
+		add(state.TypeConcept, x.ID, nil, nil)
 	}
 	for _, x := range st.Personas {
 		add(state.TypePersona, x.ID, nil, nil)

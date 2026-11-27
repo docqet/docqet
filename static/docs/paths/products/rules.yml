@@ -4,7 +4,7 @@ get:
   summary: List a product's rules
   description: >-
     The product's rules that are showing, each with how every capability that
-    follows it stands on it. A rule's ID is `<id>@<domain>`.
+    follows it stands on it.
   tags:
     - Products
   # No sign-in yet: a server is only reachable by its client's people.

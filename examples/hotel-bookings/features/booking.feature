@@ -1,6 +1,6 @@
 Feature: Room booking
 
-  # docqet:verifies rule:no-double-booking@guest-stays
+  # docqet:verifies rule:no-double-booking
   Rule: A room can't be double-booked
 
     Scenario: A stay that overlaps an existing booking is refused

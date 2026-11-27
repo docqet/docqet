@@ -1,0 +1,8 @@
+---
+docqet: rule
+id: enrolling-is-voluntary
+name: Enrolling is voluntary
+---
+
+Enrolling is voluntary and never automatic, and recommending Exalynt without
+being enrolled earns nothing.

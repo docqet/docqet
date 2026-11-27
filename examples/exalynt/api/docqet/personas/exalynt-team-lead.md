@@ -9,7 +9,6 @@ description: >-
 role: Exalynt Team Lead
 title: Principal engineer
 image: https://randomuser.me/api/portraits/men/61.jpg
-initiatives: [initiative:mvp, initiative:notifications, initiative:conversation-spaces]
 ---
 
 ## Needs

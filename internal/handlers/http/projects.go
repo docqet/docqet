@@ -33,7 +33,7 @@ func NewProjectsHandler(logger *slog.Logger, states *services.StateService) *Pro
 }
 
 // RegisterRoutes mounts the project and commit routes on r.
-// docqet:implements rule:intention-only-from-repository@understanding
+// docqet:implements rule:intention-only-from-repository
 func (h *ProjectsHandler) RegisterRoutes(r chi.Router) {
 	r.Get("/projects/{project}", h.GetProject)
 	r.Get("/projects/{project}/state", h.GetLatestState)

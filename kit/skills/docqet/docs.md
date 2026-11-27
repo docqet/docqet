@@ -9,16 +9,15 @@
 - **No fact in both.** The body says more than the fields. It doesn't repeat
   them.
 - **Every doc starts with `docqet`**, its type, which is what makes the file a
-  Docqet doc, **then `id`**, then **`domain`** for a feature, capability, rule
-  or concept. Then comes a `name`, and for every doc but a rule a
-  `description`. The ID is how everything else names it, so it stays the same
+  Docqet doc, **then `id`**. Then comes a `name`, and for every doc but a rule
+  a `description`. The ID is how everything else names it, so it stays the same
   when the file is renamed or moved, or the name changes.
 - **Where a file is means nothing.** Put a new doc where the project keeps
   others of its type, named after its ID. In a new project, use the
-  recommended layout: `docqet/domains/<domain>/` with `domain.md` and
-  `features/`, `capabilities/`, `rules/` and `concepts/`, and
-  `docqet/personas/`, `docqet/problems/`, `docqet/constraints/`, `docqet/initiatives/`,
-  `docqet/mechanisms/` and `docqet/components/`. The name is what it's called.
+  recommended layout: a folder per type in `docqet/`: `areas/`, `features/`,
+  `capabilities/`, `rules/`, `concepts/`, `personas/`, `problems/`,
+  `constraints/`, `initiatives/`, `mechanisms/` and `components/`. Subfolders
+  inside any of them are yours to use, and mean nothing to tools. The name is what it's called.
   The description says what it is, usually in a sentence, and for a concept a
   definition in as many sentences as that takes.
 - **Fields go in the order below.** Leave out any that aren't required and
@@ -26,7 +25,8 @@
   unknown one, or a value the format doesn't allow.
 - **Field names, IDs and values are kebab case**: `room-booking`,
   `confused-with`, `ga`. A link is a reference, `<type>:<id>`:
-  `rule:no-double-booking`.
+  `rule:no-double-booking`. A link is written in the more concrete doc and
+  names the more general one: see [links](#links).
 - **Text values are Markdown.** A short one can be plain. A longer one uses
   `>-` to fold its lines into one paragraph. One with paragraphs or a list
   uses `|`. A list of sentences is a YAML list, one string per item, never a
@@ -42,7 +42,7 @@
 Docs are in two spaces. **Problem docs**, personas, problems and
 constraints, are the problem space: why the software exists, and what any
 solution must keep to, never naming the software. The solution space holds **product docs**: what
-the software does, seen from outside, in the domain's words, never naming the
+the software does, seen from outside, in the business's words, never naming the
 implementation. And **technical docs**: how it's built, seen from inside, in
 the code's words. Links only point toward why: technical docs link to
 capabilities, capabilities to the problems they solve, and rules and
@@ -53,7 +53,7 @@ mechanisms to the constraints they respect, never the other way. The spaces say 
 ### Persona: `docqet: persona`
 
 A type of person the software serves, written as one invented person, for the
-whole project rather than per domain.
+whole project.
 
 ```yaml
 ---
@@ -64,7 +64,6 @@ description: Runs the front desk: takes bookings, and checks guests in and out.
 role: Front desk                   # how they use the software; null if none
 title: Front desk clerk            # their job title; null if none
 image: https://randomuser.me/api/portraits/women/68.jpg   # optional
-initiatives: [initiative:busy-season]   # the initiatives whose work is for them
 ---
 ```
 
@@ -74,8 +73,8 @@ a persona on a real person's details.
 
 ### Problem: `docqet: problem`
 
-A pain point one or more personas share, for the whole project rather than
-per domain. It's why capabilities exist.
+A pain point one or more personas share, for the whole project. It's why
+capabilities exist.
 
 ```yaml
 ---
@@ -108,7 +107,7 @@ worked out.
 
 Something imposed from outside that any solution must respect, and nobody on
 the team can change: a law, a contract, a policy set elsewhere, or a fact.
-For the whole project rather than per domain.
+For the whole project.
 
 ```yaml
 ---
@@ -130,19 +129,18 @@ call.
 
 ## Product docs
 
-Written in the domain's words, for anyone with a stake in the software. They
-never name the implementation.
+Written in the business's words, for anyone with a stake in the software.
+They never name the implementation.
 
-### Domain: `docqet: domain`
+### Area: `docqet: area`
 
-A part of the business with a language of its own. Every product doc but an
-initiative is in one, the one its `domain` field names. A domain
-doc's `id` is the domain's ID, and projects working in the same part of the
-business use the same one.
+A grouping of features, so a large product can be seen a part at a time. It
+has no language of its own: rules and concepts are the product's, whatever
+area uses them. Features name their area; small projects can have none.
 
 ```yaml
 ---
-docqet: domain
+docqet: area
 id: guest-stays
 name: Guest stays
 description: Looking after guests from their booking to their check-out.
@@ -162,12 +160,9 @@ new feature. Work that only changes how something is built is neither.
 ---
 docqet: feature
 id: reservations
-domain: guest-stays
 name: Reservations
 description: Taking bookings and handling changes to them, before the guest arrives.
-capabilities:        # required, in the order to show them
-  - capability:room-booking
-  - capability:cancellations
+area: area:guest-stays   # optional: the area it's in
 tradeoffs: []        # non-goals: capabilities we've decided never to build
 decisions: []
 ---
@@ -175,7 +170,8 @@ decisions: []
 
 A feature has no level, rules, gaps or problems. Its maturity and readiness
 come from its capabilities, its rules and problems are theirs, and a
-capability it lacks is a draft capability. A capability is in at most one feature.
+capability it lacks is a draft capability. Its capabilities name it; it lists
+none, and readers show them by name.
 
 ### Capability: `docqet: capability`
 
@@ -188,10 +184,10 @@ software closes each business day overnight".
 ---
 docqet: capability
 id: room-booking
-domain: guest-stays
 name: Room booking
 description: Clerks book a free room for a guest's stay.
 stability: beta      # required: draft, prototype, alpha, beta or ga
+feature: feature:reservations   # optional: the feature it's in, at most one
 solves: [problem:room-given-to-two-guests]   # why it exists; its personas are its problems'
 initiatives: []
 rules: [rule:no-double-booking, rule:minimum-stay]
@@ -221,7 +217,7 @@ stood for, link them with `solves`, and remove `personas`.
 ### Rule: `docqet: rule`
 
 What must always or never happen, one rule per file. Rules can be kept in
-folders of their own, such as one per part of the domain, like `rules/booking/`,
+folders of their own, such as one per part of the business, like `rules/booking/`,
 never one per capability or feature. The folders mean nothing to tools. A
 rule's ID doesn't change as capabilities start or stop following it. Its name
 is the rule in a few words. It has no description. Its body says the rule in
@@ -231,7 +227,6 @@ full when its name doesn't, with examples.
 ---
 docqet: rule
 id: same-day-turnover
-domain: guest-stays
 name: A stay can start on the day another ends
 concepts: [concept:booking, concept:room]
 respects: [constraint:rooms-cleaned-between-stays]   # optional: constraints it keeps to
@@ -246,14 +241,14 @@ needs at least one capability that follows it.
 
 ### Concept: `docqet: concept`
 
-What a word means in this domain. The same word can mean different things in
-different domains, and both are right.
+What a word means in the product. Each word means one thing: where the business
+uses one word for two things, they're two concepts with their own IDs, each
+naming the other in `confused-with`, such as a booking and a billed stay.
 
 ```yaml
 ---
 docqet: concept
 id: bill
-domain: billing
 name: Bill
 description: >-
   Everything a guest owes for one stay, and everything they've paid towards
@@ -272,8 +267,7 @@ concepts, and the states it moves through.
 ### Initiative: `docqet: initiative`
 
 A body of work, so it can be seen on its own, such as the MVP or what comes
-after it. It's for the whole project rather than per domain, and cuts across
-features.
+after it. It's for the whole project, and cuts across features.
 
 ```yaml
 ---
@@ -282,25 +276,26 @@ id: busy-season
 name: Busy season
 description: >-
   Handling full nights: groups, a waitlist, and turning rooms over faster.
+personas: [persona:front-desk-clerk]   # the personas its work is for
 ---
 ```
 
 The body is optional, and can say more, such as what the work is and why.
-Capabilities link to it in `initiatives`, and so do the personas its work is
-for; it lists neither. It has no level, gaps, tradeoffs or decisions, and no
+Capabilities link to it in `initiatives`, and it names the personas its work
+is for. It has no level, gaps, tradeoffs or decisions, and no
 dates or order. A capability or persona in no initiative shows only when
 everything does.
 
 An initiative is a person's call: ask before creating one or adding a
 capability or persona to one. Once the work no longer needs seeing on its
-own, remove the link from its capabilities and personas and delete the doc.
+own, remove the link from its capabilities and delete the doc.
 
 ## Technical docs
 
 Written in the code's words, for the engineer or agent about to change it.
 They hold only what the code can't say. Leave out what a competent reader
 learns from the code in a few minutes, such as lists of endpoints, tables or
-functions. Most code has no doc. Neither type has a level or a domain, and
+functions. Most code has no doc. Neither type has a level, and
 neither lists paths: the code points at the doc with `docqet:implements`.
 
 ### Mechanism: `docqet: mechanism`
@@ -354,13 +349,18 @@ surprise whoever changes it.
 
 ## Links
 
-Every link points one way, and is written once:
+Every link points one way, and is written once, in the more concrete doc,
+naming the more general one. Across spaces that's toward why: code →
+technical → product → problem, skipping a space when there's nothing between.
+Within a space it's up: a capability names its feature, and a feature its
+area. Docqet works out every reverse link, so each page shows both
+directions.
 
 ```text
-feature    → capabilities
-capability → problems (solves), initiatives, rules, concepts
+feature    → area
+capability → feature, problems (solves), initiatives, rules, concepts
+initiative → personas
 problem    → personas
-persona    → initiatives
 rule       → concepts, constraints (respects)
 concept    → concepts                      (confused-with)
 component  → capabilities, outcomes        (meets)
@@ -370,11 +370,8 @@ tradeoff   → an outcome                    (outcome)
 ```
 
 Every link is a reference, `<type>:<id>`, the same in frontmatter as in an
-annotation: `rules: [rule:no-double-booking]`. A link to a rule or concept
-with no domain means the one in the linking doc's own domain, and nothing else.
-One in another domain always adds `@<domain>`, even when no other domain has
-that ID: `concepts: [concept:booking@guest-stays]`. That way a link's meaning
-never changes when another domain adds a rule or concept with the same ID.
+annotation: `rules: [rule:no-double-booking]`. Every ID names one thing across
+the whole product, rules and concepts included.
 
 To go the other way, such as finding which capabilities follow a rule, use
 `docqet show rule:no-double-booking`: it lists the docs that link to it and
@@ -383,10 +380,9 @@ the code that points at it.
 ## Several projects
 
 Projects in the same product, named in `docqet.yaml`, contribute to one
-picture of the product. A domain, feature, capability, persona, problem,
-constraint, initiative, mechanism or component with the same ID in two projects is one thing: its name and
-description must match, its links are combined, and a capability's level is
-per domain. Before creating one, check whether another project in the
+picture of the product. Any doc with the same ID in two projects is one
+thing: its name and description must match, its links are combined, and a
+capability's level is per project. Before creating one, check whether another project in the
 product already has it, with `docqet list <type> --product`. Reuse its ID,
 name and description rather than writing a second. `docqet check --product`
 reports where two projects disagree.

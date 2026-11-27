@@ -5,7 +5,7 @@ name: Authorization
 description: >-
   Decides what a caller may do and which records they may do it to, from the
   Principal authentication built. It knows nothing of tokens or the database.
-  What the terms mean in the domain is in the role and organization concepts.
+  What the terms mean to the business is in the role and organization concepts.
 tradeoffs:
   - id: application-access-not-enforced
     name: Application access enforced only by the front ends

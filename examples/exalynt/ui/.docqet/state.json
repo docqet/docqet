@@ -1,5 +1,5 @@
 {
-  "docqet": "0.4",
+  "docqet": "0.5",
   "project": {
     "id": "exalynt-ui",
     "name": "Exalynt UI"
@@ -11,11 +11,12 @@
   "commit": "22b9e0d",
   "indexedAt": "2026-11-23T12:00:00Z",
   "summary": {
-    "domains": 0,
+    "areas": 0,
     "features": 0,
     "personas": 0,
     "problems": 0,
     "constraints": 0,
+    "initiatives": 0,
     "capabilities": {
       "draft": 0,
       "prototype": 0,
@@ -25,19 +26,20 @@
     },
     "rules": 0,
     "gaps": 0,
-    "findings": 90,
+    "findings": 47,
     "tradeoffs": 5,
     "mechanisms": 2,
     "components": 6
   },
-  "domains": [],
+  "areas": [],
   "features": [],
-  "capabilities": [],
-  "rules": [],
-  "concepts": [],
   "personas": [],
   "problems": [],
   "constraints": [],
+  "initiatives": [],
+  "capabilities": [],
+  "rules": [],
+  "concepts": [],
   "mechanisms": [
     {
       "id": "error-reporting",
@@ -315,24 +317,6 @@
   "gaps": [],
   "tradeoffs": [
     {
-      "id": "mechanism:error-reporting#errors-only",
-      "affects": [],
-      "name": "Only errors collected, no page views",
-      "description": "Only errors are collected: uncaught ones, and those pages pass to `reportError`. No page views, request timings or session recordings.",
-      "benefit": null,
-      "drawback": "A slow page, or one people give up on without an error, leaves nothing to look at.",
-      "places": []
-    },
-    {
-      "id": "mechanism:stability-marks#levels-kept-in-the-ui",
-      "affects": [],
-      "name": "Page levels declared in the UI, apart from the docs",
-      "description": "Each page's level is declared once in the UI, in `src/featureStability.ts`, for the rail and the pages to read, apart from the capability docs' levels in the API's repository.",
-      "benefit": null,
-      "drawback": "A level change is made in both repositories, and nothing checks that they agree. That shows when a feature's level is changed in one repository and not the other.",
-      "places": []
-    },
-    {
       "id": "component:auth#clerks-screens-for-session-tasks",
       "affects": [],
       "name": "Clerk's own screens for session tasks",
@@ -358,548 +342,355 @@
       "benefit": null,
       "drawback": "A member who hasn't uploaded a photo shows initials here, though their profile shows their Gravatar.",
       "places": []
+    },
+    {
+      "id": "mechanism:error-reporting#errors-only",
+      "affects": [],
+      "name": "Only errors collected, no page views",
+      "description": "Only errors are collected: uncaught ones, and those pages pass to `reportError`. No page views, request timings or session recordings.",
+      "benefit": null,
+      "drawback": "A slow page, or one people give up on without an error, leaves nothing to look at.",
+      "places": []
+    },
+    {
+      "id": "mechanism:stability-marks#levels-kept-in-the-ui",
+      "affects": [],
+      "name": "Page levels declared in the UI, apart from the docs",
+      "description": "Each page's level is declared once in the UI, in `src/featureStability.ts`, for the rail and the pages to read, apart from the capability docs' levels in the API's repository.",
+      "benefit": null,
+      "drawback": "A level change is made in both repositories, and nothing checks that they agree. That shows when a feature's level is changed in one repository and not the other.",
+      "places": []
     }
   ],
   "findings": [
     {
       "type": "unknown-id",
-      "subject": "mechanism:error-reporting",
+      "subject": "component:account",
       "capabilities": [],
-      "message": "Capability client-home doesn't exist."
-    },
-    {
-      "type": "unknown-id",
-      "subject": "mechanism:error-reporting",
-      "capabilities": [],
-      "message": "Capability getting-set-up doesn't exist."
-    },
-    {
-      "type": "unknown-id",
-      "subject": "mechanism:error-reporting",
-      "capabilities": [],
-      "message": "Capability billing doesn't exist."
-    },
-    {
-      "type": "unknown-id",
-      "subject": "mechanism:error-reporting",
-      "capabilities": [],
-      "message": "Capability organizations-and-members doesn't exist."
-    },
-    {
-      "type": "unknown-id",
-      "subject": "mechanism:error-reporting",
-      "capabilities": [],
-      "message": "Capability estimates doesn't exist."
-    },
-    {
-      "type": "unknown-id",
-      "subject": "mechanism:error-reporting",
-      "capabilities": [],
-      "message": "Capability your-profile doesn't exist."
-    },
-    {
-      "type": "unknown-id",
-      "subject": "mechanism:error-reporting",
-      "capabilities": [],
-      "message": "Capability partner-home doesn't exist."
-    },
-    {
-      "type": "unknown-id",
-      "subject": "mechanism:error-reporting",
-      "capabilities": [],
-      "message": "Capability partner-earnings doesn't exist."
-    },
-    {
-      "type": "unknown-id",
-      "subject": "mechanism:error-reporting",
-      "capabilities": [],
-      "message": "Capability partner-payouts doesn't exist."
-    },
-    {
-      "type": "unknown-id",
-      "subject": "mechanism:error-reporting",
-      "capabilities": [],
-      "message": "Capability partner-payout-accounts doesn't exist."
-    },
-    {
-      "type": "unknown-id",
-      "subject": "mechanism:stability-marks",
-      "capabilities": [],
-      "message": "Capability client-home doesn't exist."
-    },
-    {
-      "type": "unknown-id",
-      "subject": "mechanism:stability-marks",
-      "capabilities": [],
-      "message": "Capability getting-set-up doesn't exist."
-    },
-    {
-      "type": "unknown-id",
-      "subject": "mechanism:stability-marks",
-      "capabilities": [],
-      "message": "Capability teams doesn't exist."
-    },
-    {
-      "type": "unknown-id",
-      "subject": "mechanism:stability-marks",
-      "capabilities": [],
-      "message": "Capability capacity-purchasing doesn't exist."
-    },
-    {
-      "type": "unknown-id",
-      "subject": "mechanism:stability-marks",
-      "capabilities": [],
-      "message": "Capability scheduling doesn't exist."
-    },
-    {
-      "type": "unknown-id",
-      "subject": "mechanism:stability-marks",
-      "capabilities": [],
-      "message": "Capability fulfillment doesn't exist."
-    },
-    {
-      "type": "unknown-id",
-      "subject": "mechanism:stability-marks",
-      "capabilities": [],
-      "message": "Capability conversation-spaces doesn't exist."
-    },
-    {
-      "type": "unknown-id",
-      "subject": "mechanism:stability-marks",
-      "capabilities": [],
-      "message": "Capability estimates doesn't exist."
-    },
-    {
-      "type": "unknown-id",
-      "subject": "mechanism:stability-marks",
-      "capabilities": [],
-      "message": "Capability billing doesn't exist."
-    },
-    {
-      "type": "unknown-id",
-      "subject": "mechanism:stability-marks",
-      "capabilities": [],
-      "message": "Capability client-agreements doesn't exist."
-    },
-    {
-      "type": "unknown-id",
-      "subject": "mechanism:stability-marks",
-      "capabilities": [],
-      "message": "Capability claiming-blocks doesn't exist."
-    },
-    {
-      "type": "unknown-id",
-      "subject": "mechanism:stability-marks",
-      "capabilities": [],
-      "message": "Capability availability doesn't exist."
-    },
-    {
-      "type": "unknown-id",
-      "subject": "mechanism:stability-marks",
-      "capabilities": [],
-      "message": "Capability earnings doesn't exist."
-    },
-    {
-      "type": "unknown-id",
-      "subject": "mechanism:stability-marks",
-      "capabilities": [],
-      "message": "Capability payouts doesn't exist."
-    },
-    {
-      "type": "unknown-id",
-      "subject": "mechanism:stability-marks",
-      "capabilities": [],
-      "message": "Capability payout-accounts doesn't exist."
-    },
-    {
-      "type": "unknown-id",
-      "subject": "mechanism:stability-marks",
-      "capabilities": [],
-      "message": "Capability engineer-agreements doesn't exist."
-    },
-    {
-      "type": "unknown-id",
-      "subject": "mechanism:stability-marks",
-      "capabilities": [],
-      "message": "Capability client-directory doesn't exist."
-    },
-    {
-      "type": "unknown-id",
-      "subject": "mechanism:stability-marks",
-      "capabilities": [],
-      "message": "Capability client-coupons doesn't exist."
-    },
-    {
-      "type": "unknown-id",
-      "subject": "mechanism:stability-marks",
-      "capabilities": [],
-      "message": "Capability partnerships doesn't exist."
-    },
-    {
-      "type": "unknown-id",
-      "subject": "mechanism:stability-marks",
-      "capabilities": [],
-      "message": "Capability engineers doesn't exist."
-    },
-    {
-      "type": "unknown-id",
-      "subject": "mechanism:stability-marks",
-      "capabilities": [],
-      "message": "Capability agreements doesn't exist."
-    },
-    {
-      "type": "unknown-id",
-      "subject": "mechanism:stability-marks",
-      "capabilities": [],
-      "message": "Capability staffing doesn't exist."
-    },
-    {
-      "type": "unknown-id",
-      "subject": "mechanism:stability-marks",
-      "capabilities": [],
-      "message": "Capability roles doesn't exist."
-    },
-    {
-      "type": "unknown-id",
-      "subject": "mechanism:stability-marks",
-      "capabilities": [],
-      "message": "Capability partner-home doesn't exist."
-    },
-    {
-      "type": "unknown-id",
-      "subject": "mechanism:stability-marks",
-      "capabilities": [],
-      "message": "Capability client-invitations doesn't exist."
-    },
-    {
-      "type": "unknown-id",
-      "subject": "mechanism:stability-marks",
-      "capabilities": [],
-      "message": "Capability partner-clients doesn't exist."
-    },
-    {
-      "type": "unknown-id",
-      "subject": "mechanism:stability-marks",
-      "capabilities": [],
-      "message": "Capability partner-earnings doesn't exist."
-    },
-    {
-      "type": "unknown-id",
-      "subject": "mechanism:stability-marks",
-      "capabilities": [],
-      "message": "Capability partner-payouts doesn't exist."
-    },
-    {
-      "type": "unknown-id",
-      "subject": "mechanism:stability-marks",
-      "capabilities": [],
-      "message": "Capability partner-payout-accounts doesn't exist."
-    },
-    {
-      "type": "unknown-id",
-      "subject": "mechanism:stability-marks",
-      "capabilities": [],
-      "message": "Capability partner-agreements doesn't exist."
-    },
-    {
-      "type": "unknown-id",
-      "subject": "mechanism:stability-marks",
-      "capabilities": [],
-      "message": "Capability your-profile doesn't exist."
-    },
-    {
-      "type": "unknown-id",
-      "subject": "mechanism:stability-marks",
-      "capabilities": [],
-      "message": "Capability access-tokens doesn't exist."
-    },
-    {
-      "type": "unknown-id",
-      "subject": "mechanism:stability-marks",
-      "capabilities": [],
-      "message": "Capability notifications doesn't exist."
+      "message": "capabilities lists capability:your-profile, which this project doesn't define. It may be defined in another project in the product.",
+      "file": "docqet/components/account.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:account",
       "capabilities": [],
-      "message": "Capability your-profile doesn't exist."
+      "message": "capabilities lists capability:teams, which this project doesn't define. It may be defined in another project in the product.",
+      "file": "docqet/components/account.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:account",
       "capabilities": [],
-      "message": "Capability teams doesn't exist."
+      "message": "capabilities lists capability:access-tokens, which this project doesn't define. It may be defined in another project in the product.",
+      "file": "docqet/components/account.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:account",
       "capabilities": [],
-      "message": "Capability access-tokens doesn't exist."
-    },
-    {
-      "type": "unknown-id",
-      "subject": "component:account",
-      "capabilities": [],
-      "message": "Capability notifications doesn't exist."
+      "message": "capabilities lists capability:notifications, which this project doesn't define. It may be defined in another project in the product.",
+      "file": "docqet/components/account.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:admin",
       "capabilities": [],
-      "message": "Capability client-directory doesn't exist."
+      "message": "capabilities lists capability:client-directory, which this project doesn't define. It may be defined in another project in the product.",
+      "file": "docqet/components/admin.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:admin",
       "capabilities": [],
-      "message": "Capability client-coupons doesn't exist."
+      "message": "capabilities lists capability:client-coupons, which this project doesn't define. It may be defined in another project in the product.",
+      "file": "docqet/components/admin.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:admin",
       "capabilities": [],
-      "message": "Capability partnerships doesn't exist."
+      "message": "capabilities lists capability:partnerships, which this project doesn't define. It may be defined in another project in the product.",
+      "file": "docqet/components/admin.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:admin",
       "capabilities": [],
-      "message": "Capability engineers doesn't exist."
+      "message": "capabilities lists capability:engineers, which this project doesn't define. It may be defined in another project in the product.",
+      "file": "docqet/components/admin.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:admin",
       "capabilities": [],
-      "message": "Capability agreements doesn't exist."
+      "message": "capabilities lists capability:agreements, which this project doesn't define. It may be defined in another project in the product.",
+      "file": "docqet/components/admin.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:admin",
       "capabilities": [],
-      "message": "Capability teams doesn't exist."
+      "message": "capabilities lists capability:teams, which this project doesn't define. It may be defined in another project in the product.",
+      "file": "docqet/components/admin.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:admin",
       "capabilities": [],
-      "message": "Capability staffing doesn't exist."
+      "message": "capabilities lists capability:staffing, which this project doesn't define. It may be defined in another project in the product.",
+      "file": "docqet/components/admin.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:admin",
       "capabilities": [],
-      "message": "Capability payouts doesn't exist."
+      "message": "capabilities lists capability:payouts, which this project doesn't define. It may be defined in another project in the product.",
+      "file": "docqet/components/admin.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:admin",
       "capabilities": [],
-      "message": "Capability roles doesn't exist."
+      "message": "capabilities lists capability:roles, which this project doesn't define. It may be defined in another project in the product.",
+      "file": "docqet/components/admin.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:auth",
       "capabilities": [],
-      "message": "Capability organizations-and-members doesn't exist."
+      "message": "capabilities lists capability:organizations-and-members, which this project doesn't define. It may be defined in another project in the product.",
+      "file": "docqet/components/auth.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:auth",
       "capabilities": [],
-      "message": "Capability engineer-onboarding doesn't exist."
+      "message": "capabilities lists capability:engineer-onboarding, which this project doesn't define. It may be defined in another project in the product.",
+      "file": "docqet/components/auth.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:auth",
       "capabilities": [],
-      "message": "Capability partnerships doesn't exist."
+      "message": "capabilities lists capability:partnerships, which this project doesn't define. It may be defined in another project in the product.",
+      "file": "docqet/components/auth.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:console",
       "capabilities": [],
-      "message": "Capability getting-set-up doesn't exist."
+      "message": "capabilities lists capability:getting-set-up, which this project doesn't define. It may be defined in another project in the product.",
+      "file": "docqet/components/console.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:console",
       "capabilities": [],
-      "message": "Capability claiming-blocks doesn't exist."
+      "message": "capabilities lists capability:claiming-blocks, which this project doesn't define. It may be defined in another project in the product.",
+      "file": "docqet/components/console.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:console",
       "capabilities": [],
-      "message": "Capability fulfillment doesn't exist."
+      "message": "capabilities lists capability:fulfillment, which this project doesn't define. It may be defined in another project in the product.",
+      "file": "docqet/components/console.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:console",
       "capabilities": [],
-      "message": "Capability conversation-spaces doesn't exist."
+      "message": "capabilities lists capability:conversation-spaces, which this project doesn't define. It may be defined in another project in the product.",
+      "file": "docqet/components/console.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:console",
       "capabilities": [],
-      "message": "Capability teams doesn't exist."
+      "message": "capabilities lists capability:teams, which this project doesn't define. It may be defined in another project in the product.",
+      "file": "docqet/components/console.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:console",
       "capabilities": [],
-      "message": "Capability availability doesn't exist."
+      "message": "capabilities lists capability:availability, which this project doesn't define. It may be defined in another project in the product.",
+      "file": "docqet/components/console.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:console",
       "capabilities": [],
-      "message": "Capability earnings doesn't exist."
+      "message": "capabilities lists capability:earnings, which this project doesn't define. It may be defined in another project in the product.",
+      "file": "docqet/components/console.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:console",
       "capabilities": [],
-      "message": "Capability payouts doesn't exist."
+      "message": "capabilities lists capability:payouts, which this project doesn't define. It may be defined in another project in the product.",
+      "file": "docqet/components/console.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:console",
       "capabilities": [],
-      "message": "Capability payout-accounts doesn't exist."
+      "message": "capabilities lists capability:payout-accounts, which this project doesn't define. It may be defined in another project in the product.",
+      "file": "docqet/components/console.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:console",
       "capabilities": [],
-      "message": "Capability estimates doesn't exist."
+      "message": "capabilities lists capability:estimates, which this project doesn't define. It may be defined in another project in the product.",
+      "file": "docqet/components/console.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:console",
       "capabilities": [],
-      "message": "Capability engineer-agreements doesn't exist."
+      "message": "capabilities lists capability:engineer-agreements, which this project doesn't define. It may be defined in another project in the product.",
+      "file": "docqet/components/console.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:hub",
       "capabilities": [],
-      "message": "Capability partner-home doesn't exist."
+      "message": "capabilities lists capability:partner-home, which this project doesn't define. It may be defined in another project in the product.",
+      "file": "docqet/components/hub.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:hub",
       "capabilities": [],
-      "message": "Capability partnerships doesn't exist."
+      "message": "capabilities lists capability:partnerships, which this project doesn't define. It may be defined in another project in the product.",
+      "file": "docqet/components/hub.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:hub",
       "capabilities": [],
-      "message": "Capability client-invitations doesn't exist."
+      "message": "capabilities lists capability:client-invitations, which this project doesn't define. It may be defined in another project in the product.",
+      "file": "docqet/components/hub.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:hub",
       "capabilities": [],
-      "message": "Capability partner-clients doesn't exist."
+      "message": "capabilities lists capability:partner-clients, which this project doesn't define. It may be defined in another project in the product.",
+      "file": "docqet/components/hub.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:hub",
       "capabilities": [],
-      "message": "Capability partner-earnings doesn't exist."
+      "message": "capabilities lists capability:partner-earnings, which this project doesn't define. It may be defined in another project in the product.",
+      "file": "docqet/components/hub.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:hub",
       "capabilities": [],
-      "message": "Capability partner-payouts doesn't exist."
+      "message": "capabilities lists capability:partner-payouts, which this project doesn't define. It may be defined in another project in the product.",
+      "file": "docqet/components/hub.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:hub",
       "capabilities": [],
-      "message": "Capability partner-payout-accounts doesn't exist."
+      "message": "capabilities lists capability:partner-payout-accounts, which this project doesn't define. It may be defined in another project in the product.",
+      "file": "docqet/components/hub.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:hub",
       "capabilities": [],
-      "message": "Capability partner-agreements doesn't exist."
+      "message": "capabilities lists capability:partner-agreements, which this project doesn't define. It may be defined in another project in the product.",
+      "file": "docqet/components/hub.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:hub",
       "capabilities": [],
-      "message": "Capability getting-set-up doesn't exist."
+      "message": "capabilities lists capability:getting-set-up, which this project doesn't define. It may be defined in another project in the product.",
+      "file": "docqet/components/hub.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:portal",
       "capabilities": [],
-      "message": "Capability client-home doesn't exist."
+      "message": "capabilities lists capability:client-home, which this project doesn't define. It may be defined in another project in the product.",
+      "file": "docqet/components/portal.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:portal",
       "capabilities": [],
-      "message": "Capability getting-set-up doesn't exist."
+      "message": "capabilities lists capability:getting-set-up, which this project doesn't define. It may be defined in another project in the product.",
+      "file": "docqet/components/portal.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:portal",
       "capabilities": [],
-      "message": "Capability teams doesn't exist."
+      "message": "capabilities lists capability:teams, which this project doesn't define. It may be defined in another project in the product.",
+      "file": "docqet/components/portal.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:portal",
       "capabilities": [],
-      "message": "Capability capacity-purchasing doesn't exist."
+      "message": "capabilities lists capability:capacity-purchasing, which this project doesn't define. It may be defined in another project in the product.",
+      "file": "docqet/components/portal.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:portal",
       "capabilities": [],
-      "message": "Capability scheduling doesn't exist."
+      "message": "capabilities lists capability:scheduling, which this project doesn't define. It may be defined in another project in the product.",
+      "file": "docqet/components/portal.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:portal",
       "capabilities": [],
-      "message": "Capability fulfillment doesn't exist."
+      "message": "capabilities lists capability:fulfillment, which this project doesn't define. It may be defined in another project in the product.",
+      "file": "docqet/components/portal.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:portal",
       "capabilities": [],
-      "message": "Capability conversation-spaces doesn't exist."
+      "message": "capabilities lists capability:conversation-spaces, which this project doesn't define. It may be defined in another project in the product.",
+      "file": "docqet/components/portal.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:portal",
       "capabilities": [],
-      "message": "Capability estimates doesn't exist."
+      "message": "capabilities lists capability:estimates, which this project doesn't define. It may be defined in another project in the product.",
+      "file": "docqet/components/portal.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:portal",
       "capabilities": [],
-      "message": "Capability billing doesn't exist."
+      "message": "capabilities lists capability:billing, which this project doesn't define. It may be defined in another project in the product.",
+      "file": "docqet/components/portal.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:portal",
       "capabilities": [],
-      "message": "Capability organizations-and-members doesn't exist."
+      "message": "capabilities lists capability:organizations-and-members, which this project doesn't define. It may be defined in another project in the product.",
+      "file": "docqet/components/portal.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:portal",
       "capabilities": [],
-      "message": "Capability client-agreements doesn't exist."
+      "message": "capabilities lists capability:client-agreements, which this project doesn't define. It may be defined in another project in the product.",
+      "file": "docqet/components/portal.md"
     }
   ],
   "rubric": {

@@ -44,12 +44,13 @@ GET /api/v1/products/{product}/rubric
 GET /api/v1/products/{product}/capabilities?stability=beta&initiative=mvp
 GET /api/v1/products/{product}/capabilities/{id}
 GET /api/v1/products/{product}/capabilities/{id}/gaps/{key}
-GET /api/v1/products/{product}/domains/{domain}/rules/{id}
-GET /api/v1/products/{product}/domains/{domain}/concepts/{id}
+GET /api/v1/products/{product}/rules/{id}
+GET /api/v1/products/{product}/concepts/{id}
 GET /api/v1/products/{product}/gaps?sort=risk&impact=blocking,damaging
 GET /api/v1/products/{product}/search?q=refund
-GET /api/v1/products/{product}/domains, features, personas, initiatives, rules, concepts,
-    mechanisms, components, decisions, tradeoffs, findings, and each one by ID
+GET /api/v1/products/{product}/areas, features, personas, problems, constraints,
+    initiatives, rules, concepts, mechanisms, components, decisions, tradeoffs,
+    findings, and each one by ID
 ```
 
 All but `?at=` are built, in `internal/handlers/http`'s `ProductsHandler`,
@@ -73,8 +74,7 @@ route and resource.
   to do it.
 - **References become paths.** A gap or tradeoff is nested under the doc it's
   on, since `#` can't be in a path: `capability:room-booking#calendar-needs-a-mouse`
-  is `/capabilities/room-booking/gaps/calendar-needs-a-mouse`. A rule or
-  concept is nested under its domain.
+  is `/capabilities/room-booking/gaps/calendar-needs-a-mouse`.
 
 ## Time
 
@@ -123,7 +123,7 @@ GET /api/v1/projects/hotel-bookings/commits                          the commits
   happened, such as a gap closed, a promotion or a decision answered, and what
   it's about. `/changes` is a paginated list of them, filtered like any other.
   How a change is modelled is still in flux (see
-  [the Understanding domain's decisions](../../docqet/domains/understanding/domain.md)).
+  [the Understanding area's decisions](../../docqet/areas/understanding.md)).
 - **A comparison** is the net difference between two points, as `docqet diff`
   shows it. It isn't a collection, so it's a read of its own, as GitHub's
   `/compare` is.

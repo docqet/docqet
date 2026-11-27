@@ -28,17 +28,13 @@ export async function saveBooking(db: Pool, booking: Booking): Promise<void> {
 ```
 
 ```gherkin
-  # docqet:verifies rule:no-double-booking@guest-stays
+  # docqet:verifies rule:no-double-booking
   Rule: A room can't be double-booked
 ```
 
 - **It's on the first line below it** that isn't blank or another annotation.
   Put it directly above the function, test, constraint or step it's about.
   One at the top of a file stands for the whole file.
-- **A rule always names its domain**, as `rule:<id>@<domain>`:
-  `docqet:verifies rule:closed-bills-dont-change@billing`. Code is in no
-  domain, so a rule without one is a finding, even in a repository with one
-  domain.
 - **Annotations are claims.** Add one only where it's true: a test that
   verifies a rule actually checks it, and code that implements one actually
   enforces it.
@@ -55,8 +51,7 @@ export async function saveBooking(db: Pool, booking: Booking): Promise<void> {
 
 ## Keeping them true
 
-`docqet check` catches an annotation naming something that doesn't exist, or
-a rule without its domain. It can't catch one that's missing, or one left on
+`docqet check` catches an annotation naming something that doesn't exist. It can't catch one that's missing, or one left on
 code that's no longer about what it names. So whenever you:
 
 - **write code that enforces a rule, or a test that checks one**, annotate it;

@@ -21,12 +21,12 @@ info:
 
 
     Every endpoint carries a
-    [stability level](https://github.com/docqet/docqet/blob/main/docqet/domains/authoring/concepts/stability-level.md):
+    [stability level](https://github.com/docqet/docqet/blob/main/docqet/concepts/stability-level.md):
     Prototype, Alpha, Beta, or GA. Below GA it shows as a mark beside the
     endpoint and in the navigation, which says what to expect when you hover,
     focus, or tap it, and every endpoint states it in its `x-stability`
     field. Each group of endpoints shows its
-    [maturity](https://github.com/docqet/docqet/blob/main/docqet/domains/understanding/concepts/maturity.md) in the
+    [maturity](https://github.com/docqet/docqet/blob/main/docqet/concepts/maturity.md) in the
     navigation, and in the overview under Maturity below: how close its
     endpoints are to being stable and supported.
 
@@ -91,10 +91,10 @@ paths:
     $ref: "./paths/products/projects.yml"
   /products/{product}/rubric:
     $ref: "./paths/products/rubric.yml"
-  /products/{product}/domains:
-    $ref: "./paths/products/domains.yml"
-  /products/{product}/domains/{id}:
-    $ref: "./paths/products/domain.yml"
+  /products/{product}/areas:
+    $ref: "./paths/products/areas.yml"
+  /products/{product}/areas/{id}:
+    $ref: "./paths/products/area.yml"
   /products/{product}/features:
     $ref: "./paths/products/features.yml"
   /products/{product}/features/{id}:
@@ -107,11 +107,11 @@ paths:
     $ref: "./paths/products/capability-gap.yml"
   /products/{product}/rules:
     $ref: "./paths/products/rules.yml"
-  /products/{product}/domains/{domain}/rules/{id}:
+  /products/{product}/rules/{id}:
     $ref: "./paths/products/rule.yml"
   /products/{product}/concepts:
     $ref: "./paths/products/concepts.yml"
-  /products/{product}/domains/{domain}/concepts/{id}:
+  /products/{product}/concepts/{id}:
     $ref: "./paths/products/concept.yml"
   /products/{product}/personas:
     $ref: "./paths/products/personas.yml"

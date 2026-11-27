@@ -4,7 +4,7 @@ get:
   summary: List a product's concepts
   description: >-
     The product's concepts that are showing, with the capabilities and rules
-    that use them. A concept's ID is `<id>@<domain>`.
+    that use them.
   tags:
     - Products
   # No sign-in yet: a server is only reachable by its client's people.

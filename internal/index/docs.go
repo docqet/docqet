@@ -19,9 +19,10 @@ import (
 type frontmatter struct {
 	Docqet       string         `yaml:"docqet"`
 	ID           string         `yaml:"id"`
-	Domain       string         `yaml:"domain"`
 	Name         string         `yaml:"name"`
 	Description  string         `yaml:"description"`
+	Area         *string        `yaml:"area"`
+	Feature      *string        `yaml:"feature"`
 	Stability    string         `yaml:"stability"`
 	Applies      string         `yaml:"applies"`
 	Why          *string        `yaml:"why"`
@@ -127,7 +128,7 @@ var lineOfError = regexp.MustCompile(`^(?:yaml: )?line (\d+): (.*)$`)
 // readDoc reads file as a Docqet doc. isDoc is false when it isn't one: no
 // frontmatter, or none naming a `docqet` type. A doc that can't be read, such
 // as one whose frontmatter isn't YAML, is a doc with findings and no entry.
-// docqet:implements capability:docs-format rule:location-means-nothing@authoring
+// docqet:implements capability:docs-format rule:location-means-nothing
 func readDoc(file string, data []byte) (d *doc, isDoc bool, findings []state.Finding) {
 	fmText, body, ok := splitFrontmatter(data)
 	if !ok || !docqetField.Match(fmText) {
@@ -156,7 +157,7 @@ func readDoc(file string, data []byte) (d *doc, isDoc bool, findings []state.Fin
 	switch {
 	case !isDocType(fm.Docqet):
 		return nil, true, append(findings, fileFinding(state.InvalidFrontmatter, file, fm.line["docqet"],
-			fmt.Sprintf("docqet is %q, which isn't a doc type: it's one of domain, feature, capability, rule, concept, persona, problem, constraint, initiative, mechanism or component", fm.Docqet)))
+			fmt.Sprintf("docqet is %q, which isn't a doc type: it's one of area, feature, capability, rule, concept, persona, problem, constraint, initiative, mechanism or component", fm.Docqet)))
 	case fm.ID == "":
 		return nil, true, append(findings, fileFinding(state.InvalidFrontmatter, file, fm.line["docqet"], "A doc needs an id."))
 	}
@@ -230,17 +231,26 @@ func fileFinding(typ, file string, line int, msg string) state.Finding {
 
 // fieldsOf is the fields each doc type has, in the order they're written.
 var fieldsOf = map[string][]string{
-	state.TypeDomain:     {"docqet", "id", "name", "description", "decisions"},
-	state.TypeFeature:    {"docqet", "id", "domain", "name", "description", "capabilities", "tradeoffs", "decisions"},
-	state.TypeCapability: {"docqet", "id", "domain", "name", "description", "stability", "solves", "initiatives", "rules", "concepts", "gaps", "tradeoffs", "decisions"},
-	state.TypeRule:       {"docqet", "id", "domain", "name", "concepts", "respects", "why"},
-	state.TypeConcept:    {"docqet", "id", "domain", "name", "description", "confused-with"},
-	state.TypePersona:    {"docqet", "id", "name", "description", "role", "title", "image", "initiatives"},
+	state.TypeArea:       {"docqet", "id", "name", "description", "decisions"},
+	state.TypeFeature:    {"docqet", "id", "name", "description", "area", "tradeoffs", "decisions"},
+	state.TypeCapability: {"docqet", "id", "name", "description", "stability", "feature", "solves", "initiatives", "rules", "concepts", "gaps", "tradeoffs", "decisions"},
+	state.TypeRule:       {"docqet", "id", "name", "concepts", "respects", "why"},
+	state.TypeConcept:    {"docqet", "id", "name", "description", "confused-with"},
+	state.TypePersona:    {"docqet", "id", "name", "description", "role", "title", "image"},
 	state.TypeProblem:    {"docqet", "id", "name", "description", "cost", "personas"},
 	state.TypeConstraint: {"docqet", "id", "name", "description", "source"},
-	state.TypeInitiative: {"docqet", "id", "name", "description"},
+	state.TypeInitiative: {"docqet", "id", "name", "description", "personas"},
 	state.TypeMechanism:  {"docqet", "id", "name", "description", "applies", "respects", "meets", "gaps", "tradeoffs", "decisions"},
 	state.TypeComponent:  {"docqet", "id", "name", "description", "capabilities", "meets", "gaps", "tradeoffs", "decisions"},
+}
+
+// movedFields says where a field went, for fields a type used to have, as
+// <type>.<field>: links are written in the more concrete doc, naming the more
+// general one.
+var movedFields = map[string]string{
+	"capability.personas":  "A capability's personas are those of the problems it solves: link the problems with solves, and remove personas.",
+	"feature.capabilities": "A capability names its feature with feature:; remove capabilities.",
+	"persona.initiatives":  "An initiative names the personas it's for with personas:; remove initiatives.",
 }
 
 // unknownFields reports each top-level field a doc of type typ doesn't have,
@@ -259,8 +269,10 @@ func unknownFields(file, typ string, node *yaml.Node, at func(int) int) []state.
 			continue
 		}
 		msg := fmt.Sprintf("%s isn't a field a %s has: it has %s", key.Value, typ, strings.Join(fields, ", "))
-		if typ == state.TypeCapability && key.Value == "personas" {
-			msg = "A capability's personas are those of the problems it solves: link the problems with solves, and remove personas."
+		if hint, ok := movedFields[typ+"."+key.Value]; ok {
+			msg = hint
+		} else if key.Value == "domain" {
+			msg = "Docs have no domain now: features name their area with area:, and rules and concepts are product-wide."
 		}
 		findings = append(findings, fileFinding(state.InvalidFrontmatter, file, at(key.Line), msg))
 	}
@@ -269,7 +281,7 @@ func unknownFields(file, typ string, node *yaml.Node, at func(int) int) []state.
 
 func isDocType(t string) bool {
 	switch t {
-	case state.TypeDomain, state.TypeFeature, state.TypeCapability, state.TypeRule, state.TypeConcept,
+	case state.TypeArea, state.TypeFeature, state.TypeCapability, state.TypeRule, state.TypeConcept,
 		state.TypePersona, state.TypeProblem, state.TypeConstraint, state.TypeInitiative, state.TypeMechanism, state.TypeComponent:
 		return true
 	}

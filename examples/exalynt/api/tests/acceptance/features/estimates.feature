@@ -8,7 +8,7 @@ Feature: Estimates
     Given capacity costs $2,500 a unit on Flex, $2,375 on Core, and $2,250 on Dedicated
     And Acme and Globex are clients
 
-  # docqet:verifies rule:focus-sizes-and-block-prices@capacity
+  # docqet:verifies rule:focus-sizes-and-block-prices
   Rule: A Focus's size spans a range of units, and each block type prices them
 
     Scenario Outline: One sized Focus
@@ -33,7 +33,7 @@ Feature: Estimates
       Then the estimate has 2 Focuses, 1 of them unsized
       And it comes to 1, 2, or 3 units
 
-  # docqet:verifies rule:each-focus-has-its-own-pace@capacity
+  # docqet:verifies rule:each-focus-has-its-own-pace
   Rule: Each Focus is planned at a pace, and the estimate costs every Focus at its own
 
     Example: Focuses at different paces
@@ -44,7 +44,7 @@ Feature: Estimates
       When an admin writes an estimate with one Focus sized S and no pace
       Then the Focus is planned on Dedicated
 
-  # docqet:verifies rule:discounts-apply-to-the-whole-project@capacity
+  # docqet:verifies rule:discounts-apply-to-the-whole-project
   Rule: A discount takes a percentage off the whole project
 
     Background:
@@ -62,7 +62,7 @@ Feature: Estimates
       When the admin gives it 60% off and 50% off
       Then the estimate is as it was
 
-  # docqet:verifies rule:estimates-keep-their-original-prices@capacity
+  # docqet:verifies rule:estimates-keep-their-original-prices
   Rule: An estimate keeps the prices it was written at
 
     Example: Prices rise after an estimate is written
@@ -70,14 +70,14 @@ Feature: Estimates
       When Dedicated rises to $2,500 a unit
       Then on Dedicated it still costs $6,750, $9,000, or $13,500
 
-  # docqet:verifies rule:estimates-record-their-author@capacity
+  # docqet:verifies rule:estimates-record-their-author
   Rule: An estimate records who wrote it
 
     Example: An admin writes an estimate
       When Alex, an admin, writes an estimate for Acme
       Then the estimate says Alex wrote it
 
-  # docqet:verifies rule:replacing-replaces-everything@capacity
+  # docqet:verifies rule:replacing-replaces-everything
   Rule: Replacing an estimate replaces all of it
 
     Example: Focuses left out are dropped, and those kept are changed
@@ -86,7 +86,7 @@ Feature: Estimates
       Then the estimate has only "Reports", sized L
       And it comes to 6, 8, or 12 units
 
-  # docqet:verifies rule:clients-read-only-their-own-estimates@capacity
+  # docqet:verifies rule:clients-read-only-their-own-estimates
   Rule: A client reads their own organization's estimates and no one else's
 
     Example: A client lists estimates
@@ -99,7 +99,7 @@ Feature: Estimates
       When a member of Acme opens it
       Then there's no such estimate
 
-  # docqet:verifies rule:only-exalynt-writes-estimates@capacity
+  # docqet:verifies rule:only-exalynt-writes-estimates
   Rule: Only Exalynt writes, changes, and deletes estimates
 
     Scenario Outline: A client member tries to <action>
@@ -114,7 +114,7 @@ Feature: Estimates
         | change Acme's estimate     |
         | delete Acme's estimate     |
 
-  # docqet:verifies rule:engineers-work-on-supported-clients-estimates@capacity
+  # docqet:verifies rule:engineers-work-on-supported-clients-estimates
   Rule: An engineer works on the estimates of the clients their team supports
 
     Background:
@@ -144,7 +144,7 @@ Feature: Estimates
       When Sam writes an estimate for a prospect
       Then no estimate is written
 
-  # docqet:verifies rule:prospects-see-estimates-once-attached@capacity
+  # docqet:verifies rule:prospects-see-estimates-once-attached
   Rule: A prospect sees their estimate only once it's attached to their organization
 
     Example: Before it's attached
@@ -159,7 +159,7 @@ Feature: Estimates
       When the admin attaches the estimate to Initech
       Then a member of Initech can open it
 
-  # docqet:verifies rule:deleting-an-estimate-is-permanent@capacity
+  # docqet:verifies rule:deleting-an-estimate-is-permanent
   Rule: Deleting an estimate is permanent
 
     Example: An admin deletes an estimate
@@ -167,14 +167,14 @@ Feature: Estimates
       When the admin deletes it
       Then nobody can open it, the admin included
 
-  # docqet:verifies rule:estimates-are-for-organizations-or-prospects@capacity
+  # docqet:verifies rule:estimates-are-for-organizations-or-prospects
   Rule: An estimate is for an existing organization, or for a prospect
 
     Example: An organization that doesn't exist
       When an admin writes an estimate for an organization that doesn't exist
       Then no estimate is written
 
-  # docqet:verifies rule:a-focus-belongs-to-one-estimate@capacity
+  # docqet:verifies rule:a-focus-belongs-to-one-estimate
   Rule: A Focus belongs to one estimate
 
     Example: Reusing another estimate's Focus

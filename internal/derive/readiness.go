@@ -24,7 +24,7 @@ func GapsOn(p *combine.Product, c *combine.Capability) []*combine.Gap {
 // every gap on them, their own and those of what they're built on, each
 // scored on them. Started is how many it's worked out from, and NotStarted
 // the drafts, which never count. Improvements is what would raise it, one
-// thing at a time, most first, and Areas where it could rise, one level
+// thing at a time, most first, and Parts where it could rise, one level
 // below what it's of, by how far, most first.
 type Readiness struct {
 	Percent      *int
@@ -35,11 +35,11 @@ type Readiness struct {
 	Started      int
 	NotStarted   []*combine.Capability
 	Improvements []Improvement
-	Areas        []Area
+	Parts        []Part
 }
 
 // ReadinessOf returns the readiness of some capabilities, as of a
-// capability, feature, domain, persona or product: their maturity less their
+// capability, feature, area, persona or product: their maturity less their
 // exposure, maturity × (1 − exposure), with what would raise it, and the
 // drafts, not started, which never count. by is what its areas are: the
 // parts one level below what it's of.
@@ -55,7 +55,7 @@ func ReadinessOf(p *combine.Product, capabilities []*combine.Capability, by Grou
 			}
 		}
 	}
-	parts := partsOf(p, capabilities)
+	parts := sharesOf(p, capabilities)
 	r := Readiness{
 		Exposure: exposureOf(parts),
 		Levels:   make([]string, len(capabilities)),
@@ -72,7 +72,7 @@ func ReadinessOf(p *combine.Product, capabilities []*combine.Capability, by Grou
 		percent := int(math.Round(f.readiness))
 		r.Maturity, r.Percent = &f.maturity, &percent
 		r.Improvements = improvementsOf(p, parts, f)
-		r.Areas = areasOf(p, parts, f, r.Improvements, by)
+		r.Parts = partsOf(p, parts, f, r.Improvements, by)
 	}
 	return r
 }

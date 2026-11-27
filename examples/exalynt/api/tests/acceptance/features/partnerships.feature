@@ -6,7 +6,7 @@ Feature: Partnerships
   can manage several.
   Clients who sign up with its referral code are attributed to it.
 
-  # docqet:verifies rule:inviting-creates-the-partnership@partnerships
+  # docqet:verifies rule:inviting-creates-the-partnership
   Rule: Exalynt enrolls partners by inviting them, and inviting creates the partnership at once
 
     Example: An admin invites a partner
@@ -18,7 +18,7 @@ Feature: Partnerships
       When Theo, who isn't an admin, tries to invite grace@example.com to the Partnership Program
       Then they're refused
 
-  # docqet:verifies rule:accepting-makes-the-invitee-manager@partnerships
+  # docqet:verifies rule:accepting-makes-the-invitee-manager
   Rule: Accepting the invitation makes the invitee the partnership's manager, with the Partner Hub
 
     Example: Accepting
@@ -39,7 +39,7 @@ Feature: Partnerships
       When Grace accepts the invitation
       Then Grace manages both partnerships
 
-  # docqet:verifies rule:the-manager-names-the-partnership@partnerships
+  # docqet:verifies rule:the-manager-names-the-partnership
   Rule: The manager names the partnership, and can rename it
 
     Example: Naming it
@@ -52,7 +52,7 @@ Feature: Partnerships
       When Grace renames it "Holloway Advisory"
       Then the partnership is named "Holloway Advisory"
 
-  # docqet:verifies rule:partnership-terms-set-at-invitation@pay rule:admins-set-terms-at-invitation@partnerships
+  # docqet:verifies rule:partnership-terms-set-at-invitation rule:admins-set-terms-at-invitation
   Rule: An admin sets a partnership's terms when inviting it, and its Partner Agreement offers them
 
     Example: A 7% share for 24 months
@@ -73,7 +73,7 @@ Feature: Partnerships
       When an admin invites Grace with no Commercial Terms
       Then the partnership has a Partner Agreement to accept with no Commercial Terms
 
-  # docqet:verifies rule:revoking-removes-the-partnership@partnerships
+  # docqet:verifies rule:revoking-removes-the-partnership
   Rule: Revoking a partner's invitation removes the partnership it created
 
     Example: Revoked before it's accepted
@@ -82,7 +82,7 @@ Feature: Partnerships
       Then the partnership is gone
       And Grace has no invitation to accept
 
-  # docqet:verifies rule:managers-see-only-their-own-partnership@partnerships
+  # docqet:verifies rule:managers-see-only-their-own-partnership
   Rule: A partnership's manager never sees or changes another partnership
 
     Example: Another manager's partnership
@@ -96,7 +96,7 @@ Feature: Partnerships
       Then it isn't found
       And it's still named "Holloway Advisory"
 
-  # docqet:verifies rule:partners-invite-clients-by-email@partnerships
+  # docqet:verifies rule:partners-invite-clients-by-email
   Rule: A partner can invite someone to become a client
 
     Example: Inviting
@@ -129,7 +129,7 @@ Feature: Partnerships
       Then helen@example.com is emailed an invitation from "Holloway Advisory"
       And Grace sees the invitation to helen@example.com as sent
 
-  # docqet:verifies rule:invitations-are-limited@partnerships
+  # docqet:verifies rule:partnership-invitations-are-limited
   Rule: A partnership can send at most 50 new invitations a day
 
     Example: One more than that
@@ -139,7 +139,7 @@ Feature: Partnerships
       Then it's refused
       And helen@example.com isn't emailed
 
-  # docqet:verifies rule:invitations-can-be-resent-or-revoked@partnerships
+  # docqet:verifies rule:invitations-can-be-resent-or-revoked
   Rule: A partner can resend or revoke an invitation until the client signs up
 
     Example: Resending
@@ -169,7 +169,7 @@ Feature: Partnerships
       When Grace tries to resend the invitation
       Then it's refused
 
-  # docqet:verifies rule:invitations-are-limited@partnerships
+  # docqet:verifies rule:partnership-invitations-are-limited
   Rule: An invitation can be resent at most once a day
 
     Example: Resending again the same day
@@ -180,7 +180,7 @@ Feature: Partnerships
       Then it's refused
       And helen@example.com isn't emailed again
 
-  # docqet:verifies rule:partners-see-only-their-own-invitations@partnerships
+  # docqet:verifies rule:partners-see-only-their-own-invitations
   Rule: A partner only sees and changes their own partnership's invitations
 
     Example: Another partner's invitations
@@ -206,7 +206,7 @@ Feature: Partnerships
       Then it isn't found
       And Grace still sees the invitation to helen@example.com
 
-  # docqet:verifies rule:one-referral-code-per-partnership@partnerships rule:no-attribution-to-the-managers-organization@partnerships
+  # docqet:verifies rule:one-referral-code-per-partnership rule:no-attribution-to-the-managers-organization
   Rule: A new client who signs up with a referral code is attributed to its partnership
 
     Example: With a code
@@ -229,7 +229,7 @@ Feature: Partnerships
       Then it's refused
       And "Holloway Co" doesn't exist
 
-  # docqet:verifies rule:the-code-used-decides-the-partnership@partnerships
+  # docqet:verifies rule:the-code-used-decides-the-partnership
   Rule: An invited address is attributed by the code it uses, or else by the one partner who invited it
 
     Example: No code, one invitation
@@ -264,7 +264,7 @@ Feature: Partnerships
       When Helen creates "Ridgeline" with no code
       Then "Ridgeline" is attributed to nobody
 
-  # docqet:verifies rule:referral-codes-attribute-only-new-clients@partnerships
+  # docqet:verifies rule:referral-codes-attribute-only-new-clients
   Rule: Referral codes attribute only new clients
 
     Example: Someone already at a client
@@ -284,7 +284,7 @@ Feature: Partnerships
       Then "ridgeline" is attributed to nobody
       And "Ridgeline" is attributed to "Holloway Advisory"
 
-  # docqet:verifies rule:partners-see-only-their-own-clients@partnerships
+  # docqet:verifies rule:partners-see-only-their-own-clients
   Rule: A partner sees the clients attributed to their partnership, and no others
 
     Example: A client who signed up with the code
@@ -301,7 +301,7 @@ Feature: Partnerships
       When Theo tries to see Grace's clients
       Then it isn't found
 
-  # docqet:verifies rule:partners-see-each-clients-earning-window@partnerships
+  # docqet:verifies rule:partners-see-each-clients-earning-window
   Rule: A partner sees how long their partnership earns on each client
 
     Example: Before the client's first block
@@ -321,7 +321,7 @@ Feature: Partnerships
       And Ridgeline has bought a block
       Then Grace sees Ridgeline's earning window has no end
 
-  # docqet:verifies rule:admins-can-adjust-attribution@partnerships
+  # docqet:verifies rule:admins-can-adjust-attribution
   Rule: Admins can adjust attribution
 
     Example: Attributing a client who signed up without a code
@@ -350,7 +350,7 @@ Feature: Partnerships
       When Grace tries to attribute "Ridgeline" to "Holloway Advisory"
       Then it's refused
 
-  # docqet:verifies rule:one-partnership-per-client@partnerships
+  # docqet:verifies rule:one-partnership-per-client
   Rule: A client has at most one partnership
 
     Example: Attributing a client that already has one
@@ -360,7 +360,7 @@ Feature: Partnerships
       When an admin attributes "Ridgeline" to "Fieldwork"
       Then "Ridgeline" has one partnership, "Fieldwork"
 
-  # docqet:verifies rule:what-partners-can-see@partnerships
+  # docqet:verifies rule:what-partners-can-see
   Rule: A partner sees a client's name, how it came to them, and since when
 
     Example: Looking at a client
@@ -369,7 +369,7 @@ Feature: Partnerships
       When Grace looks at their clients
       Then Grace sees "Ridgeline", that it signed up with their code, and since when
 
-  # docqet:verifies rule:clients-see-who-referred-them@partnerships
+  # docqet:verifies rule:clients-see-who-referred-them
   Rule: A client sees the partnership that referred it, and only its name
 
     Example: A referred client

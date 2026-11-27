@@ -6,7 +6,7 @@ test.beforeEach(async ({ request }) => {
   });
 });
 
-// docqet:verifies capability:deposits rule:deposit-counts-towards-the-bill@billing
+// docqet:verifies capability:deposits rule:deposit-counts-towards-the-bill
 test("a guest's deposit is taken off their bill at check-out", async ({ page }) => {
   await page.goto("/rooms/12/check-out");
   await expect(page.getByRole("row", { name: "Deposit" })).toContainText("−150.00");

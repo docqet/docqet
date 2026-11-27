@@ -1,5 +1,5 @@
 {
-  "docqet": "0.4",
+  "docqet": "0.5",
   "project": {
     "id": "hotel-bookings",
     "name": "Hotel Bookings"
@@ -11,7 +11,7 @@
   "commit": "4f2c9e1",
   "indexedAt": "2026-11-18T15:04:00Z",
   "summary": {
-    "domains": 2,
+    "areas": 2,
     "features": 3,
     "personas": 3,
     "problems": 8,
@@ -31,76 +31,86 @@
     "mechanisms": 1,
     "components": 1
   },
-  "domains": [
+  "areas": [
     {
       "id": "guest-stays",
-      "file": "docqet/domains/guest-stays/domain.md",
+      "file": "docqet/areas/guest-stays.md",
       "name": "Guest stays",
       "description": "Looking after guests from their booking to their check-out.",
+      "features": [
+        "feature:front-desk",
+        "feature:reservations"
+      ],
       "decisions": [
         {
           "topic": "Early arrivals",
           "question": "When a guest arrives before the room's usual check-in time, does their stay start that day, or is the night before part of it?",
-          "affects": []
+          "affects": [],
+          "impact": null,
+          "likelihood": null,
+          "reach": null
         }
       ],
       "body": ""
     },
     {
       "id": "property",
-      "file": "docqet/domains/property/domain.md",
+      "file": "docqet/areas/property.md",
       "name": "Property",
       "description": "Keeping the hotel ready for guests.",
+      "features": [
+        "feature:housekeeping"
+      ],
       "decisions": [],
       "body": "Maintenance belongs here too, once the software takes on that job."
     }
   ],
   "features": [
     {
-      "id": "reservations",
-      "domain": "guest-stays",
-      "file": "docqet/domains/guest-stays/features/reservations.md",
-      "name": "Reservations",
-      "description": "Taking bookings and handling changes to them, before the guest arrives.",
-      "capabilities": [
-        "capability:room-booking",
-        "capability:cancellations",
-        "capability:group-bookings",
-        "capability:waitlist"
-      ],
-      "decisions": [],
-      "body": "",
-      "tradeoffs": [
-        "feature:reservations#front-desk-bookings-only"
-      ]
-    },
-    {
       "id": "front-desk",
-      "domain": "guest-stays",
-      "file": "docqet/domains/guest-stays/features/front-desk.md",
+      "file": "docqet/features/front-desk.md",
       "name": "Front desk",
       "description": "Welcoming guests when they arrive and settling up when they leave.",
+      "area": "area:guest-stays",
       "capabilities": [
         "capability:check-in",
         "capability:check-out"
       ],
+      "tradeoffs": [],
       "decisions": [],
-      "body": "",
-      "tradeoffs": []
+      "body": ""
     },
     {
       "id": "housekeeping",
-      "domain": "property",
-      "file": "docqet/domains/property/features/housekeeping.md",
+      "file": "docqet/features/housekeeping.md",
       "name": "Housekeeping",
       "description": "Keeping rooms ready for the next guest.",
+      "area": "area:property",
       "capabilities": [
-        "capability:room-status",
-        "capability:cleaning-schedule"
+        "capability:cleaning-schedule",
+        "capability:room-status"
+      ],
+      "tradeoffs": [],
+      "decisions": [],
+      "body": ""
+    },
+    {
+      "id": "reservations",
+      "file": "docqet/features/reservations.md",
+      "name": "Reservations",
+      "description": "Taking bookings and handling changes to them, before the guest arrives.",
+      "area": "area:guest-stays",
+      "capabilities": [
+        "capability:cancellations",
+        "capability:group-bookings",
+        "capability:room-booking",
+        "capability:waitlist"
+      ],
+      "tradeoffs": [
+        "feature:reservations#front-desk-bookings-only"
       ],
       "decisions": [],
-      "body": "",
-      "tradeoffs": []
+      "body": ""
     }
   ],
   "personas": [
@@ -123,16 +133,16 @@
       "capabilities": [
         "capability:check-in",
         "capability:check-out",
+        "capability:cleaning-schedule",
         "capability:group-bookings",
         "capability:room-booking",
-        "capability:waitlist",
-        "capability:cleaning-schedule",
-        "capability:room-status"
+        "capability:room-status",
+        "capability:waitlist"
       ],
       "features": [
         "feature:front-desk",
-        "feature:reservations",
-        "feature:housekeeping"
+        "feature:housekeeping",
+        "feature:reservations"
       ],
       "initiatives": [
         "initiative:busy-season"
@@ -315,8 +325,8 @@
       "description": "Every booking is made on the hotel's published terms: cancelling up to 48 hours before arrival is free, and later than that costs the first night.",
       "source": "The hotel's booking terms (assumed)",
       "rules": [
-        "rule:free-cancellation-window@guest-stays",
-        "rule:late-cancellation-fee@guest-stays"
+        "rule:free-cancellation-window",
+        "rule:late-cancellation-fee"
       ],
       "mechanisms": [],
       "body": ""
@@ -328,8 +338,8 @@
       "description": "However it's booked, a room can only have one guest's stay in it on any night.",
       "source": "A fact of the building",
       "rules": [
-        "rule:no-double-booking@guest-stays",
-        "rule:same-day-turnover@guest-stays"
+        "rule:no-double-booking",
+        "rule:same-day-turnover"
       ],
       "mechanisms": [],
       "body": ""
@@ -341,7 +351,7 @@
       "description": "Guests check out by 11:00 and check in from 15:00, the hotel's hours, which leave housekeeping the time a room needs to be ready for the next guest.",
       "source": "The hotel's house rules, and the time cleaning takes",
       "rules": [
-        "rule:same-day-turnover@guest-stays"
+        "rule:same-day-turnover"
       ],
       "mechanisms": [],
       "body": ""
@@ -371,12 +381,225 @@
   ],
   "capabilities": [
     {
+      "id": "cancellations",
+      "file": "docqet/capabilities/cancellations.md",
+      "name": "Cancellations",
+      "description": "Clerks cancel a booking when a guest's plans change, and the guest is refunded what the cancellation policy allows.",
+      "stability": "alpha",
+      "feature": "feature:reservations",
+      "solves": [
+        "problem:late-cancellations-leave-rooms-empty"
+      ],
+      "personas": [
+        "persona:manager"
+      ],
+      "initiatives": [],
+      "rules": [
+        "rule:free-cancellation-window",
+        "rule:late-cancellation-fee"
+      ],
+      "concepts": [
+        "concept:booking"
+      ],
+      "gaps": [
+        "capability:cancellations#late-cancellations-refunded-in-full"
+      ],
+      "tradeoffs": [],
+      "decisions": [
+        {
+          "topic": "No-shows",
+          "question": "Is a guest who never arrives treated as a late cancellation, or charged for the whole stay?",
+          "affects": [],
+          "impact": null,
+          "likelihood": null,
+          "reach": null
+        }
+      ],
+      "evidence": {
+        "implements": [],
+        "verifies": []
+      },
+      "body": "## Includes\n\n- Clerks tell a guest what they'd be refunded if they cancelled now."
+    },
+    {
+      "id": "check-in",
+      "file": "docqet/capabilities/check-in.md",
+      "name": "Check-in",
+      "description": "Clerks check guests in when they arrive and give them their room.",
+      "stability": "beta",
+      "feature": "feature:front-desk",
+      "solves": [
+        "problem:guests-queue-at-the-desk",
+        "problem:room-given-to-two-guests"
+      ],
+      "personas": [
+        "persona:front-desk-clerk"
+      ],
+      "initiatives": [],
+      "rules": [
+        "rule:no-double-booking"
+      ],
+      "concepts": [
+        "concept:booking",
+        "concept:room"
+      ],
+      "gaps": [],
+      "tradeoffs": [],
+      "decisions": [],
+      "evidence": {
+        "implements": [],
+        "verifies": []
+      },
+      "body": "## Includes\n\n- Clerks see today's arrivals.\n- Clerks move a guest to another room for the rest of their stay.\n\n## Success\n\n- A guest with a booking is checked in within two minutes of reaching the desk."
+    },
+    {
+      "id": "check-out",
+      "file": "docqet/capabilities/check-out.md",
+      "name": "Check-out",
+      "description": "Clerks check guests out on their departure day and take payment for anything still owed.",
+      "stability": "ga",
+      "feature": "feature:front-desk",
+      "solves": [
+        "problem:guests-queue-at-the-desk",
+        "problem:guests-leave-owing"
+      ],
+      "personas": [
+        "persona:front-desk-clerk",
+        "persona:manager"
+      ],
+      "initiatives": [],
+      "rules": [],
+      "concepts": [
+        "concept:booking"
+      ],
+      "gaps": [],
+      "tradeoffs": [],
+      "decisions": [],
+      "evidence": {
+        "implements": [],
+        "verifies": []
+      },
+      "body": "## Includes\n\n- Clerks see today's departures.\n\n## Success\n\n- The front desk closes the day with every departure settled."
+    },
+    {
+      "id": "cleaning-schedule",
+      "file": "docqet/capabilities/cleaning-schedule.md",
+      "name": "Cleaning schedule",
+      "description": "Housekeepers see which rooms to clean today, with early arrivals first.",
+      "stability": "prototype",
+      "feature": "feature:housekeeping",
+      "solves": [
+        "problem:arrivals-wait-for-rooms"
+      ],
+      "personas": [
+        "persona:front-desk-clerk",
+        "persona:housekeeper"
+      ],
+      "initiatives": [],
+      "rules": [],
+      "concepts": [
+        "concept:room"
+      ],
+      "gaps": [],
+      "tradeoffs": [],
+      "decisions": [
+        {
+          "topic": null,
+          "question": "Is ordering by arrival time enough, or do housekeepers plan by floor?",
+          "affects": [],
+          "impact": null,
+          "likelihood": null,
+          "reach": null
+        }
+      ],
+      "evidence": {
+        "implements": [],
+        "verifies": []
+      },
+      "body": ""
+    },
+    {
+      "id": "group-bookings",
+      "file": "docqet/capabilities/group-bookings.md",
+      "name": "Group bookings",
+      "description": "Clerks hold several rooms at once for a group travelling together, under one name.",
+      "stability": "prototype",
+      "feature": "feature:reservations",
+      "solves": [
+        "problem:groups-hard-to-keep-together"
+      ],
+      "personas": [
+        "persona:front-desk-clerk"
+      ],
+      "initiatives": [
+        "initiative:busy-season"
+      ],
+      "rules": [
+        "rule:no-double-booking",
+        "rule:minimum-stay"
+      ],
+      "concepts": [
+        "concept:booking"
+      ],
+      "gaps": [],
+      "tradeoffs": [],
+      "decisions": [
+        {
+          "topic": null,
+          "question": "Do groups want one booking with many rooms, or many bookings linked together?",
+          "affects": [],
+          "impact": null,
+          "likelihood": null,
+          "reach": null
+        }
+      ],
+      "evidence": {
+        "implements": [],
+        "verifies": []
+      },
+      "body": ""
+    },
+    {
+      "id": "rate-calendar",
+      "file": "docqet/capabilities/rate-calendar.md",
+      "name": "Rate calendar",
+      "description": "Managers set each room type's nightly rate, date by date.",
+      "stability": "prototype",
+      "feature": null,
+      "solves": [
+        "problem:rates-lag-demand"
+      ],
+      "personas": [
+        "persona:manager"
+      ],
+      "initiatives": [],
+      "rules": [],
+      "concepts": [],
+      "gaps": [],
+      "tradeoffs": [],
+      "decisions": [
+        {
+          "topic": null,
+          "question": "Do rates change often enough to need a calendar, or is a rate per season enough?",
+          "affects": [],
+          "impact": null,
+          "likelihood": null,
+          "reach": null
+        }
+      ],
+      "evidence": {
+        "implements": [],
+        "verifies": []
+      },
+      "body": ""
+    },
+    {
       "id": "room-booking",
-      "domain": "guest-stays",
-      "file": "docqet/domains/guest-stays/capabilities/room-booking.md",
+      "file": "docqet/capabilities/room-booking.md",
       "name": "Room booking",
       "description": "Clerks book a free room for a guest's stay.",
       "stability": "beta",
+      "feature": "feature:reservations",
       "solves": [
         "problem:room-given-to-two-guests"
       ],
@@ -396,9 +619,10 @@
       "gaps": [
         "capability:room-booking#calendar-needs-a-mouse"
       ],
+      "tradeoffs": [
+        "capability:room-booking#one-room-per-booking"
+      ],
       "decisions": [],
-      "body": "## Includes\n\n- Clerks see which rooms are free for a stay.\n- Clerks move a booking to new dates.\n\n## Success\n\n- The front desk stops keeping the paper diary alongside the app.",
-      "feature": "feature:reservations",
       "evidence": {
         "implements": [
           {
@@ -415,224 +639,15 @@
           }
         ]
       },
-      "tradeoffs": [
-        "capability:room-booking#one-room-per-booking"
-      ]
-    },
-    {
-      "id": "cancellations",
-      "domain": "guest-stays",
-      "file": "docqet/domains/guest-stays/capabilities/cancellations.md",
-      "name": "Cancellations",
-      "description": "Clerks cancel a booking when a guest's plans change, and the guest is refunded what the cancellation policy allows.",
-      "stability": "alpha",
-      "solves": [
-        "problem:late-cancellations-leave-rooms-empty"
-      ],
-      "personas": [
-        "persona:manager"
-      ],
-      "initiatives": [],
-      "rules": [
-        "rule:free-cancellation-window",
-        "rule:late-cancellation-fee"
-      ],
-      "concepts": [
-        "concept:booking"
-      ],
-      "gaps": [
-        "capability:cancellations#late-cancellations-refunded-in-full"
-      ],
-      "decisions": [
-        {
-          "topic": "No-shows",
-          "question": "Is a guest who never arrives treated as a late cancellation, or charged for the whole stay?",
-          "affects": []
-        }
-      ],
-      "body": "## Includes\n\n- Clerks tell a guest what they'd be refunded if they cancelled now.",
-      "feature": "feature:reservations",
-      "evidence": {
-        "implements": [],
-        "verifies": []
-      },
-      "tradeoffs": []
-    },
-    {
-      "id": "check-in",
-      "domain": "guest-stays",
-      "file": "docqet/domains/guest-stays/capabilities/check-in.md",
-      "name": "Check-in",
-      "description": "Clerks check guests in when they arrive and give them their room.",
-      "stability": "beta",
-      "solves": [
-        "problem:guests-queue-at-the-desk",
-        "problem:room-given-to-two-guests"
-      ],
-      "personas": [
-        "persona:front-desk-clerk"
-      ],
-      "initiatives": [],
-      "rules": [
-        "rule:no-double-booking"
-      ],
-      "concepts": [
-        "concept:booking",
-        "concept:room"
-      ],
-      "gaps": [],
-      "decisions": [],
-      "body": "## Includes\n\n- Clerks see today's arrivals.\n- Clerks move a guest to another room for the rest of their stay.\n\n## Success\n\n- A guest with a booking is checked in within two minutes of reaching the desk.",
-      "feature": "feature:front-desk",
-      "evidence": {
-        "implements": [],
-        "verifies": []
-      },
-      "tradeoffs": []
-    },
-    {
-      "id": "check-out",
-      "domain": "guest-stays",
-      "file": "docqet/domains/guest-stays/capabilities/check-out.md",
-      "name": "Check-out",
-      "description": "Clerks check guests out on their departure day and take payment for anything still owed.",
-      "stability": "ga",
-      "solves": [
-        "problem:guests-queue-at-the-desk",
-        "problem:guests-leave-owing"
-      ],
-      "personas": [
-        "persona:front-desk-clerk",
-        "persona:manager"
-      ],
-      "initiatives": [],
-      "rules": [],
-      "concepts": [
-        "concept:booking"
-      ],
-      "gaps": [],
-      "decisions": [],
-      "body": "## Includes\n\n- Clerks see today's departures.\n\n## Success\n\n- The front desk closes the day with every departure settled.",
-      "feature": "feature:front-desk",
-      "evidence": {
-        "implements": [],
-        "verifies": []
-      },
-      "tradeoffs": []
-    },
-    {
-      "id": "cleaning-schedule",
-      "domain": "property",
-      "file": "docqet/domains/property/capabilities/cleaning-schedule.md",
-      "name": "Cleaning schedule",
-      "description": "Housekeepers see which rooms to clean today, with early arrivals first.",
-      "stability": "prototype",
-      "solves": [
-        "problem:arrivals-wait-for-rooms"
-      ],
-      "personas": [
-        "persona:front-desk-clerk",
-        "persona:housekeeper"
-      ],
-      "initiatives": [],
-      "rules": [],
-      "concepts": [
-        "concept:room@guest-stays"
-      ],
-      "gaps": [],
-      "decisions": [
-        {
-          "topic": null,
-          "question": "Is ordering by arrival time enough, or do housekeepers plan by floor?",
-          "affects": []
-        }
-      ],
-      "body": "",
-      "feature": "feature:housekeeping",
-      "evidence": {
-        "implements": [],
-        "verifies": []
-      },
-      "tradeoffs": []
-    },
-    {
-      "id": "group-bookings",
-      "domain": "guest-stays",
-      "file": "docqet/domains/guest-stays/capabilities/group-bookings.md",
-      "name": "Group bookings",
-      "description": "Clerks hold several rooms at once for a group travelling together, under one name.",
-      "stability": "prototype",
-      "solves": [
-        "problem:groups-hard-to-keep-together"
-      ],
-      "personas": [
-        "persona:front-desk-clerk"
-      ],
-      "initiatives": [
-        "initiative:busy-season"
-      ],
-      "rules": [
-        "rule:no-double-booking",
-        "rule:minimum-stay"
-      ],
-      "concepts": [
-        "concept:booking"
-      ],
-      "gaps": [],
-      "decisions": [
-        {
-          "topic": null,
-          "question": "Do groups want one booking with many rooms, or many bookings linked together?",
-          "affects": []
-        }
-      ],
-      "body": "",
-      "feature": "feature:reservations",
-      "evidence": {
-        "implements": [],
-        "verifies": []
-      },
-      "tradeoffs": []
-    },
-    {
-      "id": "rate-calendar",
-      "domain": "guest-stays",
-      "file": "docqet/domains/guest-stays/capabilities/rate-calendar.md",
-      "name": "Rate calendar",
-      "description": "Managers set each room type's nightly rate, date by date.",
-      "stability": "prototype",
-      "solves": [
-        "problem:rates-lag-demand"
-      ],
-      "personas": [
-        "persona:manager"
-      ],
-      "initiatives": [],
-      "rules": [],
-      "concepts": [],
-      "gaps": [],
-      "decisions": [
-        {
-          "topic": null,
-          "question": "Do rates change often enough to need a calendar, or is a rate per season enough?",
-          "affects": []
-        }
-      ],
-      "body": "",
-      "feature": null,
-      "evidence": {
-        "implements": [],
-        "verifies": []
-      },
-      "tradeoffs": []
+      "body": "## Includes\n\n- Clerks see which rooms are free for a stay.\n- Clerks move a booking to new dates.\n\n## Success\n\n- The front desk stops keeping the paper diary alongside the app."
     },
     {
       "id": "room-status",
-      "domain": "property",
-      "file": "docqet/domains/property/capabilities/room-status.md",
+      "file": "docqet/capabilities/room-status.md",
       "name": "Room status",
       "description": "Housekeepers mark rooms clean or dirty, so the front desk knows which are ready.",
       "stability": "prototype",
+      "feature": "feature:housekeeping",
       "solves": [
         "problem:arrivals-wait-for-rooms"
       ],
@@ -645,31 +660,33 @@
       ],
       "rules": [],
       "concepts": [
-        "concept:room@guest-stays"
+        "concept:room"
       ],
       "gaps": [],
+      "tradeoffs": [],
       "decisions": [
         {
           "topic": null,
           "question": "Will housekeepers update a room's status as they go, or at the end of their round?",
-          "affects": []
+          "affects": [],
+          "impact": null,
+          "likelihood": null,
+          "reach": null
         }
       ],
-      "body": "## Includes\n\n- Clerks see which rooms are ready for arriving guests.",
-      "feature": "feature:housekeeping",
       "evidence": {
         "implements": [],
         "verifies": []
       },
-      "tradeoffs": []
+      "body": "## Includes\n\n- Clerks see which rooms are ready for arriving guests."
     },
     {
       "id": "waitlist",
-      "domain": "guest-stays",
-      "file": "docqet/domains/guest-stays/capabilities/waitlist.md",
+      "file": "docqet/capabilities/waitlist.md",
       "name": "Waitlist",
       "description": "Clerks put a guest on a waitlist when every room is taken, and offer them the first room that frees up for their stay.",
       "stability": "draft",
+      "feature": "feature:reservations",
       "solves": [
         "problem:full-nights-turn-guests-away"
       ],
@@ -687,32 +704,64 @@
         "concept:room"
       ],
       "gaps": [],
-      "feature": "feature:reservations",
-      "evidence": {
-        "implements": [],
-        "verifies": []
-      },
+      "tradeoffs": [],
       "decisions": [
         {
           "topic": "Who goes first",
           "question": "Whoever asked first, or whoever's stay fits the free nights best?",
-          "affects": []
+          "affects": [],
+          "impact": null,
+          "likelihood": null,
+          "reach": null
         }
       ],
-      "body": "## Includes\n\n- Clerks see who is waiting for each night.",
-      "tradeoffs": []
+      "evidence": {
+        "implements": [],
+        "verifies": []
+      },
+      "body": "## Includes\n\n- Clerks see who is waiting for each night."
     }
   ],
   "rules": [
     {
+      "id": "minimum-stay",
+      "file": "docqet/rules/booking/minimum-stay.md",
+      "name": "A stay is at least one night",
+      "capabilities": [
+        "capability:group-bookings",
+        "capability:room-booking"
+      ],
+      "concepts": [
+        "concept:booking"
+      ],
+      "respects": [],
+      "why": null,
+      "evidence": {
+        "implements": [
+          {
+            "file": "src/booking/stay.ts",
+            "line": 11,
+            "text": "export function parseStay(checkIn: string, checkOut: string): Stay {"
+          }
+        ],
+        "verifies": [
+          {
+            "file": "src/booking/stay.test.ts",
+            "line": 12,
+            "text": "it(\"rejects a stay that ends the day it starts\", () => {"
+          }
+        ]
+      },
+      "body": "A booking's check-out date is after its check-in date."
+    },
+    {
       "id": "no-double-booking",
-      "domain": "guest-stays",
-      "file": "docqet/domains/guest-stays/rules/booking/no-double-booking.md",
+      "file": "docqet/rules/booking/no-double-booking.md",
       "name": "A room can't be double-booked",
       "capabilities": [
-        "capability:room-booking",
         "capability:check-in",
-        "capability:group-bookings"
+        "capability:group-bookings",
+        "capability:room-booking"
       ],
       "concepts": [
         "concept:booking",
@@ -722,7 +771,6 @@
         "constraint:one-stay-a-room-a-night"
       ],
       "why": null,
-      "body": "Two bookings for the same room can't share a night. A cancelled booking no\nlonger holds its nights.",
       "evidence": {
         "implements": [
           {
@@ -758,44 +806,12 @@
             "text": "it(\"is refused by the database when the room is taken that night\", async () => {"
           }
         ]
-      }
-    },
-    {
-      "id": "minimum-stay",
-      "domain": "guest-stays",
-      "file": "docqet/domains/guest-stays/rules/booking/minimum-stay.md",
-      "name": "A stay is at least one night",
-      "capabilities": [
-        "capability:room-booking",
-        "capability:group-bookings"
-      ],
-      "concepts": [
-        "concept:booking"
-      ],
-      "respects": [],
-      "why": null,
-      "body": "A booking's check-out date is after its check-in date.",
-      "evidence": {
-        "implements": [
-          {
-            "file": "src/booking/stay.ts",
-            "line": 11,
-            "text": "export function parseStay(checkIn: string, checkOut: string): Stay {"
-          }
-        ],
-        "verifies": [
-          {
-            "file": "src/booking/stay.test.ts",
-            "line": 12,
-            "text": "it(\"rejects a stay that ends the day it starts\", () => {"
-          }
-        ]
-      }
+      },
+      "body": "Two bookings for the same room can't share a night. A cancelled booking no\nlonger holds its nights."
     },
     {
       "id": "same-day-turnover",
-      "domain": "guest-stays",
-      "file": "docqet/domains/guest-stays/rules/booking/same-day-turnover.md",
+      "file": "docqet/rules/booking/same-day-turnover.md",
       "name": "A stay can start on the day another ends",
       "capabilities": [
         "capability:room-booking"
@@ -809,7 +825,6 @@
         "constraint:rooms-cleaned-between-stays"
       ],
       "why": "Guests check out by 11:00 and check in from 15:00, which leaves time to clean the room.",
-      "body": "A room can be booked from the day an earlier booking checks out, because the\ntwo stays don't share a night.",
       "evidence": {
         "implements": [
           {
@@ -819,12 +834,12 @@
           }
         ],
         "verifies": []
-      }
+      },
+      "body": "A room can be booked from the day an earlier booking checks out, because the\ntwo stays don't share a night."
     },
     {
       "id": "free-cancellation-window",
-      "domain": "guest-stays",
-      "file": "docqet/domains/guest-stays/rules/cancellations/free-cancellation-window.md",
+      "file": "docqet/rules/cancellations/free-cancellation-window.md",
       "name": "Cancelling 48 hours ahead is free",
       "capabilities": [
         "capability:cancellations"
@@ -836,7 +851,6 @@
         "constraint:cancellation-terms"
       ],
       "why": null,
-      "body": "A booking cancelled at least 48 hours before check-in is refunded in full.",
       "evidence": {
         "implements": [
           {
@@ -857,12 +871,12 @@
             "text": "it(\"refunds in full exactly 48 hours ahead\", () => {"
           }
         ]
-      }
+      },
+      "body": "A booking cancelled at least 48 hours before check-in is refunded in full."
     },
     {
       "id": "late-cancellation-fee",
-      "domain": "guest-stays",
-      "file": "docqet/domains/guest-stays/rules/cancellations/late-cancellation-fee.md",
+      "file": "docqet/rules/cancellations/late-cancellation-fee.md",
       "name": "A late cancellation costs the first night",
       "capabilities": [
         "capability:cancellations"
@@ -874,30 +888,29 @@
         "constraint:cancellation-terms"
       ],
       "why": "The room usually can't be rebooked at such short notice.",
-      "body": "A booking cancelled less than 48 hours before check-in is refunded everything\nexcept the first night.",
       "evidence": {
         "implements": [],
         "verifies": []
-      }
+      },
+      "body": "A booking cancelled less than 48 hours before check-in is refunded everything\nexcept the first night."
     }
   ],
   "concepts": [
     {
       "id": "booking",
-      "domain": "guest-stays",
-      "file": "docqet/domains/guest-stays/concepts/booking.md",
+      "file": "docqet/concepts/booking.md",
       "name": "Booking",
       "description": "A guest's hold on one room for a stay, from a check-in date to a check-out date.",
       "capabilities": [
-        "capability:room-booking",
         "capability:cancellations",
         "capability:check-in",
         "capability:check-out",
-        "capability:group-bookings"
+        "capability:group-bookings",
+        "capability:room-booking"
       ],
       "rules": [
-        "rule:no-double-booking",
         "rule:minimum-stay",
+        "rule:no-double-booking",
         "rule:same-day-turnover",
         "rule:free-cancellation-window",
         "rule:late-cancellation-fee"
@@ -907,14 +920,13 @@
     },
     {
       "id": "room",
-      "domain": "guest-stays",
-      "file": "docqet/domains/guest-stays/concepts/room.md",
+      "file": "docqet/concepts/room.md",
       "name": "Room",
       "description": "A room guests can stay in, known by its number.",
       "capabilities": [
-        "capability:room-booking",
         "capability:check-in",
         "capability:cleaning-schedule",
+        "capability:room-booking",
         "capability:room-status"
       ],
       "rules": [
@@ -934,13 +946,13 @@
       "applies": "project",
       "respects": [],
       "capabilities": [
-        "capability:room-booking",
         "capability:cancellations",
         "capability:check-in",
         "capability:check-out",
         "capability:cleaning-schedule",
         "capability:group-bookings",
         "capability:rate-calendar",
+        "capability:room-booking",
         "capability:room-status"
       ],
       "meets": [
@@ -973,7 +985,10 @@
         {
           "topic": "Second instance",
           "question": "Once there's a second server, do releases switch over all at once, or one server at a time?",
-          "affects": []
+          "affects": [],
+          "impact": null,
+          "likelihood": null,
+          "reach": null
         },
         {
           "topic": "Undoing a schema change",
@@ -981,7 +996,10 @@
           "affects": [
             "outcome:reliability/ga/recovery",
             "mechanism:deployment#migrations-only-go-forward"
-          ]
+          ],
+          "impact": null,
+          "likelihood": null,
+          "reach": null
         }
       ],
       "body": "Every merge to `main` builds one container image, tagged with the commit, and\ndeploys it. Rolling back deploys the previous tag. Migrations run before the\nnew image starts, from `db/migrations/`, in filename order."
@@ -1032,40 +1050,26 @@
   "gaps": [
     {
       "id": "capability:cancellations#late-cancellations-refunded-in-full",
-      "domain": "guest-stays",
       "affects": [
         "rule:late-cancellation-fee"
       ],
       "impact": "damaging",
-      "likelihood": null,
-      "reach": null,
+      "likelihood": "certain",
+      "reach": "all",
       "name": "Late cancellations refunded in full",
       "description": "The late-cancellation fee isn't charged yet, so every cancellation is refunded in full.",
       "places": []
     },
     {
       "id": "capability:room-booking#calendar-needs-a-mouse",
-      "domain": "guest-stays",
       "affects": [
         "outcome:usability/beta/everyone"
       ],
       "impact": "blocking",
-      "likelihood": null,
-      "reach": null,
+      "likelihood": "certain",
+      "reach": "all",
       "name": "Calendar needs a mouse",
       "description": "The room calendar can't be used from the keyboard, so clerks need a mouse to pick dates.",
-      "places": []
-    },
-    {
-      "id": "mechanism:deployment#migrations-only-go-forward",
-      "affects": [
-        "outcome:reliability/ga/recovery"
-      ],
-      "impact": "damaging",
-      "likelihood": "possible",
-      "reach": null,
-      "name": "Migrations have no down step",
-      "description": "Migrations have no down step, so undoing a release that changed the schema means restoring the database from the night before.",
       "places": []
     },
     {
@@ -1075,7 +1079,7 @@
       ],
       "impact": "inconvenient",
       "likelihood": "possible",
-      "reach": null,
+      "reach": "all",
       "name": "Booking clashes logged as unknown errors",
       "description": "`saveBooking` passes every database error up as it is, so a clash that only the exclusion constraint caught is logged as an unknown failure, not as a double booking that was refused. That happens when two bookings for the same room arrive at once.",
       "places": [
@@ -1085,36 +1089,28 @@
           "text": "export async function saveBooking(db: Pool, booking: Booking): Promise<void> {"
         }
       ]
+    },
+    {
+      "id": "mechanism:deployment#migrations-only-go-forward",
+      "affects": [
+        "outcome:reliability/ga/recovery"
+      ],
+      "impact": "damaging",
+      "likelihood": "possible",
+      "reach": "all",
+      "name": "Migrations have no down step",
+      "description": "Migrations have no down step, so undoing a release that changed the schema means restoring the database from the night before.",
+      "places": []
     }
   ],
   "tradeoffs": [
     {
       "id": "capability:room-booking#one-room-per-booking",
-      "domain": "guest-stays",
       "affects": [],
       "name": "One room per booking",
       "description": "A booking holds one room, not several.",
       "benefit": "Booking, changing and cancelling stay simple: each booking is one room for one stay.",
       "drawback": "A family that needs two rooms makes two bookings. Group bookings is where several rooms under one name is being explored.",
-      "places": []
-    },
-    {
-      "id": "feature:reservations#front-desk-bookings-only",
-      "domain": "guest-stays",
-      "affects": [],
-      "name": "Front desk bookings only",
-      "description": "Bookings are taken at the front desk, not from online travel agencies.",
-      "benefit": "No agency integrations to build or keep working, while most bookings come straight to the desk.",
-      "drawback": "Clerks enter each agency booking by hand, as it arrives by email.",
-      "places": []
-    },
-    {
-      "id": "mechanism:deployment#migrations-before-start",
-      "affects": [],
-      "name": "Migrations run while the old release serves",
-      "description": "Migrations run before the new image starts, while the old one is still serving, rather than stopping the app for each release.",
-      "benefit": "Releases don't take the front desk offline.",
-      "drawback": "The running code has to work with the new schema for a minute, so a column is added a release before it's used, and removed a release after the code stops reading it.",
       "places": []
     },
     {
@@ -1131,6 +1127,24 @@
           "text": "EXCLUDE USING gist (room_id WITH =, nights WITH &&) WHERE (status <> 'cancelled')"
         }
       ]
+    },
+    {
+      "id": "feature:reservations#front-desk-bookings-only",
+      "affects": [],
+      "name": "Front desk bookings only",
+      "description": "Bookings are taken at the front desk, not from online travel agencies.",
+      "benefit": "No agency integrations to build or keep working, while most bookings come straight to the desk.",
+      "drawback": "Clerks enter each agency booking by hand, as it arrives by email.",
+      "places": []
+    },
+    {
+      "id": "mechanism:deployment#migrations-before-start",
+      "affects": [],
+      "name": "Migrations run while the old release serves",
+      "description": "Migrations run before the new image starts, while the old one is still serving, rather than stopping the app for each release.",
+      "benefit": "Releases don't take the front desk offline.",
+      "drawback": "The running code has to work with the new schema for a minute, so a column is added a release before it's used, and removed a release after the code stops reading it.",
+      "places": []
     }
   ],
   "findings": [],

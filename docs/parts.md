@@ -56,7 +56,7 @@ installs it into a project and keeps it up to date. See [`kit/`](../kit/).
 _A better name will come._ The format is how a repository declares the state
 of its software, in docs, frontmatter and annotations, and the shape of the
 state worked out from it. It's defined by Docqet's own concept docs, starting
-from the [Authoring](../docqet/domains/authoring/domain.md) domain. The
+from the [Authoring](../docqet/areas/authoring.md) area. The
 [stability rubric](../internal/rubric/rubric.yml), which says what each
 stability level means, is built into `docqet`. The format belongs to no one
 tool: `docqet` is one program that reads it, and anyone can write another.
@@ -113,7 +113,7 @@ lives, how the CLI and the server share it, and the API the UI reads.
 
 | Part                  | Today                                                                                                                                                                                                                                                                                                                                                                       |
 | --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Format                | A draft for review, defined by Docqet's concept docs, starting from the [Authoring](../docqet/domains/authoring/domain.md) domain, with example projects in [`examples/`](../examples/).                                                                                                                                                                                     |
+| Format                | A draft for review, defined by Docqet's concept docs, starting from the [Authoring](../docqet/areas/authoring.md) area, with example projects in [`examples/`](../examples/).                                                                                                                                                                                     |
 | `docqet`              | Sets up a project and installs the kit, indexes and checks it, answers what a change touches, shows and lists its docs, the rubric and what's changed, renames IDs, and applies its states to the server, which keeps them in SQLite. The rest of the commands drafted in [`cmd/docqet/`](../cmd/docqet/) exist with their flags, and say they aren't built yet. The examples' `state.json` files are written by hand. |
 | UI                    | An early UI in TypeScript that reads only the server's API. See [`ui/`](../ui/).                                                                                                                                                                                                                                                                                            |
 | Agent development kit | For any agent: an `AGENTS.md` block and a `docqet` skill, installed with `docqet kit`, and used to build Docqet itself. Every command it names is built, over the working tree or a commit, but none reads the rest of the product or the server yet. See [`kit/`](../kit/).                                                                                                 |
@@ -121,8 +121,8 @@ lives, how the CLI and the server share it, and the API the UI reads.
 ## Open questions
 
 What we haven't decided is written down as open decisions in Docqet's own
-docs, on the domain or capability each is about, such as
-[what to call the format](../docqet/domains/authoring/capabilities/docs-format.md)
-and [how people sign in to a server](../docqet/domains/understanding/capabilities/applying.md).
+docs, on the area or capability each is about, such as
+[what to call the format](../docqet/capabilities/docs-format.md)
+and [how people sign in to a server](../docqet/capabilities/applying.md).
 `docqet check` at the root of this repository indexes them, and the UI shows
 them.

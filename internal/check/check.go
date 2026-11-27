@@ -28,7 +28,7 @@ func Recheckable(p state.Finding) bool {
 // docqet:implements capability:checking component:check
 func Check(st *state.State) []state.Finding {
 	c := newChecker(st)
-	c.domains()
+	c.areas()
 	c.features()
 	c.capabilities()
 	c.rules()
@@ -48,15 +48,11 @@ func Check(st *state.State) []state.Finding {
 type checker struct {
 	st       *state.State
 	findings []state.Finding
-	domain   map[string]bool
 	outcome  map[string]bool
 }
 
 func newChecker(st *state.State) *checker {
-	c := &checker{st: st, domain: map[string]bool{}, outcome: map[string]bool{}}
-	for _, d := range st.Domains {
-		c.domain[d.ID] = true
-	}
+	c := &checker{st: st, outcome: map[string]bool{}}
 	for _, q := range st.Rubric.Qualities {
 		for _, l := range q.Levels {
 			for _, o := range l.Outcomes {
@@ -69,8 +65,8 @@ func newChecker(st *state.State) *checker {
 
 // subject is what a finding is about.
 type subject struct {
-	ref, domain, file string
-	capabilities      []string
+	ref, file    string
+	capabilities []string
 }
 
 func (c *checker) add(typ string, s subject, format string, args ...any) {
@@ -80,63 +76,32 @@ func (c *checker) add(typ string, s subject, format string, args ...any) {
 	}
 	c.findings = append(c.findings, state.Finding{
 		Type: typ, Subject: s.ref, Capabilities: caps, Message: fmt.Sprintf(format, args...),
-		Domain: s.domain, File: s.file,
+		File: s.file,
 	})
 }
 
-func (c *checker) domains() {
-	for _, d := range c.st.Domains {
-		s := subject{ref: state.DocRef(state.TypeDomain, d.ID), file: d.File}
-		c.common(s, d.ID, d.Name, d.Description, true)
-		c.decisions(s, d.Decisions)
+func (c *checker) areas() {
+	for _, a := range c.st.Areas {
+		s := subject{ref: state.DocRef(state.TypeArea, a.ID), file: a.File}
+		c.common(s, a.ID, a.Name, a.Description, true)
+		c.decisions(s, a.Decisions)
 	}
 }
 
 func (c *checker) features() {
 	for _, f := range c.st.Features {
-		s := subject{ref: state.DocRef(state.TypeFeature, f.ID), domain: f.Domain, file: f.File}
+		s := subject{ref: state.DocRef(state.TypeFeature, f.ID), file: f.File}
 		c.common(s, f.ID, f.Name, f.Description, true)
-		c.inDomain(s, f.Domain)
-		if len(f.Capabilities) == 0 {
-			c.add(state.InvalidFrontmatter, s, "A feature lists its capabilities.")
-		}
-		c.links(s, "capabilities", f.Capabilities, state.TypeCapability, f.Domain)
+		c.link(s, "area", f.Area, state.TypeArea)
 		c.decisions(s, f.Decisions)
-	}
-
-	// A capability is in at most one feature, however many domains write it.
-	in := map[string][]string{}
-	var order []string
-	for _, f := range c.st.Features {
-		for _, raw := range f.Capabilities {
-			ref, ok := state.ParseRef(raw)
-			if !ok || ref.Type != state.TypeCapability {
-				continue
-			}
-			feature := state.DocRef(state.TypeFeature, f.ID)
-			if _, seen := in[ref.ID]; !seen {
-				order = append(order, ref.ID)
-			}
-			if !slices.Contains(in[ref.ID], feature) {
-				in[ref.ID] = append(in[ref.ID], feature)
-			}
-		}
-	}
-	for _, id := range order {
-		if features := in[id]; len(features) > 1 {
-			ref := state.DocRef(state.TypeCapability, id)
-			c.add(state.InTwoFeatures, subject{ref: ref, file: c.capabilityFile(id), capabilities: []string{ref}},
-				"More than one feature lists it: %s.", strings.Join(features, ", "))
-		}
 	}
 }
 
 func (c *checker) capabilities() {
 	for _, cp := range c.st.Capabilities {
 		ref := state.DocRef(state.TypeCapability, cp.ID)
-		s := subject{ref: ref, domain: cp.Domain, file: cp.File, capabilities: []string{ref}}
+		s := subject{ref: ref, file: cp.File, capabilities: []string{ref}}
 		c.common(s, cp.ID, cp.Name, cp.Description, true)
-		c.inDomain(s, cp.Domain)
 		switch cp.Stability {
 		case "draft", "prototype", "alpha", "beta", "ga":
 		case "":
@@ -144,28 +109,21 @@ func (c *checker) capabilities() {
 		default:
 			c.add(state.InvalidFrontmatter, s, "stability is %q: it's draft, prototype, alpha, beta or ga.", cp.Stability)
 		}
-		c.links(s, "solves", cp.Solves, state.TypeProblem, cp.Domain)
-		c.links(s, "initiatives", cp.Initiatives, state.TypeInitiative, cp.Domain)
-		c.links(s, "rules", cp.Rules, state.TypeRule, cp.Domain)
-		c.links(s, "concepts", cp.Concepts, state.TypeConcept, cp.Domain)
+		c.link(s, "feature", cp.Feature, state.TypeFeature)
+		c.links(s, "solves", cp.Solves, state.TypeProblem)
+		c.links(s, "initiatives", cp.Initiatives, state.TypeInitiative)
+		c.links(s, "rules", cp.Rules, state.TypeRule)
+		c.links(s, "concepts", cp.Concepts, state.TypeConcept)
 		c.decisions(s, cp.Decisions)
 	}
 
-	// Why a capability exists is the problems it solves. One written in
-	// several domains needs them in only one.
-	solves := map[string]bool{}
+	// Why a capability exists is the problems it solves.
 	for _, cp := range c.st.Capabilities {
 		if len(cp.Solves) > 0 {
-			solves[cp.ID] = true
-		}
-	}
-	for _, cp := range c.st.Capabilities {
-		if solves[cp.ID] {
 			continue
 		}
-		solves[cp.ID] = true // once per capability
 		ref := state.DocRef(state.TypeCapability, cp.ID)
-		c.add(state.SolvesNoProblem, subject{ref: ref, domain: cp.Domain, file: cp.File, capabilities: []string{ref}},
+		c.add(state.SolvesNoProblem, subject{ref: ref, file: cp.File, capabilities: []string{ref}},
 			"It solves no problem yet: link the problems it solves with solves.")
 	}
 }
@@ -174,18 +132,17 @@ func (c *checker) rules() {
 	for _, r := range c.st.Rules {
 		ref := state.DocRef(state.TypeRule, r.ID)
 		followers := c.followers(r)
-		s := subject{ref: ref, domain: r.Domain, file: r.File, capabilities: followers}
+		s := subject{ref: ref, file: r.File, capabilities: followers}
 		c.common(s, r.ID, r.Name, "", false)
-		c.inDomain(s, r.Domain)
-		c.links(s, "concepts", r.Concepts, state.TypeConcept, r.Domain)
-		c.links(s, "respects", r.Respects, state.TypeConstraint, r.Domain)
+		c.links(s, "concepts", r.Concepts, state.TypeConcept)
+		c.links(s, "respects", r.Respects, state.TypeConstraint)
 		if len(followers) == 0 {
 			c.add(state.UnlinkedRule, s, "No capability follows this rule.")
 		}
 	}
 }
 
-// followers is the capabilities whose rules mean r.
+// followers is the capabilities that follow r.
 func (c *checker) followers(r state.Rule) []string {
 	var out []string
 	for _, cp := range c.st.Capabilities {
@@ -194,11 +151,7 @@ func (c *checker) followers(r state.Rule) []string {
 			if !ok || ref.Type != state.TypeRule || ref.ID != r.ID {
 				continue
 			}
-			domain := ref.Domain
-			if domain == "" {
-				domain = cp.Domain
-			}
-			if domain == r.Domain && !slices.Contains(out, state.DocRef(state.TypeCapability, cp.ID)) {
+			if !slices.Contains(out, state.DocRef(state.TypeCapability, cp.ID)) {
 				out = append(out, state.DocRef(state.TypeCapability, cp.ID))
 			}
 		}
@@ -208,15 +161,14 @@ func (c *checker) followers(r state.Rule) []string {
 
 func (c *checker) concepts() {
 	for _, cn := range c.st.Concepts {
-		s := subject{ref: state.DocRef(state.TypeConcept, cn.ID), domain: cn.Domain, file: cn.File}
+		s := subject{ref: state.DocRef(state.TypeConcept, cn.ID), file: cn.File}
 		c.common(s, cn.ID, cn.Name, cn.Description, true)
-		c.inDomain(s, cn.Domain)
 		for _, cw := range cn.ConfusedWith {
 			switch {
 			case (cw.Concept == nil) == (cw.Term == nil):
 				c.add(state.InvalidFrontmatter, s, "Each confused-with names either a concept or a term.")
 			case cw.Concept != nil:
-				c.links(s, "confused-with", []string{*cw.Concept}, state.TypeConcept, cn.Domain)
+				c.links(s, "confused-with", []string{*cw.Concept}, state.TypeConcept)
 			}
 			if cw.Summary == "" {
 				c.add(state.InvalidFrontmatter, s, "Each confused-with has a summary saying how they differ.")
@@ -229,7 +181,6 @@ func (c *checker) personas() {
 	for _, p := range c.st.Personas {
 		s := subject{ref: state.DocRef(state.TypePersona, p.ID), file: p.File}
 		c.common(s, p.ID, p.Name, p.Description, true)
-		c.links(s, "initiatives", p.Initiatives, state.TypeInitiative, "")
 	}
 }
 
@@ -240,7 +191,7 @@ func (c *checker) problems() {
 		if len(pr.Personas) == 0 {
 			c.add(state.InvalidFrontmatter, s, "A problem names the personas who have it.")
 		}
-		c.links(s, "personas", pr.Personas, state.TypePersona, "")
+		c.links(s, "personas", pr.Personas, state.TypePersona)
 	}
 }
 
@@ -259,7 +210,9 @@ func (c *checker) constraints() {
 
 func (c *checker) initiatives() {
 	for _, in := range c.st.Initiatives {
-		c.common(subject{ref: state.DocRef(state.TypeInitiative, in.ID), file: in.File}, in.ID, in.Name, in.Description, true)
+		s := subject{ref: state.DocRef(state.TypeInitiative, in.ID), file: in.File}
+		c.common(s, in.ID, in.Name, in.Description, true)
+		c.links(s, "personas", in.Personas, state.TypePersona)
 	}
 }
 
@@ -267,7 +220,7 @@ func (c *checker) mechanisms() {
 	for _, m := range c.st.Mechanisms {
 		s := subject{ref: state.DocRef(state.TypeMechanism, m.ID), file: m.File}
 		c.common(s, m.ID, m.Name, m.Description, true)
-		c.links(s, "respects", m.Respects, state.TypeConstraint, "")
+		c.links(s, "respects", m.Respects, state.TypeConstraint)
 		if m.Applies != "project" && m.Applies != "product" {
 			c.add(state.InvalidFrontmatter, s, "applies is %q: it's project or product.", m.Applies)
 		}
@@ -280,7 +233,7 @@ func (c *checker) components() {
 	for _, cp := range c.st.Components {
 		s := subject{ref: state.DocRef(state.TypeComponent, cp.ID), file: cp.File}
 		c.common(s, cp.ID, cp.Name, cp.Description, true)
-		c.links(s, "capabilities", cp.Capabilities, state.TypeCapability, "")
+		c.links(s, "capabilities", cp.Capabilities, state.TypeCapability)
 		c.outcomes(s, "meets", cp.Meets)
 		c.decisions(s, cp.Decisions)
 	}
@@ -288,7 +241,7 @@ func (c *checker) components() {
 
 func (c *checker) gaps() {
 	for _, g := range c.st.Gaps {
-		s := c.entrySubject(g.ID, g.Domain)
+		s := c.entrySubject(g.ID)
 		if g.Name == "" {
 			c.add(state.InvalidFrontmatter, s, "A gap has a name.")
 		}
@@ -308,14 +261,14 @@ func (c *checker) gaps() {
 				c.add(state.InvalidFrontmatter, s, "A gap affects outcomes and rules, not %s.", raw)
 				continue
 			}
-			c.links(s, "affects", []string{raw}, state.TypeRule, g.Domain)
+			c.links(s, "affects", []string{raw}, state.TypeRule)
 		}
 	}
 }
 
 func (c *checker) tradeoffs() {
 	for _, t := range c.st.Tradeoffs {
-		s := c.entrySubject(t.ID, t.Domain)
+		s := c.entrySubject(t.ID)
 		if t.Name == "" {
 			c.add(state.InvalidFrontmatter, s, "A tradeoff has a name.")
 		}
@@ -341,11 +294,11 @@ func (c *checker) tradeoffs() {
 
 // entrySubject is a gap or tradeoff as a finding's subject, with the doc it's
 // on.
-func (c *checker) entrySubject(id, domain string) subject {
-	s := subject{ref: id, domain: domain}
+func (c *checker) entrySubject(id string) subject {
+	s := subject{ref: id}
 	doc, _, _ := strings.Cut(id, "#")
 	if ref, ok := state.ParseRef(doc); ok {
-		s.file = c.fileOf(ref.Type, ref.ID, domain)
+		s.file = c.fileOf(ref.Type, ref.ID)
 		if ref.Type == state.TypeCapability {
 			s.capabilities = []string{doc}
 		}
@@ -419,21 +372,18 @@ func (c *checker) common(s subject, id, name, description string, wantsDescripti
 	}
 }
 
-// inDomain checks a doc written in a domain names one the project has.
-func (c *checker) inDomain(s subject, domain string) {
-	switch {
-	case domain == "":
-		c.add(state.InvalidFrontmatter, s, "A %s is written in a domain, so it has one.", strings.SplitN(s.ref, ":", 2)[0])
-	case !c.domain[domain]:
-		c.add(state.UnknownID, s, "domain is %s, which the project has no domain doc for.", domain)
+// link checks a single link, such as a capability's feature, as links does.
+func (c *checker) link(s subject, field string, ref *string, typ string) {
+	if ref != nil {
+		c.links(s, field, []string{*ref}, typ)
 	}
 }
 
 // links checks each link in field is a reference to a doc of type typ that
-// exists. A rule or concept is looked for in the domain it names, or naming
-// none, in from, the domain of the doc it's in.
-// docqet:implements rule:product-never-names-implementation@authoring
-func (c *checker) links(s subject, field string, refs []string, typ, from string) {
+// exists. Every doc's ID is one across the project, rules and concepts too,
+// so a link names no domain.
+// docqet:implements rule:product-never-names-implementation
+func (c *checker) links(s subject, field string, refs []string, typ string) {
 	for _, raw := range refs {
 		ref, ok := state.ParseRef(raw)
 		if !ok || ref.Key != "" {
@@ -444,16 +394,13 @@ func (c *checker) links(s subject, field string, refs []string, typ, from string
 			c.add(state.InvalidFrontmatter, s, "%s lists %s, which is a %s: it lists %ss.", field, raw, ref.Type, typ)
 			continue
 		}
-		domain := ref.Domain
-		if domain == "" {
-			domain = from
+		if ref.Domain != "" {
+			c.add(state.InvalidFrontmatter, s, "%s lists %s: rules and concepts have no domain now: write %s.", field, raw, state.DocRef(ref.Type, ref.ID))
+			continue
 		}
-		if !c.exists(typ, ref.ID, domain) {
+		if !c.exists(typ, ref.ID) {
 			msg := "%s lists %s, which doesn't exist."
-			switch {
-			case (typ == state.TypeRule || typ == state.TypeConcept) && ref.Domain == "" && domain == "":
-				msg = "%s lists %s without its domain, and the doc it's in has none: write it as " + typ + ":<id>@<domain>."
-			case c.st.Product != nil:
+			if c.st.Product != nil {
 				msg = "%s lists %s, which this project doesn't define. It may be defined in another project in the product."
 			}
 			c.add(state.UnknownID, s, msg, field, raw)
@@ -483,17 +430,14 @@ func (c *checker) oneOf(s subject, field, value string, allowed ...string) {
 	}
 }
 
-// exists reports whether the project has a doc of type typ with id, in
-// domain for a rule or concept.
-func (c *checker) exists(typ, id, domain string) bool {
-	return c.fileOf(typ, id, domain) != ""
+// exists reports whether the project has a doc of type typ with id.
+func (c *checker) exists(typ, id string) bool {
+	return c.fileOf(typ, id) != ""
 }
 
-// fileOf is the file of the doc of type typ with id, in domain for a rule or
-// concept, or "" when there's none.
-func (c *checker) fileOf(typ, id, domain string) string {
+// fileOf is the file of the doc of type typ with id, or "" when there's none.
+func (c *checker) fileOf(typ, id string) string {
 	st := c.st
-	// Every type but a rule or concept is one across every domain.
 	find := func(n int, at func(int) (string, string)) string {
 		for i := range n {
 			if gotID, file := at(i); gotID == id {
@@ -503,24 +447,16 @@ func (c *checker) fileOf(typ, id, domain string) string {
 		return ""
 	}
 	switch typ {
-	case state.TypeDomain:
-		return find(len(st.Domains), func(i int) (string, string) { return st.Domains[i].ID, st.Domains[i].File })
+	case state.TypeArea:
+		return find(len(st.Areas), func(i int) (string, string) { return st.Areas[i].ID, st.Areas[i].File })
 	case state.TypeFeature:
 		return find(len(st.Features), func(i int) (string, string) { return st.Features[i].ID, st.Features[i].File })
 	case state.TypeCapability:
 		return c.capabilityFile(id)
 	case state.TypeRule:
-		for _, r := range st.Rules {
-			if r.ID == id && r.Domain == domain {
-				return r.File
-			}
-		}
+		return find(len(st.Rules), func(i int) (string, string) { return st.Rules[i].ID, st.Rules[i].File })
 	case state.TypeConcept:
-		for _, cn := range st.Concepts {
-			if cn.ID == id && cn.Domain == domain {
-				return cn.File
-			}
-		}
+		return find(len(st.Concepts), func(i int) (string, string) { return st.Concepts[i].ID, st.Concepts[i].File })
 	case state.TypePersona:
 		return find(len(st.Personas), func(i int) (string, string) { return st.Personas[i].ID, st.Personas[i].File })
 	case state.TypeProblem:
@@ -546,16 +482,15 @@ func (c *checker) capabilityFile(id string) string {
 	return ""
 }
 
-// duplicates finds two docs of one type with one ID where there may be only
-// one: in one domain for a doc written in one, and in all for the rest, and
-// two gaps or tradeoffs with one key on a doc.
+// duplicates finds two docs of one type with one ID, and two gaps or
+// tradeoffs with one key on a doc.
 func (c *checker) duplicates() {
-	type key struct{ typ, id, domain string }
+	type key struct{ typ, id string }
 	seen := map[key]string{}
-	check := func(typ, id, domain, file string) {
-		k := key{typ, id, domain}
+	check := func(typ, id, file string) {
+		k := key{typ, id}
 		if first, ok := seen[k]; ok {
-			s := subject{ref: state.DocRef(typ, id), domain: domain, file: file}
+			s := subject{ref: state.DocRef(typ, id), file: file}
 			if typ == state.TypeCapability {
 				s.capabilities = []string{s.ref}
 			}
@@ -564,54 +499,53 @@ func (c *checker) duplicates() {
 		}
 		seen[k] = file
 	}
-	for _, d := range c.st.Domains {
-		check(state.TypeDomain, d.ID, "", d.File)
+	for _, a := range c.st.Areas {
+		check(state.TypeArea, a.ID, a.File)
 	}
 	for _, f := range c.st.Features {
-		check(state.TypeFeature, f.ID, f.Domain, f.File)
+		check(state.TypeFeature, f.ID, f.File)
 	}
 	for _, cp := range c.st.Capabilities {
-		check(state.TypeCapability, cp.ID, cp.Domain, cp.File)
+		check(state.TypeCapability, cp.ID, cp.File)
 	}
 	for _, r := range c.st.Rules {
-		check(state.TypeRule, r.ID, r.Domain, r.File)
+		check(state.TypeRule, r.ID, r.File)
 	}
 	for _, cn := range c.st.Concepts {
-		check(state.TypeConcept, cn.ID, cn.Domain, cn.File)
+		check(state.TypeConcept, cn.ID, cn.File)
 	}
 	for _, p := range c.st.Personas {
-		check(state.TypePersona, p.ID, "", p.File)
+		check(state.TypePersona, p.ID, p.File)
 	}
 	for _, pr := range c.st.Problems {
-		check(state.TypeProblem, pr.ID, "", pr.File)
+		check(state.TypeProblem, pr.ID, pr.File)
 	}
 	for _, cn := range c.st.Constraints {
-		check(state.TypeConstraint, cn.ID, "", cn.File)
+		check(state.TypeConstraint, cn.ID, cn.File)
 	}
 	for _, in := range c.st.Initiatives {
-		check(state.TypeInitiative, in.ID, "", in.File)
+		check(state.TypeInitiative, in.ID, in.File)
 	}
 	for _, m := range c.st.Mechanisms {
-		check(state.TypeMechanism, m.ID, "", m.File)
+		check(state.TypeMechanism, m.ID, m.File)
 	}
 	for _, cp := range c.st.Components {
-		check(state.TypeComponent, cp.ID, "", cp.File)
+		check(state.TypeComponent, cp.ID, cp.File)
 	}
 
-	// A doc's gaps and tradeoffs share their keys, across every domain that
-	// writes it.
+	// A doc's gaps and tradeoffs share their keys.
 	entries := map[string]bool{}
-	entry := func(id, domain string) {
+	entry := func(id string) {
 		if entries[id] {
-			c.add(state.DuplicateID, c.entrySubject(id, domain), "Its key is used twice among its doc's gaps and tradeoffs.")
+			c.add(state.DuplicateID, c.entrySubject(id), "Its key is used twice among its doc's gaps and tradeoffs.")
 			return
 		}
 		entries[id] = true
 	}
 	for _, g := range c.st.Gaps {
-		entry(g.ID, g.Domain)
+		entry(g.ID)
 	}
 	for _, t := range c.st.Tradeoffs {
-		entry(t.ID, t.Domain)
+		entry(t.ID)
 	}
 }

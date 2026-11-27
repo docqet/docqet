@@ -79,7 +79,7 @@ func (v *View) ListGaps(within []*combine.Capability, impacts []string, byRisk b
 
 // ListDecisions returns every open decision showing, with the doc it's held
 // on, riskiest first: the rated ones by their risk, then those with none,
-// each in the product's order, the domains', then the features',
+// each in the product's order, the areas', then the features',
 // capabilities', mechanisms' and components'.
 func (v *View) ListDecisions() []derive.HeldDecision {
 	out := derive.HeldDecisions(v.Product)
@@ -106,7 +106,7 @@ const (
 
 // SearchResult is a doc that matches a search, and where it matched best.
 type SearchResult struct {
-	Kind        string // project, domain, feature, capability, rule, concept, persona, problem, constraint or initiative
+	Kind        string // project, area, feature, capability, rule, concept, persona, problem, constraint or initiative
 	ID          string
 	Name        string
 	Description string
@@ -146,8 +146,8 @@ func (v *View) Search(q string) []SearchResult {
 	for _, p := range v.Projects {
 		add("project", combine.Doc{ID: p.ID, Name: p.Name})
 	}
-	for _, d := range v.Domains {
-		add("domain", d.Doc)
+	for _, a := range v.Areas {
+		add("area", a.Doc)
 	}
 	for _, f := range v.Features {
 		add("feature", f.Doc)

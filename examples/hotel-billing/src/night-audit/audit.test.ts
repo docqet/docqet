@@ -3,7 +3,7 @@ import type { Bill } from "../ledger/ledger";
 import { runNightAudit } from "./audit";
 
 describe("runNightAudit", () => {
-  // docqet:verifies rule:one-room-charge-per-night@finance
+  // docqet:verifies rule:one-room-charge-per-night
   it("charges each guest in the hotel for the night", () => {
     const bills: Bill[] = [
       { id: "b1", status: "open", lines: [] },

@@ -3,7 +3,7 @@ Feature: Organizations and members
   member holds the Admin, Member, or Billing role, and others join when an
   Admin invites them.
 
-  # docqet:verifies rule:logos-stay-within-their-organization@accounts
+  # docqet:verifies rule:logos-stay-within-their-organization
   Rule: A client can't reach another organization's logo
 
     Background:
@@ -17,7 +17,7 @@ Feature: Organizations and members
       When Globex sets Acme's logo
       Then it isn't found
 
-  # docqet:verifies rule:anyone-can-create-an-organization@accounts rule:creators-get-client-access@accounts rule:one-account-however-many-hats@accounts
+  # docqet:verifies rule:anyone-can-create-an-organization rule:creators-get-client-access rule:one-account-however-many-hats
   Rule: Creating an organization gives its creator the portal, alongside the applications they already had
 
     Example: An engineer creates an organization
@@ -26,7 +26,7 @@ Feature: Organizations and members
       Then Theo belongs to Ridgeline
       And Theo has the portal and the console
 
-  # docqet:verifies rule:newcomers-start-with-no-organization@accounts
+  # docqet:verifies rule:newcomers-start-with-no-organization
   Rule: Someone newly signed up belongs to no organization until they create one, and then it's the only one they see
 
     Background:
@@ -42,7 +42,7 @@ Feature: Organizations and members
       When Helen lists the organizations they belong to
       Then Helen sees only Ridgeline
 
-  # docqet:verifies rule:members-act-only-in-their-organizations@accounts
+  # docqet:verifies rule:members-act-only-in-their-organizations
   Rule: Someone may act only in an organization they belong to
 
     Example: Another client's organization
@@ -51,7 +51,7 @@ Feature: Organizations and members
       When Ada acts in Globex
       Then it's refused
 
-  # docqet:verifies rule:client-admins-run-the-organization@accounts
+  # docqet:verifies rule:client-admins-run-the-organization
   Rule: A client Admin runs the organization: capacity, billing, and members
 
     Example: Acting in their organization
@@ -59,7 +59,7 @@ Feature: Organizations and members
       When Ada acts in Acme
       Then Ada can buy and schedule capacity, see and pay invoices, and manage members
 
-  # docqet:verifies rule:only-admins-purchase-or-manage-members@accounts
+  # docqet:verifies rule:only-admins-purchase-or-manage-members
   Rule: Only a client Admin can purchase capacity or manage members
 
     Scenario Outline: Anyone else
@@ -72,7 +72,7 @@ Feature: Organizations and members
         | a Member         |
         | a Billing member |
 
-  # docqet:verifies rule:client-members-work-without-billing@accounts
+  # docqet:verifies rule:client-members-work-without-billing
   Rule: A client Member schedules capacity, but can't purchase capacity or see billing
 
     Example: Acting in their organization
@@ -80,7 +80,7 @@ Feature: Organizations and members
       When Ben acts in Acme
       Then Ben can schedule capacity, but can't buy capacity or see invoices
 
-  # docqet:verifies rule:client-members-see-payment-state-not-invoices@accounts
+  # docqet:verifies rule:client-members-see-payment-state-not-invoices
   Rule: A client Member can see whether a block is pending payment or its payment failed, but not its invoice
 
     Example: A block whose payment failed
@@ -90,7 +90,7 @@ Feature: Organizations and members
       Then Ben sees that the block's payment failed
       And Ben can't read the invoice it was bought on
 
-  # docqet:verifies rule:billing-members-handle-only-billing@accounts
+  # docqet:verifies rule:billing-members-handle-only-billing
   Rule: A client's Billing member sees invoices, pays them, and manages payment methods, and doesn't work with capacity, scheduling, or members
 
     Example: Acting in their organization
@@ -98,7 +98,7 @@ Feature: Organizations and members
       When Cara acts in Acme
       Then Cara can see and pay invoices and manage payment methods, but can't see or schedule capacity or manage members
 
-  # docqet:verifies rule:someone-always-manages-members@accounts
+  # docqet:verifies rule:someone-always-manages-members
   Rule: An organization always has at least one member who can manage members
 
     Background:
@@ -114,7 +114,7 @@ Feature: Organizations and members
         | leaves Acme               |
         | makes themselves a Member |
 
-  # docqet:verifies rule:giving-up-member-management@accounts
+  # docqet:verifies rule:giving-up-member-management
   Rule: Once another member holds a role that can manage members, a member can give up their own ability to manage members
 
     Example: Two Admins
@@ -122,7 +122,7 @@ Feature: Organizations and members
       When Ada makes themselves a Member
       Then Ada is a Member of Acme
 
-  # docqet:verifies rule:admins-alone-see-and-revoke-invitations@accounts rule:who-sees-and-revokes-pending-invitations@accounts
+  # docqet:verifies rule:admins-alone-see-and-revoke-invitations rule:who-sees-and-revokes-pending-invitations
   Rule: Only a client Admin sees or revokes the organization's invitations
 
     Scenario Outline: Someone who isn't an Admin
@@ -137,7 +137,7 @@ Feature: Organizations and members
         | a Member         | see Acme's invitations                     |
         | a Billing member | revoke the invitation to helen@example.com |
 
-  # docqet:verifies rule:invitations-carry-organization-roles-only@accounts
+  # docqet:verifies rule:invitations-carry-organization-roles-only
   Rule: An organization invitation only goes to an organization role, never a platform role
 
     Example: A platform role
@@ -147,7 +147,7 @@ Feature: Organizations and members
       Then it's refused
       And Acme has no invitations
 
-  # docqet:verifies rule:one-pending-invitation-per-person@accounts
+  # docqet:verifies rule:one-pending-invitation-per-person
   Rule: Someone can't be invited to an organization twice while an invitation to them is pending, whatever the case of their email address
 
     Example: The same address in other capitals
@@ -157,7 +157,7 @@ Feature: Organizations and members
       Then it's refused
       And Acme has one invitation, to helen@example.com
 
-  # docqet:verifies rule:invitations-are-limited@accounts
+  # docqet:verifies rule:organization-invitations-are-limited
   Rule: An organization, and each person, can send at most 50 invitations a day, and revoking one doesn't free up another
 
     Example: The organization's 51st
@@ -181,7 +181,7 @@ Feature: Organizations and members
       Then it's refused
       And helen@example.com isn't emailed
 
-  # docqet:verifies rule:only-the-invitee-can-accept@accounts rule:invitations-go-to-an-email-address@accounts
+  # docqet:verifies rule:only-the-invitee-can-accept rule:invitations-go-to-an-email-address
   Rule: An invitation to an organization is accepted only by the person it was sent to, signed in with that address
 
     Example: Someone else
@@ -191,7 +191,7 @@ Feature: Organizations and members
       Then Theo is told there's no such invitation
       And Theo doesn't belong to Acme
 
-  # docqet:verifies rule:accepting-makes-someone-a-member@accounts rule:invitations-go-to-an-email-address@accounts rule:invitations-stay-pending-until-resolved@accounts
+  # docqet:verifies rule:accepting-makes-someone-a-member rule:invitations-go-to-an-email-address rule:invitations-stay-pending-until-resolved
   Rule: Accepting an invitation makes the invitee a member, with the role they were invited to, and it's no longer pending
 
     Example: Accepting
@@ -203,7 +203,7 @@ Feature: Organizations and members
       And Acme is among Helen's organizations
       And Helen has no invitation to accept
 
-  # docqet:verifies rule:new-members-hold-their-roles-permissions@accounts
+  # docqet:verifies rule:new-members-hold-their-roles-permissions
   Rule: Acting in the organization, a new member holds exactly their role's permissions, and has the portal
 
     Example: A new Billing member
@@ -214,7 +214,7 @@ Feature: Organizations and members
       Then Helen can do what Billing in Acme can, and no more
       And Helen has the portal
 
-  # docqet:verifies rule:revoked-invitations-cant-be-accepted@accounts rule:invitations-stay-pending-until-resolved@accounts
+  # docqet:verifies rule:revoked-invitations-cant-be-accepted rule:invitations-stay-pending-until-resolved
   Rule: A revoked invitation is no longer pending for the invitee and can't be accepted
 
     Example: Revoked before it's accepted
@@ -226,7 +226,7 @@ Feature: Organizations and members
       And Helen has no invitation to accept
       And Helen doesn't belong to Acme
 
-  # docqet:verifies rule:anyone-can-leave-not-remove-others@accounts
+  # docqet:verifies rule:anyone-can-leave-not-remove-others
   Rule: A member who can't manage members can't remove anyone else, but can remove themselves, leaving the organization
 
     Example: Removing someone else
@@ -242,7 +242,7 @@ Feature: Organizations and members
       When Ben leaves Acme
       Then Ben no longer belongs to Acme
 
-  # docqet:verifies rule:leaving-ends-access@accounts
+  # docqet:verifies rule:leaving-ends-access
   Rule: Someone who has left an organization can no longer act in it
 
     Example: After leaving
@@ -250,7 +250,7 @@ Feature: Organizations and members
       When Ben acts in Acme
       Then it's refused
 
-  # docqet:verifies rule:former-members-can-rejoin@accounts
+  # docqet:verifies rule:former-members-can-rejoin
   Rule: Someone who left an organization can be invited again and rejoin it
 
     Example: Invited back
@@ -260,7 +260,7 @@ Feature: Organizations and members
       When Ben accepts the invitation
       Then Ben belongs to Acme
 
-  # docqet:verifies rule:outsiders-cant-rename-an-organization@accounts
+  # docqet:verifies rule:outsiders-cant-rename-an-organization
   Rule: Someone outside an organization can't rename it
 
     Example: Another client
@@ -269,14 +269,14 @@ Feature: Organizations and members
       Then it isn't found
       And Acme's name is as it was
 
-  # docqet:verifies rule:organizations-start-without-a-logo@accounts
+  # docqet:verifies rule:organizations-start-without-a-logo
   Rule: An organization has no logo until one is set
 
     Example: A new organization
       When Helen creates an organization called Ridgeline
       Then Ridgeline has no logo
 
-  # docqet:verifies rule:organization-listings-show-logo-status@accounts
+  # docqet:verifies rule:organization-listings-show-logo-status
   Rule: An organization's listing shows whether it has a logo, and a removed logo can no longer be downloaded
 
     Example: Setting a logo
@@ -290,7 +290,7 @@ Feature: Organizations and members
       Then Acme's listing shows it has no logo
       And Acme's logo can't be downloaded
 
-  # docqet:verifies rule:logos-must-be-raster-images@accounts
+  # docqet:verifies rule:logos-must-be-raster-images
   Rule: A logo must be a raster image, so an SVG is refused
 
     Example: An SVG

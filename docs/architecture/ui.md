@@ -15,7 +15,7 @@ CLI's, which writes and sends them, and the server's, which takes them.
   docs the pages hold, with each doc's figures on it. Pages and components
   never call the API themselves.
 - **What no doc's figures cover, it asks for.** Readiness for the capabilities
-  in a feature that serve a persona, or in one domain's part of a feature, is
+  in a feature that serve a persona, or that solve a problem, is
   `/status?for=`, with several references for the capabilities they share.
   The gaps a scope puts at stake are `/gaps?for=`. Search is `/search`.
 - **Every read can be slow or fail.** `useRead` in `model.ts` cancels a read

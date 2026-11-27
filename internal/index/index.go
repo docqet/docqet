@@ -5,7 +5,6 @@
 package index
 
 import (
-	"errors"
 	"fmt"
 	"io/fs"
 	"net/url"
@@ -23,8 +22,8 @@ import (
 // and returns its state. The commit and the time it was indexed are the
 // caller's to fill in. Findings in the docs are in the state; an error means
 // the project couldn't be read at all, such as having no docqet.yaml.
-// docqet:implements capability:indexing component:index rule:docs-with-findings-still-index@authoring
-// docqet:implements rule:same-files-same-state@authoring
+// docqet:implements capability:indexing component:index rule:docs-with-findings-still-index
+// docqet:implements rule:same-files-same-state
 func Index(fsys fs.FS) (*state.State, error) {
 	cfg, err := project.ReadConfig(fsys)
 	if err != nil {
@@ -38,7 +37,7 @@ func Index(fsys fs.FS) (*state.State, error) {
 	st := &state.State{
 		Docqet:       state.Version,
 		Project:      state.Ident{ID: cfg.Project.ID, Name: cfg.Project.Name},
-		Domains:      []state.Domain{},
+		Areas:        []state.Area{},
 		Features:     []state.Feature{},
 		Personas:     []state.Persona{},
 		Problems:     []state.Problem{},
@@ -116,7 +115,7 @@ func Index(fsys fs.FS) (*state.State, error) {
 // skipDir reports whether a folder isn't part of the project: git's and
 // docqet's own, and any with a docqet.yaml of its own, which is another
 // project.
-// docqet:implements rule:nested-projects-are-separate@authoring
+// docqet:implements rule:nested-projects-are-separate
 func skipDir(fsys fs.FS, p string) bool {
 	switch path.Base(p) {
 	case ".git", ".docqet":
@@ -133,31 +132,31 @@ func addEntry(st *state.State, d *doc) {
 	name, description := text(fm.Name), text(fm.Description)
 
 	switch fm.Docqet {
-	case state.TypeDomain:
-		st.Domains = append(st.Domains, state.Domain{
+	case state.TypeArea:
+		st.Areas = append(st.Areas, state.Area{
 			ID: fm.ID, File: d.file, Name: name, Description: description,
-			Decisions: decisions(fm.Decisions), Body: d.body,
+			Features: []string{}, Decisions: decisions(fm.Decisions), Body: d.body,
 		})
 	case state.TypeFeature:
 		st.Features = append(st.Features, state.Feature{
-			ID: fm.ID, Domain: fm.Domain, File: d.file, Name: name, Description: description,
-			Capabilities: list(fm.Capabilities), Tradeoffs: tradeoffRefs(ref, fm.Tradeoffs),
+			ID: fm.ID, File: d.file, Name: name, Description: description, Area: textPtr(fm.Area),
+			Capabilities: []string{}, Tradeoffs: tradeoffRefs(ref, fm.Tradeoffs),
 			Decisions: decisions(fm.Decisions), Body: d.body,
 		})
-		addTradeoffs(st, ref, fm.Domain, fm.Tradeoffs)
+		addTradeoffs(st, ref, fm.Tradeoffs)
 	case state.TypeCapability:
 		st.Capabilities = append(st.Capabilities, state.Capability{
-			ID: fm.ID, Domain: fm.Domain, File: d.file, Name: name, Description: description,
-			Stability: fm.Stability, Solves: list(fm.Solves), Personas: []string{}, Initiatives: list(fm.Initiatives),
+			ID: fm.ID, File: d.file, Name: name, Description: description,
+			Stability: fm.Stability, Feature: textPtr(fm.Feature), Solves: list(fm.Solves), Personas: []string{}, Initiatives: list(fm.Initiatives),
 			Rules: list(fm.Rules), Concepts: list(fm.Concepts),
 			Gaps: gapRefs(ref, fm.Gaps), Tradeoffs: tradeoffRefs(ref, fm.Tradeoffs),
 			Decisions: decisions(fm.Decisions), Evidence: evidence(), Body: d.body,
 		})
-		addGaps(st, ref, fm.Domain, fm.Gaps)
-		addTradeoffs(st, ref, fm.Domain, fm.Tradeoffs)
+		addGaps(st, ref, fm.Gaps)
+		addTradeoffs(st, ref, fm.Tradeoffs)
 	case state.TypeRule:
 		st.Rules = append(st.Rules, state.Rule{
-			ID: fm.ID, Domain: fm.Domain, File: d.file, Name: name,
+			ID: fm.ID, File: d.file, Name: name,
 			Capabilities: []string{}, Concepts: list(fm.Concepts), Respects: list(fm.Respects), Why: textPtr(fm.Why),
 			Evidence: evidence(), Body: d.body,
 		})
@@ -167,14 +166,14 @@ func addEntry(st *state.State, d *doc) {
 			confusions = append(confusions, state.Confusion{Concept: c.Concept, Term: c.Term, Summary: text(c.Summary)})
 		}
 		st.Concepts = append(st.Concepts, state.Concept{
-			ID: fm.ID, Domain: fm.Domain, File: d.file, Name: name, Description: description,
+			ID: fm.ID, File: d.file, Name: name, Description: description,
 			Capabilities: []string{}, Rules: []string{}, ConfusedWith: confusions, Body: d.body,
 		})
 	case state.TypePersona:
 		st.Personas = append(st.Personas, state.Persona{
 			ID: fm.ID, File: d.file, Name: name, Role: fm.Role, Title: fm.Title,
 			Description: description, Image: fm.Image,
-			Problems: []string{}, Capabilities: []string{}, Features: []string{}, Initiatives: list(fm.Initiatives), Body: d.body,
+			Problems: []string{}, Capabilities: []string{}, Features: []string{}, Initiatives: []string{}, Body: d.body,
 		})
 	case state.TypeProblem:
 		st.Problems = append(st.Problems, state.Problem{
@@ -189,7 +188,7 @@ func addEntry(st *state.State, d *doc) {
 	case state.TypeInitiative:
 		st.Initiatives = append(st.Initiatives, state.Initiative{
 			ID: fm.ID, File: d.file, Name: name, Description: description,
-			Capabilities: []string{}, Features: []string{}, Personas: []string{}, Body: d.body,
+			Capabilities: []string{}, Features: []string{}, Personas: list(fm.Personas), Body: d.body,
 		})
 	case state.TypeMechanism:
 		applies := fm.Applies
@@ -202,8 +201,8 @@ func addEntry(st *state.State, d *doc) {
 			Gaps: gapRefs(ref, fm.Gaps), Tradeoffs: tradeoffRefs(ref, fm.Tradeoffs),
 			Evidence: evidence(), Decisions: decisions(fm.Decisions), Body: d.body,
 		})
-		addGaps(st, ref, "", fm.Gaps)
-		addTradeoffs(st, ref, "", fm.Tradeoffs)
+		addGaps(st, ref, fm.Gaps)
+		addTradeoffs(st, ref, fm.Tradeoffs)
 	case state.TypeComponent:
 		st.Components = append(st.Components, state.Component{
 			ID: fm.ID, File: d.file, Name: name, Description: description,
@@ -211,25 +210,25 @@ func addEntry(st *state.State, d *doc) {
 			Gaps: gapRefs(ref, fm.Gaps), Tradeoffs: tradeoffRefs(ref, fm.Tradeoffs),
 			Evidence: evidence(), Decisions: decisions(fm.Decisions), Body: d.body,
 		})
-		addGaps(st, ref, "", fm.Gaps)
-		addTradeoffs(st, ref, "", fm.Tradeoffs)
+		addGaps(st, ref, fm.Gaps)
+		addTradeoffs(st, ref, fm.Tradeoffs)
 	}
 }
 
-func addGaps(st *state.State, ref, domain string, gs []gap) {
+func addGaps(st *state.State, ref string, gs []gap) {
 	for _, g := range gs {
 		st.Gaps = append(st.Gaps, state.Gap{
-			ID: ref + "#" + g.ID, Domain: domain, Affects: list(g.Affects),
+			ID: ref + "#" + g.ID, Affects: list(g.Affects),
 			Impact: g.Impact, Likelihood: g.Likelihood, Reach: g.Reach,
 			Name: text(g.Name), Description: text(g.Description), Places: []state.Place{},
 		})
 	}
 }
 
-func addTradeoffs(st *state.State, ref, domain string, ts []tradeoff) {
+func addTradeoffs(st *state.State, ref string, ts []tradeoff) {
 	for _, t := range ts {
 		st.Tradeoffs = append(st.Tradeoffs, state.Tradeoff{
-			ID: ref + "#" + t.ID, Domain: domain, Affects: list(t.Affects),
+			ID: ref + "#" + t.ID, Affects: list(t.Affects),
 			Name: text(t.Name), Description: text(t.Description),
 			Benefit: textPtr(t.Benefit), Drawback: text(t.Drawback), Places: []state.Place{},
 		})
@@ -239,7 +238,7 @@ func addTradeoffs(st *state.State, ref, domain string, ts []tradeoff) {
 // attachAnnotations adds each annotation to what it names: evidence on a
 // rule, capability, mechanism or component, or a place on a gap or tradeoff.
 // It returns the findings with the annotations themselves.
-// docqet:implements capability:annotations rule:annotations-name-a-rules-domain@authoring
+// docqet:implements capability:annotations
 func attachAnnotations(st *state.State, annotations []annotation) []state.Finding {
 	var findings []state.Finding
 	for _, a := range annotations {
@@ -250,6 +249,10 @@ func attachAnnotations(st *state.State, annotations []annotation) []state.Findin
 			}
 			switch a.verb {
 			case verbVerifies, verbImplements:
+				if ref.Domain != "" {
+					bad(state.InvalidAnnotation, fmt.Sprintf("docqet:%s names %s: rules and concepts have no domain now: write %s.", a.verb, raw, state.DocRef(ref.Type, ref.ID)))
+					continue
+				}
 				if ref.Key != "" {
 					bad(state.InvalidAnnotation, fmt.Sprintf("docqet:%s names %s, a gap or tradeoff: it names a rule, capability, mechanism or component.", a.verb, raw))
 					continue
@@ -289,11 +292,8 @@ func addEvidence(st *state.State, ref state.Ref, verb string, place state.Place)
 	}
 	switch ref.Type {
 	case state.TypeRule:
-		if ref.Domain == "" {
-			return false, errors.New("a rule in an annotation names its domain, as rule:<id>@<domain>, since code is in no domain")
-		}
 		for i := range st.Rules {
-			if st.Rules[i].ID == ref.ID && st.Rules[i].Domain == ref.Domain {
+			if st.Rules[i].ID == ref.ID {
 				add(&st.Rules[i].Evidence)
 			}
 		}
@@ -345,17 +345,21 @@ func addPlace(st *state.State, verb, id string, place state.Place) bool {
 // capability is in, which capabilities follow each rule, which serve each
 // persona, and the rest, and each mechanism's capabilities.
 func linkBack(st *state.State) {
-	for _, f := range st.Features {
-		for _, raw := range f.Capabilities {
-			ref, ok := state.ParseRef(raw)
-			if !ok || ref.Type != state.TypeCapability {
-				continue
+	// A feature's capabilities are those that name it, drafts among them, and
+	// an area's features those that name it.
+	for i := range st.Features {
+		f := &st.Features[i]
+		for _, c := range st.Capabilities {
+			if c.Feature != nil && names([]string{*c.Feature}, state.TypeFeature, f.ID) {
+				f.Capabilities = appendNew(f.Capabilities, state.DocRef(state.TypeCapability, c.ID))
 			}
-			for i := range st.Capabilities {
-				if st.Capabilities[i].ID == ref.ID && st.Capabilities[i].Feature == nil {
-					feature := state.DocRef(state.TypeFeature, f.ID)
-					st.Capabilities[i].Feature = &feature
-				}
+		}
+	}
+	for i := range st.Areas {
+		a := &st.Areas[i]
+		for _, f := range st.Features {
+			if f.Area != nil && names([]string{*f.Area}, state.TypeArea, a.ID) {
+				a.Features = appendNew(a.Features, state.DocRef(state.TypeFeature, f.ID))
 			}
 		}
 	}
@@ -367,27 +371,21 @@ func linkBack(st *state.State) {
 			continue
 		}
 		capRef := state.DocRef(state.TypeCapability, c.ID)
-		for _, raw := range c.Rules {
-			for i := range st.Rules {
-				if resolves(raw, state.TypeRule, c.Domain, st.Rules[i].ID, st.Rules[i].Domain) {
-					st.Rules[i].Capabilities = appendNew(st.Rules[i].Capabilities, capRef)
-				}
+		for i := range st.Rules {
+			if names(c.Rules, state.TypeRule, st.Rules[i].ID) {
+				st.Rules[i].Capabilities = appendNew(st.Rules[i].Capabilities, capRef)
 			}
 		}
-		for _, raw := range c.Concepts {
-			for i := range st.Concepts {
-				if resolves(raw, state.TypeConcept, c.Domain, st.Concepts[i].ID, st.Concepts[i].Domain) {
-					st.Concepts[i].Capabilities = appendNew(st.Concepts[i].Capabilities, capRef)
-				}
+		for i := range st.Concepts {
+			if names(c.Concepts, state.TypeConcept, st.Concepts[i].ID) {
+				st.Concepts[i].Capabilities = appendNew(st.Concepts[i].Capabilities, capRef)
 			}
 		}
 	}
 	for _, r := range st.Rules {
-		for _, raw := range r.Concepts {
-			for i := range st.Concepts {
-				if resolves(raw, state.TypeConcept, r.Domain, st.Concepts[i].ID, st.Concepts[i].Domain) {
-					st.Concepts[i].Rules = appendNew(st.Concepts[i].Rules, scopedRef(state.TypeRule, r.ID, r.Domain, st.Concepts[i].Domain))
-				}
+		for i := range st.Concepts {
+			if names(r.Concepts, state.TypeConcept, st.Concepts[i].ID) {
+				st.Concepts[i].Rules = appendNew(st.Concepts[i].Rules, state.DocRef(state.TypeRule, r.ID))
 			}
 		}
 	}
@@ -425,7 +423,7 @@ func linkBack(st *state.State) {
 		cn := &st.Constraints[i]
 		for _, r := range st.Rules {
 			if names(r.Respects, state.TypeConstraint, cn.ID) {
-				cn.Rules = appendNew(cn.Rules, scopedRef(state.TypeRule, r.ID, r.Domain, ""))
+				cn.Rules = appendNew(cn.Rules, state.DocRef(state.TypeRule, r.ID))
 			}
 		}
 		for _, m := range st.Mechanisms {
@@ -462,9 +460,9 @@ func linkBack(st *state.State) {
 				}
 			}
 		}
-		for _, p := range st.Personas {
-			if names(p.Initiatives, state.TypeInitiative, in.ID) {
-				in.Personas = appendNew(in.Personas, state.DocRef(state.TypePersona, p.ID))
+		for i := range st.Personas {
+			if names(in.Personas, state.TypePersona, st.Personas[i].ID) {
+				st.Personas[i].Initiatives = appendNew(st.Personas[i].Initiatives, state.DocRef(state.TypeInitiative, in.ID))
 			}
 		}
 	}
@@ -489,35 +487,12 @@ func linkBack(st *state.State) {
 	}
 }
 
-// resolves reports whether the link raw, written in a doc in domain from,
-// means the doc of type typ with id in domain: the one in the domain it
-// names, or naming none, the one in its own.
-func resolves(raw, typ, from, id, domain string) bool {
-	ref, ok := state.ParseRef(raw)
-	if !ok || ref.Type != typ || ref.ID != id {
-		return false
-	}
-	if ref.Domain == "" {
-		return domain == from
-	}
-	return ref.Domain == domain
-}
-
 // names reports whether refs links the doc of type typ with id.
 func names(refs []string, typ, id string) bool {
 	return slices.ContainsFunc(refs, func(raw string) bool {
 		ref, ok := state.ParseRef(raw)
 		return ok && ref.Type == typ && ref.ID == id
 	})
-}
-
-// scopedRef is a rule's or concept's reference as written from domain from:
-// with its domain when it's another.
-func scopedRef(typ, id, domain, from string) string {
-	if domain == from {
-		return state.DocRef(typ, id)
-	}
-	return state.DocRef(typ, id) + "@" + domain
 }
 
 func appendNew(l []string, s string) []string {
@@ -573,7 +548,7 @@ func brokenLinks(fsys fs.FS, file string, data []byte) []state.Finding {
 // summarize counts the state at a glance.
 func summarize(st *state.State) state.Summary {
 	s := state.Summary{
-		Domains:     len(st.Domains),
+		Areas:       len(st.Areas),
 		Features:    distinct(len(st.Features), func(i int) string { return st.Features[i].ID }),
 		Personas:    len(st.Personas),
 		Problems:    len(st.Problems),
@@ -603,8 +578,8 @@ func summarize(st *state.State) state.Summary {
 	return s
 }
 
-// distinct is how many different IDs n entries have: a feature written in
-// several domains is one feature.
+// distinct is how many different IDs n entries have: a feature declared
+// twice, a duplicate-id finding, is still one feature.
 func distinct(n int, id func(int) string) int {
 	seen := map[string]bool{}
 	for i := range n {

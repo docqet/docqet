@@ -138,7 +138,7 @@ Some things a project might say:
 - Product docs for the Exalynt product are in the API project, `api/`. This
   project has technical docs only, and its components list the API's
   capabilities.
-- Our domains are accounts, agreements, billing and capacity. Ask before
+- Our areas are accounts, agreements, billing and capacity. Ask before
   adding another.
 - Each acceptance test's Gherkin `Rule:` gets a `docqet:verifies` for the rule
   it checks.
@@ -161,6 +161,6 @@ the kit: it's part of the format, built into `docqet`, and agents read it with
 ## Known gaps
 
 The kit's gaps and tradeoffs are on
-[Agent guidance](../docqet/domains/authoring/capabilities/agent-guidance.md),
+[Agent guidance](../docqet/capabilities/agent-guidance.md),
 in Docqet's own docs, and how it's installed is
-[Installing the kit](../docqet/domains/authoring/capabilities/kit-install.md).
+[Installing the kit](../docqet/capabilities/kit-install.md).

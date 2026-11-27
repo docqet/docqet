@@ -1,0 +1,27 @@
+get:
+  operationId: getArea
+  x-stability: prototype
+  summary: Get an area
+  description: >-
+    An area, put together across the product's projects, with its features
+    and their maturity, readiness and exposure.
+  tags:
+    - Products
+  # No sign-in yet: a server is only reachable by its client's people.
+  security: []
+  parameters:
+    - $ref: "../../schemas.yml#/components/parameters/Product"
+    - $ref: "../../schemas.yml#/components/parameters/DocID"
+    - $ref: "../../schemas.yml#/components/parameters/ProjectsShown"
+    - $ref: "../../schemas.yml#/components/parameters/Initiative"
+  responses:
+    "200":
+      description: The area.
+      content:
+        application/json:
+          schema:
+            $ref: "../../schemas.yml#/components/schemas/Area"
+    "400":
+      $ref: "../../schemas.yml#/components/responses/InvalidQuery"
+    "404":
+      $ref: "../../schemas.yml#/components/responses/DocNotFound"

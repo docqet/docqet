@@ -1,7 +1,7 @@
 Feature: Payout accounts
   An engineer, and each partnership, keeps the one bank account their payouts go to.
 
-  # docqet:verifies rule:one-payout-account-per-person@pay
+  # docqet:verifies rule:one-payout-account-per-person
   Rule: A person has at most one payout account, and a new one replaces it
 
     Example: Adding a first account
@@ -15,7 +15,7 @@ Feature: Payout accounts
       Then the new one is their payout account
       And they have only that account
 
-  # docqet:verifies rule:a-partnerships-payout-account-is-its-own@pay
+  # docqet:verifies rule:a-partnerships-payout-account-is-its-own
   Rule: A partnership's payout account is its own
 
     Example: A partnership's account is apart from its manager's
@@ -30,7 +30,7 @@ Feature: Payout accounts
       When Grace adds a bank account for one of them
       Then the other still has no payout account
 
-  # docqet:verifies rule:removing-a-payout-account@pay
+  # docqet:verifies rule:removing-a-payout-account
   Rule: A payout account can be removed, except while a payout is on its way to it
 
     Example: Removing their account
@@ -52,7 +52,7 @@ Feature: Payout accounts
       Then she's told to wait until it has arrived
       And the partnership still has its payout account
 
-  # docqet:verifies rule:seeing-whether-an-account-can-be-paid@pay
+  # docqet:verifies rule:seeing-whether-an-account-can-be-paid
   Rule: A person sees whether their account can be paid, and what to fix if not
 
     Example: An account being verified
@@ -70,7 +70,7 @@ Feature: Payout accounts
       When Grace looks at the partnership's payout account
       Then she sees what needs fixing
 
-  # docqet:verifies rule:payout-accounts-stay-private-to-their-owner@pay
+  # docqet:verifies rule:payout-accounts-stay-private-to-their-owner
   Rule: People see and change only their own payout account
 
     Example: Looking at their account
@@ -83,7 +83,7 @@ Feature: Payout accounts
       When one removes their payout account
       Then the other engineer still has theirs
 
-  # docqet:verifies rule:manager-controls-the-partnerships-payout-account@pay
+  # docqet:verifies rule:manager-controls-the-partnerships-payout-account
   Rule: Only a partnership's manager sets up, sees or changes its payout account
 
     Example: Another partnership's manager
@@ -96,7 +96,7 @@ Feature: Payout accounts
       When an admin tries to add a bank account for Grace's partnership
       Then it's refused
 
-  # docqet:verifies rule:admins-see-only-payment-readiness@pay
+  # docqet:verifies rule:admins-see-only-payment-readiness
   Rule: An admin sees whether an engineer can be paid, and nothing else about their account
 
     Example: An engineer who can be paid
@@ -115,7 +115,7 @@ Feature: Payout accounts
       When one checks whether the other can be paid
       Then it's refused
 
-  # docqet:verifies rule:limited-tokens-cant-reach-payout-accounts@pay
+  # docqet:verifies rule:limited-tokens-cant-reach-payout-accounts
   Rule: A limited token can't reach its creator's payout account
 
     Example: Using a limited token

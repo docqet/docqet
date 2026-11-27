@@ -31,8 +31,8 @@ func Validate(st *state.State) error {
 			fail("every %s needs an id and a file", kind)
 		}
 	}
-	for _, d := range st.Domains {
-		entry("domain", d.ID, d.File)
+	for _, a := range st.Areas {
+		entry("area", a.ID, a.File)
 	}
 	for _, f := range st.Features {
 		entry("feature", f.ID, f.File)
@@ -94,7 +94,7 @@ func Validate(st *state.State) error {
 // Recheck works out st's findings again with Check, keeping only the
 // findings it carries that Check can't find, those found reading files, so
 // what st says about its docs is always this check's own.
-// docqet:implements rule:same-findings-everywhere@understanding
+// docqet:implements rule:same-findings-everywhere
 func Recheck(st *state.State) {
 	var kept []state.Finding
 	for _, p := range st.Findings {

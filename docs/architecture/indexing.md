@@ -37,7 +37,7 @@ func Index(project fs.FS) (*state.State, error)
   blank lines around it, and every list `[]` rather than `null`.
 - **Evidence and places.** An annotation is recorded as its own line, with
   the text of the first line below it that isn't blank or another
-  annotation, as the [annotation](../../docqet/domains/authoring/concepts/annotation.md)
+  annotation, as the [annotation](../../docqet/concepts/annotation.md)
   concept says. Every file is scanned in path order, so evidence is ordered by file,
   then line.
 - **Reverse links.** A draft claims nothing, so it's left out of the
@@ -46,7 +46,7 @@ func Index(project fs.FS) (*state.State, error)
   `unlinked-rule`. A capability's personas are those of the problems it
   solves. A mechanism's capabilities are every capability the project
   declares but drafts, then each its components list.
-- **The summary**, counting a feature written in several domains once.
+- **The summary**: how many of each there are.
 - **The rubric**, embedded from
   `internal/rubric/rubric.yml` through the `rubric`
   package, as `ui` and `kit` embed theirs.
@@ -63,9 +63,9 @@ way the CLI does:
   what it reads, and the server runs it again on every state it's sent.
 - **`index` finds what only files show**: frontmatter that isn't YAML, a
   `docqet` type that isn't one, a field its type doesn't have (`fieldsOf`), a
-  doc or gap with no ID, an annotation naming nothing or a rule without its
-  domain, and broken relative links. These have no `subject`, and say where
-  they are with `file` and `line`.
+  doc or gap with no ID, an annotation naming nothing, a rule or concept
+  written with a domain, and broken relative links. These have no `subject`,
+  and say where they are with `file` and `line`.
 - **`check.Validate` decides whether a state is one at all**: the format's
   version, a project, an ID for every entry. `apply` runs it before sending,
   and the server refuses a state that fails it. A state with findings in its

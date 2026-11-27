@@ -76,8 +76,8 @@ func MaturityOfLevels(levels []string) *Maturity {
 	return maturity(float64(total) / float64(weights))
 }
 
-// bandWeighted returns the maturity of some maturities, as of a domain from
-// its parts or a product from its features: their weighted average, each
+// bandWeighted returns the maturity of some maturities, as of an area or a
+// product from its features: their weighted average, each
 // weighted as a capability in its band would be, however many capabilities
 // it has, rounded. Each comes in already rounded. Those with none are left
 // out, and it's nil when none has one.
@@ -107,42 +107,26 @@ func CapabilitiesMaturity(capabilities []*combine.Capability) *Maturity {
 	return MaturityOfLevels(levels)
 }
 
-// FeatureMaturity returns a feature's maturity. It spans the feature's
-// domains, so each capability counts once, at its level in short.
+// FeatureMaturity returns a feature's maturity: each capability counts once,
+// at its level in short, the lowest of the projects that write it.
 func FeatureMaturity(p *combine.Product, f *combine.Feature) *Maturity {
 	return CapabilitiesMaturity(CapabilitiesByID(p, f.Capabilities))
 }
 
-// PartMaturity returns the maturity of a feature's part in a domain: the
-// capabilities in that part, at their levels in that domain alone. One the
-// domain lists but doesn't build has no level there, and doesn't count.
-func PartMaturity(p *combine.Product, part combine.Part) *Maturity {
-	var levels []string
-	for _, c := range CapabilitiesByID(p, part.Capabilities) {
-		for _, l := range c.Levels {
-			if l.Domain == part.Domain {
-				levels = append(levels, l.Level)
-			}
+// AreaMaturity returns an area's maturity: band-weighted over its features.
+func AreaMaturity(p *combine.Product, a *combine.Area) *Maturity {
+	var features []*Maturity
+	for _, id := range a.Features {
+		if f := p.Feature(id); f != nil {
+			features = append(features, FeatureMaturity(p, f))
 		}
 	}
-	return MaturityOfLevels(levels)
-}
-
-// DomainMaturity returns a domain's maturity: band-weighted over its parts
-// of features. Capabilities in no feature don't count.
-func DomainMaturity(p *combine.Product, d *combine.Domain) *Maturity {
-	var parts []*Maturity
-	for _, id := range d.Features {
-		if part := partOf(p.Feature(id), d.ID); part != nil {
-			parts = append(parts, PartMaturity(p, *part))
-		}
-	}
-	return bandWeighted(parts)
+	return bandWeighted(features)
 }
 
 // ProductMaturity returns the maturity of everything showing, one project or
-// several: band-weighted over its features, so a capability that spans
-// domains counts once. A project's own maturity is this, of the product
+// several: band-weighted over its features, so a capability written in
+// several projects counts once. A project's own maturity is this, of the product
 // combined from that project alone.
 func ProductMaturity(p *combine.Product) *Maturity {
 	features := make([]*Maturity, len(p.Features))

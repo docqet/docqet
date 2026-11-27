@@ -3,7 +3,7 @@ Feature: Agreements
   engineer under their Engineer Agreement, and a partnership under its Partner
   Agreement, whose Commercial Terms an admin sets.
 
-  # docqet:verifies rule:engineer-agreement-follows-the-invitations-terms@agreements
+  # docqet:verifies rule:engineer-agreement-follows-the-invitations-terms
   Rule: An engineer is offered the Engineer Agreement on the terms their invitation set
 
     Example: Invited with an Engineer Share of 62%
@@ -12,7 +12,7 @@ Feature: Agreements
       Then Theo has an Engineer Agreement to accept, with an Engineer Share of 62%
       And Theo has no Engineer Agreement in effect
 
-  # docqet:verifies rule:an-engineer-agreement-can-have-no-commercial-terms@agreements
+  # docqet:verifies rule:an-engineer-agreement-can-have-no-commercial-terms
   Rule: An admin can send an Engineer Agreement with no Commercial Terms
 
     Example: Invited with no Commercial Terms
@@ -24,7 +24,7 @@ Feature: Agreements
       When an admin sends Theo one with no Commercial Terms
       Then Theo has an Engineer Agreement to accept, with no Commercial Terms
 
-  # docqet:verifies rule:acceptance-puts-an-agreement-in-effect@agreements
+  # docqet:verifies rule:acceptance-puts-an-agreement-in-effect
   Rule: An agreement is in effect only once accepted, and the latest accepted supersedes any before it
 
     Example: Accepting the one offered
@@ -32,7 +32,7 @@ Feature: Agreements
       When Theo accepts it
       Then it's Theo's Engineer Agreement in effect
 
-  # docqet:verifies rule:new-terms-wait-for-acceptance@agreements
+  # docqet:verifies rule:new-terms-wait-for-acceptance
   Rule: New terms hold only once accepted; until then the agreement in effect keeps its own
 
     Example: Sent, not yet accepted
@@ -45,7 +45,7 @@ Feature: Agreements
       When Theo accepts it
       Then Theo's Engineer Agreement in effect has an Engineer Share of 65%
 
-  # docqet:verifies rule:a-newer-agreement-replaces-one-waiting@agreements
+  # docqet:verifies rule:a-newer-agreement-replaces-one-waiting
   Rule: A newer agreement replaces one still waiting
 
     Example: Sent twice before accepting
@@ -53,7 +53,7 @@ Feature: Agreements
       When an admin sends Theo one with an Engineer Share of 65%
       Then Theo has one Engineer Agreement to accept, with an Engineer Share of 65%
 
-  # docqet:verifies rule:only-the-waiting-agreement-is-accepted-once@agreements
+  # docqet:verifies rule:only-the-waiting-agreement-is-accepted-once
   Rule: Only the waiting agreement can be accepted, and only once
 
     Example: Accepting one that was replaced
@@ -81,7 +81,7 @@ Feature: Agreements
       Then they're refused
       And it's still the partnership's Partner Agreement in effect
 
-  # docqet:verifies rule:accepted-agreements-never-change@agreements
+  # docqet:verifies rule:accepted-agreements-never-change
   Rule: Accepted agreements never change
 
     Example: The engineer's name changes after accepting
@@ -94,7 +94,7 @@ Feature: Agreements
       When Acme is renamed to Acme Labs
       Then Acme's accepted Client Agreement still names Acme
 
-  # docqet:verifies rule:accepted-agreements-outlive-their-partys-account@agreements
+  # docqet:verifies rule:accepted-agreements-outlive-their-partys-account
   Rule: An accepted agreement outlives its party's account
 
     Example: An engineer's account is deleted
@@ -102,7 +102,7 @@ Feature: Agreements
       When Theo's account is deleted
       Then the Engineer Agreement Theo accepted is still kept, naming Theo
 
-  # docqet:verifies rule:agreements-stay-private@agreements
+  # docqet:verifies rule:agreements-stay-private
   Rule: Agreements stay private
 
     Example: An engineer sees only their own
@@ -140,7 +140,7 @@ Feature: Agreements
       Then they're refused
       And Grace's partnership's is still waiting to be accepted
 
-  # docqet:verifies rule:a-new-organization-is-offered-the-client-agreement@agreements
+  # docqet:verifies rule:a-new-organization-is-offered-the-client-agreement
   Rule: An organization is offered the Client Agreement when it's created
 
     Example: A client creates an organization
@@ -149,7 +149,7 @@ Feature: Agreements
       Then Acme has a Client Agreement to accept
       And Acme has no Client Agreement in effect
 
-  # docqet:verifies rule:who-accepts-a-client-agreement@agreements
+  # docqet:verifies rule:who-accepts-a-client-agreement
   Rule: An organization's Client Agreement is accepted for it by someone whose role can manage it
 
     Example: An Admin accepts
@@ -168,7 +168,7 @@ Feature: Agreements
         | Member  |
         | Billing |
 
-  # docqet:verifies rule:manager-accepts-the-partner-agreement@agreements
+  # docqet:verifies rule:manager-accepts-the-partner-agreement
   Rule: A partnership's Partner Agreement is accepted by its manager
 
     Example: The manager accepts
@@ -182,7 +182,7 @@ Feature: Agreements
       Then they're refused
       And the partnership still has no Partner Agreement in effect
 
-  # docqet:verifies rule:reading-the-partner-agreement-before-accepting@agreements
+  # docqet:verifies rule:reading-the-partner-agreement-before-accepting
   Rule: An invited partner can read the Partner Agreement before accepting, and only the address invited can
 
     Example: The person invited

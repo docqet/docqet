@@ -6,7 +6,7 @@ Feature: Billing
     Given Acme and Globex are clients
     And a Flex block costs $2,000
 
-  # docqet:verifies rule:who-manages-billing@billing
+  # docqet:verifies rule:who-manages-billing
   Rule: Admins and Billing members manage billing on the payment provider's pages; Members don't
 
     Scenario Outline: Going to manage billing
@@ -19,7 +19,7 @@ Feature: Billing
         | Billing | are sent to the payment provider |
         | Member  | are refused                      |
 
-  # docqet:verifies rule:buying-requires-a-payment-method@billing
+  # docqet:verifies rule:buying-requires-a-payment-method
   Rule: Capacity can't be bought without a payment method
 
     Example: No payment method
@@ -33,7 +33,7 @@ Feature: Billing
       When Acme buys a Flex block
       Then the purchase is refused for want of a payment method
 
-  # docqet:verifies rule:buying-charges-at-once@billing
+  # docqet:verifies rule:buying-charges-at-once
   Rule: Buying charges the default payment method at once, on one invoice
 
     Example: Several blocks by card
@@ -43,7 +43,7 @@ Feature: Billing
       And its one line is 3 Flex blocks at $2,000
       And all 3 blocks are available to schedule
 
-  # docqet:verifies rule:the-payment-provider-works-out-the-tax@billing
+  # docqet:verifies rule:the-payment-provider-works-out-the-tax
   Rule: The payment provider works out a purchase's tax, and it's charged on the invoice
 
     Example: Tax at the client's address
@@ -53,7 +53,7 @@ Feature: Billing
       Then Acme has one paid invoice for $6,600
       And its tax is $600
 
-  # docqet:verifies rule:purchases-are-quoted-with-their-tax@billing
+  # docqet:verifies rule:purchases-are-quoted-with-their-tax
   Rule: A purchase is quoted with its tax before it's bought, and quoting buys nothing
 
     Example: Quoting 3 blocks
@@ -63,7 +63,7 @@ Feature: Billing
       Then it's quoted $6,000 and $600 tax, $6,600 in all
       And Acme has no capacity and no invoices
 
-  # docqet:verifies rule:a-changed-total-buys-nothing@billing
+  # docqet:verifies rule:a-changed-total-buys-nothing
   Rule: A purchase whose total changed since it was quoted buys nothing and owes nothing
 
     Example: The tax changed after the quote
@@ -74,7 +74,7 @@ Feature: Billing
       Then the purchase is refused as changed since it was quoted
       And Acme has no capacity and no invoices
 
-  # docqet:verifies rule:tax-needs-to-know-where-the-client-is@billing
+  # docqet:verifies rule:tax-needs-to-know-where-the-client-is
   Rule: Capacity can't be bought or quoted unless the payment provider can tell where the client is for tax
 
     Example: Buying
@@ -90,7 +90,7 @@ Feature: Billing
       When Acme asks what a Flex block would cost
       Then the purchase is refused for want of a billing address
 
-  # docqet:verifies rule:declined-purchases-buy-nothing@billing
+  # docqet:verifies rule:declined-purchases-buy-nothing
   Rule: A declined purchase buys nothing and owes nothing
 
     Example: A declined card
@@ -99,7 +99,7 @@ Feature: Billing
       Then the purchase is refused as declined
       And Acme has no capacity and no invoices
 
-  # docqet:verifies rule:at-most-20-blocks-per-purchase@billing
+  # docqet:verifies rule:at-most-20-blocks-per-purchase
   Rule: At most 20 blocks can be bought at once
 
     Example: 21 blocks
@@ -108,7 +108,7 @@ Feature: Billing
       Then the purchase is refused
       And Acme has no capacity and no invoices
 
-  # docqet:verifies rule:paying-an-invoice-releases-its-capacity@billing
+  # docqet:verifies rule:paying-an-invoice-releases-its-capacity
   Rule: Unpaid capacity becomes usable once its invoice is paid
 
     Background:
@@ -123,7 +123,7 @@ Feature: Billing
       When Exalynt voids the invoice
       Then Acme no longer has the block
 
-  # docqet:verifies rule:organizations-billing-stays-separate@billing
+  # docqet:verifies rule:organizations-billing-stays-separate
   Rule: A client can't see or act on another organization's billing
 
     Background:
@@ -137,7 +137,7 @@ Feature: Billing
       When Globex goes to manage Acme's billing
       Then it isn't found
 
-  # docqet:verifies rule:unpaid-invoices-are-paid-with-the-provider@billing
+  # docqet:verifies rule:unpaid-invoices-are-paid-with-the-provider
   Rule: An unpaid invoice is paid at the payment provider's current page for it
 
     Example: Opening an unpaid invoice
@@ -145,7 +145,7 @@ Feature: Billing
       When a Billing member of Acme opens it
       Then they are sent to the payment provider's current page for it
 
-  # docqet:verifies rule:company-details-stay-untouched@billing
+  # docqet:verifies rule:company-details-stay-untouched
   Rule: Company details entered with the payment provider stay as the client left them
 
     Example: Renaming the organization
@@ -153,7 +153,7 @@ Feature: Billing
       When Acme is renamed
       Then its billing name with the payment provider is still "Acme Holdings Ltd"
 
-  # docqet:verifies rule:when-company-details-count-as-given@billing
+  # docqet:verifies rule:when-company-details-count-as-given
   Rule: Company details count as given once the payment provider holds the client's address
 
     Example: No address yet

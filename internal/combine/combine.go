@@ -11,30 +11,25 @@ import (
 // Combine puts the states of a product's projects together, in the order
 // they're given, as the product concept's Combining section says:
 //
-//   - Domains, features and capabilities are one across everything, so
-//     contributions with the same ID are put together, their links combined.
-//     Features and capabilities span domains: each domain that writes one has
-//     a part in it, and a capability keeps its level in each.
-//   - Rules and concepts are their domain's, keyed <id>@<domain>, so the same
-//     ID in two domains is two definitions. A link to one means the domain it
-//     names, else its own domain's.
+//   - Every doc is one across everything, so contributions with the same ID
+//     are put together, their links combined. A capability keeps its level
+//     in each project that writes it.
 //   - Gaps and tradeoffs are their project's, keyed <id>@<project>.
 //
-// Then reverse links and parts are worked out again across everything, and
+// Then reverse links are worked out again across everything, and
 // contradictions between contributions, and gaps or tradeoffs two projects
 // both declare, become findings. It never changes the states it's given.
-// docqet:implements capability:product-view rule:contradictions-shown@understanding
+// docqet:implements capability:product-view rule:contradictions-shown
 func Combine(states []*state.State) *Product {
 	c := newCombiner()
 	for _, st := range states {
 		c.add(st)
 	}
-	c.placeholderDomains()
 	c.resolveLinks()
 	c.reverseLinks()
 	c.resolveGaps()
 	c.featuresOfCapabilities()
-	c.parts()
+	c.areasOfFeatures()
 	c.solvedProblems()
 	c.respectedConstraints()
 	c.personasAndInitiatives()
@@ -60,24 +55,10 @@ func Combine(states []*state.State) *Product {
 	return p
 }
 
-// pending is a doc's rule and concept links as declared, to resolve once
-// every domain is in. Rules is nil for a rule, which links none.
-type pending struct {
-	domain          string
-	rules, concepts *[]string
-	linkedRules     []string
-	linkedConcepts  []string
-}
-
-// listing is a feature listing a capability, in one project.
-type listing struct {
-	feature, project string
-}
-
-// featureList is the capabilities one domain lists in its doc of a feature.
-type featureList struct {
-	domain       string
-	capabilities []string
+// placed is a doc naming a more general one, such as a capability its
+// feature, in one project.
+type placed struct {
+	general, project string
 }
 
 // acrossProduct is a mechanism that applies across a product.
@@ -89,7 +70,7 @@ type acrossProduct struct {
 type combiner struct {
 	p *Product
 
-	domains      map[string]*Domain
+	areas        map[string]*Area
 	features     map[string]*Feature
 	capabilities map[string]*Capability
 	rules        map[string]*Rule
@@ -101,9 +82,8 @@ type combiner struct {
 	mechanisms   map[string]*Technical
 	components   map[string]*Technical
 
-	pending      []pending
-	listings     map[string][]listing     // by capability
-	featureLists map[string][]featureList // by feature
+	featureOf map[string][]placed // a capability's feature, by capability
+	areaOf    map[string][]placed // a feature's area, by feature
 	// serves is what each product's projects serve, by product, as a
 	// mechanism's capabilities are worked out: what they declare, other than
 	// drafts, and what their components list.
@@ -115,7 +95,7 @@ func newCombiner() *combiner {
 	return &combiner{
 		p: &Product{
 			Projects:     []Project{},
-			Domains:      []*Domain{},
+			Areas:        []*Area{},
 			Features:     []*Feature{},
 			Capabilities: []*Capability{},
 			Rules:        []*Rule{},
@@ -130,7 +110,7 @@ func newCombiner() *combiner {
 			Tradeoffs:    []*Tradeoff{},
 			Findings:     []state.Finding{},
 		},
-		domains:      map[string]*Domain{},
+		areas:        map[string]*Area{},
 		features:     map[string]*Feature{},
 		capabilities: map[string]*Capability{},
 		rules:        map[string]*Rule{},
@@ -141,8 +121,8 @@ func newCombiner() *combiner {
 		initiatives:  map[string]*Initiative{},
 		mechanisms:   map[string]*Technical{},
 		components:   map[string]*Technical{},
-		listings:     map[string][]listing{},
-		featureLists: map[string][]featureList{},
+		featureOf:    map[string][]placed{},
+		areaOf:       map[string][]placed{},
 		serves:       map[string][]string{},
 	}
 }
@@ -179,29 +159,28 @@ func (c *combiner) add(st *state.State) {
 		return out
 	}
 
-	for _, d := range st.Domains {
-		from := contribution(project, d.ID, d.File, d.Name, d.Description, d.Body)
-		from.Decisions = decisions(d.Decisions, project)
-		contribute(&c.p.Domains, c.domains, d.ID, from, newDomain)
+	for _, a := range st.Areas {
+		from := contribution(project, a.File, a.Name, a.Description, a.Body)
+		from.Decisions = decisions(a.Decisions, project)
+		contribute(&c.p.Areas, c.areas, a.ID, from, func(base Doc) *Area {
+			return &Area{Doc: base, Features: []string{}}
+		})
 	}
 
 	for _, f := range st.Features {
-		from := contribution(project, f.Domain, f.File, f.Name, f.Description, f.Body)
+		from := contribution(project, f.File, f.Name, f.Description, f.Body)
 		from.Decisions = decisions(f.Decisions, project)
 		feature := contribute(&c.p.Features, c.features, f.ID, from, func(base Doc) *Feature {
-			return &Feature{Doc: base, Capabilities: []string{}, Tradeoffs: []string{}, Parts: []Part{}}
+			return &Feature{Doc: base, Capabilities: []string{}, Tradeoffs: []string{}}
 		})
-		caps := ids(f.Capabilities)
-		feature.Capabilities = union(feature.Capabilities, caps...)
 		feature.Tradeoffs = union(feature.Tradeoffs, own(f.Tradeoffs)...)
-		for _, id := range caps {
-			c.listings[id] = append(c.listings[id], listing{feature: f.ID, project: project})
+		if f.Area != nil {
+			c.areaOf[f.ID] = append(c.areaOf[f.ID], placed{general: idOf(*f.Area), project: project})
 		}
-		c.featureLists[f.ID] = append(c.featureLists[f.ID], featureList{domain: f.Domain, capabilities: caps})
 	}
 
 	for _, cp := range st.Capabilities {
-		from := contribution(project, cp.Domain, cp.File, cp.Name, cp.Description, cp.Body)
+		from := contribution(project, cp.File, cp.Name, cp.Description, cp.Body)
 		from.Decisions = decisions(cp.Decisions, project)
 		capability := contribute(&c.p.Capabilities, c.capabilities, cp.ID, from, func(base Doc) *Capability {
 			return &Capability{
@@ -220,30 +199,31 @@ func (c *combiner) add(st *state.State) {
 			}
 		})
 		addEvidence(&capability.Evidence, cp.Evidence, project)
-		capability.Levels = append(capability.Levels, LevelIn{Project: project, Domain: cp.Domain, Level: cp.Stability})
+		capability.Levels = append(capability.Levels, LevelIn{Project: project, Level: cp.Stability})
+		if cp.Feature != nil {
+			c.featureOf[cp.ID] = append(c.featureOf[cp.ID], placed{general: idOf(*cp.Feature), project: project})
+		}
 		capability.Solves = union(capability.Solves, ids(cp.Solves)...)
 		capability.Initiatives = union(capability.Initiatives, ids(cp.Initiatives)...)
 		capability.Gaps = union(capability.Gaps, own(cp.Gaps)...)
 		capability.Tradeoffs = union(capability.Tradeoffs, own(cp.Tradeoffs)...)
-		c.pending = append(c.pending, pending{
-			domain: cp.Domain, rules: &capability.Rules, concepts: &capability.Concepts,
-			linkedRules: ids(cp.Rules), linkedConcepts: ids(cp.Concepts),
-		})
+		capability.Rules = union(capability.Rules, ids(cp.Rules)...)
+		capability.Concepts = union(capability.Concepts, ids(cp.Concepts)...)
 	}
 
 	for _, r := range st.Rules {
-		from := contribution(project, r.Domain, r.File, r.Name, "", r.Body)
+		from := contribution(project, r.File, r.Name, "", r.Body)
 		from.Why = r.Why
-		rule := contribute(&c.p.Rules, c.rules, r.ID+"@"+r.Domain, from, func(base Doc) *Rule {
+		rule := contribute(&c.p.Rules, c.rules, r.ID, from, func(base Doc) *Rule {
 			return &Rule{Doc: base, Capabilities: []string{}, Concepts: []string{}, Respects: []string{}, Gaps: []string{}, Evidence: newEvidence()}
 		})
 		rule.Respects = union(rule.Respects, ids(r.Respects)...)
+		rule.Concepts = union(rule.Concepts, ids(r.Concepts)...)
 		addEvidence(&rule.Evidence, r.Evidence, project)
-		c.pending = append(c.pending, pending{domain: r.Domain, concepts: &rule.Concepts, linkedConcepts: ids(r.Concepts)})
 	}
 
 	for _, cn := range st.Concepts {
-		from := contribution(project, cn.Domain, cn.File, cn.Name, cn.Description, cn.Body)
+		from := contribution(project, cn.File, cn.Name, cn.Description, cn.Body)
 		from.ConfusedWith = make([]state.Confusion, 0, len(cn.ConfusedWith))
 		for _, w := range cn.ConfusedWith {
 			if w.Concept != nil {
@@ -252,27 +232,24 @@ func (c *combiner) add(st *state.State) {
 			}
 			from.ConfusedWith = append(from.ConfusedWith, w)
 		}
-		contribute(&c.p.Concepts, c.concepts, cn.ID+"@"+cn.Domain, from, func(base Doc) *Concept {
+		contribute(&c.p.Concepts, c.concepts, cn.ID, from, func(base Doc) *Concept {
 			return &Concept{Doc: base, Capabilities: []string{}, Rules: []string{}}
 		})
 	}
 
-	// A persona is in no domain; its contributions are told apart by project.
 	for _, pr := range st.Personas {
-		from := contribution(project, "", pr.File, pr.Name, pr.Description, pr.Body)
+		from := contribution(project, pr.File, pr.Name, pr.Description, pr.Body)
 		from.Role, from.Title = pr.Role, pr.Title
-		persona := contribute(&c.p.Personas, c.personas, pr.ID, from, func(base Doc) *Persona {
+		contribute(&c.p.Personas, c.personas, pr.ID, from, func(base Doc) *Persona {
 			return &Persona{
 				Doc: base, Role: pr.Role, Title: pr.Title, Image: pr.Image,
 				Problems: []string{}, Capabilities: []string{}, Features: []string{}, Initiatives: []string{},
 			}
 		})
-		persona.Initiatives = union(persona.Initiatives, ids(pr.Initiatives)...)
 	}
 
-	// A problem is in no domain either.
 	for _, pr := range st.Problems {
-		from := contribution(project, "", pr.File, pr.Name, pr.Description, pr.Body)
+		from := contribution(project, pr.File, pr.Name, pr.Description, pr.Body)
 		from.Cost = pr.Cost
 		problem := contribute(&c.p.Problems, c.problems, pr.ID, from, func(base Doc) *Problem {
 			return &Problem{Doc: base, Cost: pr.Cost, Personas: []string{}, Capabilities: []string{}}
@@ -280,24 +257,22 @@ func (c *combiner) add(st *state.State) {
 		problem.Personas = union(problem.Personas, ids(pr.Personas)...)
 	}
 
-	// So is a constraint.
 	for _, cn := range st.Constraints {
-		from := contribution(project, "", cn.File, cn.Name, cn.Description, cn.Body)
+		from := contribution(project, cn.File, cn.Name, cn.Description, cn.Body)
 		from.Source = cn.Source
 		contribute(&c.p.Constraints, c.constraints, cn.ID, from, func(base Doc) *Constraint {
 			return &Constraint{Doc: base, Source: cn.Source, Rules: []string{}, Mechanisms: []string{}}
 		})
 	}
 
-	// An initiative is in no domain either.
 	for _, i := range st.Initiatives {
-		from := contribution(project, "", i.File, i.Name, i.Description, i.Body)
-		contribute(&c.p.Initiatives, c.initiatives, i.ID, from, func(base Doc) *Initiative {
+		from := contribution(project, i.File, i.Name, i.Description, i.Body)
+		initiative := contribute(&c.p.Initiatives, c.initiatives, i.ID, from, func(base Doc) *Initiative {
 			return &Initiative{Doc: base, Capabilities: []string{}, Features: []string{}, Personas: []string{}}
 		})
+		initiative.Personas = union(initiative.Personas, ids(i.Personas)...)
 	}
 
-	// Mechanisms and components are in no domain either.
 	for _, m := range st.Mechanisms {
 		doc := c.technical(&c.p.Mechanisms, c.mechanisms, KindMechanism, project, m.ID, m.File, m.Name, m.Description, m.Body,
 			m.Decisions, m.Capabilities, m.Meets, own(m.Gaps), own(m.Tradeoffs), m.Evidence)
@@ -323,7 +298,7 @@ func (c *combiner) add(st *state.State) {
 	}
 	for _, g := range st.Gaps {
 		c.p.Gaps = append(c.p.Gaps, &Gap{
-			ID: g.ID + "@" + project, Project: project, Domain: g.Domain,
+			ID: g.ID + "@" + project, Project: project,
 			Affects: append([]string{}, g.Affects...),
 			Impact:  g.Impact, Likelihood: g.Likelihood, Reach: g.Reach,
 			Name: g.Name, Description: g.Description, Places: placed(g.Places),
@@ -331,19 +306,14 @@ func (c *combiner) add(st *state.State) {
 	}
 	for _, t := range st.Tradeoffs {
 		c.p.Tradeoffs = append(c.p.Tradeoffs, &Tradeoff{
-			ID: t.ID + "@" + project, Project: project, Domain: t.Domain,
+			ID: t.ID + "@" + project, Project: project,
 			Affects: append([]string{}, t.Affects...),
 			Name:    t.Name, Description: t.Description, Benefit: t.Benefit, Drawback: t.Drawback,
 			Places: placed(t.Places),
 		})
 	}
 
-	// A rule or concept a finding names is its domain's.
 	for _, pr := range st.Findings {
-		typ, _, _ := strings.Cut(pr.Subject, ":")
-		if (typ == state.TypeRule || typ == state.TypeConcept) && pr.Domain != "" {
-			pr.Subject += "@" + pr.Domain
-		}
 		pr.Capabilities = ids(pr.Capabilities)
 		c.p.Findings = append(c.p.Findings, pr)
 	}
@@ -353,7 +323,7 @@ func (c *combiner) add(st *state.State) {
 func (c *combiner) technical(list *[]*Technical, index map[string]*Technical, kind, project, id, file, name, description, body string,
 	ds []state.Decision, capabilities, meets, gaps, tradeoffs []string, ev state.Evidence,
 ) *Technical {
-	from := contribution(project, "", file, name, description, body)
+	from := contribution(project, file, name, description, body)
 	from.Decisions = decisions(ds, project)
 	doc := contribute(list, index, id, from, func(base Doc) *Technical {
 		return &Technical{
@@ -370,52 +340,26 @@ func (c *combiner) technical(list *[]*Technical, index map[string]*Technical, ki
 	return doc
 }
 
-// placeholderDomains gives a domain docs are written in, with no domain doc,
-// a place of its own, named by its ID.
-func (c *combiner) placeholderDomains() {
-	var froms [][]Contribution
-	for _, f := range c.p.Features {
-		froms = append(froms, f.From)
+// resolveLinks leaves out links to rules and concepts no project defines.
+// Then a mechanism that applies across its product gets what every project
+// in it serves, which no one project's indexer can see.
+func (c *combiner) resolveLinks() {
+	known := func(index map[string]bool, list []string) []string {
+		return slices.DeleteFunc(list, func(id string) bool { return !index[id] })
+	}
+	rules, concepts := map[string]bool{}, map[string]bool{}
+	for id := range c.rules {
+		rules[id] = true
+	}
+	for id := range c.concepts {
+		concepts[id] = true
 	}
 	for _, cp := range c.p.Capabilities {
-		froms = append(froms, cp.From)
+		cp.Rules = known(rules, cp.Rules)
+		cp.Concepts = known(concepts, cp.Concepts)
 	}
 	for _, r := range c.p.Rules {
-		froms = append(froms, r.From)
-	}
-	for _, cn := range c.p.Concepts {
-		froms = append(froms, cn.From)
-	}
-	for _, from := range froms {
-		for _, f := range from {
-			if c.domains[f.Domain] != nil {
-				continue
-			}
-			d := newDomain(Doc{ID: f.Domain, Project: f.Project, Domain: f.Domain, Name: f.Domain, From: []Contribution{}})
-			c.p.Domains = append(c.p.Domains, d)
-			c.domains[d.ID] = d
-		}
-	}
-}
-
-// resolveLinks resolves links to rules and concepts: to the domain named,
-// else the linking doc's own. One to nothing is left out. Then a mechanism
-// that applies across its product gets what every project in it serves,
-// which no one project's indexer can see.
-func (c *combiner) resolveLinks() {
-	for _, p := range c.pending {
-		if p.rules != nil {
-			for _, link := range p.linkedRules {
-				if key := inDomain(link, p.domain); c.rules[key] != nil {
-					*p.rules = union(*p.rules, key)
-				}
-			}
-		}
-		for _, link := range p.linkedConcepts {
-			if key := inDomain(link, p.domain); c.concepts[key] != nil {
-				*p.concepts = union(*p.concepts, key)
-			}
-		}
+		r.Concepts = known(concepts, r.Concepts)
 	}
 	for _, a := range c.across {
 		a.doc.Capabilities = union(a.doc.Capabilities, c.serves[a.product]...)
@@ -453,9 +397,8 @@ func (c *combiner) reverseLinks() {
 	}
 }
 
-// resolveGaps resolves a rule a gap affects to the domain it names, else the
-// gap's own, as a capability's link to one is. One that isn't there is left
-// out.
+// resolveGaps links each rule a gap affects back to the gap. One that isn't
+// there is left out.
 func (c *combiner) resolveGaps() {
 	for _, g := range c.p.Gaps {
 		affects := []string{}
@@ -464,7 +407,7 @@ func (c *combiner) resolveGaps() {
 				affects = append(affects, ref)
 				continue
 			}
-			r := c.rules[inDomain(idOf(ref), g.Domain)]
+			r := c.rules[idOf(ref)]
 			if r == nil {
 				continue
 			}
@@ -475,32 +418,16 @@ func (c *combiner) resolveGaps() {
 	}
 }
 
-// featuresOfCapabilities gives each capability the first feature that lists
-// it, with a finding when projects list it in different ones, and its level
-// in short: the lowest of its levels.
+// featuresOfCapabilities gives each capability the feature it names, with a
+// finding when projects name different ones, each feature its capabilities,
+// by name, and each capability its level in short: the lowest of its levels.
 func (c *combiner) featuresOfCapabilities() {
 	for _, cp := range c.p.Capabilities {
-		all := c.listings[cp.ID]
-		var features, projects []string
-		for _, l := range all {
-			features = union(features, l.feature)
-			projects = union(projects, l.project)
-		}
-		if len(features) > 1 && len(projects) > 1 {
-			where := make([]string, 0, len(all))
-			for _, l := range all {
-				where = append(where, l.feature+" in "+c.projectName(l.project))
-			}
-			c.p.Findings = append(c.p.Findings, state.Finding{
-				Type:         state.InTwoFeatures,
-				Subject:      state.DocRef(state.TypeCapability, cp.ID),
-				Capabilities: []string{cp.ID},
-				Message:      fmt.Sprintf("Listed in %d features: %s.", len(features), strings.Join(where, ", ")),
-			})
-		}
-		if len(features) > 0 {
-			f := features[0]
+		if f := c.general(state.TypeCapability, cp.ID, c.featureOf[cp.ID], state.InTwoFeatures, "Named in %d features: %s."); f != "" {
 			cp.Feature = &f
+			if feature := c.features[f]; feature != nil {
+				feature.Capabilities = union(feature.Capabilities, cp.ID)
+			}
 		}
 		cp.Stability = cp.Levels[0].Level
 		for _, l := range cp.Levels {
@@ -509,60 +436,71 @@ func (c *combiner) featuresOfCapabilities() {
 			}
 		}
 	}
+	for _, f := range c.p.Features {
+		c.byName(f.Capabilities, func(id string) string {
+			if cp := c.capabilities[id]; cp != nil {
+				return cp.Name
+			}
+			return id
+		})
+	}
 }
 
-// parts works out each feature's part in each domain: the capabilities that
-// domain builds, or lists in its own doc of the feature. Each domain gets the
-// features it has a part in, and the capabilities in no feature it builds.
-func (c *combiner) parts() {
-	builds := func(id, domain string) bool {
-		cp := c.capabilities[id]
-		if cp == nil {
-			return false
-		}
-		return slices.ContainsFunc(cp.Levels, func(l LevelIn) bool { return domain == "" || l.Domain == domain })
-	}
+// areasOfFeatures gives each feature the area it names, with a finding when
+// projects name different ones, and each area its features, by name.
+func (c *combiner) areasOfFeatures() {
 	for _, f := range c.p.Features {
-		var domains []string
-		for _, l := range c.featureLists[f.ID] {
-			domains = union(domains, l.domain)
-		}
-		for _, id := range f.Capabilities {
-			if cp := c.capabilities[id]; cp != nil {
-				for _, l := range cp.Levels {
-					domains = union(domains, l.Domain)
-				}
-			}
-		}
-		for _, domain := range domains {
-			var listedThere []string
-			for _, l := range c.featureLists[f.ID] {
-				if l.domain == domain {
-					listedThere = append(listedThere, l.capabilities...)
-				}
-			}
-			capabilities := []string{}
-			for _, id := range f.Capabilities {
-				if slices.Contains(listedThere, id) || builds(id, domain) {
-					capabilities = append(capabilities, id)
-				}
-			}
-			f.Parts = append(f.Parts, Part{Domain: domain, Capabilities: capabilities})
-			if d := c.domains[domain]; d != nil {
-				d.Features = union(d.Features, f.ID)
+		if a := c.general(state.TypeFeature, f.ID, c.areaOf[f.ID], state.Contradiction, "Named in %d areas: %s."); a != "" {
+			f.Area = &a
+			if area := c.areas[a]; area != nil {
+				area.Features = union(area.Features, f.ID)
 			}
 		}
 	}
-	for _, cp := range c.p.Capabilities {
-		if cp.Feature != nil {
-			continue
-		}
-		for _, l := range cp.Levels {
-			if d := c.domains[l.Domain]; d != nil {
-				d.Capabilities = union(d.Capabilities, cp.ID)
+	for _, a := range c.p.Areas {
+		c.byName(a.Features, func(id string) string {
+			if f := c.features[id]; f != nil {
+				return f.Name
 			}
-		}
+			return id
+		})
 	}
+}
+
+// general is the more general doc one doc names, such as a capability's
+// feature: the first project's, with a finding of type typ when projects
+// name different ones, or "" when none names one.
+func (c *combiner) general(typ, id string, all []placed, findingType, message string) string {
+	var generals []string
+	for _, p := range all {
+		generals = union(generals, p.general)
+	}
+	if len(generals) == 0 {
+		return ""
+	}
+	if len(generals) > 1 {
+		where := make([]string, 0, len(all))
+		for _, p := range all {
+			where = append(where, p.general+" in "+c.projectName(p.project))
+		}
+		capabilities := []string{}
+		if typ == state.TypeCapability {
+			capabilities = []string{id}
+		}
+		c.p.Findings = append(c.p.Findings, state.Finding{
+			Type:         findingType,
+			Subject:      state.DocRef(typ, id),
+			Capabilities: capabilities,
+			Message:      fmt.Sprintf(message, len(generals), strings.Join(where, ", ")),
+		})
+	}
+	return generals[0]
+}
+
+// byName sorts IDs by the name of the doc each is, readers' order for what's
+// worked out rather than listed.
+func (c *combiner) byName(list []string, name func(string) string) {
+	slices.SortStableFunc(list, func(a, b string) int { return strings.Compare(name(a), name(b)) })
 }
 
 // solvedProblems works out each problem's capabilities, and each persona's
@@ -654,10 +592,10 @@ func (c *combiner) personasAndInitiatives() {
 			}
 		}
 	}
-	for _, p := range c.p.Personas {
-		for _, id := range p.Initiatives {
-			if i := c.initiatives[id]; i != nil {
-				i.Personas = union(i.Personas, p.ID)
+	for _, i := range c.p.Initiatives {
+		for _, id := range i.Personas {
+			if p := c.personas[id]; p != nil {
+				p.Initiatives = union(p.Initiatives, i.ID)
 			}
 		}
 	}
@@ -695,7 +633,7 @@ func (c *combiner) contradictions() {
 			})
 		}
 	}
-	differing(state.TypeDomain, docs(c.p.Domains))
+	differing(state.TypeArea, docs(c.p.Areas))
 	differing(state.TypeFeature, docs(c.p.Features))
 	differing(state.TypeCapability, docs(c.p.Capabilities))
 	differing(state.TypeRule, docs(c.p.Rules))
@@ -795,7 +733,7 @@ func contribute[T docOf](list *[]T, index map[string]T, id string, from Contribu
 	t, ok := index[id]
 	if !ok {
 		t = newDoc(Doc{
-			ID: id, Project: from.Project, Domain: from.Domain, File: from.File,
+			ID: id, Project: from.Project, File: from.File,
 			Name: from.Name, Description: from.Description, Body: from.Body, From: []Contribution{},
 		})
 		*list = append(*list, t)
@@ -806,12 +744,8 @@ func contribute[T docOf](list *[]T, index map[string]T, id string, from Contribu
 	return t
 }
 
-func contribution(project, domain, file, name, description, body string) Contribution {
-	return Contribution{Project: project, Domain: domain, File: file, Name: name, Description: description, Body: body}
-}
-
-func newDomain(base Doc) *Domain {
-	return &Domain{Doc: base, Features: []string{}, Capabilities: []string{}}
+func contribution(project, file, name, description, body string) Contribution {
+	return Contribution{Project: project, File: file, Name: name, Description: description, Body: body}
 }
 
 func newEvidence() Evidence {
@@ -863,8 +797,7 @@ func union(list []string, ids ...string) []string {
 	return list
 }
 
-// idOf is a reference's ID, keeping any @<domain>: rule:no-double-booking is
-// no-double-booking.
+// idOf is a reference's ID: rule:no-double-booking is no-double-booking.
 func idOf(ref string) string {
 	return ref[strings.Index(ref, ":")+1:]
 }
@@ -876,15 +809,6 @@ func ids(refs []string) []string {
 		out = append(out, idOf(r))
 	}
 	return out
-}
-
-// inDomain is the rule or concept a link from a doc in domain means, keyed
-// <id>@<domain>: the domain it names, else domain.
-func inDomain(link, domain string) string {
-	if strings.Contains(link, "@") {
-		return link
-	}
-	return link + "@" + domain
 }
 
 func deref(s *string) string {

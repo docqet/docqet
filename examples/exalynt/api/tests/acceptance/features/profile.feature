@@ -5,7 +5,7 @@ Feature: Your profile
   Background:
     Given Acme and Globex are clients
 
-  # docqet:verifies rule:everyone-sees-the-name-given@accounts
+  # docqet:verifies rule:everyone-sees-the-name-given
   Rule: The name someone gives is the one everyone who sees them sees
 
     Example: Changing a name
@@ -13,7 +13,7 @@ Feature: Your profile
       When Ada changes their name to "Ada Byron"
       Then Acme sees "Ada Byron" on Platform
 
-  # docqet:verifies rule:invitations-follow-the-primary-address@accounts
+  # docqet:verifies rule:invitations-follow-the-primary-address
   Rule: An invitation goes by the address someone has made primary
 
     Example: An invitation to their new address

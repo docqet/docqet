@@ -8,7 +8,6 @@ description: >-
 role: Exalynt Engineer
 title: Associate engineer
 image: https://randomuser.me/api/portraits/men/76.jpg
-initiatives: [initiative:mvp, initiative:notifications, initiative:conversation-spaces]
 ---
 
 ## Needs

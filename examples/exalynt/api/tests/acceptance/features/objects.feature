@@ -2,7 +2,7 @@ Feature: Objects
   Objects are files uploaded to a client's organization, such as screenshots
   and screen recordings.
 
-  # docqet:verifies rule:objects-stay-within-their-organization@accounts
+  # docqet:verifies rule:objects-stay-within-their-organization
   Rule: Another organization can't reach a client's objects
 
     Background:

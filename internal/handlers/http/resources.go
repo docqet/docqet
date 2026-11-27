@@ -5,7 +5,7 @@ import "github.com/docqet/docqet/internal/state"
 // The resources the UI, and any other tool or agent, reads about a product:
 // each doc put together across the product's projects, with the figures
 // derive works out for it, so a reader works nothing out itself. IDs are as
-// combine keys them: a rule or concept is <id>@<domain>, and a gap or
+// combine keys them: every doc's is one across the product, and a gap or
 // tradeoff is its declared ID with @<project>.
 //
 // Every product route is under /api/v1/products/{product}, and takes
@@ -18,17 +18,17 @@ import "github.com/docqet/docqet/internal/state"
 //	GET /products/{product}/status?for=             StatusResource
 //	GET /products/{product}/projects                []ProductProjectResource
 //	GET /products/{product}/rubric                  state.Rubric
-//	GET /products/{product}/domains                 []DomainResource
-//	GET /products/{product}/domains/{id}            DomainResource
+//	GET /products/{product}/areas                   []AreaResource
+//	GET /products/{product}/areas/{id}              AreaResource
 //	GET /products/{product}/features                []FeatureResource
 //	GET /products/{product}/features/{id}           FeatureResource
 //	GET /products/{product}/capabilities?stability=&for=        []CapabilityResource
 //	GET /products/{product}/capabilities/{id}                   CapabilityResource
 //	GET /products/{product}/capabilities/{id}/gaps/{key}        GapResource
 //	GET /products/{product}/rules                               []RuleResource
-//	GET /products/{product}/domains/{domain}/rules/{id}         RuleResource
+//	GET /products/{product}/rules/{id}                          RuleResource
 //	GET /products/{product}/concepts                            []ConceptResource
-//	GET /products/{product}/domains/{domain}/concepts/{id}      ConceptResource
+//	GET /products/{product}/concepts/{id}                       ConceptResource
 //	GET /products/{product}/personas                []PersonaResource
 //	GET /products/{product}/personas/{id}           PersonaResource
 //	GET /products/{product}/problems                []ProblemResource
@@ -50,7 +50,8 @@ import "github.com/docqet/docqet/internal/state"
 //	GET /products/{product}/search?q=               []SearchResultResource
 //
 // ?for= is a reference, such as persona:front-desk-clerk, to a project,
-// persona, problem, constraint, initiative, domain, feature or capability, as the CLI's --for, or
+// persona, problem, constraint, initiative, area, feature or capability, as
+// the CLI's --for, or
 // several separated by commas, for the capabilities they all
 // share: a list or status then counts only those capabilities, and a gap's
 // Within says what it puts at stake there.
@@ -95,7 +96,7 @@ type ScoredGapResource struct {
 
 // ReadinessResource is how ready people can rely on some capabilities being,
 // with its improvements: what would raise it, one thing at a time, most
-// first, and its areas: where it could rise, one level below what it's of,
+// first, and its parts: where it could rise, one level below what it's of,
 // by how far, most first. Percent is
 // rounded and Band is Unready, Partial, Viable or Ready, both null with
 // nothing started. Maturity is the capabilities' own, unrounded, weighted by
@@ -111,19 +112,19 @@ type ReadinessResource struct {
 	Started      int                   `json:"started"`
 	NotStarted   []string              `json:"notStarted"`
 	Improvements []ImprovementResource `json:"improvements"`
-	Areas        []AreaResource        `json:"areas"`
+	Parts        []PartResource        `json:"parts"`
 }
 
-// AreaResource is somewhere a readiness could rise: a domain, feature or
-// capability (Kind domain, feature or capability, with Domain, Feature or
+// PartResource is somewhere a readiness could rise: an area, feature or
+// capability (Kind area, feature or capability, with Area, Feature or
 // Capability), or one step (gap, decision or promotion). Capabilities is
 // those counted in it. Potential is what readiness would be with all of it
 // settled, unrounded, and Next the step in it that would raise readiness
 // most, null when no one step does. Potentials overlap, so they don't add
 // up.
-type AreaResource struct {
+type PartResource struct {
 	Kind         string               `json:"kind"`
-	Domain       *string              `json:"domain"`
+	Area         *string              `json:"area"`
 	Feature      *string              `json:"feature"`
 	Capability   *string              `json:"capability"`
 	Capabilities []string             `json:"capabilities"`
@@ -134,7 +135,7 @@ type AreaResource struct {
 // ImprovementResource is something that would raise a readiness: promoting
 // a capability to its next level (Kind promote, with Capability, From and
 // To), promoting every capability in a feature (promote-feature, with
-// Feature) or a domain (promote-domain, with Domain) to its next level,
+// Feature) or an area (promote-area, with Area) to its next level,
 // closing a
 // gap (close, with Gap) or answering a rated decision (answer, with
 // Decision). Capabilities is where it changes something among those
@@ -147,7 +148,7 @@ type ImprovementResource struct {
 	From         *string               `json:"from"`
 	To           *string               `json:"to"`
 	Feature      *string               `json:"feature"`
-	Domain       *string               `json:"domain"`
+	Area         *string               `json:"area"`
 	Gap          *string               `json:"gap"`
 	Decision     *HeldDecisionResource `json:"decision"`
 	Capabilities []string              `json:"capabilities"`
@@ -173,7 +174,7 @@ type DecisionResource struct {
 // risk, scored on each capability it counts on: null when it isn't rated.
 type HeldDecisionResource struct {
 	DecisionResource
-	// On is the doc it's on, as a reference: domain:, feature:, capability:,
+	// On is the doc it's on, as a reference: area:, feature:, capability:,
 	// mechanism: or component:.
 	On   string        `json:"on"`
 	Risk *RiskResource `json:"risk"`
@@ -186,10 +187,9 @@ type ConfusionResource struct {
 	Summary string  `json:"summary"`
 }
 
-// ContributionResource is what one project says about a doc, in one domain.
+// ContributionResource is what one project says about a doc.
 type ContributionResource struct {
 	Project      string              `json:"project"`
-	Domain       string              `json:"domain"`
 	File         string              `json:"file"`
 	Name         string              `json:"name"`
 	Description  string              `json:"description"`
@@ -220,7 +220,6 @@ type EvidenceResource struct {
 type DocResource struct {
 	ID          string                 `json:"id"`
 	Project     string                 `json:"project"`
-	Domain      string                 `json:"domain"`
 	File        string                 `json:"file"`
 	Name        string                 `json:"name"`
 	Description string                 `json:"description"`
@@ -250,7 +249,7 @@ type ProductResource struct {
 
 // CountsResource is how many of each there are, showing.
 type CountsResource struct {
-	Domains      int            `json:"domains"`
+	Areas        int            `json:"areas"`
 	Features     int            `json:"features"`
 	Capabilities map[string]int `json:"capabilities"` // by level: draft, prototype, alpha, beta, ga
 	Rules        int            `json:"rules"`
@@ -279,9 +278,9 @@ type StatusResource struct {
 	Counts    CountsResource      `json:"counts"`
 }
 
-// DomainResource is a domain, with its maturity from its parts of features,
-// and the readiness and exposure of every capability with a part in it.
-type DomainResource struct {
+// AreaResource is an area, with its maturity from its features, and the
+// readiness and exposure of every capability in them.
+type AreaResource struct {
 	DocResource
 	Features     []string          `json:"features"`
 	Capabilities []string          `json:"capabilities"`
@@ -290,28 +289,21 @@ type DomainResource struct {
 	Exposure     ExposureResource  `json:"exposure"`
 }
 
-// PartResource is one domain's part of a feature.
-type PartResource struct {
-	Domain       string            `json:"domain"`
-	Capabilities []string          `json:"capabilities"`
-	Maturity     *MaturityResource `json:"maturity"`
-}
-
-// FeatureResource is a feature, with its parts and figures.
+// FeatureResource is a feature, with the area it names, its capabilities, by
+// name, and figures.
 type FeatureResource struct {
 	DocResource
+	Area         *string           `json:"area"`
 	Capabilities []string          `json:"capabilities"`
 	Tradeoffs    []string          `json:"tradeoffs"`
-	Parts        []PartResource    `json:"parts"`
 	Maturity     *MaturityResource `json:"maturity"`
 	Readiness    ReadinessResource `json:"readiness"`
 	Exposure     ExposureResource  `json:"exposure"`
 }
 
-// LevelResource is a capability's level in one domain that builds it.
+// LevelResource is a capability's level in one project that writes it.
 type LevelResource struct {
 	Project string `json:"project"`
-	Domain  string `json:"domain"`
 	Level   string `json:"level"`
 }
 
@@ -501,7 +493,6 @@ type GapResource struct {
 	ID          string                 `json:"id"`
 	Subject     string                 `json:"subject"`
 	Project     string                 `json:"project"`
-	Domain      string                 `json:"domain"`
 	Affects     []string               `json:"affects"`
 	Impact      string                 `json:"impact"`
 	Likelihood  string                 `json:"likelihood"`
@@ -523,7 +514,6 @@ type TradeoffResource struct {
 	ID          string                 `json:"id"`
 	Subject     string                 `json:"subject"`
 	Project     string                 `json:"project"`
-	Domain      string                 `json:"domain"`
 	Affects     []string               `json:"affects"`
 	Name        string                 `json:"name"`
 	Description string                 `json:"description"`
@@ -541,14 +531,13 @@ type FindingResource struct {
 	Subject      string   `json:"subject"`
 	Capabilities []string `json:"capabilities"`
 	Message      string   `json:"message"`
-	Domain       string   `json:"domain,omitempty"`
 	File         string   `json:"file,omitempty"`
 	Line         int      `json:"line,omitempty"`
 	Advisory     bool     `json:"advisory"` // shown, but never failing a check
 }
 
 // SearchResultResource is a doc that matches a search, best first: its kind
-// (project, domain, feature, capability, rule, concept, persona, problem,
+// (project, area, feature, capability, rule, concept, persona, problem,
 // constraint or initiative), ID and name, and where it matched.
 type SearchResultResource struct {
 	Kind        string `json:"kind"`

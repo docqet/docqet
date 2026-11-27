@@ -4,7 +4,7 @@ get:
   summary: List a product's features
   description: >-
     The product's features that are showing, each put together across its
-    projects, with each domain's part and its figures.
+    projects, with the area it names, its capabilities and its figures.
   tags:
     - Products
   # No sign-in yet: a server is only reachable by its client's people.

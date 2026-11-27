@@ -6,7 +6,7 @@ Feature: Scheduling
   Background:
     Given Acme and Globex are clients
 
-  # docqet:verifies rule:scheduling-comes-before-work@capacity
+  # docqet:verifies rule:scheduling-comes-before-work
   Rule: A block must be scheduled before it can be worked on
 
     Example: Putting an engineer on an unscheduled block
@@ -19,7 +19,7 @@ Feature: Scheduling
       When Exalynt starts it
       Then it's refused as not scheduled
 
-  # docqet:verifies rule:unscheduled-blocks-reserve-no-room@capacity
+  # docqet:verifies rule:unscheduled-blocks-reserve-no-room
   Rule: An unscheduled block reserves no room
 
     Example: Bought but not scheduled
@@ -27,7 +27,7 @@ Feature: Scheduling
       When Acme buys a block
       Then the week still has 4 units free
 
-  # docqet:verifies rule:room-comes-from-assigned-teams@capacity
+  # docqet:verifies rule:room-comes-from-assigned-teams
   Rule: A client's room comes only from the engineers on its assigned teams
 
     Example: Another team's engineers don't count
@@ -53,7 +53,7 @@ Feature: Scheduling
       When Acme schedules it into a week
       Then the week is full
 
-  # docqet:verifies rule:clients-of-a-team-share-room@capacity
+  # docqet:verifies rule:clients-of-a-team-share-room
   Rule: Clients of the same team share its room
 
     Example: Scheduling counts for each client
@@ -80,7 +80,7 @@ Feature: Scheduling
       When Acme looks at that week
       Then 1 unit is booked by someone else
 
-  # docqet:verifies rule:no-scheduling-into-a-full-week@capacity
+  # docqet:verifies rule:no-scheduling-into-a-full-week
   Rule: A week without room for a block can't be scheduled into
 
     Example: The last of a week's room
@@ -89,7 +89,7 @@ Feature: Scheduling
       When Acme schedules a third into it
       Then the week is full
 
-  # docqet:verifies rule:clients-move-blocks-until-the-week-starts@capacity
+  # docqet:verifies rule:clients-move-blocks-until-the-week-starts
   Rule: A client can move a scheduled block until its week starts
 
     Example: To a week with room
@@ -116,7 +116,7 @@ Feature: Scheduling
       When Acme moves it to another week
       Then it's refused as locked
 
-  # docqet:verifies rule:clients-unschedule-blocks-until-the-week-starts@capacity
+  # docqet:verifies rule:clients-unschedule-blocks-until-the-week-starts
   Rule: A client can take a scheduled block out of its week until that week starts
 
     Example: Back to waiting for a week
@@ -135,7 +135,7 @@ Feature: Scheduling
       When Acme takes it out of its week
       Then it's refused as locked
 
-  # docqet:verifies rule:last-in-first-out-with-an-exact-fit-first@capacity
+  # docqet:verifies rule:last-in-first-out-with-an-exact-fit-first
   Rule: Blocks come out last in, first out, with an exact fit first
 
     Scenario Outline: Which blocks come out
@@ -150,7 +150,7 @@ Feature: Scheduling
         | 1     | the Core, then the second Flex |
         | 2     | the Core                       |
 
-  # docqet:verifies rule:only-what-cant-fit-comes-out@capacity
+  # docqet:verifies rule:only-what-cant-fit-comes-out
   Rule: Only blocks the teams can't fit come out
 
     Example: A client with a second team keeps a block that team has room for
@@ -161,7 +161,7 @@ Feature: Scheduling
       When the engineer sets next week to 2 units
       Then nothing comes out of the week
 
-  # docqet:verifies rule:exalynt-can-move-lapsed-blocks@capacity
+  # docqet:verifies rule:exalynt-can-move-lapsed-blocks
   Rule: Exalynt can move a block whose week ended with no work begun
 
     Example: An admin rebooks it
@@ -174,7 +174,7 @@ Feature: Scheduling
       When Acme moves it to another week
       Then it's refused as locked
 
-  # docqet:verifies rule:the-preferred-week-is-a-target@capacity
+  # docqet:verifies rule:the-preferred-week-is-a-target
   Rule: The preferred week is a target, and a missed week doesn't cancel the block
 
     Example: The week passes unworked

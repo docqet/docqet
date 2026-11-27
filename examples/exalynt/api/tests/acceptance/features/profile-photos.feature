@@ -7,7 +7,7 @@ Feature: Profile photos
     And Ada and Ben are on Platform, which supports Acme
     And Dana and Sam are members of Acme
 
-  # docqet:verifies rule:everyone-sees-the-uploaded-photo@accounts
+  # docqet:verifies rule:everyone-sees-the-uploaded-photo
   Rule: The photo someone uploads is the one everyone who sees them sees
 
     Example: An engineer's photo
@@ -24,7 +24,7 @@ Feature: Profile photos
       When Ada uploads a different photo
       Then Acme sees Ada's new photo on Platform
 
-  # docqet:verifies rule:removed-photos-are-no-longer-shown@accounts
+  # docqet:verifies rule:removed-photos-are-no-longer-shown
   Rule: Someone who removes their photo is shown without one
 
     Example: Removing it

@@ -15,7 +15,7 @@ how much people can depend on it right now, not how good it is.
 
 1. **The user's word** wins. If it differs from the capability's `stability`,
    say so, and offer to update the doc.
-2. **The capability's `stability`**, in the domain the change is in, as
+2. **The capability's `stability`**, in the project the change is in, as
    `docqet touches` or `docqet show` reports it.
 3. **Otherwise, infer it** from what the repository shows, tell the user the
    level and what it rests on, and offer to record it. Don't write an inferred

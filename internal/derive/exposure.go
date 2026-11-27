@@ -56,12 +56,12 @@ func exposedOn(p *combine.Product, c *combine.Capability) []exposedTo {
 	return out
 }
 
-// capabilityPart is what one started capability adds to its group's
+// capabilityShare is what one started capability adds to its group's
 // maturity and exposure: its level's score and weight in maturity, its
 // weight in risk and the most it could be exposed to, and the two riskiest
 // things it's exposed to, so the exposure left once the riskiest is closed
 // or answered is known. riskiest and next have no key when there's nothing.
-type capabilityPart struct {
+type capabilityShare struct {
 	capability       *combine.Capability
 	score, matWeight float64
 	weight, most     float64
@@ -69,18 +69,18 @@ type capabilityPart struct {
 }
 
 // exposure is the capability's share of the most it could be exposed to.
-func (c capabilityPart) exposure() float64 {
+func (c capabilityShare) exposure() float64 {
 	return c.riskiest.on.Raw / c.most
 }
 
 // partOfCapability returns what a started capability adds, at its level in
 // short, or false for a draft, which adds nothing.
-func partOfCapability(p *combine.Product, c *combine.Capability) (capabilityPart, bool) {
+func shareOfCapability(p *combine.Product, c *combine.Capability) (capabilityShare, bool) {
 	s, ok := MaturityLevels[c.Stability]
 	if !ok {
-		return capabilityPart{}, false
+		return capabilityShare{}, false
 	}
-	part := capabilityPart{
+	part := capabilityShare{
 		capability: c,
 		score:      float64(s.Score),
 		matWeight:  float64(s.Weight),
@@ -99,10 +99,10 @@ func partOfCapability(p *combine.Product, c *combine.Capability) (capabilityPart
 }
 
 // partsOf returns what each started capability adds, in order.
-func partsOf(p *combine.Product, capabilities []*combine.Capability) []capabilityPart {
-	var parts []capabilityPart
+func sharesOf(p *combine.Product, capabilities []*combine.Capability) []capabilityShare {
+	var parts []capabilityShare
 	for _, c := range capabilities {
-		if part, ok := partOfCapability(p, c); ok {
+		if part, ok := shareOfCapability(p, c); ok {
 			parts = append(parts, part)
 		}
 	}
@@ -110,7 +110,7 @@ func partsOf(p *combine.Product, capabilities []*combine.Capability) []capabilit
 }
 
 // ExposureOf returns the exposure of some capabilities, as of a feature,
-// domain, project or persona. The most a capability could be exposed to is a
+// area, project or persona. The most a capability could be exposed to is a
 // certain damaging gap reaching all that breaks a claim its level makes. Its
 // exposure is the share of that of its riskiest gap or rated decision, its
 // own, one that counts on it, or one on what it's built on, and it counts
@@ -119,10 +119,10 @@ func partsOf(p *combine.Product, capabilities []*combine.Capability) []capabilit
 // and at least moderate while any gap or decision is unacceptable on one of
 // them.
 func ExposureOf(p *combine.Product, capabilities []*combine.Capability) Exposure {
-	return exposureOf(partsOf(p, capabilities))
+	return exposureOf(sharesOf(p, capabilities))
 }
 
-func exposureOf(parts []capabilityPart) Exposure {
+func exposureOf(parts []capabilityShare) Exposure {
 	e := Exposure{Capabilities: len(parts)}
 	exposed, weights := 0.0, 0.0
 	for _, c := range parts {

@@ -3,7 +3,7 @@ Feature: Organization boundaries
   to one: what's a person's goes with them wherever they act, and a team's room
   is shared by every client it supports.
 
-  # docqet:verifies rule:only-the-invitee-can-accept@accounts rule:personal-things-follow-the-person@accounts
+  # docqet:verifies rule:only-the-invitee-can-accept rule:personal-things-follow-the-person
   Rule: What belongs to a person works wherever they act
 
     Background:
@@ -23,7 +23,7 @@ Feature: Organization boundaries
       When Dana accepts the invitation waiting for them
       Then Dana belongs to Globex
 
-  # docqet:verifies rule:team-rooms-are-shared-across-clients@accounts
+  # docqet:verifies rule:team-rooms-are-shared-across-clients
   Rule: A team's room is shared by the clients it supports
 
     Background:

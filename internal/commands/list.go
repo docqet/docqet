@@ -12,10 +12,11 @@ import (
 
 	"github.com/docqet/docqet/internal/combine"
 	"github.com/docqet/docqet/internal/derive"
+	"github.com/docqet/docqet/internal/state"
 )
 
 // listKinds are what list lists, each by its plural.
-var listKinds = []string{"domains", "features", "capabilities", "rules", "concepts", "personas", "problems", "constraints", "initiatives", "mechanisms", "components", "gaps", "tradeoffs", "decisions"}
+var listKinds = []string{"areas", "features", "capabilities", "rules", "concepts", "personas", "problems", "constraints", "initiatives", "mechanisms", "components", "gaps", "tradeoffs", "decisions"}
 
 // ListCommand lists docs of one kind, or gaps, tradeoffs or decisions.
 // docqet:implements capability:cli-reads
@@ -32,7 +33,7 @@ kind is refused.`,
 		Flags: withSourceFlags(
 			&cli.StringFlag{Name: "stability", Usage: "only at `LEVEL`"},
 			&cli.StringFlag{Name: "initiative", Usage: "only in initiative `ID`"},
-			&cli.StringFlag{Name: "domain", Usage: "only in domain `ID`"},
+			&cli.StringFlag{Name: "area", Usage: "only in area `ID`"},
 			&cli.StringFlag{Name: "for", Usage: "only what affects `REF`, such as persona:front-desk-clerk"},
 			&cli.StringFlag{Name: "on", Usage: "only what's on `REF`, such as component:ledger"},
 			&cli.StringSliceFlag{Name: "impact", Usage: "only gaps with these `IMPACTS`, such as damaging,blocking"},
@@ -91,7 +92,7 @@ func listFlagsFit(cmd *cli.Command, kind string) error {
 		"on":        {"gaps", "tradeoffs", "decisions"},
 		"impact":    {"gaps"},
 		"sort":      {"gaps"},
-		"domain":    {"features", "capabilities", "rules", "concepts", "gaps", "tradeoffs", "decisions"},
+		"area":      {"features", "capabilities", "gaps", "tradeoffs", "decisions"},
 	}
 	for flag, kinds := range fits {
 		if cmd.IsSet(flag) && !slices.Contains(kinds, kind) {
@@ -115,7 +116,7 @@ type listRow struct {
 
 func listRows(lo local, cmd *cli.Command, kind string) ([]listRow, error) {
 	p, v := lo.view.Product, lo.view
-	domain, on := cmd.String("domain"), cmd.String("on")
+	area, on := cmd.String("area"), cmd.String("on")
 	var within []*combine.Capability
 	if f := cmd.String("for"); f != "" {
 		var err error
@@ -123,17 +124,20 @@ func listRows(lo local, cmd *cli.Command, kind string) ([]listRow, error) {
 			return nil, fmt.Errorf("--for %s: nothing it names is in this project", f)
 		}
 	}
-	inDomain := func(d string) bool { return domain == "" || d == domain }
+	inArea, err := areaFilter(p, area)
+	if err != nil {
+		return nil, err
+	}
 	isOn := func(id string) bool { return on == "" || strings.HasPrefix(declared(id), on+"#") }
 	rows := []listRow{}
 	switch kind {
-	case "domains":
-		for _, d := range p.Domains {
-			rows = append(rows, listRow{Ref: "domain:" + d.ID, Name: d.Name})
+	case "areas":
+		for _, a := range p.Areas {
+			rows = append(rows, listRow{Ref: "area:" + a.ID, Name: a.Name, Detail: fmt.Sprintf("%d features", len(a.Features))})
 		}
 	case "features":
 		for _, f := range p.Features {
-			if domain != "" && f.Domain != domain && !slices.ContainsFunc(f.Parts, func(pt combine.Part) bool { return pt.Domain == domain }) {
+			if !inArea(state.DocRef(state.TypeFeature, f.ID)) {
 				continue
 			}
 			rows = append(rows, listRow{Ref: "feature:" + f.ID, Name: f.Name, Detail: fmt.Sprintf("%d capabilities", len(f.Capabilities))})
@@ -144,22 +148,18 @@ func listRows(lo local, cmd *cli.Command, kind string) ([]listRow, error) {
 			levels = append(levels, l)
 		}
 		for _, c := range v.ListCapabilities(within, levels) {
-			if domain != "" && !slices.ContainsFunc(c.Levels, func(l combine.LevelIn) bool { return l.Domain == domain }) {
+			if !inArea(state.DocRef(state.TypeCapability, c.ID)) {
 				continue
 			}
 			rows = append(rows, listRow{Ref: "capability:" + c.ID, Name: c.Name, Detail: strings.Join(levelsOf(p, c), ", ")})
 		}
 	case "rules":
 		for _, r := range p.Rules {
-			if inDomain(r.Domain) {
-				rows = append(rows, listRow{Ref: "rule:" + r.ID, Name: r.Name, Detail: fmt.Sprintf("followed by %d", len(r.Capabilities))})
-			}
+			rows = append(rows, listRow{Ref: "rule:" + r.ID, Name: r.Name, Detail: fmt.Sprintf("followed by %d", len(r.Capabilities))})
 		}
 	case "concepts":
 		for _, c := range p.Concepts {
-			if inDomain(c.Domain) {
-				rows = append(rows, listRow{Ref: "concept:" + c.ID, Name: c.Name})
-			}
+			rows = append(rows, listRow{Ref: "concept:" + c.ID, Name: c.Name})
 		}
 	case "personas":
 		for _, pe := range p.Personas {
@@ -200,7 +200,7 @@ func listRows(lo local, cmd *cli.Command, kind string) ([]listRow, error) {
 	case "gaps":
 		for _, l := range v.ListGaps(within, cmd.StringSlice("impact"), cmd.String("sort") == "risk") {
 			g := l.Gap
-			if !isOn(g.ID) || (domain != "" && !gapInDomain(p, g, domain)) {
+			if !isOn(g.ID) || (area != "" && !gapInArea(p, g, inArea)) {
 				continue
 			}
 			gv := gapViewOf(p, g)
@@ -208,7 +208,7 @@ func listRows(lo local, cmd *cli.Command, kind string) ([]listRow, error) {
 		}
 	case "tradeoffs":
 		for _, t := range p.Tradeoffs {
-			if isOn(t.ID) && inDomain(t.Domain) {
+			if isOn(t.ID) && inArea(declaredOn(t.ID)) {
 				tv := tradeoffViewOf(t)
 				rows = append(rows, listRow{Ref: tv.ID, Name: t.Name, Item: tv})
 			}
@@ -216,7 +216,7 @@ func listRows(lo local, cmd *cli.Command, kind string) ([]listRow, error) {
 	case "decisions":
 		for _, h := range v.ListDecisions() {
 			ref := h.Kind + ":" + h.Doc.ID
-			if (on != "" && ref != on) || !inDomain(h.Doc.Domain) {
+			if (on != "" && ref != on) || !inArea(ref) {
 				continue
 			}
 			d := heldDecisionView(v.Product, h)
@@ -234,16 +234,38 @@ func listRows(lo local, cmd *cli.Command, kind string) ([]listRow, error) {
 	return rows, nil
 }
 
-// gapInDomain reports whether a gap is in a domain: a product gap's own, or a
-// technical gap on something a capability in that domain relies on.
-func gapInDomain(p *combine.Product, g *combine.Gap, domain string) bool {
-	if g.Domain != "" {
-		return g.Domain == domain
+// areaFilter returns whether a doc, by reference, is in an area: the area
+// itself, a feature in it, or a capability in one of those. With no area,
+// everything is.
+func areaFilter(p *combine.Product, area string) (func(string) bool, error) {
+	if area == "" {
+		return func(string) bool { return true }, nil
 	}
-	for _, c := range derive.ShowsOn(p, g.ID) {
-		if slices.ContainsFunc(c.Levels, func(l combine.LevelIn) bool { return l.Domain == domain }) {
-			return true
-		}
+	a := p.Area(area)
+	if a == nil {
+		return nil, fmt.Errorf("--area %s: there's no such area", area)
 	}
-	return false
+	in := map[string]bool{state.DocRef(state.TypeArea, a.ID): true}
+	for _, id := range a.Features {
+		in[state.DocRef(state.TypeFeature, id)] = true
+	}
+	for _, c := range derive.AreaCapabilities(p, a) {
+		in[state.DocRef(state.TypeCapability, c.ID)] = true
+	}
+	return func(ref string) bool { return in[ref] }, nil
+}
+
+// gapInArea reports whether a gap shows on a capability in an area: its own,
+// or one relying on what a technical gap is on.
+func gapInArea(p *combine.Product, g *combine.Gap, inArea func(string) bool) bool {
+	return slices.ContainsFunc(derive.ShowsOn(p, g.ID), func(c *combine.Capability) bool {
+		return inArea(state.DocRef(state.TypeCapability, c.ID))
+	})
+}
+
+// declaredOn is the doc a gap or tradeoff ID is on, as a reference:
+// feature:front-desk from feature:front-desk#no-groups@hotel-bookings.
+func declaredOn(id string) string {
+	on, _, _ := strings.Cut(declared(id), "#")
+	return on
 }

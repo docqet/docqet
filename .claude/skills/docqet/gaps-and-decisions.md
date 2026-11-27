@@ -7,11 +7,12 @@ the one doc it's about:
 | ---------------------- | -------------------------------------------------- | -------------------------------------- | --------- |
 | Capability             | What someone using it would notice                 | Limits it has by choice                | Yes       |
 | Feature                | None: a missing capability is a draft              | Non-goals: capabilities never to build | Yes       |
-| Domain                 | None                                               | None                                   | Yes       |
+| Area                   | None                                               | None                                   | Yes       |
 | Mechanism or component | What only someone working on the code would notice | Technical choices                      | Yes       |
 
-Rules, concepts, personas and initiatives have none of them. A limit across a
-whole domain is a rule, or a tradeoff on the mechanism that causes it.
+Rules, concepts, personas, problems, constraints and initiatives have none of
+them. A limit across a whole area is a rule, or a tradeoff on the mechanism
+that causes it.
 
 ## Gaps
 
@@ -20,7 +21,7 @@ it. When and how it's closed is up to them, so a gap never says.
 
 ```yaml
 gaps:
-  - id: calendar-needs-a-mouse        # unique on this doc, in every project and domain that writes it
+  - id: calendar-needs-a-mouse        # unique on this doc, in every project that writes it
     name: Calendar needs a mouse      # what falls short, in a few words
     affects:                          # optional: the claims it's why aren't true yet, see below
       - outcome:usability/beta/everyone
@@ -34,7 +35,7 @@ gaps:
 
 A gap's ID is its doc's reference plus its key:
 `capability:room-booking#calendar-needs-a-mouse`.
-A doc written in several domains or projects, such as a capability, is still
+A doc written in several projects, such as a capability, is still
 one doc, so check the keys it already has before choosing one:
 `docqet show <reference> --product` lists its gaps and tradeoffs from every
 project.
@@ -194,7 +195,7 @@ decisions:
   it became, in the same change. Nothing links back to the question; git has
   its history. A decision answered with nothing to write down, such as "no",
   is just deleted.
-- **Stay on the decision's side.** A decision on a domain, feature or
+- **Stay on the decision's side.** A decision on an area, feature or
   capability becomes product docs, or their gaps or tradeoffs. One on a
   mechanism or component becomes technical docs, or theirs.
 
@@ -248,7 +249,7 @@ As with a gap, rate as if people relied on the capability, never lower for
 its level: risk weighs a decision by the level of each capability it counts
 on, so the same question costs little on a Prototype and a lot on GA. A
 decision counts on the capability it's on, every capability of the feature
-or domain it's on, the capabilities relying on the component it's on, or
+or area it's on, the capabilities relying on the component it's on, or
 every capability the mechanism it's on applies to. Say in your report how
 you rated each decision you add, so a person can correct it.
 
@@ -267,8 +268,7 @@ affecting:
 | **Decision** | Open: neither claimed nor short | | Waits on its answer | Reopened |
 
 - **Write references**: `outcome:<quality>/<level>/<id>` (`docqet rubric`
-  lists them), `rule:<id>`, with `@<domain>` for another domain's, or a gap's
-  or tradeoff's ID.
+  lists them), `rule:<id>`, or a gap's or tradeoff's ID.
 - **Never anything else.** The doc an item is on is already what it's about,
   so it never affects a capability, feature or persona. A gap never affects a
   gap: which to close first is for a task tracker. A tradeoff never affects a

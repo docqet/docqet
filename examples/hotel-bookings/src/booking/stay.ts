@@ -8,7 +8,7 @@ export type Booking = {
   status: "confirmed" | "checked-in" | "checked-out" | "cancelled";
 };
 
-// docqet:implements rule:minimum-stay@guest-stays
+// docqet:implements rule:minimum-stay
 export function parseStay(checkIn: string, checkOut: string): Stay {
   if (checkOut <= checkIn) {
     throw new Error("A stay must be at least one night");

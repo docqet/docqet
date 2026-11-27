@@ -1,4 +1,4 @@
-// docqet:implements capability:domain-language
+// docqet:implements capability:language
 import { useEffect } from "react";
 import Box from "@mui/material/Box";
 import Table from "@mui/material/Table";

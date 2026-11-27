@@ -1,6 +1,6 @@
 Feature: Cancellations
 
-  # docqet:verifies rule:free-cancellation-window@guest-stays
+  # docqet:verifies rule:free-cancellation-window
   Rule: Cancelling 48 hours ahead is free
 
     Scenario: Cancelling three days ahead is refunded in full

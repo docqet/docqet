@@ -4,7 +4,7 @@
 # means. It's part of the format, built into docqet, so it's the same for
 # every project, whatever kind of software it is, and no project copies or
 # changes it. The rubric concept, in
-# docqet/domains/authoring/concepts/rubric.md, explains it.
+# docqet/concepts/rubric.md, explains it.
 #
 # It's a guideline, not a gate:
 #

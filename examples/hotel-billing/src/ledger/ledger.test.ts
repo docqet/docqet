@@ -11,7 +11,7 @@ describe("post", () => {
     expect(bill.lines).toHaveLength(1);
   });
 
-  // docqet:verifies rule:closed-bills-dont-change@billing
+  // docqet:verifies rule:closed-bills-dont-change
   it("refuses a charge on a closed bill", () => {
     const bill: Bill = { id: "b1", status: "closed", lines: [] };
     expect(() => post(bill, breakfast)).toThrow();

@@ -1,6 +1,6 @@
 ---
 name: docqet
-description: How to read and keep current a repository's Docqet docs (capabilities, features, rules, concepts, personas, problems, constraints, initiatives, domains, mechanisms, components, gaps, tradeoffs, open decisions, stability levels) and its docqet:implements, verifies, gap and tradeoff annotations. Use in any repository with a docqet.yaml, before changing its code, tests or docs, to learn what the change touches and what it must keep; while changing them, to update the docs and annotations in the same change; when a product decision is needed that nobody has made; and when bringing Docqet to a repository that doesn't have it yet.
+description: How to read and keep current a repository's Docqet docs (capabilities, features, areas, rules, concepts, personas, problems, constraints, initiatives, mechanisms, components, gaps, tradeoffs, open decisions, stability levels) and its docqet:implements, verifies, gap and tradeoff annotations. Use in any repository with a docqet.yaml, before changing its code, tests or docs, to learn what the change touches and what it must keep; while changing them, to update the docs and annotations in the same change; when a product decision is needed that nobody has made; and when bringing Docqet to a repository that doesn't have it yet.
 ---
 
 # Docqet
@@ -24,7 +24,7 @@ Every command takes `--json`.
 | -------------------------------- | ----------------------------------------------------------------------------- |
 | Before planning a change         | `docqet touches <paths>`, or `--base origin/main` for a whole branch          |
 | Reading one doc, gap or tradeoff | `docqet show <reference>`                                                     |
-| Finding docs of a type, or gaps  | `docqet list <kind>`, such as `docqet list capabilities --domain guest-stays` |
+| Finding docs of a type, or gaps  | `docqet list <kind>`, such as `docqet list capabilities --area guest-stays`   |
 | What a level expects             | `docqet rubric`                                                            |
 | Changing an ID                   | `docqet rename <old> <new>`                                                   |
 | Before finishing                 | `docqet check --changed`, then `docqet diff`                                  |
@@ -45,16 +45,15 @@ they are. Most projects keep them in the recommended layout:
 ```text
 docqet.yaml                                 the project's id and name, and its product
 docqet/
-├── personas/                               who it serves, across every domain
+├── personas/                               who it serves
 ├── problems/                               the pain points it's there to solve, never naming it
 ├── constraints/                            what any solution must keep to, imposed from outside
-├── initiatives/                            bodies of work, such as the MVP, across every domain
-├── domains/<domain>/
-│   ├── domain.md                           a part of the business with its own language
-│   ├── features/                           a part of what the product offers, listing its capabilities
-│   ├── capabilities/                       one result it produces, solving problems; the only docs with a level
-│   ├── rules/                              one rule per file: what must always or never happen
-│   └── concepts/                           what a word means in this domain
+├── areas/                                  groupings of features, so a big product can be seen a part at a time
+├── features/                               a part of what the product offers, naming its area
+├── capabilities/                           one result it produces, naming its feature; the only docs with a level
+├── rules/                                  one rule per file: what must always or never happen
+├── concepts/                               what a word means in the product
+├── initiatives/                            bodies of work, such as the MVP, naming the personas they're for
 ├── mechanisms/                             how something works across the whole project
 └── components/                             one area of the code, and the capabilities relying on it
 .docqet/                                    written by `docqet`, gitignored, never edited
@@ -62,21 +61,22 @@ docqet/
 
 Personas, problems and constraints are the problem space: why the software
 exists, and what any solution must keep to, never naming the software. The rest is the
-solution space. Domains, features, capabilities, rules, concepts and
+solution space. Areas, features, capabilities, rules, concepts and
 initiatives are product docs: what it does, seen from outside, in the
-domain's words. Mechanisms and components are technical docs: how it's meant
+business's words. Mechanisms and components are technical docs: how it's meant
 to be built, seen from inside, in the code's words. Links only point toward
 why: technical docs to capabilities, capabilities to the problems they
-solve, rules and mechanisms to the constraints they respect.
+solve, rules and mechanisms to the constraints they respect. Within a space
+they point up: a capability names its feature, and a feature its area.
 
-Every doc starts by saying what it is: `docqet`, its type, `id`, its ID, such
-as `no-double-booking`, and `domain`, for a feature, capability, rule or
-concept. Everything else names it by reference, `<type>:<id>`, such as
+Every doc starts by saying what it is: `docqet`, its type, and `id`, its ID,
+such as `no-double-booking`, which names one thing across the whole product.
+Everything else names it by reference, `<type>:<id>`, such as
 `rule:no-double-booking`, in frontmatter and annotations alike, and
 `docqet show` lists everything that names it. A file's name and the folders
 it's in mean nothing, so rename or move files freely. Put a new doc where the
-project keeps others of its type, named after its ID. Changing an ID or a
-`domain` is a breaking change: do it with `docqet rename`, which changes every
+project keeps others of its type, named after its ID. Changing an ID is a
+breaking change: do it with `docqet rename`, which changes every
 reference to it.
 
 Each doc's structure is its YAML frontmatter. Its body is free Markdown that
@@ -94,8 +94,8 @@ nothing reads. [docs.md](docs.md) has every type's fields.
    the problems it `solves` and the personas who have them, the `rules` it follows, its `gaps`, `tradeoffs` and open
    `decisions`, and the evidence for each. Show those rules too, for their
    `why`, and the concepts for any term you're unsure of. A capability can be
-   written in several domains, each with its own level. Use the domain the
-   change is in.
+   written in several projects of a product, each with its own level. Use the
+   level of the project the change is in.
 3. **Read the technical docs** for the code: the components and mechanisms
    `touches` names, with `docqet show`. Mechanisms apply to every capability,
    so `docqet list mechanisms` too. A `docqet:tradeoff` comment marks code
@@ -130,8 +130,8 @@ changed, not docs to fill in the structure.
 | Code now implements or verifies a rule, capability, mechanism or component | A `docqet:implements` or `docqet:verifies` annotation on it. See [annotations.md](annotations.md)                                         |
 | A new area of code has something the code can't say                        | A component, with `docqet:implements` on its entry points. Most code needs no doc                                                         |
 | How something already documented works has changed                         | Its body, so it no longer says something untrue                                                                                           |
-| A domain word is used in a new sense, or a new one appears                 | A concept, or a change to it                                                                                                              |
-| Work was grouped into an initiative, or taken out of one                   | The capability's or persona's `initiatives` link, added or removed, and a doc for a new initiative, deleted once nothing links it         |
+| A business word is used in a new sense, or a new one appears               | A concept, or a change to it                                                                                                              |
+| Work was grouped into an initiative, or taken out of one                   | The capability's `initiatives`, or the initiative's `personas`, added or removed, and a doc for a new initiative, deleted once nothing links it         |
 | A doc's ID needs to change                                                 | `docqet rename`, which changes every link and annotation here. With `--product`, it lists other projects' references to change there      |
 | Code that an annotation names was deleted or moved                         | Move or remove the annotation with it                                                                                                     |
 

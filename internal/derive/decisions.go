@@ -19,7 +19,7 @@ func OpenDecisions(d combine.Doc) []state.Decision {
 }
 
 // HeldDecision is an open decision, with the doc it's held on, that doc's
-// kind (domain, feature, capability, mechanism or component), and where it
+// kind (area, feature, capability, mechanism or component), and where it
 // is among that doc's open decisions.
 type HeldDecision struct {
 	Decision state.Decision
@@ -44,11 +44,11 @@ func held(kind string, d *combine.Doc) []HeldDecision {
 }
 
 // HeldDecisions returns every open decision showing, each with the doc it's
-// on: domains', then features', capabilities', mechanisms' and components'.
+// on: areas', then features', capabilities', mechanisms' and components'.
 func HeldDecisions(p *combine.Product) []HeldDecision {
 	var out []HeldDecision
-	for _, d := range p.Domains {
-		out = append(out, held("domain", &d.Doc)...)
+	for _, a := range p.Areas {
+		out = append(out, held("area", &a.Doc)...)
 	}
 	for _, f := range p.Features {
 		out = append(out, held("feature", &f.Doc)...)
@@ -80,7 +80,7 @@ func DecisionsAffecting(p *combine.Product, id string) []HeldDecision {
 
 // DecisionCountsOn returns the capabilities a decision is scored on: the
 // capability it's on, every capability of the feature it's on, every
-// capability with a part in the domain it's on, or every capability the
+// capability in the area it's on, or every capability the
 // mechanism or component it's on serves.
 func DecisionCountsOn(p *combine.Product, h HeldDecision) []*combine.Capability {
 	switch h.Kind {
@@ -90,9 +90,9 @@ func DecisionCountsOn(p *combine.Product, h HeldDecision) []*combine.Capability 
 		if f := p.Feature(h.Doc.ID); f != nil {
 			return CapabilitiesByID(p, f.Capabilities)
 		}
-	case "domain":
-		if d := p.Domain(h.Doc.ID); d != nil {
-			return DomainCapabilities(p, d)
+	case "area":
+		if a := p.Area(h.Doc.ID); a != nil {
+			return AreaCapabilities(p, a)
 		}
 	default:
 		if t := p.Technical(state.DocRef(h.Kind, h.Doc.ID)); t != nil {
@@ -103,22 +103,18 @@ func DecisionCountsOn(p *combine.Product, h HeldDecision) []*combine.Capability 
 }
 
 // DecisionsOn returns the open decisions scored on a capability: its own,
-// its feature's, those of each domain it has a part in, and those of the
+// its feature's, its feature's area's, and those of the
 // mechanisms and components it's built on. Rated or not.
 func DecisionsOn(p *combine.Product, c *combine.Capability) []HeldDecision {
 	out := held("capability", &c.Doc)
 	if c.Feature != nil {
 		if f := p.Feature(*c.Feature); f != nil {
 			out = append(out, held("feature", &f.Doc)...)
-		}
-	}
-	var domains []string
-	for _, l := range c.Levels {
-		domains = appendNew(domains, l.Domain)
-	}
-	for _, id := range domains {
-		if d := p.Domain(id); d != nil {
-			out = append(out, held("domain", &d.Doc)...)
+			if f.Area != nil {
+				if a := p.Area(*f.Area); a != nil {
+					out = append(out, held("area", &a.Doc)...)
+				}
+			}
 		}
 	}
 	for _, t := range BuiltOn(p, c) {

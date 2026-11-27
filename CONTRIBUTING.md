@@ -54,7 +54,7 @@ Docqet, keep those docs true in the same pull request:
 - **Update the docs with the code.** If what Docqet does, must do or still
   lacks changes, update its docs and `docqet:` annotations in the same
   change. A change to the format changes its concept docs, in
-  `docqet/domains/*/concepts/`.
+  `docqet/concepts/`.
 - **Rename IDs with `docqet rename`**, never by hand.
 - **Leave stability levels alone.** Maintainers decide them.
 - **Finish with `go run ./cmd/docqet check --changed`**, which must report no

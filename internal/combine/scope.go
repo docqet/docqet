@@ -11,8 +11,10 @@ import (
 // the states are combined, so everything worked out from the result counts
 // only what's in it. Whether a capability or persona is in the initiative is
 // decided across every project first, since projects contribute to the same
-// one: it's in when any contribution says so. A problem is in when a
-// capability in it solves the problem, in any project. It returns new states and
+// one: it's in when any contribution says so. A feature is in when a
+// capability in it names it, an area when such a feature names it, and a
+// problem when a capability in it solves it, in any project. It returns new
+// states and
 // never changes the ones it's given. With no initiative, it returns them as
 // they are.
 // docqet:implements capability:initiative-scope
@@ -29,13 +31,17 @@ func ScopeToInitiative(states []*state.State, initiative string) []*state.State 
 				kept[state.DocRef(state.TypeCapability, c.ID)] = true
 			}
 		}
-		for _, p := range st.Personas {
-			if slices.Contains(p.Initiatives, ref) {
-				personas[state.DocRef(state.TypePersona, p.ID)] = true
+		for _, in := range st.Initiatives {
+			if in.ID != initiative {
+				continue
+			}
+			for _, raw := range in.Personas {
+				personas[state.DocRef(state.TypePersona, idOf(raw))] = true
 			}
 		}
 	}
 	problems := map[string]bool{}
+	features := map[string]bool{}
 	for _, st := range states {
 		for _, c := range st.Capabilities {
 			if !kept[state.DocRef(state.TypeCapability, c.ID)] {
@@ -44,11 +50,23 @@ func ScopeToInitiative(states []*state.State, initiative string) []*state.State 
 			for _, raw := range c.Solves {
 				problems[state.DocRef(state.TypeProblem, idOf(raw))] = true
 			}
+			if c.Feature != nil {
+				features[state.DocRef(state.TypeFeature, idOf(*c.Feature))] = true
+			}
 		}
 	}
+	areas := map[string]bool{}
+	for _, st := range states {
+		for _, f := range st.Features {
+			if features[state.DocRef(state.TypeFeature, f.ID)] && f.Area != nil {
+				areas[state.DocRef(state.TypeArea, idOf(*f.Area))] = true
+			}
+		}
+	}
+	in := keep{capabilities: kept, personas: personas, problems: problems, features: features, areas: areas}
 	out := make([]*state.State, 0, len(states))
 	for _, st := range states {
-		out = append(out, scope(st, kept, personas, problems))
+		out = append(out, scope(st, in))
 	}
 	// A constraint stays when a rule left in, or a mechanism, respects it, in
 	// any project.
@@ -77,15 +95,20 @@ func ScopeToInitiative(states []*state.State, initiative string) []*state.State 
 	return out
 }
 
-// scope is one project's state with only the capabilities and personas
-// kept, and the product docs those capabilities reach. A feature or domain
-// left with none of them goes, and so do rules and concepts no kept
-// capability links. A persona in the initiative stays even when nothing in it
+// keep is what's in an initiative, by reference, across every project.
+type keep struct {
+	capabilities, personas, problems, features, areas map[string]bool
+}
+
+// scope is one project's state with only what's kept, and the product docs
+// the kept capabilities reach. Rules and concepts no kept capability links
+// go. A persona in the initiative stays even when nothing in it
 // serves them yet. A problem stays when a kept capability solves it. Gaps and
 // tradeoffs on a capability or feature that went go
 // with it. Mechanisms and components stay, with what's left of their
 // capabilities. Initiatives all stay, so each can still be chosen.
-func scope(st *state.State, kept, personas, problems map[string]bool) *state.State {
+func scope(st *state.State, in keep) *state.State {
+	kept := in.capabilities
 	narrow := func(refs []string) []string {
 		out := []string{}
 		for _, r := range refs {
@@ -104,40 +127,31 @@ func scope(st *state.State, kept, personas, problems map[string]bool) *state.Sta
 	}
 
 	features := []state.Feature{}
-	keptFeatures := map[string]bool{}
-	domains := map[string]bool{}
+	keptFeatures := in.features
 	for _, f := range st.Features {
-		f.Capabilities = narrow(f.Capabilities)
-		if len(f.Capabilities) == 0 {
+		if !keptFeatures[state.DocRef(state.TypeFeature, f.ID)] {
 			continue
 		}
+		f.Capabilities = narrow(f.Capabilities)
 		features = append(features, f)
-		keptFeatures[state.DocRef(state.TypeFeature, f.ID)] = true
-		domains[f.Domain] = true
-	}
-	for _, c := range capabilities {
-		domains[c.Domain] = true
 	}
 
-	// A rule or concept link means the domain it names, else the linking
-	// doc's own, keyed <id>@<domain>.
-	key := func(ref, domain string) string { return inDomain(idOf(ref), domain) }
 	linkedRules := map[string]bool{}
 	linkedConcepts := map[string]bool{}
 	for _, c := range capabilities {
 		for _, r := range c.Rules {
-			linkedRules[key(r, c.Domain)] = true
+			linkedRules[idOf(r)] = true
 		}
 		for _, r := range c.Concepts {
-			linkedConcepts[key(r, c.Domain)] = true
+			linkedConcepts[idOf(r)] = true
 		}
 	}
 	rules := []state.Rule{}
 	for _, r := range st.Rules {
-		if linkedRules[r.ID+"@"+r.Domain] {
+		if linkedRules[r.ID] {
 			rules = append(rules, r)
 			for _, ref := range r.Concepts {
-				linkedConcepts[key(ref, r.Domain)] = true
+				linkedConcepts[idOf(ref)] = true
 			}
 		}
 	}
@@ -158,27 +172,27 @@ func scope(st *state.State, kept, personas, problems map[string]bool) *state.Sta
 	out.Features = features
 	out.Capabilities = capabilities
 	out.Rules = rules
-	out.Domains = []state.Domain{}
-	for _, d := range st.Domains {
-		if domains[d.ID] {
-			out.Domains = append(out.Domains, d)
+	out.Areas = []state.Area{}
+	for _, a := range st.Areas {
+		if in.areas[state.DocRef(state.TypeArea, a.ID)] {
+			out.Areas = append(out.Areas, a)
 		}
 	}
 	out.Concepts = []state.Concept{}
 	for _, c := range st.Concepts {
-		if linkedConcepts[c.ID+"@"+c.Domain] {
+		if linkedConcepts[c.ID] {
 			out.Concepts = append(out.Concepts, c)
 		}
 	}
 	out.Personas = []state.Persona{}
 	for _, p := range st.Personas {
-		if personas[state.DocRef(state.TypePersona, p.ID)] {
+		if in.personas[state.DocRef(state.TypePersona, p.ID)] {
 			out.Personas = append(out.Personas, p)
 		}
 	}
 	out.Problems = []state.Problem{}
 	for _, pr := range st.Problems {
-		if problems[state.DocRef(state.TypeProblem, pr.ID)] {
+		if in.problems[state.DocRef(state.TypeProblem, pr.ID)] {
 			pr.Capabilities = narrow(pr.Capabilities)
 			out.Problems = append(out.Problems, pr)
 		}
