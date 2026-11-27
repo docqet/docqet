@@ -88,7 +88,7 @@ function summarize(state: DocqetState, at: Pick): Summary | null {
         </Box>
       ),
       figures: [
-        { label: "Improvements", value: c.readiness.improvements.length, tab: "improvements" },
+        { label: "Improvements", value: c.readiness.areas.length, tab: "improvements" },
         { label: "Rules held", value: rules.length ? `${held} / ${rules.length}` : 0, tab: "rules" },
         { label: "Personas served", value: c.personas.filter((id) => find(state.personas, id)).length, tab: "overview" },
       ],
@@ -106,7 +106,7 @@ function summarize(state: DocqetState, at: Pick): Summary | null {
       mark: <Maturity value={f.maturity} of="none of its capabilities has a level" spread={capabilities.map((c) => c.stability)} />,
       figures: [
         { label: "Capabilities", value: capabilities.length, tab: "capabilities" },
-        { label: "Improvements", value: f.readiness.improvements.length, tab: "improvements" },
+        { label: "Improvements", value: f.readiness.areas.length, tab: "improvements" },
         { label: "Personas served", value: new Set(capabilities.flatMap((c) => c.personas)).size, tab: "personas" },
       ],
       risk: f.readiness.gaps,
@@ -132,7 +132,7 @@ function summarize(state: DocqetState, at: Pick): Summary | null {
       figures: [
         { label: "Features", value: d.features.length, tab: "features" },
         { label: "Capabilities", value: capabilities.length, tab: "features" },
-        { label: "Improvements", value: d.readiness.improvements.length, tab: "improvements" },
+        { label: "Improvements", value: d.readiness.areas.length, tab: "improvements" },
       ],
       risk: d.readiness.gaps,
       exposure: d.exposure,
@@ -170,7 +170,7 @@ function summarize(state: DocqetState, at: Pick): Summary | null {
     figures: [
       { label: "Capabilities", value: capabilities.length, tab: "serves" },
       { label: "Features", value: p.features.length, tab: "readiness" },
-      { label: "Improvements", value: p.readiness.improvements.length, tab: "improvements" },
+      { label: "Improvements", value: p.readiness.areas.length, tab: "improvements" },
     ],
     /* Only what someone using the product would notice: their capabilities' own gaps, each scored on what serves them. */
     risk: someOf(p.readiness.gaps, (g) => capabilities.some((c) => c.open.gaps.includes(g))),

@@ -40,12 +40,14 @@ export type DecisionResource = {
 };
 /* An open decision, with the doc it's on and its risk: null when it isn't rated. */
 export type HeldDecisionResource = DecisionResource & { on: string; risk: RiskResource | null };
-/* Something that would raise a readiness: promoting a capability, closing a gap, or answering a rated decision. */
+/* Something that would raise a readiness: promoting a capability, or every capability in a feature or a domain, closing a gap, or answering a rated decision. */
 export type ImprovementResource = {
-  kind: "promote" | "close" | "answer";
+  kind: "promote" | "promote-feature" | "promote-domain" | "close" | "answer";
   capability: string | null;
   from: string | null;
   to: string | null;
+  feature: string | null;
+  domain: string | null;
   gap: string | null;
   decision: HeldDecisionResource | null;
   capabilities: string[];
@@ -65,6 +67,17 @@ export type ReadinessResource = {
   started: number;
   notStarted: string[];
   improvements: ImprovementResource[];
+  areas: AreaResource[];
+};
+/* Somewhere a readiness could rise: a domain, feature or capability, or one step, with what readiness would be with all of it settled, and its best next step. */
+export type AreaResource = {
+  kind: "domain" | "feature" | "capability" | "gap" | "decision" | "promotion";
+  domain: string | null;
+  feature: string | null;
+  capability: string | null;
+  capabilities: string[];
+  potential: number;
+  next: ImprovementResource | null;
 };
 /* The figures a domain, feature, persona or initiative carries. */
 export type FiguresResource = { maturity: MaturityResource; readiness: ReadinessResource; exposure: ExposureResource };

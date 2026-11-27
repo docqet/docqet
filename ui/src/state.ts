@@ -750,19 +750,22 @@ export type Risk = {
 
 /*
  * Something that would raise a readiness, and by how much, as the server
- * works it out: promoting a capability to its next level, which raises
- * maturity, or closing a gap or answering a rated decision, which lowers
- * exposure. `capabilities` is where it changes something among those
- * counted. Readiness, maturity and exposure are what they'd be after it,
+ * works it out: promoting a capability to its next level, or every
+ * capability in a feature (`feature`) or a domain (`domain`) to its own next
+ * level, which raises maturity, or closing a gap or answering a rated
+ * decision, which lowers exposure. `capabilities` is where it changes
+ * something among those counted: for a promotion of several, those promoted. Readiness, maturity and exposure are what they'd be after it,
  * unrounded, and `gain` how much readiness it adds. `band` is the quarter
  * readiness would move into, or null when it stays in the same one. It's
  * what could be done, not what has to be.
  */
 export type Improvement = {
-  kind: "promote" | "close" | "answer";
+  kind: "promote" | "promote-feature" | "promote-domain" | "close" | "answer";
   capability: Capability | null;
   from: Level | null;
   to: Level | null;
+  feature: Feature | null;
+  domain: Domain | null;
   gap: Gap | null;
   decision: HeldDecision | null;
   capabilities: Capability[];
@@ -771,6 +774,26 @@ export type Improvement = {
   exposure: number;
   gain: number;
   band: (typeof READINESS_BANDS)[number] | null;
+};
+
+/*
+ * Somewhere a readiness could rise, as the server works it out, one level
+ * below what the readiness is of: a domain, feature or capability among
+ * those counted, a gap or decision spanning more than one of them, or, for
+ * a capability, one step. `potential` is what readiness would be with all
+ * of it settled, every capability in it at GA with nothing open, or its
+ * step taken, unrounded; `next` the step in it that would raise readiness
+ * most, null when no one step does. Potentials overlap, so they don't add
+ * up.
+ */
+export type Area = {
+  kind: "domain" | "feature" | "capability" | "gap" | "decision" | "promotion";
+  domain: Domain | null;
+  feature: Feature | null;
+  capability: Capability | null;
+  capabilities: Capability[];
+  potential: number;
+  next: Improvement | null;
 };
 
 /* The gaps that show on a capability: its own, and those of the mechanisms and components it's built on. */
@@ -800,6 +823,8 @@ export type Readiness = {
   started: number;
   notStarted: Capability[];
   improvements: Improvement[];
+  /* Where it could rise, one level below what it's of, by how far, most first. */
+  areas: Area[];
 };
 
 /* How many it's worked out from: the started ones. */

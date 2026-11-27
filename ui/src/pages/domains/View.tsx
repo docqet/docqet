@@ -72,7 +72,7 @@ export function DomainPage({ domain, route, ...go }: DocPageProps & { domain: Do
     { id: "overview", label: "Overview" },
     { id: "features", label: "Features", term: "feature" as const, count: features.length },
     ...(concepts.length || rules.length ? [{ id: "language", label: "Language", term: "concept" as const, count: concepts.length + rules.length }] : []),
-    { id: IMPROVEMENTS_TAB, label: "Improvements", term: "improvement" as const, count: readiness.improvements.length || undefined },
+    { id: IMPROVEMENTS_TAB, label: "Improvements", term: "improvement" as const, count: readiness.areas.length || undefined },
     ...(hasBody(domain) ? [{ id: "about", label: "About" }] : []),
   ];
   const tab = currentTab(route, tabs);
@@ -133,7 +133,7 @@ export function DomainPage({ domain, route, ...go }: DocPageProps & { domain: Do
               </Box>
             )}
           </Section>
-          <ImprovementsSection readiness={readiness} />
+          <ImprovementsSection readiness={readiness} here={domain} />
           <TopGaps state={state} open={open} />
         </>
       ) : tab === "features" ? (
@@ -229,7 +229,7 @@ export function DomainPage({ domain, route, ...go }: DocPageProps & { domain: Do
         </>
       ) : tab === IMPROVEMENTS_TAB ? (
         <>
-          <ImprovementsList readiness={readiness} />
+          <ImprovementsList readiness={readiness} here={domain} />
           <OpenTab {...go} open={open} here={domain} />
         </>
       ) : (

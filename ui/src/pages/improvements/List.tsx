@@ -1,7 +1,7 @@
 // docqet:implements capability:improvements
 import { useState, type ReactNode } from "react";
 import TrendingUpRoundedIcon from "@mui/icons-material/TrendingUpRounded";
-import { ImprovementRows, ImprovementsFigure, improvementWords } from "../../components/improvements/Improvements";
+import { AreaRows, ImprovementRows, ImprovementsFigure, areasNote, bestStep, improvementWords } from "../../components/improvements/Improvements";
 import { ReadinessMark } from "../../components/Readiness";
 import { useStatusFor } from "../../model";
 import ExpandMoreRoundedIcon from "@mui/icons-material/ExpandMoreRounded";
@@ -71,7 +71,7 @@ export default function ImprovementsPage({ state, route }: { state: DocqetState;
   const holders = holdersIn(state, holdersOf(state), scope).filter((h) => openDecisions(h.doc).length);
   const decisions = holders.reduce((n, h) => n + openDecisions(h.doc).length, 0);
   const tabs = [
-    { id: "improvements", label: "Improvements", count: readiness ? readiness.improvements.length : undefined },
+    { id: "improvements", label: "Improvements", count: readiness ? readiness.areas.length : undefined },
     {
       id: "gaps",
       label: (
@@ -84,6 +84,8 @@ export default function ImprovementsPage({ state, route }: { state: DocqetState;
     { id: "decisions", label: <LeftLabel kind="decision" size={14} hoverOnly />, count: decisions },
   ];
   const tab = currentTab(route, tabs);
+  /* The improvements by area, or each single step on asking. */
+  const oneAtATime = search.get("show") === "steps";
   /* On a phone the picker sits over the name, the width of the page, rather than squeezing the name and its sentence at the right. */
   const phone = useMediaQuery(useTheme().breakpoints.down("sm"), { noSsr: true });
   const picker = <ScopePicker state={state} scope={scope} />;
@@ -127,8 +129,8 @@ export default function ImprovementsPage({ state, route }: { state: DocqetState;
             <Stat
               label="Improvements"
               term="improvement"
-              value={!readiness ? <Skeleton width={40} /> : readiness.improvements.length ? <ImprovementsFigure readiness={readiness} /> : "None now"}
-              note={readiness?.improvements[0] ? `Most from ${improvementWords(readiness.improvements[0])}` : undefined}
+              value={!readiness ? <Skeleton width={40} /> : readiness.areas.length ? <ImprovementsFigure readiness={readiness} /> : "None now"}
+              note={readiness && bestStep(readiness) ? `Most from ${improvementWords(bestStep(readiness)!)}` : undefined}
               href={withParam("tab", "improvements")}
             />
             <Stat
@@ -153,14 +155,27 @@ export default function ImprovementsPage({ state, route }: { state: DocqetState;
       <Tabs tabs={tabs} current={tab} />
       {tab === "improvements" ? (
         readiness ? (
-          <Section
-            title="Improvements"
-            term="improvement"
-            count={readiness.improvements.length || undefined}
-            note="By how much each would raise readiness, most first: promoting a capability raises maturity, and closing a gap or answering a rated decision lowers exposure."
-          >
-            <ImprovementRows readiness={readiness} limit={50} />
-          </Section>
+          oneAtATime ? (
+            <Section
+              title="One at a time"
+              term="improvement"
+              count={readiness.improvements.length || undefined}
+              note="Each single step by how much it would raise readiness, most first: promoting a capability raises maturity, and closing a gap or answering a rated decision lowers exposure."
+              aside={<ShowToggle oneAtATime />}
+            >
+              <ImprovementRows readiness={readiness} limit={50} />
+            </Section>
+          ) : (
+            <Section
+              title={scope.kind === "capability" ? "Steps" : `By ${AREA_LEVELS[scope.kind]}`}
+              term="improvement"
+              count={readiness.areas.length || undefined}
+              note={areasNote(readiness)}
+              aside={<ShowToggle oneAtATime={false} />}
+            >
+              <AreaRows readiness={readiness} limit={50} />
+            </Section>
+          )
         ) : (
           <ReadFallback read={status} what="the improvements for this scope" skeleton={<Skeleton variant="rounded" height={240} />} />
         )
@@ -178,6 +193,22 @@ export default function ImprovementsPage({ state, route }: { state: DocqetState;
       )}
     </View>
   );
+}
+
+/* What the areas are, one level below what's chosen. */
+const AREA_LEVELS: Record<ScopeKind, string> = {
+  all: "domain",
+  project: "domain",
+  persona: "feature",
+  initiative: "feature",
+  domain: "feature",
+  feature: "capability",
+  capability: "step",
+};
+
+/* Between the improvements by area and each single step, kept in the address. */
+function ShowToggle({ oneAtATime }: { oneAtATime: boolean }) {
+  return oneAtATime ? <a href={withParam("show", null)}>By area</a> : <a href={withParam("show", "steps")}>One at a time</a>;
 }
 
 /* The gaps' risk spread, under their count: the bar, then how many there are of each risk, each in its color, each showing only those. */

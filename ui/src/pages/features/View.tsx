@@ -54,7 +54,7 @@ export function FeaturePage({ feature, route, ...go }: DocPageProps & { feature:
   const tabs: TabDef[] = [
     { id: "overview", label: "Overview" },
     { id: "capabilities", label: "Capabilities", term: "capability" as const, count: capabilities.length },
-    { id: IMPROVEMENTS_TAB, label: "Improvements", term: "improvement" as const, count: readiness.improvements.length || undefined },
+    { id: IMPROVEMENTS_TAB, label: "Improvements", term: "improvement" as const, count: readiness.areas.length || undefined },
     ...(personas.length ? [{ id: "personas", label: "Personas", term: "persona" as const, count: personas.length }] : []),
     ...(decided ? [{ id: "decided", label: "Decided", count: decided }] : []),
     ...(hasBody(feature) ? [{ id: "about", label: "About" }] : []),
@@ -131,7 +131,7 @@ export function FeaturePage({ feature, route, ...go }: DocPageProps & { feature:
               </Box>
             )}
           </Section>
-          <ImprovementsSection readiness={readiness} />
+          <ImprovementsSection readiness={readiness} here={feature} />
           <TopGaps state={state} open={open} />
           {concepts.length ? (
             <Section
@@ -172,7 +172,7 @@ export function FeaturePage({ feature, route, ...go }: DocPageProps & { feature:
         )
       ) : tab === IMPROVEMENTS_TAB ? (
         <>
-          <ImprovementsList readiness={readiness} />
+          <ImprovementsList readiness={readiness} here={feature} />
           <OpenTab {...go} open={open} here={feature} />
         </>
       ) : tab === "personas" ? (

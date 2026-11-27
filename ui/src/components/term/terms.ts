@@ -166,8 +166,8 @@ export const TERMS: Record<TermId, TermEntry> = {
   improvement: {
     name: "Improvement",
     means:
-      "Something that would make it more ready, and by how much: promoting a capability to its next level, which raises maturity, or closing a gap or answering a rated open decision, which lowers exposure. They're ordered by how much each would raise readiness.",
-    more: "They're what could be done, not a finish line: software that keeps growing is never done, and whether any of it is worth doing, and when to stop, is yours to judge. A gap that isn't the riskiest on any capability raises nothing yet, so it isn't one until it is.",
+      "Something that would make it more ready, and by how much: promoting a capability, or every capability in a feature or domain, to its next level, which raises maturity, or closing a gap or answering a rated open decision, which lowers exposure. They're shown by area, one level down, each with its potential and its next step.",
+    more: "They're what could be done, not a finish line: software that keeps growing is never done, and whether any of it is worth doing, and when to stop, is yours to judge. A gap that isn't the riskiest on any capability raises nothing yet, so it isn't one until it is. An area's potential is how ready it could be with all of the area settled; its next step is the one thing in it that would raise readiness most. Open an area to see what's in it.",
   },
   stability: {
     name: "Stability",

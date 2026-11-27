@@ -98,7 +98,7 @@ export function CapabilityTable({
                 </TableCell>
                 {/* Its improvements read as the row's text, not as its name. */}
                 <TableCell sx={{ ...rest, "& a": { fontWeight: 400, textDecoration: "none" } }}>
-                  {c.readiness.improvements.length ? (
+                  {c.readiness.areas.length ? (
                     <a href={docHref("capability", c.id, IMPROVEMENTS_TAB)}>
                       <ImprovementsFigure readiness={c.readiness} />
                     </a>

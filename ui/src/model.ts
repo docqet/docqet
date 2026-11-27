@@ -29,6 +29,7 @@ import type {
   EvidenceResource,
   ExposureResource,
   HeldDecisionResource,
+  AreaResource,
   ImprovementResource,
   MaturityResource,
   ReadinessResource,
@@ -57,6 +58,7 @@ import {
   type Gap,
   type HeldDecision,
   type Impact,
+  type Area,
   type Improvement,
   type Initiative,
   type Level,
@@ -141,6 +143,7 @@ const noReadiness = (): Readiness => ({
   started: 0,
   notStarted: [],
   improvements: [],
+  areas: [],
 });
 const noRisk = (g: GapResource): Risk => ({
   impact: g.impact as Risk["impact"],
@@ -390,6 +393,8 @@ function converters(state: DocqetState) {
   const byId = <T extends { id: string }>(list: T[]) => new Map(list.map((x) => [x.id, x]));
   const capabilities = byId(state.capabilities);
   const gaps = byId(state.gaps);
+  const features = byId(state.features);
+  const domains = byId(state.domains);
   const tradeoffs = byId(state.tradeoffs);
   const rules = byId(state.rules);
   const technicals = new Map([...state.mechanisms, ...state.components].map((t) => [`${t.kind}:${t.id}`, t]));
@@ -459,6 +464,7 @@ function converters(state: DocqetState) {
     started: x.started,
     notStarted: some(capabilities, x.notStarted),
     improvements: x.improvements.flatMap(improvement),
+    areas: x.areas.flatMap(area),
   });
   /* An open decision with the doc it's on: the very decision that doc holds, so its risk, once found, is the same one everywhere. */
   const held = (d: HeldDecisionResource): HeldDecision[] => {
@@ -471,13 +477,24 @@ function converters(state: DocqetState) {
     const capability = x.capability ? (capabilities.get(x.capability) ?? null) : null;
     const gap = x.gap ? (gaps.get(x.gap) ?? null) : null;
     const decided = x.decision ? (held(x.decision)[0] ?? null) : null;
-    if ((x.kind === "promote" && !capability) || (x.kind === "close" && !gap) || (x.kind === "answer" && !decided)) return [];
+    const feature = x.feature ? (features.get(x.feature) ?? null) : null;
+    const domain = x.domain ? (domains.get(x.domain) ?? null) : null;
+    if (
+      (x.kind === "promote" && !capability) ||
+      (x.kind === "promote-feature" && !feature) ||
+      (x.kind === "promote-domain" && !domain) ||
+      (x.kind === "close" && !gap) ||
+      (x.kind === "answer" && !decided)
+    )
+      return [];
     return [
       {
         kind: x.kind,
         capability,
         from: x.from ? level(x.from) : null,
         to: x.to ? level(x.to) : null,
+        feature,
+        domain,
         gap,
         decision: decided,
         capabilities: some(capabilities, x.capabilities),
@@ -488,6 +505,16 @@ function converters(state: DocqetState) {
         band: READINESS_BANDS.find((b) => b.name === x.band) ?? null,
       },
     ];
+  };
+  /* An area, left out when what it is isn't showing. */
+  const area = (x: AreaResource): Area[] => {
+    const domain = x.domain ? (domains.get(x.domain) ?? null) : null;
+    const feature = x.feature ? (features.get(x.feature) ?? null) : null;
+    const capability = x.capability ? (capabilities.get(x.capability) ?? null) : null;
+    const next = x.next ? (improvement(x.next)[0] ?? null) : null;
+    if ((x.kind === "domain" && !domain) || (x.kind === "feature" && !feature) || (x.kind === "capability" && !capability)) return [];
+    if ((x.kind === "gap" || x.kind === "decision" || x.kind === "promotion") && !next) return [];
+    return [{ kind: x.kind, domain, feature, capability, capabilities: some(capabilities, x.capabilities), potential: x.potential, next }];
   };
   const affected = (a: AffectedResource): Affected[] => {
     if (a.kind === "outcome") {

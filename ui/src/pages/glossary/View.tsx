@@ -296,9 +296,9 @@ function Levels() {
           {TERMS.readiness.more}
         </Box>
         <Box component="p" sx={noteSx}>
-          It's a recommendation, and you're the judge. Every page lists its improvements: promoting a capability to its next level, closing a gap, or answering
-          a rated open decision, each with how much it would raise readiness, most first. They're what could be done, not a finish line. A draft is not started,
-          and never counts.
+          It's a recommendation, and you're the judge. Every page lists its improvements by area, one level down, each with its potential, how ready it could be
+          with all of the area settled, and its next step: promoting a capability, or a feature&rsquo;s or domain&rsquo;s capabilities, to their next level,
+          closing a gap, or answering a rated open decision. They're what could be done, not a finish line. A draft is not started, and never counts.
         </Box>
         <TableContainer sx={narrowTableSx}>
           <Table aria-label="Readiness bands">

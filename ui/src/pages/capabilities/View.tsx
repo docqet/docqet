@@ -71,7 +71,7 @@ export function CapabilityPage({ capability, route, ...go }: DocPageProps & { ca
 
   const tabs: TabDef[] = [
     { id: "overview", label: "Overview" },
-    { id: IMPROVEMENTS_TAB, label: "Improvements", term: "improvement" as const, count: readiness.improvements.length || undefined },
+    { id: IMPROVEMENTS_TAB, label: "Improvements", term: "improvement" as const, count: readiness.areas.length || undefined },
     ...(rules.length ? [{ id: "rules", label: "Rules", term: "rule" as const, count: rules.length }] : []),
     ...(state.rubric ? [{ id: "stability", label: "Stability", term: "rubric" as const }] : []),
     ...(on.length || places ? [{ id: "built", label: "How it's built", count: on.length || undefined }] : []),

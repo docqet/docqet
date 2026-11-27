@@ -10,7 +10,7 @@ import { ExposureStat, MaturityStat } from "../../components/indexParts";
 import { ExposureMark } from "../../components/risk/RiskScore";
 import { PersonaAvatar } from "../../components/Personas";
 import { ReadinessMark } from "../../components/Readiness";
-import { ImprovementRows, ImprovementsFigure, improvementWords } from "../../components/improvements/Improvements";
+import { AreaRows, ImprovementsFigure, bestStep, improvementWords } from "../../components/improvements/Improvements";
 import { InlineMarkdown } from "../../components/markdown/Markdown";
 import { MaturityRing } from "../../components/maturity/MaturityRing";
 import { MATURITY_BANDS } from "../../components/maturity/maturity";
@@ -143,10 +143,10 @@ export default function OverviewPage({ state }: { state: DocqetState; route: Rou
               label="Improvements"
               term="improvement"
               href={sectionHref("improvements")}
-              value={readiness.improvements.length ? <ImprovementsFigure readiness={readiness} /> : "None now"}
+              value={readiness.areas.length ? <ImprovementsFigure readiness={readiness} /> : "None now"}
               note={
-                readiness.improvements.length
-                  ? `Most from ${improvementWords(readiness.improvements[0])}`
+                bestStep(readiness)
+                  ? `Most from ${improvementWords(bestStep(readiness)!)}`
                   : `${plural(state.gaps.length, "gap", "gaps")} and ${plural(decisions, "open decision", "open decisions")} written down`
               }
             />
@@ -161,10 +161,10 @@ export default function OverviewPage({ state }: { state: DocqetState; route: Rou
         id="improvements"
         title="Improvements"
         term="improvement"
-        note="What would make it more ready, most first. They're what could be done, not a finish line: what's worth doing is yours to judge."
-        aside={readiness.improvements.length > 5 ? <a href={sectionHref("improvements")}>See all {readiness.improvements.length}</a> : null}
+        note="Where it could become more ready, by potential: how ready it could be with all of each settled, and where the next step would take it. They're what could be done, not a finish line: what's worth doing is yours to judge."
+        aside={readiness.areas.length > 5 ? <a href={sectionHref("improvements")}>See all {readiness.areas.length}</a> : null}
       >
-        <ImprovementRows readiness={readiness} limit={5} />
+        <AreaRows readiness={readiness} limit={5} />
       </Section>
 
       <Section

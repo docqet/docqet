@@ -254,7 +254,7 @@ function CapabilityRow({ state, capability, domain, where }: { state: DocqetStat
 
 /* Improvements in a row: the most one would add, and how many more, linking to the tab that lists them. */
 function ImprovementsLink({ readiness, href }: { readiness: Readiness; href: string }) {
-  if (!readiness.improvements.length) return <ImprovementsFigure readiness={readiness} />;
+  if (!readiness.areas.length) return <ImprovementsFigure readiness={readiness} />;
   return (
     <Box component="a" href={href} sx={{ textDecoration: "none", "&&": { color: "inherit", fontWeight: "inherit", "&:hover": { color: "primary.main" } } }}>
       <ImprovementsFigure readiness={readiness} />

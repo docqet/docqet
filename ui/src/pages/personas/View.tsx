@@ -49,7 +49,7 @@ export function PersonaPage({ persona, route, ...go }: DocPageProps & { persona:
   const tabs: TabDef[] = [
     { id: "readiness", label: "Readiness", term: "readiness" as const },
     { id: "serves", label: "What serves them", term: "capability" as const, count: capabilities.length },
-    { id: IMPROVEMENTS_TAB, label: "Improvements", term: "improvement" as const, count: readiness.improvements.length || undefined },
+    { id: IMPROVEMENTS_TAB, label: "Improvements", term: "improvement" as const, count: readiness.areas.length || undefined },
     ...(hasBody(persona) ? [{ id: "about", label: "About" }] : []),
   ];
   const tab = currentTab(route, tabs);

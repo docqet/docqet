@@ -218,7 +218,7 @@ function SideNav({ state, at, onGo }: { state: DocqetState; at: Section; onGo: (
           label: "Improvements",
           icon: <TrendingUpRoundedIcon />,
           question: "What would make it more ready, with every gap and open decision",
-          count: state.status.readiness.improvements.length,
+          count: state.status.readiness.areas.length,
         },
         { section: "decided", label: "Decided", icon: <TaskAltRoundedIcon />, question: "Tradeoffs and non-goals", count: state.tradeoffs.length },
         {
