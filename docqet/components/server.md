@@ -8,6 +8,20 @@ description: >-
 is: archetype:service
 serves:
   - capability:applying
+  - capability:api-reference
+  - capability:product-view
+  - capability:readiness
+  - capability:improvements
+  - capability:initiative-scope
+  - capability:problems
+  - capability:constraints
+  - capability:personas
+  - capability:overview
+  - capability:choices
+  - capability:language
+  - capability:how-its-built
+  - capability:seeing-findings
+  - capability:rubric
 tradeoffs:
   - id: sqlite
     name: One SQLite file
