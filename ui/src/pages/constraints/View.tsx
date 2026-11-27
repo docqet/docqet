@@ -5,11 +5,11 @@ import { StabilitySpread } from "../../components/stability/StabilitySpread";
 import { Term } from "../../components/term/Term";
 import { NAMES, plural } from "../../components/names";
 import { TechnicalRows } from "../../components/Technical";
-import { byFeature, capabilitiesById, docDomains, find, respecting, type Constraint, type DocqetState } from "../../state";
+import { areasOf, byFeature, capabilitiesById, find, respecting, type Constraint, type DocqetState } from "../../state";
 import { ExposureStat, MaturityStat } from "../../components/indexParts";
 import { docHref, type Route } from "../../routes";
 import { Empty, Section, Stat, Tabs, currentTab, type TabDef } from "../../components/shell/layout";
-import { cardSx, docGo, Crumb, DocHeader, DocView, DomainTrail, levelsSx, lineSx, tabHref, type DocPageProps } from "../../components/doc/DocPage";
+import { cardSx, docGo, Crumb, DocHeader, DocView, AreaTrail, levelsSx, lineSx, tabHref, type DocPageProps } from "../../components/doc/DocPage";
 import { openAcross, OpenTab, TopGaps } from "../../components/doc/Open";
 import { ImprovementsList, ImprovementsSection, ImprovementsStat, IMPROVEMENTS_TAB } from "../../components/improvements/Improvements";
 import { Bodies, hasBody, Sources } from "../../components/doc/About";
@@ -39,7 +39,7 @@ export function ConstraintPage({ constraint, route, ...go }: DocPageProps & { co
   const mechanisms = constraint.mechanisms.flatMap((id) => find(state.mechanisms, id) ?? []);
   const capabilities = capabilitiesById(state, constraint.capabilities);
   const features = byFeature(state, constraint.capabilities).flatMap((g) => g.feature ?? []);
-  const domains = [...new Set([...rules.map((r) => r.domain), ...capabilities.flatMap((c) => docDomains(c))])];
+  const areas = areasOf(state, capabilities);
   const readiness = constraint.readiness;
   const open = openAcross(capabilities, readiness, undefined, false);
   const name = constraint.name;
@@ -48,7 +48,7 @@ export function ConstraintPage({ constraint, route, ...go }: DocPageProps & { co
   const tabs: TabDef[] = [
     { id: "readiness", label: "Readiness", term: "readiness" as const },
     { id: "respects", label: "What respects it", term: "rule" as const, count },
-    { id: IMPROVEMENTS_TAB, label: "Improvements", term: "improvement" as const, count: readiness.areas.length || undefined },
+    { id: IMPROVEMENTS_TAB, label: "Improvements", term: "improvement" as const, count: readiness.parts.length || undefined },
     ...(hasBody(constraint) ? [{ id: "about", label: "About" }] : []),
   ];
   const tab = currentTab(route, tabs);
@@ -58,7 +58,7 @@ export function ConstraintPage({ constraint, route, ...go }: DocPageProps & { co
         state={state}
         kind="constraint"
         doc={constraint}
-        trail={domains.length ? <DomainTrail state={state} domains={domains} /> : undefined}
+        trail={areas.length ? <AreaTrail state={state} areas={areas} /> : undefined}
         stats={
           <>
             <Stat

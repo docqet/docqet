@@ -7,13 +7,13 @@ import RuleRoundedIcon from "@mui/icons-material/RuleRounded";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 import WidgetsOutlinedIcon from "@mui/icons-material/WidgetsOutlined";
 import { ConceptIcon } from "./Concepts";
-import { ConstraintIcon, DomainIcon, ProblemIcon } from "./names";
+import { ConstraintIcon, AreaIcon, ProblemIcon } from "./names";
 import { PersonaAvatar, PersonaIcon } from "./Personas";
 import { InitiativeIcon } from "./shell/ScopeFilter";
 import { GapIcon, LEFT_KINDS, LeftMark, type LeftKind } from "./left/LeftMark";
 import Tooltip from "@mui/material/Tooltip";
 import { docHref, type DocKind } from "../routes";
-import { bareId, type CapabilityLevel, type Exposure, type Gap, type Level, type Persona, type RiskAcross } from "../state";
+import { type CapabilityLevel, type Exposure, type Gap, type Level, type Persona, type RiskAcross } from "../state";
 import { ExposureMark, RiskScore } from "./risk/RiskScore";
 import { Stat } from "./shell/layout";
 import Box from "@mui/material/Box";
@@ -76,8 +76,8 @@ export function NameLink({ href, mark, name, note, wrap = false }: { href: strin
 /* Each kind's mark, small, the same as everywhere else it's named. */
 export function KindIcon({ kind, size = 15 }: { kind: DocKind; size?: number }) {
   switch (kind) {
-    case "domain":
-      return <DomainIcon size={size} />;
+    case "area":
+      return <AreaIcon size={size} />;
     case "feature":
       return <WidgetsOutlinedIcon sx={{ fontSize: size, flex: "none", color: "secondary.main" }} />;
     case "capability":
@@ -293,10 +293,10 @@ export function FilterBox({ value, onChange, placeholder }: { value: string; onC
   );
 }
 
-/* Whether a doc matches what's typed: its name, its ID without its domain, or `more`, such as its description. */
+/* Whether a doc matches what's typed: its name, its ID, or `more`, such as its description. */
 export const matches = (query: string, doc: { id: string; name: string }, more = "") => {
   const q = query.trim().toLowerCase();
-  return !q || `${doc.name} ${bareId(doc.id)} ${more}`.toLowerCase().includes(q);
+  return !q || `${doc.name} ${doc.id} ${more}`.toLowerCase().includes(q);
 };
 
 /* A plain number, faint at zero. */
@@ -317,7 +317,7 @@ export const byName = (a: { name: string }, b: { name: string }) => a.name.local
  * it's worked out. It's how aggregated stability shows on every page, as
  * ExposureStat is for aggregated risk and ReadinessMark for readiness: in a
  * card, never beside the page's title. `count` is how many capabilities (or,
- * for a domain or project, features) it's from; `of` names what it's of.
+ * for an area or project, features) it's from; `of` names what it's of.
  */
 export function MaturityStat({
   maturity,

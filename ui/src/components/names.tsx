@@ -10,10 +10,10 @@ import { PersonaIcon } from "./Personas";
 import { type TechnicalKind, type RuleStanding } from "../state";
 
 /* What the panel can show: the product's parts, each as a list or one of them. */
-export type ExploreKind = "domain" | "feature" | "capability" | "persona";
+export type ExploreKind = "area" | "feature" | "capability" | "persona";
 
 export const NAMES: Record<ExploreKind, { one: string; many: string; icon: ReactNode }> = {
-  domain: { one: "Domain", many: "Domains", icon: <DomainIcon size={18} /> },
+  area: { one: "Area", many: "Areas", icon: <AreaIcon size={18} /> },
   feature: { one: "Feature", many: "Features", icon: <WidgetsOutlinedIcon sx={{ fontSize: 18, color: "secondary.main" }} /> },
   capability: { one: "Capability", many: "Capabilities", icon: <BoltOutlinedIcon sx={{ fontSize: 18, color: "primary.main" }} /> },
   persona: { one: "Persona", many: "Personas", icon: <PersonaIcon size={18} /> },
@@ -44,7 +44,7 @@ export function ConstraintIcon({ size = 16 }: { size?: number }) {
   return <GavelOutlinedIcon sx={{ fontSize: size, flex: "none", color: "constraint.main" }} />;
 }
 
-/* A domain's mark, wherever one is named. */
-export function DomainIcon({ size = 14 }: { size?: number }) {
+/* An area's mark, wherever one is named. */
+export function AreaIcon({ size = 14 }: { size?: number }) {
   return <SpaceDashboardOutlinedIcon sx={{ fontSize: size, flex: "none", color: "text.secondary" }} />;
 }

@@ -4,14 +4,14 @@ import {
   LIKELIHOODS,
   REACHES,
   VERDICTS,
+  areaCapabilities,
+  areaName,
   capabilitiesById,
-  domainCapabilities,
-  domainName,
   find,
+  type Area,
   type Capability,
   type DecisionHolder,
   type DocqetState,
-  type Domain,
   type Gap,
   type Impact,
   type Level,
@@ -32,11 +32,11 @@ import { STABILITY_LEVEL_IDS } from "../../../components/stability/stability";
  * order by any of them.
  */
 
-export type ScopeKind = "all" | "project" | "persona" | "initiative" | "domain" | "feature" | "capability";
+export type ScopeKind = "all" | "project" | "persona" | "initiative" | "area" | "feature" | "capability";
 
 /*
  * What the page is for: everything showing, or one project, persona,
- * domain, feature or capability, and the capabilities that makes, null for
+ * area, feature or capability, and the capabilities that makes, null for
  * all of them. A project is the gaps and decisions written in it, scored on
  * every capability they show on, since a project such as a UI may build
  * none of its own.
@@ -45,9 +45,10 @@ export type Scope = { key: string; kind: ScopeKind; name: string; capabilities: 
 
 const EVERYTHING: Scope = { key: "all", kind: "all", name: "Everything showing", capabilities: null };
 
-/* The scope an address names, as `<kind>:<id>`, or everything when it names none, or one that isn't showing. */
-export function scopeOf(state: DocqetState, value: string | null): Scope {
-  if (!value) return EVERYTHING;
+/* The scope an address names, as `<kind>:<id>`, or everything when it names none, or one that isn't showing. An older address's `domain:<id>` is the area. */
+export function scopeOf(state: DocqetState, asked: string | null): Scope {
+  if (!asked) return EVERYTHING;
+  const value = asked.startsWith("domain:") ? `area:${asked.slice("domain:".length)}` : asked;
   const colon = value.indexOf(":");
   const kind = value.slice(0, colon) as ScopeKind;
   const id = value.slice(colon + 1);
@@ -63,9 +64,9 @@ export function scopeOf(state: DocqetState, value: string | null): Scope {
     const i = find(state.initiatives, id);
     return i ? { key: value, kind, name: i.name, capabilities: capabilitiesById(state, i.capabilities) } : EVERYTHING;
   }
-  if (kind === "domain") {
-    const d = find(state.domains, id);
-    return d ? { key: value, kind, name: d.name, capabilities: domainCapabilities(state, d) } : EVERYTHING;
+  if (kind === "area") {
+    const a = find(state.areas, id);
+    return a ? { key: value, kind, name: a.name, capabilities: areaCapabilities(state, a) } : EVERYTHING;
   }
   if (kind === "feature") {
     const f = find(state.features, id);
@@ -84,7 +85,6 @@ export type ScopeChoice = { kind: ScopeKind; key: string; name: string; note: st
 /* Every scope there is to choose, by kind, everything first, each kind by name. */
 export function scopeChoices(state: DocqetState): ScopeChoice[] {
   const byName = (xs: ScopeChoice[]) => [...xs].sort((a, b) => a.name.localeCompare(b.name));
-  const domains = (ids: string[]) => [...new Set(ids)].map((d) => domainName(state, d)).join(", ") || null;
   return [
     { kind: "all", key: "all", name: EVERYTHING.name, note: plural(state.projects.length, "project") },
     ...state.projects.map((p) => ({ kind: "project" as const, key: `project:${p.id}`, name: p.name, note: null })),
@@ -94,14 +94,14 @@ export function scopeChoices(state: DocqetState): ScopeChoice[] {
         .map(({ role, ...c }) => ({ ...c, note: role })),
     ),
     ...byName(state.initiatives.map((i) => ({ kind: "initiative" as const, key: `initiative:${i.id}`, name: i.name, note: null }))),
-    ...byName(state.domains.map((d) => ({ kind: "domain" as const, key: `domain:${d.id}`, name: d.name, note: null }))),
-    ...byName(state.features.map((f) => ({ kind: "feature" as const, key: `feature:${f.id}`, name: f.name, note: domains(f.parts.map((p) => p.domain)) }))),
+    ...byName(state.areas.map((a) => ({ kind: "area" as const, key: `area:${a.id}`, name: a.name, note: null }))),
+    ...byName(state.features.map((f) => ({ kind: "feature" as const, key: `feature:${f.id}`, name: f.name, note: f.area ? areaName(state, f.area) : null }))),
     ...byName(
       state.capabilities.map((c) => ({
         kind: "capability" as const,
         key: `capability:${c.id}`,
         name: c.name,
-        note: (c.feature ? find(state.features, c.feature)?.name : null) ?? domains(c.levels.map((l) => l.domain)),
+        note: (c.feature ? find(state.features, c.feature)?.name : null) ?? null,
       })),
     ),
   ];
@@ -175,14 +175,14 @@ export function useRowsFor(state: DocqetState, scope: Scope): Read<GapRow[]> {
 export const acrossRows = (rows: GapRow[]): RiskAcross<Gap> =>
   summed([...rows].sort((a, b) => b.score - a.score).map((r) => ({ item: r.gap, risk: r.risk, on: r.on, score: r.score, verdict: r.verdict })));
 
-/* The decisions held on the scope: on its capabilities, the features and domains they're in, and what they're built on. */
+/* The decisions held on the scope: on its capabilities, the features and areas they're in, and what they're built on. */
 export function holdersIn(state: DocqetState, holders: DecisionHolder[], scope: Scope): DecisionHolder[] {
   if (scope.project) return holders.filter((h) => h.doc.from.some((f) => f.project === scope.project));
   if (!scope.capabilities) return holders;
   const ids = new Set(scope.capabilities.map((c) => c.id));
   return holders.filter((h) => {
     if (h.kind === "capability") return ids.has(h.doc.id);
-    if (h.kind === "domain") return domainCapabilities(state, h.doc as Domain).some((c) => ids.has(c.id));
+    if (h.kind === "area") return areaCapabilities(state, h.doc as Area).some((c) => ids.has(c.id));
     return (h.doc as { capabilities?: string[] }).capabilities?.some((c) => ids.has(c)) ?? false;
   });
 }

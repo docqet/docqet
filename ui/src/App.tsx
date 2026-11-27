@@ -17,7 +17,7 @@ import FindingsPage from "./pages/findings/List";
 import RulePage from "./pages/rules/View";
 import CapabilityView from "./pages/capabilities/View";
 import ConceptView from "./pages/concepts/View";
-import DomainView from "./pages/domains/View";
+import AreaView from "./pages/areas/View";
 import FeatureView from "./pages/features/View";
 import InitiativeView from "./pages/initiatives/View";
 import PersonaView from "./pages/personas/View";
@@ -193,8 +193,8 @@ function content(state: DocqetState, route: Route, layoutKey: string): ReactNode
         return <CapabilityView key={id} {...props} />;
       case "feature":
         return <FeatureView key={id} {...props} />;
-      case "domain":
-        return <DomainView key={id} {...props} />;
+      case "area":
+        return <AreaView key={id} {...props} />;
       case "persona":
         return <PersonaView key={id} {...props} />;
       case "problem":

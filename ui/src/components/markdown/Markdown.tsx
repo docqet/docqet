@@ -12,7 +12,7 @@ import { capabilityTarget, featureTarget, type DocqetState, type Pick, type Targ
 
 /*
  * Markdown, wherever the UI shows it: a doc's body (a capability's, feature's,
- * concept's, rule's, persona's, domain's, mechanism's or component's) and the
+ * concept's, rule's, persona's, area's, mechanism's or component's) and the
  * text values in its frontmatter.
  *
  * It's the author's own embellishment, so nothing about it is assumed. It

@@ -5,7 +5,6 @@ import type { DocResource, FiguresResource } from "./shared";
 export type ConstraintResource = DocResource &
   FiguresResource & {
     source: string | null;
-    /* As `<id>@<domain>`. */
     rules: string[];
     mechanisms: string[];
     capabilities: string[];

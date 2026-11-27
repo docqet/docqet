@@ -21,8 +21,8 @@ import { READINESS_BANDS, RISK_BANDS, type RiskBand, type RubricExample, type Ru
 
 /*
  * What Docqet's own words mean, in one place, so a Term's popover isn't the
- * only way to find out: every term, grouped as the domain overview groups
- * them; the stability levels, with maturity, exposure and readiness, which
+ * only way to find out: every term, grouped as Docqet's own concept docs
+ * group them; the stability levels, with maturity, exposure and readiness, which
  * are worked out from them; and the stability rubric as a plain reference. Each term
  * is anchored by its ID, as `?view=glossary#gap`, so anything can link to it.
  */
@@ -51,13 +51,13 @@ export default function GlossaryPage({ state, route }: { state: DocqetState; rou
 
 /* ——— Terms ——— */
 
-/* The terms in groups, as the domain overview's "Every concept" has them. Any not named here go last. */
+/* The terms in groups. Any not named here go last. */
 const GROUPS: { title: string; ids: TermId[] }[] = [
-  { title: "The product", ids: ["product", "project", "contradiction", "domain", "feature", "capability", "rule", "concept"] },
+  { title: "The product", ids: ["product", "project", "contradiction", "area", "feature", "capability", "rule", "concept"] },
   { title: "The problem space", ids: ["persona", "problem", "constraint"] },
   { title: "How it's built", ids: ["mechanism", "component"] },
   { title: "Where intention and reality differ", ids: ["open-decision", "gap", "product-gap", "technical-gap", "tradeoff", "risk", "spread"] },
-  { title: "Stability and readiness", ids: ["stability", "maturity", "exposure", "rubric", "readiness"] },
+  { title: "Stability and readiness", ids: ["stability", "maturity", "exposure", "rubric", "readiness", "improvement", "part"] },
   { title: "Evidence", ids: ["evidence"] },
 ];
 
@@ -204,12 +204,12 @@ function Levels() {
       <Section
         id="maturity"
         title="Maturity"
-        note="How far along the work on a feature, domain or project is, for planning: how much of the work under way is stable and supported. It's an indication about the whole, not a verdict on each part, and it doesn't say whether people can use it: that's readiness."
+        note="How far along the work on a feature, area or project is, for planning: how much of the work under way is stable and supported. It's an indication about the whole, not a verdict on each part, and it doesn't say whether people can use it: that's readiness."
       >
         <Box component="p" sx={noteSx}>
-          A feature's maturity is the average of its capabilities' scores, each weighted by its level, drafts left out. A capability that spans domains counts
-          once, at its lowest level. A domain's comes from its parts of features, each at its levels there, and a project's from its features, each weighted as
-          a capability in its band would be. Starting new work lowers it without anything getting worse, and 100% isn't the goal.
+          A feature's maturity is the average of its capabilities' scores, each weighted by its level, drafts left out. A capability written in several projects
+          counts once, at the lowest of its levels there. An area's and a project's come from their features, each weighted as a capability in its band would
+          be. Starting new work lowers it without anything getting worse, and 100% isn't the goal.
         </Box>
         <TableContainer sx={narrowTableSx}>
           <Table aria-label="Each level's score and weight">
@@ -260,9 +260,9 @@ function Levels() {
       <Section id="exposure" title="Exposure" note={TERMS.exposure.means}>
         <Box component="p" sx={noteSx}>
           Each gap has a risk on each capability it&rsquo;s on, from 0 to 100. A capability is exposed to its riskiest gap&rsquo;s share of the most it could
-          be: a certain, damaging gap reaching everyone that breaks a claim its level makes. Several capabilities, as in a feature, domain, project or what
-          serves a persona, count by their level, weighted as in maturity, so exposure on GA counts for most. Drafts don&rsquo;t count. Only the riskiest gap on
-          each capability counts, so closing a lesser one doesn&rsquo;t change it.
+          be: a certain, damaging gap reaching everyone that breaks a claim its level makes. Several capabilities, as in a feature, area, project or what serves
+          a persona, count by their level, weighted as in maturity, so exposure on GA counts for most. Drafts don&rsquo;t count. Only the riskiest gap on each
+          capability counts, so closing a lesser one doesn&rsquo;t change it.
         </Box>
         <Box component="p" sx={noteSx}>
           It isn&rsquo;t stability: a level is declared, and exposure never changes it. Promoting a capability can raise its exposure, where its gaps break a
@@ -297,8 +297,8 @@ function Levels() {
           {TERMS.readiness.more}
         </Box>
         <Box component="p" sx={noteSx}>
-          It's a recommendation, and you're the judge. Every page lists its improvements by area, one level down, each with its potential, how ready it could be
-          with all of the area settled, and its next step: promoting a capability, or a feature&rsquo;s or domain&rsquo;s capabilities, to their next level,
+          It's a recommendation, and you're the judge. Every page lists its improvements by part, one level down, each with its potential, how ready it could be
+          with all of the part settled, and its next step: promoting a capability, or a feature&rsquo;s or area&rsquo;s capabilities, to their next level,
           closing a gap, or answering a rated open decision. They're what could be done, not a finish line. A draft is not started, and never counts.
         </Box>
         <TableContainer sx={narrowTableSx}>

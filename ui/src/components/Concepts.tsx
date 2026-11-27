@@ -57,19 +57,7 @@ export function ConceptIcon({ size = 16 }: { size?: number }) {
  * With `popovers`, hovering one shows what it means first; inside a popover
  * of its own, it doesn't.
  */
-export function ConceptChips({
-  concepts,
-  onOpen,
-  popovers = true,
-  scopeOf,
-}: {
-  concepts: Concept[];
-  onOpen: (id: string) => void;
-  popovers?: boolean;
-  /* Where a concept is from, such as its domain, said beside those whose names repeat here. */
-  scopeOf?: (concept: Concept) => string;
-}) {
-  const repeated = new Set(concepts.map((c) => c.name).filter((name, i, all) => all.indexOf(name) !== i));
+export function ConceptChips({ concepts, onOpen, popovers = true }: { concepts: Concept[]; onOpen: (id: string) => void; popovers?: boolean }) {
   return (
     <Box component="span" sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
       {concepts.map((c) => {
@@ -102,11 +90,6 @@ export function ConceptChips({
             }}
           >
             {c.name}
-            {scopeOf && repeated.has(c.name) ? (
-              <Box component="span" sx={{ ml: "5px", fontWeight: 450, opacity: 0.75 }}>
-                {scopeOf(c)}
-              </Box>
-            ) : null}
           </Box>
         );
         return popovers ? (
@@ -130,7 +113,7 @@ export function related(state: DocqetState, concept: Concept): Concept[] {
   const ids = new Set<string>();
   for (const f of concept.from)
     for (const c of f.confusedWith ?? []) {
-      const to = c.concept ? conceptLinked(state, c.concept, f.domain) : undefined;
+      const to = c.concept ? conceptLinked(state, c.concept) : undefined;
       if (to) ids.add(to.id);
     }
   for (const f of concept.from)

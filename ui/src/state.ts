@@ -44,8 +44,8 @@ export type Confusion = { concept: string | null; term: string | null; summary: 
 
 /*
  * The frontmatter fields that say something rather than link, so each is its
- * contribution's own, as its body is. Each type has some: open decisions on a
- * domain, feature, capability, mechanism or component; a rule's why; what a
+ * contribution's own, as its body is. Each type has some: open decisions on an
+ * area, feature, capability, mechanism or component; a rule's why; what a
  * concept is confused with. A persona has none: what it needs is in its body.
  * Text values are Markdown.
  */
@@ -76,12 +76,10 @@ export function fieldsText(f: Fields): string {
   return parts.join(" ");
 }
 
-/* What one project says about a doc, in one domain: each doc has one from every project and domain that declares it. */
+/* What one project says about a doc: each doc has one from every project that declares it. */
 export type Contribution = Fields & {
   /* Where it's defined, and its file, from that project's folder. */
   project: string;
-  /* The domain it's written in, which says what its rule and concept links mean. */
-  domain: string;
   file: string;
   name: string;
   description?: string;
@@ -93,17 +91,14 @@ export type Contribution = Fields & {
 };
 
 /*
- * A doc, put together from every contribution to it (see combine). Its ID
- * depends on its type, as the spec's Domains section says: a domain, feature
- * or capability keeps its own ID, one across everything; a rule or concept is
- * `<id>@<domain>`. Its name, description, body and file are its first
+ * A doc, put together from every contribution to it (see combine). Its ID is
+ * one across the product. Its name, description, body and file are its first
  * contribution's.
  */
 export type Doc = Fields & {
   id: string;
-  /* The project and domain its first contribution is from. */
+  /* The project its first contribution is from. */
   project: string;
-  domain: string;
   file: string;
   name: string;
   description?: string;
@@ -111,28 +106,26 @@ export type Doc = Fields & {
   from: Contribution[];
 };
 
-/* A part of the business, with a language of its own. Features and capabilities span domains; each has a part in it. */
-export type Domain = Doc & {
-  /* The features it has a part in, in the order they come up. */
+/* A group of features, so a large product can be seen a part at a time. It has no language of its own. */
+export type Area = Doc & {
+  /* The features that name it, by name. */
   features: string[];
-  /* The capabilities in no feature that it builds part of. */
+  /* Every capability in those features. */
   capabilities: string[];
-  /* 0 to 100, from its parts of features, or null with none, as the server works it out. */
+  /* 0 to 100, from its features, or null with none, as the server works it out. */
   maturity: number | null;
   band: Level | null;
-  /* Every capability with a part in it: how ready, and how exposed. */
+  /* Every capability in its features: how ready, and how exposed. */
   readiness: Readiness;
   exposure: Exposure;
 };
 
-/* One domain's part of a feature: the capabilities that domain builds or lists, and its maturity from their levels there. */
-export type Part = { domain: string; capabilities: string[]; maturity: number | null; band: Level | null };
-
-/* A part of what the product offers, grouping the capabilities in it, in every domain that does part of it. */
+/* A part of what the product offers, grouping the capabilities in it. */
 export type Feature = Doc & {
+  /* The area it names, or null. */
+  area: string | null;
+  /* The capabilities that name it, by name. */
   capabilities: string[];
-  /* Its part in each domain, in the order they come up. */
-  parts: Part[];
   /* 0 to 100, from its capabilities, each once at its level in short, or null with none. */
   maturity: number | null;
   band: Level | null;
@@ -151,8 +144,8 @@ export type Capability = Doc & {
   initiatives: string[];
   /* Its level in short: the lowest of `levels`, a draft lowest of all. */
   stability: CapabilityLevel;
-  /* Its level in each domain that builds part of it, and the project that says so. */
-  levels: { project: string; domain: string; level: CapabilityLevel }[];
+  /* Its level in each project that writes it. */
+  levels: { project: string; level: CapabilityLevel }[];
   /* The feature it's in, or null. */
   feature: string | null;
   rules: string[];
@@ -175,8 +168,8 @@ export type Capability = Doc & {
 
 /*
  * How part of the software is built, in the code's words: a mechanism, how
- * something works across a whole project, or a component, one area as the code
- * names it. Neither has a level or a domain; each holds the technical gaps,
+ * something works across a whole project, or a component, one part of the code
+ * as the code names it. Neither has a level; each holds the technical gaps,
  * tradeoffs and open decisions about it. A component lists the capabilities
  * that rely on it; a mechanism applies to every capability its project serves,
  * which the indexer writes as its `capabilities`, or, applying to its
@@ -213,9 +206,9 @@ export type EvidencePlace = { project?: string; file: string; line: number; text
 export type Evidence = { implements: EvidencePlace[]; verifies: EvidencePlace[] };
 
 /*
- * A rule belongs to a domain, not to a capability or feature. Capabilities
+ * A rule is the product's, not a capability's or feature's. Capabilities
  * refer to the rules they follow, so `capabilities` can name several, in
- * different features and domains. A feature's rules are its capabilities'.
+ * different features and areas. A feature's rules are its capabilities'.
  */
 export type Rule = Doc & {
   /* Every capability that follows it, worked out from their `rules`. */
@@ -233,9 +226,9 @@ export type Rule = Doc & {
 export type Concept = Doc & { capabilities: string[]; rules: string[] };
 
 /*
- * A type of person the software serves, one across every domain. What it
- * relates to is worked out from the problems that name it, and the
- * capabilities that solve those.
+ * A type of person the software serves, one across the product. What it
+ * relates to is worked out from the problems that name it, the
+ * capabilities that solve those, and the initiatives that name it.
  */
 export type Persona = Doc & {
   /* How they use the software, such as the role it gives them, and the job title they hold. Either can be null. */
@@ -248,7 +241,7 @@ export type Persona = Doc & {
   /* Every capability that serves them, and the features those are in. */
   capabilities: string[];
   features: string[];
-  /* The initiatives it's part of: whose work they're for. In none, it shows only when everything does. */
+  /* The initiatives that name it: whose work is for them. In none, it shows only when everything does. */
   initiatives: string[];
   /* What serves them: how mature, ready and exposed it is. */
   maturity: number | null;
@@ -259,7 +252,7 @@ export type Persona = Doc & {
 
 /*
  * A pain point one or more personas share, in their words, never naming the
- * software: why it exists. One across every domain. Capabilities say which
+ * software: why it exists. One across the product. Capabilities say which
  * problems they solve; nothing solving it is shown as such.
  */
 export type Problem = Doc & {
@@ -279,13 +272,13 @@ export type Problem = Doc & {
 /*
  * Something imposed from outside that any solution must respect, and nobody
  * on the team can change: a law, a contract, a policy set elsewhere, or a
- * fact of the world. One across every domain. Rules and mechanisms say which
+ * fact of the world. One across the product. Rules and mechanisms say which
  * constraints they respect; nothing respecting it is shown as such.
  */
 export type Constraint = Doc & {
   /* Where it comes from, such as the law or contract, or null when it isn't written down. */
   source: string | null;
-  /* The rules that respect it, as `<id>@<domain>`, and the mechanisms that do. */
+  /* The rules that respect it, and the mechanisms that do. */
   rules: string[];
   mechanisms: string[];
   /* The capabilities it bears on: those following its rules, and those its mechanisms apply to. */
@@ -301,15 +294,15 @@ export type Constraint = Doc & {
 export const respecting = (c: Constraint) => c.rules.length + c.mechanisms.length;
 
 /*
- * A body of work, such as the MVP or what comes after it, one across every
- * domain and project. What it relates to is worked out from the capabilities
- * and personas that list it.
+ * A body of work, such as the MVP or what comes after it, one across the
+ * product. It names the personas its work is for; its capabilities are those
+ * that list it.
  */
 export type Initiative = Doc & {
   /* Every capability that lists it, and the features those are in. */
   capabilities: string[];
   features: string[];
-  /* Every persona that lists it: who its work is for. */
+  /* The personas it names: who its work is for. */
   personas: string[];
   maturity: number | null;
   band: Level | null;
@@ -339,12 +332,10 @@ export type Gap = {
   id: string;
   /* The project that declares it. */
   project?: string;
-  /* A product gap's domain; a technical gap has none. */
-  domain?: string;
   /*
    * What it falls short of: expected outcomes, as
    * `outcome:<quality>/<level>/<id>`, and rules it doesn't hold to yet, as
-   * `rule:<id>`, which combining resolves to `rule:<id>@<domain>`.
+   * `rule:<id>`.
    */
   affects: string[];
   /* What it does to those it reaches when it bites, how likely it is to bite, and how many it would reach. */
@@ -366,7 +357,6 @@ export type Gap = {
 export type Tradeoff = {
   id: string;
   project?: string;
-  domain?: string;
   /* The expected outcomes it falls short of on purpose, as `outcome:<quality>/<level>/<id>`. */
   affects: string[];
   /* What we chose, in a few words, and in a sentence or two. */
@@ -385,7 +375,7 @@ export type Tradeoff = {
 /* The expected outcomes a gap, tradeoff or decision affects, as `outcome:<quality>/<level>/<id>`. */
 export const outcomesAffected = (item: { affects: string[] }) => item.affects.filter((ref) => ref.startsWith("outcome:"));
 
-/* The rules a gap affects, as `<id>@<domain>`, once combining has resolved them. */
+/* The rules a gap affects, by ID. */
 export const rulesAffected = (gap: Gap) => gap.affects.filter((ref) => ref.startsWith("rule:")).map((ref) => ref.slice("rule:".length));
 
 /* What a gap or tradeoff is on: `capability:room-booking`, from `capability:room-booking#no-waitlist@hotel-bookings`. */
@@ -427,8 +417,8 @@ export type RubricQuality = { id: string; name: string; question: string; why: s
 export type RubricKind = { id: string; name: string };
 export type Rubric = { kinds: RubricKind[]; qualities: RubricQuality[] };
 
-/* What the indexer found wrong. `domain` is that of the doc it's about, if it's about one. An advisory one is shown, but never fails a check. */
-export type Finding = { type: string; subject: string; capabilities: string[]; message: string; domain?: string; advisory: boolean };
+/* What the indexer found wrong. An advisory one is shown, but never fails a check. */
+export type Finding = { type: string; subject: string; capabilities: string[]; message: string; advisory: boolean };
 
 /* The findings that fail a check: those that aren't advisory. */
 export const failingFindings = (state: DocqetState) => state.findings.filter((f) => !f.advisory);
@@ -436,7 +426,7 @@ export const failingFindings = (state: DocqetState) => state.findings.filter((f)
 /* What the page shows at once: the projects it's showing, and everything they define, together. */
 export type DocqetState = {
   projects: Project[];
-  domains: Domain[];
+  areas: Area[];
   features: Feature[];
   capabilities: Capability[];
   rules: Rule[];
@@ -481,30 +471,29 @@ const LEVEL_ORDER: readonly Level[] = STABILITY_LEVEL_IDS;
 /* A level's place in order, a draft before Prototype. */
 const rank = (level: CapabilityLevel) => (level === null ? -1 : LEVEL_ORDER.indexOf(level));
 
-/* A rule's or concept's ID without its domain: `booking@billing` is `booking`. */
-export const bareId = (id: string) => (id.includes("@") ? id.slice(0, id.lastIndexOf("@")) : id);
-
-/* The rule or concept a link from a doc in `domain` means, keyed as combining keys them: the domain it names, else its own. */
-const inDomain = (link: string, domain: string) => (link.includes("@") ? link : `${link}@${domain}`);
-
 /* The projects that contribute to a doc, each once, in order. */
 export const docProjects = (doc: Doc) => [...new Set(doc.from.map((f) => f.project))];
-/* The domains a doc is written in, each once, in order. */
-export const docDomains = (doc: Doc) => [...new Set(doc.from.map((f) => f.domain))];
-export const domainName = (state: DocqetState, id: string) => find(state.domains, id)?.name ?? id;
+export const areaName = (state: DocqetState, id: string) => find(state.areas, id)?.name ?? id;
 export const projectName = (state: DocqetState, id: string) => find(state.projects, id)?.name ?? id;
 
-/* A feature's part in a domain, if it has one. */
-export const partOf = (feature: Feature | undefined, domain: string) => feature?.parts.find((p) => p.domain === domain);
+/* The area a feature names, if it's showing. */
+export const areaOfFeature = (state: DocqetState, feature: Feature | undefined) => (feature?.area ? find(state.areas, feature.area) : undefined);
+
+/* The area a capability's feature names, if any. */
+export const areaOfCapability = (state: DocqetState, capability: Capability) =>
+  areaOfFeature(state, capability.feature ? find(state.features, capability.feature) : undefined);
 
 /* Capabilities by ID, in the order given, leaving out any not showing. */
 export const capabilitiesById = (state: DocqetState, ids: string[]) => ids.flatMap((id) => find(state.capabilities, id) ?? []);
 
-/* Every capability with a part in a domain: those in its parts of features, and those in no feature. */
-export function domainCapabilities(state: DocqetState, domain: Domain): Capability[] {
-  const ids = [...domain.features.flatMap((id) => partOf(find(state.features, id), domain.id)?.capabilities ?? []), ...domain.capabilities];
-  return capabilitiesById(state, [...new Set(ids)]);
+/* The areas some capabilities' features name, each once, in the order the areas are listed. */
+export function areasOf(state: DocqetState, capabilities: Capability[]): string[] {
+  const ids = new Set(capabilities.flatMap((c) => areaOfCapability(state, c)?.id ?? []));
+  return state.areas.filter((a) => ids.has(a.id)).map((a) => a.id);
 }
+
+/* Every capability in an area's features. */
+export const areaCapabilities = (state: DocqetState, area: Area): Capability[] => capabilitiesById(state, area.capabilities);
 
 /* The contradictions a doc has, and gap or tradeoff IDs its projects both declare, as combining found them. */
 export const contradictionsOf = (state: DocqetState, type: string, id: string) =>
@@ -527,22 +516,22 @@ export function ruleAppliesTo(state: DocqetState, rule: Rule): { capability: Cap
 export type Target = { items: string[]; row?: string };
 
 /* Something the side panel can show and the map can be filtered to. */
-export type Pick = { kind: "domain" | "feature" | "capability" | "concept" | "persona"; id: string };
+export type Pick = { kind: "area" | "feature" | "capability" | "concept" | "persona"; id: string };
 
-/* A card on the map: a feature's part in a domain, or a capability in no feature, in a domain. */
-export const featureCard = (feature: string, domain: string) => `feature:${feature}@${domain}`;
-export const capabilityCard = (capability: string, domain: string) => `capability:${capability}@${domain}`;
-export const domainGroup = (domain: string) => `domain:${domain}`;
-/* A persona's card, above the domains. */
+/* A card on the map: a feature, or a capability in no feature. */
+export const featureCard = (feature: string) => `feature:${feature}`;
+export const capabilityCard = (capability: string) => `capability:${capability}`;
+/* An area's region on the map, or, with null, the region of what's in no area. */
+export const areaGroup = (area: string | null) => (area === null ? "area:" : `area:${area}`);
+/* A persona's card, above the areas. */
 export const personaCard = (persona: string) => `persona:${persona}`;
 
-/* Every card a capability is on: each part of its feature that has it, or its own card in each domain. */
+/* The card a capability is on: its feature's, or its own when it's in no feature. */
 export function cardsOf(state: DocqetState, capabilityId: string): string[] {
   const c = find(state.capabilities, capabilityId);
   if (!c) return [];
   const feature = c.feature ? find(state.features, c.feature) : undefined;
-  if (feature) return feature.parts.filter((p) => p.capabilities.includes(c.id)).map((p) => featureCard(feature.id, p.domain));
-  return [...new Set(c.levels.map((l) => l.domain))].map((d) => capabilityCard(c.id, d));
+  return [feature ? featureCard(feature.id) : capabilityCard(c.id)];
 }
 
 const rowsOf = (capabilityIds: string[]) => capabilityIds.map((id) => `li[data-capability="${CSS.escape(id)}"]`).join(",");
@@ -552,19 +541,18 @@ export function capabilityTarget(state: DocqetState, capabilityId: string): Targ
   return { items: cardsOf(state, capabilityId), row: rowsOf([capabilityId]) };
 }
 
-/* Where a feature is on the canvas: its card in every domain it spans. */
+/* Where a feature is on the canvas: its card. */
 export function featureTarget(state: DocqetState, featureId: string): Target {
-  const f = find(state.features, featureId);
-  return { items: (f?.parts ?? []).map((p) => featureCard(featureId, p.domain)) };
+  return { items: find(state.features, featureId) ? [featureCard(featureId)] : [] };
 }
 
 /* The capabilities a concept or persona relates to: those that use the concept, or serve the persona. */
 const capabilitiesOf = (state: DocqetState, pick: Pick) =>
   (pick.kind === "persona" ? find(state.personas, pick.id) : find(state.concepts, pick.id))?.capabilities ?? [];
 
-/* Where something the panel shows is on the canvas: a domain's region, a feature's or capability's cards, a concept's capabilities' rows, or a persona's card and those of the capabilities that serve them. */
+/* Where something the panel shows is on the canvas: an area's region, a feature's or capability's cards, a concept's capabilities' rows, or a persona's card and those of the capabilities that serve them. */
 export function targetOf(state: DocqetState, pick: Pick): Target {
-  if (pick.kind === "domain") return { items: [domainGroup(pick.id)] };
+  if (pick.kind === "area") return { items: [areaGroup(pick.id)] };
   if (pick.kind === "feature") return featureTarget(state, pick.id);
   if (pick.kind === "capability") return capabilityTarget(state, pick.id);
   const users = capabilitiesOf(state, pick);
@@ -574,7 +562,7 @@ export function targetOf(state: DocqetState, pick: Pick): Target {
 
 /* Every doc of a pick's kind. */
 export const pickList = (state: DocqetState, kind: Pick["kind"]): Doc[] =>
-  ({ domain: state.domains, feature: state.features, capability: state.capabilities, concept: state.concepts, persona: state.personas })[kind];
+  ({ area: state.areas, feature: state.features, capability: state.capabilities, concept: state.concepts, persona: state.personas })[kind];
 
 /* A pick's name, as the filter bar and back button say it. */
 export function pickName(state: DocqetState, pick: Pick): string {
@@ -604,9 +592,9 @@ export function conceptsOf(state: DocqetState, capabilityIds: string[]): Concept
 export const featureConcepts = (state: DocqetState, feature: Feature) => conceptsOf(state, feature.capabilities);
 
 /*
- * What filtering leaves on the map: everything any of the picks covers. A
- * domain covers its cards and every capability on them, a feature its cards
- * in every domain, a capability the cards it's on, a concept every capability
+ * What filtering leaves on the map: everything any of the picks covers. An
+ * area covers its features' cards and every capability on them, a feature its
+ * card, a capability the card it's on, a concept every capability
  * that uses it, and a persona every capability that serves them. Capabilities
  * on those cards that none covers are faded. Null when there's no filter.
  */
@@ -621,19 +609,15 @@ export function filterBy(state: DocqetState, picks: Pick[]): MapFilter | null {
     for (const card of cardsOf(state, id)) cards.add(card);
   };
   for (const pick of picks) {
-    if (pick.kind === "domain") {
-      const domain = find(state.domains, pick.id);
-      for (const id of domain?.capabilities ?? []) {
-        capabilities.add(id);
-        cards.add(capabilityCard(id, pick.id));
-      }
-      for (const id of domain?.features ?? []) {
-        cards.add(featureCard(id, pick.id));
-        for (const c of partOf(find(state.features, id), pick.id)?.capabilities ?? []) capabilities.add(c);
+    if (pick.kind === "area") {
+      const area = find(state.areas, pick.id);
+      for (const id of area?.features ?? []) {
+        cards.add(featureCard(id));
+        for (const c of find(state.features, id)?.capabilities ?? []) capabilities.add(c);
       }
     } else if (pick.kind === "feature") {
       const feature = find(state.features, pick.id);
-      for (const p of feature?.parts ?? []) cards.add(featureCard(pick.id, p.domain));
+      if (feature) cards.add(featureCard(pick.id));
       for (const id of feature?.capabilities ?? []) capabilities.add(id);
     } else if (pick.kind === "capability") {
       addCapability(pick.id);
@@ -654,9 +638,6 @@ export const appliesAt = (outcome: ExpectedOutcome, level: CapabilityLevel) =>
   level !== null && levelIndex(outcome.level) <= levelIndex(level) && (!outcome.until || levelIndex(outcome.until) >= levelIndex(level));
 
 /* The level after this one: Prototype after a draft, or null after GA. */
-/* A capability's level in a domain: its own there, as it can differ by domain, or else its level in short. */
-export const levelInDomain = (c: Capability, domain: string): CapabilityLevel => c.levels.find((l) => l.domain === domain)?.level ?? c.stability;
-
 export const nextLevel = (level: CapabilityLevel): Level | null => LEVEL_ORDER[rank(level) + 1] ?? null;
 
 /* Every outcome of a quality, in level order. */
@@ -676,7 +657,7 @@ export function expectedOutcome(rubric: Rubric | null, id: string): { outcome: E
 export const openDecisions = (doc: Doc): Decision[] => doc.from.flatMap((f) => f.decisions ?? []);
 
 /* A doc that holds decisions, with its kind, as a decision's way back to where it was made. */
-export type DecisionHolder = { kind: "domain" | "feature" | "capability" | "mechanism" | "component"; doc: Doc };
+export type DecisionHolder = { kind: "area" | "feature" | "capability" | "mechanism" | "component"; doc: Doc };
 
 /*
  * What a gap, tradeoff or decision affects, each found: an expected outcome,
@@ -709,8 +690,8 @@ export function affectedBy(state: DocqetState, item: { affects: string[] }): Aff
 /* An open decision, with the doc it's held on. */
 export type HeldDecision = { decision: Decision; on: DecisionHolder };
 
-/* The concept a link from a doc in `domain` means: the one in the domain it names with `@<domain>`, else its own domain's. */
-export const conceptLinked = (state: DocqetState, link: string, domain: string): Concept | undefined => find(state.concepts, inDomain(link, domain));
+/* The concept a link names. */
+export const conceptLinked = (state: DocqetState, link: string): Concept | undefined => find(state.concepts, link);
 
 /*
  * Whether a capability holds to a rule it follows: not yet, when one of its
@@ -808,7 +789,7 @@ export type Risk = {
 /*
  * Something that would raise a readiness, and by how much, as the server
  * works it out: promoting a capability to its next level, or every
- * capability in a feature (`feature`) or a domain (`domain`) to its own next
+ * capability in a feature (`feature`) or an area (`area`) to its own next
  * level, which raises maturity, or closing a gap or answering a rated
  * decision, which lowers exposure. `capabilities` is where it changes
  * something among those counted: for a promotion of several, those promoted. Readiness, maturity and exposure are what they'd be after it,
@@ -817,12 +798,12 @@ export type Risk = {
  * what could be done, not what has to be.
  */
 export type Improvement = {
-  kind: "promote" | "promote-feature" | "promote-domain" | "close" | "answer";
+  kind: "promote" | "promote-feature" | "promote-area" | "close" | "answer";
   capability: Capability | null;
   from: Level | null;
   to: Level | null;
   feature: Feature | null;
-  domain: Domain | null;
+  area: Area | null;
   gap: Gap | null;
   decision: HeldDecision | null;
   capabilities: Capability[];
@@ -835,7 +816,7 @@ export type Improvement = {
 
 /*
  * Somewhere a readiness could rise, as the server works it out, one level
- * below what the readiness is of: a domain, feature or capability among
+ * below what the readiness is of: an area, feature or capability among
  * those counted, a gap or decision spanning more than one of them, or, for
  * a capability, one step. `potential` is what readiness would be with all
  * of it settled, every capability in it at GA with nothing open, or its
@@ -843,9 +824,9 @@ export type Improvement = {
  * most, null when no one step does. Potentials overlap, so they don't add
  * up.
  */
-export type Area = {
-  kind: "domain" | "feature" | "capability" | "gap" | "decision" | "promotion";
-  domain: Domain | null;
+export type Part = {
+  kind: "area" | "feature" | "capability" | "gap" | "decision" | "promotion";
+  area: Area | null;
   feature: Feature | null;
   capability: Capability | null;
   capabilities: Capability[];
@@ -860,7 +841,7 @@ export const gapsOn = (state: DocqetState, capability: Capability) => [
 ];
 
 /*
- * The readiness of some capabilities, as of a feature, domain, persona or
+ * The readiness of some capabilities, as of a feature, area, persona or
  * project: a recommendation, 0 to 100, for people to judge by. It's their
  * maturity, each at its level in short, less their exposure:
  * maturity × (1 − exposure). With it, the two it's worked out from, how
@@ -881,7 +862,7 @@ export type Readiness = {
   notStarted: Capability[];
   improvements: Improvement[];
   /* Where it could rise, one level below what it's of, by how far, most first. */
-  areas: Area[];
+  parts: Part[];
 };
 
 /* How many it's worked out from: the started ones. */
@@ -906,7 +887,7 @@ export const readyShare = (r: Readiness) => (r.percent === null ? null : r.perce
 
 /*
  * What's at stake across some gaps, as in a capability, feature,
- * domain, persona or component: each one's risk and verdict there, its
+ * area, persona or component: each one's risk and verdict there, its
  * highest score on the capabilities `within` where given, or its risk
  * anywhere, riskiest first; the highest of those, and its verdict; and how many fall in each
  * verdict. Its score is null with no gaps.
@@ -965,7 +946,7 @@ export function inRiskOrder<T>(items: T[], of: (item: T) => Gap): T[] {
 export type PageAt = Pick | { kind: TechnicalKind | "problem" | "constraint" | "initiative"; id: string } | { kind: "gaps"; id: "" };
 
 const PAGE_KINDS: Exclude<PageAt["kind"], "gaps">[] = [
-  "domain",
+  "area",
   "feature",
   "capability",
   "concept",
@@ -1010,7 +991,7 @@ export function mapHref(at?: Pick): string {
   return `?${params}`;
 }
 
-const PICK_KINDS: Pick["kind"][] = ["domain", "feature", "capability", "concept", "persona"];
+const PICK_KINDS: Pick["kind"][] = ["area", "feature", "capability", "concept", "persona"];
 
 /* What the map's address asks it to open, from a detail page's way back. */
 export function shownInUrl(): Pick | null {

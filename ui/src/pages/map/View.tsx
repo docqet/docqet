@@ -14,7 +14,7 @@ import { navigate, useSearch } from "../../routes";
 import {
   RISK_BANDS,
   cardsOf,
-  domainGroup,
+  areaGroup,
   filterBy,
   find,
   mapHref,
@@ -40,13 +40,13 @@ import { STABILITY_LEVEL_IDS, levelColor } from "../../components/stability/stab
  */
 type Lens = "stability" | "risk";
 const LENSES: { id: Lens; label: string; tip: string }[] = [
-  { id: "stability", label: "Maturity", tip: "Each capability's stability level, and each feature's and domain's maturity" },
-  { id: "risk", label: "Exposure", tip: "What the open gaps on each capability, feature and domain put at stake: their exposure" },
+  { id: "stability", label: "Maturity", tip: "Each capability's stability level, and each feature's and area's maturity" },
+  { id: "risk", label: "Exposure", tip: "What the open gaps on each capability, feature and area put at stake: their exposure" },
 ];
 
 /*
  * The map: the features and capabilities of the projects showing, on a
- * canvas, in their domains, with their personas. It answers how everything
+ * canvas, in their areas, with their personas. It answers how everything
  * fits together. Clicking something peeks at it in a slim panel, which leads
  * to its page; the filters set there show across the top, beside what the
  * cards are colored by. Where the cards sit is this browser's own, for each
@@ -81,7 +81,7 @@ export default function MapPage({ state, layoutKey }: { state: DocqetState; layo
   const filtered = useMemo(() => filterBy(state, filters), [state, filters]);
   const items = useMemo(() => mapItems(state, openHere, filtered?.cards), [state, openHere, filtered]);
   const groups = useMemo(() => mapGroups(state, openHere), [state, openHere]);
-  /* Open something and bring it into view. When the filter hides all of it, the filter is cleared. A domain shows while any of its cards do. */
+  /* Open something and bring it into view. When the filter hides all of it, the filter is cleared. An area shows while any of its cards do. */
   const open = (pick: Pick) => {
     setPeekAt({ pick, move: true });
     const visible = (id: string) => {
@@ -245,7 +245,7 @@ function litSx(ids: string[], color: "concept" | "persona"): SystemStyleObject<T
 
 /*
  * What the peek has open is lit on the map just as it is while hovered: a
- * domain's region, a feature's cards, or a capability's rows and cards. Its
+ * area's region, a feature's card, or a capability's rows and cards. Its
  * look is the hover rules' in FeatureMap and Canvas.
  */
 const LIT: SystemStyleObject<Theme> = { borderColor: "primary.main", boxShadow: (t) => t.vars.palette.lit.ring };
@@ -254,7 +254,7 @@ function focusSx(at: Pick | null): SystemStyleObject<Theme> | null {
   if (!at || at.kind === "concept") return null;
   const id = CSS.escape(at.id);
   if (at.kind === "persona") return { [`& .slot[data-persona="${id}"] > .MuiCard-root`]: LIT };
-  if (at.kind === "domain") return { [`& .group[data-id="${CSS.escape(domainGroup(at.id))}"]`]: LIT };
+  if (at.kind === "area") return { [`& .group[data-id="${CSS.escape(areaGroup(at.id))}"]`]: LIT };
   if (at.kind === "feature") return { [`& .slot[data-feature="${id}"] > .MuiCard-root`]: LIT };
   return { [`& .slot[data-capability="${id}"] > .MuiCard-root`]: LIT, [`& li[data-capability="${id}"]`]: LIT_ROW };
 }

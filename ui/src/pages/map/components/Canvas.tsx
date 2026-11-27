@@ -36,7 +36,7 @@ export type Pos = { x: number; y: number };
 export type Size = { w: number; h: number };
 export type CanvasItem = { id: string; node: ReactNode };
 /*
- * A region drawn behind some of the cards, such as a domain behind its
+ * A region drawn behind some of the cards, such as an area behind its
  * features. It wraps wherever its cards are, so it stretches to follow one
  * dragged away, and can be resized larger than that. Dragging its grip moves
  * it with its cards. `label` sits in the room above them, and clicking the
@@ -729,11 +729,11 @@ const itemSx: SystemStyleObject<Theme> = {
 };
 
 /*
- * A domain: a wash behind its cards, sized by Canvas to wrap them or larger,
+ * An area: a wash behind its cards, sized by Canvas to wrap them or larger,
  * with its grip, name and maturity in the room above them. Its grip moves it
  * with its cards, its edges resize it, a click opens it, and dragging
  * anywhere else on it moves the canvas, as the background does. Its grip
- * waits in the margin left of its name, showing only while the domain is
+ * waits in the margin left of its name, showing only while the area is
  * hovered or dragged.
  */
 const groupSx: SystemStyleObject<Theme> = {
@@ -777,7 +777,7 @@ const groupLabelSx: SystemStyleObject<Theme> = {
 };
 
 /*
- * The edges and corners a domain is resized by, straddling its border. They
+ * The edges and corners an area is resized by, straddling its border. They
  * keep the same size on screen at any zoom, undoing the canvas's (--zoom, set
  * by Canvas), so they're as easy to catch zoomed out as in. The bottom right
  * corner, the one most reached for, is the largest and shows a mark on hover.

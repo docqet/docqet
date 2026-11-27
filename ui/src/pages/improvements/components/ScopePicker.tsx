@@ -8,7 +8,6 @@ import Popover from "@mui/material/Popover";
 import type { Theme } from "@mui/material/styles";
 import type { SystemStyleObject } from "@mui/system";
 import { NAMES } from "../../../components/names";
-import { DomainIcon } from "../../../components/names";
 import { InitiativeIcon } from "../../../components/shell/ScopeFilter";
 import { withParam } from "../../../routes";
 import type { DocqetState } from "../../../state";
@@ -27,7 +26,7 @@ const KINDS: { kind: ScopeKind | "any"; name: string }[] = [
   { kind: "project", name: "Projects" },
   { kind: "persona", name: "Personas" },
   { kind: "initiative", name: "Initiatives" },
-  { kind: "domain", name: "Domains" },
+  { kind: "area", name: "Areas" },
   { kind: "feature", name: "Features" },
   { kind: "capability", name: "Capabilities" },
 ];
@@ -37,7 +36,7 @@ const ONE: Record<ScopeKind, string> = {
   project: "Project",
   persona: "Persona",
   initiative: "Initiative",
-  domain: "Domain",
+  area: "Area",
   feature: "Feature",
   capability: "Capability",
 };
@@ -48,7 +47,6 @@ const FEW = 4;
 function KindIcon({ kind }: { kind: ScopeKind }) {
   if (kind === "all") return <LayersOutlinedIcon sx={{ fontSize: 18, color: "text.secondary" }} />;
   if (kind === "project") return <FolderOutlinedIcon sx={{ fontSize: 18, color: "text.secondary" }} />;
-  if (kind === "domain") return <DomainIcon size={18} />;
   if (kind === "initiative") return <InitiativeIcon size={18} />;
   return <>{NAMES[kind].icon}</>;
 }
@@ -145,7 +143,7 @@ export function ScopePicker({ state, scope }: { state: DocqetState; scope: Scope
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={onKey}
-            placeholder="Find a project, persona, domain, feature or capability"
+            placeholder="Find a project, persona, area, feature or capability"
             aria-label="Find what it's for"
             sx={{
               flex: 1,

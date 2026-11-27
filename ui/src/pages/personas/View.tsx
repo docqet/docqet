@@ -6,7 +6,7 @@ import { Term } from "../../components/term/Term";
 import { NAMES } from "../../components/names";
 import { PersonaAvatar, personaNameAndRole } from "../../components/Personas";
 import { ProblemRows } from "../../components/Problems";
-import { docDomains, find, type DocqetState, type Persona } from "../../state";
+import { areasOf, find, type DocqetState, type Persona } from "../../state";
 import { ExposureStat, MaturityStat } from "../../components/indexParts";
 import { docHref, type Route } from "../../routes";
 import { Empty, Section, Stat, Tabs, currentTab, type TabDef } from "../../components/shell/layout";
@@ -16,7 +16,7 @@ import { openAcross, OpenTab, TopGaps } from "../../components/doc/Open";
 import { ImprovementsList, ImprovementsSection, ImprovementsStat, IMPROVEMENTS_TAB } from "../../components/improvements/Improvements";
 import { DocView } from "../../components/doc/DocPage";
 import { DocHeader } from "../../components/doc/DocPage";
-import { DomainTrail } from "../../components/doc/DocPage";
+import { AreaTrail } from "../../components/doc/DocPage";
 import { Sources } from "../../components/doc/About";
 import { hasBody } from "../../components/doc/About";
 import { Bodies } from "../../components/doc/About";
@@ -44,7 +44,7 @@ export function PersonaPage({ persona, route, ...go }: DocPageProps & { persona:
   const problems = persona.problems.flatMap((id) => find(state.problems, id) ?? []);
   const features = persona.features.flatMap((id) => find(state.features, id) ?? []);
   const loose = capabilities.filter((c) => !c.feature);
-  const domains = [...new Set(capabilities.flatMap((c) => docDomains(c)))];
+  const areas = areasOf(state, capabilities);
   const readiness = persona.readiness;
   const open = openAcross(capabilities, readiness, undefined, false);
   const { name, role } = personaNameAndRole(persona);
@@ -52,7 +52,7 @@ export function PersonaPage({ persona, route, ...go }: DocPageProps & { persona:
     { id: "readiness", label: "Readiness", term: "readiness" as const },
     { id: "problems", label: "Their problems", term: "problem" as const, count: problems.length },
     { id: "serves", label: "What serves them", term: "capability" as const, count: capabilities.length },
-    { id: IMPROVEMENTS_TAB, label: "Improvements", term: "improvement" as const, count: readiness.areas.length || undefined },
+    { id: IMPROVEMENTS_TAB, label: "Improvements", term: "improvement" as const, count: readiness.parts.length || undefined },
     ...(hasBody(persona) ? [{ id: "about", label: "About" }] : []),
   ];
   const tab = currentTab(route, tabs);
@@ -70,7 +70,7 @@ export function PersonaPage({ persona, route, ...go }: DocPageProps & { persona:
             {name}
           </Box>
         }
-        trail={domains.length ? <DomainTrail state={state} domains={domains} /> : undefined}
+        trail={areas.length ? <AreaTrail state={state} areas={areas} /> : undefined}
         stats={
           <>
             <Stat

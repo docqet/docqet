@@ -34,8 +34,8 @@ export const LEFT_KINDS: Record<LeftKind, { one: string; many: string; Icon: typ
   tradeoff: { one: "Tradeoff", many: "Tradeoffs", Icon: BalanceRoundedIcon, color: "text.secondary" },
 };
 
-/* A gap's kind: a product gap is in a domain; a technical gap, on a mechanism or component, isn't. */
-export const gapKind = (gap: { domain?: string }): LeftKind => (gap.domain ? "product-gap" : "technical-gap");
+/* A gap's kind: a technical gap is on a mechanism or component; a product gap is on anything else. */
+export const gapKind = (gap: { id: string }): LeftKind => (/^(mechanism|component):/.test(gap.id) ? "technical-gap" : "product-gap");
 
 /* A gap's kind, as a label before what it says: "Product" in a gap's amber, or "Technical", quieter. */
 export function GapKindTag({ kind }: { kind: LeftKind }) {

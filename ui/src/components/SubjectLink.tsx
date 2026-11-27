@@ -1,6 +1,5 @@
 import Box from "@mui/material/Box";
 import { NAMES, TECHNICAL_NAMES } from "./names";
-import { DomainIcon } from "./names";
 import { CapabilityStability } from "./CapabilityLabel";
 import { docHref, type DocKind } from "../routes";
 import { find, technicalDoc, type Capability, type Doc, type DocqetState } from "../state";
@@ -39,14 +38,14 @@ export function SubjectLink({
   const technical = type === "mechanism" || type === "component";
   const doc: Doc | undefined = technical
     ? technicalDoc(state, `${type}:${id}`)
-    : find<Doc>(type === "domain" ? state.domains : type === "feature" ? state.features : state.capabilities, id);
+    : find<Doc>(type === "area" ? state.areas : type === "feature" ? state.features : state.capabilities, id);
   if (!doc)
     return (
       <Box component="span" sx={[subjectSx, quiet && quietSx]}>
         {id}
       </Box>
     );
-  const icon = type === "domain" ? <DomainIcon size={15} /> : KIND_NAMES[type as keyof typeof KIND_NAMES]?.icon;
+  const icon = KIND_NAMES[type as keyof typeof KIND_NAMES]?.icon;
   return (
     <Box component="span" sx={{ display: "inline-flex", alignItems: "center", gap: 1, minWidth: 0 }}>
       <Box component="a" href={docHref(type as DocKind, id)} sx={[subjectSx, quiet && quietSx, { "&:hover": { color: "primary.main" } }]}>

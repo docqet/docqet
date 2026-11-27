@@ -8,14 +8,14 @@ import { StabilityMark } from "../stability/StabilityMark";
 import { Term } from "../term/Term";
 import { CapabilityStability } from "../CapabilityLabel";
 import { TECHNICAL_NAMES, NAMES, type ExploreKind } from "../names";
-import { ConstraintIcon, DomainIcon, ProblemIcon } from "../names";
+import { ConstraintIcon, AreaIcon, ProblemIcon } from "../names";
 import { PersonaAvatar, personaNameAndRole } from "../Personas";
 import { ProjectIcon } from "../shell/ProductFilter";
 import { InitiativeIcon } from "../shell/ScopeFilter";
 import { InitiativeTags } from "../Initiatives";
 import {
+  areaName,
   contradictionsOf,
-  domainName,
   pageHref,
   projectName,
   type Capability,
@@ -53,7 +53,7 @@ export const KIND_NAMES: Record<Pick["kind"] | TechnicalKind | "problem" | "cons
 export const tabHref = (tab: string) => withParam("tab", tab);
 
 /*
- * The looks doc pages share. A card holds rows, such as a domain's concepts
+ * The looks doc pages share. A card holds rows, such as an area's features
  * or what implements something; in a Section it sits flush with the
  * section's width.
  */
@@ -75,7 +75,7 @@ export const lineSx: SystemStyleObject<Theme> = {
   "& a": { color: "primary.main", textDecoration: "none" },
 };
 
-/* A line apiece: a domain's or feature's name, then its level, maturity or readiness. */
+/* A line apiece: an area's or feature's name, then its level, maturity or readiness. */
 export const levelsSx: SystemStyleObject<Theme> = {
   display: "flex",
   flexDirection: "column",
@@ -247,28 +247,28 @@ export function DocHeader({
   );
 }
 
-/* A domain in a trail, as a link to its page. */
-export function DomainCrumb({ state, id }: { state: DocqetState; id: string }) {
+/* An area in a trail, as a link to its page. */
+export function AreaCrumb({ state, id }: { state: DocqetState; id: string }) {
   return (
-    <Crumb href={docHref("domain", id)} icon={<DomainIcon size={14} />}>
-      {domainName(state, id)}
+    <Crumb href={docHref("area", id)} icon={<AreaIcon size={14} />}>
+      {areaName(state, id)}
     </Crumb>
   );
 }
 
-/* The domains something spans, as links. */
-export function DomainTrail({ state, domains }: { state: DocqetState; domains: string[] }) {
-  if (!domains.length) return <span>In no domain</span>;
+/* The areas something is in, or what serves it is, as links. */
+export function AreaTrail({ state, areas }: { state: DocqetState; areas: string[] }) {
+  if (!areas.length) return <span>In no area</span>;
   return (
     <>
-      {domains.map((id, i) => (
+      {areas.map((id, i) => (
         <Fragment key={id}>
           {i ? (
             <Box component="span" sx={faintSx}>
               +
             </Box>
           ) : null}
-          <DomainCrumb state={state} id={id} />
+          <AreaCrumb state={state} id={id} />
         </Fragment>
       ))}
     </>

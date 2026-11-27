@@ -32,7 +32,7 @@ export default function BuiltPage({ state, route }: { state: DocqetState; route:
     <View title="How it's built" wide>
       <PageHeader
         title="How it's built"
-        lede="How is it meant to be built? Mechanisms work across a whole project or product; components are one area of the code. Worst gap first."
+        lede="How is it meant to be built? Mechanisms work across a whole project or product; components are one part of the code. Worst gap first."
       />
       <Tabs tabs={tabs} current={tab} />
       {docs.length ? <TechnicalTable state={state} kind={kind} docs={docs} /> : <Empty>No {kind}s are written down yet.</Empty>}

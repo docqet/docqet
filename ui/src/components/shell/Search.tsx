@@ -13,12 +13,11 @@ import { StabilityTrack } from "../stability/StabilityTrack";
 import { ConceptIcon } from "../Concepts";
 import { PersonaIcon } from "../Personas";
 import { InitiativeIcon } from "./ScopeFilter";
-import { ConstraintIcon, DomainIcon, ProblemIcon } from "../names";
+import { ConstraintIcon, AreaIcon, ProblemIcon } from "../names";
 import { ProjectIcon } from "./ProductFilter";
 import { searchProduct, type SearchResultResource } from "../../services/docqet/search";
 import {
-  docDomains,
-  domainName,
+  areaName,
   find,
   docProjects,
   projectName,
@@ -35,12 +34,12 @@ import { isAbort } from "../../services/docqet/client";
 import { ReadError, useDelayed } from "../ReadFallback";
 
 /*
- * What choosing a result does: opens a domain, feature, capability, concept,
+ * What choosing a result does: opens an area, feature, capability, concept,
  * persona, problem, constraint or rule on its page, or shows only that project.
  */
 export type Selection = { pick: Pick | { kind: "problem" | "constraint" | "initiative"; id: string } } | { rule: string } | { project: string };
 
-type Kind = "project" | "domain" | "feature" | "capability" | "rule" | "concept" | "persona" | "problem" | "constraint" | "initiative";
+type Kind = "project" | "area" | "feature" | "capability" | "rule" | "concept" | "persona" | "problem" | "constraint" | "initiative";
 
 type Entry = {
   key: string;
@@ -57,7 +56,7 @@ type Entry = {
 
 const GROUPS: { kind: Kind; label: string }[] = [
   { kind: "project", label: "Projects" },
-  { kind: "domain", label: "Domains" },
+  { kind: "area", label: "Areas" },
   { kind: "feature", label: "Features" },
   { kind: "capability", label: "Capabilities" },
   { kind: "rule", label: "Rules" },
@@ -114,24 +113,22 @@ function index(state: DocqetState, all: Project[]): Entry[] {
 }
 
 function entries(state: DocqetState): (Entry & { projects: string[] })[] {
-  /* "Guest stays + Billing": the domains something is written in. Found by them too. */
-  const domains = (ids: string[]) => ids.map((id) => domainName(state, id)).join(" + ");
   return [
-    ...state.domains.map((d) => ({
-      key: `domain:${d.id}`,
-      kind: "domain" as const,
-      title: d.name,
-      context: plural(d.features.length, "feature", "features"),
-      target: { pick: { kind: "domain" as const, id: d.id } },
-      projects: docProjects(d),
+    ...state.areas.map((a) => ({
+      key: `area:${a.id}`,
+      kind: "area" as const,
+      title: a.name,
+      context: plural(a.features.length, "feature", "features"),
+      target: { pick: { kind: "area" as const, id: a.id } },
+      projects: docProjects(a),
     })),
     ...state.features.map((f) => {
-      const spans = domains(f.parts.map((p) => p.domain));
+      const capabilities = plural(f.capabilities.length, "capability", "capabilities");
       return {
         key: `feature:${f.id}`,
         kind: "feature" as const,
         title: f.name,
-        context: `${spans} · ${plural(f.capabilities.length, "capability", "capabilities")}`,
+        context: f.area ? `${areaName(state, f.area)} · ${capabilities}` : capabilities,
         target: { pick: { kind: "feature" as const, id: f.id } },
         projects: docProjects(f),
       };
@@ -140,7 +137,7 @@ function entries(state: DocqetState): (Entry & { projects: string[] })[] {
       key: `capability:${c.id}`,
       kind: "capability" as const,
       title: c.name,
-      context: `${(c.feature && find(state.features, c.feature)?.name) || "Not in a feature"} · ${domains(docDomains(c))}`,
+      context: (c.feature && find(state.features, c.feature)?.name) || "Not in a feature",
       level: c.stability,
       target: { pick: { kind: "capability" as const, id: c.id } },
       projects: docProjects(c),
@@ -149,7 +146,7 @@ function entries(state: DocqetState): (Entry & { projects: string[] })[] {
       key: `rule:${r.id}`,
       kind: "rule" as const,
       title: r.name,
-      context: r.capabilities.length ? appliesTo(state, r) : domainName(state, r.domain),
+      context: r.capabilities.length ? appliesTo(state, r) : r.description || "No capability follows it yet",
       target: { rule: r.id },
       projects: docProjects(r),
     })),
@@ -157,7 +154,7 @@ function entries(state: DocqetState): (Entry & { projects: string[] })[] {
       key: `concept:${c.id}`,
       kind: "concept" as const,
       title: c.name,
-      context: `${state.domains.length > 1 ? `${domainName(state, c.domain)} · ` : ""}${c.description ?? plural(c.capabilities.length, "capability", "capabilities")}`,
+      context: c.description ?? plural(c.capabilities.length, "capability", "capabilities"),
       target: { pick: { kind: "concept" as const, id: c.id } },
       projects: docProjects(c),
     })),
@@ -227,7 +224,7 @@ function highlight(title: string, terms: string[]): ReactNode {
 const MOD = typeof navigator !== "undefined" && /Mac|iPhone|iPad/.test(navigator.userAgent) ? "⌘" : "Ctrl";
 
 /*
- * Search across projects, domains, features, capabilities, rules, concepts,
+ * Search across projects, areas, features, capabilities, rules, concepts,
  * personas, problems and constraints. The header only says how to open it; `/` or Ctrl/⌘ + K, or
  * clicking that, opens it in the middle of the page over a blurred canvas.
  * The arrow keys move through the results, Enter shows one on the canvas, and
@@ -312,7 +309,7 @@ export default function Search({ state, all, onSelect }: { state: DocqetState; a
     setOpen(false);
   };
 
-  const placeholder = all.length > 1 ? "Search projects, features, capabilities…" : "Search domains, features, capabilities, rules…";
+  const placeholder = all.length > 1 ? "Search projects, features, capabilities…" : "Search areas, features, capabilities, rules…";
   const theme = useTheme();
   const phone = useMediaQuery(theme.breakpoints.down("sm"), { noSsr: true });
   const still = useMediaQuery("(prefers-reduced-motion: reduce)", { noSsr: true });
@@ -405,7 +402,7 @@ export default function Search({ state, all, onSelect }: { state: DocqetState; a
             type="search"
             value={query}
             placeholder={placeholder}
-            aria-label="Search projects, domains, features, capabilities, rules, concepts, personas, problems, and constraints"
+            aria-label="Search projects, areas, features, capabilities, rules, concepts, personas, problems, and constraints"
             aria-expanded={q.length > 0}
             aria-controls="search-results"
             aria-activedescendant={flat[active] ? `result-${flat[active].key}` : undefined}
@@ -456,7 +453,7 @@ export default function Search({ state, all, onSelect }: { state: DocqetState; a
           sx={{ flex: 1, minHeight: 0, maxHeight: { sm: 440 }, overflowY: "auto", p: 0.75 }}
         >
           {!q ? (
-            <Box sx={emptySx}>Find a project, domain, feature, capability, rule, concept, persona, problem, or constraint, and open it.</Box>
+            <Box sx={emptySx}>Find a project, area, feature, capability, rule, concept, persona, problem, or constraint, and open it.</Box>
           ) : groups.length ? (
             groups.map((g) => (
               <div key={g.kind} role="group" aria-label={g.label}>
@@ -597,7 +594,7 @@ function Kbd({ children }: { children: ReactNode }) {
 function KindIcon({ kind }: { kind: Kind }) {
   const sx = { fontSize: 16, flex: "none" };
   if (kind === "project") return <ProjectIcon size={16} />;
-  if (kind === "domain") return <DomainIcon size={16} />;
+  if (kind === "area") return <AreaIcon size={16} />;
   if (kind === "feature") return <WidgetsOutlinedIcon sx={{ ...sx, color: "secondary.main" }} />;
   if (kind === "capability") return <BoltOutlinedIcon sx={{ ...sx, color: "primary.main" }} />;
   if (kind === "concept") return <ConceptIcon />;

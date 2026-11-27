@@ -5,11 +5,11 @@ import { StabilitySpread } from "../../components/stability/StabilitySpread";
 import { Term } from "../../components/term/Term";
 import { NAMES } from "../../components/names";
 import { PersonaRows } from "../../components/Personas";
-import { byFeature, capabilitiesById, docDomains, find, type DocqetState, type Problem } from "../../state";
+import { areasOf, byFeature, capabilitiesById, find, type DocqetState, type Problem } from "../../state";
 import { ExposureStat, MaturityStat } from "../../components/indexParts";
 import { docHref, type Route } from "../../routes";
 import { Empty, Section, Stat, Tabs, currentTab, type TabDef } from "../../components/shell/layout";
-import { Avatars, docGo, Crumb, DocHeader, DocView, DomainTrail, levelsSx, lineSx, tabHref, type DocPageProps } from "../../components/doc/DocPage";
+import { Avatars, docGo, Crumb, DocHeader, DocView, AreaTrail, levelsSx, lineSx, tabHref, type DocPageProps } from "../../components/doc/DocPage";
 import { openAcross, OpenTab, TopGaps } from "../../components/doc/Open";
 import { ImprovementsList, ImprovementsSection, ImprovementsStat, IMPROVEMENTS_TAB } from "../../components/improvements/Improvements";
 import { Bodies, hasBody, Sources } from "../../components/doc/About";
@@ -38,7 +38,7 @@ export function ProblemPage({ problem, route, ...go }: DocPageProps & { problem:
   const features = groups.flatMap((g) => g.feature ?? []);
   const loose = groups.find((g) => !g.feature)?.capabilities ?? [];
   const personas = problem.personas.flatMap((id) => find(state.personas, id) ?? []);
-  const domains = [...new Set(capabilities.flatMap((c) => docDomains(c)))];
+  const areas = areasOf(state, capabilities);
   const readiness = problem.readiness;
   const open = openAcross(capabilities, readiness, undefined, false);
   const name = problem.name;
@@ -46,7 +46,7 @@ export function ProblemPage({ problem, route, ...go }: DocPageProps & { problem:
   const tabs: TabDef[] = [
     { id: "readiness", label: "Readiness", term: "readiness" as const },
     { id: "solves", label: "What solves it", term: "capability" as const, count: capabilities.length },
-    { id: IMPROVEMENTS_TAB, label: "Improvements", term: "improvement" as const, count: readiness.areas.length || undefined },
+    { id: IMPROVEMENTS_TAB, label: "Improvements", term: "improvement" as const, count: readiness.parts.length || undefined },
     ...(hasBody(problem) ? [{ id: "about", label: "About" }] : []),
   ];
   const tab = currentTab(route, tabs);
@@ -56,7 +56,7 @@ export function ProblemPage({ problem, route, ...go }: DocPageProps & { problem:
         state={state}
         kind="problem"
         doc={problem}
-        trail={domains.length ? <DomainTrail state={state} domains={domains} /> : undefined}
+        trail={areas.length ? <AreaTrail state={state} areas={areas} /> : undefined}
         stats={
           <>
             <Stat

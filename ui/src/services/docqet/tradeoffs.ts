@@ -5,7 +5,6 @@ export type TradeoffResource = {
   id: string;
   subject: string;
   project: string;
-  domain: string;
   affects: string[];
   name: string;
   description: string;

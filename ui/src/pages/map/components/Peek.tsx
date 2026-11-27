@@ -9,7 +9,7 @@ import FilterListRoundedIcon from "@mui/icons-material/FilterListRounded";
 import WidgetsOutlinedIcon from "@mui/icons-material/WidgetsOutlined";
 import { ConceptIcon } from "../../../components/Concepts";
 import { Maturity } from "../../../components/maturity/Maturity";
-import { DomainIcon } from "../../../components/names";
+import { AreaIcon } from "../../../components/names";
 import { PersonaAvatar, PersonaIcon, personaNameAndRole } from "../../../components/Personas";
 import { ReadinessMark } from "../../../components/Readiness";
 import { docHref, type DocKind } from "../../../routes";
@@ -17,26 +17,14 @@ import { InlineMarkdown } from "../../../components/markdown/Markdown";
 import { GapRiskMark, RiskScore } from "../../../components/risk/RiskScore";
 import { StabilityMark } from "../../../components/stability/StabilityMark";
 import { Term } from "../../../components/term/Term";
-import {
-  domainCapabilities,
-  partOf,
-  domainName,
-  find,
-  pickList,
-  type Capability,
-  type DocqetState,
-  type Exposure,
-  type Gap,
-  type Pick,
-  type RiskAcross,
-} from "../../../state";
+import { areaCapabilities, find, pickList, type Capability, type DocqetState, type Exposure, type Gap, type Pick, type RiskAcross } from "../../../state";
 import { gapsAcross, someOf } from "../../../model";
 import { InitiativeTags, initiativesOf } from "../../../components/Initiatives";
 import { panelSx } from "./Canvas";
 
 /* Each kind's icon and name, as the peek and the map's filter bar say them. */
 export const PICK_KINDS: Record<Pick["kind"], { one: string; icon: (size: number) => ReactNode }> = {
-  domain: { one: "Domain", icon: (size) => <DomainIcon size={size} /> },
+  area: { one: "Area", icon: (size) => <AreaIcon size={size} /> },
   feature: { one: "Feature", icon: (size) => <WidgetsOutlinedIcon sx={{ fontSize: size, color: "secondary.main" }} /> },
   capability: { one: "Capability", icon: (size) => <BoltOutlinedIcon sx={{ fontSize: size, color: "primary.main" }} /> },
   concept: { one: "Concept", icon: (size) => <ConceptIcon size={size} /> },
@@ -88,7 +76,7 @@ function summarize(state: DocqetState, at: Pick): Summary | null {
         </Box>
       ),
       figures: [
-        { label: "Improvements", value: c.readiness.areas.length, tab: "improvements" },
+        { label: "Improvements", value: c.readiness.parts.length, tab: "improvements" },
         { label: "Rules held", value: rules.length ? `${held} / ${rules.length}` : 0, tab: "rules" },
         { label: "Personas served", value: c.personas.filter((id) => find(state.personas, id)).length, tab: "overview" },
       ],
@@ -106,7 +94,7 @@ function summarize(state: DocqetState, at: Pick): Summary | null {
       mark: <Maturity value={f.maturity} of="none of its capabilities has a level" spread={capabilities.map((c) => c.stability)} />,
       figures: [
         { label: "Capabilities", value: capabilities.length, tab: "capabilities" },
-        { label: "Improvements", value: f.readiness.areas.length, tab: "improvements" },
+        { label: "Improvements", value: f.readiness.parts.length, tab: "improvements" },
         { label: "Personas served", value: new Set(capabilities.flatMap((c) => c.personas)).size, tab: "personas" },
       ],
       risk: f.readiness.gaps,
@@ -114,25 +102,25 @@ function summarize(state: DocqetState, at: Pick): Summary | null {
       within: capabilities,
     };
   }
-  if (at.kind === "domain") {
-    const d = find(state.domains, at.id);
+  if (at.kind === "area") {
+    const d = find(state.areas, at.id);
     if (!d) return null;
-    const capabilities = domainCapabilities(state, d);
+    const capabilities = areaCapabilities(state, d);
     return {
       name: d.name,
       mark: (
         <Maturity
           value={d.maturity}
-          subject="domain"
+          subject="area"
           of="none of its features has a level"
           count={d.features.length}
-          spread={d.features.map((id) => partOf(find(state.features, id), d.id)?.band ?? null)}
+          spread={d.features.map((id) => find(state.features, id)?.band ?? null)}
         />
       ),
       figures: [
         { label: "Features", value: d.features.length, tab: "features" },
         { label: "Capabilities", value: capabilities.length, tab: "features" },
-        { label: "Improvements", value: d.readiness.areas.length, tab: "improvements" },
+        { label: "Improvements", value: d.readiness.parts.length, tab: "improvements" },
       ],
       risk: d.readiness.gaps,
       exposure: d.exposure,
@@ -145,7 +133,6 @@ function summarize(state: DocqetState, at: Pick): Summary | null {
     const rules = c.rules.flatMap((id) => find(state.rules, id) ?? []);
     return {
       name: c.name,
-      where: domainName(state, c.domain),
       mark: null,
       figures: [
         { label: "Capabilities", value: c.capabilities.filter((id) => find(state.capabilities, id)).length, tab: "used" },
@@ -170,7 +157,7 @@ function summarize(state: DocqetState, at: Pick): Summary | null {
     figures: [
       { label: "Capabilities", value: capabilities.length, tab: "serves" },
       { label: "Features", value: p.features.length, tab: "readiness" },
-      { label: "Improvements", value: p.readiness.areas.length, tab: "improvements" },
+      { label: "Improvements", value: p.readiness.parts.length, tab: "improvements" },
     ],
     /* Only what someone using the product would notice: their capabilities' own gaps, each scored on what serves them. */
     risk: someOf(p.readiness.gaps, (g) => capabilities.some((c) => c.open.gaps.includes(g))),

@@ -8,7 +8,7 @@ import { find, type Capability, type DocqetState } from "../state";
 
 /*
  * The initiatives some capabilities are part of, each once, in the order
- * state lists them: what a feature, domain, rule, concept or gap is part of,
+ * state lists them: what a feature, area, rule, concept or gap is part of,
  * worked out from its capabilities.
  */
 export const initiativesOf = (state: DocqetState, capabilities: Capability[]): string[] => {

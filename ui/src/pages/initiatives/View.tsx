@@ -5,7 +5,7 @@ import { StabilitySpread } from "../../components/stability/StabilitySpread";
 import { Term } from "../../components/term/Term";
 import { NAMES } from "../../components/names";
 import { PersonaAvatar } from "../../components/Personas";
-import { docDomains, find, type DocqetState, type Initiative, capabilitiesById } from "../../state";
+import { areasOf, find, type DocqetState, type Initiative, capabilitiesById } from "../../state";
 import { ExposureStat, MaturityStat } from "../../components/indexParts";
 import { docHref, type Route } from "../../routes";
 import { Empty, Section, Stat, Tabs, currentTab, type TabDef } from "../../components/shell/layout";
@@ -15,7 +15,7 @@ import { openAcross, OpenTab, TopGaps } from "../../components/doc/Open";
 import { ImprovementsList, ImprovementsSection, ImprovementsStat, IMPROVEMENTS_TAB } from "../../components/improvements/Improvements";
 import { DocView } from "../../components/doc/DocPage";
 import { DocHeader } from "../../components/doc/DocPage";
-import { DomainTrail } from "../../components/doc/DocPage";
+import { AreaTrail } from "../../components/doc/DocPage";
 import { hasBody } from "../../components/doc/About";
 import { Bodies } from "../../components/doc/About";
 import { ReadinessStat } from "../../components/doc/ReadinessParts";
@@ -41,7 +41,7 @@ export function InitiativePage({ initiative, route, ...go }: DocPageProps & { in
   const capabilities = capabilitiesById(state, initiative.capabilities);
   const features = initiative.features.flatMap((id) => find(state.features, id) ?? []);
   const loose = capabilities.filter((c) => !c.feature);
-  const domains = [...new Set(capabilities.flatMap((c) => docDomains(c)))];
+  const areas = areasOf(state, capabilities);
   const readiness = initiative.readiness;
   const open = openAcross(capabilities, readiness, undefined, false);
   const personas = initiative.personas.flatMap((id) => find(state.personas, id) ?? []);
@@ -49,7 +49,7 @@ export function InitiativePage({ initiative, route, ...go }: DocPageProps & { in
   const tabs: TabDef[] = [
     { id: "readiness", label: "Readiness", term: "readiness" as const },
     { id: "capabilities", label: "Capabilities", term: "capability" as const, count: capabilities.length },
-    { id: IMPROVEMENTS_TAB, label: "Improvements", term: "improvement" as const, count: readiness.areas.length || undefined },
+    { id: IMPROVEMENTS_TAB, label: "Improvements", term: "improvement" as const, count: readiness.parts.length || undefined },
     ...(hasBody(initiative) ? [{ id: "about", label: "About" }] : []),
   ];
   const tab = currentTab(route, tabs);
@@ -59,7 +59,7 @@ export function InitiativePage({ initiative, route, ...go }: DocPageProps & { in
         state={state}
         kind="initiative"
         doc={initiative}
-        trail={domains.length ? <DomainTrail state={state} domains={domains} /> : undefined}
+        trail={areas.length ? <AreaTrail state={state} areas={areas} /> : undefined}
         stats={
           <>
             <Stat
@@ -101,7 +101,7 @@ export function InitiativePage({ initiative, route, ...go }: DocPageProps & { in
               </Box>
             ) : (
               <Box component="p" sx={lineSx}>
-                No persona says it's part of {name}.
+                {name} names no persona yet.
               </Box>
             )}
           </Section>

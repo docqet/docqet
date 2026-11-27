@@ -34,20 +34,17 @@ export const cellSubSx: SystemStyleObject<Theme> = { display: "block", mt: "2px"
 export const wideOnly: SystemStyleObject<Theme> = { display: { xs: "none", sm: "table-cell" } };
 
 /*
- * Capabilities as a table: each one's name, opening its page, its level (in
- * `domain`, when given), its improvements, what would make it more ready,
+ * Capabilities as a table: each one's name, opening its page, its level, its improvements, what would make it more ready,
  * opening that tab of its page, and who it serves. On a phone, who it serves
  * is left out.
  */
 export function CapabilityTable({
   state,
   capabilities,
-  domain,
   compact = false,
 }: {
   state: DocqetState;
   capabilities: Capability[];
-  domain?: string;
   /* Just each one's level, name and improvements, for where it stands. */
   compact?: boolean;
 }) {
@@ -81,7 +78,6 @@ export function CapabilityTable({
         </TableHead>
         <TableBody>
           {capabilities.map((c) => {
-            const level = (domain && c.levels.find((l) => l.domain === domain)?.level) || c.stability;
             return (
               <TableRow key={c.id}>
                 <TableCell sx={{ minWidth: { xs: 120, sm: 240 } }}>
@@ -94,11 +90,11 @@ export function CapabilityTable({
                   )}
                 </TableCell>
                 <TableCell sx={rest}>
-                  <LevelName level={level} name={c.name} />
+                  <LevelName level={c.stability} name={c.name} />
                 </TableCell>
                 {/* Its improvements read as the row's text, not as its name. */}
                 <TableCell sx={{ ...rest, "& a": { fontWeight: 400, textDecoration: "none" } }}>
-                  {c.readiness.areas.length ? (
+                  {c.readiness.parts.length ? (
                     <a href={docHref("capability", c.id, IMPROVEMENTS_TAB)}>
                       <ImprovementsFigure readiness={c.readiness} />
                     </a>

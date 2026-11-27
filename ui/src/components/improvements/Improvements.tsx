@@ -5,7 +5,7 @@ import { keyframes, type Theme } from "@mui/material/styles";
 import type { SystemStyleObject } from "@mui/system";
 import type { ReactNode } from "react";
 import { docHref, sectionHref } from "../../routes";
-import { nextLevel, type Area, type Capability, type Domain, type Feature, type Improvement, type Readiness } from "../../state";
+import { nextLevel, type Area, type Capability, type Feature, type Improvement, type Part, type Readiness } from "../../state";
 import { readinessColor } from "../Readiness";
 import { tabHref } from "../doc/DocPage";
 import { LeftMark, gapKind } from "../left/LeftMark";
@@ -17,14 +17,14 @@ import { STABILITY } from "../stability/stability";
  * Improvements: what would make something more ready, and by how much, as
  * the server works them out with its readiness.
  *
- * They're shown by area, one level below what's being looked at: a
- * product's domains, a domain's, persona's or initiative's features, a
+ * They're shown by part, one level below what's being looked at: a
+ * product's areas, an area's, persona's or initiative's features, a
  * feature's capabilities, and a capability's own steps, with any gap or
- * decision spanning more than one of them as an area of its own. Each area
+ * decision spanning more than one of them as a part of its own. Each part
  * has its potential, what readiness would be with all of it settled, and
  * its next step, the one thing in it that would raise readiness most, drawn
  * together on a bar of the readiness: now, where the next step lands, and
- * the potential. Areas are ordered by potential, most first, and each opens
+ * the potential. Parts are ordered by potential, most first, and each opens
  * its own improvements, so the reader can go down level by level.
  *
  * One at a time, each step is listed flat too: promoting a capability to
@@ -48,8 +48,8 @@ export const IMPROVEMENTS_TAB = "improvements";
 /* What an improvement is about, in a few plain words, for a note or a label: "closing Calendar needs a mouse". */
 export function improvementWords(i: Improvement): string {
   if (i.kind === "promote" && i.capability && i.to) return `${i.capability.name} reaching ${STABILITY[i.to].name}`;
-  if (i.kind === "promote-feature" && i.feature) return `promoting ${i.feature.name}'s ${i.capabilities.length} capabilities`;
-  if (i.kind === "promote-domain" && i.domain) return `promoting ${i.domain.name}'s ${i.capabilities.length} capabilities`;
+  if (i.kind === "promote-feature" && i.feature) return `promoting the ${i.capabilities.length} capabilities in ${i.feature.name}`;
+  if (i.kind === "promote-area" && i.area) return `promoting the ${i.capabilities.length} capabilities in ${i.area.name}`;
   if (i.kind === "close" && i.gap) return `closing ${plainText(i.gap.name)}`;
   if (i.kind === "answer" && i.decision) return `answering ${plainText(i.decision.decision.topic ?? i.decision.decision.question)}`;
   return "";
@@ -89,12 +89,12 @@ function PromoteMark() {
   );
 }
 
-/* What a page or an area is about, which an improvement needn't name. */
-type Here = Capability | Feature | Domain;
+/* What a page or a part is about, which an improvement needn't name. */
+type Here = Capability | Feature | Area;
 
-/* What an improvement does, as a line: its mark, then, conditionally, what would happen. `here` is the capability, feature or domain the page or area is about, which needn't be named. */
+/* What an improvement does, as a line: its mark, then, conditionally, what would happen. `here` is the capability, feature or area the page or part is about, which needn't be named. */
 function ImprovementWhat({ improvement: i, here }: { improvement: Improvement; here?: Here }) {
-  const several = i.kind === "promote-feature" ? i.feature : i.kind === "promote-domain" ? i.domain : null;
+  const several = i.kind === "promote-feature" ? i.feature : i.kind === "promote-area" ? i.area : null;
   if (several)
     return (
       <>
@@ -105,7 +105,7 @@ function ImprovementWhat({ improvement: i, here }: { improvement: Improvement; h
             `all ${i.capabilities.length} of its capabilities`
           ) : (
             <>
-              <a href={docHref(i.kind === "promote-feature" ? "feature" : "domain", several.id)}>{several.name}</a>&rsquo;s {i.capabilities.length} capabilities
+              <a href={docHref(i.kind === "promote-feature" ? "feature" : "area", several.id)}>{several.name}</a>&rsquo;s {i.capabilities.length} capabilities
             </>
           )}
           <Faint> · each to its next level: {levelSteps(i.capabilities)}</Faint>
@@ -166,7 +166,7 @@ function ImprovementWhat({ improvement: i, here }: { improvement: Improvement; h
 function improvementWhy(i: Improvement, readiness: Readiness): string {
   const pct = (n: number) => `${Math.round(n)}%`;
   const parts: string[] = [];
-  if (i.kind === "promote" || i.kind === "promote-feature" || i.kind === "promote-domain") {
+  if (i.kind === "promote" || i.kind === "promote-feature" || i.kind === "promote-area") {
     parts.push(`would raise maturity from ${pct(readiness.maturity ?? 0)} to ${pct(i.maturity)}`);
     const before = readiness.exposure.percent ?? 0;
     if (Math.round(i.exposure) !== Math.round(before)) parts.push(`exposure would be ${pct(i.exposure)}`);
@@ -257,7 +257,7 @@ export function ImprovementRows({ readiness, limit = 8, here }: { readiness: Rea
   );
 }
 
-/* A list of improvements or areas, its links in the text's color. */
+/* A list of improvements or parts, its links in the text's color. */
 const listSx: SystemStyleObject<Theme> = {
   display: "flex",
   flexDirection: "column",
@@ -267,28 +267,28 @@ const listSx: SystemStyleObject<Theme> = {
   "& a:hover": { color: "primary.main" },
 };
 
-/* ——— Areas ——— */
+/* ——— Parts ——— */
 
 const pct = (n: number) => `${Math.round(n)}%`;
 
-/* The step an area would take next, if any: the one that would raise readiness most. */
+/* The step a part would take next, if any: the one that would raise readiness most. */
 export function bestStep(readiness: Readiness): Improvement | null {
   let best: Improvement | null = null;
-  for (const a of readiness.areas) if (a.next && (!best || a.next.gain > best.gain)) best = a.next;
+  for (const a of readiness.parts) if (a.next && (!best || a.next.gain > best.gain)) best = a.next;
   return best ?? readiness.improvements[0] ?? null;
 }
 
-/* What an area is, which its step needn't name. */
-const hereOf = (a: Area): Here | undefined => a.domain ?? a.feature ?? a.capability ?? undefined;
+/* What a part is, which its step needn't name. */
+const hereOf = (a: Part): Here | undefined => a.area ?? a.feature ?? a.capability ?? undefined;
 
-/* Whether an area is one step, rather than a domain, feature or capability with steps in it. */
-const isStep = (a: Area) => a.kind === "gap" || a.kind === "decision" || a.kind === "promotion";
+/* Whether a part is one step, rather than an area, feature or capability with steps in it. */
+const isStep = (a: Part) => a.kind === "gap" || a.kind === "decision" || a.kind === "promotion";
 
-const AREA_KINDS = { domain: "Domain", feature: "Feature", capability: "Capability" } as const;
+const PART_KINDS = { area: "Area", feature: "Feature", capability: "Capability" } as const;
 
-/* Where an area's own improvements are: the Improvements page, for it. */
-function areaHref(a: Area): string | null {
-  const doc = a.domain ?? a.feature ?? a.capability;
+/* Where a part's own improvements are: the Improvements page, for it. */
+function partHref(a: Part): string | null {
+  const doc = a.area ?? a.feature ?? a.capability;
   return doc && !isStep(a) ? sectionHref("improvements", { for: `${a.kind}:${doc.id}` }) : null;
 }
 
@@ -303,7 +303,7 @@ const glow = (t: Theme) => keyframes`
 `;
 
 /*
- * A readiness, and how far an area could raise it, as a bar 0 to 100: now,
+ * A readiness, and how far a part could raise it, as a bar 0 to 100: now,
  * solid in readiness's color; where its next step would land, the same
  * color, lighter; and its potential, faint and dashed. The quarters' edges
  * are ticks, so a step into Partial, Viable or Ready shows. The row it's in
@@ -360,7 +360,7 @@ function RiseBar({ now, next, potential, label }: { now: number; next: number | 
 }
 
 /* While a row is hovered or focused, its next step lights up in the accent and glows, with its figure, and its potential firms up; without motion, the glow holds still. */
-const areaRowSx: SystemStyleObject<Theme> = {
+const partRowSx: SystemStyleObject<Theme> = {
   display: "flex",
   flexDirection: "column",
   gap: 0.75,
@@ -386,9 +386,9 @@ const areaRowSx: SystemStyleObject<Theme> = {
   },
 };
 
-/* An area's figures at the right: where its next step lands, and its potential. */
-function AreaFigures({ area, next }: { area: Area; next: Improvement | null }) {
-  const step = isStep(area);
+/* A part's figures at the right: where its next step lands, and its potential. */
+function PartFigures({ part, next }: { part: Part; next: Improvement | null }) {
+  const step = isStep(part);
   return (
     <Box component="span" sx={{ ml: "auto", display: "inline-flex", alignItems: "baseline", gap: 1, whiteSpace: "nowrap", fontVariantNumeric: "tabular-nums" }}>
       {next ? (
@@ -408,7 +408,7 @@ function AreaFigures({ area, next }: { area: Area; next: Improvement | null }) {
         >
           · potential{" "}
           <Box component="strong" sx={{ fontSize: 14, color: "text.primary", fontWeight: 700 }}>
-            up to {pct(area.potential)}
+            up to {pct(part.potential)}
           </Box>
         </Box>
       ) : null}
@@ -416,21 +416,21 @@ function AreaFigures({ area, next }: { area: Area; next: Improvement | null }) {
   );
 }
 
-/* What an area is, as its row's heading: a domain, feature or capability, linking to its own improvements, or the step it is. */
-function AreaHead({ area, here }: { area: Area; here?: Here }) {
-  if (isStep(area) && area.next)
+/* What a part is, as its row's heading: an area, feature or capability, linking to its own improvements, or the step it is. */
+function PartHead({ part, here }: { part: Part; here?: Here }) {
+  if (isStep(part) && part.next)
     return (
       <Box component="span" sx={whatSx}>
-        <ImprovementWhat improvement={area.next} here={here} />
+        <ImprovementWhat improvement={part.next} here={here} />
       </Box>
     );
-  const doc = area.domain ?? area.feature ?? area.capability;
-  const href = areaHref(area);
+  const doc = part.area ?? part.feature ?? part.capability;
+  const href = partHref(part);
   if (!doc) return null;
   return (
     <Box component="span" sx={{ display: "inline-flex", alignItems: "baseline", flexWrap: "wrap", gap: "2px 8px", minWidth: 0 }}>
       <Box component="span" sx={{ fontSize: 11, fontWeight: 650, letterSpacing: "0.06em", textTransform: "uppercase", color: "text.disabled" }}>
-        {AREA_KINDS[area.kind as keyof typeof AREA_KINDS]}
+        {PART_KINDS[part.kind as keyof typeof PART_KINDS]}
       </Box>
       {href ? (
         <Box component="a" href={href} sx={{ fontWeight: 600 }}>
@@ -439,36 +439,36 @@ function AreaHead({ area, here }: { area: Area; here?: Here }) {
       ) : (
         <strong>{doc.name}</strong>
       )}
-      <Faint>{area.capability?.stability ? STABILITY[area.capability.stability].name : plural(area.capabilities.length, "capability", "capabilities")}</Faint>
+      <Faint>{part.capability?.stability ? STABILITY[part.capability.stability].name : plural(part.capabilities.length, "capability", "capabilities")}</Faint>
     </Box>
   );
 }
 
 /*
- * One area: what it is, where its next step would land and its potential,
+ * One part: what it is, where its next step would land and its potential,
  * the bar, then its next step, or, for a step, what it would change.
  */
-function AreaRow({ area, readiness, here }: { area: Area; readiness: Readiness; here?: Here }) {
+function PartRow({ part, readiness, here }: { part: Part; readiness: Readiness; here?: Here }) {
   const now = readiness.percent ?? 0;
-  const { next } = area;
-  const step = isStep(area);
+  const { next } = part;
+  const step = isStep(part);
   const label = step
     ? `Readiness ${pct(now)}, ${next ? `to ${pct(next.readiness)} with this step` : ""}`
-    : `Readiness ${pct(now)}${next ? `, ${pct(next.readiness)} after its next step` : ""}, up to ${pct(area.potential)} with all of it settled`;
+    : `Readiness ${pct(now)}${next ? `, ${pct(next.readiness)} after its next step` : ""}, up to ${pct(part.potential)} with all of it settled`;
   return (
-    <Box component="li" sx={areaRowSx}>
+    <Box component="li" sx={partRowSx}>
       <Box sx={{ display: "flex", flexWrap: "wrap", alignItems: "baseline", gap: "4px 12px" }}>
-        <AreaHead area={area} here={here} />
-        <AreaFigures area={area} next={next} />
+        <PartHead part={part} here={here} />
+        <PartFigures part={part} next={next} />
       </Box>
-      <RiseBar now={now} next={next?.readiness ?? null} potential={area.potential} label={label} />
+      <RiseBar now={now} next={next?.readiness ?? null} potential={part.potential} label={label} />
       <Box component="span" sx={{ fontSize: 12.5, color: "text.secondary" }}>
         {step && next ? (
           improvementWhy(next, readiness)
         ) : next ? (
           <Box component="span" sx={[whatSx, { display: "inline-flex", flexWrap: "wrap", columnGap: 0.75 }]}>
             <Faint>Next:</Faint>
-            <ImprovementWhat improvement={next} here={hereOf(area)} />
+            <ImprovementWhat improvement={next} here={hereOf(part)} />
           </Box>
         ) : (
           "No one step raises it alone: what's open on it has to be closed together."
@@ -479,11 +479,11 @@ function AreaRow({ area, readiness, here }: { area: Area; readiness: Readiness; 
 }
 
 /*
- * Where a readiness could rise, by area, most first: each with its bar, its
+ * Where a readiness could rise, by part, most first: each with its bar, its
  * next step and its potential. Past `limit`, the rest are folded. With
  * none, a line saying so, and never that anything is done.
  */
-export function AreaRows({ readiness, limit = 6, here }: { readiness: Readiness; limit?: number; here?: Here }) {
+export function PartRows({ readiness, limit = 6, here }: { readiness: Readiness; limit?: number; here?: Here }) {
   const lineSx: SystemStyleObject<Theme> = { fontSize: 13.5, color: "text.secondary" };
   if (readiness.percent === null)
     return (
@@ -491,29 +491,29 @@ export function AreaRows({ readiness, limit = 6, here }: { readiness: Readiness;
         Nothing started yet, so there&rsquo;s no readiness to raise.
       </Box>
     );
-  if (!readiness.areas.length)
+  if (!readiness.parts.length)
     return (
       <Box component="p" sx={lineSx}>
         Nothing written down would raise its readiness now.
       </Box>
     );
-  const shown = readiness.areas.slice(0, limit);
-  const rest = readiness.areas.slice(limit);
+  const shown = readiness.parts.slice(0, limit);
+  const rest = readiness.parts.slice(limit);
   return (
     <Box sx={listSx}>
       <Box component="ul" sx={{ display: "flex", flexDirection: "column" }}>
         {shown.map((a, n) => (
-          <AreaRow key={n} area={a} readiness={readiness} here={here} />
+          <PartRow key={n} part={a} readiness={readiness} here={here} />
         ))}
       </Box>
       {rest.length ? (
         <details>
           <Box component="summary" sx={{ cursor: "pointer", color: "text.secondary" }}>
-            {plural(rest.length, "more area", "more areas")}, each with less potential
+            {plural(rest.length, "more part", "more parts")}, each with less potential
           </Box>
           <Box component="ul" sx={{ display: "flex", flexDirection: "column" }}>
             {rest.map((a, n) => (
-              <AreaRow key={n} area={a} readiness={readiness} here={here} />
+              <PartRow key={n} part={a} readiness={readiness} here={here} />
             ))}
           </Box>
         </details>
@@ -524,12 +524,12 @@ export function AreaRows({ readiness, limit = 6, here }: { readiness: Readiness;
 
 /*
  * Improvements as a figure, in a table's cell or a tile: what the next step
- * that would add most adds, and how many more areas there are, "+14% · 3
+ * that would add most adds, and how many more parts there are, "+14% · 3
  * more"; a quiet dash with none, never "done".
  */
 export function ImprovementsFigure({ readiness }: { readiness: Readiness }) {
   const top = bestStep(readiness);
-  const more = Math.max(readiness.areas.length - 1, 0);
+  const more = Math.max(readiness.parts.length - 1, 0);
   if (!top)
     return (
       <Box component="span" sx={{ color: "text.disabled" }} aria-label="No improvements">
@@ -570,34 +570,34 @@ export function ImprovementsStat({ readiness }: { readiness: Readiness }) {
   );
 }
 
-/* What a list of areas shows: areas with their potential, or, at a capability, its steps. */
-export function areasNote(readiness: Readiness): string {
-  return readiness.areas.length && readiness.areas.every(isStep)
+/* What a list of parts shows: parts with their potential, or, at a capability, its steps. */
+export function partsNote(readiness: Readiness): string {
+  return readiness.parts.length && readiness.parts.every(isStep)
     ? "Each step by where it would take readiness, most first. The bar shows readiness now and where the step would take it. What's worth doing is yours to judge."
     : "Where it could become more ready, by potential: how ready it could be with all of each settled. The bar shows readiness now, where the next step would take it, and the potential. Open one to see what's in it. What's worth doing is yours to judge.";
 }
 
-/* On a first tab, the few areas with most potential, with a way to all of them. */
+/* On a first tab, the few parts with most potential, with a way to all of them. */
 export function ImprovementsSection({ readiness, here, limit = 3 }: { readiness: Readiness; here?: Here; limit?: number }) {
-  const n = readiness.areas.length;
+  const n = readiness.parts.length;
   return (
     <Section
       id="improvements"
       title="Improvements"
       term="improvement"
-      note={areasNote(readiness)}
+      note={partsNote(readiness)}
       aside={n > limit ? <a href={tabHref(IMPROVEMENTS_TAB)}>See all {n}</a> : null}
     >
-      <AreaRows readiness={readiness} limit={limit} here={here} />
+      <PartRows readiness={readiness} limit={limit} here={here} />
     </Section>
   );
 }
 
-/* The Improvements tab: every area, most first. */
+/* The Improvements tab: every part, most first. */
 export function ImprovementsList({ readiness, here }: { readiness: Readiness; here?: Here }) {
   return (
-    <Section title="Improvements" term="improvement" count={readiness.areas.length || undefined} note={areasNote(readiness)}>
-      <AreaRows readiness={readiness} limit={50} here={here} />
+    <Section title="Improvements" term="improvement" count={readiness.parts.length || undefined} note={partsNote(readiness)}>
+      <PartRows readiness={readiness} limit={50} here={here} />
     </Section>
   );
 }

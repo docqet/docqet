@@ -134,8 +134,8 @@ function Subject({ state, finding }: { state: DocqetState; finding: Finding }) {
 
 function docsOf(state: DocqetState, kind: DocKind): Doc[] {
   switch (kind) {
-    case "domain":
-      return state.domains;
+    case "area":
+      return state.areas;
     case "feature":
       return state.features;
     case "capability":

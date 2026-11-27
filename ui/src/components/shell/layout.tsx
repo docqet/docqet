@@ -49,7 +49,7 @@ export function View({ title, wide = false, children }: { title: string; wide?: 
 /*
  * The top of a page. `kind` is the small label over the name, such as a
  * capability's icon and "Capability"; `trail` the breadcrumb above it, such
- * as its domain and feature, as links; `lede` its one sentence; `marks` what
+ * as its area and feature, as links; `lede` its one sentence; `marks` what
  * sits beside the name, such as its stability level; `stats` a row of Stat
  * tiles under it; `actions` anything at the far right. The name is the
  * page's one h1.

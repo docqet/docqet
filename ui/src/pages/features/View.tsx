@@ -6,9 +6,8 @@ import { StabilitySpread } from "../../components/stability/StabilitySpread";
 import { Term } from "../../components/term/Term";
 import { plural } from "../../components/names";
 import { PersonaRows } from "../../components/Personas";
-import { Maturity } from "../../components/maturity/Maturity";
 import { initiativesOf } from "../../components/Initiatives";
-import { domainName, featureConcepts, find, type DocqetState, type Feature, levelInDomain } from "../../state";
+import { featureConcepts, find, type DocqetState, type Feature } from "../../state";
 import { ExposureStat, MaturityStat } from "../../components/indexParts";
 import { type Route } from "../../routes";
 import { Empty, Section, Stat, Tabs, currentTab, type TabDef } from "../../components/shell/layout";
@@ -18,8 +17,7 @@ import { openAcross, OpenTab, TopGaps } from "../../components/doc/Open";
 import { ImprovementsList, ImprovementsSection, ImprovementsStat, IMPROVEMENTS_TAB } from "../../components/improvements/Improvements";
 import { DocView } from "../../components/doc/DocPage";
 import { DocHeader } from "../../components/doc/DocPage";
-import { DomainCrumb } from "../../components/doc/DocPage";
-import { DomainTrail } from "../../components/doc/DocPage";
+import { AreaCrumb } from "../../components/doc/DocPage";
 import { Avatars } from "../../components/doc/DocPage";
 import { Sources } from "../../components/doc/About";
 import { hasBody } from "../../components/doc/About";
@@ -29,7 +27,7 @@ import { DecidedTab } from "../../components/doc/DecidedTab";
 import { CapabilityTable } from "../../components/doc/CapabilityTable";
 import { StandingSummary } from "../../components/doc/RuleTable";
 import { Missing } from "../../components/doc/Missing";
-import { docGo, faintSx, levelsSx, lineSx } from "../../components/doc/DocPage";
+import { docGo, lineSx } from "../../components/doc/DocPage";
 
 /* A feature's page, or what shows when it isn't in the projects showing. */
 export default function FeatureView({ state, id, route }: { state: DocqetState; id: string; route: Route }) {
@@ -54,7 +52,7 @@ export function FeaturePage({ feature, route, ...go }: DocPageProps & { feature:
   const tabs: TabDef[] = [
     { id: "overview", label: "Overview" },
     { id: "capabilities", label: "Capabilities", term: "capability" as const, count: capabilities.length },
-    { id: IMPROVEMENTS_TAB, label: "Improvements", term: "improvement" as const, count: readiness.areas.length || undefined },
+    { id: IMPROVEMENTS_TAB, label: "Improvements", term: "improvement" as const, count: readiness.parts.length || undefined },
     ...(personas.length ? [{ id: "personas", label: "Personas", term: "persona" as const, count: personas.length }] : []),
     ...(decided ? [{ id: "decided", label: "Decided", count: decided }] : []),
     ...(hasBody(feature) ? [{ id: "about", label: "About" }] : []),
@@ -67,7 +65,7 @@ export function FeaturePage({ feature, route, ...go }: DocPageProps & { feature:
         kind="feature"
         doc={feature}
         initiatives={initiativesOf(state, capabilities)}
-        trail={<DomainTrail state={state} domains={feature.parts.map((p) => p.domain)} />}
+        trail={feature.area ? <AreaCrumb state={state} id={feature.area} /> : <span>In no area</span>}
         stats={
           <>
             <Stat
@@ -105,24 +103,6 @@ export function FeaturePage({ feature, route, ...go }: DocPageProps & { feature:
         <>
           <Sources {...go} kind="feature" doc={feature} title="What it is" />
           <Section title="Where it stands">
-            {feature.parts.length > 1 ? (
-              <Box component="ul" sx={levelsSx}>
-                {feature.parts.map((p) => (
-                  <li key={p.domain}>
-                    <DomainCrumb state={state} id={p.domain} />
-                    <Maturity
-                      value={p.maturity}
-                      subject="feature"
-                      of="none of its capabilities here has a level yet"
-                      spread={partLevels(state, p.capabilities, p.domain)}
-                    />
-                    <Box component="span" sx={faintSx}>
-                      {plural(p.capabilities.length, "capability", "capabilities")}
-                    </Box>
-                  </li>
-                ))}
-              </Box>
-            ) : null}
             {capabilities.length ? (
               <StandingSummary state={state} capabilities={capabilities} all={tabHref("capabilities")} />
             ) : (
@@ -142,31 +122,15 @@ export function FeaturePage({ feature, route, ...go }: DocPageProps & { feature:
               }
               count={concepts.length}
             >
-              <ConceptChips concepts={concepts} onOpen={onConcept} scopeOf={(c) => domainName(state, c.domain)} />
+              <ConceptChips concepts={concepts} onOpen={onConcept} />
             </Section>
           ) : null}
         </>
       ) : tab === "capabilities" ? (
-        feature.parts.length ? (
-          feature.parts.map((part) => (
-            <Section
-              key={part.domain}
-              title={feature.parts.length > 1 ? `In ${domainName(state, part.domain)}` : <Term id="capability">Capabilities</Term>}
-              count={part.capabilities.length}
-              aside={
-                feature.parts.length > 1 ? (
-                  <Maturity
-                    value={part.maturity}
-                    subject="feature"
-                    of="none of its capabilities here has a level yet"
-                    spread={partLevels(state, part.capabilities, part.domain)}
-                  />
-                ) : undefined
-              }
-            >
-              <CapabilityTable state={state} capabilities={part.capabilities.flatMap((id) => find(state.capabilities, id) ?? [])} domain={part.domain} />
-            </Section>
-          ))
+        capabilities.length ? (
+          <Section title={<Term id="capability">Capabilities</Term>} count={capabilities.length}>
+            <CapabilityTable state={state} capabilities={capabilities} />
+          </Section>
         ) : (
           <Empty>A part the software doesn't have yet.</Empty>
         )
@@ -200,7 +164,3 @@ export function FeaturePage({ feature, route, ...go }: DocPageProps & { feature:
     </DocView>
   );
 }
-
-/* The levels of a feature's capabilities in one domain, at their levels there. */
-export const partLevels = (state: DocqetState, ids: string[], domain: string) =>
-  ids.flatMap((id) => find(state.capabilities, id) ?? []).map((c) => levelInDomain(c, domain));

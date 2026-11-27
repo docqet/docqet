@@ -169,7 +169,7 @@ function SideNav({ state, at, onGo }: { state: DocqetState; at: Section; onGo: (
           section: "features",
           label: "Features",
           icon: <WidgetsOutlinedIcon />,
-          question: "What can it do? Domains, features and capabilities",
+          question: "What can it do? Areas, features and capabilities",
           count: state.features.length,
         },
         {
@@ -208,7 +208,7 @@ function SideNav({ state, at, onGo }: { state: DocqetState; at: Section; onGo: (
           section: "language",
           label: "Language",
           icon: <ConceptIcon size={20} />,
-          question: "What the words mean, and the rules that must hold",
+          question: "The product's words, and the rules that must hold",
           count: state.concepts.length + state.rules.length,
         },
       ],
@@ -233,7 +233,7 @@ function SideNav({ state, at, onGo }: { state: DocqetState; at: Section; onGo: (
           label: "Improvements",
           icon: <TrendingUpRoundedIcon />,
           question: "What would make it more ready, with every gap and open decision",
-          count: state.status.readiness.areas.length,
+          count: state.status.readiness.parts.length,
         },
         { section: "decided", label: "Decided", icon: <TaskAltRoundedIcon />, question: "Tradeoffs and non-goals", count: state.tradeoffs.length },
         {

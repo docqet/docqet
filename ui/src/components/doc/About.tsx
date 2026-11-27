@@ -4,9 +4,8 @@ import type { Theme } from "@mui/material/styles";
 import type { SystemStyleObject } from "@mui/system";
 import { Facets, facets } from "../Fields";
 import { Body } from "../markdown/Markdown";
-import { DomainIcon } from "../names";
 import { ProjectIcon } from "../shell/ProductFilter";
-import { domainName, projectName, type Contribution, type Doc, type DocqetState } from "../../state";
+import { projectName, type Contribution, type Doc, type DocqetState } from "../../state";
 import { Section } from "../shell/layout";
 import { Crumb, type DocGo } from "./DocPage";
 
@@ -33,8 +32,8 @@ const sourceSx: SystemStyleObject<Theme> = {
   "& > .doc-body .markdown": { maxWidth: "76ch", mt: 0, fontSize: 15, lineHeight: 1.6 },
 };
 
-/* Above what a source says, where several define it: the domain, where they differ, and the project it's from. */
-export function SourceFrom({ state, doc, from }: { state: DocqetState; doc: Doc; from: Contribution }) {
+/* Above what a source says, where several define it: the project it's from. */
+export function SourceFrom({ state, from }: { state: DocqetState; from: Contribution }) {
   return (
     <Box
       sx={{
@@ -48,7 +47,6 @@ export function SourceFrom({ state, doc, from }: { state: DocqetState; doc: Doc;
         borderColor: "divider",
       }}
     >
-      {doc.from.some((o) => o.domain !== from.domain) ? <Crumb icon={<DomainIcon size={14} />}>{domainName(state, from.domain)}</Crumb> : null}
       <Crumb icon={<ProjectIcon size={14} />}>{projectName(state, from.project)}</Crumb>
     </Box>
   );
@@ -71,7 +69,7 @@ export function Sources({ kind, doc, title, aside, ...go }: DocGo & { kind: stri
         <Box sx={sourcesSx}>
           {fielded.map((f, i) => (
             <Box key={i} sx={sourceSx}>
-              <SourceFrom state={state} doc={doc} from={f} />
+              <SourceFrom state={state} from={f} />
               {f.description ? (
                 <Box component="p" sx={{ fontSize: 15, lineHeight: 1.5 }}>
                   {f.description}
@@ -107,7 +105,7 @@ export function Bodies({ doc, ...go }: DocGo & { doc: Doc }) {
     <Box sx={sourcesSx}>
       {written.map((f, i) => (
         <Box key={i} sx={sourceSx}>
-          <SourceFrom state={go.state} doc={doc} from={f} />
+          <SourceFrom state={go.state} from={f} />
           <Body from={f} go={go} limit={BODY_LIMIT} />
         </Box>
       ))}

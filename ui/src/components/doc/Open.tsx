@@ -2,7 +2,6 @@ import { DecisionList } from "../Fields";
 import { LeftLabel } from "../left/LeftMark";
 import { NAMES } from "../names";
 import { TechnicalLink } from "../Technical";
-import { DomainIcon } from "../names";
 import {
   inRiskOrder,
   openDecisions,
@@ -25,7 +24,7 @@ import { tabHref } from "./DocPage";
 import { CapabilityLink, Crumb, cardSx } from "./DocPage";
 
 /* Something that holds open decisions, with what it is. */
-export type Holder = { kind: "domain" | "feature" | "capability" | "mechanism" | "component"; doc: Doc };
+export type Holder = { kind: "area" | "feature" | "capability" | "mechanism" | "component"; doc: Doc };
 
 /* A gap, and for a technical one under a capability, the mechanism or component it's on. */
 export type OpenGap = { gap: Gap; on?: TechnicalDoc };
@@ -35,7 +34,7 @@ export type OpenHere = { holders: Holder[]; decisions: number; gaps: OpenGap[]; 
 
 /*
  * What's open across some capabilities, with the open decisions of `own`,
- * the feature or domain they're under, first. A technical gap on what several
+ * the feature or area they're under, first. A technical gap on what several
  * of them are built on is one gap, so it counts once. With `technical` false,
  * as for a persona, only what someone using the product would notice. Its
  * risk is from `readiness`, theirs, whose gaps are every gap on them, each
@@ -77,7 +76,7 @@ export function HolderLink({ holder }: { holder: Holder }) {
   if (kind === "mechanism" || kind === "component") return <TechnicalLink doc={doc as TechnicalDoc} />;
   if (kind === "capability") return <CapabilityLink capability={doc as Capability} tab={IMPROVEMENTS_TAB} />;
   return (
-    <Crumb href={docHref(kind, doc.id)} icon={kind === "domain" ? <DomainIcon size={14} /> : NAMES[kind].icon}>
+    <Crumb href={docHref(kind, doc.id)} icon={NAMES[kind].icon}>
       {doc.name}
     </Crumb>
   );

@@ -237,7 +237,7 @@ export function facets(kind: string, f: Contribution, go: Go): Facet[] {
         node: (
           <Box component="ul" sx={{ display: "grid", gap: 1, minWidth: 0 }}>
             {f.confusedWith.map((c, i) => {
-              const to = c.concept ? conceptLinked(go.state, c.concept, f.domain) : undefined;
+              const to = c.concept ? conceptLinked(go.state, c.concept) : undefined;
               return (
                 <Box component="li" key={i} sx={{ display: "grid", gap: "2px", minWidth: 0 }}>
                   {to ? (

@@ -13,35 +13,21 @@ import { STABILITY, STABILITY_LEVEL_IDS } from "../../components/stability/stabi
 import { Term } from "../../components/term/Term";
 import { docHref, withParam, type Route } from "../../routes";
 import { Empty, PageHeader, Section, Stat, View } from "../../components/shell/layout";
-import {
-  domainName,
-  levelInDomain,
-  find,
-  gapsOn,
-  partOf,
-  RISK_BANDS,
-  type Capability,
-  type CapabilityLevel,
-  type DocqetState,
-  type Domain,
-  type Feature,
-} from "../../state";
+import { areaName, find, gapsOn, RISK_BANDS, type Area, type Capability, type CapabilityLevel, type DocqetState, type Feature } from "../../state";
 import { ImprovementsFigure, IMPROVEMENTS_TAB } from "../../components/improvements/Improvements";
 import type { Readiness } from "../../state";
 import { DocLink, LevelMark, PersonaFaces, ExposureStat, ellipsisSx, whereSx } from "../../components/indexParts";
 import { InitiativeTags, initiativesOf } from "../../components/Initiatives";
-import { useStatusFor } from "../../model";
-import Skeleton from "@mui/material/Skeleton";
-import { ReadFallback } from "../../components/ReadFallback";
 
-type Group = "domain" | "stability" | "exposure";
-const GROUPS: Group[] = ["domain", "stability", "exposure"];
+type Group = "area" | "stability" | "exposure";
+const GROUPS: Group[] = ["area", "stability", "exposure"];
 
 /*
- * Every domain, feature and capability, and how far along each is. By
- * default a tree: each domain, the features it has a part in, and the
- * capabilities of that part, each with its level in that domain, the risk it
- * is exposed to, its improvements and who it serves. Domains and features show
+ * Every area, feature and capability, and how far along each is. By
+ * default a tree: each area, its features, by name, and their capabilities,
+ * by name, each with its level, the risk it is exposed to, its improvements
+ * and who it serves; then the features in no area, and the capabilities in no
+ * feature. Areas and features show
  * their maturity and exposure in the same columns, as rings, as the map does;
  * what either is worked out from is in its popover. Grouped by stability
  * instead, every capability under its level, least stable first; grouped by
@@ -51,7 +37,7 @@ const GROUPS: Group[] = ["domain", "stability", "exposure"];
  */
 export default function FeaturesPage({ state }: { state: DocqetState; route: Route }) {
   const asked = new URLSearchParams(window.location.search).get("group") as Group | null;
-  const group: Group = asked && GROUPS.includes(asked) ? asked : "domain";
+  const group: Group = asked && GROUPS.includes(asked) ? asked : "area";
   const overall = state.status.maturity;
   /* On a phone the header has no room beside the title, so the grouping goes under it. */
   const phone = useMediaQuery(useTheme().breakpoints.down("sm"), { noSsr: true });
@@ -59,7 +45,7 @@ export default function FeaturesPage({ state }: { state: DocqetState; route: Rou
     <View title="Features" wide>
       <PageHeader
         title="Features"
-        lede="What can it do? Every domain, the features it has a part in, and their capabilities, with how far along each is."
+        lede="What can it do? Every area, its features and their capabilities, with how far along each is."
         stats={
           <>
             <Stat
@@ -81,7 +67,7 @@ export default function FeaturesPage({ state }: { state: DocqetState; route: Rou
               label="Capabilities"
               term="capability"
               value={state.capabilities.length || "None"}
-              note={`${plural(state.features.length, "feature", "features")} · ${plural(state.domains.length, "domain", "domains")}`}
+              note={`${plural(state.features.length, "feature", "features")} · ${plural(state.areas.length, "area", "areas")}`}
             />
           </>
         }
@@ -92,10 +78,10 @@ export default function FeaturesPage({ state }: { state: DocqetState; route: Rou
           <GroupToggle group={group} />
         </Box>
       ) : null}
-      {!state.capabilities.length && !state.domains.length ? (
-        <Empty>No domains, features or capabilities are written down yet.</Empty>
-      ) : group === "domain" ? (
-        <DomainTree state={state} />
+      {!state.capabilities.length && !state.features.length && !state.areas.length ? (
+        <Empty>No areas, features or capabilities are written down yet.</Empty>
+      ) : group === "area" ? (
+        <AreaTree state={state} />
       ) : group === "stability" ? (
         <ByStability state={state} />
       ) : (
@@ -105,9 +91,9 @@ export default function FeaturesPage({ state }: { state: DocqetState; route: Rou
   );
 }
 
-const GROUP_NAMES: Record<Group, string> = { domain: "Domain", stability: "Stability", exposure: "Exposure" };
+const GROUP_NAMES: Record<Group, string> = { area: "Area", stability: "Stability", exposure: "Exposure" };
 
-/* Group by domain, stability or risk, as links that change `&group=`. */
+/* Group by area, stability or risk, as links that change `&group=`. */
 function GroupToggle({ group }: { group: Group }) {
   return (
     <Box role="group" aria-label="Group by" sx={{ display: "inline-flex", alignItems: "center", gap: "2px", fontSize: 13 }}>
@@ -118,7 +104,7 @@ function GroupToggle({ group }: { group: Group }) {
         <Box
           component="a"
           key={g}
-          href={withParam("group", g === "domain" ? null : g)}
+          href={withParam("group", g === "area" ? null : g)}
           aria-current={group === g ? "true" : undefined}
           sx={{
             py: 0.5,
@@ -215,15 +201,12 @@ function ColumnHeads({ first }: { first: ReactNode }) {
   );
 }
 
-const levelIn = (c: Capability, domain?: string): CapabilityLevel => (domain && c.levels.find((l) => l.domain === domain)?.level) || c.stability;
-
 /*
  * A capability's row: its name, linking to its page, and `where` it is when
- * that isn't plain from where the row sits; its level, in `domain` when
- * that's given; its exposure; its improvements, what would make it more
+ * that isn't plain from where the row sits; its level; its exposure; its improvements, what would make it more
  * ready; and the personas it serves.
  */
-function CapabilityRow({ state, capability, domain, where }: { state: DocqetState; capability: Capability; domain?: string; where?: ReactNode }) {
+function CapabilityRow({ state, capability, where }: { state: DocqetState; capability: Capability; where?: ReactNode }) {
   const personas = capability.personas.flatMap((id) => find(state.personas, id) ?? []);
   return (
     <Box component="li" sx={{ ...capabilityRowSx, ...hoverSx }}>
@@ -237,7 +220,7 @@ function CapabilityRow({ state, capability, domain, where }: { state: DocqetStat
         ) : null}
       </Box>
       <Box component="span" sx={levelSx}>
-        <LevelMark name={capability.name} level={levelIn(capability, domain)} />
+        <LevelMark name={capability.name} level={capability.stability} />
       </Box>
       <Box component="span" sx={riskSx}>
         <ExposureMark exposure={capability.exposure} risk={capability.risk} of={capability.name} />
@@ -254,7 +237,7 @@ function CapabilityRow({ state, capability, domain, where }: { state: DocqetStat
 
 /* Improvements in a row: the most one would add, and how many more, linking to the tab that lists them. */
 function ImprovementsLink({ readiness, href }: { readiness: Readiness; href: string }) {
-  if (!readiness.areas.length) return <ImprovementsFigure readiness={readiness} />;
+  if (!readiness.parts.length) return <ImprovementsFigure readiness={readiness} />;
   return (
     <Box component="a" href={href} sx={{ textDecoration: "none", "&&": { color: "inherit", fontWeight: "inherit", "&:hover": { color: "primary.main" } } }}>
       <ImprovementsFigure readiness={readiness} />
@@ -274,18 +257,18 @@ function FoldEmpty({ children }: { children: ReactNode }) {
 /*
  * A row that folds what's under it, open to begin with: its `head`, then its
  * maturity, exposure and improvements under the capability rows' Stability,
- * Exposure and Improvements columns. A domain's row is a little larger, with more room above it, and
+ * Exposure and Improvements columns. An area's row is a little larger, with more room above it, and
  * what's under each is indented by about its chevron.
  */
 function FoldRow({
-  domain = false,
+  area = false,
   head,
   maturity,
   exposure,
   improvements,
   children,
 }: {
-  domain?: boolean;
+  area?: boolean;
   head: ReactNode;
   maturity: ReactNode;
   exposure: ReactNode;
@@ -299,11 +282,11 @@ function FoldRow({
         sx={{
           ...rowSx,
           ...hoverSx,
-          pt: domain ? "14px" : 1,
+          pt: area ? "14px" : 1,
           pr: 1,
           pb: 1,
           pl: 0,
-          fontSize: domain ? 15 : undefined,
+          fontSize: area ? 15 : undefined,
           listStyle: "none",
           cursor: "pointer",
           "&::-webkit-details-marker": { display: "none" },
@@ -333,83 +316,95 @@ function FoldRow({
         </Box>
         <Box component="span" sx={whoSx} />
       </Box>
-      <Box sx={{ pl: domain ? 2.75 : 3.25 }}>{children}</Box>
+      <Box sx={{ pl: area ? 2.75 : 3.25 }}>{children}</Box>
     </details>
   );
 }
 
-/* Each domain, with its parts of features and their capabilities, then any capabilities in no feature. */
-function DomainTree({ state }: { state: DocqetState }) {
+/*
+ * Each area, with its features and their capabilities, by name; then the
+ * features in no area, and any capabilities in no feature.
+ */
+function AreaTree({ state }: { state: DocqetState }) {
+  const unplaced = state.features.filter((f) => !f.area || !find(state.areas, f.area));
+  const loose = state.capabilities.filter((c) => !c.feature || !find(state.features, c.feature));
   return (
     <Box sx={{ fontSize: 13.5 }}>
-      <ColumnHeads first="Domain, feature and capability" />
-      {state.domains.map((d) => (
-        <DomainBranch key={d.id} state={state} domain={d} />
+      <ColumnHeads first="Area, feature and capability" />
+      {state.areas.map((a) => (
+        <AreaBranch key={a.id} state={state} area={a} />
       ))}
-    </Box>
-  );
-}
-
-function DomainBranch({ state, domain }: { state: DocqetState; domain: Domain }) {
-  const features = domain.features.flatMap((id) => find(state.features, id) ?? []);
-  const loose = domain.capabilities.flatMap((id) => find(state.capabilities, id) ?? []);
-  const parts = features.map((f) => partOf(f, domain.id));
-  return (
-    <FoldRow
-      domain
-      maturity={
-        domain.maturity === null ? null : (
-          <MaturityRing
-            progress={domain.maturity}
-            subject="domain"
-            count={parts.filter((p) => p?.maturity != null).length}
-            label={`${domain.name} maturity`}
-            size={22}
-            spread={parts.map((p) => p?.band ?? null)}
-          />
-        )
-      }
-      exposure={<ExposureMark exposure={domain.exposure} risk={domain.readiness.gaps} of={domain.name} />}
-      improvements={<ImprovementsLink readiness={domain.readiness} href={docHref("domain", domain.id, IMPROVEMENTS_TAB)} />}
-      head={<DocLink kind="domain" id={domain.id} name={domain.name} sx={{ ...nameLinkSx, fontWeight: 700 }} />}
-    >
-      {!features.length && !loose.length ? <FoldEmpty>A part of the business the software doesn't serve yet.</FoldEmpty> : null}
-      {features.map((f) => (
-        <FeatureBranch key={f.id} state={state} feature={f} domain={domain.id} />
-      ))}
+      {unplaced.length ? (
+        <FoldRow
+          area
+          maturity={null}
+          exposure={null}
+          head={
+            <Box component="span" sx={{ ...nameLinkSx, fontWeight: 700, color: "text.secondary" }}>
+              No area
+            </Box>
+          }
+        >
+          {unplaced.map((f) => (
+            <FeatureBranch key={f.id} state={state} feature={f} />
+          ))}
+        </FoldRow>
+      ) : null}
       {loose.length ? (
         <div>
-          <Box sx={{ pt: 1.25, pr: 1, pb: 0.75, pl: 0, fontSize: 12.5, color: "text.secondary", borderBottom: 1, borderColor: "divider" }}>
+          <Box sx={{ pt: 1.75, pr: 1, pb: 0.75, pl: 0, fontSize: 12.5, color: "text.secondary", borderBottom: 1, borderColor: "divider" }}>
             In no <Term id="feature">feature</Term>
           </Box>
           <ul>
             {loose.map((c) => (
-              <CapabilityRow key={c.id} state={state} capability={c} domain={domain.id} />
+              <CapabilityRow key={c.id} state={state} capability={c} />
             ))}
           </ul>
         </div>
       ) : null}
+    </Box>
+  );
+}
+
+function AreaBranch({ state, area }: { state: DocqetState; area: Area }) {
+  const features = area.features.flatMap((id) => find(state.features, id) ?? []);
+  return (
+    <FoldRow
+      area
+      maturity={
+        area.maturity === null ? null : (
+          <MaturityRing
+            progress={area.maturity}
+            subject="area"
+            count={features.filter((f) => f.maturity !== null).length}
+            label={`${area.name} maturity`}
+            size={22}
+            spread={features.map((f) => f.band)}
+          />
+        )
+      }
+      exposure={<ExposureMark exposure={area.exposure} risk={area.readiness.gaps} of={area.name} />}
+      improvements={<ImprovementsLink readiness={area.readiness} href={docHref("area", area.id, IMPROVEMENTS_TAB)} />}
+      head={<DocLink kind="area" id={area.id} name={area.name} sx={{ ...nameLinkSx, fontWeight: 700 }} />}
+    >
+      {!features.length ? <FoldEmpty>No feature names it yet.</FoldEmpty> : null}
+      {features.map((f) => (
+        <FeatureBranch key={f.id} state={state} feature={f} />
+      ))}
     </FoldRow>
   );
 }
 
-/* A feature's part in one domain: its maturity and risk there, where else it is, and those capabilities. */
-function FeatureBranch({ state, feature, domain }: { state: DocqetState; feature: Feature; domain: string }) {
-  const part = partOf(feature, domain);
-  const capabilities = (part?.capabilities ?? []).flatMap((id) => find(state.capabilities, id) ?? []);
-  const elsewhere = feature.parts.filter((p) => p.domain !== domain);
-  const levels = capabilities.map((c) => levelInDomain(c, domain));
-  /* Its figures in this domain: the feature's own when it's in no other, or else the server's for its part here. */
-  const inPart = useStatusFor(state, elsewhere.length ? `feature:${feature.id},domain:${domain}` : null);
-  const figures = elsewhere.length
-    ? inPart.data && { exposure: inPart.data.exposure, risk: inPart.data.risk }
-    : { exposure: feature.exposure, risk: feature.readiness.gaps };
+/* A feature: its maturity, exposure and improvements, and its capabilities, by name. */
+function FeatureBranch({ state, feature }: { state: DocqetState; feature: Feature }) {
+  const capabilities = feature.capabilities.flatMap((id) => find(state.capabilities, id) ?? []);
+  const levels = capabilities.map((c) => c.stability);
   return (
     <FoldRow
       maturity={
-        part?.maturity == null ? null : (
+        feature.maturity === null ? null : (
           <MaturityRing
-            progress={part.maturity}
+            progress={feature.maturity}
             subject="feature"
             count={levels.filter(Boolean).length}
             label={`${feature.name} maturity`}
@@ -418,52 +413,23 @@ function FeatureBranch({ state, feature, domain }: { state: DocqetState; feature
           />
         )
       }
-      exposure={
-        figures ? (
-          <ExposureMark exposure={figures.exposure} risk={figures.risk} of={feature.name} />
-        ) : (
-          <ReadFallback read={inPart} what="its exposure here" inline skeleton={<Skeleton variant="circular" width={22} height={22} />} />
-        )
-      }
+      exposure={<ExposureMark exposure={feature.exposure} risk={feature.readiness.gaps} of={feature.name} />}
       improvements={<ImprovementsLink readiness={feature.readiness} href={docHref("feature", feature.id, IMPROVEMENTS_TAB)} />}
       head={
         <>
           <DocLink kind="feature" id={feature.id} name={feature.name} sx={nameLinkSx} />
           <InitiativeTags state={state} ids={initiativesOf(state, capabilities)} />
-          {elsewhere.length ? (
-            <Box
-              component="span"
-              sx={(t) => ({
-                ...whereSx,
-                "& a": {
-                  color: "inherit",
-                  textDecoration: "underline",
-                  textDecorationColor: t.vars.palette.surface.borderStrong,
-                  textUnderlineOffset: "2px",
-                  "&:hover": { color: t.vars.palette.primary.main },
-                },
-              })}
-            >
-              {"Also in "}
-              {elsewhere.map((p, i) => (
-                <span key={p.domain}>
-                  {i ? ", " : null}
-                  <a href={docHref("domain", p.domain)}>{domainName(state, p.domain)}</a>
-                </span>
-              ))}
-            </Box>
-          ) : null}
         </>
       }
     >
       {capabilities.length ? (
         <ul>
           {capabilities.map((c) => (
-            <CapabilityRow key={c.id} state={state} capability={c} domain={domain} />
+            <CapabilityRow key={c.id} state={state} capability={c} />
           ))}
         </ul>
       ) : (
-        <FoldEmpty>No capabilities here yet.</FoldEmpty>
+        <FoldEmpty>No capabilities yet.</FoldEmpty>
       )}
     </FoldRow>
   );
@@ -471,9 +437,9 @@ function FeatureBranch({ state, feature, domain }: { state: DocqetState; feature
 
 /*
  * Every capability under its level, least stable first: drafts, then
- * Prototype up to GA. A capability built at different levels in different
- * domains is under the lowest. Each says which feature it's in, or which
- * domains when it's in none.
+ * Prototype up to GA. A capability at different levels in different
+ * projects is under the lowest. Each says which feature it's in, and the
+ * feature's area.
  */
 function ByStability({ state }: { state: DocqetState }) {
   const levels: CapabilityLevel[] = [null, ...STABILITY_LEVEL_IDS];
@@ -535,9 +501,9 @@ function CapabilityList({ state, capabilities }: { state: DocqetState; capabilit
   );
 }
 
-/* Where a capability is: its feature, or else its domains. */
+/* Where a capability is: its feature, in its area, if any. */
 function whereIs(state: DocqetState, c: Capability): string {
   const feature = c.feature ? find(state.features, c.feature) : undefined;
-  if (feature) return feature.name;
-  return [...new Set(c.levels.map((l) => domainName(state, l.domain)))].join(", ");
+  if (!feature) return "Not in a feature";
+  return feature.area ? `${feature.name} · ${areaName(state, feature.area)}` : feature.name;
 }

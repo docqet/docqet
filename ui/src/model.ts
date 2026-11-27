@@ -11,7 +11,7 @@ import { isAbort, type Showing } from "./services/docqet/client";
 import { listComponents } from "./services/docqet/components";
 import { listDecisions } from "./services/docqet/decisions";
 import { listConcepts } from "./services/docqet/concepts";
-import { listDomains } from "./services/docqet/domains";
+import { listAreas } from "./services/docqet/areas";
 import { listFeatures } from "./services/docqet/features";
 import { listGaps, type GapResource, type RiskOnResource } from "./services/docqet/gaps";
 import { listInitiatives } from "./services/docqet/initiatives";
@@ -31,7 +31,7 @@ import type {
   EvidenceResource,
   ExposureResource,
   HeldDecisionResource,
-  AreaResource,
+  PartResource,
   ImprovementResource,
   MaturityResource,
   ReadinessResource,
@@ -53,14 +53,14 @@ import {
   type DecisionHolder,
   type Doc,
   type DocqetState,
-  type Domain,
+  type Area,
   type Evidence,
   type Exposure,
   type Feature,
   type Gap,
   type HeldDecision,
   type Impact,
-  type Area,
+  type Part,
   type Improvement,
   type Initiative,
   type Level,
@@ -102,7 +102,6 @@ const decision = (d: DecisionResource): Decision => ({
 
 const contribution = (c: ContributionResource): Contribution => ({
   project: c.project,
-  domain: c.domain,
   file: c.file,
   name: c.name,
   description: c.description,
@@ -120,7 +119,6 @@ function doc(r: DocResource): Doc {
   return {
     id: r.id,
     project: r.project,
-    domain: r.domain,
     file: r.file,
     name: r.name,
     description: r.description,
@@ -147,7 +145,7 @@ const noReadiness = (): Readiness => ({
   started: 0,
   notStarted: [],
   improvements: [],
-  areas: [],
+  parts: [],
 });
 const noRisk = (g: GapResource): Risk => ({
   impact: g.impact as Risk["impact"],
@@ -167,7 +165,7 @@ async function readProduct(showing: Showing, signal?: AbortSignal) {
     status,
     projects,
     rubric,
-    domains,
+    areas,
     features,
     capabilities,
     rules,
@@ -186,7 +184,7 @@ async function readProduct(showing: Showing, signal?: AbortSignal) {
     getStatus(showing, undefined, signal),
     listProjects(showing, signal),
     getRubric(showing, signal),
-    listDomains(showing, signal),
+    listAreas(showing, signal),
     listFeatures(showing, signal),
     listCapabilities(showing, signal),
     listRules(showing, signal),
@@ -206,7 +204,7 @@ async function readProduct(showing: Showing, signal?: AbortSignal) {
     status,
     projects,
     rubric,
-    domains,
+    areas,
     features,
     capabilities,
     rules,
@@ -240,20 +238,20 @@ function modelOf(r: Awaited<ReturnType<typeof readProduct>>, showing: Showing): 
       maturity: percent(p.maturity),
       band: band(p.maturity),
     })),
-    domains: r.domains.map((d): Domain => ({
-      ...doc(d),
-      features: d.features,
-      capabilities: d.capabilities,
-      maturity: percent(d.maturity),
-      band: band(d.maturity),
+    areas: r.areas.map((a): Area => ({
+      ...doc(a),
+      features: a.features,
+      capabilities: a.capabilities,
+      maturity: percent(a.maturity),
+      band: band(a.maturity),
       readiness: noReadiness(),
       exposure: noExposure,
     })),
     features: r.features.map((f): Feature => ({
       ...doc(f),
+      area: f.area,
       capabilities: f.capabilities,
       tradeoffs: f.tradeoffs,
-      parts: f.parts.map((p) => ({ domain: p.domain, capabilities: p.capabilities, maturity: percent(p.maturity), band: band(p.maturity) })),
       maturity: percent(f.maturity),
       band: band(f.maturity),
       readiness: noReadiness(),
@@ -265,7 +263,7 @@ function modelOf(r: Awaited<ReturnType<typeof readProduct>>, showing: Showing): 
       personas: c.personas,
       initiatives: c.initiatives,
       stability: level(c.stability),
-      levels: c.levels.map((l) => ({ project: l.project, domain: l.domain, level: level(l.level) })),
+      levels: c.levels.map((l) => ({ project: l.project, level: level(l.level) })),
       feature: c.feature,
       rules: c.rules,
       concepts: c.concepts,
@@ -340,7 +338,6 @@ function modelOf(r: Awaited<ReturnType<typeof readProduct>>, showing: Showing): 
     gaps: r.gaps.map((g): Gap => ({
       id: g.id,
       project: g.project,
-      ...(g.domain ? { domain: g.domain } : {}),
       affects: g.affects,
       impact: g.impact as Gap["impact"],
       likelihood: g.likelihood as Gap["likelihood"],
@@ -355,7 +352,6 @@ function modelOf(r: Awaited<ReturnType<typeof readProduct>>, showing: Showing): 
     tradeoffs: r.tradeoffs.map((t): Tradeoff => ({
       id: t.id,
       project: t.project,
-      ...(t.domain ? { domain: t.domain } : {}),
       affects: t.affects,
       name: t.name,
       description: t.description,
@@ -370,7 +366,6 @@ function modelOf(r: Awaited<ReturnType<typeof readProduct>>, showing: Showing): 
       subject: p.subject,
       capabilities: p.capabilities,
       message: p.message,
-      ...(p.domain ? { domain: p.domain } : {}),
       advisory: p.advisory,
     })),
     rubric: r.rubric.qualities.length ? (r.rubric as Rubric) : null,
@@ -385,7 +380,7 @@ function modelOf(r: Awaited<ReturnType<typeof readProduct>>, showing: Showing): 
     const found = held(d)[0];
     if (found) found.decision.risk = decisionRisk(d);
   }
-  r.domains.forEach((x, i) => Object.assign(state.domains[i], { readiness: readiness(x.readiness), exposure: exposure(x.exposure) }));
+  r.areas.forEach((x, i) => Object.assign(state.areas[i], { readiness: readiness(x.readiness), exposure: exposure(x.exposure) }));
   r.features.forEach((x, i) => Object.assign(state.features[i], { readiness: readiness(x.readiness), exposure: exposure(x.exposure) }));
   r.personas.forEach((x, i) => Object.assign(state.personas[i], { readiness: readiness(x.readiness), exposure: exposure(x.exposure) }));
   r.problems.forEach((x, i) => Object.assign(state.problems[i], { readiness: readiness(x.readiness), exposure: exposure(x.exposure) }));
@@ -431,12 +426,12 @@ function converters(state: DocqetState) {
   const capabilities = byId(state.capabilities);
   const gaps = byId(state.gaps);
   const features = byId(state.features);
-  const domains = byId(state.domains);
+  const areas = byId(state.areas);
   const tradeoffs = byId(state.tradeoffs);
   const rules = byId(state.rules);
   const technicals = new Map([...state.mechanisms, ...state.components].map((t) => [`${t.kind}:${t.id}`, t]));
   const holders = new Map<string, DecisionHolder>([
-    ...state.domains.map((d) => [`domain:${d.id}`, { kind: "domain", doc: d }] as const),
+    ...state.areas.map((d) => [`area:${d.id}`, { kind: "area", doc: d }] as const),
     ...state.features.map((d) => [`feature:${d.id}`, { kind: "feature", doc: d }] as const),
     ...state.capabilities.map((d) => [`capability:${d.id}`, { kind: "capability", doc: d }] as const),
     ...state.mechanisms.map((d) => [`mechanism:${d.id}`, { kind: "mechanism", doc: d }] as const),
@@ -501,7 +496,7 @@ function converters(state: DocqetState) {
     started: x.started,
     notStarted: some(capabilities, x.notStarted),
     improvements: x.improvements.flatMap(improvement),
-    areas: x.areas.flatMap(area),
+    parts: x.parts.flatMap(part),
   });
   /* An open decision with the doc it's on: the very decision that doc holds, so its risk, once found, is the same one everywhere. */
   const held = (d: HeldDecisionResource): HeldDecision[] => {
@@ -515,11 +510,11 @@ function converters(state: DocqetState) {
     const gap = x.gap ? (gaps.get(x.gap) ?? null) : null;
     const decided = x.decision ? (held(x.decision)[0] ?? null) : null;
     const feature = x.feature ? (features.get(x.feature) ?? null) : null;
-    const domain = x.domain ? (domains.get(x.domain) ?? null) : null;
+    const area = x.area ? (areas.get(x.area) ?? null) : null;
     if (
       (x.kind === "promote" && !capability) ||
       (x.kind === "promote-feature" && !feature) ||
-      (x.kind === "promote-domain" && !domain) ||
+      (x.kind === "promote-area" && !area) ||
       (x.kind === "close" && !gap) ||
       (x.kind === "answer" && !decided)
     )
@@ -531,7 +526,7 @@ function converters(state: DocqetState) {
         from: x.from ? level(x.from) : null,
         to: x.to ? level(x.to) : null,
         feature,
-        domain,
+        area,
         gap,
         decision: decided,
         capabilities: some(capabilities, x.capabilities),
@@ -543,15 +538,15 @@ function converters(state: DocqetState) {
       },
     ];
   };
-  /* An area, left out when what it is isn't showing. */
-  const area = (x: AreaResource): Area[] => {
-    const domain = x.domain ? (domains.get(x.domain) ?? null) : null;
+  /* A part, left out when what it is isn't showing. */
+  const part = (x: PartResource): Part[] => {
+    const area = x.area ? (areas.get(x.area) ?? null) : null;
     const feature = x.feature ? (features.get(x.feature) ?? null) : null;
     const capability = x.capability ? (capabilities.get(x.capability) ?? null) : null;
     const next = x.next ? (improvement(x.next)[0] ?? null) : null;
-    if ((x.kind === "domain" && !domain) || (x.kind === "feature" && !feature) || (x.kind === "capability" && !capability)) return [];
+    if ((x.kind === "area" && !area) || (x.kind === "feature" && !feature) || (x.kind === "capability" && !capability)) return [];
     if ((x.kind === "gap" || x.kind === "decision" || x.kind === "promotion") && !next) return [];
-    return [{ kind: x.kind, domain, feature, capability, capabilities: some(capabilities, x.capabilities), potential: x.potential, next }];
+    return [{ kind: x.kind, area, feature, capability, capabilities: some(capabilities, x.capabilities), potential: x.potential, next }];
   };
   const affected = (a: AffectedResource): Affected[] => {
     if (a.kind === "outcome") {
@@ -649,8 +644,7 @@ export function useRead<T>(key: string | null, read: (signal: AbortSignal) => Pr
 /*
  * The figures of the capabilities a for names, as the server works them out,
  * for a set no doc's own figures cover: those in a feature that serve a
- * persona, as `persona:<id>,feature:<id>`, or in one domain's part of a
- * feature, as `feature:<id>,domain:<id>`. With initiative, within that
+ * persona, as `persona:<id>,feature:<id>`. With initiative, within that
  * initiative instead of what's showing. With no for, nothing is read.
  */
 export function useStatusFor(state: DocqetState, forRef: string | null, initiative?: string | null): Read<Status> {

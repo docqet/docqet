@@ -1,7 +1,7 @@
 // docqet:implements capability:improvements
 import { useState, type ReactNode } from "react";
 import TrendingUpRoundedIcon from "@mui/icons-material/TrendingUpRounded";
-import { AreaRows, ImprovementRows, ImprovementsFigure, areasNote, bestStep, improvementWords } from "../../components/improvements/Improvements";
+import { PartRows, ImprovementRows, ImprovementsFigure, partsNote, bestStep, improvementWords } from "../../components/improvements/Improvements";
 import { ReadinessMark } from "../../components/Readiness";
 import { useStatusFor } from "../../model";
 import ExpandMoreRoundedIcon from "@mui/icons-material/ExpandMoreRounded";
@@ -48,7 +48,7 @@ import { menuSlots } from "../../components/shell/ProductFilter";
 
 /*
  * What would make it more ready: its improvements, most first, for
- * everything showing, or for one project, persona, initiative, domain,
+ * everything showing, or for one project, persona, initiative, area,
  * feature or capability. Then every gap still open and every question still
  * to answer, which is what the improvements are drawn from. Tradeoffs are
  * decided, so they're on the Decided page. Each gap is scored on the
@@ -71,7 +71,7 @@ export default function ImprovementsPage({ state, route }: { state: DocqetState;
   const holders = holdersIn(state, holdersOf(state), scope).filter((h) => openDecisions(h.doc).length);
   const decisions = holders.reduce((n, h) => n + openDecisions(h.doc).length, 0);
   const tabs = [
-    { id: "improvements", label: "Improvements", count: readiness ? readiness.areas.length : undefined },
+    { id: "improvements", label: "Improvements", count: readiness ? readiness.parts.length : undefined },
     {
       id: "gaps",
       label: (
@@ -84,7 +84,7 @@ export default function ImprovementsPage({ state, route }: { state: DocqetState;
     { id: "decisions", label: <LeftLabel kind="decision" size={14} hoverOnly />, count: decisions },
   ];
   const tab = currentTab(route, tabs);
-  /* The improvements by area, or each single step on asking. */
+  /* The improvements by part, or each single step on asking. */
   const oneAtATime = search.get("show") === "steps";
   /* On a phone the picker sits over the name, the width of the page, rather than squeezing the name and its sentence at the right. */
   const phone = useMediaQuery(useTheme().breakpoints.down("sm"), { noSsr: true });
@@ -129,7 +129,7 @@ export default function ImprovementsPage({ state, route }: { state: DocqetState;
             <Stat
               label="Improvements"
               term="improvement"
-              value={!readiness ? <Skeleton width={40} /> : readiness.areas.length ? <ImprovementsFigure readiness={readiness} /> : "None now"}
+              value={!readiness ? <Skeleton width={40} /> : readiness.parts.length ? <ImprovementsFigure readiness={readiness} /> : "None now"}
               note={readiness && bestStep(readiness) ? `Most from ${improvementWords(bestStep(readiness)!)}` : undefined}
               href={withParam("tab", "improvements")}
             />
@@ -167,13 +167,13 @@ export default function ImprovementsPage({ state, route }: { state: DocqetState;
             </Section>
           ) : (
             <Section
-              title={scope.kind === "capability" ? "Steps" : `By ${AREA_LEVELS[scope.kind]}`}
+              title={scope.kind === "capability" ? "Steps" : `By ${PART_LEVELS[scope.kind]}`}
               term="improvement"
-              count={readiness.areas.length || undefined}
-              note={areasNote(readiness)}
+              count={readiness.parts.length || undefined}
+              note={partsNote(readiness)}
               aside={<ShowToggle oneAtATime={false} />}
             >
-              <AreaRows readiness={readiness} limit={50} />
+              <PartRows readiness={readiness} limit={50} />
             </Section>
           )
         ) : (
@@ -195,20 +195,20 @@ export default function ImprovementsPage({ state, route }: { state: DocqetState;
   );
 }
 
-/* What the areas are, one level below what's chosen. */
-const AREA_LEVELS: Record<ScopeKind, string> = {
-  all: "domain",
-  project: "domain",
+/* What the parts are, one level below what's chosen. */
+const PART_LEVELS: Record<ScopeKind, string> = {
+  all: "area",
+  project: "area",
   persona: "feature",
   initiative: "feature",
-  domain: "feature",
+  area: "feature",
   feature: "capability",
   capability: "step",
 };
 
-/* Between the improvements by area and each single step, kept in the address. */
+/* Between the improvements by part and each single step, kept in the address. */
 function ShowToggle({ oneAtATime }: { oneAtATime: boolean }) {
-  return oneAtATime ? <a href={withParam("show", null)}>By area</a> : <a href={withParam("show", "steps")}>One at a time</a>;
+  return oneAtATime ? <a href={withParam("show", null)}>By part</a> : <a href={withParam("show", "steps")}>One at a time</a>;
 }
 
 /* The gaps' risk spread, under their count: the bar, then how many there are of each risk, each in its color, each showing only those. */
@@ -261,7 +261,7 @@ const SCOPE_KINDS: Record<ScopeKind, string> = {
   project: "Project",
   persona: "Persona",
   initiative: "Initiative",
-  domain: "Domain",
+  area: "Area",
   feature: "Feature",
   capability: "Capability",
 };
@@ -743,7 +743,7 @@ export const goFor = (state: DocqetState): Go => ({
 /* Every doc that can hold decisions, by kind, in the spec's order. */
 export function holdersOf(state: DocqetState): DecisionHolder[] {
   return [
-    ...state.domains.map((doc) => ({ kind: "domain" as const, doc })),
+    ...state.areas.map((doc) => ({ kind: "area" as const, doc })),
     ...state.features.map((doc) => ({ kind: "feature" as const, doc })),
     ...state.capabilities.map((doc) => ({ kind: "capability" as const, doc })),
     ...state.mechanisms.map((doc) => ({ kind: "mechanism" as const, doc })),
@@ -751,7 +751,7 @@ export function holdersOf(state: DocqetState): DecisionHolder[] {
   ];
 }
 
-const HOLDER_KINDS = ["domain", "feature", "capability", "mechanism", "component"] as const;
+const HOLDER_KINDS = ["area", "feature", "capability", "mechanism", "component"] as const;
 const KIND_NAMES = { ...NAMES, ...TECHNICAL_NAMES };
 
 /* Decisions grouped by where they're held: a section per kind of doc, a card per doc, linking to its page. */

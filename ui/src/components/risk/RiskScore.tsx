@@ -138,11 +138,11 @@ export const riskOnScoreSx = (verdict: Verdict): SystemStyleObject<Theme> => ({
 
 /*
  * The risk across several gaps, as in a capability, feature,
- * domain, persona or component: a short bar split by how many fall in each
+ * area, persona or component: a short bar split by how many fall in each
  * verdict, with no number, since no one score stands for them all. One alone
  * shows its own score, with its verdict when `verdict` is set. Its popover
  * shows the spread with counts and names the riskiest few. Given what
- * they're on `exposure`, as for a feature, domain or persona, it shows their
+ * they're on `exposure`, as for a feature, area or persona, it shows their
  * exposure instead, as a ring filling up to its percentage in the color
  * of its band, drawn and sized as maturity is, whose popover names the band and shows the spread and how
  * it's worked out. Inside

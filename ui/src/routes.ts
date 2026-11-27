@@ -35,7 +35,7 @@ export type Section = (typeof SECTIONS)[number];
 /* What can have a page of its own. */
 export type DocKind = Exclude<PageAt["kind"], "gaps"> | "rule" | "gap";
 export const DOC_KINDS: DocKind[] = [
-  "domain",
+  "area",
   "feature",
   "capability",
   "concept",
@@ -53,7 +53,7 @@ export type Route = { kind: "section"; section: Section; tab: string | null } | 
 
 /* Which side-nav section a doc's page is under, so it stays lit there. */
 const SECTION_OF_DOC: Record<DocKind, Section> = {
-  domain: "features",
+  area: "features",
   feature: "features",
   capability: "features",
   persona: "personas",
@@ -77,7 +77,11 @@ export function routeOf(search: string): Route {
     if (id) return { kind: "doc", doc, id, tab };
   }
   const view = params.get("view");
-  /* Older addresses: the gaps page, What's left, and the map opening on something. */
+  /* Older addresses: a domain's page, now an area's, and the domains list, now the features'. */
+  const domain = params.get("domain");
+  if (domain) return { kind: "doc", doc: "area", id: domain, tab };
+  if (view === "domains") return { kind: "section", section: "features", tab };
+  /* The gaps page, What's left, and the map opening on something. */
   if (view === "gaps") return { kind: "section", section: "improvements", tab: tab ?? "gaps" };
   if (view === "left") return { kind: "section", section: "improvements", tab: tab === "decisions" ? tab : (tab ?? "gaps") };
   if (!view && params.get("show")) return { kind: "section", section: "map", tab };
@@ -106,7 +110,7 @@ export function sectionHref(section: Section, extra: Record<string, string | nul
   return withParams(params);
 }
 
-/* A doc's page, such as `?rule=no-double-booking@guest-stays`, at one of its tabs if named. */
+/* A doc's page, such as `?rule=no-double-booking`, at one of its tabs if named. */
 export function docHref(doc: DocKind, id: string, tab?: string | null, hash?: string): string {
   const params = showingParams();
   params.set(doc, id);

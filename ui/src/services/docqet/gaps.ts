@@ -7,7 +7,6 @@ export type GapResource = {
   id: string;
   subject: string;
   project: string;
-  domain: string;
   affects: string[];
   impact: string;
   likelihood: string;

@@ -1,20 +1,19 @@
 // docqet:implements capability:language
 import Box from "@mui/material/Box";
-import { ConceptChips, ConceptIcon, related } from "../../components/Concepts";
+import { ConceptChips, related } from "../../components/Concepts";
 import { facets } from "../../components/Fields";
 import { MORE_ABOUT } from "../../components/markdown/Markdown";
 import { Term } from "../../components/term/Term";
 import { CapabilityStability } from "../../components/CapabilityLabel";
 import { NAMES, plural } from "../../components/names";
 import { initiativesOf } from "../../components/Initiatives";
-import { bareId, byFeature, domainName, find, type Concept, type DocqetState, capabilitiesById } from "../../state";
+import { byFeature, find, type Concept, type DocqetState, capabilitiesById } from "../../state";
 import { docHref, type Route } from "../../routes";
 import { Empty, Section, Stat, Tabs, currentTab, type TabDef } from "../../components/shell/layout";
 import { type DocPageProps } from "../../components/doc/DocPage";
 import { tabHref } from "../../components/doc/DocPage";
 import { DocView } from "../../components/doc/DocPage";
 import { DocHeader } from "../../components/doc/DocPage";
-import { DomainCrumb } from "../../components/doc/DocPage";
 import { Sources } from "../../components/doc/About";
 import { hasBody } from "../../components/doc/About";
 import { Bodies } from "../../components/doc/About";
@@ -32,7 +31,7 @@ export default function ConceptView({ state, id, route }: { state: DocqetState; 
 
 /*
  * A concept: what it means, then the capabilities that use it, the rules
- * that refer to it, and the same word in other domains. A concept is small,
+ * that refer to it. A concept is small,
  * so a tab with nothing in it is left out.
  */
 export function ConceptPage({ concept, route, ...go }: DocPageProps & { concept: Concept }) {
@@ -40,13 +39,11 @@ export function ConceptPage({ concept, route, ...go }: DocPageProps & { concept:
   const groups = byFeature(state, concept.capabilities);
   const rules = concept.rules.flatMap((id) => find(state.rules, id) ?? []);
   const others = related(state, concept);
-  const elsewhere = state.concepts.filter((c) => c.id !== concept.id && bareId(c.id) === bareId(concept.id));
   const fielded = concept.from.some((f) => facets("concept", f, go).length) || concept.from.length > 1;
   const tabs: TabDef[] = [
     { id: "meaning", label: "Meaning" },
     ...(concept.capabilities.length ? [{ id: "used", label: "Used by", term: "capability" as const, count: concept.capabilities.length }] : []),
     ...(rules.length ? [{ id: "rules", label: "Rules", term: "rule" as const, count: rules.length }] : []),
-    ...(elsewhere.length ? [{ id: "elsewhere", label: "The same word elsewhere", count: elsewhere.length }] : []),
   ];
   const tab = currentTab(route, tabs);
   const file = (
@@ -61,7 +58,6 @@ export function ConceptPage({ concept, route, ...go }: DocPageProps & { concept:
         kind="concept"
         doc={concept}
         initiatives={initiativesOf(state, capabilitiesById(state, concept.capabilities))}
-        trail={<DomainCrumb state={state} id={concept.domain} />}
         stats={
           <>
             <Stat
@@ -72,14 +68,6 @@ export function ConceptPage({ concept, route, ...go }: DocPageProps & { concept:
               href={concept.capabilities.length ? tabHref("used") : undefined}
             />
             <Stat label="Referred to by" term="rule" value={plural(rules.length, "rule", "rules")} href={rules.length ? tabHref("rules") : undefined} />
-            {elsewhere.length ? (
-              <Stat
-                label="Also defined in"
-                value={elsewhere.map((c) => domainName(state, c.domain)).join(", ")}
-                note="With a meaning of its own there"
-                href={tabHref("elsewhere")}
-              />
-            ) : null}
           </>
         }
       />
@@ -135,7 +123,7 @@ export function ConceptPage({ concept, route, ...go }: DocPageProps & { concept:
             </Box>
           </Section>
         ))
-      ) : tab === "rules" ? (
+      ) : (
         <Section
           title={
             <>
@@ -145,20 +133,6 @@ export function ConceptPage({ concept, route, ...go }: DocPageProps & { concept:
           count={rules.length}
         >
           <RuleTable rules={rules} />
-        </Section>
-      ) : (
-        <Section title="The same word elsewhere" count={elsewhere.length} note="Each domain's word means what it says there.">
-          <Box sx={cardSx}>
-            <DocRows
-              rows={elsewhere.map((c) => ({
-                key: c.id,
-                href: docHref("concept", c.id),
-                icon: <ConceptIcon size={15} />,
-                name: `In ${domainName(state, c.domain)}`,
-                summary: c.description,
-              }))}
-            />
-          </Box>
         </Section>
       )}
     </DocView>

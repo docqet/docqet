@@ -3,9 +3,9 @@ import BoltOutlinedIcon from "@mui/icons-material/BoltOutlined";
 import Box from "@mui/material/Box";
 import type { Theme } from "@mui/material/styles";
 import type { SystemStyleObject } from "@mui/system";
-import { DomainIcon } from "../names";
+import { AreaIcon } from "../names";
 import { Excerpt, plainText } from "../markdown/Markdown";
-import { LeftMark } from "../left/LeftMark";
+import { LeftMark, gapKind } from "../left/LeftMark";
 import Tooltip from "@mui/material/Tooltip";
 import { docHref } from "../../routes";
 import { VERDICTS, find, subjectOf, technicalDoc, type DocqetState, type Gap, type Risk, type RiskAcross, type TechnicalDoc } from "../../state";
@@ -154,7 +154,7 @@ export function GapRows({
 
 function GapLine({ state, row, risk, here, flat = false }: { state: DocqetState; row: GapRow; risk: Risk; here?: { id: string }; flat?: boolean }) {
   const { gap } = row;
-  const technical = !gap.domain;
+  const technical = gapKind(gap) === "technical-gap";
   return (
     <Box component="li" sx={rowSx(flat)}>
       <GapRiskMark risk={risk} on={risk.on[0] ?? null} />
@@ -198,11 +198,11 @@ function onLink(state: DocqetState, { gap, on }: GapRow, here?: { id: string }):
       </a>
     ) : null;
   }
-  if (type === "domain") {
-    const d = find(state.domains, id);
+  if (type === "area") {
+    const d = find(state.areas, id);
     return d ? (
-      <a href={docHref("domain", d.id)}>
-        <DomainIcon size={13} />
+      <a href={docHref("area", d.id)}>
+        <AreaIcon size={13} />
         {d.name}
       </a>
     ) : null;

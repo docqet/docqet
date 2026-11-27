@@ -16,7 +16,7 @@ export type CapabilityResource = DocResource & {
   personas: string[];
   initiatives: string[];
   stability: string;
-  levels: { project: string; domain: string; level: string }[];
+  levels: { project: string; level: string }[];
   feature: string | null;
   rules: string[];
   concepts: string[];

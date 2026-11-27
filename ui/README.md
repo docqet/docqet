@@ -33,20 +33,20 @@ words. A nav down the side picks which question you're asking:
 
 | Section        | Answers                                                                                                                                                                 | Address                               |
 | -------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------- |
-| Overview       | How is it doing? Maturity, readiness and what it still needs, who it's least ready for, where each domain stands, the riskiest gaps                                     | (none)                                |
-| Map            | How does it fit together? Domains, features and capabilities on a canvas, with their personas                                                                           | `?view=map`                           |
-| Features       | What can it do? Domains, features and capabilities as a tree                                                                                                            | `?view=features`                      |
+| Overview       | How is it doing? Maturity, readiness and what it still needs, who it's least ready for, where each area stands, the riskiest gaps                                       | (none)                                |
+| Map            | How does it fit together? Areas, features and capabilities on a canvas, with their personas                                                                             | `?view=map`                           |
+| Features       | What can it do? Areas, features and capabilities as a tree                                                                                                              | `?view=features`                      |
 | Personas       | Who it serves, and how ready it is for each                                                                                                                             | `?view=personas`                      |
 | Problems       | Why it exists: the problems it solves, who has each, and how ready what solves it is, with those nothing solves yet shown as such                                       | `?view=problems`                      |
 | Constraints    | What it must keep to that nobody on the team can change, such as laws and contracts, and how ready what keeps to each is, with those nothing respects yet shown as such | `?view=constraints`                   |
 | Initiatives    | Bodies of work, such as the MVP, and how ready each is                                                                                                                  | `?view=initiatives`                   |
-| Language       | What the words mean: concepts, and the rules that must hold                                                                                                             | `?view=language`                      |
+| Language       | The product's words: concepts, and the rules that must hold                                                                                                             | `?view=language`                      |
 | How it's built | Mechanisms and components                                                                                                                                               | `?view=built`                         |
-| Improvements   | What would make it more ready, then every gap and open decision, for everything or one project, persona, initiative, domain, feature or capability                      | `?view=improvements&for=persona:<id>` |
+| Improvements   | What would make it more ready, then every gap and open decision, for everything or one project, persona, initiative, area, feature or capability                        | `?view=improvements&for=persona:<id>` |
 | Decided        | Tradeoffs and non-goals                                                                                                                                                 | `?view=decided`                       |
 | Findings       | Contradictions and mistakes in the docs, then advice that never fails a check                                                                                           | `?view=findings`                      |
 
-Every domain, feature, capability, persona, problem, constraint, initiative, concept, rule,
+Every area, feature, capability, persona, problem, constraint, initiative, concept, rule,
 mechanism, component and gap has a page of its own, such as
 `?capability=deposits`: a header saying what it is and how it's doing, then
 tabs, each answering one question about it, kept in the address as
@@ -59,14 +59,14 @@ when the product has none. Showing one initiative, every page shows only its
 capabilities and personas, every number counts only those, and
 `?scope=<initiative-id>` in the address says which. Switching product goes
 back to Everything. Wherever a capability or persona is shown, tags name the
-initiatives it's part of, and a feature, domain, rule, concept, mechanism,
+initiatives it's part of, and a feature, area, rule, concept, mechanism,
 component or gap shows those of its capabilities.
 
 On the map, clicking something opens a small peek beside the canvas: what it
 is, three figures, its riskiest gaps and a link to its page, all of it
 whatever's showing. "Show" chooses what the canvas shows, one at a time:
-Stability (each capability's level, and each feature's and domain's
-maturity), Risk (the risk spread of each capability, feature and domain,
+Stability (each capability's level, and each feature's and area's
+maturity), Risk (the risk spread of each capability, feature and area,
 with rows tinted by risk) or Evidence (the evidence spread of each, how
 their rules hold, tinted the same way). Each shows only its own marks, at
 the right of each card and row. A persona's readiness always shows on their
@@ -83,8 +83,9 @@ the cards sit is this browser's own, for each product.
   are showing. With no product named, it's the first, and with no projects
   named, all of its projects are.
 - **Seeing them**: a doc's page and each search result say which projects
-  define it. On the map, each domain is one region holding every project's
-  part of it, and a feature that spans domains has a card in each.
+  define it. On the map, each area is one region holding its features,
+  whichever projects define them, and features in no area, with capabilities
+  in no feature, share a region of their own.
 - **Maturity**: the server works it out, for one project or several, the
   same way. With several showing, its popover lists each project's.
 
@@ -94,12 +95,11 @@ Two different questions, worked out by the server from each capability's
 level, neither from the other:
 
 - **Maturity** is how far along the work is, for planning: a weighted average
-  of capabilities' level scores, drafts left out, in one of four bands. A
-  domain's part of a feature counts its capabilities at their levels there.
-  Anything spanning domains counts each capability once, at its level in
-  short: a feature from its capabilities, and a project, or everything
-  showing, from its features. A domain comes from its parts of features. It
-  shows on features, domains, projects and the map, and on a persona's page
+  of capabilities' level scores, drafts left out, in one of four bands. Each
+  capability counts once, at its level in short, the lowest of the projects
+  that write it: a feature from its capabilities, and an area, a project, or
+  everything showing, from its features. It
+  shows on features, areas, projects and the map, and on a persona's page
   as the maturity of what serves them.
 - **Readiness** is how ready people can rely on it being, as a
   recommendation: the same weighted average as maturity, each capability at
@@ -109,7 +109,7 @@ level, neither from the other:
   as a short straight bar from grey to green, never a ring, which is
   maturity's. Drafts are listed apart, as not
   started, and never count. It shows on personas, on a feature for a persona,
-  on the overview, and on capability, feature and domain pages, each with
+  on the overview, and on capability, feature and area pages, each with
   what it still needs: each capability below Beta, or with an unacceptable
   gap, and what to do about it, linking to each.
 - **Stability spread** is how many capabilities are at each level, as a
@@ -150,7 +150,7 @@ decisions and tradeoffs.
   tile shows the most one would add and how many more there are, and never
   says anything is done. What's open is the open decisions and the gaps,
   and nothing else: missing evidence is never open. The Improvements page is
-  for everything showing, or for one project, persona, initiative, domain,
+  for everything showing, or for one project, persona, initiative, area,
   feature or capability, chosen at the top right, with each gap scored on
   that one's capabilities. Its first tab is the improvements; then the
   gaps, with their risk spread and how many there are at each risk, and the

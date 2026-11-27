@@ -17,23 +17,11 @@ import { CapabilityTable, cellSubSx, tableCardSx, wideOnly } from "./CapabilityT
 import { faintSx, lineSx } from "./DocPage";
 
 /* Where something stands: each of its capabilities, with its stability beside its improvements. Past `limit`, a link to them all. */
-export function StandingSummary({
-  state,
-  capabilities,
-  domain,
-  limit = 8,
-  all,
-}: {
-  state: DocqetState;
-  capabilities: Capability[];
-  domain?: string;
-  limit?: number;
-  all: string;
-}) {
+export function StandingSummary({ state, capabilities, limit = 8, all }: { state: DocqetState; capabilities: Capability[]; limit?: number; all: string }) {
   const shown = capabilities.slice(0, limit);
   return (
     <>
-      <CapabilityTable state={state} capabilities={shown} domain={domain} compact />
+      <CapabilityTable state={state} capabilities={shown} compact />
       {capabilities.length > shown.length ? (
         <Box component="p" sx={lineSx}>
           <a href={all}>See all {capabilities.length} capabilities</a>

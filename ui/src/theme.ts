@@ -11,7 +11,7 @@ import type { StabilityLevelId } from "./components/stability/stability";
 type DocqetPalette = {
   /* The canvas and its panels: the dots behind the map, frosted panels, stronger borders, the accent's soft fill, and a card's shadow. */
   surface: { dot: string; panel: string; borderStrong: string; accentSoft: string; shadow: string };
-  /* Domain concepts: a teal of their own, apart from features and capabilities. */
+  /* Concepts: a teal of their own, apart from features and capabilities. */
   concept: { main: string; soft: string };
   /* Personas: a blue of their own, apart from concepts, features and capabilities. */
   persona: { main: string; soft: string };

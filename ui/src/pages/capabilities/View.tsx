@@ -12,7 +12,7 @@ import { PersonaRows } from "../../components/Personas";
 import { ProblemRows } from "../../components/Problems";
 import { levelName } from "../../components/stability/stability";
 import { ReadinessMark } from "../../components/Readiness";
-import { outcomesOf, builtOn, docDomains, domainName, find, nextLevel, projectName, type Capability, type DocqetState } from "../../state";
+import { areaOfFeature, outcomesOf, builtOn, find, nextLevel, projectName, type Capability, type DocqetState } from "../../state";
 import { ExposureStat } from "../../components/indexParts";
 import { docHref, type Route } from "../../routes";
 import { Section, Stat, Tabs, currentTab, type TabDef } from "../../components/shell/layout";
@@ -22,8 +22,8 @@ import { openAcross, OpenTab, TopGaps } from "../../components/doc/Open";
 import { ImprovementsList, ImprovementsSection, ImprovementsStat, IMPROVEMENTS_TAB, improvementWords } from "../../components/improvements/Improvements";
 import { DocView } from "../../components/doc/DocPage";
 import { DocHeader } from "../../components/doc/DocPage";
-import { DomainCrumb } from "../../components/doc/DocPage";
-import { DomainTrail } from "../../components/doc/DocPage";
+import { AreaCrumb } from "../../components/doc/DocPage";
+import { ProjectIcon } from "../../components/shell/ProductFilter";
 import { LevelName } from "../../components/doc/DocPage";
 import { Sources } from "../../components/doc/About";
 import { hasBody } from "../../components/doc/About";
@@ -62,6 +62,7 @@ export function CapabilityPage({ capability, route, ...go }: DocPageProps & { ca
         .reduce((n, l) => n + l.outcomes.length, 0)
     : 0;
   const feature = capability.feature ? find(state.features, capability.feature) : undefined;
+  const area = areaOfFeature(state, feature);
   const on = builtOn(state, capability);
   const places = capability.evidence.implements.length + capability.evidence.verifies.length;
   const readiness = capability.readiness;
@@ -73,7 +74,7 @@ export function CapabilityPage({ capability, route, ...go }: DocPageProps & { ca
 
   const tabs: TabDef[] = [
     { id: "overview", label: "Overview" },
-    { id: IMPROVEMENTS_TAB, label: "Improvements", term: "improvement" as const, count: readiness.areas.length || undefined },
+    { id: IMPROVEMENTS_TAB, label: "Improvements", term: "improvement" as const, count: readiness.parts.length || undefined },
     ...(rules.length ? [{ id: "rules", label: "Rules", term: "rule" as const, count: rules.length }] : []),
     ...(state.rubric ? [{ id: "stability", label: "Stability", term: "rubric" as const }] : []),
     ...(on.length || places ? [{ id: "built", label: "How it's built", count: on.length || undefined }] : []),
@@ -96,10 +97,14 @@ export function CapabilityPage({ capability, route, ...go }: DocPageProps & { ca
         initiatives={capability.initiatives}
         trail={
           <>
-            <DomainTrail state={state} domains={docDomains(capability)} />
-            <Box component="span" sx={faintSx}>
-              ›
-            </Box>
+            {area ? (
+              <>
+                <AreaCrumb state={state} id={area.id} />
+                <Box component="span" sx={faintSx}>
+                  ›
+                </Box>
+              </>
+            ) : null}
             {feature ? (
               <Crumb href={docHref("feature", feature.id)} icon={NAMES.feature.icon}>
                 {feature.name}
@@ -187,14 +192,9 @@ export function CapabilityPage({ capability, route, ...go }: DocPageProps & { ca
             {capability.levels.length > 1 ? (
               <Box component="ul" sx={levelsSx}>
                 {capability.levels.map((l) => (
-                  <li key={`${l.project}:${l.domain}`}>
-                    <DomainCrumb state={state} id={l.domain} />
+                  <li key={l.project}>
+                    <Crumb icon={<ProjectIcon size={14} />}>{projectName(state, l.project)}</Crumb>
                     <LevelName level={l.level} name={capability.name} named />
-                    {state.projects.length > 1 ? (
-                      <Box component="span" sx={faintSx}>
-                        {projectName(state, l.project)}
-                      </Box>
-                    ) : null}
                   </li>
                 ))}
               </Box>
@@ -236,7 +236,7 @@ export function CapabilityPage({ capability, route, ...go }: DocPageProps & { ca
               }
               count={concepts.length}
             >
-              <ConceptChips concepts={concepts} onOpen={onConcept} scopeOf={(c) => domainName(state, c.domain)} />
+              <ConceptChips concepts={concepts} onOpen={onConcept} />
             </Section>
           ) : null}
         </>

@@ -1,13 +1,13 @@
 /*
  * What each of Docqet's own words means, for the popover a Term opens. Taken
- * from Docqet's concept docs, in each domain's concepts folder in docqet/,
+ * from Docqet's concept docs, in docqet/concepts/,
  * shortened to what someone looking at the page needs. Stability and maturity also have popovers of
  * their own, on their marks; these are for where they label something.
  */
 export type TermId =
   | "project"
   | "product"
-  | "domain"
+  | "area"
   | "feature"
   | "capability"
   | "rule"
@@ -29,6 +29,7 @@ export type TermId =
   | "evidence"
   | "readiness"
   | "improvement"
+  | "part"
   | "stability"
   | "maturity"
   | "rubric"
@@ -55,15 +56,16 @@ export const TERMS: Record<TermId, TermEntry> = {
       "The end result of one or more pieces of software working together to accomplish a high-level goal, such as a web app, a mobile app and the API behind them. Each piece is a project, and Docqet shows a product's projects together, as one picture.",
     more: "A hotel's booking app and its billing service make one product, Hotel.",
   },
-  domain: {
-    name: "Domain",
-    means: "A part of the business the software serves, with a language of its own: within a domain, each word means one thing.",
-    more: "Guest stays and Billing are both domains. A booking is a guest's hold on a room in one, and what they're charged for a stay in the other.",
+  area: {
+    name: "Area",
+    means:
+      "A part of the product that groups the features belonging together, so a large product can be seen a part at a time. It's a plain grouping: features name it, and it has no language of its own.",
+    more: "Guest stays is an area, with Reservations and Front desk in it; Billing is another, with Guest bills and Payments. A feature in no area is allowed, and shows on its own.",
   },
   feature: {
     name: "Feature",
     means:
-      "A part of what the software offers its users or the business, with an identity that lasts: the part of the software someone comes to, and would name. It's made of capabilities, and its maturity comes from theirs.",
+      "A part of what the product offers its users or the business, with an identity that lasts: the part of the software someone comes to, and would name. Capabilities name it, and its maturity comes from theirs. It can be in an area.",
     more: "Reservations is a feature: taking bookings and handling changes to them, before the guest arrives.",
   },
   capability: {
@@ -75,12 +77,13 @@ export const TERMS: Record<TermId, TermEntry> = {
   rule: {
     name: "Rule",
     means:
-      "A business rule: a promise the software keeps, often one the business chose. It's something that must always be true, or must never happen, in the domain's words, and says what and why, never how the code enforces it.",
+      "A business rule: a promise the software keeps, often one the business chose. It's something that must always be true, or must never happen, in the product's words, and says what and why, never how the code enforces it.",
     more: "“A room can't be double-booked” is a rule. So is “cancelling 48 hours ahead is free”. A rule can respect a constraint, but the constraint would hold whatever the rules said.",
   },
   concept: {
     name: "Concept",
-    means: "What a term in the domain means: what it is, what it's made of, how it relates to other concepts and what states it moves through.",
+    means:
+      "What one of the product's words means: what it is, what it's made of, how it relates to other concepts and what states it moves through. A word that means two things is two concepts.",
     more: "A booking: “a guest's hold on one room for a stay”.",
   },
   persona: {
@@ -104,18 +107,18 @@ export const TERMS: Record<TermId, TermEntry> = {
   initiative: {
     name: "Initiative",
     means:
-      "A named body of work, such as the MVP or what comes after it. Capabilities and personas say which initiatives they're part of. Choosing a scope shows everything, or one initiative, and every number counts only what's showing.",
+      "A named body of work, such as the MVP or what comes after it. It names the personas its work is for, and capabilities say which initiatives they're part of. Choosing a scope shows everything, or one initiative, and every number counts only what's showing.",
     more: "Busy season, in Hotel Bookings: group bookings, the waitlist and room status, across two features. Unlike a feature, it's a stretch of work, not a lasting part of the product.",
   },
   mechanism: {
     name: "Mechanism",
     means:
       "How something works across a whole project, such as deployment, authentication or tenant isolation, so you need the whole picture to change it safely. It applies to every capability its project serves.",
-    more: "A component is one area of the code; a mechanism is built once and relied on everywhere. Expect a handful per repository.",
+    more: "A component is one part of the code; a mechanism is built once and relied on everywhere. Expect a handful per repository.",
   },
   component: {
     name: "Component",
-    means: "One area of the code, and what to know before changing it, named the way the code names it. One component can serve several capabilities.",
+    means: "One part of the code, and what to know before changing it, named the way the code names it. One component can serve several capabilities.",
     more: "A booking app's bookings component is where a room is held and double-booking is prevented. Something that works across the whole project is a mechanism instead.",
   },
   gap: {
@@ -163,7 +166,7 @@ export const TERMS: Record<TermId, TermEntry> = {
   exposure: {
     name: "Exposure",
     means:
-      "What the gaps and rated decisions still open on a feature, domain, project or what serves a persona put at stake together: how close its capabilities are to the worst their levels allow, as a percentage, in one of four bands: low, minor, moderate or high. It's to risk what maturity is to stability.",
+      "What the gaps and rated decisions still open on a feature, area, project or what serves a persona put at stake together: how close its capabilities are to the worst their levels allow, as a percentage, in one of four bands: low, minor, moderate or high. It's to risk what maturity is to stability.",
     more: "Each capability is exposed to its riskiest gap's or decision's share of the most it could be, a certain damaging gap reaching everyone that breaks a claim its level makes, and each counts by its level, GA most, as in maturity. Drafts don't count. Readiness is maturity less exposure.",
   },
   evidence: {
@@ -180,19 +183,25 @@ export const TERMS: Record<TermId, TermEntry> = {
   improvement: {
     name: "Improvement",
     means:
-      "Something that would make it more ready, and by how much: promoting a capability, or every capability in a feature or domain, to its next level, which raises maturity, or closing a gap or answering a rated open decision, which lowers exposure. They're shown by area, one level down, each with its potential and its next step.",
-    more: "They're what could be done, not a finish line: software that keeps growing is never done, and whether any of it is worth doing, and when to stop, is yours to judge. A gap that isn't the riskiest on any capability raises nothing yet, so it isn't one until it is. An area's potential is how ready it could be with all of the area settled; its next step is the one thing in it that would raise readiness most. Open an area to see what's in it.",
+      "Something that would make it more ready, and by how much: promoting a capability, or every capability in a feature or area, to its next level, which raises maturity, or closing a gap or answering a rated open decision, which lowers exposure. They're shown by part, one level down, each with its potential and its next step.",
+    more: "They're what could be done, not a finish line: software that keeps growing is never done, and whether any of it is worth doing, and when to stop, is yours to judge. A gap that isn't the riskiest on any capability raises nothing yet, so it isn't one until it is.",
+  },
+  part: {
+    name: "Part",
+    means:
+      "Where readiness could rise, one level below what's being looked at: a product's parts are its areas, an area's its features, a feature's its capabilities, and a capability's its steps. A gap or decision that's the riskiest in more than one part is a part of its own.",
+    more: "A part's potential is how ready what's being looked at could be with all of the part settled, every capability in it at GA with nothing open; its next step is the one thing in it that would raise readiness most. Potentials overlap, so they don't add up. Open a part to see its own parts.",
   },
   stability: {
     name: "Stability",
     means:
       "How much people can depend on a capability right now: Prototype, Alpha, Beta or GA. It's declared by the people building it, and only changes when someone promotes or demotes it. A capability not started yet is a draft, with no level.",
-    more: "Beta is the bar for real use: settled enough to rely on. A level is about dependability, not quality. Only capabilities have one; features, domains and projects have a maturity instead.",
+    more: "Beta is the bar for real use: settled enough to rely on. A level is about dependability, not quality. Only capabilities have one; features, areas and projects have a maturity instead.",
   },
   maturity: {
     name: "Maturity",
     means:
-      "How far along a feature, domain or project is: how much of the work under way is stable and supported, as a percentage worked out from its capabilities' stability. Stable capabilities count for more, and drafts don't count. It falls in one of four bands.",
+      "How far along a feature, area or project is: how much of the work under way is stable and supported, as a percentage worked out from its capabilities' stability. Stable capabilities count for more, and drafts don't count. It falls in one of four bands.",
     more: "It's about the whole, not each part, and starting new work lowers it without anything getting worse. It doesn't say whether people can rely on it: that's readiness.",
   },
   rubric: {

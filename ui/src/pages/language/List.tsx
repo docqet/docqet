@@ -14,14 +14,14 @@ import { RULE_STANDING_LABELS } from "../../components/names";
 import { Excerpt } from "../../components/markdown/Markdown";
 import { StandingMark } from "../../components/standing/StandingMark";
 import type { Route } from "../../routes";
-import { Empty, PageHeader, Section, Tabs, View, currentTab, type TabDef } from "../../components/shell/layout";
-import { domainName, find, type Concept, type DocqetState, type Rule, type RuleStanding } from "../../state";
+import { Empty, PageHeader, Tabs, View, currentTab, type TabDef } from "../../components/shell/layout";
+import { find, type Concept, type DocqetState, type Rule, type RuleStanding } from "../../state";
 import { DocLink, FilterBox, Num, byName, faintSx, matches, numSx, visuallyHiddenSx, wideOnlySx } from "../../components/indexParts";
 
 /*
- * The domain's language: what its words mean, and the rules that must hold.
- * Two tabs, concepts and rules, each grouped by domain, one line a row, with
- * a box to narrow them by name, since there can be hundreds of rules. How
+ * The product's language: what its words mean, and the rules that must hold.
+ * Two tabs, concepts and rules, each one list, one line a row, with a box to
+ * narrow them by name, since there can be hundreds of rules. How
  * many match is read out as the box narrows them.
  */
 export default function LanguagePage({ state, route }: { state: DocqetState; route: Route }) {
@@ -39,7 +39,7 @@ export default function LanguagePage({ state, route }: { state: DocqetState; rou
   const noun = tab === "rules" ? (matching === 1 ? "rule" : "rules") : matching === 1 ? "concept" : "concepts";
   return (
     <View title="Language" wide>
-      <PageHeader title="Language" lede="What do the words mean? Each domain's concepts, and the rules that must always or never happen." />
+      <PageHeader title="Language" lede="What do the words mean? The product's concepts, and the rules that must always or never happen." />
       <Tabs tabs={tabs} current={tab} />
       <Box sx={{ mb: 2 }}>
         <FilterBox value={query} onChange={setQuery} placeholder={tab === "rules" ? "Filter rules by name" : "Filter concepts"} />
@@ -50,12 +50,6 @@ export default function LanguagePage({ state, route }: { state: DocqetState; rou
       {tab === "rules" ? <Rules state={state} query={query} /> : <Concepts state={state} query={query} />}
     </View>
   );
-}
-
-/* Docs grouped by the domain they're written in, in the order domains come, each group's docs A to Z. */
-function byDomain<T extends { domain: string; name: string }>(state: DocqetState, docs: T[]): { domain: string; docs: T[] }[] {
-  const ids = [...state.domains.map((d) => d.id), ...docs.map((d) => d.domain)];
-  return [...new Set(ids)].map((domain) => ({ domain, docs: docs.filter((d) => d.domain === domain).sort(byName) })).filter((g) => g.docs.length);
 }
 
 /* A table of one line a row, its columns as wide as its headings say, what doesn't fit cut short. */
@@ -70,45 +64,36 @@ const countSx: SystemStyleObject<Theme>[] = [numSx, { width: 110 }, wideOnlySx];
 /* A name that fits its cell, cut short when it doesn't. */
 const fitSx: SystemStyleObject<Theme> = { maxWidth: "100%" };
 
-/* Each domain's concepts: name, what it means, and how many capabilities use it. A phone shows just the names and counts. */
+/* The concepts, A to Z: name, what it means, and how many capabilities use it. A phone shows just the names and counts. */
 function Concepts({ state, query }: { state: DocqetState; query: string }) {
   if (!state.concepts.length) return <Empty>No concepts are written down yet.</Empty>;
-  const groups = byDomain(
-    state,
-    state.concepts.filter((c) => matches(query, c, c.description)),
-  );
-  if (!groups.length) return <Empty>No concept matches “{query}”.</Empty>;
+  const shown = state.concepts.filter((c) => matches(query, c, c.description)).sort(byName);
+  if (!shown.length) return <Empty>No concept matches “{query}”.</Empty>;
   return (
-    <>
-      {groups.map((g) => (
-        <Section key={g.domain} title={domainName(state, g.domain)} count={g.docs.length}>
-          <TableContainer>
-            <Table sx={onelineSx}>
-              <TableHead>
-                <TableRow>
-                  <TableCell sx={{ width: { sm: "28%" } }}>
-                    <Term id="concept" hoverOnly>
-                      Concept
-                    </Term>
-                  </TableCell>
-                  <TableCell sx={wideOnlySx}>What it means</TableCell>
-                  <TableCell align="right" sx={countSx}>
-                    <Term id="capability" hoverOnly>
-                      Capabilities
-                    </Term>
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {g.docs.map((c) => (
-                  <ConceptRow key={c.id} concept={c} />
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Section>
-      ))}
-    </>
+    <TableContainer>
+      <Table sx={onelineSx}>
+        <TableHead>
+          <TableRow>
+            <TableCell sx={{ width: { sm: "28%" } }}>
+              <Term id="concept" hoverOnly>
+                Concept
+              </Term>
+            </TableCell>
+            <TableCell sx={wideOnlySx}>What it means</TableCell>
+            <TableCell align="right" sx={countSx}>
+              <Term id="capability" hoverOnly>
+                Capabilities
+              </Term>
+            </TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {shown.map((c) => (
+            <ConceptRow key={c.id} concept={c} />
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
   );
 }
 
@@ -129,61 +114,53 @@ function ConceptRow({ concept }: { concept: Concept }) {
 }
 
 /*
- * Each domain's rules: name, how many capabilities follow it, and whether
- * they hold to it, as counts of each standing. Within a domain, rules some
- * capability doesn't hold to yet come first, then the rest A to Z. A phone
- * leaves out how many follow it.
+ * The rules: name, how many capabilities follow it, and whether they hold
+ * to it, as counts of each standing. Rules some capability doesn't hold to
+ * yet come first, then the rest, each A to Z. A phone leaves out how many
+ * follow it.
  */
 function Rules({ state, query }: { state: DocqetState; query: string }) {
   if (!state.rules.length) return <Empty>No rules are written down yet.</Empty>;
   const standings = new Map(state.rules.map((r) => [r.id, standingsOf(state, r)]));
-  const groups = byDomain(
-    state,
-    state.rules.filter((r) => matches(query, r)),
-  ).map((g) => ({ ...g, docs: [...g.docs].sort((a, b) => Number(standings.get(b.id)!.gap > 0) - Number(standings.get(a.id)!.gap > 0)) }));
-  if (!groups.length) return <Empty>No rule matches “{query}”.</Empty>;
+  const notHeld = (r: Rule) => Number(standings.get(r.id)!.gap > 0);
+  const shown = state.rules.filter((r) => matches(query, r)).sort((a, b) => notHeld(b) - notHeld(a) || byName(a, b));
+  if (!shown.length) return <Empty>No rule matches “{query}”.</Empty>;
   const heldSx: SystemStyleObject<Theme> = { width: { xs: 96, sm: 200 } };
   return (
-    <>
-      {groups.map((g) => (
-        <Section key={g.domain} title={domainName(state, g.domain)} count={g.docs.length}>
-          <TableContainer>
-            <Table sx={onelineSx}>
-              <TableHead>
-                <TableRow>
-                  <TableCell>
-                    <Term id="rule" hoverOnly>
-                      Rule
-                    </Term>
-                  </TableCell>
-                  <TableCell align="right" sx={countSx}>
-                    <Term id="capability" hoverOnly>
-                      Capabilities
-                    </Term>
-                  </TableCell>
-                  <TableCell sx={heldSx}>Held</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {g.docs.map((r) => (
-                  <TableRow key={r.id}>
-                    <TableCell>
-                      <DocLink kind="rule" id={r.id} name={r.name} sx={fitSx} />
-                    </TableCell>
-                    <TableCell align="right" sx={countSx}>
-                      <Num n={r.capabilities.length} />
-                    </TableCell>
-                    <TableCell sx={heldSx}>
-                      <StandingCounts counts={standings.get(r.id)!} followed={r.capabilities.length} />
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Section>
-      ))}
-    </>
+    <TableContainer>
+      <Table sx={onelineSx}>
+        <TableHead>
+          <TableRow>
+            <TableCell>
+              <Term id="rule" hoverOnly>
+                Rule
+              </Term>
+            </TableCell>
+            <TableCell align="right" sx={countSx}>
+              <Term id="capability" hoverOnly>
+                Capabilities
+              </Term>
+            </TableCell>
+            <TableCell sx={heldSx}>Held</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {shown.map((r) => (
+            <TableRow key={r.id}>
+              <TableCell>
+                <DocLink kind="rule" id={r.id} name={r.name} sx={fitSx} />
+              </TableCell>
+              <TableCell align="right" sx={countSx}>
+                <Num n={r.capabilities.length} />
+              </TableCell>
+              <TableCell sx={heldSx}>
+                <StandingCounts counts={standings.get(r.id)!} followed={r.capabilities.length} />
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
   );
 }
 

@@ -7,16 +7,16 @@ import { STABILITY, STABILITY_LEVEL_IDS, levelColor, type StabilityLevelId } fro
 import { LevelSpread } from "../stability/StabilitySpread";
 
 /*
- * A feature's maturity comes from its capabilities, a domain's from its parts
- * of features, and a project's from its features. A persona's is of what
+ * A feature's maturity comes from its capabilities, and an area's and a
+ * project's from their features. A persona's is of what
  * serves them, from the capabilities that list them, as a feature's is, and
  * a problem's of what solves it, and a constraint's of what keeps to it.
  */
-export type MaturitySubject = "feature" | "domain" | "project" | "persona" | "problem" | "constraint" | "initiative";
+export type MaturitySubject = "feature" | "area" | "project" | "persona" | "problem" | "constraint" | "initiative";
 
 export const SUBJECT_NAMES: Record<MaturitySubject, string> = {
   feature: "Feature",
-  domain: "Domain",
+  area: "Area",
   project: "Project",
   persona: "Persona",
   problem: "Problem",

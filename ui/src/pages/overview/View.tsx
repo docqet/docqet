@@ -10,7 +10,7 @@ import { ExposureStat, MaturityStat } from "../../components/indexParts";
 import { ExposureMark } from "../../components/risk/RiskScore";
 import { PersonaAvatar } from "../../components/Personas";
 import { ReadinessMark } from "../../components/Readiness";
-import { AreaRows, ImprovementsFigure, bestStep, improvementWords } from "../../components/improvements/Improvements";
+import { PartRows, ImprovementsFigure, bestStep, improvementWords } from "../../components/improvements/Improvements";
 import { InlineMarkdown } from "../../components/markdown/Markdown";
 import { MaturityRing } from "../../components/maturity/MaturityRing";
 import { MATURITY_BANDS } from "../../components/maturity/maturity";
@@ -20,21 +20,19 @@ import { Term } from "../../components/term/Term";
 import { docHref, sectionHref, type Route } from "../../routes";
 import { Empty, PageHeader, Section, Stat, View } from "../../components/shell/layout";
 import {
-  domainCapabilities,
+  areaCapabilities,
   failingFindings,
   find,
-  partOf,
   isReady,
   readyShare,
   startedOf,
-  gapsOn,
   inRiskOrder,
   openDecisions,
   subjectOf,
   technicalDoc,
   type CapabilityLevel,
+  type Area,
   type DocqetState,
-  type Domain,
   type Gap,
   type Level,
 } from "../../state";
@@ -66,7 +64,7 @@ const nameRowSx: SystemStyleObject<Theme> = { ...rowSx, display: "flex", alignIt
  * far along the work is, its readiness, whether people can use it, who it's
  * least ready for, its improvements and what's wrong in the docs, as tiles
  * that each link to where they're explained; then what would make it more
- * ready, how stable each domain is, how ready it is for each persona, and
+ * ready, how stable each area is, how ready it is for each persona, and
  * the few riskiest gaps. Summary only: every count links on rather than
  * listing.
  */
@@ -87,7 +85,7 @@ export default function OverviewPage({ state }: { state: DocqetState; route: Rou
   const failing = failingFindings(state).length;
   const advisory = state.findings.length - failing;
   const riskiest = useMemo(() => inRiskOrder(state.gaps, (g) => g).slice(0, 5), [state]);
-  const decisions = [...state.domains, ...state.features, ...state.capabilities, ...state.mechanisms, ...state.components].reduce(
+  const decisions = [...state.areas, ...state.features, ...state.capabilities, ...state.mechanisms, ...state.components].reduce(
     (n, doc) => n + openDecisions(doc).length,
     0,
   );
@@ -147,7 +145,7 @@ export default function OverviewPage({ state }: { state: DocqetState; route: Rou
               label="Improvements"
               term="improvement"
               href={sectionHref("improvements")}
-              value={readiness.areas.length ? <ImprovementsFigure readiness={readiness} /> : "None now"}
+              value={readiness.parts.length ? <ImprovementsFigure readiness={readiness} /> : "None now"}
               note={
                 bestStep(readiness)
                   ? `Most from ${improvementWords(bestStep(readiness)!)}`
@@ -174,22 +172,24 @@ export default function OverviewPage({ state }: { state: DocqetState; route: Rou
         title="Improvements"
         term="improvement"
         note="Where it could become more ready, by potential: how ready it could be with all of each settled, and where the next step would take it. They're what could be done, not a finish line: what's worth doing is yours to judge."
-        aside={readiness.areas.length > 5 ? <a href={sectionHref("improvements")}>See all {readiness.areas.length}</a> : null}
+        aside={readiness.parts.length > 5 ? <a href={sectionHref("improvements")}>See all {readiness.parts.length}</a> : null}
       >
-        <AreaRows readiness={readiness} limit={5} />
+        <PartRows readiness={readiness} limit={5} />
       </Section>
 
-      <Section
-        title={
-          <>
-            Where each <Term id="domain">domain</Term> stands
-          </>
-        }
-        count={state.domains.length}
-        note="Its maturity and its capabilities' stability, beside their exposure and its improvements, least mature first."
-      >
-        {state.domains.length ? <DomainStability state={state} /> : <Empty>No domains yet.</Empty>}
-      </Section>
+      {state.areas.length ? (
+        <Section
+          title={
+            <>
+              Where each <Term id="area">area</Term> stands
+            </>
+          }
+          count={state.areas.length}
+          note="Its maturity and its capabilities' stability, beside their exposure and its improvements, least mature first."
+        >
+          <AreaStability state={state} />
+        </Section>
+      ) : null}
 
       {personas.length ? (
         <Section
@@ -266,7 +266,7 @@ export default function OverviewPage({ state }: { state: DocqetState; route: Rou
 /* Under the name: which projects, with several, and how much there is. */
 function Lede({ state }: { state: DocqetState }) {
   const sizes = [
-    plural(state.domains.length, "domain", "domains"),
+    ...(state.areas.length ? [plural(state.areas.length, "area", "areas")] : []),
     plural(state.features.length, "feature", "features"),
     plural(state.capabilities.length, "capability", "capabilities"),
   ].join(", ");
@@ -291,38 +291,27 @@ const draftSwatchSx = (theme: Theme) => ({
 /* Draft first, then the levels from Prototype to GA, as the bars run left to right. */
 const BAR_ORDER: CapabilityLevel[] = [null, ...STABILITY_LEVEL_IDS];
 
-/* A capability's level in a domain: its own there, as it can differ by domain, or else its overall one. */
-function levelIn(state: DocqetState, domain: Domain) {
-  return domainCapabilities(state, domain).map((c) => c.levels.find((l) => l.domain === domain.id)?.level ?? c.stability);
-}
-
 const levelLabel = (level: CapabilityLevel) => (level ? STABILITY[level].name : "Draft");
 
 /*
- * Where each domain stands, a line each: its maturity, its capabilities as a
+ * Where each area stands, a line each: its maturity, its capabilities as a
  * bar split by stability level, and its exposure and improvements. One key
  * under the list says which color is which level. Least mature first. Below
  * md, the name and maturity share a line, and the bar and the figures each
  * take one of their own.
  */
-function DomainStability({ state }: { state: DocqetState }) {
-  const rows = [...state.domains]
-    .map((domain) => {
-      const capabilities = domainCapabilities(state, domain);
-      const levels = levelIn(state, domain);
-      const gaps = [...new Set(capabilities.flatMap((c) => gapsOn(state, c)))];
-      const decisions = capabilities.reduce((n, c) => n + openDecisions(c).length, openDecisions(domain).length);
-      return { domain, capabilities, levels, gaps, decisions };
-    })
-    .sort((a, b) => (a.domain.maturity ?? -1) - (b.domain.maturity ?? -1));
+function AreaStability({ state }: { state: DocqetState }) {
+  const rows = [...state.areas]
+    .map((area) => ({ area, levels: areaCapabilities(state, area).map((c) => c.stability), features: featuresOf(state, area) }))
+    .sort((a, b) => (a.area.maturity ?? -1) - (b.area.maturity ?? -1));
   return (
     <>
       <ul>
-        {rows.map(({ domain, levels }) => {
+        {rows.map(({ area, levels, features }) => {
           return (
             <Box
               component="li"
-              key={domain.id}
+              key={area.id}
               sx={{
                 ...rowSx,
                 display: "grid",
@@ -331,15 +320,15 @@ function DomainStability({ state }: { state: DocqetState }) {
                 gap: 2,
               }}
             >
-              <Box component="a" href={docHref("domain", domain.id)} sx={nameLinkSx}>
-                {domain.name}
+              <Box component="a" href={docHref("area", area.id)} sx={nameLinkSx}>
+                {area.name}
               </Box>
               <Maturity
-                value={domain.maturity}
-                subject="domain"
-                count={domain.features.length}
+                value={area.maturity}
+                subject="area"
+                count={features.length}
                 of="none of its capabilities has a level yet"
-                spread={domain.features.map((id) => partOf(find(state.features, id), domain.id)?.band ?? null)}
+                spread={features.map((f) => f.band)}
               />
               {/* Its capabilities as a bar split by level, with how many there are. */}
               <Box
@@ -354,7 +343,7 @@ function DomainStability({ state }: { state: DocqetState }) {
                 }}
               >
                 {levels.length ? (
-                  <StabilitySpread levels={levels} of={domain.name} wide />
+                  <StabilitySpread levels={levels} of={area.name} wide />
                 ) : (
                   <Box component="span" sx={faintSx}>
                     No capabilities
@@ -370,13 +359,13 @@ function DomainStability({ state }: { state: DocqetState }) {
                 sx={{ display: "flex", justifyContent: { xs: "flex-start", md: "flex-end" }, gridColumn: { xs: "1 / -1", md: "auto" }, whiteSpace: "nowrap" }}
               >
                 <Box component="span" sx={{ display: "inline-flex", alignItems: "center", gap: 1.5 }}>
-                  <ExposureMark exposure={domain.exposure} risk={domain.readiness.gaps} of={domain.name} />
+                  <ExposureMark exposure={area.exposure} risk={area.readiness.gaps} of={area.name} />
                   <Box
                     component="a"
-                    href={docHref("domain", domain.id, "improvements")}
+                    href={docHref("area", area.id, "improvements")}
                     sx={{ textDecoration: "none", color: "inherit", "&:hover": { color: "primary.main" } }}
                   >
-                    <ImprovementsFigure readiness={domain.readiness} />
+                    <ImprovementsFigure readiness={area.readiness} />
                   </Box>
                 </Box>
               </Box>
@@ -395,6 +384,9 @@ function DomainStability({ state }: { state: DocqetState }) {
     </>
   );
 }
+
+/* An area's features, as it lists them. */
+const featuresOf = (state: DocqetState, area: Area) => area.features.flatMap((id) => find(state.features, id) ?? []);
 
 /* What a gap is on, quieter than the gap itself, its icon kept whole as the name cuts off. */
 const onSx: SystemStyleObject<Theme> = {

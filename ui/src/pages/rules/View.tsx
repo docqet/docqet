@@ -14,9 +14,9 @@ import { CapabilityStability } from "../../components/CapabilityLabel";
 import { Body, Excerpt } from "../../components/markdown/Markdown";
 import { StandingMark } from "../../components/standing/StandingMark";
 import { Term } from "../../components/term/Term";
-import { docHref, navigate, type Route } from "../../routes";
+import { docHref, navigate, sectionHref, type Route } from "../../routes";
 import { Empty, PageHeader, Section, Stat, Tabs, View, currentTab, type TabDef } from "../../components/shell/layout";
-import { byFeature, contradictionsOf, domainName, find, gapsById, projectName, type Capability, type DocqetState, type Rule } from "../../state";
+import { byFeature, contradictionsOf, find, gapsById, projectName, type Capability, type DocqetState, type Rule } from "../../state";
 /* EvidenceList's rules, until it's styled in place. */
 import { EvidenceList } from "../../components/doc/EvidenceList";
 import { Missing } from "../../components/doc/Missing";
@@ -71,7 +71,7 @@ function RuleView({ state, rule, route }: { state: DocqetState; rule: Rule; rout
       <PageHeader
         trail={
           <>
-            <a href={docHref("domain", rule.domain)}>{domainName(state, rule.domain)}</a>
+            <a href={sectionHref("language", { tab: "rules" })}>Language</a>
             <InitiativeTags state={state} ids={initiativesOf(state, following)} />
           </>
         }
@@ -186,11 +186,6 @@ function RuleView({ state, rule, route }: { state: DocqetState; rule: Rule; rout
                   </Box>
                 ) : null}
               </Box>
-              {c.domain !== rule.domain ? (
-                <Box component="span" sx={{ flex: "none", fontSize: 12.5, color: "text.disabled" }}>
-                  {domainName(state, c.domain)}
-                </Box>
-              ) : null}
             </Box>
           ))}
         </Box>

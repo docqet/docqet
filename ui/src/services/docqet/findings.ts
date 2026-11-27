@@ -6,7 +6,6 @@ export type FindingResource = {
   subject: string;
   capabilities: string[];
   message: string;
-  domain?: string;
   file?: string;
   line?: number;
   /* Shown, but never failing a check. */
