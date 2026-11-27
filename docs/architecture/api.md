@@ -123,7 +123,7 @@ GET /api/v1/projects/hotel-bookings/commits                          the commits
   happened, such as a gap closed, a promotion or a decision answered, and what
   it's about. `/changes` is a paginated list of them, filtered like any other.
   How a change is modelled is still in flux (see
-  [the Reporting domain's decisions](../../docqet/domains/reporting/domain.md)).
+  [the Understanding domain's decisions](../../docqet/domains/understanding/domain.md)).
 - **A comparison** is the net difference between two points, as `docqet diff`
   shows it. It isn't a collection, so it's a read of its own, as GitHub's
   `/compare` is.

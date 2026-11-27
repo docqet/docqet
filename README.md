@@ -82,8 +82,9 @@ docqet check                              # exit 1 on any problem
 ## Learn more
 
 - **The concepts.** The [Authoring](docqet/domains/authoring/domain.md) and
-  [Reporting](docqet/domains/reporting/domain.md) domains define the format:
-  capabilities, rules, gaps, stability levels, maturity, readiness and the rest.
+  [Understanding](docqet/domains/understanding/domain.md) domains define the
+  format: capabilities, rules, gaps, stability levels, maturity, readiness and
+  the rest.
 - **[Principles](docs/principles.md):** how Docqet supports software
   engineering, what it isn't, and what belongs in it.
 - **[Docqet's parts](docs/parts.md):** the format, the kit, the `docqet` CLI

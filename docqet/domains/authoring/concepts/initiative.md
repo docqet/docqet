@@ -43,9 +43,9 @@ and it's for the front desk clerk and the housekeeper.
   capability or persona in no initiative shows only when everything does.
 - **It has no [stability level](stability-level.md)**, the same as a feature,
   and no gaps, tradeoffs or open decisions. It has a
-  [maturity](../../reporting/concepts/maturity.md), an
-  [exposure](../../reporting/concepts/exposure.md) and a
-  [readiness](../../reporting/concepts/readiness.md), worked out from its
+  [maturity](../../understanding/concepts/maturity.md), an
+  [exposure](../../understanding/concepts/exposure.md) and a
+  [readiness](../../understanding/concepts/readiness.md), worked out from its
   capabilities.
 - **It doesn't say when.** It has no dates and no order, just as a
   [gap](gap.md) doesn't say when it'll be closed.

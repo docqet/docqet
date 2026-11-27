@@ -49,7 +49,7 @@ says of them all:
   list. It lists none itself, so a new capability is covered as soon as it's
   declared, and its technical gaps and the outcomes it meets show on each of
   them, under the hood.
-- **Or every capability its [product](../../reporting/concepts/product.md)
+- **Or every capability its [product](../../understanding/concepts/product.md)
   serves**, with `applies: product`: what every project in the product
   serves, worked out the same way. It's for something one project runs for
   all of them, such as authentication in an API gateway that every service

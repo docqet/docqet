@@ -45,7 +45,7 @@ repositories:
 
 How results and changes are modelled is still in flux, so these two are
 placeholders, named for now by what they hold (see
-[the Reporting domain's decisions](../../docqet/domains/reporting/domain.md)).
+[the Understanding domain's decisions](../../docqet/domains/understanding/domain.md)).
 
 - **Resources never come from a repository.** Capabilities, gaps, readiness
   and the rest aren't stored: the read service works them out from states with

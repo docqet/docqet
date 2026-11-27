@@ -50,7 +50,7 @@ The core's packages:
 | `state`   | The types of `state.json`, as the [state](../../docqet/domains/authoring/concepts/state.md) concept defines them                | `docqet index`                      |
 | `index`   | Reads a project's docs and annotations, and works out evidence, reverse links and problems              | `docqet index`                      |
 | `check`   | Finds the problems a state shows on its own, for the CLI and the server alike                           | `docqet check`, `apply`, the server |
-| `combine` | Puts several projects of one product together, as [Combining](../../docqet/domains/reporting/concepts/product.md) describes | `--product`, the server's reads     |
+| `combine` | Puts several projects of one product together, as [Combining](../../docqet/domains/understanding/concepts/product.md) describes | `--product`, the server's reads     |
 | `derive`  | Works out maturity, readiness, risk and exposure                                                        | `docqet status`, the API            |
 | `diff`    | Compares two states, with the trailers between them                                                     | `docqet diff`, `log`, `preview`     |
 
@@ -98,14 +98,14 @@ Each step builds only what its commands need:
 ## Open decisions
 
 Open decisions are in Docqet's own docs, such as how results and changes are
-modelled, on the [Reporting](../../docqet/domains/reporting/domain.md) domain.
+modelled, on the [Understanding](../../docqet/domains/understanding/domain.md) domain.
 
 ## Left out for now
 
 What's left out for now is in Docqet's own docs, as gaps, tradeoffs and draft
 capabilities: signing in on
-[Applying states](../../docqet/domains/reporting/capabilities/applying.md),
-[Trends](../../docqet/domains/reporting/capabilities/trends.md),
-`?at=` on the [Local viewer](../../docqet/domains/reporting/capabilities/local-viewer.md),
+[Applying states](../../docqet/domains/understanding/capabilities/applying.md),
+[Trends](../../docqet/domains/understanding/capabilities/trends.md),
+`?at=` on the [Local viewer](../../docqet/domains/understanding/capabilities/local-viewer.md),
 and how the server is configured on the [Server](../../docqet/components/server.md)
 component.

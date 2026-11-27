@@ -8,10 +8,10 @@ description: >-
   declared by the people building it, and only changes when someone decides to
   promote or demote it.
 confused-with:
-  - concept: "concept:maturity@reporting"
+  - concept: "concept:maturity@understanding"
     summary: >-
       how far along a whole feature, domain or project is, worked out from its capabilities' levels.
-  - concept: "concept:readiness@reporting"
+  - concept: "concept:readiness@understanding"
     summary: >-
       how ready people can rely on something being, worked out from levels and gaps.
   - term: "How good the work is"
@@ -38,11 +38,11 @@ What each level generally expects, quality by quality, is in the
 - **Stability isn't perfection.** GA software still has bugs, and it can
   still have known [gaps](gap.md).
 - **Beta is the bar for real use.** Reaching each next level is one of the
-  improvements [readiness](../../reporting/concepts/readiness.md) lists.
+  improvements [readiness](../../understanding/concepts/readiness.md) lists.
 - **Only capabilities have one.** A feature's, domain's, project's,
   persona's and initiative's
-  [maturity](../../reporting/concepts/maturity.md) and
-  [readiness](../../reporting/concepts/readiness.md) are worked out from
+  [maturity](../../understanding/concepts/maturity.md) and
+  [readiness](../../understanding/concepts/readiness.md) are worked out from
   their capabilities' levels.
 - **A capability has one in each domain that builds part of it.** Where they
   differ, its level in short is the lowest, since that's what you can count

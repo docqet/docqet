@@ -17,12 +17,12 @@ directly. `docqet` works it out, as the CLI or as the server, and the UI only
 shows what `docqet` gives it. To show several projects together, `docqet`
 reads each one's state and **combines** them: it puts each doc's
 contributions together, works out reverse links again across them, and finds
-the [contradictions](../../reporting/concepts/contradiction.md) between them. Showing only some
+the [contradictions](../../understanding/concepts/contradiction.md) between them. Showing only some
 projects combines just what they define.
 
 Some things are worked out only when the state is shown, since they depend on
 other projects: which outcomes a capability meets with evidence,
-[risk](../../reporting/concepts/risk.md), [maturity](../../reporting/concepts/maturity.md) and [readiness](../../reporting/concepts/readiness.md).
+[risk](../../understanding/concepts/risk.md), [maturity](../../understanding/concepts/maturity.md) and [readiness](../../understanding/concepts/readiness.md).
 `docqet` works these out too, and the UI never does.
 
 A state can be of a working tree, uncommitted changes included, or of a

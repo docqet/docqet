@@ -24,7 +24,7 @@ confused-with:
       the software meant to do something and doesn't, closed by fixing the code, in the issue tracker. A gap needs work nobody has done yet.
   - term: "A task"
     summary: >-
-      Docqet doesn't say when or how a gap is closed. Planning that is a task tracker's job. [Risk](../../reporting/concepts/risk.md) says what's at stake, not what to do first.
+      Docqet doesn't say when or how a gap is closed. Planning that is a task tracker's job. [Risk](../../understanding/concepts/risk.md) says what's at stake, not what to do first.
 ---
 
 ## Where gaps and tradeoffs go
@@ -78,7 +78,7 @@ A gap says what's at stake with its `impact`, `likelihood` and `reach`.
 Every gap rates all three: none of them has a default, and a gap missing
 one is `invalid-frontmatter`. All three are rated as if people relied on the
 capability, never lowered by its level, since
-[risk](../../reporting/concepts/risk.md) weighs them by its level. So they
+[risk](../../understanding/concepts/risk.md) weighs them by its level. So they
 aren't rated again when the capability is promoted. Readers order gaps by
 the risk worked out from them.
 
@@ -209,7 +209,7 @@ For a gap:
 - **A gap affecting a claim breaks it** where that claim is made: on each
   capability it shows on whose level expects the outcome, or that follows the
   rule. People may be relying on something that isn't true yet, so it raises
-  the gap's [risk](../../reporting/concepts/risk.md) there.
+  the gap's [risk](../../understanding/concepts/risk.md) there.
 - **A rule written before it's built** is followed with a gap affecting it on
   each capability that doesn't hold to it yet, since following a rule
   otherwise claims it holds. City tax is added for children, so city tax

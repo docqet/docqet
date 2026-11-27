@@ -40,8 +40,8 @@ next guest".
   Guest stays, with check-in and check-out, and in Billing, with settling the
   bill at check-out.
 - **It has no stability level.** Each of its capabilities has its own. It has
-  a [maturity](../../reporting/concepts/maturity.md), how far along it is, and
-  a [readiness](../../reporting/concepts/readiness.md), how ready people can
+  a [maturity](../../understanding/concepts/maturity.md), how far along it is, and
+  a [readiness](../../understanding/concepts/readiness.md), how ready people can
   rely on it being, both worked out from its capabilities. Nobody writes them
   down.
 

@@ -123,6 +123,6 @@ lives, how the CLI and the server share it, and the API the UI reads.
 What we haven't decided is written down as open decisions in Docqet's own
 docs, on the domain or capability each is about, such as
 [what to call the format](../docqet/domains/authoring/capabilities/docs-format.md)
-and [how people sign in to a server](../docqet/domains/reporting/capabilities/applying.md).
+and [how people sign in to a server](../docqet/domains/understanding/capabilities/applying.md).
 `docqet check` at the root of this repository indexes them, and the UI shows
 them.

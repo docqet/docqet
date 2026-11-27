@@ -26,7 +26,7 @@ info:
     endpoint and in the navigation, which says what to expect when you hover,
     focus, or tap it, and every endpoint states it in its `x-stability`
     field. Each group of endpoints shows its
-    [maturity](https://github.com/docqet/docqet/blob/main/docqet/domains/reporting/concepts/maturity.md) in the
+    [maturity](https://github.com/docqet/docqet/blob/main/docqet/domains/understanding/concepts/maturity.md) in the
     navigation, and in the overview under Maturity below: how close its
     endpoints are to being stable and supported.
 

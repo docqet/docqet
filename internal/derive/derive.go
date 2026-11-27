@@ -1,7 +1,7 @@
 // Package derive works out the figures nobody writes down from a combined
 // product: maturity and its bands, each gap's risk and verdict, exposure,
-// readiness, and its improvements. They're the reporting domain's concepts, worked
-// out as the UI works them out, with its numbers. It's pure: what it returns
+// readiness, and its improvements. They're the understanding domain's
+// concepts, worked out as the UI works them out, with its numbers. It's pure: what it returns
 // depends only on the product it's given.
 //
 // A figure for some capabilities, such as a domain's or a persona's
@@ -20,7 +20,7 @@ import (
 
 // started reports whether level is a stability level, not a draft. Only
 // started capabilities count toward a figure.
-// docqet:implements rule:drafts-claim-nothing@reporting
+// docqet:implements rule:drafts-claim-nothing@understanding
 func started(level string) bool {
 	return combine.Rank(level) > 0
 }

@@ -20,7 +20,7 @@ are the definition of the format. There's no separate spec.
 
 - **Start with the domains.** [Authoring](domains/authoring/domain.md)
   introduces writing intention down and how the concepts fit together.
-  [Reporting](domains/reporting/domain.md) introduces how it's shown:
+  [Understanding](domains/understanding/domain.md) introduces how it's shown:
   maturity, readiness, risk and improvements.
 - **A concept defines a word for any project.** The
   [rule](domains/authoring/concepts/rule.md) concept says what a rule is
@@ -49,13 +49,13 @@ are the definition of the format. There's no separate spec.
 docqet/
 ├── personas/              who Docqet is for
 ├── domains/
-│   ├── authoring/         writing intention and annotations, then indexing and checking them
+│   ├── authoring/         declaring intention and evidence, and keeping both current
 │   │   ├── domain.md      the entry point to the format
 │   │   ├── concepts/      the format's words: doc, capability, rule, gap, annotation…
 │   │   ├── features/
 │   │   ├── capabilities/
 │   │   └── rules/
-│   └── reporting/         the server, maturity and readiness, history, and the UI
+│   └── understanding/     what everyone involved can learn from it: where it stands, what it means, what changed
 │       └── …              the same, with maturity, readiness, risk and exposure as concepts
 ├── mechanisms/            how something works across docqet's code
 └── components/            one area of docqet's code, linked to docs/architecture/

@@ -48,8 +48,8 @@ domain.
   is a part of the business the software doesn't serve yet.
 - **It's one level.** A domain holds its parts of features, never other
   domains.
-- **It has no stability level.** It has a [maturity](../../reporting/concepts/maturity.md), worked out
-  from its parts of features, and a [readiness](../../reporting/concepts/readiness.md), from every
+- **It has no stability level.** It has a [maturity](../../understanding/concepts/maturity.md), worked out
+  from its parts of features, and a [readiness](../../understanding/concepts/readiness.md), from every
   capability with a part in it.
 
 ## How it's written
@@ -89,7 +89,7 @@ decisions:
 ## Putting contributions together
 
 Every project contributes what it knows to one picture of the
-[product](../../reporting/concepts/product.md). How a doc is put together
+[product](../../understanding/concepts/product.md). How a doc is put together
 with others of the same ID depends on its type:
 
 | Type | Is one across | The same ID elsewhere |
@@ -111,7 +111,7 @@ with others of the same ID depends on its type:
   fields that aren't links, such as `decisions` or a rule's `why`. Readers
   show each, labelled with its project and domain. Its name and description,
   and a persona's role and title, should match the others'. Where they don't,
-  that's a [contradiction](../../reporting/concepts/contradiction.md).
+  that's a [contradiction](../../understanding/concepts/contradiction.md).
 - **A capability's `stability` is per domain.** Each contribution declares the
   level of its own part. Where they differ, the capability's level in short is
   the lowest, and readers show each.

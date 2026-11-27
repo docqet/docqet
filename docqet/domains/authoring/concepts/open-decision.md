@@ -38,7 +38,7 @@ does. People rely on what the software does now, and an answer that changes
 it changes what they relied on. A decision says how much that could cost
 them with the same three ratings a [gap](gap.md#whats-at-stake) has,
 `impact`, `likelihood` and `reach`, and has a
-[risk](../../reporting/concepts/risk.md) worked out from them the same way.
+[risk](../../understanding/concepts/risk.md) worked out from them the same way.
 
 The ratings are optional, but all or none. A decision with none has no
 risk: answering it changes nothing anyone relies on, such as what the
@@ -105,9 +105,9 @@ On each, it breaks a claim, as a gap does, where it affects an outcome that
 capability's level expects: whether the outcome is met isn't settled, so
 people relying on it are relying on something nobody can vouch for yet.
 
-A rated decision counts in [exposure](../../reporting/concepts/exposure.md)
+A rated decision counts in [exposure](../../understanding/concepts/exposure.md)
 beside gaps, so answering it can be one of the
-[improvements](../../reporting/capabilities/improvements.md) that would
+[improvements](../../understanding/capabilities/improvements.md) that would
 make something more ready.
 
 ## What it affects

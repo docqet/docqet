@@ -5,14 +5,14 @@ domain: authoring
 name: Project
 description: >-
   One piece of software that describes itself to Docqet, as part of a
-  [software product](../../reporting/concepts/product.md): a folder marked by a `docqet.yaml` that gives
+  [software product](../../understanding/concepts/product.md): a folder marked by a `docqet.yaml` that gives
   the project's ID and name, with everything in it. It's where software is
   defined, and usually implemented. Its docs say what the software can do and
   the rules it follows, and its code and tests, when it has them, do it and
   prove it. To Docqet, it's a source of [state](state.md): each project is
   indexed on its own.
 confused-with:
-  - concept: "concept:product@reporting"
+  - concept: "concept:product@understanding"
     summary: >-
       the projects that make up one product. A project is one source of state on it.
   - term: "Repository"
@@ -50,17 +50,17 @@ repositories, or two folders in one.
   Bookings works in Guest stays and Property, and Hotel Billing in Billing and
   Finance. Both say something about check-out: bookings that clerks check
   guests out, billing that the guest's bill is settled as they go. Where they
-  disagree, that's a [contradiction](../../reporting/concepts/contradiction.md).
+  disagree, that's a [contradiction](../../understanding/concepts/contradiction.md).
 - **Moving docs between projects changes no product doc.** Giving a service a
   `docqet.yaml` of its own, or moving it to a repository of its own, makes a
   new project, but it creates, removes or renames no domain, feature or
   capability.
-- **It's part of one [software product](../../reporting/concepts/product.md)**: the end result of its
+- **It's part of one [software product](../../understanding/concepts/product.md)**: the end result of its
   projects working together, shown and combined as one. Hotel Bookings and
   Hotel Billing are both part of Hotel. A project that names no product is a
   product of its own.
-- **It has no stability level.** It has a [maturity](../../reporting/concepts/maturity.md), worked
-  out from its features, and a [readiness](../../reporting/concepts/readiness.md), from every
+- **It has no stability level.** It has a [maturity](../../understanding/concepts/maturity.md), worked
+  out from its features, and a [readiness](../../understanding/concepts/readiness.md), from every
   capability it shows. Several projects shown together have both too, as if
   they were one project. Showing only some projects works out each feature's
   and domain's from what those projects say.
@@ -85,7 +85,7 @@ product:
   - **`name`** is what people see, named for the software, not for a domain:
     Hotel Bookings, not Guest stays.
 - **`product`**, optional, says which
-  [software product](../../reporting/concepts/product.md) the project is part
+  [software product](../../understanding/concepts/product.md) the project is part
   of, with its own `id` and `name`, as the product describes.
 
 Its [state](state.md) starts with the same, the commit it describes, and a

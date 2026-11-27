@@ -6,7 +6,7 @@ name: Problem
 description: >-
   Something the indexer, or combining, found wrong in the docs, such as a link
   to a doc that doesn't exist, a capability in two features, or a
-  [contradiction](../../reporting/concepts/contradiction.md) between projects.
+  [contradiction](../../understanding/concepts/contradiction.md) between projects.
 confused-with:
   - concept: "concept:gap"
     summary: >-
@@ -31,12 +31,12 @@ closed, for example, is an `unknown-id`.
 | `broken-link`         | A relative link in a doc's body or a text value doesn't resolve. |
 | `unlinked-rule`       | No capability follows a rule. |
 | `in-two-features`     | More than one feature lists the same capability. |
-| `contradiction`       | Contributions that should agree don't, as [contradiction](../../reporting/concepts/contradiction.md) describes. |
+| `contradiction`       | Contributions that should agree don't, as [contradiction](../../understanding/concepts/contradiction.md) describes. |
 | `invalid-annotation`  | An annotation names a rule without its domain. |
 | `unknown-outcome`     | An outcome in a gap's, tradeoff's or decision's `affects`, or in `meets`, isn't an outcome in [the stability rubric](rubric.md). |
 
 `in-two-features` is a contradiction too, when the listings are in different
-projects. [Combining](../../reporting/concepts/product.md#combining) raises
+projects. [Combining](../../understanding/concepts/product.md#combining) raises
 `contradiction`, `duplicate-id`, and `in-two-features` across projects.
 
 ## How it's written

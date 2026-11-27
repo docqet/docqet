@@ -18,8 +18,8 @@ confused-with:
   [tradeoffs](tradeoff.md), [links](link.md) and
   [annotations](annotation.md).
 - **Derived**: worked out by the [indexer](indexer.md), or by readers.
-  [Evidence](evidence.md), [maturity](../../reporting/concepts/maturity.md), [bands](../../reporting/concepts/band.md),
-  [readiness](../../reporting/concepts/readiness.md), [risk](../../reporting/concepts/risk.md), the
+  [Evidence](evidence.md), [maturity](../../understanding/concepts/maturity.md), [bands](../../understanding/concepts/band.md),
+  [readiness](../../understanding/concepts/readiness.md), [risk](../../understanding/concepts/risk.md), the
   standing of each outcome in [the stability rubric](rubric.md), reverse
   links and [problems](problem.md). Nobody edits it by hand.
 

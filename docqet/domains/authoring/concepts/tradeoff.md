@@ -34,7 +34,7 @@ came with the choice.
 ## No risk
 
 A tradeoff isn't rated and carries no
-[risk](../../reporting/concepts/risk.md). Risk asks whether it's OK to leave
+[risk](../../understanding/concepts/risk.md). Risk asks whether it's OK to leave
 something open, and a tradeoff is the answer: someone weighed its drawback
 against its benefit and chose to live with it. Its drawback says what was
 accepted, in words.

@@ -17,7 +17,7 @@ Docqet's format is how a repository records what its software is meant to
 do, so that people, agents and tools can all read it. It belongs to no
 particular tool: anyone can adopt it or write their own indexer for it.
 
-This domain's [concepts](concepts/), with [reporting's](../reporting/domain.md),
+This domain's [concepts](concepts/), with [understanding's](../understanding/domain.md),
 are the format's definition. Each concept doc says what a word means, how
 it's written down, and every rule about it. When a concept doc and a word in
 the code or the UI disagree, the concept doc is what we intend, and the other
@@ -57,7 +57,7 @@ domains, such as [intention docs](capabilities/docs-format.md).
 
 ## The big picture
 
-A **[software product](../reporting/concepts/product.md)** is the end result
+A **[software product](../understanding/concepts/product.md)** is the end result
 of one or more pieces of software working together to accomplish a
 high-level goal, such as a hotel's booking app and billing service. Each
 piece is a **[project](concepts/project.md)**: a folder marked by a
@@ -69,7 +69,7 @@ business, each with its own language, such as Guest stays or Billing. Every
 doc but a persona, an initiative, a mechanism or a component is written in
 exactly one domain. Every project contributes what it knows to one picture
 of the whole product, and where two of them say different things, Docqet
-shows the **[contradiction](../reporting/concepts/contradiction.md)** rather
+shows the **[contradiction](../understanding/concepts/contradiction.md)** rather
 than picking one.
 
 A **[feature](concepts/feature.md)** is a job the product does, and it groups
@@ -105,7 +105,7 @@ product, serves.
 Intention and reality differ in a few named ways:
 **[open decisions](concepts/open-decision.md)**, **[gaps](concepts/gap.md)**,
 **[tradeoffs](concepts/tradeoff.md)** and **[problems](concepts/problem.md)**.
-[Reporting](../reporting/domain.md#where-intention-and-reality-differ) sets
+[Understanding](../understanding/domain.md#where-intention-and-reality-differ) sets
 out where each is declared, and what's open.
 
 Anything in the repository can point at a rule, capability, mechanism or
@@ -115,7 +115,7 @@ code. A commit can say what something it removed became with a
 **[trailer](concepts/trailer.md)**, so history can follow it. The
 **[indexer](concepts/indexer.md)** reads all of it, and works out each one's
 evidence and any problems. Readers then work out how far along and how ready
-it all is, as [reporting](../reporting/domain.md) describes.
+it all is, as [understanding](../understanding/domain.md) describes.
 
 ```mermaid
 flowchart TB
@@ -207,8 +207,8 @@ flowchart TB
 Solid arrows are [declared](concepts/declared-and-derived.md): written in a
 doc. Dashed arrows and boxes are derived from them, and nobody writes them by
 hand. An arrow into a group means some of what's in it:
-[which each one holds](../reporting/domain.md#where-intention-and-reality-differ)
-is set out in reporting.
+[which each one holds](../understanding/domain.md#where-intention-and-reality-differ)
+is set out in understanding.
 
 ## Agnostic of implementation
 
@@ -301,12 +301,12 @@ In the order to read them, across both domains.
 
 **The product**
 
-- [Software product](../reporting/concepts/product.md): the end result of one
+- [Software product](../understanding/concepts/product.md): the end result of one
   or more pieces of software working together to accomplish a high-level
   goal.
 - [Project](concepts/project.md): one piece of a product, a folder with a
   `docqet.yaml`, where software is defined.
-- [Contradiction](../reporting/concepts/contradiction.md): two projects
+- [Contradiction](../understanding/concepts/contradiction.md): two projects
   saying different things that should agree.
 - [Domain](concepts/domain.md): a part of the business, with a language of
   its own.
@@ -331,11 +331,11 @@ In the order to read them, across both domains.
 - [Gap](concepts/gap.md): something we intend to close.
 - [Tradeoff](concepts/tradeoff.md): something we chose, knowing its benefit
   and drawback.
-- [Risk](../reporting/concepts/risk.md): what's at stake in a gap, scored
+- [Risk](../understanding/concepts/risk.md): what's at stake in a gap, scored
   from its impact, likelihood and reach, the level of each capability it's
   on, and whether it breaks a claim made there, and its spread, how that
   spreads across them.
-- [Exposure](../reporting/concepts/exposure.md): what the gaps open on some
+- [Exposure](../understanding/concepts/exposure.md): what the gaps open on some
   capabilities put at stake together: to risk what maturity is to stability.
 
 **Stability, maturity and readiness**
@@ -344,11 +344,11 @@ In the order to read them, across both domains.
   on a capability.
 - [Stability rubric](concepts/rubric.md): what each level generally
   means and expects.
-- [Maturity](../reporting/concepts/maturity.md): how far along a feature,
+- [Maturity](../understanding/concepts/maturity.md): how far along a feature,
   domain, project, initiative, or what serves a persona, is.
-- [Band](../reporting/concepts/band.md): the quarter of the maturity scale
+- [Band](../understanding/concepts/band.md): the quarter of the maturity scale
   something is in.
-- [Readiness](../reporting/concepts/readiness.md): how ready people can rely
+- [Readiness](../understanding/concepts/readiness.md): how ready people can rely
   on the software being, as a recommendation, with what it still needs.
 
 **Evidence and history**
