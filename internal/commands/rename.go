@@ -227,6 +227,9 @@ func (p *renamePlan) collectFiles(st *state.State) {
 	for _, x := range st.Problems {
 		doc(state.TypeProblem, x.ID, "", x.File)
 	}
+	for _, x := range st.Constraints {
+		doc(state.TypeConstraint, x.ID, "", x.File)
+	}
 	for _, x := range st.Initiatives {
 		doc(state.TypeInitiative, x.ID, "", x.File)
 	}
@@ -274,7 +277,7 @@ func (p *renamePlan) collectFiles(st *state.State) {
 }
 
 var (
-	refToken   = regexp.MustCompile(`(?:^|[^a-zA-Z0-9_./:-])((?:domain|feature|capability|rule|concept|persona|problem|initiative|mechanism|component):[a-z0-9]+(?:-[a-z0-9]+)*(?:@[a-z0-9]+(?:-[a-z0-9]+)*)?(?:#[a-z0-9]+(?:-[a-z0-9]+)*)?)`)
+	refToken   = regexp.MustCompile(`(?:^|[^a-zA-Z0-9_./:-])((?:domain|feature|capability|rule|concept|persona|problem|constraint|initiative|mechanism|component):[a-z0-9]+(?:-[a-z0-9]+)*(?:@[a-z0-9]+(?:-[a-z0-9]+)*)?(?:#[a-z0-9]+(?:-[a-z0-9]+)*)?)`)
 	annotation = regexp.MustCompile(`docqet:(?:implements|verifies|gap|tradeoff)[ \t]`)
 	topKey     = regexp.MustCompile(`^([a-z][a-z-]*):`)
 	itemID     = regexp.MustCompile(`^(\s*-\s+id:\s*)([a-z0-9-]+)(\s*(?:#.*)?)$`)

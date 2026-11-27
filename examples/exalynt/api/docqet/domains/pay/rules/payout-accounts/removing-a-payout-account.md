@@ -3,6 +3,7 @@ docqet: rule
 id: removing-a-payout-account
 domain: pay
 name: Removing a payout account
+respects: [constraint:payouts-partner-keeps-paying-accounts-open]
 why: >-
   The payments partner holds a payout until it reaches the bank, and won't
   close an account while it does.

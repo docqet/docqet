@@ -4,7 +4,7 @@
 package state
 
 // Version is the version of the state format this docqet writes and reads.
-const Version = "0.3"
+const Version = "0.4"
 
 // State is one project's state, indexed from its docs and annotations.
 type State struct {
@@ -18,6 +18,7 @@ type State struct {
 	Features     []Feature    `json:"features"`
 	Personas     []Persona    `json:"personas"`
 	Problems     []Problem    `json:"problems"`
+	Constraints  []Constraint `json:"constraints"`
 	Initiatives  []Initiative `json:"initiatives"`
 	Capabilities []Capability `json:"capabilities"`
 	Rules        []Rule       `json:"rules"`
@@ -42,6 +43,7 @@ type Summary struct {
 	Features     int             `json:"features"`
 	Personas     int             `json:"personas"`
 	Problems     int             `json:"problems"`
+	Constraints  int             `json:"constraints"`
 	Initiatives  int             `json:"initiatives"`
 	Capabilities CapabilityTally `json:"capabilities"`
 	Rules        int             `json:"rules"`
@@ -146,6 +148,7 @@ type Rule struct {
 	Name         string   `json:"name"`
 	Capabilities []string `json:"capabilities"`
 	Concepts     []string `json:"concepts"`
+	Respects     []string `json:"respects"`
 	Why          *string  `json:"why"`
 	Evidence     Evidence `json:"evidence"`
 	Body         string   `json:"body"`
@@ -214,6 +217,21 @@ type Initiative struct {
 	Body         string   `json:"body"`
 }
 
+// Constraint is a constraint doc: something imposed from outside that any
+// solution must respect, such as a law, a contract or a physical fact.
+// Constraints are in no domain. The rules and mechanisms that respect it are
+// worked out, not declared.
+type Constraint struct {
+	ID          string   `json:"id"`
+	File        string   `json:"file"`
+	Name        string   `json:"name"`
+	Description string   `json:"description"`
+	Source      *string  `json:"source"`
+	Rules       []string `json:"rules"`
+	Mechanisms  []string `json:"mechanisms"`
+	Body        string   `json:"body"`
+}
+
 // Mechanism is a mechanism doc. Its capabilities are worked out, not
 // declared.
 type Mechanism struct {
@@ -222,6 +240,7 @@ type Mechanism struct {
 	Name         string     `json:"name"`
 	Description  string     `json:"description"`
 	Applies      string     `json:"applies"`
+	Respects     []string   `json:"respects"`
 	Capabilities []string   `json:"capabilities"`
 	Meets        []string   `json:"meets"`
 	Gaps         []string   `json:"gaps"`
@@ -299,13 +318,14 @@ const (
 	InvalidAnnotation  = "invalid-annotation"
 	UnknownOutcome     = "unknown-outcome"
 	SolvesNoProblem    = "solves-no-problem"
+	RespectedByNothing = "respected-by-nothing"
 )
 
 // Advisory reports whether findings of type typ are advisory: shown and
 // counted like any other, but never failing a check, so a project can adopt
 // what they ask for one doc at a time.
 func Advisory(typ string) bool {
-	return typ == SolvesNoProblem
+	return typ == SolvesNoProblem || typ == RespectedByNothing
 }
 
 // Rubric is the stability rubric: what each stability level expects, as the

@@ -3,6 +3,7 @@ docqet: rule
 id: invitations-are-limited
 domain: accounts
 name: Invitations are limited
+respects: [constraint:no-unwanted-bulk-email]
 ---
 
 An organization can send at most 50 invitations in a day, and so can each

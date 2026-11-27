@@ -4,6 +4,7 @@ id: city-tax-per-guest-night
 domain: billing
 name: City tax is charged per guest, per night
 concepts: [concept:bill, concept:charge]
+respects: [constraint:city-tax-owed-per-guest-night]
 why: >-
   The hotel owes the city tax for every guest night, whether or not it charged
   the guest.

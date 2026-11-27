@@ -5,7 +5,7 @@ domain: authoring
 name: Doc
 description: >-
   One Markdown file describing one thing: a domain, feature, capability, rule,
-  concept, persona, problem, initiative, mechanism or component.
+  concept, persona, problem, constraint, initiative, mechanism or component.
 confused-with:
   - concept: "concept:state"
     summary: >-
@@ -139,6 +139,7 @@ its `docqet/` folder, with a folder per type and per domain:
 | concept    | required                        | `docqet/domains/<domain>/concepts/`     | `booking`           |
 | persona    | none                            | `docqet/personas/`                      | `front-desk-clerk`  |
 | problem    | none                            | `docqet/problems/`                      | `room-given-to-two-guests` |
+| constraint | none                            | `docqet/constraints/`                   | `invoice-numbers-in-sequence` |
 | initiative | none                            | `docqet/initiatives/`                   | `busy-season`       |
 | mechanism  | none                            | `docqet/mechanisms/`                    | `deployment`        |
 | component  | none                            | `docqet/components/`                    | `bookings`          |
@@ -154,13 +155,13 @@ its `docqet/` folder, with a folder per type and per domain:
   as `room-booking`, `not-decided` or `ga`. Tools show values with their own
   labels, such as GA for `ga`.
 - **What an ID names depends on the type.** A domain, feature, capability,
-  persona, problem, initiative, mechanism or component ID names one thing across every
+  persona, problem, constraint, initiative, mechanism or component ID names one thing across every
   project, and the same ID anywhere is a contribution to the same one. A rule
   or concept ID names one definition within a domain, and the same ID in two
   domains is two definitions. [Domain](domain.md) says how contributions are
   put together.
 - **A project has one doc of each type with a given ID in each domain**, and
-  one domain, persona, problem, initiative, mechanism or component with a given ID in
+  one domain, persona, problem, constraint, initiative, mechanism or component with a given ID in
   all. A second is a `duplicate-id` [finding](finding.md). The same ID in
   another domain, or in another project, is a contribution or another
   definition, as above.
@@ -227,12 +228,13 @@ own. What has no name, such as what a concept is confused with, is said in its
 | domain | `docqet`, `id`, `name`, `description`, `decisions` | Anything more about the part of the business | [guest-stays](../../../../examples/hotel-bookings/docqet/domains/guest-stays/domain.md) |
 | feature | `docqet`, `id`, `domain`, `name`, `description`, `capabilities` (required), `tradeoffs`, `decisions` | Anything more about what it offers | [reservations](../../../../examples/hotel-bookings/docqet/domains/guest-stays/features/reservations.md) |
 | capability | `docqet`, `id`, `domain`, `name`, `description`, `stability` (required), `solves`, `initiatives`, `rules`, `concepts`, `gaps`, `tradeoffs`, `decisions` | Anything more about what it does, such as what else it includes, or how we'll know it's working | [room-booking](../../../../examples/hotel-bookings/docqet/domains/guest-stays/capabilities/room-booking.md) |
-| rule | `docqet`, `id`, `domain`, `name`, `concepts`, `why` | The rule in full, where its name doesn't say it all, and examples or how it plays out | [same-day-turnover](../../../../examples/hotel-bookings/docqet/domains/guest-stays/rules/booking/same-day-turnover.md) |
+| rule | `docqet`, `id`, `domain`, `name`, `concepts`, `respects`, `why` | The rule in full, where its name doesn't say it all, and examples or how it plays out | [same-day-turnover](../../../../examples/hotel-bookings/docqet/domains/guest-stays/rules/booking/same-day-turnover.md) |
 | concept | `docqet`, `id`, `domain`, `name`, `description`, `confused-with` | Its details: what it's made of, how it relates to other concepts, and the states it moves through | [booking](../../../../examples/hotel-bookings/docqet/domains/guest-stays/concepts/booking.md) |
 | persona | `docqet`, `id`, `name`, `description`, `role`, `title`, `image`, `initiatives` | Anything more about who they are, such as what they know, their context, what they expect, and what they care about | [front-desk-clerk](../../../../examples/hotel-bookings/docqet/personas/front-desk-clerk.md) |
 | problem | `docqet`, `id`, `name`, `description`, `cost`, `personas` (required) | Anything more about the pain, such as when it happens and what people do about it today | [room-given-to-two-guests](../../../../examples/hotel-bookings/docqet/problems/room-given-to-two-guests.md) |
+| constraint | `docqet`, `id`, `name`, `description`, `source` | Anything more, such as the clause or article it comes from, or what happens if it's broken | [invoice-numbers-in-sequence](../../../../examples/hotel-billing/docqet/constraints/invoice-numbers-in-sequence.md) |
 | initiative | `docqet`, `id`, `name`, `description` | Anything more about the work, such as what's in it and why | [busy-season](../../../../examples/hotel-bookings/docqet/initiatives/busy-season.md) |
-| mechanism | `docqet`, `id`, `name`, `description`, `applies`, `meets`, `gaps`, `tradeoffs`, `decisions` | How it works | [deployment](../../../../examples/hotel-bookings/docqet/mechanisms/deployment.md) |
+| mechanism | `docqet`, `id`, `name`, `description`, `applies`, `respects`, `meets`, `gaps`, `tradeoffs`, `decisions` | How it works | [deployment](../../../../examples/hotel-bookings/docqet/mechanisms/deployment.md) |
 | component | `docqet`, `id`, `name`, `description`, `capabilities`, `meets`, `gaps`, `tradeoffs`, `decisions` | How it works | [bookings](../../../../examples/hotel-bookings/docqet/components/bookings.md) |
 
 The body column is a suggestion of what's worth writing, not a structure.
@@ -244,6 +246,8 @@ Each field is defined by the concept it's about:
   the personas it serves.
 - **`personas`** lists the [personas](persona.md) who have a problem.
 - **`cost`** says what a problem costs the people who have it.
+- **`respects`** lists the [constraints](constraint.md) a rule or mechanism
+  keeps to, and **`source`** says where a constraint comes from.
 - **`initiatives`** lists the [initiatives](initiative.md) a capability is
   part of, or on a persona, those whose work is for them.
 - **`capabilities`** on a [component](component.md) lists the capabilities

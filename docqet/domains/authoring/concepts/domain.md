@@ -32,8 +32,8 @@ domain.
   creates, removes or splits a domain.
 - **Every product doc but an initiative is written in exactly one domain**: the one whose words it uses, which it names in its `domain`
   field. Changing a doc's `domain` moves it to that domain, wherever its file
-  is. Personas and problems, in the problem space, are in no domain, and
-  neither are mechanisms and components.
+  is. Personas, problems and constraints, in the problem space, are in no
+  domain, and neither are mechanisms and components.
 - **Domains are shared by ID.** Projects that work in the same part of the
   business use the same domain ID, and their contributions to it are one
   domain.
@@ -94,7 +94,7 @@ with others of the same ID depends on its type:
 
 | Type | Is one across | The same ID elsewhere |
 | --- | --- | --- |
-| domain, feature, capability, persona, problem, initiative, mechanism, component | everything | A contribution to the same one. Its links are put together, and its name and description should match. |
+| domain, feature, capability, persona, problem, constraint, initiative, mechanism, component | everything | A contribution to the same one. Its links are put together, and its name and description should match. |
 | rule, concept | its domain | Another definition, shown beside this one. Within the same domain, it's a contribution, as above. |
 
 - **Features and capabilities span domains.** A feature or capability written
@@ -111,7 +111,8 @@ with others of the same ID depends on its type:
 - **What a contribution says is its own**: its body, and its frontmatter
   fields that aren't links, such as `decisions` or a rule's `why`. Readers
   show each, labelled with its project and domain. Its name and description,
-  a persona's role and title, and a problem's cost, should match the others'. Where they don't,
+  a persona's role and title, a problem's cost, and a constraint's source,
+  should match the others'. Where they don't,
   that's a [contradiction](../../understanding/concepts/contradiction.md).
 - **A capability's `stability` is per domain.** Each contribution declares the
   level of its own part. Where they differ, the capability's level in short is

@@ -18,13 +18,13 @@ Every link points one way and is written once:
 feature                    → capabilities
 problem                    → personas
 capability                 → problems (solves), initiatives, rules, concepts
-rule                       → concepts
+rule                       → concepts, constraints     (respects)
 concept                    → concepts                  (confused-with)
 gap                        → outcomes, rules           (affects)
 tradeoff                   → outcomes                  (affects)
 decision                   → outcomes, gaps, tradeoffs (affects)
 component                  → capabilities, outcomes    (meets)
-mechanism                  → outcomes                  (meets)
+mechanism                  → outcomes (meets), constraints (respects)
 annotation                 → rules, capabilities, mechanisms, components    (docqet:verifies, docqet:implements)
                            → gaps, tradeoffs           (docqet:gap, docqet:tradeoff)
 ```

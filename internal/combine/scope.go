@@ -50,6 +50,30 @@ func ScopeToInitiative(states []*state.State, initiative string) []*state.State 
 	for _, st := range states {
 		out = append(out, scope(st, kept, personas, problems))
 	}
+	// A constraint stays when a rule left in, or a mechanism, respects it, in
+	// any project.
+	respected := map[string]bool{}
+	for _, st := range out {
+		for _, r := range st.Rules {
+			for _, raw := range r.Respects {
+				respected[idOf(raw)] = true
+			}
+		}
+		for _, m := range st.Mechanisms {
+			for _, raw := range m.Respects {
+				respected[idOf(raw)] = true
+			}
+		}
+	}
+	for _, st := range out {
+		constraints := []state.Constraint{}
+		for _, cn := range st.Constraints {
+			if respected[cn.ID] {
+				constraints = append(constraints, cn)
+			}
+		}
+		st.Constraints = constraints
+	}
 	return out
 }
 

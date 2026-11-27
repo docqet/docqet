@@ -26,11 +26,13 @@ type frontmatter struct {
 	Applies      string         `yaml:"applies"`
 	Why          *string        `yaml:"why"`
 	Cost         *string        `yaml:"cost"`
+	Source       *string        `yaml:"source"`
 	Role         *string        `yaml:"role"`
 	Title        *string        `yaml:"title"`
 	Image        *string        `yaml:"image"`
 	Capabilities []string       `yaml:"capabilities"`
 	Solves       []string       `yaml:"solves"`
+	Respects     []string       `yaml:"respects"`
 	Personas     []string       `yaml:"personas"`
 	Initiatives  []string       `yaml:"initiatives"`
 	Rules        []string       `yaml:"rules"`
@@ -154,7 +156,7 @@ func readDoc(file string, data []byte) (d *doc, isDoc bool, findings []state.Fin
 	switch {
 	case !isDocType(fm.Docqet):
 		return nil, true, append(findings, fileFinding(state.InvalidFrontmatter, file, fm.line["docqet"],
-			fmt.Sprintf("docqet is %q, which isn't a doc type: it's one of domain, feature, capability, rule, concept, persona, problem, initiative, mechanism or component", fm.Docqet)))
+			fmt.Sprintf("docqet is %q, which isn't a doc type: it's one of domain, feature, capability, rule, concept, persona, problem, constraint, initiative, mechanism or component", fm.Docqet)))
 	case fm.ID == "":
 		return nil, true, append(findings, fileFinding(state.InvalidFrontmatter, file, fm.line["docqet"], "A doc needs an id."))
 	}
@@ -231,12 +233,13 @@ var fieldsOf = map[string][]string{
 	state.TypeDomain:     {"docqet", "id", "name", "description", "decisions"},
 	state.TypeFeature:    {"docqet", "id", "domain", "name", "description", "capabilities", "tradeoffs", "decisions"},
 	state.TypeCapability: {"docqet", "id", "domain", "name", "description", "stability", "solves", "initiatives", "rules", "concepts", "gaps", "tradeoffs", "decisions"},
-	state.TypeRule:       {"docqet", "id", "domain", "name", "concepts", "why"},
+	state.TypeRule:       {"docqet", "id", "domain", "name", "concepts", "respects", "why"},
 	state.TypeConcept:    {"docqet", "id", "domain", "name", "description", "confused-with"},
 	state.TypePersona:    {"docqet", "id", "name", "description", "role", "title", "image", "initiatives"},
 	state.TypeProblem:    {"docqet", "id", "name", "description", "cost", "personas"},
+	state.TypeConstraint: {"docqet", "id", "name", "description", "source"},
 	state.TypeInitiative: {"docqet", "id", "name", "description"},
-	state.TypeMechanism:  {"docqet", "id", "name", "description", "applies", "meets", "gaps", "tradeoffs", "decisions"},
+	state.TypeMechanism:  {"docqet", "id", "name", "description", "applies", "respects", "meets", "gaps", "tradeoffs", "decisions"},
 	state.TypeComponent:  {"docqet", "id", "name", "description", "capabilities", "meets", "gaps", "tradeoffs", "decisions"},
 }
 
@@ -267,7 +270,7 @@ func unknownFields(file, typ string, node *yaml.Node, at func(int) int) []state.
 func isDocType(t string) bool {
 	switch t {
 	case state.TypeDomain, state.TypeFeature, state.TypeCapability, state.TypeRule, state.TypeConcept,
-		state.TypePersona, state.TypeProblem, state.TypeInitiative, state.TypeMechanism, state.TypeComponent:
+		state.TypePersona, state.TypeProblem, state.TypeConstraint, state.TypeInitiative, state.TypeMechanism, state.TypeComponent:
 		return true
 	}
 	return false

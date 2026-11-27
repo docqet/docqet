@@ -3,6 +3,7 @@ docqet: rule
 id: some-notifications-cant-be-turned-off
 domain: accounts
 name: Some notifications can't be turned off
+respects: [constraint:no-unwanted-bulk-email]
 ---
 
 Some notifications can't be turned off: a moved preferred week, a failed

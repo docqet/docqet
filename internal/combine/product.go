@@ -31,6 +31,7 @@ type Product struct {
 	Concepts     []*Concept
 	Personas     []*Persona
 	Problems     []*Problem
+	Constraints  []*Constraint
 	Initiatives  []*Initiative
 	Mechanisms   []*Technical
 	Components   []*Technical
@@ -63,9 +64,10 @@ type Contribution struct {
 	Description string
 	Body        string
 
-	Role  *string // a persona's
-	Title *string // a persona's
-	Cost  *string // a problem's
+	Role   *string // a persona's
+	Title  *string // a persona's
+	Cost   *string // a problem's
+	Source *string // a constraint's
 
 	// Decisions are the doc's open decisions as this project declares them.
 	// What each affects, other than an outcome, has @<project> added, as gap
@@ -158,6 +160,7 @@ type Rule struct {
 	Doc
 	Capabilities []string // every capability that follows it
 	Concepts     []string // as <id>@<domain>
+	Respects     []string // the constraints it respects
 	Gaps         []string // the gaps that affect it
 	Evidence     Evidence
 }
@@ -189,6 +192,15 @@ type Problem struct {
 	Capabilities []string // every capability that solves it
 }
 
+// Constraint is something imposed from outside that any solution must
+// respect.
+type Constraint struct {
+	Doc
+	Source     *string
+	Rules      []string // every rule that respects it, as <id>@<domain>
+	Mechanisms []string // every mechanism that respects it
+}
+
 // Initiative is a body of work.
 type Initiative struct {
 	Doc
@@ -210,6 +222,7 @@ type Technical struct {
 	// Applies is "project" or "product": what a mechanism applies to. A
 	// component's is always "project".
 	Applies      string
+	Respects     []string // a mechanism's: the constraints it respects
 	Capabilities []string
 	Meets        []string
 	Gaps         []string
@@ -272,6 +285,11 @@ func (p *Product) Capability(id string) *Capability {
 // Problem returns the problem with id, or nil.
 func (p *Product) Problem(id string) *Problem {
 	return find(p.Problems, id, func(pr *Problem) string { return pr.ID })
+}
+
+// Constraint returns the constraint with id, or nil.
+func (p *Product) Constraint(id string) *Constraint {
+	return find(p.Constraints, id, func(cn *Constraint) string { return cn.ID })
 }
 
 // Rule returns the rule with key, <id>@<domain>, or nil.

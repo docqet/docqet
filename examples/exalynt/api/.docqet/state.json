@@ -1,5 +1,5 @@
 {
-  "docqet": "0.3",
+  "docqet": "0.4",
   "project": {
     "id": "exalynt-api",
     "name": "Exalynt API"
@@ -15,6 +15,7 @@
     "features": 12,
     "personas": 10,
     "problems": 24,
+    "constraints": 9,
     "initiatives": 4,
     "capabilities": {
       "draft": 0,
@@ -2774,6 +2775,7 @@
         "capability:access-tokens"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A token's organizations are fixed when it's created.",
       "evidence": {
@@ -2796,6 +2798,7 @@
         "capability:access-tokens"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A banned person's tokens don't work until the ban is lifted.",
       "evidence": {
@@ -2818,6 +2821,7 @@
         "capability:access-tokens"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "",
       "evidence": {
@@ -2840,6 +2844,7 @@
         "capability:access-tokens"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "An expired token doesn't sign anyone in.",
       "evidence": {
@@ -2862,6 +2867,7 @@
         "capability:access-tokens"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "An expired token stays listed until it's revoked.",
       "evidence": {
@@ -2884,6 +2890,7 @@
         "capability:access-tokens"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Using a token records when it was last used.",
       "evidence": {
@@ -2906,6 +2913,7 @@
         "capability:access-tokens"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A limited token can't act for its creator outside its organizations.",
       "evidence": {
@@ -2928,6 +2936,7 @@
         "capability:access-tokens"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A limited token has at least one organization.",
       "evidence": {
@@ -2950,6 +2959,7 @@
         "capability:access-tokens"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A limited token has to name one of its organizations.",
       "evidence": {
@@ -2972,6 +2982,7 @@
         "capability:access-tokens"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A limited token reveals only its own organizations.",
       "evidence": {
@@ -2994,6 +3005,7 @@
         "capability:access-tokens"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A limited token works only in its organizations, with its creator's role in\neach.",
       "evidence": {
@@ -3016,6 +3028,7 @@
         "capability:access-tokens"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A token can only be limited to organizations its creator belongs to.",
       "evidence": {
@@ -3038,6 +3051,7 @@
         "capability:access-tokens"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A limit never widens.",
       "evidence": {
@@ -3060,6 +3074,7 @@
         "capability:access-tokens"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Managing tokens needs a signed-in session.",
       "evidence": {
@@ -3082,6 +3097,7 @@
         "capability:access-tokens"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A token's owner sees which organizations it's limited to.",
       "evidence": {
@@ -3104,6 +3120,7 @@
         "capability:access-tokens"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A revoked token can no longer sign anyone in.",
       "evidence": {
@@ -3126,6 +3143,7 @@
         "capability:access-tokens"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A change to its creator's roles or memberships applies at once.",
       "evidence": {
@@ -3148,6 +3166,7 @@
         "capability:access-tokens"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "The secret is shown once, when the token is created.",
       "evidence": {
@@ -3170,6 +3189,7 @@
         "capability:access-tokens"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A token is only its owner's to see or revoke.",
       "evidence": {
@@ -3192,6 +3212,7 @@
         "capability:access-tokens"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A token has its creator's access when it's used, within any limit it has.",
       "evidence": {
@@ -3214,6 +3235,7 @@
         "capability:access-tokens"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A token works in all of its creator's organizations unless they limit it when\ncreating it.",
       "evidence": {
@@ -3236,6 +3258,7 @@
         "capability:access-tokens"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A token can't act in an organization its creator doesn't belong to.",
       "evidence": {
@@ -3258,6 +3281,7 @@
         "capability:access-tokens"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "An unknown token doesn't sign anyone in.",
       "evidence": {
@@ -3280,6 +3304,7 @@
         "capability:access-tokens"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A token that works in all organizations follows its creator.",
       "evidence": {
@@ -3304,6 +3329,7 @@
         "capability:partnerships"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "To add a hat to an existing account, invite the address that account uses.",
       "evidence": {
@@ -3328,6 +3354,7 @@
         "capability:partnerships"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Gaining a hat never takes another away, and each keeps its own rules. Being a\npartner doesn't change an engineer's share or team.",
       "evidence": {
@@ -3352,6 +3379,7 @@
         "capability:partnerships"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Invitations are sent to an email address, and the invitee accepts signed in\nwith that address. Someone without an account signs up with it first.",
       "evidence": {
@@ -3381,6 +3409,7 @@
         "capability:partnerships"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "An invitation stays pending until it's accepted or revoked, and doesn't expire.\nA revoked invitation can't be accepted, and an accepted one is no longer\npending.",
       "evidence": {
@@ -3415,6 +3444,7 @@
         "capability:partnerships"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A person has one account, however many hats they wear. Someone who already has\nan account and takes on another persona keeps that account and gains the apps\nand functions the new one needs, alongside what they already have. An engineer\ninvited to be a partner gains the Partner Hub. A client member invited to be an\nengineer gains the console. An engineer who signs up as a client creates an\norganization from the account they already have.",
       "evidence": {
@@ -3444,6 +3474,7 @@
         "capability:partnerships"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Whoever can send an invitation can see it while it's pending, or revoke it.",
       "evidence": {
@@ -3466,6 +3497,7 @@
         "capability:notifications"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "In a client organization, billing notifications go only to members whose role\ncan see billing, and member notifications only to those who can manage members.",
       "evidence": {
@@ -3482,6 +3514,7 @@
         "capability:notifications"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Each person's choices are their own. Nobody else can see or change them, admins\nincluded.",
       "evidence": {
@@ -3498,6 +3531,7 @@
         "capability:notifications"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Each app offers only the notifications for who someone is in it: the portal a\nclient's, the console an engineer's and a team lead's, the admin an admin's,\nand the Partner Hub a partner's. A notification offered in more than one app\nhas one setting, shared across them.",
       "evidence": {
@@ -3514,6 +3548,9 @@
         "capability:notifications"
       ],
       "concepts": [],
+      "respects": [
+        "constraint:no-unwanted-bulk-email"
+      ],
       "why": null,
       "body": "Email goes only to a verified address on the person's account, the one they\nchose for that notification or else their first.",
       "evidence": {
@@ -3530,6 +3567,7 @@
         "capability:notifications"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Someone who loses access to an organization, team, or partnership stops being\ntold about it, and keeps their choices.",
       "evidence": {
@@ -3546,6 +3584,7 @@
         "capability:notifications"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Nobody is told about something they did themselves.",
       "evidence": {
@@ -3562,6 +3601,7 @@
         "capability:notifications"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Nobody is told about anything they couldn't otherwise see. A notification about\nan organization's work goes only to its members, the teams assigned to it, and\nExalynt staff.",
       "evidence": {
@@ -3578,6 +3618,7 @@
         "capability:notifications"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "One set of choices covers every organization someone belongs to, and each\nnotification names the organization it's about.",
       "evidence": {
@@ -3594,6 +3635,7 @@
         "capability:notifications"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "An admin is told when payouts are ready to release, and again if they're still\nwaiting to be released.",
       "evidence": {
@@ -3610,6 +3652,7 @@
         "capability:notifications"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A notification goes only to the channels its recipient chose for it, and to at\nleast one while it's on.",
       "evidence": {
@@ -3626,6 +3669,7 @@
         "capability:notifications"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Removing a verified address from an account stops email going to it at once,\nwhatever had been chosen.",
       "evidence": {
@@ -3642,6 +3686,7 @@
         "capability:notifications"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "When a channel or address is removed, the notifications that used it go to the\nperson's remaining channels. Their last channel can't be removed.",
       "evidence": {
@@ -3658,6 +3703,9 @@
         "capability:notifications"
       ],
       "concepts": [],
+      "respects": [
+        "constraint:no-unwanted-bulk-email"
+      ],
       "why": null,
       "body": "Some notifications can't be turned off: a moved preferred week, a failed\npayment, and a payout account that needs attention. The person still chooses\nwhich channel they go to.",
       "evidence": {
@@ -3674,6 +3722,7 @@
         "capability:notifications"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A notification someone has turned off isn't sent to them.",
       "evidence": {
@@ -3690,6 +3739,7 @@
         "capability:notifications"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "An admin is told when an organization signs up, an engineer or partner accepts\nan invitation, capacity is purchased, a block has no engineer when its week\nstarts, a week is overbooked, a client's payment fails, a payout fails, an\nengineer lacks a valid payout account, or a referral code attributes a client.",
       "evidence": {
@@ -3706,6 +3756,7 @@
         "capability:notifications"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A client is told when an engineer is assigned to or comes off a block, a block\nhas no engineer when its week starts, Exalynt moves a preferred week, a block\nis fulfilled, an estimate is ready, or a team is assigned or removed.",
       "evidence": {
@@ -3722,6 +3773,7 @@
         "capability:notifications"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "An engineer is told when a block joins their team's queue, they're put on or\ntaken off a block, its week starts, they change teams or their team's clients\nchange, a payout is sent, or their payout account needs attention.",
       "evidence": {
@@ -3738,6 +3790,7 @@
         "capability:notifications"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A partner is told when a referred client signs up or first purchases, an\nearning window is closing, an admin changes an attribution, a share is earned,\na payout is sent or fails, or their payout account needs setting up.",
       "evidence": {
@@ -3754,6 +3807,7 @@
         "capability:notifications"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A team lead is also told when an engineer joins or leaves their team or becomes\nineligible.",
       "evidence": {
@@ -3768,6 +3822,7 @@
       "name": "Deleted objects can't be found",
       "capabilities": [],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Once an object is deleted, neither it nor its content can be found.",
       "evidence": {
@@ -3782,6 +3837,7 @@
       "name": "Listing positions belong to one organization",
       "capabilities": [],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A listing position only works for the organization it came from.",
       "evidence": {
@@ -3796,6 +3852,9 @@
       "name": "Objects stay within their organization",
       "capabilities": [],
       "concepts": [],
+      "respects": [
+        "constraint:client-work-is-confidential"
+      ],
       "why": null,
       "body": "Another organization can't reach a client's objects.",
       "evidence": {
@@ -3816,6 +3875,7 @@
       "name": "Upload types and file names",
       "capabilities": [],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "An upload sent as generic bytes takes the type its bytes suggest, and its file\nname is reduced to its base name, with no directories.",
       "evidence": {
@@ -3834,6 +3894,7 @@
         "capability:teams"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Every admin sees and revokes all of Exalynt's pending invitations, not only the\nones they sent. A revoked invitation can't be accepted.",
       "evidence": {
@@ -3852,6 +3913,7 @@
         "capability:teams"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Engineers join only by an admin's invitation. There's no self sign-up as an\nengineer.",
       "evidence": {
@@ -3870,6 +3932,7 @@
         "capability:teams"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Someone who already has an account, such as a client member or a partner,\naccepts an engineer invitation with that account and gains the engineer role\nand the console alongside what they already have, rather than a second account.",
       "evidence": {
@@ -3888,6 +3951,7 @@
         "capability:teams"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Shares from blocks fulfilled while an engineer's payout account isn't valid are\nstill earned, and are paid once the account is valid again.",
       "evidence": {
@@ -3906,6 +3970,7 @@
         "capability:teams"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "An engineer invited onto a team joins it on accepting.",
       "evidence": {
@@ -3930,6 +3995,7 @@
         "capability:teams"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "An engineer is ready for client work once they have set their availability and\nare on a team. A bio and a payout account are recommended, and don't stop them\nbeing ready.",
       "evidence": {
@@ -3946,6 +4012,7 @@
         "capability:organizations-and-members"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "What belongs to a person works wherever they act.",
       "evidence": {
@@ -3968,6 +4035,7 @@
         "capability:organizations-and-members"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A team's room is shared by the clients it supports.",
       "evidence": {
@@ -3991,6 +4059,7 @@
         "capability:client-directory"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Accepting an invitation makes the invitee a member of the organization, listed\nwith their email address and the role they were invited to, and the\norganization appears among theirs. Once accepted, the invitation is no longer\npending for them.",
       "evidence": {
@@ -4014,6 +4083,7 @@
         "capability:client-directory"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Only a client Admin sees or revokes the organization's invitations, as with\nmanaging members.",
       "evidence": {
@@ -4037,6 +4107,7 @@
         "capability:client-directory"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Anyone can sign up as a client and create an organization, without an\ninvitation. Someone who already has an account, such as an engineer or a\npartner, creates their organization from that account rather than a new one.",
       "evidence": {
@@ -4065,6 +4136,7 @@
         "capability:client-directory"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A member who can't manage members can't remove anyone else, but can remove\nthemselves, leaving the organization.",
       "evidence": {
@@ -4088,6 +4160,7 @@
         "capability:client-directory"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A client's Billing member sees invoices, pays them, and manages payment\nmethods. Beyond that, they don't work with capacity, scheduling, or members.",
       "evidence": {
@@ -4111,6 +4184,7 @@
         "capability:client-directory"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A client Admin runs the organization: capacity, billing, and members.",
       "evidence": {
@@ -4134,6 +4208,7 @@
         "capability:client-directory"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A client Member can see whether a block is pending payment or its payment\nfailed. They don't see invoices or amounts.",
       "evidence": {
@@ -4157,6 +4232,7 @@
         "capability:client-directory"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A client Member schedules capacity, but can't purchase capacity or see billing.",
       "evidence": {
@@ -4180,6 +4256,7 @@
         "capability:client-directory"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Creating an organization gives its creator the portal, alongside the\napplications they already had.",
       "evidence": {
@@ -4203,6 +4280,7 @@
         "capability:client-directory"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Someone who left an organization can be invited again and rejoin it.",
       "evidence": {
@@ -4226,6 +4304,7 @@
         "capability:client-directory"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Once another member holds a role that can manage members, a member can give up\ntheir own ability to manage members.",
       "evidence": {
@@ -4249,6 +4328,9 @@
         "capability:client-directory"
       ],
       "concepts": [],
+      "respects": [
+        "constraint:no-unwanted-bulk-email"
+      ],
       "why": null,
       "body": "An organization can send at most 50 invitations in a day, and so can each\nperson, across every organization they invite people to. Revoking one, or its\nbeing accepted, doesn't free up another. So nobody is flooded with email from\nExalynt, even by someone who signs up just to send it.",
       "evidence": {
@@ -4272,6 +4354,7 @@
         "capability:client-directory"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "An organization invitation only goes to an organization role, never a platform\nrole.",
       "evidence": {
@@ -4295,6 +4378,7 @@
         "capability:client-directory"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Someone who has left an organization can no longer act in it.",
       "evidence": {
@@ -4318,6 +4402,7 @@
         "capability:client-directory"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A logo must be a raster image, so an SVG is refused.",
       "evidence": {
@@ -4341,6 +4426,7 @@
         "capability:client-directory"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A client can't reach another organization's logo.",
       "evidence": {
@@ -4364,6 +4450,7 @@
         "capability:client-directory"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Someone may act only in an organization they belong to.",
       "evidence": {
@@ -4387,6 +4474,7 @@
         "capability:client-directory"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Acting in the organization, a new member holds exactly their role's\npermissions, and has the portal.",
       "evidence": {
@@ -4410,6 +4498,7 @@
         "capability:client-directory"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Someone newly signed up belongs to no organization until they create one, and\nthen it's the only one they see.",
       "evidence": {
@@ -4433,6 +4522,7 @@
         "capability:client-directory"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Someone can't be invited to an organization twice while an invitation to them\nis pending, whatever the case of their email address, and the organization\nlists the one invitation.",
       "evidence": {
@@ -4456,6 +4546,7 @@
         "capability:client-directory"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Only a client Admin can purchase capacity or manage members.",
       "evidence": {
@@ -4479,6 +4570,7 @@
         "capability:client-directory"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "An invitation to an organization is accepted signed in with the email address\nit was sent to, and only the person invited can accept it; anyone else finds\nnothing. Someone who already has an account joins with it.",
       "evidence": {
@@ -4507,6 +4599,7 @@
         "capability:client-directory"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "An organization's listing shows whether it has a logo, and that changes when\nthe logo is set or removed. Once a logo is removed, it can no longer be\ndownloaded.",
       "evidence": {
@@ -4530,6 +4623,7 @@
         "capability:client-directory"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Something that can only be done in an organization is refused when no\norganization is named.",
       "evidence": {
@@ -4553,6 +4647,7 @@
         "capability:client-directory"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "An organization has no logo until one is set.",
       "evidence": {
@@ -4576,6 +4671,7 @@
         "capability:client-directory"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Someone outside an organization can't rename it.",
       "evidence": {
@@ -4599,6 +4695,7 @@
         "capability:client-directory"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A revoked invitation is no longer pending for the invitee and can't be\naccepted.",
       "evidence": {
@@ -4622,6 +4719,7 @@
         "capability:client-directory"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "An organization always has at least one member who can manage members, such as\nan Admin. The last one can't be removed, leave, or be given a role that can't\nmanage members, including by changing their own role. So an organization's last\nmember can't be removed either.",
       "evidence": {
@@ -4644,6 +4742,7 @@
         "capability:your-profile"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "The photo someone uploads is the one everyone who sees them sees.",
       "evidence": {
@@ -4666,6 +4765,7 @@
         "capability:your-profile"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Someone who removes their photo is shown without one.",
       "evidence": {
@@ -4688,6 +4788,7 @@
         "capability:your-profile"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Someone keeps at least a first or last name. The profile page enforces it, so\nits unit tests check it, not this suite.",
       "evidence": {
@@ -4704,6 +4805,7 @@
         "capability:your-profile"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "The name someone gives is the one everyone who sees them sees.",
       "evidence": {
@@ -4726,6 +4828,7 @@
         "capability:your-profile"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "An invitation goes by the address someone has made primary.",
       "evidence": {
@@ -4749,6 +4852,7 @@
         "capability:engineers"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Accepting an invitation to work with Exalynt gives the invitee the platform\nrole, its permissions, and the applications they were invited to, and the\ninvitation leaves Exalynt's pending invitations.",
       "evidence": {
@@ -4766,6 +4870,7 @@
         "capability:engineers"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Someone who is both an engineer and a client member acts as one or the other,\nnever both.",
       "evidence": {
@@ -4789,6 +4894,7 @@
         "capability:engineers"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "The applications set for someone show on that person, listed in order.",
       "evidence": {
@@ -4806,6 +4912,7 @@
         "capability:engineers"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A new organization's creator holds the role given to creators.",
       "evidence": {
@@ -4829,6 +4936,7 @@
         "capability:engineers"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Once a role is deleted, it can't be found.",
       "evidence": {
@@ -4852,6 +4960,7 @@
         "capability:engineers"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "An invitation to work with Exalynt shows as pending for the invitee, as an\ninvitation to no organization, naming the platform role.",
       "evidence": {
@@ -4869,6 +4978,7 @@
         "capability:engineers"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Nobody can grant what only Exalynt's own systems hold.",
       "evidence": {
@@ -4892,6 +5002,7 @@
         "capability:engineers"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "An organization role someone holds can't be deleted.",
       "evidence": {
@@ -4915,6 +5026,7 @@
         "capability:engineers"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A platform role someone holds can't be deleted.",
       "evidence": {
@@ -4938,6 +5050,7 @@
         "capability:engineers"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "An organization role someone holds keeps the ability to manage members.",
       "evidence": {
@@ -4961,6 +5074,7 @@
         "capability:engineers"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A role someone has been invited to can't be deleted.",
       "evidence": {
@@ -4984,6 +5098,7 @@
         "capability:engineers"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Someone who only gives out platform roles can't invite someone with\napplications.",
       "evidence": {
@@ -5001,6 +5116,7 @@
         "capability:engineers"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Someone with no platform role can't list people.",
       "evidence": {
@@ -5024,6 +5140,7 @@
         "capability:engineers"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A member's permissions follow their role.",
       "evidence": {
@@ -5047,6 +5164,7 @@
         "capability:engineers"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A new person has no applications.",
       "evidence": {
@@ -5064,6 +5182,7 @@
         "capability:engineers"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Acting in no organization, someone with no platform role holds no permissions.",
       "evidence": {
@@ -5087,6 +5206,7 @@
         "capability:engineers"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "",
       "evidence": {
@@ -5110,6 +5230,7 @@
         "capability:engineers"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Only one organization role is given to creators.",
       "evidence": {
@@ -5133,6 +5254,7 @@
         "capability:engineers"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Someone can't change roles in an organization they don't belong to.",
       "evidence": {
@@ -5156,6 +5278,7 @@
         "capability:engineers"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "An engineer allowed to read capacity only at their own scope sees only the\nblocks they're staffed on.",
       "evidence": {
@@ -5179,6 +5302,7 @@
         "capability:engineers"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Acting in no organization, the people listed are only those who work with\nExalynt, holding a platform role, never clients.",
       "evidence": {
@@ -5202,6 +5326,7 @@
         "capability:engineers"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "What someone may do follows where they act.",
       "evidence": {
@@ -5225,6 +5350,7 @@
         "capability:engineers"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A platform role is not an organization role, and looking for it as one finds\nnothing.",
       "evidence": {
@@ -5242,6 +5368,7 @@
         "capability:engineers"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "An administrator can take away someone's platform role, leaving them with none.",
       "evidence": {
@@ -5259,6 +5386,7 @@
         "capability:engineers"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "An engineer who can only read can't staff a block.",
       "evidence": {
@@ -5282,6 +5410,7 @@
         "capability:engineers"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Changing a role's name and grants leaves its description as it was, and its\ngrants are listed by permission.",
       "evidence": {
@@ -5299,6 +5428,7 @@
         "capability:engineers"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Role names are unique among their kind, ignoring case.",
       "evidence": {
@@ -5322,6 +5452,7 @@
         "capability:engineers"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A role only grants what its kind may grant.",
       "evidence": {
@@ -5345,6 +5476,7 @@
         "capability:engineers"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "An organization role can't be given to someone as their platform role, and a\nplatform role can't be given to an organization member.",
       "evidence": {
@@ -5362,6 +5494,7 @@
         "capability:engineers"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "An engineer allowed to read capacity at team scope sees only what their team\nsupports.",
       "evidence": {
@@ -5385,6 +5518,7 @@
         "capability:engineers"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "The role given to creators can manage members.",
       "evidence": {
@@ -5408,6 +5542,7 @@
         "capability:engineers"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "What each kind of role may grant.",
       "evidence": {
@@ -5431,6 +5566,7 @@
         "capability:engineers"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Only someone who manages people's roles gives out platform roles.",
       "evidence": {
@@ -5454,6 +5590,7 @@
         "capability:engineers"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Only someone who gives out platform roles invites people to work with Exalynt.\nA client can't.",
       "evidence": {
@@ -5471,6 +5608,7 @@
         "capability:engineers"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Only someone who manages roles reads the permissions roles can grant, or makes\nroles.",
       "evidence": {
@@ -5494,6 +5632,7 @@
         "capability:engineers"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Only someone who manages application access sets which applications someone\nhas. Neither a client nor someone who only gives out platform roles can.",
       "evidence": {
@@ -5513,6 +5652,7 @@
         "capability:partner-agreements"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "An organization is offered the Client Agreement when it's created.",
       "evidence": {
@@ -5538,6 +5678,7 @@
         "capability:partner-agreements"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A newer agreement sent to a party replaces one still waiting for them, so at\nmost one waits at a time.",
       "evidence": {
@@ -5563,6 +5704,7 @@
         "capability:partner-agreements"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "An agreement is in effect only once accepted, and the latest accepted\nsupersedes any before it.",
       "evidence": {
@@ -5588,6 +5730,7 @@
         "capability:partner-agreements"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "An accepted agreement is kept exactly as accepted, and never changes\nafterwards.",
       "evidence": {
@@ -5613,6 +5756,7 @@
         "capability:partner-agreements"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "An accepted agreement is kept, as accepted, after its party's account is\ndeleted.",
       "evidence": {
@@ -5638,6 +5782,7 @@
         "capability:partner-agreements"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "One organization never sees another's agreements, one partnership never sees\nanother's, and an engineer sees only their own.",
       "evidence": {
@@ -5663,6 +5808,7 @@
         "capability:partner-agreements"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "An admin can send an Engineer Agreement with no Commercial Terms, whether with\nan invitation or later. The engineer then earns nothing (see [Unlisted shares\nearn nothing](../../../pay/rules/earnings-and-payouts)), and the admin confirms\nthat before sending.",
       "evidence": {
@@ -5688,6 +5834,9 @@
         "capability:partner-agreements"
       ],
       "concepts": [],
+      "respects": [
+        "constraint:agreements-set-pay"
+      ],
       "why": null,
       "body": "An engineer is offered the Engineer Agreement on the terms their invitation\nset.",
       "evidence": {
@@ -5713,6 +5862,7 @@
         "capability:partner-agreements"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A partnership's Partner Agreement is accepted by its manager, and by nobody\nelse: not another partnership's manager, and not an Exalynt admin, who can only\nread it.",
       "evidence": {
@@ -5738,6 +5888,7 @@
         "capability:partner-agreements"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "New terms hold only once accepted; until then the agreement in effect keeps its\nown.",
       "evidence": {
@@ -5763,6 +5914,7 @@
         "capability:partner-agreements"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Only the agreement waiting for a party can be accepted, and only once: one that\nwas replaced, or is already accepted, can't be.",
       "evidence": {
@@ -5788,6 +5940,7 @@
         "capability:partner-agreements"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "An invited partner can read the Partner Agreement before accepting, and only\nthe address invited can.",
       "evidence": {
@@ -5813,6 +5966,7 @@
         "capability:partner-agreements"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "An organization's Client Agreement is accepted for it by someone whose role can\nmanage it.",
       "evidence": {
@@ -5835,6 +5989,7 @@
         "capability:billing"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A purchase whose total changed since it was quoted buys nothing and owes\nnothing, so a client is never charged other than what they were shown.",
       "evidence": {
@@ -5857,6 +6012,7 @@
         "capability:billing"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "At most 20 blocks can be bought at once.",
       "evidence": {
@@ -5879,6 +6035,7 @@
         "capability:billing"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Buying charges the default payment method at once, on one invoice.",
       "evidence": {
@@ -5901,6 +6058,9 @@
         "capability:billing"
       ],
       "concepts": [],
+      "respects": [
+        "constraint:payment-provider-holds-payment-details"
+      ],
       "why": null,
       "body": "Capacity can't be bought without a payment method.",
       "evidence": {
@@ -5923,6 +6083,7 @@
         "capability:billing"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Capacity, the operations fee, and infrastructure are billed separately and\nnever bundled. Only capacity is invoiced today.",
       "evidence": {
@@ -5939,6 +6100,7 @@
         "capability:billing"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Company details entered with the payment provider stay as the client left them.",
       "evidence": {
@@ -5961,6 +6123,7 @@
         "capability:billing"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A declined purchase buys nothing and owes nothing.",
       "evidence": {
@@ -5983,6 +6146,7 @@
         "capability:billing"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A client can't see or act on another organization's billing.",
       "evidence": {
@@ -6005,6 +6169,7 @@
         "capability:billing"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Unpaid capacity becomes usable once its invoice is paid.",
       "evidence": {
@@ -6027,6 +6192,9 @@
         "capability:billing"
       ],
       "concepts": [],
+      "respects": [
+        "constraint:sales-tax-is-collected"
+      ],
       "why": null,
       "body": "A purchase is quoted with its tax before it's bought, and quoting buys nothing.",
       "evidence": {
@@ -6049,6 +6217,9 @@
         "capability:billing"
       ],
       "concepts": [],
+      "respects": [
+        "constraint:sales-tax-is-collected"
+      ],
       "why": null,
       "body": "Capacity can't be bought or quoted unless the payment provider can tell where\nthe client is for tax, which takes a billing address it can place.",
       "evidence": {
@@ -6071,6 +6242,9 @@
         "capability:billing"
       ],
       "concepts": [],
+      "respects": [
+        "constraint:sales-tax-is-collected"
+      ],
       "why": "Exalynt is responsible for making sure sales tax is collected, but not for calculating it; the provider holds the billing address and the tax settings it needs.",
       "body": "The payment provider works out a purchase's tax, and it's charged on the\ninvoice. Exalynt never calculates tax itself.",
       "evidence": {
@@ -6093,6 +6267,9 @@
         "capability:billing"
       ],
       "concepts": [],
+      "respects": [
+        "constraint:payment-provider-holds-payment-details"
+      ],
       "why": null,
       "body": "An unpaid invoice is paid at the payment provider's current page for it.",
       "evidence": {
@@ -6115,6 +6292,7 @@
         "capability:billing"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Company details count as given once the payment provider holds the client's\naddress.",
       "evidence": {
@@ -6137,6 +6315,7 @@
         "capability:billing"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Admins and Billing members manage billing on the payment provider's pages;\nMembers don't.",
       "evidence": {
@@ -6159,6 +6338,7 @@
         "capability:availability"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "An engineer's adjustments never cover the same week.",
       "evidence": {
@@ -6181,6 +6361,7 @@
         "capability:availability"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Admins set their own availability, as engineers do.",
       "evidence": {
@@ -6203,6 +6384,7 @@
         "capability:availability"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Availability is offered in whole weeks, in quarters of a week.",
       "evidence": {
@@ -6225,6 +6407,7 @@
         "capability:availability"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A week's availability is the engineer's adjustment for it, otherwise their\nbaseline once it has started, otherwise nothing.",
       "evidence": {
@@ -6247,6 +6430,7 @@
         "capability:availability"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "An engineer has one baseline.",
       "evidence": {
@@ -6269,6 +6453,7 @@
         "capability:availability"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Nobody sets anyone else's availability.",
       "evidence": {
@@ -6291,6 +6476,9 @@
         "capability:availability"
       ],
       "concepts": [],
+      "respects": [
+        "constraint:the-past-cant-change"
+      ],
       "why": null,
       "body": "Weeks that have gone by can't be changed.",
       "evidence": {
@@ -6313,6 +6501,7 @@
         "capability:availability"
       ],
       "concepts": [],
+      "respects": [],
       "why": "A week is never overbooked, and clients keep their place in a week wherever a teammate can still fit them.",
       "body": "A reduction that leaves too little room for what's already booked takes blocks\nout until it fits, and only once the engineer has seen which blocks those are\nand confirmed. The engineer's own blocks that no longer fit their week come off\nthem first, staying in their week for a teammate to claim. Only if their team's\nroom is still short are blocks unscheduled, back to their clients to schedule\nagain.",
       "evidence": {
@@ -6335,6 +6524,7 @@
         "capability:availability"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "An engineer's reduction of their availability takes effect without approval.",
       "evidence": {
@@ -6357,6 +6547,9 @@
         "capability:availability"
       ],
       "concepts": [],
+      "respects": [
+        "constraint:the-past-cant-change"
+      ],
       "why": null,
       "body": "A reduction never takes out a block whose week has started or that work has\nbegun on. A reduction that can't fit without doing so is refused.",
       "evidence": {
@@ -6379,6 +6572,7 @@
         "capability:availability"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Removing an adjustment returns its weeks to the baseline.",
       "evidence": {
@@ -6401,6 +6595,7 @@
         "capability:availability"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "An engineer's availability is seen by them, their team, and admins.",
       "evidence": {
@@ -6423,6 +6618,7 @@
         "capability:capacity-purchasing"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Blocks are numbered in turn within each organization, and keep their number.",
       "evidence": {
@@ -6445,6 +6641,7 @@
         "capability:capacity-purchasing"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A block is bought, then scheduled, and waits in no week until it is.",
       "evidence": {
@@ -6467,6 +6664,7 @@
         "capability:capacity-purchasing"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A client can't reach another organization's blocks.",
       "evidence": {
@@ -6489,6 +6687,7 @@
         "capability:capacity-purchasing"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A client can buy before it has a team, and its blocks wait until it can\nschedule them.",
       "evidence": {
@@ -6511,6 +6710,7 @@
         "capability:capacity-purchasing"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A client can only buy a defined capacity type.",
       "evidence": {
@@ -6533,6 +6733,7 @@
         "capability:capacity-purchasing"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Capacity is shown in blocks and units, never as hours spent, reserved or\nremaining, or a price per hour.",
       "evidence": {
@@ -6555,6 +6756,7 @@
         "capability:capacity-purchasing"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "The capacity types are listed smallest first, each with a description.",
       "evidence": {
@@ -6577,6 +6779,7 @@
         "capability:capacity-purchasing"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Clients never choose who works a block.",
       "evidence": {
@@ -6599,6 +6802,9 @@
         "capability:capacity-purchasing"
       ],
       "concepts": [],
+      "respects": [
+        "constraint:payment-provider-holds-payment-details"
+      ],
       "why": null,
       "body": "",
       "evidence": {
@@ -6621,6 +6827,9 @@
         "capability:conversation-spaces"
       ],
       "concepts": [],
+      "respects": [
+        "constraint:messaging-provider-terms"
+      ],
       "why": "What was said stays available with the messaging provider.",
       "body": "A space and its conversations stay when everyone has left, and when its\norganization is gone.",
       "evidence": {
@@ -6637,6 +6846,7 @@
         "capability:conversation-spaces"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "The engineers on a team, its lead included, are in the space of every client\nthe team is assigned to. Assigning a team to a client puts them in, and\nremoving it takes them out.",
       "evidence": {
@@ -6653,6 +6863,9 @@
         "capability:conversation-spaces"
       ],
       "concepts": [],
+      "respects": [
+        "constraint:messaging-provider-terms"
+      ],
       "why": null,
       "body": "Exalynt's people are put in a space directly. A client's people are invited\nwhere the messaging provider requires it, and anyone it can't reach is shown as\nunable to join, to be emailed instead.",
       "evidence": {
@@ -6669,6 +6882,7 @@
         "capability:conversation-spaces"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Every organization has a space from when it's created, and whoever creates it\nis in it.",
       "evidence": {
@@ -6685,6 +6899,7 @@
         "capability:conversation-spaces"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Joining an organization puts you in its space, and leaving it, or being\nremoved, takes you out.",
       "evidence": {
@@ -6701,6 +6916,9 @@
         "capability:conversation-spaces"
       ],
       "concepts": [],
+      "respects": [
+        "constraint:client-work-is-confidential"
+      ],
       "why": "Someone no longer at Exalynt, or banned, must not keep reading what clients say.",
       "body": "Losing your place as one of Exalynt's people, or being banned or deleted, takes\nyou out of every space you're in.",
       "evidence": {
@@ -6717,6 +6935,7 @@
         "capability:conversation-spaces"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "In the app, only the engineers on a client's teams, and admins, see who is in\nthe client's space. The client's people see it with the messaging provider.",
       "evidence": {
@@ -6733,6 +6952,7 @@
         "capability:conversation-spaces"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Joining a team puts an engineer in its clients' spaces, and leaving it takes\nthem out. Moving to another team does both, except for clients both teams\nsupport.",
       "evidence": {
@@ -6749,6 +6969,9 @@
         "capability:conversation-spaces"
       ],
       "concepts": [],
+      "respects": [
+        "constraint:client-work-is-confidential"
+      ],
       "why": null,
       "body": "The same people see a block's conversations: anyone in its organization, the\nengineers on the teams assigned to it, and admins. Nobody at another client\ndoes.",
       "evidence": {
@@ -6771,6 +6994,7 @@
         "capability:conversation-spaces"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "No two of a block's conversations with the messaging provider in use share a\nsubject, however it's capitalized.",
       "evidence": {
@@ -6793,6 +7017,7 @@
         "capability:conversation-spaces"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Anyone in a block's organization, and the engineers on the teams assigned to\nit, start conversations on its blocks. So do admins. Engineers on other teams\ncan't.",
       "evidence": {
@@ -6815,6 +7040,7 @@
         "capability:conversation-spaces"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A block has no conversations until someone starts one, on a subject they give\nit. It's started in the block's organization's space, and a block can have any\nnumber. Each stays the same conversation whoever claims or unclaims the block.",
       "evidence": {
@@ -6837,6 +7063,7 @@
         "capability:conversation-spaces"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Once a block is fulfilled, no more conversations start on it. Those it has\nstay.",
       "evidence": {
@@ -6859,6 +7086,7 @@
         "capability:teams"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A bio is short, at most 500 characters.",
       "evidence": {
@@ -6881,6 +7109,7 @@
         "capability:teams"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "",
       "evidence": {
@@ -6903,6 +7132,7 @@
         "capability:teams"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "An engineer edits their own bio, and Exalynt's admins can edit anyone's.",
       "evidence": {
@@ -6925,6 +7155,7 @@
         "capability:teams"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "An engineer's bio is seen by their teammates and by the clients their team\nsupports, and by no other client.",
       "evidence": {
@@ -6947,6 +7178,7 @@
         "capability:estimates"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "",
       "evidence": {
@@ -6969,6 +7201,7 @@
         "capability:estimates"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A client reads their own organization's estimates and no one else's.",
       "evidence": {
@@ -6991,6 +7224,7 @@
         "capability:estimates"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "",
       "evidence": {
@@ -7013,6 +7247,7 @@
         "capability:estimates"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A discount takes a percentage off the whole project.",
       "evidence": {
@@ -7035,6 +7270,7 @@
         "capability:estimates"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Each Focus is planned at a pace, and the estimate costs every Focus at its own.",
       "evidence": {
@@ -7057,6 +7293,7 @@
         "capability:estimates"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "An engineer works on the estimates of the clients their team supports.",
       "evidence": {
@@ -7079,6 +7316,7 @@
         "capability:estimates"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "An estimate is for an existing organization, or for a prospect.",
       "evidence": {
@@ -7101,6 +7339,7 @@
         "capability:estimates"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "An estimate keeps the prices it was written at.",
       "evidence": {
@@ -7123,6 +7362,7 @@
         "capability:estimates"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "An estimate records who wrote it.",
       "evidence": {
@@ -7145,6 +7385,7 @@
         "capability:estimates"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A Focus's size spans a range of units, and each block type prices them.",
       "evidence": {
@@ -7167,6 +7408,7 @@
         "capability:estimates"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Only Exalynt writes, changes, and deletes estimates.",
       "evidence": {
@@ -7189,6 +7431,7 @@
         "capability:estimates"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A prospect sees their estimate only once it's attached to their organization.",
       "evidence": {
@@ -7211,6 +7454,7 @@
         "capability:estimates"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Replacing an estimate replaces all of it.",
       "evidence": {
@@ -7233,6 +7477,7 @@
         "capability:fulfillment"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A focus is its own record, and can be on several of its client's blocks. A\nblock has at most one focus: giving it a new focus, or one of its client's\nexisting focuses, takes the place of the one it had, which remains. A focus\nneeds a title, editing it keeps it the same focus and changes it on every block\nit's on, and taking it off a block keeps the focus. A block can't be given\nanother client's focus.",
       "evidence": {
@@ -7255,6 +7500,7 @@
         "capability:fulfillment"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Clients follow a block's status: in progress once it's started, then fulfilled.\nA client can't mark a block fulfilled.",
       "evidence": {
@@ -7277,6 +7523,7 @@
         "capability:fulfillment"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Anyone who can read a block reads its updates, the client included, and another\norganization can't.",
       "evidence": {
@@ -7299,6 +7546,7 @@
         "capability:fulfillment"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A block's engineer marks it fulfilled. Nobody else can.",
       "evidence": {
@@ -7321,6 +7569,7 @@
         "capability:fulfillment"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Whoever can manage a block posts updates on it: its engineer, their lead, or an\nadmin, and nobody else. An update is about its block, and about the block's\nfocus at the time when it has one. A block with no focus still takes updates.\nAn update's attachments are its client's objects, never another organization's.",
       "evidence": {
@@ -7343,6 +7592,7 @@
         "capability:fulfillment"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A block's engineer starts it, from the start of its week. Before then, starting\nit is refused, and nobody else can start it.",
       "evidence": {
@@ -7365,6 +7615,7 @@
         "capability:fulfillment"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A focus's attachments are its client's objects, never another organization's.",
       "evidence": {
@@ -7387,6 +7638,9 @@
         "capability:fulfillment"
       ],
       "concepts": [],
+      "respects": [
+        "constraint:the-past-cant-change"
+      ],
       "why": null,
       "body": "Marking a block fulfilled is final.",
       "evidence": {
@@ -7409,6 +7663,7 @@
         "capability:fulfillment"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "There's no deadline for fulfilling a block. A block still not fulfilled after\nits week ends, started or not, can still be started and marked fulfilled later.",
       "evidence": {
@@ -7425,6 +7680,7 @@
         "capability:fulfillment"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Only the person who wrote an update edits or deletes it. A deleted update keeps\nits place on the block, emptied, saying when it was deleted.",
       "evidence": {
@@ -7447,6 +7703,7 @@
         "capability:fulfillment"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A block must be started before it's marked fulfilled.",
       "evidence": {
@@ -7469,6 +7726,7 @@
         "capability:fulfillment"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Starting a block records who started it and when.",
       "evidence": {
@@ -7491,6 +7749,7 @@
         "capability:fulfillment"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Only someone who can manage a block it's on, or the block's client, changes a\nfocus. At the client, that's a member whose role lets them change focuses,\nwhich the Admin and Member roles do, on any of its blocks, whether or not an\nengineer is on it yet. Whoever can change the focus of any of a client's blocks\ncan look through that client's focuses to choose one. Anyone who can read the\nblock, the client included, reads its focus, and another organization can't.",
       "evidence": {
@@ -7513,6 +7772,7 @@
         "capability:scheduling"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A client can move a scheduled block until its week starts.",
       "evidence": {
@@ -7535,6 +7795,7 @@
         "capability:scheduling"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Clients of the same team share its room.",
       "evidence": {
@@ -7557,6 +7818,7 @@
         "capability:scheduling"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A client can take a scheduled block out of its week until that week starts.",
       "evidence": {
@@ -7580,6 +7842,7 @@
         "capability:scheduling"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Exalynt can move a block whose week ended with no work begun.",
       "evidence": {
@@ -7602,6 +7865,7 @@
         "capability:scheduling"
       ],
       "concepts": [],
+      "respects": [],
       "why": "The clients who scheduled first keep their place, and as little room as possible is given up.",
       "body": "When blocks must come out of a week to fit less room, the latest-scheduled\nblock whose size exactly matches the shortfall comes out first, even if later\nblocks are skipped. If none matches, the latest-scheduled block comes out, and\nthe choice repeats until the week fits.",
       "evidence": {
@@ -7624,6 +7888,7 @@
         "capability:scheduling"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A week without room for a block can't be scheduled into.",
       "evidence": {
@@ -7646,6 +7911,7 @@
         "capability:scheduling"
       ],
       "concepts": [],
+      "respects": [],
       "why": "A client with several teams can be fitted by any of them, so less room on one team needn't cost it anything.",
       "body": "When blocks come out of a week to fit less room, a block whose client's teams\ncan still fit it stays, even if it was scheduled later.",
       "evidence": {
@@ -7668,6 +7934,7 @@
         "capability:scheduling"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A client's room comes only from the engineers on its assigned teams.",
       "evidence": {
@@ -7690,6 +7957,7 @@
         "capability:scheduling"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A block must be scheduled before it can be worked on.",
       "evidence": {
@@ -7712,6 +7980,7 @@
         "capability:scheduling"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A block's engineer starting it means work on it has begun.",
       "evidence": {
@@ -7729,6 +7998,7 @@
         "capability:scheduling"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "The preferred week is a target, and a missed week doesn't cancel the block.",
       "evidence": {
@@ -7751,6 +8021,7 @@
         "capability:scheduling"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "An unscheduled block reserves no room.",
       "evidence": {
@@ -7773,6 +8044,7 @@
         "capability:scheduling"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A week never holds more scheduled blocks than its room fits.",
       "evidence": {
@@ -7791,6 +8063,7 @@
         "capability:staffing"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Admins can reassign blocks across teams and resolve cross-team conflicts.",
       "evidence": {
@@ -7809,6 +8082,7 @@
         "capability:staffing"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A block can't be assigned to an engineer whose effective availability that week\ncan't fit it alongside what they already have. Admins can't assign a block\nbeyond an engineer's availability for its week either.",
       "evidence": {
@@ -7827,6 +8101,7 @@
         "capability:staffing"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "An engineer must be eligible when they're assigned a block.",
       "evidence": {
@@ -7845,6 +8120,7 @@
         "capability:staffing"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "An engineer must be eligible to claim a block: on a team assigned to its\nclient.",
       "evidence": {
@@ -7869,6 +8145,7 @@
         "capability:staffing"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Claiming puts the engineer straight on the block, with no team-held step in\nbetween.",
       "evidence": {
@@ -7893,6 +8170,7 @@
         "capability:staffing"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A block can't be claimed by an engineer whose availability that week can't fit\nit alongside what they already have.",
       "evidence": {
@@ -7917,6 +8195,7 @@
         "capability:staffing"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "An engineer is never on more blocks in a week than their availability fits.",
       "evidence": {
@@ -7935,6 +8214,7 @@
         "capability:staffing"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Exalynt staff put an engineer on a block.",
       "evidence": {
@@ -7953,6 +8233,7 @@
         "capability:staffing"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Once a block is in progress, its preferred week can't be moved.",
       "evidence": {
@@ -7971,6 +8252,7 @@
         "capability:staffing"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Once its preferred week ends, an unclaimed block can't be claimed by anyone\nuntil it's moved to an upcoming week. The client or an admin can move it, and\nthe client is notified when it isn't them.",
       "evidence": {
@@ -7995,6 +8277,7 @@
         "capability:staffing"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "The goal is to claim a block before its preferred week. A block still unclaimed\nwhen the week starts can still be claimed late in that week.",
       "evidence": {
@@ -8019,6 +8302,7 @@
         "capability:staffing"
       ],
       "concepts": [],
+      "respects": [],
       "why": "An engineer who no longer supports a client can't see or unclaim its blocks, and nobody else can claim one while they're on it.",
       "body": "An engineer who leaves a client's teams comes off its blocks whose week hasn't\nstarted. A block whose week has started, or that work has begun on, keeps them.",
       "evidence": {
@@ -8043,6 +8327,7 @@
         "capability:staffing"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "The blocks an engineer is on can be listed across every client, and narrowed to\na range of weeks.",
       "evidence": {
@@ -8067,6 +8352,7 @@
         "capability:staffing"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A newly bought block has no engineer on it.",
       "evidence": {
@@ -8085,6 +8371,7 @@
         "capability:staffing"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "An engineer can't claim a block assigned to someone else. An admin can reassign\nit.",
       "evidence": {
@@ -8109,6 +8396,7 @@
         "capability:staffing"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A block has at most one assigned engineer and is never split across engineers.\nReassigning a block replaces its engineer and never adds a second one.",
       "evidence": {
@@ -8127,6 +8415,7 @@
         "capability:staffing"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Only Exalynt staff who manage capacity put an engineer on a block. A client\ncan't.",
       "evidence": {
@@ -8145,6 +8434,7 @@
         "capability:staffing"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Taking an engineer off a block clears it, and the block no longer shows among\nthe blocks they're on.",
       "evidence": {
@@ -8163,6 +8453,7 @@
         "capability:staffing"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "An engineer can unclaim a block they're on until its week starts. It goes back\nto nobody being on it, still in its week, for anyone eligible to claim.",
       "evidence": {
@@ -8187,6 +8478,7 @@
         "capability:staffing"
       ],
       "concepts": [],
+      "respects": [],
       "why": "An engineer whose team supports several clients can use up the only room one client's block had, which then lapses unless an admin sorts it out.",
       "body": "An engineer is told before claiming a block that leaves another of that week's\nblocks with nobody who can take it. The claim is still allowed.",
       "evidence": {
@@ -8210,6 +8502,7 @@
         "capability:teams"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Between teams with as much unfulfilled capacity, it gets the one with the\nfewest clients.",
       "evidence": {
@@ -8233,6 +8526,7 @@
         "capability:teams"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A new client gets the team with the least unfulfilled capacity.",
       "evidence": {
@@ -8256,6 +8550,7 @@
         "capability:teams"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Only a team with an engineer offering time in the coming weeks can be given.",
       "evidence": {
@@ -8279,6 +8574,7 @@
         "capability:teams"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A new client signs up even when it can't be given a team, and waits for Exalynt\nto assign one.",
       "evidence": {
@@ -8302,6 +8598,7 @@
         "capability:teams"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "When a team's lead moves to another team, their old team is left with no lead,\nand they lead the new team only if put on it as lead.",
       "evidence": {
@@ -8325,6 +8622,7 @@
         "capability:teams"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A client can have several teams, and sees each by name, with its own members\nand its own lead.",
       "evidence": {
@@ -8348,6 +8646,9 @@
         "capability:teams"
       ],
       "concepts": [],
+      "respects": [
+        "constraint:client-work-is-confidential"
+      ],
       "why": null,
       "body": "A client sees only itself among a team's clients, never which others the team\nworks with.",
       "evidence": {
@@ -8371,6 +8672,7 @@
         "capability:teams"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A client sees only teams that support it.",
       "evidence": {
@@ -8394,6 +8696,7 @@
         "capability:teams"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Once a team is deleted, its clients no longer see it.",
       "evidence": {
@@ -8417,6 +8720,7 @@
         "capability:teams"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Engineers work with a client's capacity only when their team supports that\nclient.",
       "evidence": {
@@ -8440,6 +8744,7 @@
         "capability:teams"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Naming a client, Exalynt sees that client's teams and every client each\nsupports; naming none, every team.",
       "evidence": {
@@ -8463,6 +8768,7 @@
         "capability:teams"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A client's members see its teams only if their role lets them.",
       "evidence": {
@@ -8486,6 +8792,7 @@
         "capability:teams"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A team's members are listed lead first, each with their name and email address.",
       "evidence": {
@@ -8509,6 +8816,7 @@
         "capability:teams"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A team has at most one lead, so making someone its lead makes the old lead an\nordinary member.",
       "evidence": {
@@ -8532,6 +8840,7 @@
         "capability:teams"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "An engineer belongs to at most one team, so putting them on another moves them\noff their old one.",
       "evidence": {
@@ -8555,6 +8864,7 @@
         "capability:teams"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Only Exalynt assigns teams to clients and takes them off. A client can't give\nitself a team or take one away.",
       "evidence": {
@@ -8578,6 +8888,7 @@
         "capability:teams"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "",
       "evidence": {
@@ -8601,6 +8912,7 @@
         "capability:teams"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Only Exalynt's own people can be on a team, and someone who leaves Exalynt is\nno longer shown on it.",
       "evidence": {
@@ -8624,6 +8936,7 @@
         "capability:teams"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Taking someone off a team takes them off every client's view of it.",
       "evidence": {
@@ -8647,6 +8960,7 @@
         "capability:teams"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Taking a client off one of its teams leaves it its other teams.",
       "evidence": {
@@ -8670,6 +8984,7 @@
         "capability:teams"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Taking someone off a team they've already left finds nothing to take them off.",
       "evidence": {
@@ -8693,6 +9008,7 @@
         "capability:teams"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Assigning a team to a client it already supports changes nothing.",
       "evidence": {
@@ -8716,6 +9032,7 @@
         "capability:teams"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Team names are unique, ignoring case and surrounding spaces.",
       "evidence": {
@@ -8739,6 +9056,7 @@
         "capability:teams"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A team can support several clients, and Exalynt sees every client a team is\nassigned to.",
       "evidence": {
@@ -8762,6 +9080,7 @@
         "capability:teams"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A team counts as updated when its engineers or clients change.",
       "evidence": {
@@ -8789,6 +9108,7 @@
         "capability:partner-earnings"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A partnership is never a client organization, and isn't held by a person or by\na business: a solo partner manages one named after them, and an agency's\nrepresentative manages one named after the agency. Whether it pays a person or\na business is settled when its payout account is set up.",
       "evidence": {
@@ -8810,6 +9130,7 @@
         "capability:partner-earnings"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Accepting the invitation makes the invitee the partnership's manager, with the\nPartner Hub.",
       "evidence": {
@@ -8837,6 +9158,7 @@
         "capability:partner-earnings"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "An admin can adjust attribution at any time: attribute a client, move it to\nanother partnership, or remove it. Typical reasons: Exalynt was already in\nconversation with the client before the referral, or the client signed up\nwithout the code. Only a partnership whose invitation has been accepted can be\nattributed a client.",
       "evidence": {
@@ -8864,6 +9186,7 @@
         "capability:partner-earnings"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "An admin sets a partnership's terms when inviting it, and its Partner Agreement\noffers them.",
       "evidence": {
@@ -8891,6 +9214,7 @@
         "capability:partner-earnings"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A client's people see the partnership that referred it, by name, and nothing\nelse of it. Nobody sees who referred another client.",
       "evidence": {
@@ -8918,6 +9242,7 @@
         "capability:partner-earnings"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Enrolling is voluntary and never automatic, and recommending Exalynt without\nbeing enrolled earns nothing.",
       "evidence": {
@@ -8939,6 +9264,7 @@
         "capability:partner-earnings"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "An invited partner who already has an account, such as an engineer or a client\nmember, accepts the invitation with that account and gains the Partner Hub\nalongside what they already have.",
       "evidence": {
@@ -8960,6 +9286,7 @@
         "capability:partner-earnings"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Introducing a client doesn't assign an engineer or team to it, and nothing\nprevents it either: an engineer who introduced a client can be on or lead a\nteam assigned to that client, and be assigned to its capacity.",
       "evidence": {
@@ -8981,6 +9308,9 @@
         "capability:partner-earnings"
       ],
       "concepts": [],
+      "respects": [
+        "constraint:no-unwanted-bulk-email"
+      ],
       "why": null,
       "body": "A partnership can send at most 50 new invitations in a day, and revoking one\ndoesn't free up another. Each invitation can be resent at most once a day. So\nnobody is flooded with email from Exalynt.",
       "evidence": {
@@ -9013,6 +9343,7 @@
         "capability:partner-earnings"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A partner can resend or revoke an invitation until the client signs up.",
       "evidence": {
@@ -9040,6 +9371,7 @@
         "capability:partner-earnings"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Exalynt enrolls partners by inviting them, and inviting creates the partnership\nat once.",
       "evidence": {
@@ -9067,6 +9399,7 @@
         "capability:partner-earnings"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A partnership's manager never sees or changes another partnership.",
       "evidence": {
@@ -9094,6 +9427,7 @@
         "capability:partner-earnings"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A partnership can't be attributed a client organization its manager is a member\nof, so a manager can't use their own code.",
       "evidence": {
@@ -9121,6 +9455,7 @@
         "capability:partner-earnings"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Partners earn only on clients they introduce, never on other partners or their\nintroductions.",
       "evidence": {
@@ -9142,6 +9477,7 @@
         "capability:partner-earnings"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A client has at most one partnership, and earnings are never split.",
       "evidence": {
@@ -9169,6 +9505,7 @@
         "capability:partner-earnings"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Each partnership has one referral code, shared either as the code itself or as\na sign-up link that carries it. A client who signs up with it is attributed to\nthat partnership automatically. Entering one is optional, and a code that\ndoesn't exist is refused.",
       "evidence": {
@@ -9196,6 +9533,7 @@
         "capability:partner-earnings"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A partner can invite someone to become a client, once per address. Exalynt\nsends the invitation, and it says the partner may earn from it.",
       "evidence": {
@@ -9223,6 +9561,7 @@
         "capability:partner-earnings"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A partner sees how long their partnership earns on each of its clients: until\nwhen, that it has no end, or that it opens with the client's first block.",
       "evidence": {
@@ -9250,6 +9589,7 @@
         "capability:partner-earnings"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A partner sees the clients attributed to their partnership, and no others.",
       "evidence": {
@@ -9277,6 +9617,7 @@
         "capability:partner-earnings"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A partner only sees and changes their own partnership's invitations, and is\nnever told whether an address already has an account or is already a client.",
       "evidence": {
@@ -9304,6 +9645,7 @@
         "capability:partner-earnings"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "An admin can hand a partnership to another manager. Its referral code,\nattributed clients, earnings, payouts, and payout account stay with the\npartnership.",
       "evidence": {
@@ -9325,6 +9667,7 @@
         "capability:partner-earnings"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Only new clients can be attributed by referral code. Someone already at a\nclient can't use one to sign up again. A company with the same name as a client\nisn't attributed, and nobody is told why, so a client's name never shows.",
       "evidence": {
@@ -9352,6 +9695,7 @@
         "capability:partner-earnings"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A client introduced by a partner works with Exalynt exactly as any other client\ndoes, with the same prices and ownership.",
       "evidence": {
@@ -9373,6 +9717,7 @@
         "capability:partner-earnings"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Revoking a partner's invitation removes the partnership it created.",
       "evidence": {
@@ -9400,6 +9745,7 @@
         "capability:partner-earnings"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "An invited address is attributed by the code it uses, even if another partner\ninvited it. With no code, it's attributed to the partner who invited it, when\njust one has, and otherwise to nobody. Either way, it came by invitation when\nthe partnership it's attributed to invited that address, as the invitation's\nlink carries the code.",
       "evidence": {
@@ -9427,6 +9773,7 @@
         "capability:partner-earnings"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "The manager names the partnership, and can rename it.",
       "evidence": {
@@ -9454,6 +9801,7 @@
         "capability:partner-earnings"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Partners see only what they need to understand their partnership and its\nearnings: attributed clients' names, the capacity those clients purchased, and\nwhat it earned. They never see a client's work or invoices.",
       "evidence": {
@@ -9481,6 +9829,7 @@
         "capability:payouts"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A block earns for the partnership its client was attributed to when it bought\nthe block. Moving or removing the attribution later doesn't change that, and\nattributing a client later doesn't reach the blocks it already bought.",
       "evidence": {
@@ -9508,6 +9857,7 @@
         "capability:payouts"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Each available teammate earns the Team Support Share of their own agreement.",
       "evidence": {
@@ -9535,6 +9885,9 @@
         "capability:payouts"
       ],
       "concepts": [],
+      "respects": [
+        "constraint:agreements-set-pay"
+      ],
       "why": null,
       "body": "Coupons and price changes change no share, and a coupon comes out of what\nExalynt keeps.",
       "evidence": {
@@ -9562,6 +9915,7 @@
         "capability:payouts"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Each share is rounded to the nearest cent on its own.",
       "evidence": {
@@ -9589,6 +9943,7 @@
         "capability:payouts"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A client's earning window opens at the first block it buys while attributed to\nthe partnership, and lasts as many months as the partnership's Earning Window\nsays, or has no end when its terms set no time limit. Blocks it bought before\nit was attributed don't open it, and earn the partnership nothing.",
       "evidence": {
@@ -9616,6 +9971,7 @@
         "capability:payouts"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A client's earning window never resets or pauses. A block bought inside the\nwindow and fulfilled after it still counts.",
       "evidence": {
@@ -9643,6 +9999,7 @@
         "capability:payouts"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A partnership's earnings belong to the partnership, whoever manages it, and are\npaid to its payout account, not to the individual who made the introduction.",
       "evidence": {
@@ -9670,6 +10027,9 @@
         "capability:payouts"
       ],
       "concepts": [],
+      "respects": [
+        "constraint:agreements-set-pay"
+      ],
       "why": null,
       "body": "The engineer on a block when it's fulfilled earns the Engineer Share of their\nEngineer Agreement.",
       "evidence": {
@@ -9697,6 +10057,7 @@
         "capability:payouts"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A partnership's basis says which capacity is eligible. The only basis is\nEngineering Capacity (Flex, Core, or Dedicated) that referred clients purchase\nwithin their earning window and have fulfilled.",
       "evidence": {
@@ -9724,6 +10085,7 @@
         "capability:payouts"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Exalynt bears partnership earnings as a separate allocation. The client's\nprice, the engineer share, and the team-lead share don't change.",
       "evidence": {
@@ -9751,6 +10113,7 @@
         "capability:payouts"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "If the lead's payout account isn't valid when the block is fulfilled, the\nteam-lead share is still earned and is paid once it is.",
       "evidence": {
@@ -9772,6 +10135,7 @@
         "capability:payouts"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Only a partnership's manager can set up or change its payout account, which is\nthe partnership's own, separate from any the manager has as an engineer.",
       "evidence": {
@@ -9799,6 +10163,7 @@
         "capability:payouts"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "If the team has no lead when the block is Fulfilled, no team-lead share is\nearned. A lead appointed later doesn't get it retroactively.",
       "evidence": {
@@ -9820,6 +10185,7 @@
         "capability:payouts"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A block creates at most one team-lead share, even when several teams serve the\nclient.",
       "evidence": {
@@ -9841,6 +10207,7 @@
         "capability:payouts"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Being a partner doesn't change an engineer's share, team, or lead status.",
       "evidence": {
@@ -9862,6 +10229,7 @@
         "capability:payouts"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A partnership's manager sees its earnings, each with its client, block, payout\nbasis, percentage, and amount, and never another partnership's. They aren't\ntold who worked a block.",
       "evidence": {
@@ -9889,6 +10257,7 @@
         "capability:payouts"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A partnership's share is earned when the block is fulfilled, and not before.",
       "evidence": {
@@ -9916,6 +10285,7 @@
         "capability:payouts"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A partnership's share is a percentage of the capacity payout basis of eligible\ncapacity. It isn't a share of the price, the invoice, or the engineer share,\nand it excludes the operations fee, infrastructure pass-through, taxes, and\nanything that isn't Engineering Capacity.",
       "evidence": {
@@ -9943,6 +10313,9 @@
         "capability:payouts"
       ],
       "concepts": [],
+      "respects": [
+        "constraint:agreements-set-pay"
+      ],
       "why": null,
       "body": "A partnership earns on the terms Exalynt set when inviting it: its share, its\nbasis, and its earning window. The default is 5% of the engineering capacity\nreferred clients purchase and have fulfilled within 12 months.",
       "evidence": {
@@ -9970,6 +10343,9 @@
         "capability:payouts"
       ],
       "concepts": [],
+      "respects": [
+        "constraint:agreements-set-pay"
+      ],
       "why": null,
       "body": "A partnership earns the Referral Share of its Partner Agreement in effect when\nthe block is fulfilled. With none in effect then, it earns nothing on that\nblock.",
       "evidence": {
@@ -9997,6 +10373,7 @@
         "capability:payouts"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A partnership earns on its eligible blocks whether or not it has a payout\naccount. Like engineer and team-lead shares, its share is held until it has a\npayout account that can receive it, then paid.",
       "evidence": {
@@ -10024,6 +10401,7 @@
         "capability:payouts"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A block's payout basis is its capacity units × $1,750, and its price never\nenters it.",
       "evidence": {
@@ -10051,6 +10429,7 @@
         "capability:payouts"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A block reassigned before it's fulfilled earns its earlier engineer nothing\nhere. Anything owed for partial work is settled under their agreement.",
       "evidence": {
@@ -10072,6 +10451,7 @@
         "capability:payouts"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A refund or failed payment after a block is fulfilled doesn't change a share.\nExalynt absorbs it.",
       "evidence": {
@@ -10093,6 +10473,7 @@
         "capability:payouts"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Each share is worked out on its own, so no share reduces another.",
       "evidence": {
@@ -10120,6 +10501,7 @@
         "capability:payouts"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A block's shares are earned when it's fulfilled, and not before.",
       "evidence": {
@@ -10147,6 +10529,7 @@
         "capability:payouts"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "The engineer's team lead earns the Team Lead Share of their own agreement, but\nnot on their own block.",
       "evidence": {
@@ -10174,6 +10557,7 @@
         "capability:payouts"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A share that doesn't apply goes to nobody else. With no lead, no available\nteammates, or no partnership, Exalynt keeps it.",
       "evidence": {
@@ -10201,6 +10585,7 @@
         "capability:payouts"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Capacity that's never fulfilled earns a partnership nothing.",
       "evidence": {
@@ -10228,6 +10613,9 @@
         "capability:payouts"
       ],
       "concepts": [],
+      "respects": [
+        "constraint:agreements-set-pay"
+      ],
       "why": null,
       "body": "A share someone's agreement in effect doesn't list, or having none in effect,\nearns them nothing.",
       "evidence": {
@@ -10255,6 +10643,7 @@
         "capability:payouts"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A block's basis is fixed when it's bought, and its percentages when it's\nassigned. A later basis change applies only to blocks bought after it, and\nreassigning a block fixes its percentages again for its new engineer.",
       "evidence": {
@@ -10276,6 +10665,7 @@
         "capability:payouts"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Which teammates earn team support is fixed when the block is Fulfilled: those\non a team with its owning engineer at that moment, other than that team's lead,\nwith some availability in the block's week. A team change after that doesn't\nalter it.",
       "evidence": {
@@ -10297,6 +10687,7 @@
         "capability:payouts"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "The team-lead share's beneficiary is fixed when the block is Fulfilled: whoever\nholds the role of team lead, at that moment, of a team the owning engineer is\non. A change of lead or team after that doesn't change it.",
       "evidence": {
@@ -10315,6 +10706,7 @@
         "capability:payout-accounts"
       ],
       "concepts": [],
+      "respects": [],
       "why": "Partnerships are separate payees, whether a person or a business stands behind them, and keep their account when they change managers.",
       "body": "A partnership has its own payout account, apart from its manager's and from any\nother partnership's, so someone managing several sets each one up.",
       "evidence": {
@@ -10339,6 +10731,7 @@
         "capability:payout-accounts"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "An admin sees whether an engineer can be paid, and nothing else about their\naccount.",
       "evidence": {
@@ -10363,6 +10756,7 @@
         "capability:payout-accounts"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A limited token can't reach its creator's payout account.",
       "evidence": {
@@ -10387,6 +10781,7 @@
         "capability:payout-accounts"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A person has at most one payout account, and a new one replaces it.",
       "evidence": {
@@ -10411,6 +10806,7 @@
         "capability:payout-accounts"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "People see and change only their own payout account.",
       "evidence": {
@@ -10435,6 +10831,9 @@
         "capability:payout-accounts"
       ],
       "concepts": [],
+      "respects": [
+        "constraint:payouts-partner-keeps-paying-accounts-open"
+      ],
       "why": "The payments partner holds a payout until it reaches the bank, and won't close an account while it does.",
       "body": "A person, or a partnership's manager, can remove its payout account, except\nwhile money paid to it is still on its way to the bank.",
       "evidence": {
@@ -10459,6 +10858,7 @@
         "capability:payout-accounts"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A person sees whether their account can be paid, and what to fix if not.",
       "evidence": {
@@ -10483,6 +10883,7 @@
         "capability:payouts"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "An admin sees and releases payouts, and nothing is sent without that.",
       "evidence": {
@@ -10507,6 +10908,7 @@
         "capability:payouts"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A payout canceled before any money leaves is Canceled, and its earnings stay\nunsent.",
       "evidence": {
@@ -10531,6 +10933,7 @@
         "capability:payouts"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Each earning shows where it stands, and earnings on hold say what to fix.",
       "evidence": {
@@ -10555,6 +10958,7 @@
         "capability:payouts"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Earnings are still paid after someone leaves their team or Exalynt.",
       "evidence": {
@@ -10579,6 +10983,7 @@
         "capability:payouts"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Earnings are paid out when approved by an admin, usually once per week. A\nrelease covers all unsent earnings from blocks fulfilled by the end of the\nprevious Sunday, UTC, so a week nobody released goes in the next one. Every\nearning is paid eventually.",
       "evidence": {
@@ -10603,6 +11008,9 @@
         "capability:payouts"
       ],
       "concepts": [],
+      "respects": [
+        "constraint:bank-transfers-cant-be-recalled"
+      ],
       "why": null,
       "body": "Earnings are only ever sent once.",
       "evidence": {
@@ -10627,6 +11035,7 @@
         "capability:payouts"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Once payouts are sent, each earning also shows that it's waiting to be\nreleased, processing, paid, or failed.",
       "evidence": {
@@ -10651,6 +11060,7 @@
         "capability:payouts"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Earnings wait while their payee has no valid account, then go in the first\npayout after it's valid.",
       "evidence": {
@@ -10675,6 +11085,7 @@
         "capability:payouts"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "From assignment, people can see what a block will pay them.",
       "evidence": {
@@ -10699,6 +11110,9 @@
         "capability:payouts"
       ],
       "concepts": [],
+      "respects": [
+        "constraint:bank-transfers-cant-be-recalled"
+      ],
       "why": null,
       "body": "A failed payout's earnings go out in a new payout once there's an account that\ncan receive them. The failed one says why and links to the new one.",
       "evidence": {
@@ -10723,6 +11137,7 @@
         "capability:payouts"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A payout is Processing once sent, then Paid when the payment provider posts it,\nor Failed if it's returned. A Paid payout becomes Failed only if the payment\nprovider returns it later. The one in use posts a payout as soon as it's sent,\npays it on to the bank itself, and keeps for the payee anything the bank sends\nback, so its payouts stay Paid.",
       "evidence": {
@@ -10747,6 +11162,7 @@
         "capability:payouts"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "There's no minimum payout.",
       "evidence": {
@@ -10771,6 +11187,7 @@
         "capability:payouts"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A payee gets one payout per payout run, which can cover any number of earnings\nof any kind. Each line shows its block, client, basis, percentage, and amount.",
       "evidence": {
@@ -10795,6 +11212,7 @@
         "capability:payouts"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A partnership's manager sees only the payouts sent to that partnership, with\nthe bank account each went to. An admin sees them too, without the account.",
       "evidence": {
@@ -10819,6 +11237,7 @@
         "capability:payouts"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A partnership's earnings go in their own payout to its account, even when its\nmanager is also an engineer.",
       "evidence": {
@@ -10843,6 +11262,7 @@
         "capability:payouts"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "Earnings are earned and sent in US dollars. Exalynt pays the sending fee, and\nthe payee bears any currency conversion.",
       "evidence": {
@@ -10867,6 +11287,7 @@
         "capability:payouts"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A payout goes to the payee's payout account when it's sent. Changing the\naccount affects later payouts only.",
       "evidence": {
@@ -10891,6 +11312,7 @@
         "capability:payouts"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "",
       "evidence": {
@@ -10915,6 +11337,9 @@
         "capability:payouts"
       ],
       "concepts": [],
+      "respects": [
+        "constraint:bank-transfers-cant-be-recalled"
+      ],
       "why": null,
       "body": "A sent payout isn't taken back here. Corrections are settled outside the\nproduct.",
       "evidence": {
@@ -10933,6 +11358,9 @@
         "capability:payouts"
       ],
       "concepts": [],
+      "respects": [
+        "constraint:bank-transfers-cant-be-recalled"
+      ],
       "why": null,
       "body": "What a sent payout lists never changes, whatever later happens to the basis,\nearnings, or teams.",
       "evidence": {
@@ -10957,6 +11385,7 @@
         "capability:payouts"
       ],
       "concepts": [],
+      "respects": [],
       "why": null,
       "body": "A lead sees the payout status of their team's blocks, not what anyone else\nearns. An admin sees everyone's.",
       "evidence": {
@@ -12338,6 +12767,137 @@
       "body": ""
     }
   ],
+  "constraints": [
+    {
+      "id": "agreements-set-pay",
+      "file": "docqet/constraints/agreements-set-pay.md",
+      "name": "What people earn is set by their agreements",
+      "description": "Engineers and partners are paid under the Commercial Terms of the agreement each accepted, and nothing outside those terms earns anything.",
+      "source": "The Engineer and Partner Agreements",
+      "rules": [
+        "rule:engineer-agreement-follows-the-invitations-terms@agreements",
+        "rule:coupons-never-change-shares@pay",
+        "rule:engineer-earns-the-engineer-share@pay",
+        "rule:partnership-terms-set-at-invitation@pay",
+        "rule:partnerships-earn-under-their-agreement-in-effect@pay",
+        "rule:unlisted-shares-earn-nothing@pay"
+      ],
+      "mechanisms": [],
+      "body": ""
+    },
+    {
+      "id": "bank-transfers-cant-be-recalled",
+      "file": "docqet/constraints/bank-transfers-cant-be-recalled.md",
+      "name": "A bank transfer can't be recalled once it's sent",
+      "description": "Once money has been sent to someone's bank, it can't be pulled back or changed: only a new payment can put a mistake right.",
+      "source": "How bank transfers work",
+      "rules": [
+        "rule:earnings-are-sent-only-once@pay",
+        "rule:failed-payouts-are-sent-again@pay",
+        "rule:sent-payouts-arent-taken-back@pay",
+        "rule:sent-payouts-never-change@pay"
+      ],
+      "mechanisms": [],
+      "body": ""
+    },
+    {
+      "id": "client-work-is-confidential",
+      "file": "docqet/constraints/client-work-is-confidential.md",
+      "name": "Each client's work and conversations are confidential",
+      "description": "What a client builds, and what's said about it, is confidential to that client and the people working for it.",
+      "source": "Client agreements",
+      "rules": [
+        "rule:objects-stay-within-their-organization@accounts",
+        "rule:leaving-exalynt-takes-you-out-of-every-space@capacity",
+        "rule:a-blocks-conversations-are-for-its-client-and-the-teams-supporting-it@capacity",
+        "rule:clients-cant-see-a-teams-other-clients@capacity"
+      ],
+      "mechanisms": [],
+      "body": ""
+    },
+    {
+      "id": "messaging-provider-terms",
+      "file": "docqet/constraints/messaging-provider-terms.md",
+      "name": "The messaging provider decides who joins and keeps the history",
+      "description": "Who can be added to a conversation directly, and how long its history is kept, are the messaging provider's to decide.",
+      "source": "The messaging provider's terms",
+      "rules": [
+        "rule:a-space-outlasts-its-people@capacity",
+        "rule:clients-are-invited-and-some-can-only-be-emailed@capacity"
+      ],
+      "mechanisms": [],
+      "body": ""
+    },
+    {
+      "id": "no-unwanted-bulk-email",
+      "file": "docqet/constraints/no-unwanted-bulk-email.md",
+      "name": "Nobody is sent unwanted bulk email",
+      "description": "Email goes only to addresses that asked for it or are needed for the service, and never in bulk to people who didn't.",
+      "source": "Anti-spam law, and email providers' terms",
+      "rules": [
+        "rule:email-only-to-verified-addresses@accounts",
+        "rule:some-notifications-cant-be-turned-off@accounts",
+        "rule:invitations-are-limited@accounts",
+        "rule:invitations-are-limited@partnerships"
+      ],
+      "mechanisms": [],
+      "body": ""
+    },
+    {
+      "id": "payment-provider-holds-payment-details",
+      "file": "docqet/constraints/payment-provider-holds-payment-details.md",
+      "name": "The payment provider holds payment methods and invoices",
+      "description": "Clients' payment methods, billing details and invoices are held by the payment provider, on its terms, and paid through it.",
+      "source": "The payment provider's terms",
+      "rules": [
+        "rule:buying-requires-a-payment-method@billing",
+        "rule:unpaid-invoices-are-paid-with-the-provider@billing",
+        "rule:retrying-a-purchase-never-charges-twice@capacity"
+      ],
+      "mechanisms": [],
+      "body": ""
+    },
+    {
+      "id": "payouts-partner-keeps-paying-accounts-open",
+      "file": "docqet/constraints/payouts-partner-keeps-paying-accounts-open.md",
+      "name": "An account can't close while a payout is on its way",
+      "description": "The payments partner won't close a payout account while a payout to it is still on its way to the bank.",
+      "source": "The payments partner's terms",
+      "rules": [
+        "rule:removing-a-payout-account@pay"
+      ],
+      "mechanisms": [],
+      "body": ""
+    },
+    {
+      "id": "sales-tax-is-collected",
+      "file": "docqet/constraints/sales-tax-is-collected.md",
+      "name": "Sales tax is collected on every sale",
+      "description": "The company must make sure sales tax is collected wherever a client is, at the rate that place sets, without working the tax out itself.",
+      "source": "Sales tax law, with the payment provider working the tax out",
+      "rules": [
+        "rule:purchases-are-quoted-with-their-tax@billing",
+        "rule:tax-needs-to-know-where-the-client-is@billing",
+        "rule:the-payment-provider-works-out-the-tax@billing"
+      ],
+      "mechanisms": [],
+      "body": ""
+    },
+    {
+      "id": "the-past-cant-change",
+      "file": "docqet/constraints/the-past-cant-change.md",
+      "name": "What has already happened can't be undone",
+      "description": "Work that has started, weeks that have passed and work that's been delivered are facts: nothing later can make them not have happened.",
+      "source": "A fact of time",
+      "rules": [
+        "rule:past-weeks-cant-change@capacity",
+        "rule:reductions-never-touch-started-work@capacity",
+        "rule:fulfilled-is-final@capacity"
+      ],
+      "mechanisms": [],
+      "body": ""
+    }
+  ],
   "initiatives": [
     {
       "id": "conversation-spaces",
@@ -12477,6 +13037,7 @@
       "name": "API docs",
       "description": "The reference at `GET /docs/api`: the OpenAPI spec bundled into one document, rendered by Scalar, with each endpoint's stability and each group's maturity drawn on top by our own script.",
       "applies": "project",
+      "respects": [],
       "capabilities": [
         "capability:access-tokens",
         "capability:engineer-onboarding",
@@ -12535,6 +13096,7 @@
       "name": "Authentication",
       "description": "Decides who is calling each request, and puts the `authz.Principal` the rest of the API works from on the context. Clerk only signs people in: users are copied to our database, and organizations, memberships, and roles are the API's own.",
       "applies": "product",
+      "respects": [],
       "capabilities": [
         "capability:access-tokens",
         "capability:engineer-onboarding",
@@ -12589,6 +13151,7 @@
       "name": "Authorization",
       "description": "Decides what a caller may do and which records they may do it to, from the Principal authentication built. It knows nothing of tokens or the database. What the terms mean in the domain is in the role and organization concepts.",
       "applies": "project",
+      "respects": [],
       "capabilities": [
         "capability:access-tokens",
         "capability:engineer-onboarding",
@@ -12645,6 +13208,7 @@
       "name": "Provider boundary",
       "description": "How the API reaches third-party services so that one can be swapped or stubbed without its callers noticing. Each service's own setup and behavior has a provider doc.",
       "applies": "project",
+      "respects": [],
       "capabilities": [
         "capability:access-tokens",
         "capability:engineer-onboarding",
@@ -12699,6 +13263,7 @@
       "name": "Row-level security",
       "description": "Postgres enforces the organization and partnership boundaries underneath the application's Bounds, so a query that forgets its Bounds still can't cross them in a request acting in an organization or a partnership.",
       "applies": "project",
+      "respects": [],
       "capabilities": [
         "capability:access-tokens",
         "capability:engineer-onboarding",
@@ -12758,6 +13323,7 @@
       "name": "Telemetry",
       "description": "What the API emits and how to read it. The API exports over OTLP to the collector `OTEL_EXPORTER_OTLP_ENDPOINT` names, which in the cluster is the Grafana Alloy collector the exalynt/collector repo deploys, forwarding to Grafana Cloud. The README's Configuration section covers the settings.",
       "applies": "project",
+      "respects": [],
       "capabilities": [
         "capability:access-tokens",
         "capability:engineer-onboarding",

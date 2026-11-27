@@ -3,6 +3,7 @@ docqet: rule
 id: clients-are-invited-and-some-can-only-be-emailed
 domain: capacity
 name: Clients are invited, and some can only be emailed
+respects: [constraint:messaging-provider-terms]
 ---
 
 Exalynt's people are put in a space directly. A client's people are invited

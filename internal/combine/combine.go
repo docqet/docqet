@@ -36,6 +36,7 @@ func Combine(states []*state.State) *Product {
 	c.featuresOfCapabilities()
 	c.parts()
 	c.solvedProblems()
+	c.respectedConstraints()
 	c.personasAndInitiatives()
 	c.contradictions()
 	c.duplicates()
@@ -95,6 +96,7 @@ type combiner struct {
 	concepts     map[string]*Concept
 	personas     map[string]*Persona
 	problems     map[string]*Problem
+	constraints  map[string]*Constraint
 	initiatives  map[string]*Initiative
 	mechanisms   map[string]*Technical
 	components   map[string]*Technical
@@ -120,6 +122,7 @@ func newCombiner() *combiner {
 			Concepts:     []*Concept{},
 			Personas:     []*Persona{},
 			Problems:     []*Problem{},
+			Constraints:  []*Constraint{},
 			Initiatives:  []*Initiative{},
 			Mechanisms:   []*Technical{},
 			Components:   []*Technical{},
@@ -134,6 +137,7 @@ func newCombiner() *combiner {
 		concepts:     map[string]*Concept{},
 		personas:     map[string]*Persona{},
 		problems:     map[string]*Problem{},
+		constraints:  map[string]*Constraint{},
 		initiatives:  map[string]*Initiative{},
 		mechanisms:   map[string]*Technical{},
 		components:   map[string]*Technical{},
@@ -231,8 +235,9 @@ func (c *combiner) add(st *state.State) {
 		from := contribution(project, r.Domain, r.File, r.Name, "", r.Body)
 		from.Why = r.Why
 		rule := contribute(&c.p.Rules, c.rules, r.ID+"@"+r.Domain, from, func(base Doc) *Rule {
-			return &Rule{Doc: base, Capabilities: []string{}, Concepts: []string{}, Gaps: []string{}, Evidence: newEvidence()}
+			return &Rule{Doc: base, Capabilities: []string{}, Concepts: []string{}, Respects: []string{}, Gaps: []string{}, Evidence: newEvidence()}
 		})
+		rule.Respects = union(rule.Respects, ids(r.Respects)...)
 		addEvidence(&rule.Evidence, r.Evidence, project)
 		c.pending = append(c.pending, pending{domain: r.Domain, concepts: &rule.Concepts, linkedConcepts: ids(r.Concepts)})
 	}
@@ -275,6 +280,15 @@ func (c *combiner) add(st *state.State) {
 		problem.Personas = union(problem.Personas, ids(pr.Personas)...)
 	}
 
+	// So is a constraint.
+	for _, cn := range st.Constraints {
+		from := contribution(project, "", cn.File, cn.Name, cn.Description, cn.Body)
+		from.Source = cn.Source
+		contribute(&c.p.Constraints, c.constraints, cn.ID, from, func(base Doc) *Constraint {
+			return &Constraint{Doc: base, Source: cn.Source, Rules: []string{}, Mechanisms: []string{}}
+		})
+	}
+
 	// An initiative is in no domain either.
 	for _, i := range st.Initiatives {
 		from := contribution(project, "", i.File, i.Name, i.Description, i.Body)
@@ -287,6 +301,7 @@ func (c *combiner) add(st *state.State) {
 	for _, m := range st.Mechanisms {
 		doc := c.technical(&c.p.Mechanisms, c.mechanisms, KindMechanism, project, m.ID, m.File, m.Name, m.Description, m.Body,
 			m.Decisions, m.Capabilities, m.Meets, own(m.Gaps), own(m.Tradeoffs), m.Evidence)
+		doc.Respects = union(doc.Respects, ids(m.Respects)...)
 		if m.Applies == "product" {
 			doc.Applies = "product"
 			c.across = append(c.across, acrossProduct{doc: doc, product: product.ID})
@@ -342,7 +357,7 @@ func (c *combiner) technical(list *[]*Technical, index map[string]*Technical, ki
 	from.Decisions = decisions(ds, project)
 	doc := contribute(list, index, id, from, func(base Doc) *Technical {
 		return &Technical{
-			Doc: base, Kind: kind, Applies: "project",
+			Doc: base, Kind: kind, Applies: "project", Respects: []string{},
 			Capabilities: []string{}, Meets: []string{}, Gaps: []string{}, Tradeoffs: []string{},
 			Evidence: newEvidence(),
 		}
@@ -582,6 +597,33 @@ func (c *combiner) solvedProblems() {
 	})
 }
 
+// respectedConstraints works out the rules and mechanisms that respect each
+// constraint, across every project, so a constraint one project declares and
+// another respects isn't reported as respected by nothing.
+func (c *combiner) respectedConstraints() {
+	for _, r := range c.p.Rules {
+		for _, id := range r.Respects {
+			if cn := c.constraints[id]; cn != nil {
+				cn.Rules = union(cn.Rules, r.ID)
+			}
+		}
+	}
+	for _, m := range c.p.Mechanisms {
+		for _, id := range m.Respects {
+			if cn := c.constraints[id]; cn != nil {
+				cn.Mechanisms = union(cn.Mechanisms, m.ID)
+			}
+		}
+	}
+	c.p.Findings = slices.DeleteFunc(c.p.Findings, func(f state.Finding) bool {
+		if f.Type != state.RespectedByNothing {
+			return false
+		}
+		cn := c.constraints[idOf(f.Subject)]
+		return cn != nil && (len(cn.Rules) > 0 || len(cn.Mechanisms) > 0)
+	})
+}
+
 // personasAndInitiatives works out each persona's capabilities and the
 // features those are in, and each initiative's capabilities, personas and
 // features.
@@ -636,7 +678,7 @@ func (c *combiner) contradictions() {
 				if typ == state.TypeRule {
 					body = f.Body
 				}
-				said = union(said, strings.Join([]string{f.Name, deref(f.Role), deref(f.Title), deref(f.Cost), f.Description, body}, "\n"))
+				said = union(said, strings.Join([]string{f.Name, deref(f.Role), deref(f.Title), deref(f.Cost), deref(f.Source), f.Description, body}, "\n"))
 			}
 			if len(said) < 2 {
 				continue
@@ -660,6 +702,7 @@ func (c *combiner) contradictions() {
 	differing(state.TypeConcept, docs(c.p.Concepts))
 	differing(state.TypePersona, docs(c.p.Personas))
 	differing(state.TypeProblem, docs(c.p.Problems))
+	differing(state.TypeConstraint, docs(c.p.Constraints))
 	differing(state.TypeInitiative, docs(c.p.Initiatives))
 	differing(state.TypeMechanism, docs(c.p.Mechanisms))
 	differing(state.TypeComponent, docs(c.p.Components))

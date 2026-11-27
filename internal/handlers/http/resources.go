@@ -33,6 +33,8 @@ import "github.com/docqet/docqet/internal/state"
 //	GET /products/{product}/personas/{id}           PersonaResource
 //	GET /products/{product}/problems                []ProblemResource
 //	GET /products/{product}/problems/{id}           ProblemResource
+//	GET /products/{product}/constraints             []ConstraintResource
+//	GET /products/{product}/constraints/{id}        ConstraintResource
 //	GET /products/{product}/initiatives             []InitiativeResource
 //	GET /products/{product}/initiatives/{id}        InitiativeResource
 //	GET /products/{product}/mechanisms              []TechnicalResource
@@ -48,7 +50,7 @@ import "github.com/docqet/docqet/internal/state"
 //	GET /products/{product}/search?q=               []SearchResultResource
 //
 // ?for= is a reference, such as persona:front-desk-clerk, to a project,
-// persona, problem, initiative, domain, feature or capability, as the CLI's --for, or
+// persona, problem, constraint, initiative, domain, feature or capability, as the CLI's --for, or
 // several separated by commas, for the capabilities they all
 // share: a list or status then counts only those capabilities, and a gap's
 // Within says what it puts at stake there.
@@ -255,6 +257,7 @@ type CountsResource struct {
 	Concepts     int            `json:"concepts"`
 	Personas     int            `json:"personas"`
 	Problems     int            `json:"problems"`
+	Constraints  int            `json:"constraints"`
 	Initiatives  int            `json:"initiatives"`
 	Mechanisms   int            `json:"mechanisms"`
 	Components   int            `json:"components"`
@@ -373,6 +376,7 @@ type RuleResource struct {
 	DocResource
 	Capabilities []string          `json:"capabilities"`
 	Concepts     []string          `json:"concepts"`
+	Respects     []string          `json:"respects"`
 	Gaps         []string          `json:"gaps"`
 	Evidence     EvidenceResource  `json:"evidence"`
 	Standings    map[string]string `json:"standings"` // by capability ID
@@ -412,6 +416,19 @@ type ProblemResource struct {
 	Exposure     ExposureResource  `json:"exposure"`
 }
 
+// ConstraintResource is a constraint, with the rules and mechanisms that
+// respect it, and the figures of the capabilities it bears on.
+type ConstraintResource struct {
+	DocResource
+	Source       *string           `json:"source"`
+	Rules        []string          `json:"rules"`
+	Mechanisms   []string          `json:"mechanisms"`
+	Capabilities []string          `json:"capabilities"`
+	Maturity     *MaturityResource `json:"maturity"`
+	Readiness    ReadinessResource `json:"readiness"`
+	Exposure     ExposureResource  `json:"exposure"`
+}
+
 // InitiativeResource is an initiative, with the figures of its
 // capabilities.
 type InitiativeResource struct {
@@ -428,8 +445,9 @@ type InitiativeResource struct {
 // its gaps.
 type TechnicalResource struct {
 	DocResource
-	Kind         string              `json:"kind"`    // mechanism or component
-	Applies      string              `json:"applies"` // project or product
+	Kind         string              `json:"kind"`     // mechanism or component
+	Applies      string              `json:"applies"`  // project or product
+	Respects     []string            `json:"respects"` // a mechanism's constraints
 	Capabilities []string            `json:"capabilities"`
 	Meets        []string            `json:"meets"`
 	Gaps         []string            `json:"gaps"`
@@ -530,8 +548,8 @@ type FindingResource struct {
 }
 
 // SearchResultResource is a doc that matches a search, best first: its kind
-// (project, domain, feature, capability, rule, concept, persona, problem or
-// initiative), ID and name, and where it matched.
+// (project, domain, feature, capability, rule, concept, persona, problem,
+// constraint or initiative), ID and name, and where it matched.
 type SearchResultResource struct {
 	Kind        string `json:"kind"`
 	ID          string `json:"id"`

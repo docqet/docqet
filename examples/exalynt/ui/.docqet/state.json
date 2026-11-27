@@ -1,5 +1,5 @@
 {
-  "docqet": "0.3",
+  "docqet": "0.4",
   "project": {
     "id": "exalynt-ui",
     "name": "Exalynt UI"
@@ -15,6 +15,7 @@
     "features": 0,
     "personas": 0,
     "problems": 0,
+    "constraints": 0,
     "capabilities": {
       "draft": 0,
       "prototype": 0,
@@ -36,6 +37,7 @@
   "concepts": [],
   "personas": [],
   "problems": [],
+  "constraints": [],
   "mechanisms": [
     {
       "id": "error-reporting",
@@ -43,6 +45,7 @@
       "name": "Error reporting",
       "description": "How the apps report unexpected failures from the browser, so someone looking can see what went wrong.",
       "applies": "project",
+      "respects": [],
       "capabilities": [
         "capability:your-profile",
         "capability:teams",
@@ -100,6 +103,7 @@
       "name": "Stability marks",
       "description": "How every app page shows its stability level, from one record of every feature in every app.",
       "applies": "project",
+      "respects": [],
       "capabilities": [
         "capability:your-profile",
         "capability:teams",

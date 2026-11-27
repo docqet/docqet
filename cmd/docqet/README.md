@@ -320,6 +320,7 @@ the UI's views have.
 ```sh
 docqet list capabilities --stability alpha
 docqet list problems
+docqet list constraints
 docqet list gaps --initiative mvp --sort risk --product
 docqet list gaps --for persona:front-desk-clerk --impact damaging,blocking
 docqet list decisions --domain guest-stays --remote

@@ -287,6 +287,7 @@ func newStatusResource(v *services.View, within []*combine.Capability, by derive
 		Concepts:     len(p.Concepts),
 		Personas:     len(p.Personas),
 		Problems:     len(p.Problems),
+		Constraints:  len(p.Constraints),
 		Initiatives:  len(p.Initiatives),
 		Mechanisms:   len(p.Mechanisms),
 		Components:   len(p.Components),
@@ -407,6 +408,7 @@ func newRuleResource(p *combine.Product, rule *combine.Rule) RuleResource {
 		DocResource:  newDocResource(rule.Doc),
 		Capabilities: list(rule.Capabilities),
 		Concepts:     list(rule.Concepts),
+		Respects:     list(rule.Respects),
 		Gaps:         list(rule.Gaps),
 		Evidence:     newEvidenceResource(rule.Evidence),
 		Standings:    map[string]string{},
@@ -457,6 +459,25 @@ func newProblemResource(p *combine.Product, problem *combine.Problem) ProblemRes
 	}
 }
 
+func newConstraintResource(p *combine.Product, cn *combine.Constraint) ConstraintResource {
+	caps := derive.ConstraintCapabilities(p, cn)
+	readiness := derive.ReadinessOf(p, caps, derive.ByFeature)
+	ids := make([]string, 0, len(caps))
+	for _, c := range caps {
+		ids = append(ids, c.ID)
+	}
+	return ConstraintResource{
+		DocResource:  newDocResource(cn.Doc),
+		Source:       cn.Source,
+		Rules:        list(cn.Rules),
+		Mechanisms:   list(cn.Mechanisms),
+		Capabilities: ids,
+		Maturity:     newMaturityResource(derive.CapabilitiesMaturity(caps)),
+		Readiness:    newReadinessResource(p, readiness),
+		Exposure:     newExposureResource(readiness.Exposure),
+	}
+}
+
 func newInitiativeResource(p *combine.Product, i *combine.Initiative) InitiativeResource {
 	caps := derive.CapabilitiesByID(p, i.Capabilities)
 	readiness := derive.ReadinessOf(p, caps, derive.ByFeature)
@@ -482,6 +503,7 @@ func newTechnicalResource(p *combine.Product, t *combine.Technical) TechnicalRes
 		DocResource:  newDocResource(t.Doc),
 		Kind:         t.Kind,
 		Applies:      t.Applies,
+		Respects:     list(t.Respects),
 		Capabilities: list(t.Capabilities),
 		Meets:        list(t.Meets),
 		Gaps:         list(t.Gaps),

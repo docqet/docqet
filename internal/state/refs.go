@@ -52,6 +52,7 @@ const (
 	TypeConcept    = "concept"
 	TypePersona    = "persona"
 	TypeProblem    = "problem"
+	TypeConstraint = "constraint"
 	TypeInitiative = "initiative"
 	TypeMechanism  = "mechanism"
 	TypeComponent  = "component"

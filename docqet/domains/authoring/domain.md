@@ -50,8 +50,9 @@ domains, such as [intention docs](capabilities/docs-format.md).
   work out what depends on other projects, such as maturity, readiness, risk,
   and which outcomes a capability meets with evidence. Nobody edits derived
   state by hand. See [declared and derived](concepts/declared-and-derived.md).
-- **Why, what and how.** Problem docs say why the software exists: the
-  problems people have, in their words, never naming the software. Product
+- **Why, what and how.** Problem docs say why the software exists, and what
+  it must keep to: the problems people have, in their words, and the
+  constraints imposed on it from outside, never naming the software. Product
   docs say what it does, in the domain's words, and never name its
   implementation. Technical docs say how it's meant to be built, in the
   code's words. [Links only point toward why](#problem-space-and-solution-space).
@@ -77,8 +78,8 @@ usually implemented. A project is often a whole repository, and can be one
 package of several in one. Docqet shows one product at a time. Each project
 works in one or more **[domains](concepts/domain.md)**: parts of the
 business, each with its own language, such as Guest stays or Billing. Every
-doc but a persona, a problem, an initiative, a mechanism or a component is
-written in exactly one domain. Every project contributes what it knows to one picture
+doc but a persona, a problem, a constraint, an initiative, a mechanism or a
+component is written in exactly one domain. Every project contributes what it knows to one picture
 of the whole product, and where two of them say different things, Docqet
 shows the **[contradiction](../understanding/concepts/contradiction.md)** rather
 than picking one.
@@ -87,7 +88,9 @@ Why the software exists comes first. A **[persona](concepts/persona.md)** is a
 type of person the software serves, such as a front desk clerk. A
 **[problem](concepts/problem.md)** is a pain point one or more personas share,
 such as guests being turned away when rooms are free, said in their words and
-never naming the software.
+never naming the software. A **[constraint](concepts/constraint.md)** is
+something imposed from outside that any solution must respect, such as a tax
+law or a fact of the building.
 
 A **[feature](concepts/feature.md)** is a part of what the product offers,
 and it groups the **[capabilities](concepts/capability.md)**, each one result
@@ -101,7 +104,8 @@ it, follows **[rules](concepts/rule.md)**, and uses
 **[concepts](concepts/concept.md)**. Rules and concepts belong to a domain,
 and mean what they say there. A capability refers to the ones it follows and
 uses, so one rule can apply to many capabilities, in different features and
-domains. What each level generally means and expects is in the
+domains. A rule says which constraints it respects, when it's there to keep
+to one. What each level generally means and expects is in the
 **[stability rubric](concepts/rubric.md)**.
 
 An **[initiative](concepts/initiative.md)** is a body of work, such as the
@@ -146,6 +150,7 @@ flowchart TB
   subgraph problemSpace ["Problem docs: why it exists, in the persona's words"]
     persona["Persona<br/>who it serves"]
     problem["Problem<br/>a pain point they share"]
+    constraint["Constraint<br/>imposed from outside"]
   end
 
   subgraph product ["Product docs: what it does, in the domain's words"]
@@ -195,6 +200,8 @@ flowchart TB
   capability -- "follows" --> rule
   capability -- "uses" --> concept
   rule -- "refers to" --> concept
+  rule -- "respects" --> constraint
+  mechanism -- "respects" --> constraint
 
   component -- "relied on by" --> capability
   mechanism -- "works across" --> project
@@ -243,7 +250,7 @@ Docqet's docs are in two spaces, the way people already talk about software:
 
 | Space              | Docs                                                                                | Say                                            | In whose words          |
 | ------------------ | ----------------------------------------------------------------------------------- | ---------------------------------------------- | ----------------------- |
-| **Problem space**  | Personas and problems                                                               | **Why**: the pain, and who has it              | The persona's           |
+| **Problem space**  | Personas, problems and constraints                                                  | **Why**: the pain, who has it, and what any solution must keep to | The persona's, or the world's |
 | **Solution space** | **Product docs**: domains, features, capabilities, rules, concepts and initiatives  | **What** the software does, seen from outside  | The domain's            |
 |                    | **Technical docs**: mechanisms and components                                       | **How** it's built, seen from inside           | The code's              |
 
@@ -254,7 +261,8 @@ the running one only once it's healthy" is broad, and still technical: nobody
 using it can tell.
 
 - **Links only point toward why.** Technical docs link to the capabilities
-  they serve, and capabilities link to the problems they solve. Product docs
+  they serve, capabilities link to the problems they solve, and rules and
+  mechanisms link to the constraints they respect. Product docs
   never link to technical docs, and problem docs never link to product docs,
   so a problem stays true whatever solves it, and a capability stays the same
   however it's built.
@@ -270,6 +278,9 @@ Three questions place a doc:
 
 - **Problem or capability?** Would it still be true if the software didn't
   exist? Then it's a problem.
+- **Constraint or rule?** Would it still apply if the software were rebuilt
+  from scratch, any way the team liked? Then it's a constraint, and the rule
+  is the software's promise to keep to it.
 - **Capability or technical?** Could it be built a completely different way
   and still be the same? Then it's a capability.
 - **Feature or capability?** Would someone using it name it as a part of the
@@ -385,6 +396,8 @@ In the order to read them, across both domains.
 - [Persona](concepts/persona.md): a type of person the software serves.
 - [Problem](concepts/problem.md): a pain point one or more personas share,
   never naming the software.
+- [Constraint](concepts/constraint.md): something imposed from outside that
+  any solution must respect.
 
 **The solution space**
 

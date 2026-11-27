@@ -17,7 +17,7 @@
   others of its type, named after its ID. In a new project, use the
   recommended layout: `docqet/domains/<domain>/` with `domain.md` and
   `features/`, `capabilities/`, `rules/` and `concepts/`, and
-  `docqet/personas/`, `docqet/problems/`, `docqet/initiatives/`,
+  `docqet/personas/`, `docqet/problems/`, `docqet/constraints/`, `docqet/initiatives/`,
   `docqet/mechanisms/` and `docqet/components/`. The name is what it's called.
   The description says what it is, usually in a sentence, and for a concept a
   definition in as many sentences as that takes.
@@ -39,14 +39,14 @@
 
 ## Two spaces
 
-Docs are in two spaces. **Problem docs**, personas and problems, are the
-problem space: why the software exists, in the words of the people it's for,
-never naming the software. The solution space holds **product docs**: what
+Docs are in two spaces. **Problem docs**, personas, problems and
+constraints, are the problem space: why the software exists, and what any
+solution must keep to, never naming the software. The solution space holds **product docs**: what
 the software does, seen from outside, in the domain's words, never naming the
 implementation. And **technical docs**: how it's built, seen from inside, in
 the code's words. Links only point toward why: technical docs link to
-capabilities, and capabilities to the problems they solve, never the other
-way. The spaces say what a doc describes, not who decides it.
+capabilities, capabilities to the problems they solve, and rules and
+mechanisms to the constraints they respect, never the other way. The spaces say what a doc describes, not who decides it.
 
 ## Problem docs
 
@@ -103,6 +103,30 @@ personas: [persona:front-desk-clerk]   # required: who has it
 A problem is a person's call, like any intention: propose it, and write it
 once they confirm it. Its capabilities, those whose `solves` names it, are
 worked out.
+
+### Constraint: `docqet: constraint`
+
+Something imposed from outside that any solution must respect, and nobody on
+the team can change: a law, a contract, a policy set elsewhere, or a fact.
+For the whole project rather than per domain.
+
+```yaml
+---
+docqet: constraint
+id: invoice-numbers-in-sequence
+name: Invoice numbers run in sequence for the tax office
+description: >-
+  The tax office requires the hotel's invoices to be numbered in one
+  sequence, with no number missing or used twice.
+source: Tax law                   # optional: where it comes from
+---
+```
+
+Ask whether it would still apply if the software were rebuilt from scratch,
+any way the team liked. A budget, a deadline or a technology the team chose
+isn't one. Rules and mechanisms that keep to it list it in `respects`; one
+nothing respects is an advisory finding. Like a problem, it's a person's
+call.
 
 ## Product docs
 
@@ -210,6 +234,7 @@ id: same-day-turnover
 domain: guest-stays
 name: A stay can start on the day another ends
 concepts: [concept:booking, concept:room]
+respects: [constraint:rooms-cleaned-between-stays]   # optional: constraints it keeps to
 why: >-
   Guests check out by 11:00 and check in from 15:00, which leaves time to
   clean the room.
@@ -293,6 +318,7 @@ description: >-
   How a change gets from the main branch to the hotel's server, and back off
   it again.
 applies: project     # or product: every capability any project in the product serves
+respects: []         # constraints how it's built keeps to
 meets:               # expected outcomes it meets for those capabilities
   - outcome:reliability/beta/undo-release
 gaps: []
@@ -335,10 +361,10 @@ feature    → capabilities
 capability → problems (solves), initiatives, rules, concepts
 problem    → personas
 persona    → initiatives
-rule       → concepts
+rule       → concepts, constraints (respects)
 concept    → concepts                      (confused-with)
 component  → capabilities, outcomes        (meets)
-mechanism  → outcomes                      (meets)
+mechanism  → outcomes (meets), constraints (respects)
 gap        → an outcome, a rule            (outcome, rule)
 tradeoff   → an outcome                    (outcome)
 ```
@@ -358,7 +384,7 @@ the code that points at it.
 
 Projects in the same product, named in `docqet.yaml`, contribute to one
 picture of the product. A domain, feature, capability, persona, problem,
-initiative, mechanism or component with the same ID in two projects is one thing: its name and
+constraint, initiative, mechanism or component with the same ID in two projects is one thing: its name and
 description must match, its links are combined, and a capability's level is
 per domain. Before creating one, check whether another project in the
 product already has it, with `docqet list <type> --product`. Reuse its ID,

@@ -73,11 +73,13 @@ others.
 
 A mechanism is a doc whose `docqet` is `mechanism`, outside any domain. Its
 frontmatter, in order, is `docqet`, `id`, `name`, `description`, `applies`,
-`meets`, `gaps`, `tradeoffs` and `decisions`.
+`respects`, `meets`, `gaps`, `tradeoffs` and `decisions`.
 
 - **`applies`** says what it applies to: `project`, every capability its
   project serves, or `product`, every capability any project on its product
   serves. It's `project` when left out.
+- **`respects`**, optional, lists the [constraints](constraint.md) how it's
+  built keeps to, such as guests' data staying in one country.
 - **No doc names its code.** A mechanism or component is found in the code by
   its `docqet:implements` [annotations](annotation.md), and a capability
   through the mechanisms that apply to it and the components that list it,

@@ -4,6 +4,7 @@ id: late-cancellation-fee
 domain: guest-stays
 name: A late cancellation costs the first night
 concepts: [concept:booking]
+respects: [constraint:cancellation-terms]
 why: The room usually can't be rebooked at such short notice.
 ---
 

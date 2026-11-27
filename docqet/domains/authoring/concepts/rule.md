@@ -16,6 +16,9 @@ confused-with:
   - concept: "concept:concept"
     summary: >-
       what a word means. A rule says what must hold, in those words.
+  - concept: "concept:constraint"
+    summary: >-
+      something imposed from outside that the rule keeps to. The constraint would hold whatever the rules said.
 ---
 
 Each rule says what it is and why, and nothing about how the code enforces it.
@@ -69,10 +72,13 @@ leaves the rule in place.
 ## How it's written
 
 A rule is one doc whose `docqet` is `rule`, with its `domain`. Its
-frontmatter, in order, is `docqet`, `id`, `domain`, `name`, `concepts` and
-`why`:
+frontmatter, in order, is `docqet`, `id`, `domain`, `name`, `concepts`,
+`respects` and `why`:
 
 - **`name`** is the rule in a few words.
+- **`respects`**, optional, lists the [constraints](constraint.md) it's there
+  to keep to: "invoice numbers run in sequence" respects the tax office's
+  requirement. A rule the business chose for itself respects none.
 - **`why`** says why the rule holds, so whoever meets a case it didn't foresee
   can judge it.
 - **It has no `description`.** Its body, if it has one, states the rule in

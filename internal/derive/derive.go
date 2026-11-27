@@ -121,6 +121,31 @@ func ProblemCapabilities(p *combine.Product, problem *combine.Problem) []*combin
 	return CapabilitiesByID(p, problem.Capabilities)
 }
 
+// ConstraintCapabilities returns the capabilities a constraint bears on: those
+// that follow a rule respecting it, and those a mechanism respecting it applies
+// to. It's what a figure for the constraint counts.
+func ConstraintCapabilities(p *combine.Product, constraint *combine.Constraint) []*combine.Capability {
+	var ids []string
+	add := func(list []string) {
+		for _, id := range list {
+			if !slices.Contains(ids, id) {
+				ids = append(ids, id)
+			}
+		}
+	}
+	for _, key := range constraint.Rules {
+		if r := p.Rule(key); r != nil {
+			add(r.Capabilities)
+		}
+	}
+	for _, id := range constraint.Mechanisms {
+		if m := p.Technical(state.DocRef(state.TypeMechanism, id)); m != nil {
+			add(m.Capabilities)
+		}
+	}
+	return CapabilitiesByID(p, ids)
+}
+
 // PersonaCapabilitiesIn returns the capabilities in a feature that serve a
 // persona: what a figure for the feature, for that persona, counts.
 func PersonaCapabilitiesIn(p *combine.Product, persona *combine.Persona, f *combine.Feature) []*combine.Capability {

@@ -1,5 +1,5 @@
 {
-  "docqet": "0.3",
+  "docqet": "0.4",
   "project": {
     "id": "hotel-bookings",
     "name": "Hotel Bookings"
@@ -15,6 +15,7 @@
     "features": 3,
     "personas": 3,
     "problems": 8,
+    "constraints": 3,
     "initiatives": 1,
     "capabilities": {
       "draft": 1,
@@ -303,6 +304,46 @@
         "capability:check-in",
         "capability:room-booking"
       ],
+      "body": ""
+    }
+  ],
+  "constraints": [
+    {
+      "id": "cancellation-terms",
+      "file": "docqet/constraints/cancellation-terms.md",
+      "name": "Guests book on the hotel's cancellation terms",
+      "description": "Every booking is made on the hotel's published terms: cancelling up to 48 hours before arrival is free, and later than that costs the first night.",
+      "source": "The hotel's booking terms (assumed)",
+      "rules": [
+        "rule:free-cancellation-window@guest-stays",
+        "rule:late-cancellation-fee@guest-stays"
+      ],
+      "mechanisms": [],
+      "body": ""
+    },
+    {
+      "id": "one-stay-a-room-a-night",
+      "file": "docqet/constraints/one-stay-a-room-a-night.md",
+      "name": "A room holds one stay a night",
+      "description": "However it's booked, a room can only have one guest's stay in it on any night.",
+      "source": "A fact of the building",
+      "rules": [
+        "rule:no-double-booking@guest-stays",
+        "rule:same-day-turnover@guest-stays"
+      ],
+      "mechanisms": [],
+      "body": ""
+    },
+    {
+      "id": "rooms-cleaned-between-stays",
+      "file": "docqet/constraints/rooms-cleaned-between-stays.md",
+      "name": "A room is cleaned between one stay and the next",
+      "description": "Guests check out by 11:00 and check in from 15:00, the hotel's hours, which leave housekeeping the time a room needs to be ready for the next guest.",
+      "source": "The hotel's house rules, and the time cleaning takes",
+      "rules": [
+        "rule:same-day-turnover@guest-stays"
+      ],
+      "mechanisms": [],
       "body": ""
     }
   ],
@@ -677,6 +718,9 @@
         "concept:booking",
         "concept:room"
       ],
+      "respects": [
+        "constraint:one-stay-a-room-a-night"
+      ],
       "why": null,
       "body": "Two bookings for the same room can't share a night. A cancelled booking no\nlonger holds its nights.",
       "evidence": {
@@ -728,6 +772,7 @@
       "concepts": [
         "concept:booking"
       ],
+      "respects": [],
       "why": null,
       "body": "A booking's check-out date is after its check-in date.",
       "evidence": {
@@ -759,6 +804,10 @@
         "concept:booking",
         "concept:room"
       ],
+      "respects": [
+        "constraint:one-stay-a-room-a-night",
+        "constraint:rooms-cleaned-between-stays"
+      ],
       "why": "Guests check out by 11:00 and check in from 15:00, which leaves time to clean the room.",
       "body": "A room can be booked from the day an earlier booking checks out, because the\ntwo stays don't share a night.",
       "evidence": {
@@ -782,6 +831,9 @@
       ],
       "concepts": [
         "concept:booking"
+      ],
+      "respects": [
+        "constraint:cancellation-terms"
       ],
       "why": null,
       "body": "A booking cancelled at least 48 hours before check-in is refunded in full.",
@@ -817,6 +869,9 @@
       ],
       "concepts": [
         "concept:booking"
+      ],
+      "respects": [
+        "constraint:cancellation-terms"
       ],
       "why": "The room usually can't be rebooked at such short notice.",
       "body": "A booking cancelled less than 48 hours before check-in is refunded everything\nexcept the first night.",
@@ -877,6 +932,7 @@
       "name": "Deployment",
       "description": "How a change gets from the main branch to the hotel's server, and back off it again.",
       "applies": "project",
+      "respects": [],
       "capabilities": [
         "capability:room-booking",
         "capability:cancellations",

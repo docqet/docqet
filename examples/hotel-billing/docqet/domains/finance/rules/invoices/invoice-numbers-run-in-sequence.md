@@ -4,6 +4,7 @@ id: invoice-numbers-run-in-sequence
 domain: finance
 name: Invoice numbers run in sequence
 concepts: [concept:company-account]
+respects: [constraint:invoice-numbers-in-sequence]
 why: The tax office requires it, so it can tell no invoice is missing.
 ---
 

@@ -3,6 +3,7 @@ docqet: rule
 id: reductions-never-touch-started-work
 domain: capacity
 name: Reductions never touch started work
+respects: [constraint:the-past-cant-change]
 ---
 
 A reduction never takes out a block whose week has started or that work has

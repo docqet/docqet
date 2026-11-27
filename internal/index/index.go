@@ -42,6 +42,7 @@ func Index(fsys fs.FS) (*state.State, error) {
 		Features:     []state.Feature{},
 		Personas:     []state.Persona{},
 		Problems:     []state.Problem{},
+		Constraints:  []state.Constraint{},
 		Initiatives:  []state.Initiative{},
 		Capabilities: []state.Capability{},
 		Rules:        []state.Rule{},
@@ -157,7 +158,7 @@ func addEntry(st *state.State, d *doc) {
 	case state.TypeRule:
 		st.Rules = append(st.Rules, state.Rule{
 			ID: fm.ID, Domain: fm.Domain, File: d.file, Name: name,
-			Capabilities: []string{}, Concepts: list(fm.Concepts), Why: textPtr(fm.Why),
+			Capabilities: []string{}, Concepts: list(fm.Concepts), Respects: list(fm.Respects), Why: textPtr(fm.Why),
 			Evidence: evidence(), Body: d.body,
 		})
 	case state.TypeConcept:
@@ -180,6 +181,11 @@ func addEntry(st *state.State, d *doc) {
 			ID: fm.ID, File: d.file, Name: name, Description: description, Cost: textPtr(fm.Cost),
 			Personas: list(fm.Personas), Capabilities: []string{}, Body: d.body,
 		})
+	case state.TypeConstraint:
+		st.Constraints = append(st.Constraints, state.Constraint{
+			ID: fm.ID, File: d.file, Name: name, Description: description, Source: textPtr(fm.Source),
+			Rules: []string{}, Mechanisms: []string{}, Body: d.body,
+		})
 	case state.TypeInitiative:
 		st.Initiatives = append(st.Initiatives, state.Initiative{
 			ID: fm.ID, File: d.file, Name: name, Description: description,
@@ -191,7 +197,7 @@ func addEntry(st *state.State, d *doc) {
 			applies = "project"
 		}
 		st.Mechanisms = append(st.Mechanisms, state.Mechanism{
-			ID: fm.ID, File: d.file, Name: name, Description: description, Applies: applies,
+			ID: fm.ID, File: d.file, Name: name, Description: description, Applies: applies, Respects: list(fm.Respects),
 			Capabilities: []string{}, Meets: list(fm.Meets),
 			Gaps: gapRefs(ref, fm.Gaps), Tradeoffs: tradeoffRefs(ref, fm.Tradeoffs),
 			Evidence: evidence(), Decisions: decisions(fm.Decisions), Body: d.body,
@@ -414,6 +420,21 @@ func linkBack(st *state.State) {
 		}
 	}
 
+	// A constraint's rules and mechanisms are those that respect it.
+	for i := range st.Constraints {
+		cn := &st.Constraints[i]
+		for _, r := range st.Rules {
+			if names(r.Respects, state.TypeConstraint, cn.ID) {
+				cn.Rules = appendNew(cn.Rules, scopedRef(state.TypeRule, r.ID, r.Domain, ""))
+			}
+		}
+		for _, m := range st.Mechanisms {
+			if names(m.Respects, state.TypeConstraint, cn.ID) {
+				cn.Mechanisms = appendNew(cn.Mechanisms, state.DocRef(state.TypeMechanism, m.ID))
+			}
+		}
+	}
+
 	featureOf := func(c state.Capability) string {
 		if c.Feature == nil {
 			return ""
@@ -556,6 +577,7 @@ func summarize(st *state.State) state.Summary {
 		Features:    distinct(len(st.Features), func(i int) string { return st.Features[i].ID }),
 		Personas:    len(st.Personas),
 		Problems:    len(st.Problems),
+		Constraints: len(st.Constraints),
 		Initiatives: len(st.Initiatives),
 		Rules:       len(st.Rules),
 		Gaps:        len(st.Gaps),

@@ -158,7 +158,7 @@ components:
         docqet:
           type: string
           description: The version of the state format.
-          example: "0.3"
+          example: "0.4"
         project:
           type: object
           properties:
@@ -188,7 +188,7 @@ components:
       properties:
         type:
           type: string
-          enum: [unknown-id, invalid-frontmatter, duplicate-id, broken-link, unlinked-rule, in-two-features, contradiction, invalid-annotation, unknown-outcome, solves-no-problem]
+          enum: [unknown-id, invalid-frontmatter, duplicate-id, broken-link, unlinked-rule, in-two-features, contradiction, invalid-annotation, unknown-outcome, solves-no-problem, respected-by-nothing]
         subject:
           type: string
           description: >-
@@ -728,7 +728,7 @@ components:
     Counts:
       type: object
       description: How many of each there are, showing.
-      required: [domains, features, capabilities, rules, concepts, personas, problems, initiatives, mechanisms, components, gaps, tradeoffs, decisions, findings]
+      required: [domains, features, capabilities, rules, concepts, personas, problems, constraints, initiatives, mechanisms, components, gaps, tradeoffs, decisions, findings]
       properties:
         domains:
           type: integer
@@ -752,6 +752,8 @@ components:
         personas:
           type: integer
         problems:
+          type: integer
+        constraints:
           type: integer
         initiatives:
           type: integer
@@ -981,11 +983,13 @@ components:
       allOf:
         - $ref: "#/components/schemas/Doc"
         - type: object
-          required: [capabilities, concepts, gaps, evidence, standings]
+          required: [capabilities, concepts, respects, gaps, evidence, standings]
           properties:
             capabilities:
               $ref: "#/components/schemas/StringList"
             concepts:
+              $ref: "#/components/schemas/StringList"
+            respects:
               $ref: "#/components/schemas/StringList"
             gaps:
               $ref: "#/components/schemas/StringList"
@@ -1062,6 +1066,31 @@ components:
             exposure:
               $ref: "#/components/schemas/Exposure"
 
+    Constraint:
+      description: >-
+        A constraint, with the rules and mechanisms that respect it, and the
+        figures of the capabilities it bears on.
+      allOf:
+        - $ref: "#/components/schemas/Doc"
+        - type: object
+          required: [source, rules, mechanisms, capabilities, maturity, readiness, exposure]
+          properties:
+            source:
+              type: string
+              nullable: true
+            rules:
+              $ref: "#/components/schemas/StringList"
+            mechanisms:
+              $ref: "#/components/schemas/StringList"
+            capabilities:
+              $ref: "#/components/schemas/StringList"
+            maturity:
+              $ref: "#/components/schemas/Maturity"
+            readiness:
+              $ref: "#/components/schemas/Readiness"
+            exposure:
+              $ref: "#/components/schemas/Exposure"
+
     Initiative:
       description: An initiative, with the figures of its capabilities.
       allOf:
@@ -1087,7 +1116,7 @@ components:
       allOf:
         - $ref: "#/components/schemas/Doc"
         - type: object
-          required: [kind, applies, capabilities, meets, gaps, tradeoffs, evidence, risk]
+          required: [kind, applies, respects, capabilities, meets, gaps, tradeoffs, evidence, risk]
           properties:
             kind:
               type: string
@@ -1095,6 +1124,10 @@ components:
             applies:
               type: string
               enum: [project, product]
+            respects:
+              description: A mechanism's constraints. A component's is always empty.
+              allOf:
+                - $ref: "#/components/schemas/StringList"
             capabilities:
               $ref: "#/components/schemas/StringList"
             meets:
@@ -1291,7 +1324,7 @@ components:
       properties:
         kind:
           type: string
-          enum: [project, domain, feature, capability, rule, concept, persona, problem, initiative]
+          enum: [project, domain, feature, capability, rule, concept, persona, problem, constraint, initiative]
         id:
           type: string
           example: room-booking
@@ -1462,8 +1495,8 @@ components:
       in: query
       required: false
       description: >-
-        A reference to a project, persona, problem, initiative, domain, feature
-        or capability, as the CLI's `--for`: count only its capabilities.
+        A reference to a project, persona, problem, constraint, initiative,
+        domain, feature or capability, as the CLI's `--for`: count only its capabilities.
         Several, separated by commas, count
         only the capabilities they all share, such as
         `persona:front-desk-clerk,feature:front-desk`. One that names nothing

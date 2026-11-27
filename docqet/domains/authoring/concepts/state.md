@@ -49,7 +49,7 @@ with each list cut down to its keys:
     "tradeoffs": 3,
     "findings": 0
   },
-  "domains": [], "features": [], "personas": [], "problems": [], "initiatives": [],
+  "domains": [], "features": [], "personas": [], "problems": [], "constraints": [], "initiatives": [],
   "capabilities": [], "rules": [], "concepts": [], "mechanisms": [],
   "components": [], "gaps": [], "tradeoffs": [], "findings": [],
   "rubric": {}
@@ -63,7 +63,7 @@ with each list cut down to its keys:
 - **Every `file` is from the project's folder**, the one with its
   `docqet.yaml`, such as `docqet/domains/billing/concepts/bill.md`, not from
   the repository's root, so a project reads the same wherever it is.
-- **`summary`**: how many domains, features, personas, problems and initiatives there
+- **`summary`**: how many domains, features, personas, problems, constraints and initiatives there
   are, capabilities per level with `draft` among them, how many rules, gaps,
   tradeoffs, mechanisms, components and findings. This is the at-a-glance
   view.
@@ -81,6 +81,10 @@ with each list cut down to its keys:
 - **`problems`**: each with its ID, file, `name`, `description`, `cost`, or
   `null`, the `personas` it names, the capabilities that solve it, drafts
   among them, and its body. Problems aren't in a domain either.
+- **`constraints`**: each with its ID, file, `name`, `description`,
+  `source`, or `null`, the rules that respect it, with their domains, the
+  mechanisms that respect it, and its body. A rule and a mechanism each list
+  the constraints they `respect`.
 - **`initiatives`**: each with its ID, file, `name`, `description`, the
   capabilities that list it, the features those are in, the personas that
   list it, and its body. Like personas, they have no `domain`. Each

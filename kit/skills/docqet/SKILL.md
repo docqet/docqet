@@ -1,6 +1,6 @@
 ---
 name: docqet
-description: How to read and keep current a repository's Docqet docs (capabilities, features, rules, concepts, personas, problems, initiatives, domains, mechanisms, components, gaps, tradeoffs, open decisions, stability levels) and its docqet:implements, verifies, gap and tradeoff annotations. Use in any repository with a docqet.yaml, before changing its code, tests or docs, to learn what the change touches and what it must keep; while changing them, to update the docs and annotations in the same change; when a product decision is needed that nobody has made; and when bringing Docqet to a repository that doesn't have it yet.
+description: How to read and keep current a repository's Docqet docs (capabilities, features, rules, concepts, personas, problems, constraints, initiatives, domains, mechanisms, components, gaps, tradeoffs, open decisions, stability levels) and its docqet:implements, verifies, gap and tradeoff annotations. Use in any repository with a docqet.yaml, before changing its code, tests or docs, to learn what the change touches and what it must keep; while changing them, to update the docs and annotations in the same change; when a product decision is needed that nobody has made; and when bringing Docqet to a repository that doesn't have it yet.
 ---
 
 # Docqet
@@ -47,6 +47,7 @@ docqet.yaml                                 the project's id and name, and its p
 docqet/
 ├── personas/                               who it serves, across every domain
 ├── problems/                               the pain points it's there to solve, never naming it
+├── constraints/                            what any solution must keep to, imposed from outside
 ├── initiatives/                            bodies of work, such as the MVP, across every domain
 ├── domains/<domain>/
 │   ├── domain.md                           a part of the business with its own language
@@ -59,13 +60,14 @@ docqet/
 .docqet/                                    written by `docqet`, gitignored, never edited
 ```
 
-Personas and problems are the problem space: why the software exists, in the
-words of the people it's for, never naming the software. The rest is the
+Personas, problems and constraints are the problem space: why the software
+exists, and what any solution must keep to, never naming the software. The rest is the
 solution space. Domains, features, capabilities, rules, concepts and
 initiatives are product docs: what it does, seen from outside, in the
 domain's words. Mechanisms and components are technical docs: how it's meant
 to be built, seen from inside, in the code's words. Links only point toward
-why: technical docs to capabilities, capabilities to the problems they solve.
+why: technical docs to capabilities, capabilities to the problems they
+solve, rules and mechanisms to the constraints they respect.
 
 Every doc starts by saying what it is: `docqet`, its type, `id`, its ID, such
 as `no-double-booking`, and `domain`, for a feature, capability, rule or
@@ -116,6 +118,7 @@ changed, not docs to fill in the structure.
 | -------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
 | The software can now do something new for someone                          | A capability, at the level the user gives, in the feature it's part of, linked to the problems it `solves`. A new part of the product is a new feature. Ask which when it isn't clear. |
 | Someone has a pain the software is meant to solve, and the user confirmed it | A problem, naming the personas who have it, linked from every capability that solves it                                                   |
+| Something outside the team binds the software, and the user confirmed it   | A constraint, with its `source`, linked from every rule or mechanism that respects it                                                     |
 | A capability was asked for and not started                                 | A capability with `stability: draft`                                                                                                      |
 | Something must always or never happen, and the user said so                | A rule, linked from every capability that follows it                                                                                      |
 | A rule is followed but not held yet                                        | A gap on each capability that doesn't hold it, with the rule in its `affects`                                                             |

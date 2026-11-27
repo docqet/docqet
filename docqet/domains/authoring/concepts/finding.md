@@ -27,7 +27,7 @@ closed, for example, is an `unknown-id`.
 | --------------------- | ----------- |
 | `unknown-id`          | A link, annotation, `affects` or `domain` names a doc, gap or tradeoff that doesn't exist. |
 | `invalid-frontmatter` | A required field is missing, a field its type doesn't have is written, or a value isn't allowed, such as a link of the wrong type for its field, a `docqet` that isn't a type, or a feature, capability, rule or concept with no `domain`. |
-| `duplicate-id`        | A project has two docs of one type with the same ID in one domain, or two domains, personas, problems, initiatives, mechanisms or components with the same ID, or a doc has two gaps or tradeoffs with the same key across the projects and domains that write it. |
+| `duplicate-id`        | A project has two docs of one type with the same ID in one domain, or two domains, personas, problems, constraints, initiatives, mechanisms or components with the same ID, or a doc has two gaps or tradeoffs with the same key across the projects and domains that write it. |
 | `broken-link`         | A relative link in a doc's body or a text value doesn't resolve. |
 | `unlinked-rule`       | No capability follows a rule. |
 | `in-two-features`     | More than one feature lists the same capability. |
@@ -35,11 +35,13 @@ closed, for example, is an `unknown-id`.
 | `invalid-annotation`  | An annotation names a rule without its domain. |
 | `unknown-outcome`     | An outcome in a gap's, tradeoff's or decision's `affects`, or in `meets`, isn't an outcome in [the stability rubric](rubric.md). |
 | `solves-no-problem`   | A capability solves no [problem](problem.md) yet, in any project of the product. Advisory. |
+| `respected-by-nothing` | No rule or mechanism respects a [constraint](constraint.md) yet, in any project of the product. Advisory. |
 
 **Advisory findings** are shown and counted like any other, but never fail
 `docqet check`, so a project can adopt what they ask for one doc at a time.
-`solves-no-problem` is the only one: a capability nobody has said the reason
-for is worth seeing, but it isn't a mistake in the docs.
+`solves-no-problem` and `respected-by-nothing` are the two: a capability
+nobody has said the reason for, or a constraint nothing keeps to, is worth
+seeing, but isn't a mistake in the docs.
 
 `in-two-features` is a contradiction too, when the listings are in different
 projects. [Combining](../../understanding/concepts/product.md#combining) raises

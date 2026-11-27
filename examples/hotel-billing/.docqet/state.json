@@ -1,5 +1,5 @@
 {
-  "docqet": "0.3",
+  "docqet": "0.4",
   "project": {
     "id": "hotel-billing",
     "name": "Hotel Billing"
@@ -15,6 +15,7 @@
     "features": 5,
     "personas": 5,
     "problems": 9,
+    "constraints": 6,
     "capabilities": {
       "draft": 1,
       "prototype": 1,
@@ -397,6 +398,83 @@
       "capabilities": [
         "capability:accounting-export"
       ],
+      "body": ""
+    }
+  ],
+  "constraints": [
+    {
+      "id": "cancellation-terms",
+      "file": "docqet/constraints/cancellation-terms.md",
+      "name": "Guests book on the hotel's cancellation terms",
+      "description": "Every booking is made on the hotel's published terms: cancelling up to 48 hours before arrival is free, and later than that costs the first night.",
+      "source": "The hotel's booking terms (assumed)",
+      "rules": [
+        "rule:deposit-is-the-first-night@billing"
+      ],
+      "mechanisms": [],
+      "body": ""
+    },
+    {
+      "id": "card-scheme-security-rules",
+      "file": "docqet/constraints/card-scheme-security-rules.md",
+      "name": "Keeping card numbers brings the card schemes' audits",
+      "description": "A business that keeps guests' card numbers must meet the card schemes' security standard and pass their audits, which a small hotel can't take on.",
+      "source": "The card schemes' rules for merchants",
+      "rules": [
+        "rule:card-numbers-are-never-kept@billing"
+      ],
+      "mechanisms": [],
+      "body": ""
+    },
+    {
+      "id": "charges-kept-for-the-tax-office",
+      "file": "docqet/constraints/charges-kept-for-the-tax-office.md",
+      "name": "Every charge stays on the record for the tax office",
+      "description": "The tax office and the hotel's accountant must be able to see every charge ever made, mistakes and their corrections included, so a charge can never be quietly changed or removed.",
+      "source": "Tax law",
+      "rules": [
+        "rule:charges-are-never-changed@billing"
+      ],
+      "mechanisms": [],
+      "body": ""
+    },
+    {
+      "id": "city-tax-owed-per-guest-night",
+      "file": "docqet/constraints/city-tax-owed-per-guest-night.md",
+      "name": "The city's tax is owed for every guest night",
+      "description": "The city charges its tourist tax for each guest for each night, on its own terms for children and long stays, and the hotel owes it whether or not it charged the guest.",
+      "source": "The city's tourist tax",
+      "rules": [
+        "rule:children-pay-no-city-tax@billing",
+        "rule:city-tax-per-guest-night@billing",
+        "rule:city-tax-stops-after-seven-nights@billing"
+      ],
+      "mechanisms": [],
+      "body": ""
+    },
+    {
+      "id": "company-credit-agreements",
+      "file": "docqet/constraints/company-credit-agreements.md",
+      "name": "Each company's credit agreement sets what it will pay for",
+      "description": "A company pays for its staff's stays under an agreement with the hotel that sets how much it can owe and whose stays it covers.",
+      "source": "Each company's agreement with the hotel (assumed)",
+      "rules": [
+        "rule:credit-limit@finance",
+        "rule:only-named-guests@finance"
+      ],
+      "mechanisms": [],
+      "body": ""
+    },
+    {
+      "id": "invoice-numbers-in-sequence",
+      "file": "docqet/constraints/invoice-numbers-in-sequence.md",
+      "name": "Invoice numbers run in sequence for the tax office",
+      "description": "The tax office requires the hotel's invoices to be numbered in one sequence, with no number missing or used twice.",
+      "source": "Tax law",
+      "rules": [
+        "rule:invoice-numbers-run-in-sequence@finance"
+      ],
+      "mechanisms": [],
       "body": ""
     }
   ],
@@ -898,6 +976,9 @@
         "concept:charge",
         "concept:bill"
       ],
+      "respects": [
+        "constraint:charges-kept-for-the-tax-office"
+      ],
       "why": "The hotel's accountant and the tax office need to see every charge that was made, including the mistakes.",
       "body": "A charge is corrected by adding a charge for the opposite amount, never by\nchanging or deleting it.",
       "evidence": {
@@ -932,6 +1013,7 @@
         "concept:charge",
         "concept:payment"
       ],
+      "respects": [],
       "why": null,
       "body": "Nothing can be charged or paid on a closed bill. A charge that arrives after\nthe guest has left goes on a new bill for the same stay.",
       "evidence": {
@@ -963,6 +1045,9 @@
         "concept:bill",
         "concept:charge"
       ],
+      "respects": [
+        "constraint:city-tax-owed-per-guest-night"
+      ],
       "why": "The hotel owes the city tax for every guest night, whether or not it charged the guest.",
       "body": "Each guest on a stay is charged the city's tax for each night, at the rate on\nthat night.",
       "evidence": {
@@ -993,6 +1078,9 @@
       "concepts": [
         "concept:charge"
       ],
+      "respects": [
+        "constraint:city-tax-owed-per-guest-night"
+      ],
       "why": null,
       "body": "Guests under 16 aren't charged city tax.",
       "evidence": {
@@ -1010,6 +1098,9 @@
       ],
       "concepts": [
         "concept:charge"
+      ],
+      "respects": [
+        "constraint:city-tax-owed-per-guest-night"
       ],
       "why": null,
       "body": "A guest staying longer than seven nights is charged city tax for the first\nseven only.",
@@ -1036,6 +1127,7 @@
         "concept:bill",
         "concept:charge"
       ],
+      "respects": [],
       "why": null,
       "body": "Splitting a bill or moving charges between bills never changes the total owed\nacross them.",
       "evidence": {
@@ -1053,6 +1145,9 @@
       ],
       "concepts": [
         "concept:payment"
+      ],
+      "respects": [
+        "constraint:cancellation-terms"
       ],
       "why": null,
       "body": "A stay's deposit is the first night's room rate, with its city tax.",
@@ -1085,6 +1180,7 @@
         "concept:payment",
         "concept:bill"
       ],
+      "respects": [],
       "why": null,
       "body": "A deposit is a payment on the guest's bill, so the guest pays only the rest at\ncheck-out.",
       "evidence": {
@@ -1120,6 +1216,9 @@
       ],
       "concepts": [
         "concept:payment"
+      ],
+      "respects": [
+        "constraint:card-scheme-security-rules"
       ],
       "why": "Holding card numbers would put the hotel under the card schemes' security audits.",
       "body": "The hotel never stores a guest's card number. Only the payment provider holds\nit.",
@@ -1158,6 +1257,9 @@
         "concept:company-account",
         "concept:bill@billing"
       ],
+      "respects": [
+        "constraint:company-credit-agreements"
+      ],
       "why": null,
       "body": "A bill can't move to a company's account if it would take what the company owes\nover its credit limit.",
       "evidence": {
@@ -1189,6 +1291,9 @@
         "concept:company-account",
         "concept:bill@billing"
       ],
+      "respects": [
+        "constraint:company-credit-agreements"
+      ],
       "why": null,
       "body": "A bill can move to a company's account only if the company has named the guest\nas someone whose stays it pays for.",
       "evidence": {
@@ -1212,6 +1317,9 @@
       ],
       "concepts": [
         "concept:company-account"
+      ],
+      "respects": [
+        "constraint:invoice-numbers-in-sequence"
       ],
       "why": "The tax office requires it, so it can tell no invoice is missing.",
       "body": "Each invoice's number is one more than the last, with none skipped or used\ntwice.",
@@ -1244,6 +1352,7 @@
         "concept:business-day",
         "concept:charge@billing"
       ],
+      "respects": [],
       "why": null,
       "body": "Each guest in the hotel is charged for their room once for each night, even if\nthe audit is started more than once.",
       "evidence": {
@@ -1282,6 +1391,7 @@
         "concept:business-day",
         "concept:charge@billing"
       ],
+      "respects": [],
       "why": "A closed day's takings have already gone to the accountant.",
       "body": "Once a business day is closed, nothing is added to it. A correction to a closed\nday goes on the current one.",
       "evidence": {
@@ -1311,6 +1421,7 @@
         "concept:payment",
         "concept:bill"
       ],
+      "respects": [],
       "why": null,
       "body": "A guest who has paid more than their bill is refunded the difference before the\nbill closes.",
       "evidence": {

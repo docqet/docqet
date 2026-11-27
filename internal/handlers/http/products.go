@@ -55,6 +55,8 @@ func (h *ProductsHandler) RegisterRoutes(r chi.Router) {
 	r.Get("/products/{product}/personas/{id}", h.GetPersona)
 	r.Get("/products/{product}/problems", h.ListProblems)
 	r.Get("/products/{product}/problems/{id}", h.GetProblem)
+	r.Get("/products/{product}/constraints", h.ListConstraints)
+	r.Get("/products/{product}/constraints/{id}", h.GetConstraint)
 	r.Get("/products/{product}/initiatives", h.ListInitiatives)
 	r.Get("/products/{product}/initiatives/{id}", h.GetInitiative)
 	r.Get("/products/{product}/mechanisms", h.listTechnical(combine.KindMechanism))
@@ -122,7 +124,7 @@ func groupingFor(refs string) derive.Grouping {
 	for ref := range strings.SplitSeq(refs, ",") {
 		r, _ := state.ParseRef(strings.TrimSpace(ref))
 		switch r.Type {
-		case state.TypeDomain, state.TypePersona, state.TypeProblem, state.TypeInitiative:
+		case state.TypeDomain, state.TypePersona, state.TypeProblem, state.TypeConstraint, state.TypeInitiative:
 			by = max(by, derive.ByFeature)
 		case state.TypeFeature:
 			by = max(by, derive.ByCapability)
@@ -336,6 +338,27 @@ func (h *ProductsHandler) GetProblem(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		notShowing(w, r, state.DocRef(state.TypeProblem, id))
+	}
+}
+
+// ListConstraints lists the constraints showing.
+// docqet:implements capability:constraints
+func (h *ProductsHandler) ListConstraints(w http.ResponseWriter, r *http.Request) {
+	if v, ok := h.view(w, r); ok {
+		writePage(w, r, build(v.Constraints, func(cn *combine.Constraint) ConstraintResource { return newConstraintResource(v.Product, cn) }))
+	}
+}
+
+// GetConstraint returns a constraint.
+// docqet:implements capability:constraints
+func (h *ProductsHandler) GetConstraint(w http.ResponseWriter, r *http.Request) {
+	if v, ok := h.view(w, r); ok {
+		id := chi.URLParam(r, "id")
+		if cn := v.Constraint(id); cn != nil {
+			render.JSON(w, r, newConstraintResource(v.Product, cn))
+			return
+		}
+		notShowing(w, r, state.DocRef(state.TypeConstraint, id))
 	}
 }
 

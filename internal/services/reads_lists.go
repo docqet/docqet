@@ -106,7 +106,7 @@ const (
 
 // SearchResult is a doc that matches a search, and where it matched best.
 type SearchResult struct {
-	Kind        string // project, domain, feature, capability, rule, concept, persona, problem or initiative
+	Kind        string // project, domain, feature, capability, rule, concept, persona, problem, constraint or initiative
 	ID          string
 	Name        string
 	Description string
@@ -166,6 +166,9 @@ func (v *View) Search(q string) []SearchResult {
 	}
 	for _, pr := range v.Problems {
 		add("problem", pr.Doc)
+	}
+	for _, cn := range v.Constraints {
+		add("constraint", cn.Doc)
 	}
 	for _, i := range v.Initiatives {
 		add("initiative", i.Doc)

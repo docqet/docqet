@@ -35,6 +35,7 @@ func Check(st *state.State) []state.Finding {
 	c.concepts()
 	c.personas()
 	c.problems()
+	c.constraints()
 	c.initiatives()
 	c.mechanisms()
 	c.components()
@@ -177,6 +178,7 @@ func (c *checker) rules() {
 		c.common(s, r.ID, r.Name, "", false)
 		c.inDomain(s, r.Domain)
 		c.links(s, "concepts", r.Concepts, state.TypeConcept, r.Domain)
+		c.links(s, "respects", r.Respects, state.TypeConstraint, r.Domain)
 		if len(followers) == 0 {
 			c.add(state.UnlinkedRule, s, "No capability follows this rule.")
 		}
@@ -242,6 +244,19 @@ func (c *checker) problems() {
 	}
 }
 
+// constraints checks each constraint, and reports one nothing respects:
+// why it was written down is a rule or mechanism keeping to it.
+func (c *checker) constraints() {
+	for _, cn := range c.st.Constraints {
+		ref := state.DocRef(state.TypeConstraint, cn.ID)
+		s := subject{ref: ref, file: cn.File}
+		c.common(s, cn.ID, cn.Name, cn.Description, true)
+		if len(cn.Rules) == 0 && len(cn.Mechanisms) == 0 {
+			c.add(state.RespectedByNothing, s, "No rule or mechanism respects it yet: link it from those that do with respects.")
+		}
+	}
+}
+
 func (c *checker) initiatives() {
 	for _, in := range c.st.Initiatives {
 		c.common(subject{ref: state.DocRef(state.TypeInitiative, in.ID), file: in.File}, in.ID, in.Name, in.Description, true)
@@ -252,6 +267,7 @@ func (c *checker) mechanisms() {
 	for _, m := range c.st.Mechanisms {
 		s := subject{ref: state.DocRef(state.TypeMechanism, m.ID), file: m.File}
 		c.common(s, m.ID, m.Name, m.Description, true)
+		c.links(s, "respects", m.Respects, state.TypeConstraint, "")
 		if m.Applies != "project" && m.Applies != "product" {
 			c.add(state.InvalidFrontmatter, s, "applies is %q: it's project or product.", m.Applies)
 		}
@@ -509,6 +525,8 @@ func (c *checker) fileOf(typ, id, domain string) string {
 		return find(len(st.Personas), func(i int) (string, string) { return st.Personas[i].ID, st.Personas[i].File })
 	case state.TypeProblem:
 		return find(len(st.Problems), func(i int) (string, string) { return st.Problems[i].ID, st.Problems[i].File })
+	case state.TypeConstraint:
+		return find(len(st.Constraints), func(i int) (string, string) { return st.Constraints[i].ID, st.Constraints[i].File })
 	case state.TypeInitiative:
 		return find(len(st.Initiatives), func(i int) (string, string) { return st.Initiatives[i].ID, st.Initiatives[i].File })
 	case state.TypeMechanism:
@@ -566,6 +584,9 @@ func (c *checker) duplicates() {
 	}
 	for _, pr := range c.st.Problems {
 		check(state.TypeProblem, pr.ID, "", pr.File)
+	}
+	for _, cn := range c.st.Constraints {
+		check(state.TypeConstraint, cn.ID, "", cn.File)
 	}
 	for _, in := range c.st.Initiatives {
 		check(state.TypeInitiative, in.ID, "", in.File)

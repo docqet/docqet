@@ -3,6 +3,7 @@ docqet: rule
 id: partnerships-earn-under-their-agreement-in-effect
 domain: pay
 name: Partnerships earn under their agreement in effect
+respects: [constraint:agreements-set-pay]
 ---
 
 A partnership earns the Referral Share of its Partner Agreement in effect when

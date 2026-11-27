@@ -13,6 +13,7 @@ rules:
   - rule:location-means-nothing
   - rule:product-never-names-implementation
   - rule:problem-never-names-product
+  - rule:docs-hold-nothing-private
 decisions:
   - topic: The format's name
     question: What should the format be called?

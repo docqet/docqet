@@ -160,6 +160,7 @@ func showOf(p *combine.Product, ref string) (*shown, error) {
 		if len(rule.From) > 0 && rule.From[0].Why != nil {
 			s.add("why", oneLine(*rule.From[0].Why, 1000))
 		}
+		s.add("respects", prefixed("constraint:", rule.Respects)...)
 		s.add("followed by", prefixed("capability:", rule.Capabilities)...)
 		var concepts []string
 		for _, k := range rule.Concepts {
@@ -236,6 +237,21 @@ func showOf(p *combine.Product, ref string) (*shown, error) {
 		s.add("features", prefixed("feature:", pe.Features)...)
 		s.add("initiatives", prefixed("initiative:", pe.Initiatives)...)
 		return s, nil
+	case state.TypeConstraint:
+		cn := p.Constraint(r.ID)
+		if cn == nil {
+			return nil, notFound
+		}
+		s := docShown(cn.Doc, r.Type, ref)
+		if cn.Source != nil {
+			s.add("source", *cn.Source)
+		}
+		var rules []string
+		for _, key := range cn.Rules {
+			rules = append(rules, "rule:"+key)
+		}
+		s.add("respected by", append(rules, prefixed("mechanism:", cn.Mechanisms)...)...)
+		return s, nil
 	case state.TypeProblem:
 		pr := p.Problem(r.ID)
 		if pr == nil {
@@ -266,6 +282,7 @@ func showOf(p *combine.Product, ref string) (*shown, error) {
 		s := docShown(t.Doc, r.Type, ref)
 		if t.Kind == combine.KindMechanism {
 			s.add("applies", "every capability the "+t.Applies+" serves")
+			s.add("respects", prefixed("constraint:", t.Respects)...)
 		} else {
 			s.add("capabilities", prefixed("capability:", t.Capabilities)...)
 		}
@@ -274,7 +291,7 @@ func showOf(p *combine.Product, ref string) (*shown, error) {
 		s.Evidence = evidenceOf(t.Evidence)
 		return s, nil
 	}
-	return nil, fmt.Errorf("%s isn't a type of doc: it's one of domain, feature, capability, rule, concept, persona, problem, initiative, mechanism or component", r.Type)
+	return nil, fmt.Errorf("%s isn't a type of doc: it's one of domain, feature, capability, rule, concept, persona, problem, constraint, initiative, mechanism or component", r.Type)
 }
 
 // docShown starts a shown doc with what every doc has.
