@@ -5,6 +5,7 @@ name: Server
 description: >-
   `docqet serve`: the API that takes and hands back applied states, kept in
   SQLite.
+is: archetype:service
 serves:
   - capability:applying
 tradeoffs:

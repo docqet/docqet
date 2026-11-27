@@ -1,4 +1,4 @@
-// docqet:implements capability:improvements
+// docqet:implements capability:improvements component:improvements-page
 import { useState, type ReactNode } from "react";
 import TrendingUpRoundedIcon from "@mui/icons-material/TrendingUpRounded";
 import { PartRows, ImprovementRows, ImprovementsFigure, partsNote, bestStep, improvementWords } from "../../components/improvements/Improvements";

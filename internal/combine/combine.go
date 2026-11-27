@@ -19,7 +19,7 @@ import (
 // Then reverse links are worked out again across everything, and
 // contradictions between contributions, and gaps or tradeoffs two projects
 // both declare, become findings. It never changes the states it's given.
-// docqet:implements capability:product-view rule:contradictions-shown
+// docqet:implements capability:product-view component:engine rule:contradictions-shown
 func Combine(states []*state.State) *Product {
 	c := newCombiner()
 	for _, st := range states {

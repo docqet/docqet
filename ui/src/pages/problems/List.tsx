@@ -1,4 +1,4 @@
-// docqet:implements capability:problems
+// docqet:implements capability:problems component:problems-page
 import Box from "@mui/material/Box";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";

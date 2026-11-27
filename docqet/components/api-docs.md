@@ -5,6 +5,7 @@ name: API docs
 description: >-
   The reference at `/docs/api`: the OpenAPI spec, rendered by Scalar, with
   each endpoint's stability.
+within: component:server
 serves:
   - capability:api-reference
 gaps:

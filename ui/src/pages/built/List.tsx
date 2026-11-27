@@ -1,4 +1,4 @@
-// docqet:implements capability:how-its-built
+// docqet:implements capability:how-its-built component:built-page
 import Box from "@mui/material/Box";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";

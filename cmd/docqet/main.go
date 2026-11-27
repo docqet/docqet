@@ -15,6 +15,7 @@ import (
 //	go build -ldflags "-X main.version=$(git describe --tags)" ./cmd/docqet
 var version = "dev"
 
+// docqet:implements component:cli
 func main() {
 	// Stopped by Ctrl-C or `docker stop`, so a server shuts down cleanly.
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)

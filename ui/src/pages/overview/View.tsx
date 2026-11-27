@@ -1,4 +1,4 @@
-// docqet:implements capability:overview
+// docqet:implements capability:overview component:overview-page
 import Box from "@mui/material/Box";
 import type { Theme } from "@mui/material/styles";
 import type { SystemStyleObject } from "@mui/system";
