@@ -135,6 +135,7 @@ type Capability struct {
 	Levels    []LevelIn
 	Feature   *string // the feature it names, the first project's where they differ, or nil
 	Rules     []string
+	Respects  []string // the constraints it respects itself
 	Concepts  []string
 	Gaps      []string
 	Tradeoffs []string
@@ -181,6 +182,7 @@ type Problem struct {
 	Doc
 	Cost         *string
 	Personas     []string
+	SubjectTo    []string // the constraints it names as bounding it
 	Capabilities []string // every capability that solves it
 }
 
@@ -188,9 +190,20 @@ type Problem struct {
 // respect.
 type Constraint struct {
 	Doc
-	Source     *string
-	Rules      []string // every rule that respects it
-	Mechanisms []string // every mechanism that respects it
+	Source *string
+	// Applies is "product" or "project" when it applies to every problem in
+	// its product, or in the projects in AppliesIn, and "" when it applies to
+	// the problems subject to it.
+	Applies   string
+	AppliesIn []string
+	Problems  []string // every problem subject to it
+	// What respects it: rules, mechanisms, capabilities and components.
+	Rules        []string
+	Mechanisms   []string
+	Capabilities []string
+	Components   []string
+	Gaps         []string // the gaps that affect it
+	Evidence     Evidence // places that verify it
 }
 
 // Initiative is a body of work.
@@ -214,7 +227,7 @@ type Technical struct {
 	// Applies is "project" or "product": what a mechanism applies to. A
 	// component's is always "project".
 	Applies  string
-	Respects []string // a mechanism's: the constraints it respects
+	Respects []string // the constraints it respects
 	// Within, Is and Archetype are a component's: the bigger component it's
 	// within, the archetype it says it is, and the archetype it is, its own
 	// or else the nearest bigger component's. Each is an ID, or "". Parts is

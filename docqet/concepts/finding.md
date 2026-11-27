@@ -34,13 +34,15 @@ closed, for example, is an `unknown-id`.
 | `invalid-annotation`  | An annotation names something it can't, such as a gap where it should name a rule, or a rule or concept reference written with `@<domain>`. |
 | `unknown-outcome`     | An outcome in a gap's, tradeoff's or decision's `affects`, or in `meets`, isn't an outcome in [the stability rubric](rubric.md). |
 | `solves-no-problem`   | A capability solves no [problem](problem.md) yet, in any project of the product. Advisory. |
-| `respected-by-nothing` | No rule or mechanism respects a [constraint](constraint.md) yet, in any project of the product. Advisory. |
+| `respected-by-nothing` | Nothing respects a [constraint](constraint.md) yet, in any project of the product: no rule, capability, mechanism or component. Advisory. |
+| `applies-to-nothing`   | No [problem](problem.md) is subject to a constraint, in any project of the product, and it doesn't say it applies to the whole project or product. Advisory. |
 
 **Advisory findings** are shown and counted like any other, but never fail
 `docqet check`, so a project can adopt what they ask for one doc at a time.
-`solves-no-problem` and `respected-by-nothing` are the two: a capability
-nobody has said the reason for, or a constraint nothing keeps to, is worth
-seeing, but isn't a mistake in the docs.
+`solves-no-problem`, `respected-by-nothing` and `applies-to-nothing` are
+the three: a capability nobody has said the reason for, a constraint nothing
+keeps to, or one that bounds nothing, is worth seeing, but isn't a mistake in
+the docs.
 
 `in-two-features` is a contradiction too, and like one is found only when
 projects are put together. [Combining](product.md#combining) raises

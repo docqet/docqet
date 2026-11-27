@@ -45,8 +45,8 @@ solution must keep to, never naming the software. The solution space holds **pro
 the software does, seen from outside, in the business's words, never naming the
 implementation. And **technical docs**: how it's built, seen from inside, in
 the code's words. Links only point toward why: technical docs link to
-capabilities, capabilities to the problems they solve, and rules and
-mechanisms to the constraints they respect, never the other way. The spaces say what a doc describes, not who decides it.
+capabilities, capabilities to the problems they solve, and whatever keeps to
+a constraint to the constraint it respects, never the other way. The spaces say what a doc describes, not who decides it.
 
 ## Problem docs
 
@@ -88,6 +88,7 @@ description: >-
 cost: >-                          # optional: what it costs them or the business
   The worst conversation the front desk has.
 felt-by: [persona:front-desk-clerk]   # required: who feels it
+subject-to: [constraint:one-stay-a-room-a-night]   # optional: what any solution must keep to
 ---
 ```
 
@@ -118,14 +119,26 @@ description: >-
   The tax office requires the hotel's invoices to be numbered in one
   sequence, with no number missing or used twice.
 source: Tax law                   # optional: where it comes from
+applies: project                  # optional: project or product when it bounds every problem there
 ---
 ```
 
 Ask whether it would still apply if the software were rebuilt from scratch,
 any way the team liked. A budget, a deadline or a technology the team chose
-isn't one. Rules and mechanisms that keep to it list it in `respects`; one
-nothing respects is an advisory finding. Like a problem, it's a person's
-call.
+isn't one. Like a problem, it's a person's call, and it can be written before
+anything solves the problem.
+
+- **What it applies to:** the problems that name it in `subject-to`, or
+  every problem in its project or product with `applies`. One that does
+  neither is an advisory finding.
+- **What keeps to it** lists it in `respects`: a rule, capability, mechanism
+  or component. A capability or component that keeps to it respects it
+  directly. Write a rule only when the software promises something of its
+  own, more specific than the constraint, never one that only says it again.
+  One nothing respects is an advisory finding.
+- **Evidence:** a test, audit or check of the obligation itself says
+  `docqet:verifies constraint:<id>`, and a gap can `affect` it. Nothing
+  implements one.
 
 ## Product docs
 
@@ -191,6 +204,7 @@ within: feature:reservations   # optional: the feature it's in, at most one
 solves: [problem:room-given-to-two-guests]   # why it exists; its personas are its problems'
 included-in: []
 follows: [rule:no-double-booking, rule:minimum-stay]
+respects: []         # constraints it keeps to itself, with no rule restating them
 uses: [concept:booking]
 gaps: []
 tradeoffs: []
@@ -336,6 +350,7 @@ description: >-
 within: component:server   # optional: the one bigger component it's part of
 is: archetype:service      # optional: the archetype it is; a part is its bigger component's unless it says
 serves: [capability:room-booking, capability:group-bookings, capability:check-in]   # those relying on it
+respects: [constraint:one-stay-a-room-a-night]   # optional: constraints it's built to keep to
 meets: []
 gaps: []
 tradeoffs: []
@@ -393,19 +408,22 @@ capability within       a feature
            solves       problems
            included-in  initiatives
            follows      rules
+           respects     constraints
            uses         concepts
 initiative for          personas
 problem    felt-by      personas
+           subject-to   constraints
 rule       uses         concepts
            respects     constraints
 concept    confused-with concepts
 component  within       a component
            is           an archetype
            serves       capabilities
+           respects     constraints
            meets        outcomes
 mechanism  meets        outcomes
            respects     constraints
-gap        affects      an outcome or a rule
+gap        affects      an outcome, a rule or a constraint
 tradeoff   affects      an outcome
 ```
 

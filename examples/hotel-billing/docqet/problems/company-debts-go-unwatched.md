@@ -13,4 +13,5 @@ cost: >-
   late or never (assumed), and companies dispute stays they didn't agree to
   cover (assumed).
 felt-by: [persona:bookkeeper]
+subject-to: [constraint:company-credit-agreements]
 ---

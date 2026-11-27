@@ -11,4 +11,5 @@ cost: >-
   Guests wait at the desk for their room, clerks lose time on the phone, and
   housekeepers are rushed and walk the building twice.
 felt-by: [persona:front-desk-clerk, persona:housekeeper]
+subject-to: [constraint:rooms-cleaned-between-stays]
 ---

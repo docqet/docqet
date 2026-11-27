@@ -149,7 +149,7 @@ func addEntry(st *state.State, d *doc) {
 		st.Capabilities = append(st.Capabilities, state.Capability{
 			ID: fm.ID, File: d.file, Name: name, Description: description,
 			Stability: fm.Stability, Feature: textPtr(fm.Within), Solves: list(fm.Solves), Personas: []string{}, Initiatives: list(fm.IncludedIn),
-			Rules: list(fm.Follows), Concepts: list(fm.Uses),
+			Rules: list(fm.Follows), Respects: list(fm.Respects), Concepts: list(fm.Uses),
 			Gaps: gapRefs(ref, fm.Gaps), Tradeoffs: tradeoffRefs(ref, fm.Tradeoffs),
 			Decisions: decisions(fm.Decisions), Evidence: evidence(), Body: d.body,
 		})
@@ -179,12 +179,13 @@ func addEntry(st *state.State, d *doc) {
 	case state.TypeProblem:
 		st.Problems = append(st.Problems, state.Problem{
 			ID: fm.ID, File: d.file, Name: name, Description: description, Cost: textPtr(fm.Cost),
-			Personas: list(fm.FeltBy), Capabilities: []string{}, Body: d.body,
+			Personas: list(fm.FeltBy), SubjectTo: list(fm.SubjectTo), Capabilities: []string{}, Body: d.body,
 		})
 	case state.TypeConstraint:
 		st.Constraints = append(st.Constraints, state.Constraint{
-			ID: fm.ID, File: d.file, Name: name, Description: description, Source: textPtr(fm.Source),
-			Rules: []string{}, Mechanisms: []string{}, Body: d.body,
+			ID: fm.ID, File: d.file, Name: name, Description: description, Source: textPtr(fm.Source), Applies: nonEmpty(fm.Applies),
+			Problems: []string{}, Rules: []string{}, Mechanisms: []string{}, Capabilities: []string{}, Components: []string{},
+			Evidence: evidence(), Body: d.body,
 		})
 	case state.TypeInitiative:
 		st.Initiatives = append(st.Initiatives, state.Initiative{
@@ -208,7 +209,7 @@ func addEntry(st *state.State, d *doc) {
 		st.Components = append(st.Components, state.Component{
 			ID: fm.ID, File: d.file, Name: name, Description: description,
 			Within: textPtr(fm.Within), Is: textPtr(fm.Is), Parts: []string{},
-			Capabilities: list(fm.Serves), Meets: list(fm.Meets),
+			Capabilities: list(fm.Serves), Respects: list(fm.Respects), Meets: list(fm.Meets),
 			Gaps: gapRefs(ref, fm.Gaps), Tradeoffs: tradeoffRefs(ref, fm.Tradeoffs),
 			Evidence: evidence(), Decisions: decisions(fm.Decisions), Body: d.body,
 		})
@@ -321,8 +322,17 @@ func addEvidence(st *state.State, ref state.Ref, verb string, place state.Place)
 				add(&st.Components[i].Evidence)
 			}
 		}
+	case state.TypeConstraint:
+		if verb == verbImplements {
+			return false, fmt.Errorf("nothing implements a constraint: what keeps to it respects it, and a place that checks it verifies it")
+		}
+		for i := range st.Constraints {
+			if st.Constraints[i].ID == ref.ID {
+				add(&st.Constraints[i].Evidence)
+			}
+		}
 	default:
-		return false, fmt.Errorf("it names a rule, capability, mechanism or component, not a %s", ref.Type)
+		return false, fmt.Errorf("it names a rule, capability, mechanism, component or constraint, not a %s", ref.Type)
 	}
 	return found, nil
 }
@@ -424,9 +434,25 @@ func linkBack(st *state.State) {
 		}
 	}
 
-	// A constraint's rules and mechanisms are those that respect it.
+	// A constraint's problems are those subject to it, and its rules,
+	// mechanisms, capabilities and components those that respect it.
 	for i := range st.Constraints {
 		cn := &st.Constraints[i]
+		for _, pr := range st.Problems {
+			if names(pr.SubjectTo, state.TypeConstraint, cn.ID) {
+				cn.Problems = appendNew(cn.Problems, state.DocRef(state.TypeProblem, pr.ID))
+			}
+		}
+		for _, c := range st.Capabilities {
+			if names(c.Respects, state.TypeConstraint, cn.ID) {
+				cn.Capabilities = appendNew(cn.Capabilities, state.DocRef(state.TypeCapability, c.ID))
+			}
+		}
+		for _, c := range st.Components {
+			if names(c.Respects, state.TypeConstraint, cn.ID) {
+				cn.Components = appendNew(cn.Components, state.DocRef(state.TypeComponent, c.ID))
+			}
+		}
 		for _, r := range st.Rules {
 			if names(r.Respects, state.TypeConstraint, cn.ID) {
 				cn.Rules = appendNew(cn.Rules, state.DocRef(state.TypeRule, r.ID))
@@ -648,6 +674,14 @@ func distinct(n int, id func(int) string) int {
 // leaves at its end.
 func text(s string) string {
 	return strings.TrimSpace(s)
+}
+
+// nonEmpty is s, or nil when it's empty.
+func nonEmpty(s string) *string {
+	if s == "" {
+		return nil
+	}
+	return &s
 }
 
 func textPtr(s *string) *string {

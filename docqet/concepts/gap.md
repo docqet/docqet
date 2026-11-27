@@ -175,11 +175,11 @@ the rule holds. A gap, a tradeoff and an
 here", and `affects` is how each says which claim, or which other item, it's
 about. What it means comes from what's doing the affecting:
 
-| `affects` → | An outcome | A rule | A gap | A tradeoff |
-| --- | --- | --- | --- | --- |
-| **Gap** | Not met yet | Not held yet | | |
-| **Tradeoff** | Not met, by choice | | | |
-| **Decision** | Open: neither claimed nor short | | Waits on it | Reopened |
+| `affects` → | An outcome | A rule | A constraint | A gap | A tradeoff |
+| --- | --- | --- | --- | --- | --- |
+| **Gap** | Not met yet | Not held yet | Not kept to yet | | |
+| **Tradeoff** | Not met, by choice | | | | |
+| **Decision** | Open: neither claimed nor short | | | Waits on it | Reopened |
 
 What each means for a tradeoff and a decision is on
 [Tradeoff](tradeoff.md) and [Open decision](open-decision.md). A decision's
@@ -187,7 +187,7 @@ What each means for a tradeoff and a decision is on
 comes from its own ratings. For all three:
 
 - **It's a list of references**: `outcome:<quality>/<level>/<id>`,
-  `rule:<id>`, or a gap's or
+  `rule:<id>`, `constraint:<id>` for a gap, or a gap's or
   tradeoff's ID. Any other target, such as a capability, a persona, or a gap
   affecting a gap, is `invalid-frontmatter`: the doc an item is declared on
   is already what it's about, and which gap to close first is for a task
@@ -195,7 +195,9 @@ comes from its own ratings. For all three:
   `unknown-outcome` for an outcome.
 - **It stays on its side.** A product gap, tradeoff or decision affects
   outcomes, rules, and product gaps and tradeoffs. A technical one affects
-  outcomes, and technical gaps and tradeoffs. Product docs never link to
+  outcomes, and technical gaps and tradeoffs. A gap of either can affect a
+  constraint, since a constraint is in the problem space, toward why from
+  both. Product docs never link to
   technical docs.
 - **The link is held by what's deleted first.** Closing a gap, reversing a
   tradeoff or answering a decision deletes it with its `affects`, and what it
@@ -241,7 +243,7 @@ has:
   `Calendar needs a mouse`.
 - **`description`**: a sentence or two.
 - **`impact`**, **`likelihood`** and **`reach`**: what's at stake, as above.
-- **Optionally**, the outcomes and rules it `affects`.
+- **Optionally**, the outcomes, rules and constraints it `affects`.
 
 Room booking's calendar falls short of an outcome Beta expects. It's
 `certain`, since it's true today, and reaches `all`, since it's an

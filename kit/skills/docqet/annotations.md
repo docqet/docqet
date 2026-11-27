@@ -9,8 +9,8 @@ docqet:<verb> <type>:<id> [<type>:<id> ...]
 
 | Verb         | Says                                                               | Names                                                              |
 | ------------ | ------------------------------------------------------------------ | ------------------------------------------------------------------ |
-| `implements` | This place makes it so                                             | `rule:`, `capability:`, `mechanism:`, `component:`                 |
-| `verifies`   | This place checks that it holds or works                           | `rule:`, `capability:`, `mechanism:`, `component:`                 |
+| `implements` | This place makes it so; never a constraint, which is respected     | `rule:`, `capability:`, `mechanism:`, `component:`                 |
+| `verifies`   | This place checks that it holds, works or is kept to               | `rule:`, `capability:`, `mechanism:`, `component:`, `constraint:`  |
 | `gap`        | A known gap shows here, in place of a bare TODO                    | A gap's ID, such as `component:bookings#clashes-logged-as-unknown` |
 | `tradeoff`   | This is deliberate, though it may look wrong, so nobody "fixes" it | A tradeoff's ID                                                    |
 

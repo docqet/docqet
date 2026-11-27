@@ -1,6 +1,7 @@
 package http
 
 import (
+	"slices"
 	"strings"
 
 	"github.com/docqet/docqet/internal/combine"
@@ -350,6 +351,7 @@ func newCapabilityResource(p *combine.Product, c *combine.Capability) Capability
 		Levels:      make([]LevelResource, len(c.Levels)),
 		Feature:     c.Feature,
 		Rules:       list(c.Rules),
+		Respects:    list(c.Respects),
 		Concepts:    list(c.Concepts),
 		Gaps:        list(c.Gaps),
 		Tradeoffs:   list(c.Tradeoffs),
@@ -446,10 +448,19 @@ func newProblemResource(p *combine.Product, problem *combine.Problem) ProblemRes
 		Cost:         problem.Cost,
 		Personas:     list(problem.Personas),
 		Capabilities: list(problem.Capabilities),
+		Constraints:  constraintsOn(p, problem),
 		Maturity:     newMaturityResource(derive.CapabilitiesMaturity(caps)),
 		Readiness:    newReadinessResource(p, readiness),
 		Exposure:     newExposureResource(readiness.Exposure),
 	}
+}
+
+func constraintsOn(p *combine.Product, problem *combine.Problem) []ConstraintOnResource {
+	out := []ConstraintOnResource{}
+	for _, on := range derive.ProblemConstraints(p, problem) {
+		out = append(out, ConstraintOnResource{Constraint: on.Constraint.ID, Broad: on.Broad, RespectedBy: on.RespectedBy, Unaddressed: on.Unaddressed()})
+	}
+	return out
 }
 
 func newConstraintResource(p *combine.Product, cn *combine.Constraint) ConstraintResource {
@@ -460,8 +471,14 @@ func newConstraintResource(p *combine.Product, cn *combine.Constraint) Constrain
 		ids = append(ids, c.ID)
 	}
 	return ConstraintResource{
-		DocResource:  newDocResource(cn.Doc),
-		Source:       cn.Source,
+		DocResource: newDocResource(cn.Doc),
+		Source:      cn.Source,
+		Applies:     idPtr(cn.Applies),
+		Problems:    list(cn.Problems),
+		RespectedBy: slices.Concat(prefixed(state.TypeRule, cn.Rules), prefixed(state.TypeCapability, cn.Capabilities),
+			prefixed(state.TypeMechanism, cn.Mechanisms), prefixed(state.TypeComponent, cn.Components)),
+		Gaps:         list(cn.Gaps),
+		Evidence:     newEvidenceResource(cn.Evidence),
 		Rules:        list(cn.Rules),
 		Mechanisms:   list(cn.Mechanisms),
 		Capabilities: ids,
@@ -633,4 +650,13 @@ func newFindingResource(pr state.Finding) FindingResource {
 
 func newSearchResultResource(s services.SearchResult) SearchResultResource {
 	return SearchResultResource{Kind: s.Kind, ID: s.ID, Name: s.Name, Description: s.Description, Match: s.Match}
+}
+
+// prefixed is each ID as a reference to a doc of type typ.
+func prefixed(typ string, ids []string) []string {
+	out := make([]string, 0, len(ids))
+	for _, id := range ids {
+		out = append(out, state.DocRef(typ, id))
+	}
+	return out
 }

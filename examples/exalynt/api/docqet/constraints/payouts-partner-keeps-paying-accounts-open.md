@@ -6,4 +6,5 @@ description: >-
   The payments partner won't close a payout account while a payout to it is
   still on its way to the bank.
 source: The payments partner's terms
+applies: project
 ---

@@ -12,4 +12,5 @@ cost: >-
   conversation the front desk has. The guest's trust in the hotel is lost, and
   so is the clerk's trust in whatever they use to keep track of rooms.
 felt-by: [persona:front-desk-clerk]
+subject-to: [constraint:one-stay-a-room-a-night]
 ---

@@ -7,6 +7,8 @@ export type ProblemResource = DocResource &
     cost: string | null;
     personas: string[];
     capabilities: string[];
+    /* The constraints that apply to it, each with what solving it respects it. */
+    constraints: { constraint: string; broad: boolean; respectedBy: string[]; unaddressed: boolean }[];
   };
 
 export const listProblems = (showing: Showing, signal?: AbortSignal) => getAll<ProblemResource>(productPath(showing, "/problems"), signal);

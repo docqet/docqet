@@ -58,14 +58,18 @@ and a problem never links to the solution.
 
 ## How it's written
 
-A problem is a doc whose `docqet` is `problem`. Its frontmatter, in order, is `docqet`, `id`, `name`, `description`, `cost` and
-`felt-by` (required):
+A problem is a doc whose `docqet` is `problem`. Its frontmatter, in order, is `docqet`, `id`, `name`, `description`, `cost`,
+`felt-by` (required) and `subject-to`:
 
 - **`name`** is the problem in a few words, the way a rule's name is the rule:
   `A guest's room is given to someone else`.
 - **`description`** is the situation, in the words of the people who have it.
 - **`cost`**, optional, is what it costs them or the business.
 - **`felt-by`** names the personas who have it, at least one.
+- **`subject-to`**, optional, names the [constraints](constraint.md) any way
+  of solving it must keep to, such as a law that bounds it. It can be
+  written before anything solves it. Constraints that apply to the whole
+  project or product apply to it without being named.
 
 Its body, which can be left out, is anything more about the pain, such as
 when it happens, how often, and what people do about it today.

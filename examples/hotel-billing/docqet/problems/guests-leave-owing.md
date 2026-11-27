@@ -11,4 +11,5 @@ cost: >-
   not it charged the guest, so tax it didn't charge comes out of the hotel's
   own pocket.
 felt-by: [persona:front-desk-clerk, persona:manager]
+subject-to: [constraint:card-scheme-security-rules]
 ---

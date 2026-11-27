@@ -348,6 +348,7 @@ type CapabilityResource struct {
 	Levels      []LevelResource  `json:"levels"`
 	Feature     *string          `json:"feature"`
 	Rules       []string         `json:"rules"`
+	Respects    []string         `json:"respects"`
 	Concepts    []string         `json:"concepts"`
 	Gaps        []string         `json:"gaps"`
 	Tradeoffs   []string         `json:"tradeoffs"`
@@ -404,19 +405,45 @@ type PersonaResource struct {
 // solve it.
 type ProblemResource struct {
 	DocResource
-	Cost         *string           `json:"cost"`
-	Personas     []string          `json:"personas"`
-	Capabilities []string          `json:"capabilities"`
-	Maturity     *MaturityResource `json:"maturity"`
-	Readiness    ReadinessResource `json:"readiness"`
-	Exposure     ExposureResource  `json:"exposure"`
+	Cost         *string  `json:"cost"`
+	Personas     []string `json:"personas"`
+	Capabilities []string `json:"capabilities"`
+	// Constraints are those that apply to it, each with what solving it
+	// respects it: none means no part of its solution says it keeps to it.
+	Constraints []ConstraintOnResource `json:"constraints"`
+	Maturity    *MaturityResource      `json:"maturity"`
+	Readiness   ReadinessResource      `json:"readiness"`
+	Exposure    ExposureResource       `json:"exposure"`
+}
+
+// ConstraintOnResource is a constraint that applies to a problem, and the
+// rules, capabilities, mechanisms and components solving it that respect it.
+type ConstraintOnResource struct {
+	Constraint string `json:"constraint"`
+	// Broad is true when it applies because it applies to the whole project
+	// or product, not because the problem names it.
+	Broad       bool     `json:"broad"`
+	RespectedBy []string `json:"respectedBy"`
+	// Unaddressed is true when nothing says the solution keeps to it: for one
+	// the problem names, nothing solving it respects it; for a broad one,
+	// nothing respects it at all.
+	Unaddressed bool `json:"unaddressed"`
 }
 
 // ConstraintResource is a constraint, with the rules and mechanisms that
 // respect it, and the figures of the capabilities it bears on.
 type ConstraintResource struct {
 	DocResource
-	Source       *string           `json:"source"`
+	Source *string `json:"source"`
+	// Applies is project or product when it applies to every problem there,
+	// and null when it applies to the problems subject to it.
+	Applies  *string  `json:"applies"`
+	Problems []string `json:"problems"`
+	// RespectedBy is everything that respects it, as references; Rules and
+	// Mechanisms are those among it, by ID.
+	RespectedBy  []string          `json:"respectedBy"`
+	Gaps         []string          `json:"gaps"`
+	Evidence     EvidenceResource  `json:"evidence"`
 	Rules        []string          `json:"rules"`
 	Mechanisms   []string          `json:"mechanisms"`
 	Capabilities []string          `json:"capabilities"`

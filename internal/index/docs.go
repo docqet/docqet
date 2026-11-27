@@ -33,6 +33,7 @@ type frontmatter struct {
 	Image        *string        `yaml:"image"`
 	Serves       []string       `yaml:"serves"`
 	Solves       []string       `yaml:"solves"`
+	SubjectTo    []string       `yaml:"subject-to"`
 	Respects     []string       `yaml:"respects"`
 	FeltBy       []string       `yaml:"felt-by"`
 	For          []string       `yaml:"for"`
@@ -236,15 +237,15 @@ func fileFinding(typ, file string, line int, msg string) state.Finding {
 var fieldsOf = map[string][]string{
 	state.TypeArea:       {"docqet", "id", "name", "description", "decisions"},
 	state.TypeFeature:    {"docqet", "id", "name", "description", "within", "tradeoffs", "decisions"},
-	state.TypeCapability: {"docqet", "id", "name", "description", "stability", "within", "solves", "included-in", "follows", "uses", "gaps", "tradeoffs", "decisions"},
+	state.TypeCapability: {"docqet", "id", "name", "description", "stability", "within", "solves", "included-in", "follows", "respects", "uses", "gaps", "tradeoffs", "decisions"},
 	state.TypeRule:       {"docqet", "id", "name", "uses", "respects", "why"},
 	state.TypeConcept:    {"docqet", "id", "name", "description", "confused-with"},
 	state.TypePersona:    {"docqet", "id", "name", "description", "role", "title", "image"},
-	state.TypeProblem:    {"docqet", "id", "name", "description", "cost", "felt-by"},
-	state.TypeConstraint: {"docqet", "id", "name", "description", "source"},
+	state.TypeProblem:    {"docqet", "id", "name", "description", "cost", "felt-by", "subject-to"},
+	state.TypeConstraint: {"docqet", "id", "name", "description", "source", "applies"},
 	state.TypeInitiative: {"docqet", "id", "name", "description", "for"},
 	state.TypeMechanism:  {"docqet", "id", "name", "description", "applies", "respects", "meets", "gaps", "tradeoffs", "decisions"},
-	state.TypeComponent:  {"docqet", "id", "name", "description", "within", "is", "serves", "meets", "gaps", "tradeoffs", "decisions"},
+	state.TypeComponent:  {"docqet", "id", "name", "description", "within", "is", "serves", "respects", "meets", "gaps", "tradeoffs", "decisions"},
 	state.TypeArchetype:  {"docqet", "id", "name", "description"},
 }
 

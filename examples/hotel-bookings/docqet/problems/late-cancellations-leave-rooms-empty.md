@@ -8,4 +8,5 @@ description: >-
 cost: >-
   That night's takings for the room are lost.
 felt-by: [persona:manager]
+subject-to: [constraint:cancellation-terms]
 ---

@@ -137,9 +137,11 @@ when someone decides to promote or demote it.
 
 A capability is a doc whose `docqet` is `capability`. Its frontmatter, in
 order, is `docqet`, `id`, `name`, `description`, `stability` (required),
-`within`, `solves`, `included-in`, `follows`, `uses`, `gaps`, `tradeoffs`
-and `decisions`. `within`, optional, names the feature it's in, `follows`
-the rules it follows and `uses` the concepts it uses. Its body, which can be left out, is for
+`within`, `solves`, `included-in`, `follows`, `respects`, `uses`, `gaps`,
+`tradeoffs` and `decisions`. `within`, optional, names the feature it's in,
+`follows` the rules it follows, `respects` the
+[constraints](constraint.md) it keeps to itself, and `uses` the concepts it
+uses. Its body, which can be left out, is for
 anything more about what it does, such as what else it includes or how we'll
 know it works.
 [`room-booking.md`](../../examples/hotel-bookings/docqet/capabilities/room-booking.md):

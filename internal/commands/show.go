@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"slices"
 	"strings"
 	"text/tabwriter"
 
@@ -139,6 +140,7 @@ func showOf(p *combine.Product, ref string) (*shown, error) {
 			rules = append(rules, "rule:"+key+standing)
 		}
 		s.add("rules", rules...)
+		s.add("respects", prefixed("constraint:", c.Respects)...)
 		s.add("concepts", prefixed("concept:", c.Concepts)...)
 		s.add("built by", c.BuiltBy...)
 		s.add("archetypes", prefixed("archetype:", c.Archetypes)...)
@@ -236,11 +238,17 @@ func showOf(p *combine.Product, ref string) (*shown, error) {
 		if cn.Source != nil {
 			s.add("source", *cn.Source)
 		}
-		var rules []string
-		for _, key := range cn.Rules {
-			rules = append(rules, "rule:"+key)
+		switch cn.Applies {
+		case "product":
+			s.add("applies", "every problem in the product")
+		case "project":
+			s.add("applies", "every problem in "+strings.Join(cn.AppliesIn, ", "))
 		}
-		s.add("respected by", append(rules, prefixed("mechanism:", cn.Mechanisms)...)...)
+		s.add("problems", prefixed("problem:", cn.Problems)...)
+		s.add("respected by", slices.Concat(prefixed("rule:", cn.Rules), prefixed("capability:", cn.Capabilities),
+			prefixed("mechanism:", cn.Mechanisms), prefixed("component:", cn.Components))...)
+		s.items(p, cn.Gaps, nil, ref, cn.Doc)
+		s.Evidence = evidenceOf(cn.Evidence)
 		return s, nil
 	case state.TypeProblem:
 		pr := p.Problem(r.ID)
@@ -253,6 +261,18 @@ func showOf(p *combine.Product, ref string) (*shown, error) {
 		}
 		s.add("personas", prefixed("persona:", pr.Personas)...)
 		s.add("capabilities", prefixed("capability:", pr.Capabilities)...)
+		var constraints []string
+		for _, on := range derive.ProblemConstraints(p, pr) {
+			standing := " (respected by " + strings.Join(on.RespectedBy, ", ") + ")"
+			switch {
+			case on.Unaddressed():
+				standing = " (nothing solving it respects it)"
+			case len(on.RespectedBy) == 0:
+				standing = " (applies to all, respected elsewhere)"
+			}
+			constraints = append(constraints, "constraint:"+on.Constraint.ID+standing)
+		}
+		s.add("subject to", constraints...)
 		return s, nil
 	case state.TypeInitiative:
 		in := p.Initiative(r.ID)
@@ -286,6 +306,7 @@ func showOf(p *combine.Product, ref string) (*shown, error) {
 			}
 			s.add("parts", prefixed("component:", t.Parts)...)
 			s.add("capabilities", prefixed("capability:", t.Capabilities)...)
+			s.add("respects", prefixed("constraint:", t.Respects)...)
 			s.add("gaps in its parts", partGaps(p, t)...)
 		}
 		s.add("meets", t.Meets...)

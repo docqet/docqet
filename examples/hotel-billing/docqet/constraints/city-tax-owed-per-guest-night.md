@@ -7,4 +7,5 @@ description: >-
   terms for children and long stays, and the hotel owes it whether or not it
   charged the guest.
 source: The city's tourist tax
+applies: project
 ---

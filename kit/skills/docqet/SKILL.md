@@ -67,7 +67,7 @@ initiatives are product docs: what it does, seen from outside, in the
 business's words. Mechanisms, components and archetypes are technical docs: how it's meant
 to be built, seen from inside, in the code's words. Links only point toward
 why: technical docs to capabilities, capabilities to the problems they
-solve, rules and mechanisms to the constraints they respect. Within a space
+solve, and whatever keeps to a constraint to the constraint. Within a space
 they point up: a capability names its feature, and a feature its area.
 
 Every doc starts by saying what it is: `docqet`, its type, and `id`, its ID,
@@ -119,7 +119,7 @@ changed, not docs to fill in the structure.
 | -------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
 | The software can now do something new for someone                          | A capability, at the level the user gives, in the feature it's part of, linked to the problems it `solves`. A new part of the product is a new feature. Ask which when it isn't clear. |
 | Someone has a pain the software is meant to solve, and the user confirmed it | A problem, naming the personas who have it, linked from every capability that solves it                                                   |
-| Something outside the team binds the software, and the user confirmed it   | A constraint, with its `source`, linked from every rule or mechanism that respects it                                                     |
+| Something outside the team binds the software, and the user confirmed it   | A constraint, with its `source`, named by the problems it bounds with `subject-to`, or with `applies` when it bounds everything, and linked from whatever keeps to it with `respects` |
 | A capability was asked for and not started                                 | A capability with `stability: draft`                                                                                                      |
 | Something must always or never happen, and the user said so                | A rule, linked from every capability that follows it                                                                                      |
 | A rule is followed but not held yet                                        | A gap on each capability that doesn't hold it, with the rule in its `affects`                                                             |

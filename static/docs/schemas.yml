@@ -901,7 +901,7 @@ components:
       allOf:
         - $ref: "#/components/schemas/Doc"
         - type: object
-          required: [solves, personas, initiatives, stability, levels, feature, rules, concepts, gaps, tradeoffs, builtBy, archetypes, evidence, readiness, exposure, risk, open, ruleStandings, outcomes]
+          required: [solves, personas, initiatives, stability, levels, feature, rules, respects, concepts, gaps, tradeoffs, builtBy, archetypes, evidence, readiness, exposure, risk, open, ruleStandings, outcomes]
           properties:
             solves:
               $ref: "#/components/schemas/StringList"
@@ -925,6 +925,10 @@ components:
               example: reservations
             rules:
               $ref: "#/components/schemas/StringList"
+            respects:
+              description: The constraints it respects itself.
+              allOf:
+                - $ref: "#/components/schemas/StringList"
             concepts:
               $ref: "#/components/schemas/StringList"
             gaps:
@@ -1032,7 +1036,7 @@ components:
       allOf:
         - $ref: "#/components/schemas/Doc"
         - type: object
-          required: [cost, personas, capabilities, maturity, readiness, exposure]
+          required: [cost, personas, capabilities, constraints, maturity, readiness, exposure]
           properties:
             cost:
               type: string
@@ -1041,6 +1045,34 @@ components:
               $ref: "#/components/schemas/StringList"
             capabilities:
               $ref: "#/components/schemas/StringList"
+            constraints:
+              description: >-
+                The constraints that apply to it: those it's subject to, and
+                those that apply to its whole project or product. Each has
+                what solving it respects it; none means no part of its
+                solution says it keeps to it.
+              type: array
+              items:
+                type: object
+                required: [constraint, broad, respectedBy, unaddressed]
+                properties:
+                  constraint:
+                    type: string
+                  broad:
+                    type: boolean
+                    description: >-
+                      It applies because it applies to the whole project or
+                      product, not because the problem names it.
+                  respectedBy:
+                    description: What, among what solves the problem, respects it.
+                    allOf:
+                      - $ref: "#/components/schemas/StringList"
+                  unaddressed:
+                    type: boolean
+                    description: >-
+                      Nothing says the solution keeps to it: for one the
+                      problem names, nothing solving it respects it; for a
+                      broad one, nothing respects it at all.
             maturity:
               $ref: "#/components/schemas/Maturity"
             readiness:
@@ -1055,11 +1087,36 @@ components:
       allOf:
         - $ref: "#/components/schemas/Doc"
         - type: object
-          required: [source, rules, mechanisms, capabilities, maturity, readiness, exposure]
+          required: [source, applies, problems, respectedBy, gaps, evidence, rules, mechanisms, capabilities, maturity, readiness, exposure]
           properties:
             source:
               type: string
               nullable: true
+            applies:
+              type: string
+              nullable: true
+              enum: [project, product, null]
+              description: >-
+                project or product when it applies to every problem there;
+                null when it applies to the problems subject to it.
+            problems:
+              description: The problems subject to it.
+              allOf:
+                - $ref: "#/components/schemas/StringList"
+            respectedBy:
+              description: >-
+                Everything that respects it, as references: rules,
+                capabilities, mechanisms and components.
+              allOf:
+                - $ref: "#/components/schemas/StringList"
+            gaps:
+              description: The gaps that affect it.
+              allOf:
+                - $ref: "#/components/schemas/StringList"
+            evidence:
+              description: The places that verify it. Nothing implements a constraint.
+              allOf:
+                - $ref: "#/components/schemas/Evidence"
             rules:
               $ref: "#/components/schemas/StringList"
             mechanisms:
@@ -1107,7 +1164,7 @@ components:
               type: string
               enum: [project, product]
             respects:
-              description: A mechanism's constraints. A component's is always empty.
+              description: The constraints it respects.
               allOf:
                 - $ref: "#/components/schemas/StringList"
             within:

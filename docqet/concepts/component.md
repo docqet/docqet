@@ -60,7 +60,8 @@ component, and its indexer and checker are components within it.
 ## How it's written
 
 A component is a doc whose `docqet` is `component`. Its frontmatter, in order, is `docqet`, `id`, `name`, `description`,
-`within`, `is`, `serves`, `meets`, `gaps`, `tradeoffs` and `decisions`. Its
+`within`, `is`, `serves`, `respects`, `meets`, `gaps`, `tradeoffs` and
+`decisions`. Its
 body is how it works, as a mechanism's is.
 
 - **`within`**, optional, names the one bigger component it's part of:
@@ -71,6 +72,9 @@ body is how it works, as a mechanism's is.
   component is.
 - **`serves`** lists the capabilities that rely on it. It's the only
   link between the technical docs and the product. A mechanism has none.
+- **`respects`**, optional, lists the [constraints](constraint.md) it's
+  built to keep to, such as a database that refuses two stays in one room on
+  one night.
 - **It names no code**, as a mechanism doesn't: its entry points say
   `docqet:implements component:bookings`.
 

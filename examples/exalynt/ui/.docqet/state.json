@@ -1,5 +1,5 @@
 {
-  "docqet": "0.6",
+  "docqet": "0.7",
   "project": {
     "id": "exalynt-ui",
     "name": "Exalynt UI"
@@ -175,6 +175,7 @@
         "capability:access-tokens",
         "capability:notifications"
       ],
+      "respects": [],
       "meets": [],
       "gaps": [],
       "tradeoffs": [],
@@ -205,6 +206,7 @@
         "capability:payouts",
         "capability:roles"
       ],
+      "respects": [],
       "meets": [],
       "gaps": [],
       "tradeoffs": [],
@@ -229,6 +231,7 @@
         "capability:engineer-onboarding",
         "capability:partnerships"
       ],
+      "respects": [],
       "meets": [],
       "gaps": [],
       "tradeoffs": [
@@ -263,6 +266,7 @@
         "capability:estimates",
         "capability:engineer-agreements"
       ],
+      "respects": [],
       "meets": [],
       "gaps": [],
       "tradeoffs": [],
@@ -293,6 +297,7 @@
         "capability:partner-agreements",
         "capability:getting-set-up"
       ],
+      "respects": [],
       "meets": [],
       "gaps": [],
       "tradeoffs": [],
@@ -325,6 +330,7 @@
         "capability:organizations-and-members",
         "capability:client-agreements"
       ],
+      "respects": [],
       "meets": [],
       "gaps": [],
       "tradeoffs": [

@@ -269,6 +269,8 @@ export type Problem = Doc & {
   personas: string[];
   /* Every capability that solves it, drafts among them. */
   capabilities: string[];
+  /* The constraints that apply to it, each with what solving it respects it, as references: none means no part of its solution says it keeps to it. */
+  constraints: { constraint: string; broad: boolean; respectedBy: string[]; unaddressed: boolean }[];
   /* What solves it: how mature, ready and exposed it is. */
   maturity: number | null;
   band: Level | null;
@@ -285,6 +287,11 @@ export type Problem = Doc & {
 export type Constraint = Doc & {
   /* Where it comes from, such as the law or contract, or null when it isn't written down. */
   source: string | null;
+  /* project or product when it applies to every problem there; null when it applies to the problems subject to it, listed in problems. */
+  applies: "project" | "product" | null;
+  problems: string[];
+  /* Everything that respects it, as references. */
+  respectedBy: string[];
   /* The rules that respect it, and the mechanisms that do. */
   rules: string[];
   mechanisms: string[];
@@ -298,7 +305,7 @@ export type Constraint = Doc & {
 };
 
 /* How many rules and mechanisms respect a constraint. */
-export const respecting = (c: Constraint) => c.rules.length + c.mechanisms.length;
+export const respecting = (c: Constraint) => c.respectedBy.length;
 
 /*
  * A body of work, such as the MVP or what comes after it, one across the

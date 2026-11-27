@@ -5,6 +5,7 @@ import { StabilitySpread } from "../../components/stability/StabilitySpread";
 import { Term } from "../../components/term/Term";
 import { NAMES } from "../../components/names";
 import { PersonaRows } from "../../components/Personas";
+import { ConstraintIcon } from "../../components/names";
 import { areasOf, byFeature, capabilitiesById, find, type DocqetState, type Problem } from "../../state";
 import { ExposureStat, MaturityStat } from "../../components/indexParts";
 import { docHref, type Route } from "../../routes";
@@ -124,6 +125,7 @@ export function ProblemPage({ problem, route, ...go }: DocPageProps & { problem:
               </Box>
             )}
           </Section>
+          {problem.constraints.length ? <SubjectTo state={state} problem={problem} /> : null}
           {capabilities.length ? (
             <>
               <ImprovementsSection readiness={readiness} />
@@ -195,5 +197,45 @@ export function ProblemPage({ problem, route, ...go }: DocPageProps & { problem:
         </Section>
       )}
     </DocView>
+  );
+}
+
+/*
+ * The constraints a problem is subject to, its own and those that apply to
+ * its whole project or product, each with whether anything solving it says it
+ * keeps to it. One nothing solving it respects is shown as such: the
+ * solution may break it without anyone having said otherwise.
+ */
+function SubjectTo({ state, problem }: { state: DocqetState; problem: Problem }) {
+  const unaddressed = problem.constraints.filter((c) => c.unaddressed).length;
+  return (
+    <Section
+      title="What any solution must keep to"
+      term="constraint"
+      count={problem.constraints.length}
+      note={unaddressed ? `${unaddressed} that nothing says its solution keeps to.` : "Something says its solution keeps to each."}
+    >
+      <Box component="ul" sx={[levelsSx, { "& > li": { display: "flex", flexDirection: "column", alignItems: "flex-start", gap: 0.25 } }]}>
+        {problem.constraints.map(({ constraint, broad, respectedBy, unaddressed }) => {
+          const c = find(state.constraints, constraint);
+          return (
+            <li key={constraint}>
+              <Crumb href={docHref("constraint", constraint)} icon={<ConstraintIcon />}>
+                {c?.name ?? constraint}
+              </Crumb>
+              <Box component="span" sx={{ fontSize: 12.5, color: unaddressed ? "warning.main" : "text.secondary" }}>
+                {unaddressed
+                  ? broad
+                    ? "Applies to everything, and nothing respects it yet"
+                    : "Nothing solving it respects it yet"
+                  : respectedBy.length
+                    ? `Respected by ${respectedBy.length === 1 ? respectedBy[0] : `${respectedBy.length} parts of its solution`}`
+                    : "Applies to everything, and is respected elsewhere"}
+              </Box>
+            </li>
+          );
+        })}
+      </Box>
+    </Section>
   );
 }

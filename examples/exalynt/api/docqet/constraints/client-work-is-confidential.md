@@ -6,4 +6,5 @@ description: >-
   What a client builds, and what's said about it, is confidential to that
   client and the people working for it.
 source: Client agreements
+applies: product
 ---

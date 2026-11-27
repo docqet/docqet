@@ -6,4 +6,5 @@ description: >-
   Engineers and partners are paid under the Commercial Terms of the agreement
   each accepted, and nothing outside those terms earns anything.
 source: The Engineer and Partner Agreements
+applies: project
 ---

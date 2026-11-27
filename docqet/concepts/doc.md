@@ -216,15 +216,15 @@ own. What has no name, such as what a concept is confused with, is said in its
 | --- | --- | --- | --- |
 | area | `docqet`, `id`, `name`, `description`, `decisions` | Anything more about the part of the business | [guest-stays](../../examples/hotel-bookings/docqet/areas/guest-stays.md) |
 | feature | `docqet`, `id`, `name`, `description`, `within`, `tradeoffs`, `decisions` | Anything more about what it offers | [reservations](../../examples/hotel-bookings/docqet/features/reservations.md) |
-| capability | `docqet`, `id`, `name`, `description`, `stability` (required), `within`, `solves`, `included-in`, `follows`, `uses`, `gaps`, `tradeoffs`, `decisions` | Anything more about what it does, such as what else it includes, or how we'll know it's working | [room-booking](../../examples/hotel-bookings/docqet/capabilities/room-booking.md) |
+| capability | `docqet`, `id`, `name`, `description`, `stability` (required), `within`, `solves`, `included-in`, `follows`, `respects`, `uses`, `gaps`, `tradeoffs`, `decisions` | Anything more about what it does, such as what else it includes, or how we'll know it's working | [room-booking](../../examples/hotel-bookings/docqet/capabilities/room-booking.md) |
 | rule | `docqet`, `id`, `name`, `uses`, `respects`, `why` | The rule in full, where its name doesn't say it all, and examples or how it plays out | [same-day-turnover](../../examples/hotel-bookings/docqet/rules/booking/same-day-turnover.md) |
 | concept | `docqet`, `id`, `name`, `description`, `confused-with` | Its details: what it's made of, how it relates to other concepts, and the states it moves through | [booking](../../examples/hotel-bookings/docqet/concepts/booking.md) |
 | persona | `docqet`, `id`, `name`, `description`, `role`, `title`, `image` | Anything more about who they are, such as what they know, their context, what they expect, and what they care about | [front-desk-clerk](../../examples/hotel-bookings/docqet/personas/front-desk-clerk.md) |
-| problem | `docqet`, `id`, `name`, `description`, `cost`, `felt-by` (required) | Anything more about the pain, such as when it happens and what people do about it today | [room-given-to-two-guests](../../examples/hotel-bookings/docqet/problems/room-given-to-two-guests.md) |
-| constraint | `docqet`, `id`, `name`, `description`, `source` | Anything more, such as the clause or article it comes from, or what happens if it's broken | [invoice-numbers-in-sequence](../../examples/hotel-billing/docqet/constraints/invoice-numbers-in-sequence.md) |
+| problem | `docqet`, `id`, `name`, `description`, `cost`, `felt-by` (required), `subject-to` | Anything more about the pain, such as when it happens and what people do about it today | [room-given-to-two-guests](../../examples/hotel-bookings/docqet/problems/room-given-to-two-guests.md) |
+| constraint | `docqet`, `id`, `name`, `description`, `source`, `applies` | Anything more, such as the clause or article it comes from, or what happens if it's broken | [invoice-numbers-in-sequence](../../examples/hotel-billing/docqet/constraints/invoice-numbers-in-sequence.md) |
 | initiative | `docqet`, `id`, `name`, `description`, `for` | Anything more about the work, such as what's in it and why | [busy-season](../../examples/hotel-bookings/docqet/initiatives/busy-season.md) |
 | mechanism | `docqet`, `id`, `name`, `description`, `applies`, `respects`, `meets`, `gaps`, `tradeoffs`, `decisions` | How it works | [deployment](../../examples/hotel-bookings/docqet/mechanisms/deployment.md) |
-| component | `docqet`, `id`, `name`, `description`, `within`, `is`, `serves`, `meets`, `gaps`, `tradeoffs`, `decisions` | How it works | [bookings](../../examples/hotel-bookings/docqet/components/bookings.md) |
+| component | `docqet`, `id`, `name`, `description`, `within`, `is`, `serves`, `respects`, `meets`, `gaps`, `tradeoffs`, `decisions` | How it works | [bookings](../../examples/hotel-bookings/docqet/components/bookings.md) |
 | archetype | `docqet`, `id`, `name`, `description` | What it means here for a component to be one, such as what's expected of every one | [web-app](../../examples/exalynt/ui/docqet/archetypes/web-app.md) |
 
 The body column is a suggestion of what's worth writing, not a structure.
@@ -243,8 +243,10 @@ Each field is defined by the concept it's about:
 - **`felt-by`** lists the [personas](persona.md) who have a problem, and
   **`for`** those an initiative's work is for.
 - **`cost`** says what a problem costs the people who have it.
-- **`respects`** lists the [constraints](constraint.md) a rule or mechanism
-  keeps to, and **`source`** says where a constraint comes from.
+- **`respects`** lists the [constraints](constraint.md) a rule, capability,
+  mechanism or component keeps to, **`subject-to`** those a problem is bound
+  by, **`source`** says where a constraint comes from, and its **`applies`**
+  whether it bounds every problem in its project or product.
 - **`included-in`** lists the [initiatives](initiative.md) a capability is
   part of.
 - **`follows`** lists the [rules](rule.md) a capability follows, and

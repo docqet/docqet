@@ -114,6 +114,7 @@ func (c *checker) capabilities() {
 		c.links(s, "solves", cp.Solves, state.TypeProblem)
 		c.links(s, "included-in", cp.Initiatives, state.TypeInitiative)
 		c.links(s, "follows", cp.Rules, state.TypeRule)
+		c.links(s, "respects", cp.Respects, state.TypeConstraint)
 		c.links(s, "uses", cp.Concepts, state.TypeConcept)
 		c.decisions(s, cp.Decisions)
 	}
@@ -193,18 +194,26 @@ func (c *checker) problems() {
 			c.add(state.InvalidFrontmatter, s, "A problem names the personas who have it.")
 		}
 		c.links(s, "felt-by", pr.Personas, state.TypePersona)
+		c.links(s, "subject-to", pr.SubjectTo, state.TypeConstraint)
 	}
 }
 
-// constraints checks each constraint, and reports one nothing respects:
-// why it was written down is a rule or mechanism keeping to it.
+// constraints checks each constraint, and reports one nothing respects, and
+// one that applies to no problem: it's written down to be kept to, in solving
+// something.
 func (c *checker) constraints() {
 	for _, cn := range c.st.Constraints {
 		ref := state.DocRef(state.TypeConstraint, cn.ID)
 		s := subject{ref: ref, file: cn.File}
 		c.common(s, cn.ID, cn.Name, cn.Description, true)
-		if len(cn.Rules) == 0 && len(cn.Mechanisms) == 0 {
-			c.add(state.RespectedByNothing, s, "No rule or mechanism respects it yet: link it from those that do with respects.")
+		if cn.Applies != nil && *cn.Applies != "project" && *cn.Applies != "product" {
+			c.add(state.InvalidFrontmatter, s, "applies is %q: it's project or product, or left out when the problems it bounds name it.", *cn.Applies)
+		}
+		if len(cn.Rules) == 0 && len(cn.Mechanisms) == 0 && len(cn.Capabilities) == 0 && len(cn.Components) == 0 {
+			c.add(state.RespectedByNothing, s, "Nothing respects it yet: link it from the rules, capabilities, mechanisms or components that keep to it, with respects.")
+		}
+		if cn.Applies == nil && len(cn.Problems) == 0 {
+			c.add(state.AppliesToNothing, s, "No problem is subject to it: name it from the problems it bounds with subject-to, or say it applies to the whole project or product with applies.")
 		}
 	}
 }
@@ -237,6 +246,7 @@ func (c *checker) components() {
 		c.link(s, "within", cp.Within, state.TypeComponent)
 		c.link(s, "is", cp.Is, state.TypeArchetype)
 		c.links(s, "serves", cp.Capabilities, state.TypeCapability)
+		c.links(s, "respects", cp.Respects, state.TypeConstraint)
 		c.outcomes(s, "meets", cp.Meets)
 		c.decisions(s, cp.Decisions)
 		if c.withinItself(cp.ID) {
@@ -293,11 +303,11 @@ func (c *checker) gaps() {
 				continue
 			}
 			ref, ok := state.ParseRef(raw)
-			if !ok || ref.Type != state.TypeRule || ref.Key != "" {
-				c.add(state.InvalidFrontmatter, s, "A gap affects outcomes and rules, not %s.", raw)
+			if !ok || (ref.Type != state.TypeRule && ref.Type != state.TypeConstraint) || ref.Key != "" {
+				c.add(state.InvalidFrontmatter, s, "A gap affects outcomes, rules and constraints, not %s.", raw)
 				continue
 			}
-			c.links(s, "affects", []string{raw}, state.TypeRule)
+			c.links(s, "affects", []string{raw}, ref.Type)
 		}
 	}
 }

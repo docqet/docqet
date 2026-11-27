@@ -42,8 +42,9 @@ project.
 
 - **Most gaps affect nothing.** They're limits on what the capability does.
   A gap affects an outcome only when it's the reason the capability's level
-  falls short of it, or a rule only when the capability follows it and
-  doesn't hold to it yet. See [What `affects` says](#what-affects-says).
+  falls short of it, a rule only when the capability follows it and
+  doesn't hold to it yet, or a constraint only when what it's on respects it
+  and doesn't keep to it yet. See [What `affects` says](#what-affects-says).
 - **A rule written before it's built** is followed by its capabilities, each
   with a gap affecting it, since following a rule otherwise claims it holds.
 - **When a gap has a visible effect and a technical cause**, the gap goes on
@@ -261,14 +262,17 @@ the three ways of saying "except here", and `affects` says which claim, or
 which other item, each is about. Its meaning comes from what's doing the
 affecting:
 
-| `affects` → | An outcome | A rule | A gap | A tradeoff |
-| --- | --- | --- | --- | --- |
-| **Gap** | Not met yet | Not held yet | | |
-| **Tradeoff** | Not met, by choice | | | |
-| **Decision** | Open: neither claimed nor short | | Waits on its answer | Reopened |
+| `affects` → | An outcome | A rule | A constraint | A gap | A tradeoff |
+| --- | --- | --- | --- | --- | --- |
+| **Gap** | Not met yet | Not held yet | Not kept to yet | | |
+| **Tradeoff** | Not met, by choice | | | | |
+| **Decision** | Open: neither claimed nor short | | | Waits on its answer | Reopened |
 
 - **Write references**: `outcome:<quality>/<level>/<id>` (`docqet rubric`
-  lists them), `rule:<id>`, or a gap's or tradeoff's ID.
+  lists them), `rule:<id>`, `constraint:<id>` from a gap, or a gap's or
+  tradeoff's ID.
+- **A gap affecting a constraint** says where the software doesn't keep to it
+  yet. It shows on the constraint; its risk is its own, on the doc it's on.
 - **Never anything else.** The doc an item is on is already what it's about,
   so it never affects a capability, feature or persona. A gap never affects a
   gap: which to close first is for a task tracker. A tradeoff never affects a

@@ -59,8 +59,8 @@ behind it:
 
 | Verb | Says | Names |
 | --- | --- | --- |
-| `verifies` | This place checks that the rule holds, the capability works, or the mechanism or component does what it says | `rule`, `capability`, `mechanism`, `component` |
-| `implements` | This place makes it so | `rule`, `capability`, `mechanism`, `component` |
+| `verifies` | This place checks that the rule holds, the capability works, the mechanism or component does what it says, or the constraint is kept to | `rule`, `capability`, `mechanism`, `component`, `constraint` |
+| `implements` | This place makes it so. Nothing implements a constraint: what keeps to it respects it | `rule`, `capability`, `mechanism`, `component` |
 | `gap` | A known gap shows here: tracked technical debt, in place of a bare TODO | A gap's ID |
 | `tradeoff` | This is deliberate, though it may look wrong, so nobody "fixes" it | A tradeoff's ID |
 

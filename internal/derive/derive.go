@@ -111,8 +111,9 @@ func ProblemCapabilities(p *combine.Product, problem *combine.Problem) []*combin
 }
 
 // ConstraintCapabilities returns the capabilities a constraint bears on: those
-// that follow a rule respecting it, and those a mechanism respecting it applies
-// to. It's what a figure for the constraint counts.
+// that respect it, follow a rule respecting it, or rely on a component
+// respecting it, and those a mechanism respecting it applies to. It's what a
+// figure for the constraint counts.
 func ConstraintCapabilities(p *combine.Product, constraint *combine.Constraint) []*combine.Capability {
 	var ids []string
 	add := func(list []string) {
@@ -132,7 +133,88 @@ func ConstraintCapabilities(p *combine.Product, constraint *combine.Constraint) 
 			add(m.Capabilities)
 		}
 	}
+	add(constraint.Capabilities)
+	for _, id := range constraint.Components {
+		if c := p.Technical(state.DocRef(state.TypeComponent, id)); c != nil {
+			add(c.Capabilities)
+		}
+	}
 	return CapabilitiesByID(p, ids)
+}
+
+// ConstraintOn is a constraint that applies to a problem, and what, among
+// the docs solving the problem, respects it: the capabilities solving it,
+// the rules they follow, and the mechanisms and components they're built on.
+// Broad is true when it applies because it applies to the whole project or
+// product, not because the problem names it.
+type ConstraintOn struct {
+	Constraint  *combine.Constraint
+	Broad       bool
+	RespectedBy []string // as references
+}
+
+// Unaddressed reports whether nothing says the problem's solution keeps to
+// it. A constraint the problem names needs something solving the problem to
+// respect it. One that applies to everything is kept to wherever it's
+// respected, so it's unaddressed only when nothing respects it at all.
+func (c ConstraintOn) Unaddressed() bool {
+	if len(c.RespectedBy) > 0 {
+		return false
+	}
+	if !c.Broad {
+		return true
+	}
+	cn := c.Constraint
+	return len(cn.Rules) == 0 && len(cn.Mechanisms) == 0 && len(cn.Capabilities) == 0 && len(cn.Components) == 0
+}
+
+// ProblemConstraints returns the constraints that apply to a problem: those
+// it's subject to, then those that apply to its whole product, or to a
+// project it's written in, each with what solving it respects it.
+// docqet:implements capability:constraints
+func ProblemConstraints(p *combine.Product, problem *combine.Problem) []ConstraintOn {
+	var projects []string
+	for _, f := range problem.From {
+		projects = append(projects, f.Project)
+	}
+	var applying []*combine.Constraint
+	for _, id := range problem.SubjectTo {
+		if cn := p.Constraint(id); cn != nil {
+			applying = append(applying, cn)
+		}
+	}
+	for _, cn := range p.Constraints {
+		broad := cn.Applies == "product" ||
+			(cn.Applies == "project" && slices.ContainsFunc(cn.AppliesIn, func(pr string) bool { return slices.Contains(projects, pr) }))
+		if broad && !slices.Contains(applying, cn) {
+			applying = append(applying, cn)
+		}
+	}
+
+	out := make([]ConstraintOn, 0, len(applying))
+	for _, cn := range applying {
+		on := ConstraintOn{Constraint: cn, Broad: !slices.Contains(problem.SubjectTo, cn.ID), RespectedBy: []string{}}
+		respected := func(ref string, respects []string) {
+			if slices.Contains(respects, cn.ID) && !slices.Contains(on.RespectedBy, ref) {
+				on.RespectedBy = append(on.RespectedBy, ref)
+			}
+		}
+		for _, c := range ProblemCapabilities(p, problem) {
+			respected(state.DocRef(state.TypeCapability, c.ID), c.Respects)
+			for _, key := range c.Rules {
+				if r := p.Rule(key); r != nil {
+					respected(state.DocRef(state.TypeRule, r.ID), r.Respects)
+				}
+			}
+			for _, ref := range c.BuiltBy {
+				if t := p.Technical(ref); t != nil {
+					respected(ref, t.Respects)
+				}
+			}
+		}
+		out = append(out, on)
+	}
+	return out
 }
 
 // PersonaCapabilitiesIn returns the capabilities in a feature that serve a

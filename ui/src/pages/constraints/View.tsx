@@ -3,7 +3,7 @@ import Box from "@mui/material/Box";
 import { InlineMarkdown, MORE_ABOUT } from "../../components/markdown/Markdown";
 import { StabilitySpread } from "../../components/stability/StabilitySpread";
 import { Term } from "../../components/term/Term";
-import { NAMES, plural } from "../../components/names";
+import { NAMES, ProblemIcon, plural } from "../../components/names";
 import { TechnicalRows } from "../../components/Technical";
 import { areasOf, byFeature, capabilitiesById, find, respecting, type Constraint, type DocqetState } from "../../state";
 import { ExposureStat, MaturityStat } from "../../components/indexParts";
@@ -37,6 +37,10 @@ export function ConstraintPage({ constraint, route, ...go }: DocPageProps & { co
   const { state } = go;
   const rules = constraint.rules.flatMap((id) => find(state.rules, id) ?? []);
   const mechanisms = constraint.mechanisms.flatMap((id) => find(state.mechanisms, id) ?? []);
+  const ofType = (type: string) => constraint.respectedBy.filter((ref) => ref.startsWith(`${type}:`)).map((ref) => ref.slice(type.length + 1));
+  const respectingCapabilities = capabilitiesById(state, ofType("capability"));
+  const components = ofType("component").flatMap((id) => find(state.components, id) ?? []);
+  const problems = constraint.problems.flatMap((id) => find(state.problems, id) ?? []);
   const capabilities = capabilitiesById(state, constraint.capabilities);
   const features = byFeature(state, constraint.capabilities).flatMap((g) => g.feature ?? []);
   const areas = areasOf(state, capabilities);
@@ -67,10 +71,15 @@ export function ConstraintPage({ constraint, route, ...go }: DocPageProps & { co
               value={count || "Nothing yet"}
               note={
                 count
-                  ? [rules.length ? plural(rules.length, "rule", "rules") : "", mechanisms.length ? plural(mechanisms.length, "mechanism", "mechanisms") : ""]
+                  ? [
+                      rules.length ? plural(rules.length, "rule", "rules") : "",
+                      respectingCapabilities.length ? plural(respectingCapabilities.length, "capability", "capabilities") : "",
+                      mechanisms.length ? plural(mechanisms.length, "mechanism", "mechanisms") : "",
+                      components.length ? plural(components.length, "component", "components") : "",
+                    ]
                       .filter(Boolean)
                       .join(" · ")
-                  : "No rule or mechanism respects it"
+                  : "Nothing says it keeps to it"
               }
               href={tabHref("respects")}
             />
@@ -163,10 +172,26 @@ export function ConstraintPage({ constraint, route, ...go }: DocPageProps & { co
               <RuleTable rules={rules} />
             </Section>
           ) : null}
+          {respectingCapabilities.length ? (
+            <Section
+              title={<Term id="capability">Capabilities</Term>}
+              count={respectingCapabilities.length}
+              note="Results the product produces that keep to it themselves."
+            >
+              <CapabilityTable state={state} capabilities={respectingCapabilities} />
+            </Section>
+          ) : null}
           {mechanisms.length ? (
             <Section title={<Term id="mechanism">Mechanisms</Term>} count={mechanisms.length} note="How it's built to keep to it.">
               <Box sx={cardSx}>
                 <TechnicalRows state={state} docs={mechanisms} />
+              </Box>
+            </Section>
+          ) : null}
+          {components.length ? (
+            <Section title={<Term id="component">Components</Term>} count={components.length} note="Parts of the code built to keep to it.">
+              <Box sx={cardSx}>
+                <TechnicalRows state={state} docs={components} />
               </Box>
             </Section>
           ) : null}
@@ -180,7 +205,29 @@ export function ConstraintPage({ constraint, route, ...go }: DocPageProps & { co
               <CapabilityTable state={state} capabilities={capabilities} />
             </Section>
           ) : null}
-          {!count ? <Empty>Nothing respects it yet: no rule or mechanism says it keeps to it.</Empty> : null}
+          {!count ? <Empty>Nothing respects it yet: no rule, capability, mechanism or component says it keeps to it.</Empty> : null}
+          <Section title="What it applies to" term="problem" count={problems.length || undefined}>
+            {constraint.applies ? (
+              <Box component="p" sx={lineSx}>
+                Every problem in its {constraint.applies}.
+              </Box>
+            ) : null}
+            {problems.length ? (
+              <Box component="ul" sx={levelsSx}>
+                {problems.map((p) => (
+                  <li key={p.id}>
+                    <Crumb href={docHref("problem", p.id)} icon={<ProblemIcon />}>
+                      {p.name}
+                    </Crumb>
+                  </li>
+                ))}
+              </Box>
+            ) : !constraint.applies ? (
+              <Box component="p" sx={lineSx}>
+                No problem is subject to it yet.
+              </Box>
+            ) : null}
+          </Section>
         </>
       ) : tab === IMPROVEMENTS_TAB ? (
         <>

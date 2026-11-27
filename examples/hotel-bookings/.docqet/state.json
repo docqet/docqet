@@ -1,5 +1,5 @@
 {
-  "docqet": "0.6",
+  "docqet": "0.7",
   "project": {
     "id": "hotel-bookings",
     "name": "Hotel Bookings"
@@ -210,6 +210,9 @@
         "persona:front-desk-clerk",
         "persona:housekeeper"
       ],
+      "subjectTo": [
+        "constraint:rooms-cleaned-between-stays"
+      ],
       "capabilities": [
         "capability:cleaning-schedule",
         "capability:room-status"
@@ -225,6 +228,7 @@
       "personas": [
         "persona:front-desk-clerk"
       ],
+      "subjectTo": [],
       "capabilities": [
         "capability:waitlist"
       ],
@@ -239,6 +243,7 @@
       "personas": [
         "persona:front-desk-clerk"
       ],
+      "subjectTo": [],
       "capabilities": [
         "capability:group-bookings"
       ],
@@ -254,6 +259,7 @@
         "persona:front-desk-clerk",
         "persona:manager"
       ],
+      "subjectTo": [],
       "capabilities": [
         "capability:check-out"
       ],
@@ -268,6 +274,7 @@
       "personas": [
         "persona:front-desk-clerk"
       ],
+      "subjectTo": [],
       "capabilities": [
         "capability:check-in",
         "capability:check-out"
@@ -283,6 +290,9 @@
       "personas": [
         "persona:manager"
       ],
+      "subjectTo": [
+        "constraint:cancellation-terms"
+      ],
       "capabilities": [
         "capability:cancellations"
       ],
@@ -297,6 +307,7 @@
       "personas": [
         "persona:manager"
       ],
+      "subjectTo": [],
       "capabilities": [
         "capability:rate-calendar"
       ],
@@ -310,6 +321,9 @@
       "cost": "Telling a guest at the desk that their room was given away: the worst conversation the front desk has. The guest's trust in the hotel is lost, and so is the clerk's trust in whatever they use to keep track of rooms.",
       "personas": [
         "persona:front-desk-clerk"
+      ],
+      "subjectTo": [
+        "constraint:one-stay-a-room-a-night"
       ],
       "capabilities": [
         "capability:check-in",
@@ -325,11 +339,21 @@
       "name": "Guests book on the hotel's cancellation terms",
       "description": "Every booking is made on the hotel's published terms: cancelling up to 48 hours before arrival is free, and later than that costs the first night.",
       "source": "The hotel's booking terms (assumed)",
+      "applies": null,
+      "problems": [
+        "problem:late-cancellations-leave-rooms-empty"
+      ],
       "rules": [
         "rule:free-cancellation-window",
         "rule:late-cancellation-fee"
       ],
       "mechanisms": [],
+      "capabilities": [],
+      "components": [],
+      "evidence": {
+        "implements": [],
+        "verifies": []
+      },
       "body": ""
     },
     {
@@ -338,11 +362,29 @@
       "name": "A room holds one stay a night",
       "description": "However it's booked, a room can only have one guest's stay in it on any night.",
       "source": "A fact of the building",
+      "applies": null,
+      "problems": [
+        "problem:room-given-to-two-guests"
+      ],
       "rules": [
         "rule:no-double-booking",
         "rule:same-day-turnover"
       ],
       "mechanisms": [],
+      "capabilities": [],
+      "components": [
+        "component:bookings"
+      ],
+      "evidence": {
+        "implements": [],
+        "verifies": [
+          {
+            "file": "db/checks/one-stay-a-night.sql",
+            "line": 3,
+            "text": "SELECT a.room_id, a.id AS booking, b.id AS clashes_with"
+          }
+        ]
+      },
       "body": ""
     },
     {
@@ -351,10 +393,20 @@
       "name": "A room is cleaned between one stay and the next",
       "description": "Guests check out by 11:00 and check in from 15:00, the hotel's hours, which leave housekeeping the time a room needs to be ready for the next guest.",
       "source": "The hotel's house rules, and the time cleaning takes",
+      "applies": null,
+      "problems": [
+        "problem:arrivals-wait-for-rooms"
+      ],
       "rules": [
         "rule:same-day-turnover"
       ],
       "mechanisms": [],
+      "capabilities": [],
+      "components": [],
+      "evidence": {
+        "implements": [],
+        "verifies": []
+      },
       "body": ""
     }
   ],
@@ -399,6 +451,7 @@
         "rule:free-cancellation-window",
         "rule:late-cancellation-fee"
       ],
+      "respects": [],
       "concepts": [
         "concept:booking"
       ],
@@ -440,6 +493,7 @@
       "rules": [
         "rule:no-double-booking"
       ],
+      "respects": [],
       "concepts": [
         "concept:booking",
         "concept:room"
@@ -470,6 +524,7 @@
       ],
       "initiatives": [],
       "rules": [],
+      "respects": [],
       "concepts": [
         "concept:booking"
       ],
@@ -498,6 +553,7 @@
       ],
       "initiatives": [],
       "rules": [],
+      "respects": [],
       "concepts": [
         "concept:room"
       ],
@@ -539,6 +595,7 @@
         "rule:no-double-booking",
         "rule:minimum-stay"
       ],
+      "respects": [],
       "concepts": [
         "concept:booking"
       ],
@@ -575,6 +632,7 @@
       ],
       "initiatives": [],
       "rules": [],
+      "respects": [],
       "concepts": [],
       "gaps": [],
       "tradeoffs": [],
@@ -613,6 +671,7 @@
         "rule:minimum-stay",
         "rule:same-day-turnover"
       ],
+      "respects": [],
       "concepts": [
         "concept:booking",
         "concept:room"
@@ -660,6 +719,7 @@
         "initiative:busy-season"
       ],
       "rules": [],
+      "respects": [],
       "concepts": [
         "concept:room"
       ],
@@ -700,6 +760,7 @@
       "rules": [
         "rule:no-double-booking"
       ],
+      "respects": [],
       "concepts": [
         "concept:booking",
         "concept:room"
@@ -1020,6 +1081,9 @@
         "capability:room-booking",
         "capability:group-bookings",
         "capability:check-in"
+      ],
+      "respects": [
+        "constraint:one-stay-a-room-a-night"
       ],
       "meets": [],
       "gaps": [

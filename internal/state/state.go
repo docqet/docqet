@@ -4,7 +4,7 @@
 package state
 
 // Version is the version of the state format this docqet writes and reads.
-const Version = "0.6"
+const Version = "0.7"
 
 // State is one project's state, indexed from its docs and annotations.
 type State struct {
@@ -136,6 +136,7 @@ type Capability struct {
 	Personas    []string   `json:"personas"`
 	Initiatives []string   `json:"initiatives"`
 	Rules       []string   `json:"rules"`
+	Respects    []string   `json:"respects"`
 	Concepts    []string   `json:"concepts"`
 	Gaps        []string   `json:"gaps"`
 	Tradeoffs   []string   `json:"tradeoffs"`
@@ -204,6 +205,7 @@ type Problem struct {
 	Description  string   `json:"description"`
 	Cost         *string  `json:"cost"`
 	Personas     []string `json:"personas"`
+	SubjectTo    []string `json:"subjectTo"`
 	Capabilities []string `json:"capabilities"`
 	Body         string   `json:"body"`
 }
@@ -221,18 +223,25 @@ type Initiative struct {
 }
 
 // Constraint is a constraint doc: something imposed from outside that any
-// solution must respect, such as a law, a contract or a physical fact. The
-// rules and mechanisms that respect it are
-// worked out, not declared.
+// solution must respect, such as a law, a contract or a physical fact. It
+// applies to the problems subject to it, or with Applies to every problem in
+// its project or product. The problems subject to it, and the rules,
+// mechanisms, capabilities and components that respect it, are worked out,
+// not declared. Places can verify it; nothing implements it.
 type Constraint struct {
-	ID          string   `json:"id"`
-	File        string   `json:"file"`
-	Name        string   `json:"name"`
-	Description string   `json:"description"`
-	Source      *string  `json:"source"`
-	Rules       []string `json:"rules"`
-	Mechanisms  []string `json:"mechanisms"`
-	Body        string   `json:"body"`
+	ID           string   `json:"id"`
+	File         string   `json:"file"`
+	Name         string   `json:"name"`
+	Description  string   `json:"description"`
+	Source       *string  `json:"source"`
+	Applies      *string  `json:"applies"`
+	Problems     []string `json:"problems"`
+	Rules        []string `json:"rules"`
+	Mechanisms   []string `json:"mechanisms"`
+	Capabilities []string `json:"capabilities"`
+	Components   []string `json:"components"`
+	Evidence     Evidence `json:"evidence"`
+	Body         string   `json:"body"`
 }
 
 // Mechanism is a mechanism doc. Its capabilities are worked out, not
@@ -266,6 +275,7 @@ type Component struct {
 	Archetype    *string    `json:"archetype"`
 	Parts        []string   `json:"parts"`
 	Capabilities []string   `json:"capabilities"`
+	Respects     []string   `json:"respects"`
 	Meets        []string   `json:"meets"`
 	Gaps         []string   `json:"gaps"`
 	Tradeoffs    []string   `json:"tradeoffs"`
@@ -337,13 +347,14 @@ const (
 	UnknownOutcome     = "unknown-outcome"
 	SolvesNoProblem    = "solves-no-problem"
 	RespectedByNothing = "respected-by-nothing"
+	AppliesToNothing   = "applies-to-nothing"
 )
 
 // Advisory reports whether findings of type typ are advisory: shown and
 // counted like any other, but never failing a check, so a project can adopt
 // what they ask for one doc at a time.
 func Advisory(typ string) bool {
-	return typ == SolvesNoProblem || typ == RespectedByNothing
+	return typ == SolvesNoProblem || typ == RespectedByNothing || typ == AppliesToNothing
 }
 
 // Rubric is the stability rubric: what each stability level expects, as the

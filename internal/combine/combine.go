@@ -195,6 +195,7 @@ func (c *combiner) add(st *state.State) {
 				Stability:   cp.Stability,
 				Levels:      []LevelIn{},
 				Rules:       []string{},
+				Respects:    []string{},
 				Concepts:    []string{},
 				Gaps:        []string{},
 				Tradeoffs:   []string{},
@@ -212,6 +213,7 @@ func (c *combiner) add(st *state.State) {
 		capability.Gaps = union(capability.Gaps, own(cp.Gaps)...)
 		capability.Tradeoffs = union(capability.Tradeoffs, own(cp.Tradeoffs)...)
 		capability.Rules = union(capability.Rules, ids(cp.Rules)...)
+		capability.Respects = union(capability.Respects, ids(cp.Respects)...)
 		capability.Concepts = union(capability.Concepts, ids(cp.Concepts)...)
 	}
 
@@ -256,17 +258,32 @@ func (c *combiner) add(st *state.State) {
 		from := contribution(project, pr.File, pr.Name, pr.Description, pr.Body)
 		from.Cost = pr.Cost
 		problem := contribute(&c.p.Problems, c.problems, pr.ID, from, func(base Doc) *Problem {
-			return &Problem{Doc: base, Cost: pr.Cost, Personas: []string{}, Capabilities: []string{}}
+			return &Problem{Doc: base, Cost: pr.Cost, Personas: []string{}, SubjectTo: []string{}, Capabilities: []string{}}
 		})
 		problem.Personas = union(problem.Personas, ids(pr.Personas)...)
+		problem.SubjectTo = union(problem.SubjectTo, ids(pr.SubjectTo)...)
 	}
 
 	for _, cn := range st.Constraints {
 		from := contribution(project, cn.File, cn.Name, cn.Description, cn.Body)
 		from.Source = cn.Source
-		contribute(&c.p.Constraints, c.constraints, cn.ID, from, func(base Doc) *Constraint {
-			return &Constraint{Doc: base, Source: cn.Source, Rules: []string{}, Mechanisms: []string{}}
+		constraint := contribute(&c.p.Constraints, c.constraints, cn.ID, from, func(base Doc) *Constraint {
+			return &Constraint{
+				Doc: base, Source: cn.Source, AppliesIn: []string{}, Problems: []string{},
+				Rules: []string{}, Mechanisms: []string{}, Capabilities: []string{}, Components: []string{},
+				Gaps: []string{}, Evidence: newEvidence(),
+			}
 		})
+		switch {
+		case cn.Applies != nil && *cn.Applies == "product":
+			constraint.Applies = "product"
+		case cn.Applies != nil && *cn.Applies == "project":
+			if constraint.Applies == "" {
+				constraint.Applies = "project"
+			}
+			constraint.AppliesIn = union(constraint.AppliesIn, project)
+		}
+		addEvidence(&constraint.Evidence, cn.Evidence, project)
 	}
 
 	for _, i := range st.Initiatives {
@@ -289,6 +306,7 @@ func (c *combiner) add(st *state.State) {
 	for _, m := range st.Components {
 		doc := c.technical(&c.p.Components, c.components, KindComponent, project, m.ID, m.File, m.Name, m.Description, m.Body,
 			m.Decisions, m.Capabilities, m.Meets, own(m.Gaps), own(m.Tradeoffs), m.Evidence)
+		doc.Respects = union(doc.Respects, ids(m.Respects)...)
 		if doc.Within == "" && m.Within != nil {
 			doc.Within = idOf(*m.Within)
 		}
@@ -418,6 +436,15 @@ func (c *combiner) resolveGaps() {
 	for _, g := range c.p.Gaps {
 		affects := []string{}
 		for _, ref := range g.Affects {
+			if strings.HasPrefix(ref, state.TypeConstraint+":") {
+				cn := c.constraints[idOf(ref)]
+				if cn == nil {
+					continue
+				}
+				cn.Gaps = union(cn.Gaps, g.ID)
+				affects = append(affects, ref)
+				continue
+			}
 			if !strings.HasPrefix(ref, state.TypeRule+":") {
 				affects = append(affects, ref)
 				continue
@@ -550,10 +577,32 @@ func (c *combiner) solvedProblems() {
 	})
 }
 
-// respectedConstraints works out the rules and mechanisms that respect each
-// constraint, across every project, so a constraint one project declares and
-// another respects isn't reported as respected by nothing.
+// respectedConstraints works out what respects each constraint, and the
+// problems subject to it, across every project, so a constraint one project
+// declares and another respects, or names from a problem, isn't reported as
+// respected by nothing, or applying to nothing.
 func (c *combiner) respectedConstraints() {
+	for _, pr := range c.p.Problems {
+		for _, id := range pr.SubjectTo {
+			if cn := c.constraints[id]; cn != nil {
+				cn.Problems = union(cn.Problems, pr.ID)
+			}
+		}
+	}
+	for _, cp := range c.p.Capabilities {
+		for _, id := range cp.Respects {
+			if cn := c.constraints[id]; cn != nil {
+				cn.Capabilities = union(cn.Capabilities, cp.ID)
+			}
+		}
+	}
+	for _, t := range c.p.Components {
+		for _, id := range t.Respects {
+			if cn := c.constraints[id]; cn != nil {
+				cn.Components = union(cn.Components, t.ID)
+			}
+		}
+	}
 	for _, r := range c.p.Rules {
 		for _, id := range r.Respects {
 			if cn := c.constraints[id]; cn != nil {
@@ -569,11 +618,16 @@ func (c *combiner) respectedConstraints() {
 		}
 	}
 	c.p.Findings = slices.DeleteFunc(c.p.Findings, func(f state.Finding) bool {
-		if f.Type != state.RespectedByNothing {
-			return false
-		}
 		cn := c.constraints[idOf(f.Subject)]
-		return cn != nil && (len(cn.Rules) > 0 || len(cn.Mechanisms) > 0)
+		switch {
+		case cn == nil:
+			return false
+		case f.Type == state.RespectedByNothing:
+			return len(cn.Rules) > 0 || len(cn.Mechanisms) > 0 || len(cn.Capabilities) > 0 || len(cn.Components) > 0
+		case f.Type == state.AppliesToNothing:
+			return cn.Applies != "" || len(cn.Problems) > 0
+		}
+		return false
 	})
 }
 

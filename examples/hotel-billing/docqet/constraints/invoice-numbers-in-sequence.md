@@ -6,4 +6,5 @@ description: >-
   The tax office requires the hotel's invoices to be numbered in one sequence,
   with no number missing or used twice.
 source: Tax law
+applies: project
 ---

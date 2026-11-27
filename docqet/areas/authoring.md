@@ -198,6 +198,8 @@ flowchart TB
   rule -- "uses" --> concept
   rule -- "respects" --> constraint
   mechanism -- "respects" --> constraint
+  capability -- "respects" --> constraint
+  problem -- "subject to" --> constraint
 
   component -- "serves" --> capability
   component -- "within" --> component
@@ -263,7 +265,9 @@ using it can tell.
   to technical docs, to product docs, to problem docs, though a link can skip
   a space: technical docs link to the capabilities they serve, capabilities
   to the problems they solve, initiatives to the personas they're for, and
-  rules and mechanisms to the constraints they respect. Product docs never
+  whatever keeps to a constraint to the constraint it respects. Within the
+  problem space, a problem names the personas who feel it and the
+  constraints it's subject to. Product docs never
   link to technical docs, and problem docs never link to product docs, so a
   problem stays true whatever solves it, and a capability stays the same
   however it's built. Within a space, links point up: a capability names its

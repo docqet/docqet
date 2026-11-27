@@ -1,5 +1,5 @@
 {
-  "docqet": "0.6",
+  "docqet": "0.7",
   "project": {
     "id": "exalynt-api",
     "name": "Exalynt API"
@@ -769,6 +769,7 @@
       "personas": [
         "persona:exalynt-admin"
       ],
+      "subjectTo": [],
       "capabilities": [
         "capability:access-tokens",
         "capability:roles"
@@ -784,6 +785,7 @@
       "personas": [
         "persona:exalynt-admin"
       ],
+      "subjectTo": [],
       "capabilities": [
         "capability:agreements",
         "capability:client-coupons",
@@ -802,6 +804,7 @@
         "persona:client-admin-founder",
         "persona:client-admin-operations"
       ],
+      "subjectTo": [],
       "capabilities": [
         "capability:estimates"
       ],
@@ -817,6 +820,7 @@
         "persona:client-admin-founder",
         "persona:client-admin-operations"
       ],
+      "subjectTo": [],
       "capabilities": [
         "capability:operations-and-ownership"
       ],
@@ -832,6 +836,7 @@
         "persona:client-admin-founder",
         "persona:client-admin-operations"
       ],
+      "subjectTo": [],
       "capabilities": [
         "capability:billing",
         "capability:capacity-purchasing",
@@ -854,6 +859,7 @@
         "persona:exalynt-engineer-2",
         "persona:exalynt-team-lead"
       ],
+      "subjectTo": [],
       "capabilities": [
         "capability:availability"
       ],
@@ -868,6 +874,7 @@
       "personas": [
         "persona:exalynt-admin"
       ],
+      "subjectTo": [],
       "capabilities": [
         "capability:availability",
         "capability:billing",
@@ -889,6 +896,7 @@
       "personas": [
         "persona:partner"
       ],
+      "subjectTo": [],
       "capabilities": [
         "capability:client-invitations",
         "capability:partner-home",
@@ -905,6 +913,7 @@
       "personas": [
         "persona:exalynt-admin"
       ],
+      "subjectTo": [],
       "capabilities": [
         "capability:payouts"
       ],
@@ -919,6 +928,7 @@
       "personas": [
         "persona:exalynt-engineer-new-hire"
       ],
+      "subjectTo": [],
       "capabilities": [
         "capability:engineer-agreements",
         "capability:engineer-onboarding",
@@ -946,6 +956,7 @@
         "persona:exalynt-team-lead",
         "persona:partner"
       ],
+      "subjectTo": [],
       "capabilities": [
         "capability:access-tokens",
         "capability:your-profile"
@@ -961,6 +972,7 @@
       "personas": [
         "persona:partner"
       ],
+      "subjectTo": [],
       "capabilities": [
         "capability:getting-set-up",
         "capability:notifications",
@@ -987,6 +999,7 @@
         "persona:exalynt-engineer-2",
         "persona:exalynt-team-lead"
       ],
+      "subjectTo": [],
       "capabilities": [
         "capability:earnings",
         "capability:notifications",
@@ -1006,6 +1019,7 @@
         "persona:exalynt-engineer-1",
         "persona:exalynt-engineer-2"
       ],
+      "subjectTo": [],
       "capabilities": [
         "capability:estimates"
       ],
@@ -1020,6 +1034,7 @@
       "personas": [
         "persona:exalynt-engineer-1"
       ],
+      "subjectTo": [],
       "capabilities": [
         "capability:fulfillment"
       ],
@@ -1036,6 +1051,7 @@
         "persona:client-admin-operations",
         "persona:client-member"
       ],
+      "subjectTo": [],
       "capabilities": [
         "capability:client-home",
         "capability:conversation-spaces",
@@ -1055,6 +1071,7 @@
         "persona:client-admin-founder",
         "persona:client-admin-operations"
       ],
+      "subjectTo": [],
       "capabilities": [
         "capability:capacity-purchasing",
         "capability:client-home",
@@ -1073,6 +1090,7 @@
         "persona:exalynt-engineer-1",
         "persona:exalynt-engineer-2"
       ],
+      "subjectTo": [],
       "capabilities": [
         "capability:claiming-blocks",
         "capability:earnings",
@@ -1089,6 +1107,7 @@
       "personas": [
         "persona:exalynt-team-lead"
       ],
+      "subjectTo": [],
       "capabilities": [
         "capability:availability",
         "capability:fulfillment",
@@ -1106,6 +1125,7 @@
       "personas": [
         "persona:client-billing"
       ],
+      "subjectTo": [],
       "capabilities": [
         "capability:billing",
         "capability:notifications"
@@ -1123,6 +1143,7 @@
         "persona:client-member",
         "persona:client-billing"
       ],
+      "subjectTo": [],
       "capabilities": [
         "capability:organizations-and-members"
       ],
@@ -1140,6 +1161,7 @@
         "persona:client-member",
         "persona:client-billing"
       ],
+      "subjectTo": [],
       "capabilities": [
         "capability:client-agreements"
       ],
@@ -1156,6 +1178,7 @@
         "persona:client-admin-operations",
         "persona:client-member"
       ],
+      "subjectTo": [],
       "capabilities": [
         "capability:scheduling"
       ],
@@ -1173,6 +1196,7 @@
         "persona:exalynt-team-lead",
         "persona:exalynt-admin"
       ],
+      "subjectTo": [],
       "capabilities": [
         "capability:conversation-spaces",
         "capability:fulfillment",
@@ -1188,6 +1212,8 @@
       "name": "What people earn is set by their agreements",
       "description": "Engineers and partners are paid under the Commercial Terms of the agreement each accepted, and nothing outside those terms earns anything.",
       "source": "The Engineer and Partner Agreements",
+      "applies": "project",
+      "problems": [],
       "rules": [
         "rule:engineer-agreement-follows-the-invitations-terms",
         "rule:coupons-never-change-shares",
@@ -1197,6 +1223,12 @@
         "rule:unlisted-shares-earn-nothing"
       ],
       "mechanisms": [],
+      "capabilities": [],
+      "components": [],
+      "evidence": {
+        "implements": [],
+        "verifies": []
+      },
       "body": ""
     },
     {
@@ -1205,6 +1237,8 @@
       "name": "A bank transfer can't be recalled once it's sent",
       "description": "Once money has been sent to someone's bank, it can't be pulled back or changed: only a new payment can put a mistake right.",
       "source": "How bank transfers work",
+      "applies": "project",
+      "problems": [],
       "rules": [
         "rule:earnings-are-sent-only-once",
         "rule:failed-payouts-are-sent-again",
@@ -1212,6 +1246,12 @@
         "rule:sent-payouts-never-change"
       ],
       "mechanisms": [],
+      "capabilities": [],
+      "components": [],
+      "evidence": {
+        "implements": [],
+        "verifies": []
+      },
       "body": ""
     },
     {
@@ -1220,6 +1260,8 @@
       "name": "Each client's work and conversations are confidential",
       "description": "What a client builds, and what's said about it, is confidential to that client and the people working for it.",
       "source": "Client agreements",
+      "applies": "product",
+      "problems": [],
       "rules": [
         "rule:leaving-exalynt-takes-you-out-of-every-space",
         "rule:a-blocks-conversations-are-for-its-client-and-the-teams-supporting-it",
@@ -1227,6 +1269,12 @@
         "rule:clients-cant-see-a-teams-other-clients"
       ],
       "mechanisms": [],
+      "capabilities": [],
+      "components": [],
+      "evidence": {
+        "implements": [],
+        "verifies": []
+      },
       "body": ""
     },
     {
@@ -1235,11 +1283,19 @@
       "name": "The messaging provider decides who joins and keeps the history",
       "description": "Who can be added to a conversation directly, and how long its history is kept, are the messaging provider's to decide.",
       "source": "The messaging provider's terms",
+      "applies": "project",
+      "problems": [],
       "rules": [
         "rule:a-space-outlasts-its-people",
         "rule:clients-are-invited-and-some-can-only-be-emailed"
       ],
       "mechanisms": [],
+      "capabilities": [],
+      "components": [],
+      "evidence": {
+        "implements": [],
+        "verifies": []
+      },
       "body": ""
     },
     {
@@ -1248,6 +1304,8 @@
       "name": "Nobody is sent unwanted bulk email",
       "description": "Email goes only to addresses that asked for it or are needed for the service, and never in bulk to people who didn't.",
       "source": "Anti-spam law, and email providers' terms",
+      "applies": "product",
+      "problems": [],
       "rules": [
         "rule:email-only-to-verified-addresses",
         "rule:some-notifications-cant-be-turned-off",
@@ -1255,6 +1313,12 @@
         "rule:partnership-invitations-are-limited"
       ],
       "mechanisms": [],
+      "capabilities": [],
+      "components": [],
+      "evidence": {
+        "implements": [],
+        "verifies": []
+      },
       "body": ""
     },
     {
@@ -1263,12 +1327,20 @@
       "name": "The payment provider holds payment methods and invoices",
       "description": "Clients' payment methods, billing details and invoices are held by the payment provider, on its terms, and paid through it.",
       "source": "The payment provider's terms",
+      "applies": "project",
+      "problems": [],
       "rules": [
         "rule:buying-requires-a-payment-method",
         "rule:unpaid-invoices-are-paid-with-the-provider",
         "rule:retrying-a-purchase-never-charges-twice"
       ],
       "mechanisms": [],
+      "capabilities": [],
+      "components": [],
+      "evidence": {
+        "implements": [],
+        "verifies": []
+      },
       "body": ""
     },
     {
@@ -1277,10 +1349,18 @@
       "name": "An account can't close while a payout is on its way",
       "description": "The payments partner won't close a payout account while a payout to it is still on its way to the bank.",
       "source": "The payments partner's terms",
+      "applies": "project",
+      "problems": [],
       "rules": [
         "rule:removing-a-payout-account"
       ],
       "mechanisms": [],
+      "capabilities": [],
+      "components": [],
+      "evidence": {
+        "implements": [],
+        "verifies": []
+      },
       "body": ""
     },
     {
@@ -1289,12 +1369,20 @@
       "name": "Sales tax is collected on every sale",
       "description": "The company must make sure sales tax is collected wherever a client is, at the rate that place sets, without working the tax out itself.",
       "source": "Sales tax law, with the payment provider working the tax out",
+      "applies": "product",
+      "problems": [],
       "rules": [
         "rule:purchases-are-quoted-with-their-tax",
         "rule:tax-needs-to-know-where-the-client-is",
         "rule:the-payment-provider-works-out-the-tax"
       ],
       "mechanisms": [],
+      "capabilities": [],
+      "components": [],
+      "evidence": {
+        "implements": [],
+        "verifies": []
+      },
       "body": ""
     },
     {
@@ -1303,12 +1391,20 @@
       "name": "What has already happened can't be undone",
       "description": "Work that has started, weeks that have passed and work that's been delivered are facts: nothing later can make them not have happened.",
       "source": "A fact of time",
+      "applies": "project",
+      "problems": [],
       "rules": [
         "rule:past-weeks-cant-change",
         "rule:reductions-never-touch-started-work",
         "rule:fulfilled-is-final"
       ],
       "mechanisms": [],
+      "capabilities": [],
+      "components": [],
+      "evidence": {
+        "implements": [],
+        "verifies": []
+      },
       "body": ""
     }
   ],
@@ -1497,6 +1593,7 @@
         "rule:limits-never-widen",
         "rule:owners-see-a-tokens-limits"
       ],
+      "respects": [],
       "concepts": [
         "concept:access-token",
         "concept:organization",
@@ -1551,6 +1648,7 @@
         "rule:accepted-agreements-outlive-their-partys-account",
         "rule:agreements-stay-private"
       ],
+      "respects": [],
       "concepts": [
         "concept:agreement",
         "concept:organization",
@@ -1611,6 +1709,7 @@
         "rule:reductions-never-touch-started-work",
         "rule:past-weeks-cant-change"
       ],
+      "respects": [],
       "concepts": [
         "concept:effective-availability",
         "concept:capacity-unit",
@@ -1663,6 +1762,7 @@
         "rule:when-company-details-count-as-given",
         "rule:capacity-fees-and-infrastructure-billed-separately"
       ],
+      "respects": [],
       "concepts": [
         "concept:invoice",
         "concept:capacity-block"
@@ -1710,6 +1810,7 @@
         "rule:block-numbers-are-per-organization",
         "rule:retrying-a-purchase-never-charges-twice"
       ],
+      "respects": [],
       "concepts": [
         "concept:capacity-block",
         "concept:capacity-unit",
@@ -1791,6 +1892,7 @@
         "rule:lapsed-blocks-must-be-moved-first",
         "rule:in-progress-blocks-cant-be-moved"
       ],
+      "respects": [],
       "concepts": [
         "concept:capacity-block",
         "concept:shared-queue",
@@ -1855,6 +1957,7 @@
         "rule:accepted-agreements-outlive-their-partys-account",
         "rule:agreements-stay-private"
       ],
+      "respects": [],
       "concepts": [
         "concept:agreement",
         "concept:organization"
@@ -1900,6 +2003,7 @@
         "initiative:mvp"
       ],
       "rules": [],
+      "respects": [],
       "concepts": [
         "concept:organization"
       ],
@@ -1988,6 +2092,7 @@
         "rule:removing-someone-already-gone",
         "rule:only-exalynts-people-join-teams"
       ],
+      "respects": [],
       "concepts": [
         "concept:capacity-block",
         "concept:invoice",
@@ -2028,6 +2133,7 @@
         "rule:exalynt-can-move-lapsed-blocks",
         "rule:the-preferred-week-is-a-target"
       ],
+      "respects": [],
       "concepts": [
         "concept:capacity-block"
       ],
@@ -2090,6 +2196,7 @@
         "rule:clients-see-who-referred-them",
         "rule:introductions-dont-affect-engineer-assignment"
       ],
+      "respects": [],
       "concepts": [
         "concept:partnership"
       ],
@@ -2145,6 +2252,7 @@
         "rule:anyone-at-the-client-or-on-a-team-supporting-it-starts-its-blocks-conversations",
         "rule:a-blocks-conversations-are-for-its-client-and-the-teams-supporting-it"
       ],
+      "respects": [],
       "concepts": [
         "concept:space",
         "concept:space-membership",
@@ -2227,6 +2335,7 @@
         "rule:exalynt-bears-partnership-earnings",
         "rule:partners-see-only-their-partnerships-earnings"
       ],
+      "respects": [],
       "concepts": [
         "concept:payout-share",
         "concept:capacity-payout-basis",
@@ -2281,6 +2390,7 @@
         "rule:accepted-agreements-outlive-their-partys-account",
         "rule:agreements-stay-private"
       ],
+      "respects": [],
       "concepts": [
         "concept:agreement"
       ],
@@ -2336,6 +2446,7 @@
         "rule:invitations-stay-pending-until-resolved",
         "rule:who-sees-and-revokes-pending-invitations"
       ],
+      "respects": [],
       "concepts": [
         "concept:agreement",
         "concept:team"
@@ -2430,6 +2541,7 @@
         "rule:admins-see-only-payment-readiness",
         "rule:limited-tokens-cant-reach-payout-accounts"
       ],
+      "respects": [],
       "concepts": [
         "concept:team",
         "concept:role"
@@ -2481,6 +2593,7 @@
         "rule:estimates-are-for-organizations-or-prospects",
         "rule:a-focus-belongs-to-one-estimate"
       ],
+      "respects": [],
       "concepts": [
         "concept:estimate",
         "concept:capacity-block",
@@ -2584,6 +2697,7 @@
         "rule:exalynt-bears-partnership-earnings",
         "rule:partners-see-only-their-partnerships-earnings"
       ],
+      "respects": [],
       "concepts": [
         "concept:capacity-block",
         "concept:fulfilled",
@@ -2632,6 +2746,7 @@
         "rule:when-an-engineer-is-ready",
         "rule:invited-engineers-join-their-team"
       ],
+      "respects": [],
       "concepts": [
         "concept:organization",
         "concept:team"
@@ -2695,6 +2810,7 @@
         "rule:removed-channels-fall-back-to-others",
         "rule:removed-addresses-stop-email-immediately"
       ],
+      "respects": [],
       "concepts": [],
       "gaps": [],
       "tradeoffs": [
@@ -2744,6 +2860,7 @@
         "initiative:operations-and-ownership"
       ],
       "rules": [],
+      "respects": [],
       "concepts": [],
       "gaps": [],
       "tradeoffs": [],
@@ -2908,6 +3025,7 @@
         "rule:clients-see-who-referred-them",
         "rule:introductions-dont-affect-engineer-assignment"
       ],
+      "respects": [],
       "concepts": [
         "concept:organization",
         "concept:role",
@@ -2974,6 +3092,7 @@
         "rule:accepted-agreements-outlive-their-partys-account",
         "rule:agreements-stay-private"
       ],
+      "respects": [],
       "concepts": [
         "concept:agreement",
         "concept:partnership"
@@ -3034,6 +3153,7 @@
         "rule:clients-see-who-referred-them",
         "rule:introductions-dont-affect-engineer-assignment"
       ],
+      "respects": [],
       "concepts": [
         "concept:partnership"
       ],
@@ -3148,6 +3268,7 @@
         "rule:clients-see-who-referred-them",
         "rule:introductions-dont-affect-engineer-assignment"
       ],
+      "respects": [],
       "concepts": [
         "concept:partnership",
         "concept:payout-share",
@@ -3212,6 +3333,7 @@
         "rule:clients-see-who-referred-them",
         "rule:introductions-dont-affect-engineer-assignment"
       ],
+      "respects": [],
       "concepts": [
         "concept:partnership",
         "concept:capacity-payout-basis",
@@ -3284,6 +3406,7 @@
         "rule:exalynt-bears-partnership-earnings",
         "rule:partners-see-only-their-partnerships-earnings"
       ],
+      "respects": [],
       "concepts": [
         "concept:payout",
         "concept:partnership"
@@ -3376,6 +3499,7 @@
         "rule:exalynt-bears-partnership-earnings",
         "rule:partners-see-only-their-partnerships-earnings"
       ],
+      "respects": [],
       "concepts": [
         "concept:payout",
         "concept:partnership"
@@ -3449,6 +3573,7 @@
         "rule:invitations-stay-pending-until-resolved",
         "rule:who-sees-and-revokes-pending-invitations"
       ],
+      "respects": [],
       "concepts": [
         "concept:partnership",
         "concept:agreement",
@@ -3514,6 +3639,7 @@
         "rule:admins-see-only-payment-readiness",
         "rule:limited-tokens-cant-reach-payout-accounts"
       ],
+      "respects": [],
       "concepts": [
         "concept:payout",
         "concept:partnership"
@@ -3611,6 +3737,7 @@
         "rule:exalynt-bears-partnership-earnings",
         "rule:partners-see-only-their-partnerships-earnings"
       ],
+      "respects": [],
       "concepts": [
         "concept:payout",
         "concept:payout-share",
@@ -3682,6 +3809,7 @@
         "rule:who-sets-application-access",
         "rule:inviting-with-applications-needs-access"
       ],
+      "respects": [],
       "concepts": [
         "concept:role",
         "concept:organization"
@@ -3734,6 +3862,7 @@
         "rule:starting-means-work-has-begun",
         "rule:the-preferred-week-is-a-target"
       ],
+      "respects": [],
       "concepts": [
         "concept:capacity-block",
         "concept:preferred-week",
@@ -3819,6 +3948,7 @@
         "rule:lapsed-blocks-must-be-moved-first",
         "rule:in-progress-blocks-cant-be-moved"
       ],
+      "respects": [],
       "concepts": [
         "concept:capacity-block",
         "concept:shared-queue",
@@ -3920,6 +4050,7 @@
         "rule:when-an-engineer-is-ready",
         "rule:invited-engineers-join-their-team"
       ],
+      "respects": [],
       "concepts": [
         "concept:team",
         "concept:organization"
@@ -3971,6 +4102,7 @@
         "rule:everyone-sees-the-uploaded-photo",
         "rule:removed-photos-are-no-longer-shown"
       ],
+      "respects": [],
       "concepts": [],
       "gaps": [],
       "tradeoffs": [],
@@ -13059,6 +13191,7 @@
       "capabilities": [
         "capability:access-tokens"
       ],
+      "respects": [],
       "meets": [],
       "gaps": [],
       "tradeoffs": [],
@@ -13085,6 +13218,7 @@
         "capability:partner-agreements",
         "capability:earnings"
       ],
+      "respects": [],
       "meets": [],
       "gaps": [],
       "tradeoffs": [
@@ -13114,6 +13248,7 @@
         "capability:claiming-blocks",
         "capability:staffing"
       ],
+      "respects": [],
       "meets": [],
       "gaps": [],
       "tradeoffs": [
@@ -13139,6 +13274,7 @@
         "capability:billing",
         "capability:capacity-purchasing"
       ],
+      "respects": [],
       "meets": [
         "outcome:reliability/beta/fails-clearly"
       ],
@@ -13172,6 +13308,7 @@
         "capability:fulfillment",
         "capability:client-directory"
       ],
+      "respects": [],
       "meets": [],
       "gaps": [],
       "tradeoffs": [
@@ -13199,6 +13336,7 @@
         "capability:partner-clients",
         "capability:partner-home"
       ],
+      "respects": [],
       "meets": [],
       "gaps": [],
       "tradeoffs": [],
@@ -13221,6 +13359,7 @@
       "capabilities": [
         "capability:estimates"
       ],
+      "respects": [],
       "meets": [],
       "gaps": [],
       "tradeoffs": [
@@ -13246,6 +13385,7 @@
       "capabilities": [
         "capability:fulfillment"
       ],
+      "respects": [],
       "meets": [],
       "gaps": [],
       "tradeoffs": [],
@@ -13270,6 +13410,7 @@
         "capability:client-directory",
         "capability:billing"
       ],
+      "respects": [],
       "meets": [
         "outcome:security/ga/sound"
       ],
@@ -13302,6 +13443,7 @@
         "capability:partner-home",
         "capability:organizations-and-members"
       ],
+      "respects": [],
       "meets": [],
       "gaps": [],
       "tradeoffs": [
@@ -13327,6 +13469,7 @@
         "capability:payouts",
         "capability:partner-payouts"
       ],
+      "respects": [],
       "meets": [],
       "gaps": [],
       "tradeoffs": [
@@ -13351,6 +13494,7 @@
       "capabilities": [
         "capability:conversation-spaces"
       ],
+      "respects": [],
       "meets": [],
       "gaps": [
         "component:spaces#sync-users-has-no-hook"
@@ -13380,6 +13524,7 @@
         "capability:organizations-and-members",
         "capability:staffing"
       ],
+      "respects": [],
       "meets": [],
       "gaps": [],
       "tradeoffs": [],
@@ -13402,6 +13547,7 @@
       "capabilities": [
         "capability:fulfillment"
       ],
+      "respects": [],
       "meets": [],
       "gaps": [],
       "tradeoffs": [],

@@ -308,6 +308,7 @@ function modelOf(r: Awaited<ReturnType<typeof readProduct>>, showing: Showing): 
       cost: p.cost,
       personas: p.personas,
       capabilities: p.capabilities,
+      constraints: p.constraints,
       maturity: percent(p.maturity),
       band: band(p.maturity),
       readiness: noReadiness(),
@@ -316,6 +317,9 @@ function modelOf(r: Awaited<ReturnType<typeof readProduct>>, showing: Showing): 
     constraints: r.constraints.map((c): Constraint => ({
       ...doc(c),
       source: c.source,
+      applies: c.applies,
+      problems: c.problems,
+      respectedBy: c.respectedBy,
       rules: c.rules,
       mechanisms: c.mechanisms,
       capabilities: c.capabilities,

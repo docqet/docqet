@@ -5,6 +5,7 @@ name: Bookings
 description: >-
   Where a room is held for a stay, and where no double-booking is enforced.
 serves: [capability:room-booking, capability:group-bookings, capability:check-in]
+respects: [constraint:one-stay-a-room-a-night]
 gaps:
   - id: clashes-logged-as-unknown
     name: Booking clashes logged as unknown errors

@@ -1,5 +1,5 @@
 {
-  "docqet": "0.6",
+  "docqet": "0.7",
   "project": {
     "id": "hotel-billing",
     "name": "Hotel Billing"
@@ -303,6 +303,7 @@
       "personas": [
         "persona:night-auditor"
       ],
+      "subjectTo": [],
       "capabilities": [
         "capability:night-audit"
       ],
@@ -316,6 +317,9 @@
       "cost": "Month end becomes the busiest time of the bookkeeper's month. Money is paid late or never (assumed), and companies dispute stays they didn't agree to cover (assumed).",
       "personas": [
         "persona:bookkeeper"
+      ],
+      "subjectTo": [
+        "constraint:company-credit-agreements"
       ],
       "capabilities": [
         "capability:company-accounts",
@@ -334,6 +338,7 @@
         "persona:front-desk-clerk",
         "persona:guest"
       ],
+      "subjectTo": [],
       "capabilities": [
         "capability:city-tax",
         "capability:deposits",
@@ -353,6 +358,9 @@
         "persona:front-desk-clerk",
         "persona:manager"
       ],
+      "subjectTo": [
+        "constraint:card-scheme-security-rules"
+      ],
       "capabilities": [
         "capability:check-out",
         "capability:city-tax",
@@ -369,6 +377,7 @@
       "personas": [
         "persona:front-desk-clerk"
       ],
+      "subjectTo": [],
       "capabilities": [
         "capability:check-out",
         "capability:direct-billing",
@@ -385,6 +394,9 @@
       "personas": [
         "persona:manager"
       ],
+      "subjectTo": [
+        "constraint:cancellation-terms"
+      ],
       "capabilities": [
         "capability:deposits"
       ],
@@ -399,6 +411,7 @@
       "personas": [
         "persona:guest"
       ],
+      "subjectTo": [],
       "capabilities": [
         "capability:check-out",
         "capability:direct-billing",
@@ -415,6 +428,7 @@
       "personas": [
         "persona:manager"
       ],
+      "subjectTo": [],
       "capabilities": [
         "capability:daily-takings",
         "capability:night-audit"
@@ -430,6 +444,7 @@
       "personas": [
         "persona:bookkeeper"
       ],
+      "subjectTo": [],
       "capabilities": [
         "capability:accounting-export"
       ],
@@ -443,10 +458,20 @@
       "name": "Guests book on the hotel's cancellation terms",
       "description": "Every booking is made on the hotel's published terms: cancelling up to 48 hours before arrival is free, and later than that costs the first night.",
       "source": "The hotel's booking terms (assumed)",
+      "applies": null,
+      "problems": [
+        "problem:late-cancellations-leave-rooms-empty"
+      ],
       "rules": [
         "rule:deposit-is-the-first-night"
       ],
       "mechanisms": [],
+      "capabilities": [],
+      "components": [],
+      "evidence": {
+        "implements": [],
+        "verifies": []
+      },
       "body": ""
     },
     {
@@ -455,10 +480,20 @@
       "name": "Keeping card numbers brings the card schemes' audits",
       "description": "A business that keeps guests' card numbers must meet the card schemes' security standard and pass their audits, which a small hotel can't take on.",
       "source": "The card schemes' rules for merchants",
+      "applies": null,
+      "problems": [
+        "problem:guests-leave-owing"
+      ],
       "rules": [
         "rule:card-numbers-are-never-kept"
       ],
       "mechanisms": [],
+      "capabilities": [],
+      "components": [],
+      "evidence": {
+        "implements": [],
+        "verifies": []
+      },
       "body": ""
     },
     {
@@ -467,10 +502,18 @@
       "name": "Every charge stays on the record for the tax office",
       "description": "The tax office and the hotel's accountant must be able to see every charge ever made, mistakes and their corrections included, so a charge can never be quietly changed or removed.",
       "source": "Tax law",
+      "applies": "project",
+      "problems": [],
       "rules": [
         "rule:charges-are-never-changed"
       ],
       "mechanisms": [],
+      "capabilities": [],
+      "components": [],
+      "evidence": {
+        "implements": [],
+        "verifies": []
+      },
       "body": ""
     },
     {
@@ -479,12 +522,20 @@
       "name": "The city's tax is owed for every guest night",
       "description": "The city charges its tourist tax for each guest for each night, on its own terms for children and long stays, and the hotel owes it whether or not it charged the guest.",
       "source": "The city's tourist tax",
+      "applies": "project",
+      "problems": [],
       "rules": [
         "rule:children-pay-no-city-tax",
         "rule:city-tax-per-guest-night",
         "rule:city-tax-stops-after-seven-nights"
       ],
       "mechanisms": [],
+      "capabilities": [],
+      "components": [],
+      "evidence": {
+        "implements": [],
+        "verifies": []
+      },
       "body": ""
     },
     {
@@ -493,11 +544,21 @@
       "name": "Each company's credit agreement sets what it will pay for",
       "description": "A company pays for its staff's stays under an agreement with the hotel that sets how much it can owe and whose stays it covers.",
       "source": "Each company's agreement with the hotel (assumed)",
+      "applies": null,
+      "problems": [
+        "problem:company-debts-go-unwatched"
+      ],
       "rules": [
         "rule:credit-limit",
         "rule:only-named-guests"
       ],
       "mechanisms": [],
+      "capabilities": [],
+      "components": [],
+      "evidence": {
+        "implements": [],
+        "verifies": []
+      },
       "body": ""
     },
     {
@@ -506,10 +567,18 @@
       "name": "Invoice numbers run in sequence for the tax office",
       "description": "The tax office requires the hotel's invoices to be numbered in one sequence, with no number missing or used twice.",
       "source": "Tax law",
+      "applies": "project",
+      "problems": [],
       "rules": [
         "rule:invoice-numbers-run-in-sequence"
       ],
       "mechanisms": [],
+      "capabilities": [],
+      "components": [],
+      "evidence": {
+        "implements": [],
+        "verifies": []
+      },
       "body": ""
     }
   ],
@@ -532,6 +601,7 @@
       "rules": [
         "rule:closed-days-dont-change"
       ],
+      "respects": [],
       "concepts": [
         "concept:business-day"
       ],
@@ -574,6 +644,7 @@
       "rules": [
         "rule:closed-bills-dont-change"
       ],
+      "respects": [],
       "concepts": [
         "concept:bill",
         "concept:billed-stay"
@@ -618,6 +689,7 @@
         "rule:children-pay-no-city-tax",
         "rule:city-tax-stops-after-seven-nights"
       ],
+      "respects": [],
       "concepts": [
         "concept:bill",
         "concept:charge"
@@ -650,6 +722,7 @@
       "rules": [
         "rule:credit-limit"
       ],
+      "respects": [],
       "concepts": [
         "concept:company-account"
       ],
@@ -679,6 +752,7 @@
       "rules": [
         "rule:closed-days-dont-change"
       ],
+      "respects": [],
       "concepts": [
         "concept:business-day",
         "concept:charge"
@@ -714,6 +788,7 @@
         "rule:deposit-counts-towards-the-bill",
         "rule:card-numbers-are-never-kept"
       ],
+      "respects": [],
       "concepts": [
         "concept:payment",
         "concept:bill"
@@ -770,6 +845,7 @@
         "rule:credit-limit",
         "rule:only-named-guests"
       ],
+      "respects": [],
       "concepts": [
         "concept:bill",
         "concept:company-account"
@@ -806,6 +882,7 @@
         "rule:charges-are-never-changed",
         "rule:closed-bills-dont-change"
       ],
+      "respects": [],
       "concepts": [
         "concept:bill",
         "concept:charge"
@@ -836,6 +913,7 @@
       "rules": [
         "rule:invoice-numbers-run-in-sequence"
       ],
+      "respects": [],
       "concepts": [
         "concept:company-account"
       ],
@@ -871,6 +949,7 @@
         "rule:closed-days-dont-change",
         "rule:charges-are-never-changed"
       ],
+      "respects": [],
       "concepts": [
         "concept:business-day",
         "concept:bill",
@@ -905,6 +984,7 @@
         "rule:card-numbers-are-never-kept",
         "rule:closed-bills-dont-change"
       ],
+      "respects": [],
       "concepts": [
         "concept:payment",
         "concept:bill"
@@ -953,6 +1033,7 @@
       "rules": [
         "rule:overpayments-are-refunded"
       ],
+      "respects": [],
       "concepts": [
         "concept:payment",
         "concept:bill"
@@ -993,6 +1074,7 @@
       "rules": [
         "rule:moving-charges-keeps-the-total"
       ],
+      "respects": [],
       "concepts": [
         "concept:bill",
         "concept:charge"
@@ -1620,6 +1702,7 @@
         "capability:check-out",
         "capability:direct-billing"
       ],
+      "respects": [],
       "meets": [
         "outcome:reliability/beta/data-kept"
       ],
@@ -1672,6 +1755,7 @@
         "capability:deposits",
         "capability:pay-by-link"
       ],
+      "respects": [],
       "meets": [],
       "gaps": [
         "component:payments#no-timeout-on-provider-calls"
