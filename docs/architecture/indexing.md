@@ -1,10 +1,10 @@
 # Indexing
 
-_How a project's docs and annotations become its state, and how its problems
+_How a project's docs and annotations become its state, and how its findings
 are found. Part of [how `docqet` is built](README.md)._
 
 **Code:** `internal/index` (reading docs and annotations), `internal/check`
-(problems a state shows), `internal/state` (the types), `internal/git` (the
+(findings a state shows), `internal/state` (the types), `internal/git` (the
 files of the working tree or a commit).
 
 ```go
@@ -24,7 +24,7 @@ func Index(project fs.FS) (*state.State, error)
   the same code.
 - **YAML is read with `go.yaml.in/yaml/v3`.** The standard library has no
   YAML, and this is the YAML organization's maintained continuation of
-  `gopkg.in/yaml.v3`. Its nodes carry line numbers, which problems need to
+  `gopkg.in/yaml.v3`. Its nodes carry line numbers, which findings need to
   say `file:line`.
 - **It's pure.** The commit and the time it was indexed are the caller's to
   set, so the same files always index to the same state.
@@ -50,9 +50,9 @@ func Index(project fs.FS) (*state.State, error)
   `internal/rubric/rubric.yml` through the `rubric`
   package, as `ui` and `kit` embed theirs.
 
-## Problems
+## Findings
 
-Problems are found in two places, so the server can check a state the same
+Findings are made in two places, so the server can check a state the same
 way the CLI does:
 
 - **`check.Check` finds what a state shows on its own**: required fields,
@@ -66,13 +66,13 @@ way the CLI does:
   have no `subject`, and say where they are with `file` and `line`.
 - **`check.Validate` decides whether a state is one at all**: the format's
   version, a project, an ID for every entry. `apply` runs it before sending,
-  and the server refuses a state that fails it. A state with problems in its
+  and the server refuses a state that fails it. A state with findings in its
   docs is still a state.
-- **The server keeps its own problems** (`check.Recheck`): it works them out
-  again with `Check`, and keeps from what it's sent only the problems with
+- **The server keeps its own findings** (`check.Recheck`): it works them out
+  again with `Check`, and keeps from what it's sent only the findings with
   no subject, which it can't see.
 
-Every problem also carries its doc's `file`, beyond what the format lists, so
+Every finding also carries its doc's `file`, beyond what the format lists, so
 `docqet check` can say where to fix it.
 
 ## Checking it against the examples

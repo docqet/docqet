@@ -150,8 +150,8 @@ export default function OverviewPage({ state }: { state: DocqetState; route: Rou
                   : `${plural(state.gaps.length, "gap", "gaps")} and ${plural(decisions, "open decision", "open decisions")} written down`
               }
             />
-            {state.problems.length ? (
-              <Stat label="Doc problems" href={sectionHref("problems")} tone="warn" value={state.problems.length} note="Contradictions and mistakes to fix" />
+            {state.findings.length ? (
+              <Stat label="Findings" href={sectionHref("findings")} tone="warn" value={state.findings.length} note="Contradictions and mistakes to fix" />
             ) : null}
           </>
         }

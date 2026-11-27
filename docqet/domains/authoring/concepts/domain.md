@@ -38,7 +38,7 @@ domain.
   business use the same domain ID, and their contributions to it are one
   domain.
 - **Rules and concepts are the domain's own.** The same ID in two domains is
-  two definitions, shown side by side, and that's not a problem. A link to a
+  two definitions, shown side by side, and that's not a mistake. A link to a
   [rule](rule.md) or [concept](concept.md) means its own domain's, unless it
   names another domain's (see
   [which rule or concept a link means](link.md#which-rule-or-concept-a-link-means)).

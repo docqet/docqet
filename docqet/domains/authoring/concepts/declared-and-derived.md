@@ -21,7 +21,7 @@ confused-with:
   [Evidence](evidence.md), [maturity](../../understanding/concepts/maturity.md), [bands](../../understanding/concepts/band.md),
   [readiness](../../understanding/concepts/readiness.md), [risk](../../understanding/concepts/risk.md), the
   standing of each outcome in [the stability rubric](rubric.md), reverse
-  links and [problems](problem.md). Nobody edits it by hand.
+  links and [findings](finding.md). Nobody edits it by hand.
 
 Intention is only ever declared in a repository, so it's reviewed with the
 code. Servers and other tools read it and show it, but never change it.

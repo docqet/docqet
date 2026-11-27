@@ -175,7 +175,7 @@ export function DocHeader({
   marks?: ReactNode;
   stats: ReactNode;
 }) {
-  const problems = contradictionsOf(state, kind, doc.id);
+  const findings = contradictionsOf(state, kind, doc.id);
   const single = doc.from.length === 1;
   const project = single && state.projects.length > 1 ? projectName(state, doc.from[0].project) : null;
   return (
@@ -212,7 +212,7 @@ export function DocHeader({
         stats={stats}
       />
       {/* A contradiction, as a callout of its own, under the header and over the tabs. */}
-      {problems.map((p) => (
+      {findings.map((p) => (
         <Box
           component="p"
           key={p.message}

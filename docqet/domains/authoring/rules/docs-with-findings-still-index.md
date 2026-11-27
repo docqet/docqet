@@ -1,10 +1,10 @@
 ---
 docqet: rule
-id: docs-with-problems-still-index
+id: docs-with-findings-still-index
 domain: authoring
-name: A project with problems in its docs still has a state
+name: A project with findings in its docs still has a state
 why: >-
-  So one mistake doesn't hide everything else the docs say, and its problems
+  So one mistake doesn't hide everything else the docs say, and its findings
   can be shown beside what's right.
 ---
 

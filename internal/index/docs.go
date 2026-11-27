@@ -121,9 +121,9 @@ var lineOfError = regexp.MustCompile(`^(?:yaml: )?line (\d+): (.*)$`)
 
 // readDoc reads file as a Docqet doc. isDoc is false when it isn't one: no
 // frontmatter, or none naming a `docqet` type. A doc that can't be read, such
-// as one whose frontmatter isn't YAML, is a doc with problems and no entry.
+// as one whose frontmatter isn't YAML, is a doc with findings and no entry.
 // docqet:implements capability:docs-format rule:location-means-nothing@authoring
-func readDoc(file string, data []byte) (d *doc, isDoc bool, problems []state.Problem) {
+func readDoc(file string, data []byte) (d *doc, isDoc bool, findings []state.Finding) {
 	fmText, body, ok := splitFrontmatter(data)
 	if !ok || !docqetField.Match(fmText) {
 		return nil, false, nil
@@ -133,27 +133,27 @@ func readDoc(file string, data []byte) (d *doc, isDoc bool, problems []state.Pro
 
 	var node yaml.Node
 	if err := yaml.Unmarshal(fmText, &node); err != nil {
-		return nil, true, []state.Problem{yamlProblem(file, err, at)}
+		return nil, true, []state.Finding{yamlFinding(file, err, at)}
 	}
 	var fm frontmatter
 	if err := node.Decode(&fm); err != nil {
 		var typeErr *yaml.TypeError
 		if !errors.As(err, &typeErr) {
-			return nil, true, []state.Problem{yamlProblem(file, err, at)}
+			return nil, true, []state.Finding{yamlFinding(file, err, at)}
 		}
-		// The fields that decoded are kept, and each that didn't is a problem.
+		// The fields that decoded are kept, and each that didn't is a finding.
 		for _, e := range typeErr.Errors {
-			problems = append(problems, yamlProblem(file, errors.New(e), at))
+			findings = append(findings, yamlFinding(file, errors.New(e), at))
 		}
 	}
 	fm.line, fm.entryLines = fieldLines(&node, at)
 
 	switch {
 	case !isDocType(fm.Docqet):
-		return nil, true, append(problems, fileProblem(state.InvalidFrontmatter, file, fm.line["docqet"],
+		return nil, true, append(findings, fileFinding(state.InvalidFrontmatter, file, fm.line["docqet"],
 			fmt.Sprintf("docqet is %q, which isn't a doc type: it's one of domain, feature, capability, rule, concept, persona, initiative, mechanism or component", fm.Docqet)))
 	case fm.ID == "":
-		return nil, true, append(problems, fileProblem(state.InvalidFrontmatter, file, fm.line["docqet"], "A doc needs an id."))
+		return nil, true, append(findings, fileFinding(state.InvalidFrontmatter, file, fm.line["docqet"], "A doc needs an id."))
 	}
 
 	// Gaps and tradeoffs need a key to be one: without one, there's nothing to
@@ -161,7 +161,7 @@ func readDoc(file string, data []byte) (d *doc, isDoc bool, problems []state.Pro
 	gaps := fm.Gaps[:0:0]
 	for _, g := range fm.Gaps {
 		if g.ID == "" {
-			problems = append(problems, fileProblem(state.InvalidFrontmatter, file, fm.line["gaps"], "A gap needs an id."))
+			findings = append(findings, fileFinding(state.InvalidFrontmatter, file, fm.line["gaps"], "A gap needs an id."))
 			continue
 		}
 		gaps = append(gaps, g)
@@ -170,14 +170,14 @@ func readDoc(file string, data []byte) (d *doc, isDoc bool, problems []state.Pro
 	tradeoffs := fm.Tradeoffs[:0:0]
 	for _, t := range fm.Tradeoffs {
 		if t.ID == "" {
-			problems = append(problems, fileProblem(state.InvalidFrontmatter, file, fm.line["tradeoffs"], "A tradeoff needs an id."))
+			findings = append(findings, fileFinding(state.InvalidFrontmatter, file, fm.line["tradeoffs"], "A tradeoff needs an id."))
 			continue
 		}
 		tradeoffs = append(tradeoffs, t)
 	}
 	fm.Tradeoffs = tradeoffs
 
-	return &doc{file: file, fm: fm, body: trimBody(string(body))}, true, problems
+	return &doc{file: file, fm: fm, body: trimBody(string(body))}, true, findings
 }
 
 // fieldLines finds the line each top-level field is on, and each gap's and
@@ -207,19 +207,19 @@ func fieldLines(node *yaml.Node, at func(int) int) (fields, entries map[string]i
 	return fields, entries
 }
 
-func yamlProblem(file string, err error, at func(int) int) state.Problem {
+func yamlFinding(file string, err error, at func(int) int) state.Finding {
 	msg := err.Error()
 	line := 0
 	if m := lineOfError.FindStringSubmatch(msg); m != nil {
 		n, _ := strconv.Atoi(m[1])
 		line, msg = at(n), m[2]
 	}
-	return fileProblem(state.InvalidFrontmatter, file, line, "The frontmatter isn't valid: "+msg)
+	return fileFinding(state.InvalidFrontmatter, file, line, "The frontmatter isn't valid: "+msg)
 }
 
-// fileProblem is a problem found reading a file, rather than one about a doc.
-func fileProblem(typ, file string, line int, msg string) state.Problem {
-	return state.Problem{Type: typ, Capabilities: []string{}, Message: msg, File: file, Line: line}
+// fileFinding is a finding made reading a file, rather than one about a doc.
+func fileFinding(typ, file string, line int, msg string) state.Finding {
+	return state.Finding{Type: typ, Capabilities: []string{}, Message: msg, File: file, Line: line}
 }
 
 func isDocType(t string) bool {

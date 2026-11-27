@@ -1,4 +1,4 @@
-// docqet:implements capability:seeing-problems
+// docqet:implements capability:seeing-findings
 import Box from "@mui/material/Box";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -9,7 +9,7 @@ import TableRow from "@mui/material/TableRow";
 import { InlineMarkdown } from "../../components/markdown/Markdown";
 import { DOC_KINDS, type DocKind, type Route } from "../../routes";
 import { Empty, PageHeader, Section, View } from "../../components/shell/layout";
-import { find, type Doc, type DocqetState, type Problem } from "../../state";
+import { find, type Doc, type DocqetState, type Finding } from "../../state";
 import { DocLink } from "../../components/indexParts";
 
 /*
@@ -18,21 +18,21 @@ import { DocLink } from "../../components/indexParts";
  * settle before anything else reads true, then the other kinds, the most
  * common first. Each says what's wrong and links to what it's about.
  */
-export default function ProblemsPage({ state }: { state: DocqetState; route: Route }) {
-  const types = [...new Set(state.problems.map((p) => p.type))].sort((a, b) => rank(a) - rank(b) || count(state, b) - count(state, a) || a.localeCompare(b));
+export default function FindingsPage({ state }: { state: DocqetState; route: Route }) {
+  const types = [...new Set(state.findings.map((p) => p.type))].sort((a, b) => rank(a) - rank(b) || count(state, b) - count(state, a) || a.localeCompare(b));
   return (
-    <View title="Doc problems" wide>
+    <View title="Findings" wide>
       <PageHeader
-        title="Doc problems"
+        title="Findings"
         lede="What's wrong in the docs? Contradictions between projects first, then mistakes such as links to things that don't exist."
       />
       {!types.length ? (
-        <Empty>No problems: the docs hold together.</Empty>
+        <Empty>No findings: the docs hold together.</Empty>
       ) : (
         types.map((type) => {
-          const problems = state.problems.filter((p) => p.type === type).sort((a, b) => a.subject.localeCompare(b.subject));
+          const findings = state.findings.filter((p) => p.type === type).sort((a, b) => a.subject.localeCompare(b.subject));
           return (
-            <Section key={type} title={TYPES[type]?.name ?? type} count={problems.length} note={TYPES[type]?.note}>
+            <Section key={type} title={TYPES[type]?.name ?? type} count={findings.length} note={TYPES[type]?.note}>
               <TableContainer>
                 <Table>
                   <TableHead>
@@ -42,10 +42,10 @@ export default function ProblemsPage({ state }: { state: DocqetState; route: Rou
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {problems.map((p, i) => (
+                    {findings.map((p, i) => (
                       <TableRow key={`${p.subject}:${i}`}>
                         <TableCell sx={{ width: "34%" }}>
-                          <Subject state={state} problem={p} />
+                          <Subject state={state} finding={p} />
                         </TableCell>
                         <TableCell>{p.message}</TableCell>
                       </TableRow>
@@ -61,7 +61,7 @@ export default function ProblemsPage({ state }: { state: DocqetState; route: Rou
   );
 }
 
-/* Each kind of problem, as the spec lists them, named and said in a line. */
+/* Each kind of finding, as the spec lists them, named and said in a line. */
 const TYPES: Record<string, { name: string; note: string }> = {
   contradiction: { name: "Contradictions", note: "Projects that should agree about a doc say different things." },
   "in-two-features": { name: "In two features", note: "More than one feature lists the same capability." },
@@ -76,19 +76,19 @@ const TYPES: Record<string, { name: string; note: string }> = {
   },
 };
 
-/* Contradictions, and the problems that are contradictions too, before the rest. */
+/* Contradictions, and the findings that are contradictions too, before the rest. */
 const FIRST = ["contradiction", "in-two-features", "duplicate-id"];
 const rank = (type: string) => (FIRST.includes(type) ? FIRST.indexOf(type) : FIRST.length);
-const count = (state: DocqetState, type: string) => state.problems.filter((p) => p.type === type).length;
+const count = (state: DocqetState, type: string) => state.findings.filter((p) => p.type === type).length;
 
-/* What a problem is about, linking to its page when it's showing; else as written. */
-function Subject({ state, problem }: { state: DocqetState; problem: Problem }) {
-  const colon = problem.subject.indexOf(":");
-  const type = problem.subject.slice(0, colon);
-  const id = problem.subject.slice(colon + 1);
+/* What a finding is about, linking to its page when it's showing; else as written. */
+function Subject({ state, finding }: { state: DocqetState; finding: Finding }) {
+  const colon = finding.subject.indexOf(":");
+  const type = finding.subject.slice(0, colon);
+  const id = finding.subject.slice(colon + 1);
   /* A gap: `capability:x#key`, which is its project's in state. */
   if (id.includes("#")) {
-    const gap = state.gaps.find((g) => g.id.startsWith(`${problem.subject}@`));
+    const gap = state.gaps.find((g) => g.id.startsWith(`${finding.subject}@`));
     if (gap) return <DocLink kind="gap" id={gap.id} name={<InlineMarkdown text={gap.name} />} />;
   } else if ((DOC_KINDS as string[]).includes(type)) {
     const doc = find(docsOf(state, type as DocKind), id);
@@ -96,7 +96,7 @@ function Subject({ state, problem }: { state: DocqetState; problem: Problem }) {
   }
   return (
     <Box component="code" sx={{ fontFamily: "fontFamilyMono", fontSize: 12, color: "text.secondary", overflowWrap: "anywhere" }}>
-      {problem.subject}
+      {finding.subject}
     </Box>
   );
 }

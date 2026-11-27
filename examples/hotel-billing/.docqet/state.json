@@ -1,5 +1,5 @@
 {
-  "docqet": "0.1",
+  "docqet": "0.2",
   "project": {
     "id": "hotel-billing",
     "name": "Hotel Billing"
@@ -23,7 +23,7 @@
     },
     "rules": 15,
     "gaps": 4,
-    "problems": 0,
+    "findings": 0,
     "tradeoffs": 4,
     "mechanisms": 0,
     "components": 2
@@ -1419,7 +1419,7 @@
       "places": []
     }
   ],
-  "problems": [],
+  "findings": [],
   "rubric": {
     "kinds": [
       {

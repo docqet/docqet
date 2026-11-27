@@ -4,7 +4,7 @@ get:
   summary: Get a project's latest state
   description: >-
     The project's state at its latest commit by commit time, whole, as
-    `state.json` holds it. Its problems are the ones the server found when it
+    `state.json` holds it. Its findings are the ones the server found when it
     was applied.
   tags:
     - Projects

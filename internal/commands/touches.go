@@ -43,7 +43,7 @@ a commit, such as origin/main.`,
 			if err != nil {
 				return err
 			}
-			t := touchesOf(lo.view.Product, lo.state.Problems, paths)
+			t := touchesOf(lo.view.Product, lo.state.Findings, paths)
 			out := cmd.Root().Writer
 			if cmd.Bool("json") {
 				writeJSON(out, map[string]any{
@@ -93,7 +93,7 @@ type touchedAnnotation struct {
 type touchedFile struct {
 	File        string              `json:"file"`
 	Annotations []touchedAnnotation `json:"annotations"`
-	Problems    []string            `json:"problems,omitempty"`
+	Findings    []string            `json:"findings,omitempty"`
 }
 
 type touchedTechnical struct {
@@ -122,7 +122,7 @@ type touches struct {
 }
 
 // touchesOf works out what the files under paths are about.
-func touchesOf(p *combine.Product, problems []state.Problem, paths []string) touches {
+func touchesOf(p *combine.Product, findings []state.Finding, paths []string) touches {
 	inPaths := func(file string) bool {
 		return slices.ContainsFunc(paths, func(path string) bool { return under(file, path) })
 	}
@@ -165,10 +165,10 @@ func touchesOf(p *combine.Product, problems []state.Problem, paths []string) tou
 	for _, tr := range p.Tradeoffs {
 		note(tr.Places, "tradeoff", tr.ID)
 	}
-	for _, pr := range problems {
+	for _, pr := range findings {
 		if pr.File != "" && inPaths(pr.File) && (pr.Type == state.InvalidAnnotation || pr.Subject == "") {
 			f := fileOf(pr.File)
-			f.Problems = append(f.Problems, fmt.Sprintf("line %d: %s", pr.Line, pr.Message))
+			f.Findings = append(f.Findings, fmt.Sprintf("line %d: %s", pr.Line, pr.Message))
 		}
 	}
 	var t touches
@@ -261,8 +261,8 @@ func (t touches) print(out io.Writer) {
 		for _, a := range f.Annotations {
 			_, _ = fmt.Fprintf(out, "  %d  %s %s\n", a.Line, a.Verb, a.Ref)
 		}
-		for _, pr := range f.Problems {
-			_, _ = fmt.Fprintf(out, "  problem: %s\n", pr)
+		for _, pr := range f.Findings {
+			_, _ = fmt.Fprintf(out, "  finding: %s\n", pr)
 		}
 		_, _ = fmt.Fprintln(out)
 	}

@@ -148,17 +148,17 @@ components:
       type: object
       description: >-
         A project's state, as `docqet index` writes it to `state.json`:
-        every doc's entry, its evidence, reverse links and problems, and the
+        every doc's entry, its evidence, reverse links and findings, and the
         rubric it was indexed against. The
         [state concept](https://github.com/docqet/docqet/blob/main/docqet/domains/authoring/concepts/state.md)
         describes every field.
-      required: [docqet, project, commit, indexedAt, summary, problems, rubric]
+      required: [docqet, project, commit, indexedAt, summary, findings, rubric]
       additionalProperties: true
       properties:
         docqet:
           type: string
           description: The version of the state format.
-          example: "0.1"
+          example: "0.2"
         project:
           type: object
           properties:
@@ -174,15 +174,15 @@ components:
         summary:
           type: object
           additionalProperties: true
-        problems:
+        findings:
           type: array
           items:
-            $ref: "#/components/schemas/Problem"
+            $ref: "#/components/schemas/Finding"
         rubric:
           type: object
           additionalProperties: true
 
-    Problem:
+    Finding:
       type: object
       required: [type, subject, capabilities, message]
       properties:
@@ -192,7 +192,7 @@ components:
         subject:
           type: string
           description: >-
-            The doc, gap or tradeoff it's about, or empty for a problem found
+            The doc, gap or tradeoff it's about, or empty for a finding made
             reading a file, such as an annotation naming nothing.
           example: rule:no-double-booking
         capabilities:
@@ -725,7 +725,7 @@ components:
     Counts:
       type: object
       description: How many of each there are, showing.
-      required: [domains, features, capabilities, rules, concepts, personas, initiatives, mechanisms, components, gaps, tradeoffs, decisions, problems]
+      required: [domains, features, capabilities, rules, concepts, personas, initiatives, mechanisms, components, gaps, tradeoffs, decisions, findings]
       properties:
         domains:
           type: integer
@@ -760,7 +760,7 @@ components:
           type: integer
         decisions:
           type: integer
-        problems:
+        findings:
           type: integer
 
     Status:

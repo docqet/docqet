@@ -50,7 +50,7 @@ The server is the one in docqet.yaml's server field, or DOCQET_SERVER.`,
 type sent struct {
 	Commit      string `json:"commit"`
 	CommittedAt string `json:"committedAt"`
-	Problems    int    `json:"problems"`
+	Findings    int    `json:"findings"`
 	Result      string `json:"result"` // created, replaced, skipped or would-send
 }
 
@@ -109,7 +109,7 @@ func apply(ctx context.Context, cmd *cli.Command) error {
 		}
 		results = append(results, result)
 		if !asJSON {
-			_, _ = fmt.Fprintf(out, "%s  %s  %-10s  %d problems\n", short(result.Commit), result.CommittedAt, result.Result, result.Problems)
+			_, _ = fmt.Fprintf(out, "%s  %s  %-10s  %d findings\n", short(result.Commit), result.CommittedAt, result.Result, result.Findings)
 		}
 	}
 
@@ -201,7 +201,7 @@ func applyCommit(ctx context.Context, cmd *cli.Command, srv *client.Client, root
 	if err := check.Validate(st); err != nil {
 		return sent{}, fmt.Errorf("the state indexed isn't valid: %w", err)
 	}
-	result.Problems = len(st.Problems)
+	result.Findings = len(st.Findings)
 
 	values, err := git.Trailers(ctx, root, sha, becameTrailer)
 	if err != nil {

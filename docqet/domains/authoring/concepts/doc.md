@@ -160,7 +160,7 @@ its `docqet/` folder, with a folder per type and per domain:
   put together.
 - **A project has one doc of each type with a given ID in each domain**, and
   one domain, persona, initiative, mechanism or component with a given ID in
-  all. A second is a `duplicate-id` [problem](problem.md). The same ID in
+  all. A second is a `duplicate-id` [finding](finding.md). The same ID in
   another domain, or in another project, is a contribution or another
   definition, as above.
 - **Name the file after its ID**, as the examples do, so it's easy to find.

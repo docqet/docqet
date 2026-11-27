@@ -7,9 +7,9 @@ description: >-
   Two contributions that should agree and don't, such as two
   [projects](../../authoring/concepts/project.md) describing check-out differently, or listing the same
   capability under different features. Docqet shows a contradiction as a
-  [problem](../../authoring/concepts/problem.md), naming the projects involved, instead of choosing one.
+  [finding](../../authoring/concepts/finding.md), naming the projects involved, instead of choosing one.
 confused-with:
-  - concept: "concept:problem@authoring"
+  - concept: "concept:finding@authoring"
     summary: >-
       anything wrong in the docs. A contradiction is one kind, found only when projects are put together.
 ---
@@ -60,7 +60,7 @@ description: >-
 ```
 
 Each project's [state](../../authoring/concepts/state.md) only knows its own contribution, so the
-contradiction appears when they're combined, as a problem naming both:
+contradiction appears when they're combined, as a finding naming both:
 
 ```json
 {

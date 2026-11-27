@@ -36,7 +36,7 @@ domains, such as [intention docs](capabilities/docs-format.md).
   repository or derived from it.
 - **Declared vs. derived.** People and agents write the declared parts:
   stability, rules, decisions, gaps, tradeoffs and links. The indexer
-  computes the derived parts: evidence, reverse links and problems. Readers
+  computes the derived parts: evidence, reverse links and findings. Readers
   work out what depends on other projects, such as maturity, readiness, risk,
   and which outcomes a capability meets with evidence. Nobody edits derived
   state by hand. See [declared and derived](concepts/declared-and-derived.md).
@@ -53,7 +53,7 @@ domains, such as [intention docs](capabilities/docs-format.md).
   worth saying, with no structure anyone can rely on. No fact is in both.
 - **Contradictions are shown, not resolved.** Each project contributes what
   it knows to one picture of the product. Where two contributions disagree,
-  readers see both and a [problem](concepts/problem.md), not a winner.
+  readers see both and a [finding](concepts/finding.md), not a winner.
 
 ## The big picture
 
@@ -104,7 +104,7 @@ product, serves.
 
 Intention and reality differ in a few named ways:
 **[open decisions](concepts/open-decision.md)**, **[gaps](concepts/gap.md)**,
-**[tradeoffs](concepts/tradeoff.md)** and **[problems](concepts/problem.md)**.
+**[tradeoffs](concepts/tradeoff.md)** and **[findings](concepts/finding.md)**.
 [Understanding](../understanding/domain.md#where-intention-and-reality-differ) sets
 out where each is declared, and what's open.
 
@@ -114,7 +114,7 @@ it verifies or implements it, or mark where a gap or tradeoff shows in the
 code. A commit can say what something it removed became with a
 **[trailer](concepts/trailer.md)**, so history can follow it. The
 **[indexer](concepts/indexer.md)** reads all of it, and works out each one's
-evidence and any problems. Readers then work out how far along and how ready
+evidence and any findings. Readers then work out how far along and how ready
 it all is, as [understanding](../understanding/domain.md) describes.
 
 Intention is only worth reading while it's true, so it's kept current in the
@@ -162,7 +162,7 @@ flowchart TB
     readiness["Readiness"]
     risk["Risk"]
     exposure["Exposure"]
-    problem["Problem"]
+    finding["Finding"]
   end
 
   project -- "works in" --> domain
@@ -205,10 +205,10 @@ flowchart TB
   level -. "weight" .-> exposure
   maturity -. "less exposure" .-> readiness
   exposure -.-> readiness
-  project -. "its docs" .-> problem
+  project -. "its docs" .-> finding
 
   classDef derivedNode stroke-dasharray: 4 3
-  class evidence,maturity,readiness,risk,exposure,problem derivedNode
+  class evidence,maturity,readiness,risk,exposure,finding derivedNode
 ```
 
 Solid arrows are [declared](concepts/declared-and-derived.md): written in a
@@ -375,4 +375,4 @@ In the order to read them, across both domains.
   write, and what's worked out.
 - [Indexer](concepts/indexer.md): the program that works out the state.
 - [State](concepts/state.md): a snapshot of a project at one commit.
-- [Problem](concepts/problem.md): something wrong in the docs.
+- [Finding](concepts/finding.md): something wrong in the docs.

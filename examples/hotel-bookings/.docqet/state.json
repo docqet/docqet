@@ -1,5 +1,5 @@
 {
-  "docqet": "0.1",
+  "docqet": "0.2",
   "project": {
     "id": "hotel-bookings",
     "name": "Hotel Bookings"
@@ -24,7 +24,7 @@
     },
     "rules": 5,
     "gaps": 4,
-    "problems": 0,
+    "findings": 0,
     "tradeoffs": 4,
     "mechanisms": 1,
     "components": 1
@@ -905,7 +905,7 @@
       ]
     }
   ],
-  "problems": [],
+  "findings": [],
   "rubric": {
     "kinds": [
       {

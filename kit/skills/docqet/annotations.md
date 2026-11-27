@@ -37,7 +37,7 @@ export async function saveBooking(db: Pool, booking: Booking): Promise<void> {
   One at the top of a file stands for the whole file.
 - **A rule always names its domain**, as `rule:<id>@<domain>`:
   `docqet:verifies rule:closed-bills-dont-change@billing`. Code is in no
-  domain, so a rule without one is a problem, even in a repository with one
+  domain, so a rule without one is a finding, even in a repository with one
   domain.
 - **Annotations are claims.** Add one only where it's true: a test that
   verifies a rule actually checks it, and code that implements one actually

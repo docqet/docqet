@@ -25,8 +25,8 @@ All but results are built.
   and `apply --replace` replaces it: `201` for a commit new to the server,
   `200` for one it had.
 - **The server checks every state it's sent** with the CLI's own check. It
-  refuses one that isn't a state with `400`, and stores the problems it finds
-  itself, as [Indexing](indexing.md#problems) describes.
+  refuses one that isn't a state with `400`, and stores the findings it makes
+  itself, as [Indexing](indexing.md#findings) describes.
 - **The CLI reads whole states** too, for `--product`: it combines the working
   tree with the other projects' states itself, and keeps them in
   `.docqet/product/`. These are its endpoints, not the UI's.
@@ -49,7 +49,7 @@ GET /api/v1/products/{product}/domains/{domain}/concepts/{id}
 GET /api/v1/products/{product}/gaps?sort=risk&impact=blocking,damaging
 GET /api/v1/products/{product}/search?q=refund
 GET /api/v1/products/{product}/domains, features, personas, initiatives, rules, concepts,
-    mechanisms, components, decisions, tradeoffs, problems, and each one by ID
+    mechanisms, components, decisions, tradeoffs, findings, and each one by ID
 ```
 
 All but `?at=` are built, in `internal/handlers/http`'s `ProductsHandler`,

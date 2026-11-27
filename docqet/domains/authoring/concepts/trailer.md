@@ -151,7 +151,7 @@ left in the body of a squashed commit's message is lost, as `Signed-off-by`
 and `Co-authored-by` are in the same place. GitLab's `Changelog` trailers
 work the same way.
 
-## Problems
+## Findings
 
 Trailers are checked over a range of commits, such as a branch before it
 merges, rather than in a project's state, since they're in commit messages

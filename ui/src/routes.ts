@@ -25,7 +25,7 @@ export const SECTIONS = [
   "built",
   "improvements",
   "decided",
-  "problems",
+  "findings",
   "glossary",
 ] as const;
 export type Section = (typeof SECTIONS)[number];
@@ -60,7 +60,8 @@ export function routeOf(search: string): Route {
     if (id) return { kind: "doc", doc, id, tab };
   }
   const view = params.get("view");
-  /* Older addresses: the gaps page, What's left, and the map opening on something. */
+  /* Older addresses: the gaps page, What's left, doc problems, and the map opening on something. */
+  if (view === "problems") return { kind: "section", section: "findings", tab };
   if (view === "gaps") return { kind: "section", section: "improvements", tab: tab ?? "gaps" };
   if (view === "left") return { kind: "section", section: "improvements", tab: tab === "decisions" ? tab : (tab ?? "gaps") };
   if (!view && params.get("show")) return { kind: "section", section: "map", tab };

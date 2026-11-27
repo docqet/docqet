@@ -292,7 +292,7 @@ func newStatusResource(v *services.View, within []*combine.Capability, by derive
 		Gaps:         len(p.Gaps),
 		Tradeoffs:    len(p.Tradeoffs),
 		Decisions:    len(v.ListDecisions()),
-		Problems:     len(p.Problems),
+		Findings:     len(p.Findings),
 	}
 	for _, l := range state.Levels {
 		counts.Capabilities[l] = 0
@@ -573,8 +573,8 @@ func newTradeoffResource(p *combine.Product, t *combine.Tradeoff) TradeoffResour
 	}
 }
 
-func newProblemResource(pr state.Problem) ProblemResource {
-	return ProblemResource{
+func newFindingResource(pr state.Finding) FindingResource {
+	return FindingResource{
 		Type:         pr.Type,
 		Subject:      pr.Subject,
 		Capabilities: list(pr.Capabilities),

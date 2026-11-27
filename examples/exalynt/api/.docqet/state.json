@@ -1,5 +1,5 @@
 {
-  "docqet": "0.1",
+  "docqet": "0.2",
   "project": {
     "id": "exalynt-api",
     "name": "Exalynt API"
@@ -24,7 +24,7 @@
     },
     "rules": 368,
     "gaps": 56,
-    "problems": 4,
+    "findings": 4,
     "tradeoffs": 48,
     "mechanisms": 6,
     "components": 14
@@ -13587,7 +13587,7 @@
       "places": []
     }
   ],
-  "problems": [
+  "findings": [
     {
       "type": "unlinked-rule",
       "subject": "rule:deleted-objects-cant-be-found",

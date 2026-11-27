@@ -51,7 +51,7 @@ function RuleView({ state, rule, route }: { state: DocqetState; rule: Rule; rout
   const places = rule.evidence.verifies.length + rule.evidence.implements.length;
   const written = rule.from.filter((f) => f.body.trim());
   const several = rule.from.length > 1;
-  const problems = contradictionsOf(state, "rule", rule.id);
+  const findings = contradictionsOf(state, "rule", rule.id);
   const description = rule.from.find((f) => f.description?.trim())?.description;
 
   const tabs: TabDef[] = [
@@ -121,7 +121,7 @@ function RuleView({ state, rule, route }: { state: DocqetState; rule: Rule; rout
         }
       />
 
-      {problems.map((p) => (
+      {findings.map((p) => (
         <Box
           component="p"
           key={p.message}

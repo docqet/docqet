@@ -1,8 +1,8 @@
 ---
 docqet: concept
-id: problem
+id: finding
 domain: authoring
-name: Problem
+name: Finding
 description: >-
   Something the indexer, or combining, found wrong in the docs, such as a link
   to a doc that doesn't exist, a capability in two features, or a
@@ -10,13 +10,13 @@ description: >-
 confused-with:
   - concept: "concept:gap"
     summary: >-
-      something the software doesn't do yet, declared on purpose. A problem is a mistake in the docs.
+      something the software doesn't do yet, declared on purpose. A finding is a mistake in the docs.
   - term: "No evidence"
     summary: >-
-      a rule or capability nothing points at. That's neither a problem nor something left to do: it holds on trust.
+      a rule or capability nothing points at. That's neither a finding nor something left to do: it holds on trust.
 ---
 
-Problems are about the docs, never the software: Docqet checks that the docs
+Findings are about the docs, never the software: Docqet checks that the docs
 hold together, since they're only useful if they do. They're always derived,
 and can be about anything. A `docqet:gap` left behind after its gap was
 closed, for example, is an `unknown-id`.

@@ -8,12 +8,12 @@ description: >-
   keeps its state and checks it again.
 stability: prototype
 personas: [persona:engineer]
-concepts: [concept:state@authoring, concept:problem@authoring]
+concepts: [concept:state@authoring, concept:finding@authoring]
 rules:
   - rule:one-client-per-server@understanding
   - rule:intention-only-from-repository@understanding
   - rule:applying-twice-changes-nothing@understanding
-  - rule:same-problems-everywhere@understanding
+  - rule:same-findings-everywhere@understanding
 gaps:
   - id: no-sign-in
     name: No sign-in

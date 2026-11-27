@@ -1,7 +1,7 @@
 import { getAll, productPath, type Showing } from "./client";
 
 /* What the indexer found wrong in the docs. */
-export type ProblemResource = {
+export type FindingResource = {
   type: string;
   subject: string;
   capabilities: string[];
@@ -11,4 +11,4 @@ export type ProblemResource = {
   line?: number;
 };
 
-export const listProblems = (showing: Showing, signal?: AbortSignal) => getAll<ProblemResource>(productPath(showing, "/problems"), signal);
+export const listFindings = (showing: Showing, signal?: AbortSignal) => getAll<FindingResource>(productPath(showing, "/findings"), signal);

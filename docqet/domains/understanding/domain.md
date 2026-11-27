@@ -91,7 +91,7 @@ can be shown the same way and nothing is hidden:
 | **[Open decision](../authoring/concepts/open-decision.md)** | What's intended isn't settled yet                                                         | Declared            |
 | **[Gap](../authoring/concepts/gap.md)**                     | The software falls short of what's intended, in a way that needs work nobody has done yet | Declared            |
 | **[Tradeoff](../authoring/concepts/tradeoff.md)**           | We chose this on purpose, with its benefit and drawback                                   | Declared            |
-| **[Problem](../authoring/concepts/problem.md)**             | The docs are wrong or contradict each other                                               | Derived             |
+| **[Finding](../authoring/concepts/finding.md)**             | The docs are wrong or contradict each other                                               | Derived             |
 
 Each declared one is written on the thing it's about, once, and shown on
 everything it affects. When one seems to belong to two things, it's about

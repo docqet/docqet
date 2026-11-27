@@ -4,7 +4,7 @@
 package state
 
 // Version is the version of the state format this docqet writes and reads.
-const Version = "0.1"
+const Version = "0.2"
 
 // State is one project's state, indexed from its docs and annotations.
 type State struct {
@@ -25,7 +25,7 @@ type State struct {
 	Components   []Component  `json:"components"`
 	Gaps         []Gap        `json:"gaps"`
 	Tradeoffs    []Tradeoff   `json:"tradeoffs"`
-	Problems     []Problem    `json:"problems"`
+	Findings     []Finding    `json:"findings"`
 	Rubric       Rubric       `json:"rubric"`
 }
 
@@ -44,7 +44,7 @@ type Summary struct {
 	Capabilities CapabilityTally `json:"capabilities"`
 	Rules        int             `json:"rules"`
 	Gaps         int             `json:"gaps"`
-	Problems     int             `json:"problems"`
+	Findings     int             `json:"findings"`
 	Tradeoffs    int             `json:"tradeoffs"`
 	Mechanisms   int             `json:"mechanisms"`
 	Components   int             `json:"components"`
@@ -254,11 +254,11 @@ type Tradeoff struct {
 	Places      []Place  `json:"places"`
 }
 
-// Problem is something wrong in the docs or annotations. A problem about a
+// Finding is something wrong in the docs or annotations. A finding about a
 // doc names it as its subject, with its domain. One found reading files, such
 // as an annotation naming nothing, or frontmatter that isn't valid YAML, has
 // no subject, and says where it is with File and Line instead.
-type Problem struct {
+type Finding struct {
 	Type         string   `json:"type"`
 	Subject      string   `json:"subject"`
 	Capabilities []string `json:"capabilities"`
@@ -268,7 +268,7 @@ type Problem struct {
 	Line         int      `json:"line,omitempty"`
 }
 
-// The types of problem the spec defines.
+// The types of finding the spec defines.
 const (
 	UnknownID          = "unknown-id"
 	InvalidFrontmatter = "invalid-frontmatter"

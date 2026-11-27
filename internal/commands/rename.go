@@ -261,7 +261,7 @@ func (p *renamePlan) collectFiles(st *state.State) {
 	for _, x := range st.Tradeoffs {
 		places(x.Places)
 	}
-	for _, x := range st.Problems {
+	for _, x := range st.Findings {
 		if x.File != "" && x.Line > 0 && !seen[x.File] {
 			seen[x.File] = true
 			p.annotated = append(p.annotated, x.File)

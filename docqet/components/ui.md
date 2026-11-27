@@ -12,7 +12,7 @@ capabilities:
   - capability:personas
   - capability:initiative-scope
   - capability:product-view
-  - capability:seeing-problems
+  - capability:seeing-findings
   - capability:choices
   - capability:domain-language
   - capability:how-its-built

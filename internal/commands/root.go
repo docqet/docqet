@@ -32,7 +32,7 @@ const (
 	// exitOK is for when everything's fine.
 	exitOK = 0
 	// exitFound is for when a command ran and found what it was asked to fail
-	// on, such as a problem in check.
+	// on, such as a finding in check.
 	exitFound = 1
 	// exitCouldNotRun is for when a command couldn't run: bad usage, not in a
 	// project, a server it couldn't reach, or a command not built yet.

@@ -98,7 +98,7 @@ code does:
 
 - **Preview** shows what merging a branch would change on the server:
   capabilities added or promoted, gaps closed, decisions answered, rules with
-  new evidence, new problems.
+  new evidence, new findings.
 - **Apply** sends each new commit on the main branch, so the server reflects
   the repository.
 

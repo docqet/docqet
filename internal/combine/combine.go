@@ -22,7 +22,7 @@ import (
 //
 // Then reverse links and parts are worked out again across everything, and
 // contradictions between contributions, and gaps or tradeoffs two projects
-// both declare, become problems. It never changes the states it's given.
+// both declare, become findings. It never changes the states it's given.
 // docqet:implements capability:product-view rule:contradictions-shown@understanding
 func Combine(states []*state.State) *Product {
 	c := newCombiner()
@@ -122,7 +122,7 @@ func newCombiner() *combiner {
 			Components:   []*Technical{},
 			Gaps:         []*Gap{},
 			Tradeoffs:    []*Tradeoff{},
-			Problems:     []state.Problem{},
+			Findings:     []state.Finding{},
 		},
 		domains:      map[string]*Domain{},
 		features:     map[string]*Feature{},
@@ -308,14 +308,14 @@ func (c *combiner) add(st *state.State) {
 		})
 	}
 
-	// A rule or concept a problem names is its domain's.
-	for _, pr := range st.Problems {
+	// A rule or concept a finding names is its domain's.
+	for _, pr := range st.Findings {
 		typ, _, _ := strings.Cut(pr.Subject, ":")
 		if (typ == state.TypeRule || typ == state.TypeConcept) && pr.Domain != "" {
 			pr.Subject += "@" + pr.Domain
 		}
 		pr.Capabilities = ids(pr.Capabilities)
-		c.p.Problems = append(c.p.Problems, pr)
+		c.p.Findings = append(c.p.Findings, pr)
 	}
 }
 
@@ -446,7 +446,7 @@ func (c *combiner) resolveGaps() {
 }
 
 // featuresOfCapabilities gives each capability the first feature that lists
-// it, with a problem when projects list it in different ones, and its level
+// it, with a finding when projects list it in different ones, and its level
 // in short: the lowest of its levels.
 func (c *combiner) featuresOfCapabilities() {
 	for _, cp := range c.p.Capabilities {
@@ -461,7 +461,7 @@ func (c *combiner) featuresOfCapabilities() {
 			for _, l := range all {
 				where = append(where, l.feature+" in "+c.projectName(l.project))
 			}
-			c.p.Problems = append(c.p.Problems, state.Problem{
+			c.p.Findings = append(c.p.Findings, state.Finding{
 				Type:         state.InTwoFeatures,
 				Subject:      state.DocRef(state.TypeCapability, cp.ID),
 				Capabilities: []string{cp.ID},
@@ -577,7 +577,7 @@ func (c *combiner) personasAndInitiatives() {
 	}
 }
 
-// contradictions adds a problem for each doc whose contributions say
+// contradictions adds a finding for each doc whose contributions say
 // different things: its name, a persona's role or title, or its description,
 // and a rule's body too.
 func (c *combiner) contradictions() {
@@ -598,7 +598,7 @@ func (c *combiner) contradictions() {
 			if typ == state.TypeCapability {
 				capabilities = []string{d.ID}
 			}
-			c.p.Problems = append(c.p.Problems, state.Problem{
+			c.p.Findings = append(c.p.Findings, state.Finding{
 				Type:         state.Contradiction,
 				Subject:      state.DocRef(typ, d.ID),
 				Capabilities: capabilities,
@@ -617,7 +617,7 @@ func (c *combiner) contradictions() {
 	differing(state.TypeComponent, docs(c.p.Components))
 }
 
-// duplicates adds a problem for each gap or tradeoff ID two projects both
+// duplicates adds a finding for each gap or tradeoff ID two projects both
 // declare. Within a project, its own check reports it.
 func (c *combiner) duplicates() {
 	var refs []string
@@ -644,7 +644,7 @@ func (c *combiner) duplicates() {
 		if id, ok := strings.CutPrefix(doc, state.TypeCapability+":"); ok {
 			capabilities = []string{id}
 		}
-		c.p.Problems = append(c.p.Problems, state.Problem{
+		c.p.Findings = append(c.p.Findings, state.Finding{
 			Type:         state.DuplicateID,
 			Subject:      doc,
 			Capabilities: capabilities,

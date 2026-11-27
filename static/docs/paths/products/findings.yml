@@ -1,9 +1,9 @@
 get:
-  operationId: listProblems
+  operationId: listFindings
   x-stability: prototype
-  summary: List a product's problems
+  summary: List a product's findings
   description: >-
-    Everything wrong in the docs showing: each project's own problems, and
+    Everything wrong in the docs showing: each project's own findings, and
     those that only appear once its projects are put together, such as a
     contradiction or an ID two projects declare.
   tags:
@@ -18,7 +18,7 @@ get:
     - $ref: "../../schemas.yml#/components/parameters/Size"
   responses:
     "200":
-      description: The problems, a page at a time.
+      description: The findings, a page at a time.
       headers:
         Link:
           $ref: "../../schemas.yml#/components/headers/Link"
@@ -29,7 +29,7 @@ get:
           schema:
             type: array
             items:
-              $ref: "../../schemas.yml#/components/schemas/Problem"
+              $ref: "../../schemas.yml#/components/schemas/Finding"
     "400":
       $ref: "../../schemas.yml#/components/responses/InvalidQuery"
     "404":

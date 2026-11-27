@@ -235,7 +235,7 @@ has:
 - **`id`**: its key, unique among the gaps and tradeoffs of that doc across
   every project and domain that writes the doc, so its ID means one gap or
   tradeoff. A capability written in two domains can't have a gap with the
-  same key in each. A second is a `duplicate-id` problem. The gap's ID is its
+  same key in each. A second is a `duplicate-id` finding. The gap's ID is its
   doc's [reference](doc.md#references) plus its key, such as
   `capability:room-booking#calendar-needs-a-mouse`.
 - **`name`**: what falls short, in a few words, such as

@@ -56,7 +56,7 @@ skills from that folder.
   answer changes what you build. Otherwise take the simplest path, record it as
   an open decision, and say so.
 - **Never change a stability level** unless the user tells you to.
-- **Finish clean.** `docqet check --changed` must report no problems before
+- **Finish clean.** `docqet check --changed` must report no findings before
   you're done.
 - **Say what you changed.** End your work with what you changed in Docqet,
   from `docqet diff`, and anything waiting on someone: intention you inferred

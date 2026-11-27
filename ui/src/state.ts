@@ -376,7 +376,7 @@ export type RubricKind = { id: string; name: string };
 export type Rubric = { kinds: RubricKind[]; qualities: RubricQuality[] };
 
 /* What the indexer found wrong. `domain` is that of the doc it's about, if it's about one. */
-export type Problem = { type: string; subject: string; capabilities: string[]; message: string; domain?: string };
+export type Finding = { type: string; subject: string; capabilities: string[]; message: string; domain?: string };
 
 /* What the page shows at once: the projects it's showing, and everything they define, together. */
 export type DocqetState = {
@@ -392,7 +392,7 @@ export type DocqetState = {
   components: TechnicalDoc[];
   gaps: Gap[];
   tradeoffs: Tradeoff[];
-  problems: Problem[];
+  findings: Finding[];
   /* The rubric, the same for every project: the first project's, or null if none has one. */
   rubric: Rubric | null;
   /* Everything showing at a glance: its maturity, readiness and exposure, and what's at stake in every gap. */
@@ -451,7 +451,7 @@ export function domainCapabilities(state: DocqetState, domain: Domain): Capabili
 
 /* The contradictions a doc has, and gap or tradeoff IDs its projects both declare, as combining found them. */
 export const contradictionsOf = (state: DocqetState, type: string, id: string) =>
-  state.problems.filter((p) => (p.type === "contradiction" || p.type === "duplicate-id" || p.type === "in-two-features") && p.subject === `${type}:${id}`);
+  state.findings.filter((p) => (p.type === "contradiction" || p.type === "duplicate-id" || p.type === "in-two-features") && p.subject === `${type}:${id}`);
 
 export function find<T extends { id: string }>(list: T[], id: string): T | undefined {
   return list.find((item) => item.id === id);

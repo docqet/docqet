@@ -139,7 +139,7 @@ paths:
     $ref: "./paths/products/tradeoffs.yml"
   /products/{product}/decisions:
     $ref: "./paths/products/decisions.yml"
-  /products/{product}/problems:
-    $ref: "./paths/products/problems.yml"
+  /products/{product}/findings:
+    $ref: "./paths/products/findings.yml"
   /products/{product}/search:
     $ref: "./paths/products/search.yml"

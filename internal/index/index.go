@@ -1,5 +1,5 @@
 // Package index reads a project's docs and annotations and works out its
-// state: every doc's entry, evidence, reverse links and problems, as the
+// state: every doc's entry, evidence, reverse links and findings, as the
 // spec's Index output describes. It reads only what it's given, so the
 // working tree and any commit are indexed the same way.
 package index
@@ -21,9 +21,9 @@ import (
 
 // Index reads the project rooted at fsys, the folder with its docqet.yaml,
 // and returns its state. The commit and the time it was indexed are the
-// caller's to fill in. Problems in the docs are in the state; an error means
+// caller's to fill in. Findings in the docs are in the state; an error means
 // the project couldn't be read at all, such as having no docqet.yaml.
-// docqet:implements capability:indexing component:index rule:docs-with-problems-still-index@authoring
+// docqet:implements capability:indexing component:index rule:docs-with-findings-still-index@authoring
 // docqet:implements rule:same-files-same-state@authoring
 func Index(fsys fs.FS) (*state.State, error) {
 	cfg, err := project.ReadConfig(fsys)
@@ -49,7 +49,7 @@ func Index(fsys fs.FS) (*state.State, error) {
 		Components:   []state.Component{},
 		Gaps:         []state.Gap{},
 		Tradeoffs:    []state.Tradeoff{},
-		Problems:     []state.Problem{},
+		Findings:     []state.Finding{},
 		Rubric:       rubric,
 	}
 	if cfg.Product != nil {
@@ -63,7 +63,7 @@ func Index(fsys fs.FS) (*state.State, error) {
 	var (
 		docs        []*doc
 		annotations []annotation
-		problems    []state.Problem
+		findings    []state.Finding
 	)
 	err = fs.WalkDir(fsys, ".", func(p string, d fs.DirEntry, err error) error {
 		if err != nil {
@@ -84,11 +84,11 @@ func Index(fsys fs.FS) (*state.State, error) {
 		}
 		if strings.HasSuffix(p, ".md") {
 			doc, isDoc, found := readDoc(p, data)
-			problems = append(problems, found...)
+			findings = append(findings, found...)
 			if isDoc {
 				if doc != nil {
 					docs = append(docs, doc)
-					problems = append(problems, brokenLinks(fsys, p, data)...)
+					findings = append(findings, brokenLinks(fsys, p, data)...)
 				}
 				return nil
 			}
@@ -103,10 +103,10 @@ func Index(fsys fs.FS) (*state.State, error) {
 	for _, d := range docs {
 		addEntry(st, d)
 	}
-	problems = append(problems, attachAnnotations(st, annotations)...)
+	findings = append(findings, attachAnnotations(st, annotations)...)
 	linkBack(st)
 
-	st.Problems = append(list(problems), check.Check(st)...)
+	st.Findings = append(list(findings), check.Check(st)...)
 	st.Summary = summarize(st)
 	return st, nil
 }
@@ -226,15 +226,15 @@ func addTradeoffs(st *state.State, ref, domain string, ts []tradeoff) {
 
 // attachAnnotations adds each annotation to what it names: evidence on a
 // rule, capability, mechanism or component, or a place on a gap or tradeoff.
-// It returns the problems with the annotations themselves.
+// It returns the findings with the annotations themselves.
 // docqet:implements capability:annotations rule:annotations-name-a-rules-domain@authoring
-func attachAnnotations(st *state.State, annotations []annotation) []state.Problem {
-	var problems []state.Problem
+func attachAnnotations(st *state.State, annotations []annotation) []state.Finding {
+	var findings []state.Finding
 	for _, a := range annotations {
 		for _, raw := range a.refs {
 			ref, _ := state.ParseRef(raw)
 			bad := func(typ, msg string) {
-				problems = append(problems, fileProblem(typ, a.file, a.line, msg))
+				findings = append(findings, fileFinding(typ, a.file, a.line, msg))
 			}
 			switch a.verb {
 			case verbVerifies, verbImplements:
@@ -261,7 +261,7 @@ func attachAnnotations(st *state.State, annotations []annotation) []state.Proble
 			}
 		}
 	}
-	return problems
+	return findings
 }
 
 // addEvidence adds place to the evidence of every entry ref names. found is
@@ -480,8 +480,8 @@ var codeSpan = regexp.MustCompile("`[^`]*`")
 // brokenLinks finds the relative links in a doc, in its frontmatter's text
 // values and its body, that don't resolve from its file. A link out of the
 // project's folder can't be checked, so it's left alone.
-func brokenLinks(fsys fs.FS, file string, data []byte) []state.Problem {
-	var problems []state.Problem
+func brokenLinks(fsys fs.FS, file string, data []byte) []state.Finding {
+	var findings []state.Finding
 	inFence := false
 	for i, line := range strings.Split(string(data), "\n") {
 		// A link in a code block or a code span is an example, not a link.
@@ -508,11 +508,11 @@ func brokenLinks(fsys fs.FS, file string, data []byte) []state.Problem {
 				continue
 			}
 			if _, err := fs.Stat(fsys, resolved); err != nil {
-				problems = append(problems, fileProblem(state.BrokenLink, file, i+1, fmt.Sprintf("The link to %s doesn't resolve.", m[1])))
+				findings = append(findings, fileFinding(state.BrokenLink, file, i+1, fmt.Sprintf("The link to %s doesn't resolve.", m[1])))
 			}
 		}
 	}
-	return problems
+	return findings
 }
 
 // summarize counts the state at a glance.
@@ -524,7 +524,7 @@ func summarize(st *state.State) state.Summary {
 		Initiatives: len(st.Initiatives),
 		Rules:       len(st.Rules),
 		Gaps:        len(st.Gaps),
-		Problems:    len(st.Problems),
+		Findings:    len(st.Findings),
 		Tradeoffs:   len(st.Tradeoffs),
 		Mechanisms:  len(st.Mechanisms),
 		Components:  len(st.Components),

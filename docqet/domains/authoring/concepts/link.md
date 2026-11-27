@@ -68,7 +68,7 @@ A link to a rule or concept means the one in the domain it names with
 doc it's in. Nothing else is looked at, so what a link means never changes
 because a doc was added or removed in another domain. A link that names no
 domain and has nothing with that ID in its own is an `unknown-id`
-[problem](problem.md), fixed by naming the domain it means.
+[finding](finding.md), fixed by naming the domain it means.
 
 An annotation in code is in no domain, so a rule it names always names its
 domain too. One that doesn't is `invalid-annotation`.

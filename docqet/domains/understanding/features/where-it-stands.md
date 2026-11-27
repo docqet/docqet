@@ -14,5 +14,5 @@ capabilities:
   - capability:personas
   - capability:initiative-scope
   - capability:product-view
-  - capability:seeing-problems
+  - capability:seeing-findings
 ---

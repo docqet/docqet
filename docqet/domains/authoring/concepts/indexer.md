@@ -17,7 +17,7 @@ confused-with:
 anyone can write their own. It doesn't parse code, run tests or read their
 results. It reads the [docs](doc.md), finds every
 [annotation](annotation.md) by its text, and works out evidence, reverse
-links and [problems](problem.md).
+links and [findings](finding.md).
 
 `docqet index` is one. The examples' state is written by hand, to show what
 indexing should produce, and checks `docqet index` against it.

@@ -50,7 +50,7 @@ var shaPattern = regexp.MustCompile(`^(?:[0-9a-f]{40}|[0-9a-f]{64})$`)
 
 // Apply stores a project's state at a commit, replacing any stored for it,
 // so sending a commit twice changes nothing. It checks the state as the CLI
-// does, and keeps the problems it finds itself rather than the ones it's
+// does, and keeps the findings it finds itself rather than the ones it's
 // sent, but for those only files show. It returns ErrInvalidState for a state
 // that isn't one, or that's for another project. created reports whether the
 // commit is new to the server.

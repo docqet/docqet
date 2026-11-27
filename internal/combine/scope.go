@@ -161,12 +161,12 @@ func scope(st *state.State, kept, personas map[string]bool) *state.State {
 			out.Tradeoffs = append(out.Tradeoffs, t)
 		}
 	}
-	out.Problems = []state.Problem{}
-	for _, p := range st.Problems {
+	out.Findings = []state.Finding{}
+	for _, p := range st.Findings {
 		if len(p.Capabilities) == 0 || slices.ContainsFunc(p.Capabilities, func(ref string) bool {
 			return kept[ref] || kept[state.DocRef(state.TypeCapability, ref)]
 		}) {
-			out.Problems = append(out.Problems, p)
+			out.Findings = append(out.Findings, p)
 		}
 	}
 	return &out

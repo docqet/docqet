@@ -13,7 +13,7 @@ import (
 // becameKey is the trailer that says what something a commit removed became.
 const becameKey = "Docqet-Became"
 
-// invalidTrailer is the type of a problem with a Docqet-Became trailer. It's
+// invalidTrailer is the type of a finding with a Docqet-Became trailer. It's
 // check's own: trailers aren't part of a state, so the indexer never reports
 // one.
 const invalidTrailer = "invalid-trailer"
@@ -23,12 +23,12 @@ const invalidTrailer = "invalid-trailer"
 // and <new> exists after it, and that no Docqet-Became line is left in a
 // message's body, where git won't read it.
 // docqet:implements capability:trailers
-func checkTrailers(ctx context.Context, root, rng string) ([]state.Problem, error) {
+func checkTrailers(ctx context.Context, root, rng string) ([]state.Finding, error) {
 	commits, err := git.Commits(ctx, root, rng)
 	if err != nil {
 		return nil, err
 	}
-	var problems []state.Problem
+	var findings []state.Finding
 	for _, sha := range commits {
 		message, trailers, err := git.Message(ctx, root, sha, becameKey)
 		if err != nil {
@@ -42,7 +42,7 @@ func checkTrailers(ctx context.Context, root, rng string) ([]state.Problem, erro
 			}
 		}
 		if lines > len(trailers) {
-			problems = append(problems, state.Problem{Type: invalidTrailer, File: where,
+			findings = append(findings, state.Finding{Type: invalidTrailer, File: where,
 				Message: "a Docqet-Became line isn't in the message's trailer block, its last paragraph, so git won't read it"})
 		}
 		if len(trailers) == 0 {
@@ -59,18 +59,18 @@ func checkTrailers(ctx context.Context, root, rng string) ([]state.Problem, erro
 			_, newOK := state.ParseRef(new)
 			switch {
 			case !ok || !oldOK || !newOK:
-				problems = append(problems, state.Problem{Type: invalidTrailer, Subject: t, File: where,
+				findings = append(findings, state.Finding{Type: invalidTrailer, Subject: t, File: where,
 					Message: "write it as <old reference> -> <new reference>"})
 			case !hasID(before, old):
-				problems = append(problems, state.Problem{Type: invalidTrailer, Subject: t, File: where,
+				findings = append(findings, state.Finding{Type: invalidTrailer, Subject: t, File: where,
 					Message: fmt.Sprintf("%s didn't exist before this commit", old)})
 			case !hasID(after, new):
-				problems = append(problems, state.Problem{Type: invalidTrailer, Subject: t, File: where,
+				findings = append(findings, state.Finding{Type: invalidTrailer, Subject: t, File: where,
 					Message: fmt.Sprintf("%s doesn't exist after this commit", new)})
 			}
 		}
 	}
-	return problems, nil
+	return findings, nil
 }
 
 // idsAround returns what a commit's first parent and the commit itself

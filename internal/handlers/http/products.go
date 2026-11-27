@@ -64,7 +64,7 @@ func (h *ProductsHandler) RegisterRoutes(r chi.Router) {
 	r.Get("/products/{product}/gaps", h.ListGaps)
 	r.Get("/products/{product}/tradeoffs", h.ListTradeoffs)
 	r.Get("/products/{product}/decisions", h.ListDecisions)
-	r.Get("/products/{product}/problems", h.ListProblems)
+	r.Get("/products/{product}/findings", h.ListFindings)
 	r.Get("/products/{product}/search", h.Search)
 }
 
@@ -411,11 +411,11 @@ func (h *ProductsHandler) ListDecisions(w http.ResponseWriter, r *http.Request) 
 	}
 }
 
-// ListProblems lists the problems showing.
-// docqet:implements capability:seeing-problems
-func (h *ProductsHandler) ListProblems(w http.ResponseWriter, r *http.Request) {
+// ListFindings lists the findings showing.
+// docqet:implements capability:seeing-findings
+func (h *ProductsHandler) ListFindings(w http.ResponseWriter, r *http.Request) {
 	if v, ok := h.view(w, r); ok {
-		writePage(w, r, build(v.Problems, newProblemResource))
+		writePage(w, r, build(v.Findings, newFindingResource))
 	}
 }
 

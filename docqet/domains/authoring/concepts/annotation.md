@@ -125,7 +125,7 @@ mechanism's or component's evidence in [state](state.md), as
 [Evidence](evidence.md#how-its-written) shows, and a gap's or tradeoff's
 `places`, in the same shape.
 
-## Problems
+## Findings
 
 Annotations are claims, and the indexer can only check some of what they
 claim:

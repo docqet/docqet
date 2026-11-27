@@ -15,18 +15,18 @@ import (
 	"github.com/docqet/docqet/internal/state"
 )
 
-// CheckCommand finds problems in the docs, annotations and commit trailers.
+// CheckCommand reports what's wrong in the docs, annotations and commit trailers.
 func CheckCommand() *cli.Command {
 	return &cli.Command{
 		Name:     "check",
 		Category: reading,
-		Usage:    "Find problems in the docs, annotations and commit trailers",
-		Description: `Indexes the working tree, or with --at a commit, and reports every problem,
+		Usage:    "Report what's wrong in the docs, annotations and commit trailers",
+		Description: `Indexes the working tree, or with --at a commit, and reports every finding,
 with its file and line where it has one. It exits 1 when there are any. The
 server checks every state it's sent with the same check.`,
 		ArgValidator: maxArgs(0),
 		Flags: withSourceFlags(
-			&cli.BoolFlag{Name: "changed", Usage: "only problems in files changed since the main branch"},
+			&cli.BoolFlag{Name: "changed", Usage: "only findings in files changed since the main branch"},
 			&cli.StringFlag{Name: "base", Usage: "with --changed, changed since `REV` instead of origin/HEAD"},
 			&cli.StringFlag{Name: "commits", Usage: "also check the Docqet trailers in `RANGE`, such as origin/main..HEAD"},
 		),
@@ -41,9 +41,9 @@ server checks every state it's sent with the same check.`,
 			if err != nil {
 				return err
 			}
-			problems := ix.state.Problems
+			findings := ix.state.Findings
 			if cmd.Bool("changed") {
-				if problems, err = onlyChanged(ctx, ix.root, cmd.String("base"), problems); err != nil {
+				if findings, err = onlyChanged(ctx, ix.root, cmd.String("base"), findings); err != nil {
 					return err
 				}
 			}
@@ -52,16 +52,16 @@ server checks every state it's sent with the same check.`,
 				if err != nil {
 					return err
 				}
-				problems = append(problems, found...)
+				findings = append(findings, found...)
 			}
 			out := cmd.Root().Writer
 			if cmd.Bool("json") {
-				writeJSON(out, map[string]any{"source": ix.source, "problems": problems})
+				writeJSON(out, map[string]any{"source": ix.source, "findings": findings})
 			} else {
 				_, _ = fmt.Fprintf(out, "%s\n\n", ix.source.line())
-				printProblems(cmd, problems)
+				printFindings(cmd, findings)
 			}
-			if len(problems) > 0 {
+			if len(findings) > 0 {
 				return errFound
 			}
 			return nil
@@ -69,16 +69,16 @@ server checks every state it's sent with the same check.`,
 	}
 }
 
-// printProblems lists problems, one a line: where it is, its type, what it's
+// printFindings lists findings, one a line: where it is, its type, what it's
 // about, and what's wrong.
-func printProblems(cmd *cli.Command, problems []state.Problem) {
+func printFindings(cmd *cli.Command, findings []state.Finding) {
 	out := cmd.Root().Writer
-	if len(problems) == 0 {
-		_, _ = fmt.Fprintln(out, "No problems.")
+	if len(findings) == 0 {
+		_, _ = fmt.Fprintln(out, "No findings.")
 		return
 	}
 	tw := tabwriter.NewWriter(out, 0, 0, 2, ' ', 0)
-	for _, p := range problems {
+	for _, p := range findings {
 		where := p.File
 		if p.Line > 0 {
 			where += ":" + strconv.Itoa(p.Line)
@@ -91,19 +91,19 @@ func printProblems(cmd *cli.Command, problems []state.Problem) {
 		_, _ = fmt.Fprintf(tw, "%s\t%s\t%s\t%s\n", where, p.Type, about, p.Message)
 	}
 	_ = tw.Flush()
-	noun := "problems"
-	if len(problems) == 1 {
-		noun = "problem"
+	noun := "findings"
+	if len(findings) == 1 {
+		noun = "finding"
 	}
-	_, _ = fmt.Fprintf(out, "\n%d %s.\n", len(problems), noun)
+	_, _ = fmt.Fprintf(out, "\n%d %s.\n", len(findings), noun)
 }
 
-// onlyChanged keeps the problems a change since base brought: those in the
+// onlyChanged keeps the findings a change since base brought: those in the
 // files it changed, and any other that wasn't there at base, such as an
 // annotation left naming a gap the change removed. base is the main branch,
 // origin/HEAD, when it's "".
 // docqet:implements capability:checking
-func onlyChanged(ctx context.Context, root, base string, problems []state.Problem) ([]state.Problem, error) {
+func onlyChanged(ctx context.Context, root, base string, findings []state.Finding) ([]state.Finding, error) {
 	if base == "" {
 		var err error
 		if base, err = git.DefaultBase(ctx, root); err != nil {
@@ -121,8 +121,8 @@ func onlyChanged(ctx context.Context, root, base string, problems []state.Proble
 	before := map[string]bool{}
 	if fsys, err := git.Tree(ctx, root, mb); err == nil {
 		if st, err := index.Index(fsys); err == nil {
-			for _, p := range st.Problems {
-				before[problemKey(p)] = true
+			for _, p := range st.Findings {
+				before[findingKey(p)] = true
 			}
 		}
 	}
@@ -130,16 +130,16 @@ func onlyChanged(ctx context.Context, root, base string, problems []state.Proble
 	for _, f := range changed {
 		in[f] = true
 	}
-	kept := []state.Problem{}
-	for _, p := range problems {
-		if in[p.File] || !before[problemKey(p)] {
+	kept := []state.Finding{}
+	for _, p := range findings {
+		if in[p.File] || !before[findingKey(p)] {
 			kept = append(kept, p)
 		}
 	}
 	return kept, nil
 }
 
-// problemKey is what makes two problems the same one, wherever they're found.
-func problemKey(p state.Problem) string {
+// findingKey is what makes two findings the same one, wherever they're found.
+func findingKey(p state.Finding) string {
 	return p.Type + "\x00" + p.Subject + "\x00" + p.File + "\x00" + p.Message
 }

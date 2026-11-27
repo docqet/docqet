@@ -52,8 +52,8 @@ commit's, read from git without checking it out, to .docqet/history/<sha>.json.`
 			}
 			s := ix.state.Summary
 			caps := s.Capabilities.Draft + s.Capabilities.Prototype + s.Capabilities.Alpha + s.Capabilities.Beta + s.Capabilities.GA
-			_, _ = fmt.Fprintf(out, "%s\n\nWrote %s: %d capabilities, %d rules, %d gaps, %d tradeoffs, %d problems.\n",
-				ix.source.line(), rel, caps, s.Rules, s.Gaps, s.Tradeoffs, s.Problems)
+			_, _ = fmt.Fprintf(out, "%s\n\nWrote %s: %d capabilities, %d rules, %d gaps, %d tradeoffs, %d findings.\n",
+				ix.source.line(), rel, caps, s.Rules, s.Gaps, s.Tradeoffs, s.Findings)
 			return nil
 		},
 	}

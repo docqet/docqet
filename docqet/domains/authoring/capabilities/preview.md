@@ -33,7 +33,7 @@ gaps:
     description: >-
       Only the working tree can be seen. What a branch would change on the
       server, such as capabilities added or promoted, gaps closed, decisions
-      answered and new problems, isn't shown, since `docqet preview` isn't
+      answered and new findings, isn't shown, since `docqet preview` isn't
       built.
 ---
 

@@ -8,7 +8,7 @@ description: How to read and keep current a repository's Docqet docs (capabiliti
 Docqet separates what software is meant to do from what it does. People
 declare the intention in small Markdown docs beside the code. Code and tests
 point back at it as evidence, and tools derive the rest: evidence, risk,
-maturity, readiness and problems. Your job in a Docqet repository is to read the
+maturity, readiness and findings. Your job in a Docqet repository is to read the
 intention before you change anything, keep it true as you change things, and
 leave decisions about intention with people.
 
@@ -163,10 +163,10 @@ person has stated or confirmed it.
 
 ## Before you finish
 
-1. **Run `docqet check --changed`** and fix every problem it reports in what
+1. **Run `docqet check --changed`** and fix every finding it reports in what
    you changed: invalid frontmatter, a link or annotation that doesn't
    resolve, a rule no capability follows, an outcome that isn't in the
-   rubric. Leave problems that were there before your change alone, unless
+   rubric. Leave findings that were there before your change alone, unless
    the task is to fix them. A link into another project is reported as
    `unknown-id` unless you add `--product`.
 2. **Check what it can't**, since it reads frontmatter and annotations, never

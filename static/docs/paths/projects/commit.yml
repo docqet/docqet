@@ -10,7 +10,7 @@ put:
 
     The server checks the state with the same check the CLI runs. It refuses a
     state that isn't one, such as one for another format version or project,
-    with 400. Problems in the docs aren't refused: the server works them out
+    with 400. Findings in the docs aren't refused: the server works them out
     again and stores its own, keeping only those found reading files, which it
     can't see.
   tags:

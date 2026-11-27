@@ -66,7 +66,7 @@ the server are separate, since they aren't reads.
 | [`docqet kit`](#docqet-kit) | Install, update or remove the agent kit, for the agents the project uses | Setting up |
 | [`docqet index`](#docqet-index) | Write the state for the working tree or a commit | Setting up |
 | [`docqet completion`](#docqet-completion) | Print a shell completion script | Setting up |
-| [`docqet check`](#docqet-check) | Find problems in the docs, annotations and commit trailers | Read |
+| [`docqet check`](#docqet-check) | Report what's wrong in the docs, annotations and commit trailers | Read |
 | [`docqet touches`](#docqet-touches) | What a set of files or a change is about | Read |
 | [`docqet show`](#docqet-show) | One doc, with everything derived about it | Read |
 | [`docqet list`](#docqet-list) | Docs, gaps, decisions or tradeoffs, filtered and ordered | Read |
@@ -241,20 +241,20 @@ examples show the ones each is most often used with.
 
 ### `docqet check`
 
-Reports every [problem](../../docqet/domains/authoring/concepts/problem.md), with the file and line,
+Reports every [finding](../../docqet/domains/authoring/concepts/finding.md), with the file and line,
 and exits 1 if there are any. Agents run it with `--changed` before they
 finish, as the kit tells them to.
 
 ```sh
 docqet check                          # everything in the working tree
-docqet check --changed                # only problems in files changed since the main branch
+docqet check --changed                # only findings in files changed since the main branch
 docqet check --changed --base v1.4    # changed since some other point
 docqet check --commits origin/main..HEAD   # also check the Docqet trailers in these commits
 docqet check --product               # with the rest of the product
 ```
 
 - **`--changed`** keeps hooks and agents focused on their own change in a
-  repository that already has problems. The main branch is `origin/HEAD`
+  repository that already has findings. The main branch is `origin/HEAD`
   unless `--base` says otherwise.
 - **`--commits`** checks every [trailer](#trailers) in a range: that each
   names something that existed before, and something that exists after, and
@@ -328,7 +328,7 @@ docqet list tradeoffs --on component:ledger
 
 The overview, in the terminal: capabilities at each level, maturity and
 readiness, what readiness still needs, the riskiest gaps, open decisions and
-problems. `--initiative` and `--for` narrow it as the UI does.
+findings. `--initiative` and `--for` narrow it as the UI does.
 
 ```sh
 docqet status
@@ -443,7 +443,7 @@ nothing is indexed here.
 
 What changed in Docqet between two points, in Docqet's words rather than as
 lines: capabilities added, removed or moved between levels, gaps opened and
-closed, decisions answered, rules gaining or losing evidence, new problems.
+closed, decisions answered, rules gaining or losing evidence, new findings.
 
 ```sh
 docqet diff [<from>] [<to>]
@@ -834,7 +834,7 @@ docqet list decisions --product=hotel --initiative mvp
 - **Every read says what it's showing**, in its first line and in its JSON's
   `source`, as [Where a read comes from](#where-a-read-comes-from) describes.
 - **Exit codes**: `0` when everything's fine, `1` when it found what it was
-  asked to fail on, such as a problem in `check` or an out-of-date kit in
+  asked to fail on, such as a finding in `check` or an out-of-date kit in
   `kit check`, and `2` when it couldn't run: bad usage, not in a project, or
   a server it couldn't reach or wasn't allowed into.
 - **No prompts unless it's run in a terminal.** Anything it would ask, it

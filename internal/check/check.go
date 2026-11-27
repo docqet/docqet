@@ -1,10 +1,10 @@
-// Package check finds the problems a project's state shows on its own, such
+// Package check finds the findings a project's state shows on its own, such
 // as a link to a doc that doesn't exist or a rule no capability follows. It
 // reads only the state, never files, so the CLI and the server run the same
 // check: index runs it on what it reads, and the server runs it again on
 // every state it's sent.
 //
-// Problems only files show, such as frontmatter that isn't YAML, an
+// Findings only files show, such as frontmatter that isn't YAML, an
 // annotation naming nothing, or a broken link in a body, are found by index,
 // and have no subject: see Recheckable.
 package check
@@ -17,16 +17,16 @@ import (
 	"github.com/docqet/docqet/internal/state"
 )
 
-// Recheckable reports whether p is a problem Check finds, and so one the
+// Recheckable reports whether p is a finding Check finds, and so one the
 // server works out again rather than taking from what it's sent. Every
-// problem about a doc is; those found reading files aren't about one.
-func Recheckable(p state.Problem) bool {
+// finding about a doc is; those found reading files aren't about one.
+func Recheckable(p state.Finding) bool {
 	return p.Subject != ""
 }
 
-// Check returns every problem st shows on its own, in the order of its docs.
+// Check returns every finding st shows on its own, in the order of its docs.
 // docqet:implements capability:checking component:check
-func Check(st *state.State) []state.Problem {
+func Check(st *state.State) []state.Finding {
 	c := newChecker(st)
 	c.domains()
 	c.features()
@@ -40,12 +40,12 @@ func Check(st *state.State) []state.Problem {
 	c.gaps()
 	c.tradeoffs()
 	c.duplicates()
-	return c.problems
+	return c.findings
 }
 
 type checker struct {
 	st       *state.State
-	problems []state.Problem
+	findings []state.Finding
 	domain   map[string]bool
 	outcome  map[string]bool
 }
@@ -65,7 +65,7 @@ func newChecker(st *state.State) *checker {
 	return c
 }
 
-// subject is what a problem is about.
+// subject is what a finding is about.
 type subject struct {
 	ref, domain, file string
 	capabilities      []string
@@ -76,7 +76,7 @@ func (c *checker) add(typ string, s subject, format string, args ...any) {
 	if caps == nil {
 		caps = []string{}
 	}
-	c.problems = append(c.problems, state.Problem{
+	c.findings = append(c.findings, state.Finding{
 		Type: typ, Subject: s.ref, Capabilities: caps, Message: fmt.Sprintf(format, args...),
 		Domain: s.domain, File: s.file,
 	})
@@ -293,7 +293,7 @@ func (c *checker) tradeoffs() {
 	}
 }
 
-// entrySubject is a gap or tradeoff as a problem's subject, with the doc it's
+// entrySubject is a gap or tradeoff as a finding's subject, with the doc it's
 // on.
 func (c *checker) entrySubject(id, domain string) subject {
 	s := subject{ref: id, domain: domain}

@@ -42,7 +42,7 @@ words. A nav down the side picks which question you're asking:
 | How it's built | Mechanisms and components                                                                                                                          | `?view=built`                         |
 | Improvements   | What would make it more ready, then every gap and open decision, for everything or one project, persona, initiative, domain, feature or capability | `?view=improvements&for=persona:<id>` |
 | Decided        | Tradeoffs and non-goals                                                                                                                            | `?view=decided`                       |
-| Doc problems   | Contradictions and mistakes in the docs                                                                                                            | `?view=problems`                      |
+| Findings       | Contradictions and mistakes in the docs                                                                                                            | `?view=findings`                      |
 
 Every domain, feature, capability, persona, initiative, concept, rule,
 mechanism, component and gap has a page of its own, such as

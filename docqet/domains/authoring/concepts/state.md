@@ -47,11 +47,11 @@ with each list cut down to its keys:
     "capabilities": { "draft": 1, "prototype": 4, "alpha": 1, "beta": 2, "ga": 1 },
     "gaps": 4,
     "tradeoffs": 3,
-    "problems": 0
+    "findings": 0
   },
   "domains": [], "features": [], "personas": [], "initiatives": [],
   "capabilities": [], "rules": [], "concepts": [], "mechanisms": [],
-  "components": [], "gaps": [], "tradeoffs": [], "problems": [],
+  "components": [], "gaps": [], "tradeoffs": [], "findings": [],
   "rubric": {}
 }
 ```
@@ -65,7 +65,7 @@ with each list cut down to its keys:
   the repository's root, so a project reads the same wherever it is.
 - **`summary`**: how many domains, features, personas and initiatives there
   are, capabilities per level with `draft` among them, how many rules, gaps,
-  tradeoffs, mechanisms, components and problems. This is the at-a-glance
+  tradeoffs, mechanisms, components and findings. This is the at-a-glance
   view.
 - **`domains`**: each of the project's domain docs.
 - **`features`**: each with its capabilities and its `tradeoffs`. Each
@@ -115,8 +115,8 @@ with each list cut down to its keys:
   `domain` when it's a feature's or capability's, the outcomes it `affects`,
   `name`, `description`, `benefit`, or `null` where it has none, `drawback`,
   and `places`, from `docqet:tradeoff` annotations.
-- **`problems`**: everything the indexer found wrong, each about a doc with
-  that doc's `domain` (see [problem](problem.md)).
+- **`findings`**: everything the indexer found wrong, each about a doc with
+  that doc's `domain` (see [finding](finding.md)).
 - **`rubric`**: [the stability rubric](rubric.md) the project was
   indexed against, so the UI can show it beside each capability. It's the
   YAML's `kinds`, and its `qualities`, each with its `levels` as a list in

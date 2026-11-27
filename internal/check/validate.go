@@ -10,8 +10,8 @@ import (
 
 // Validate reports whether st is a state at all, as index writes one: the
 // format's version, a project, and an ID for every entry. A state that isn't
-// one is refused. Problems in the docs aren't its business: a state with
-// problems is still a state, and Check finds them.
+// one is refused. Findings in the docs aren't its business: a state with
+// findings is still a state, and Check finds them.
 func Validate(st *state.State) error {
 	var errs []string
 	fail := func(format string, args ...any) {
@@ -68,9 +68,9 @@ func Validate(st *state.State) error {
 			fail("tradeoff %q isn't a tradeoff's ID: <doc>#<key>", t.ID)
 		}
 	}
-	for _, p := range st.Problems {
+	for _, p := range st.Findings {
 		if p.Type == "" {
-			fail("every problem needs a type")
+			fail("every finding needs a type")
 		}
 	}
 	if len(st.Rubric.Qualities) == 0 {
@@ -85,20 +85,20 @@ func Validate(st *state.State) error {
 	return errors.New(strings.Join(errs, "; "))
 }
 
-// Recheck works out st's problems again with Check, keeping only the
-// problems it carries that Check can't find, those found reading files, so
+// Recheck works out st's findings again with Check, keeping only the
+// findings it carries that Check can't find, those found reading files, so
 // what st says about its docs is always this check's own.
-// docqet:implements rule:same-problems-everywhere@understanding
+// docqet:implements rule:same-findings-everywhere@understanding
 func Recheck(st *state.State) {
-	var kept []state.Problem
-	for _, p := range st.Problems {
+	var kept []state.Finding
+	for _, p := range st.Findings {
 		if !Recheckable(p) {
 			kept = append(kept, p)
 		}
 	}
-	st.Problems = append(kept, Check(st)...)
-	if st.Problems == nil {
-		st.Problems = []state.Problem{}
+	st.Findings = append(kept, Check(st)...)
+	if st.Findings == nil {
+		st.Findings = []state.Finding{}
 	}
-	st.Summary.Problems = len(st.Problems)
+	st.Summary.Findings = len(st.Findings)
 }

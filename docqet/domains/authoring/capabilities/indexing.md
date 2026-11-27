@@ -15,7 +15,7 @@ rules:
   - rule:same-files-same-state
   - rule:nested-projects-are-separate
   - rule:ignored-files-arent-read
-  - rule:docs-with-problems-still-index
+  - rule:docs-with-findings-still-index
 ---
 
 Today it's `docqet index`.

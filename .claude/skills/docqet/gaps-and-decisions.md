@@ -76,7 +76,7 @@ project.
 
 Three ratings say what a gap could do, each by judgement about this
 software's circumstances. Every gap has all three: none has a default, and
-leaving one out is a problem `docqet check` reports. None needs to be exact: they make the judgement
+leaving one out is a finding `docqet check` reports. None needs to be exact: they make the judgement
 visible, so a person can see it and correct it. Never lower any of them
 because the capability is early: rate them as if people relied on the
 capability, since risk weighs them by its level already, and nobody re-rates

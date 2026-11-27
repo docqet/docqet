@@ -92,7 +92,7 @@ together **combines** their states:
    capability's level in short, the lowest across the domains that build it.
    Readers then work out [maturity](maturity.md),
    [readiness](readiness.md) and [risk](risk.md) from all of it.
-5. Add the [problems](../../authoring/concepts/problem.md) combining finds:
+5. Add the [findings](../../authoring/concepts/finding.md) combining finds:
    [contradictions](contradiction.md), and gap or tradeoff IDs declared in
-   more than one project. Drop an `unknown-id` problem when the link resolves
+   more than one project. Drop an `unknown-id` finding when the link resolves
    to another project's doc.

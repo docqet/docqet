@@ -41,7 +41,7 @@ they serve, how stable each one is, and the gaps and tradeoffs you know about.
   and verify, with comments such as `docqet:implements` and `docqet:verifies`.
 - **State is derived.** `docqet` reads both and works out the rest: each
   rule's evidence, each gap's risk, how mature and ready each part is, and
-  any problems in the docs themselves.
+  any findings in the docs themselves.
 - **The difference is the work.** Where intention and reality differ, Docqet
   shows it instead of hiding it.
 
@@ -73,7 +73,7 @@ go install github.com/docqet/docqet/cmd/docqet@latest
 
 docqet init --id my-app --name "My App"   # writes docqet.yaml
 docqet kit install                        # the agent kit
-docqet check                              # exit 1 on any problem
+docqet check                              # exit 1 on any finding
 ```
 
 [Installing](docs/installing.md) covers CI, and

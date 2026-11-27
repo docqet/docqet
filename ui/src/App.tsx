@@ -11,7 +11,7 @@ import MapPage from "./pages/map/View";
 import OverviewPage from "./pages/overview/View";
 import InitiativesPage from "./pages/initiatives/List";
 import PersonasPage from "./pages/personas/List";
-import ProblemsPage from "./pages/problems/List";
+import FindingsPage from "./pages/findings/List";
 import RulePage from "./pages/rules/View";
 import CapabilityView from "./pages/capabilities/View";
 import ConceptView from "./pages/concepts/View";
@@ -221,8 +221,8 @@ function content(state: DocqetState, route: Route, layoutKey: string): ReactNode
       return <ImprovementsPage state={state} route={route} />;
     case "decided":
       return <DecidedPage state={state} route={route} />;
-    case "problems":
-      return <ProblemsPage state={state} route={route} />;
+    case "findings":
+      return <FindingsPage state={state} route={route} />;
     case "glossary":
       return <GlossaryPage state={state} route={route} />;
   }

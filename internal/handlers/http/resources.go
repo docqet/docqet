@@ -42,7 +42,7 @@ import "github.com/docqet/docqet/internal/state"
 //	GET /products/{product}/gaps?for=&impact=&sort=risk         []GapResource
 //	GET /products/{product}/tradeoffs               []TradeoffResource
 //	GET /products/{product}/decisions               []HeldDecisionResource
-//	GET /products/{product}/problems                []ProblemResource
+//	GET /products/{product}/findings                []FindingResource
 //	GET /products/{product}/search?q=               []SearchResultResource
 //
 // ?for= is a reference, such as persona:front-desk-clerk, to a project,
@@ -258,7 +258,7 @@ type CountsResource struct {
 	Gaps         int            `json:"gaps"`
 	Tradeoffs    int            `json:"tradeoffs"`
 	Decisions    int            `json:"decisions"`
-	Problems     int            `json:"problems"`
+	Findings     int            `json:"findings"`
 }
 
 // StatusResource is the product at a glance, or what serves a ?for=:
@@ -499,9 +499,9 @@ type TradeoffResource struct {
 	Decisions   []HeldDecisionResource `json:"decisions"`
 }
 
-// ProblemResource is something wrong in the docs, as state's problems are,
+// FindingResource is something wrong in the docs, as state's findings are,
 // with combining's added.
-type ProblemResource struct {
+type FindingResource struct {
 	Type         string   `json:"type"`
 	Subject      string   `json:"subject"`
 	Capabilities []string `json:"capabilities"`

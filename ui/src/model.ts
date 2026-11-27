@@ -17,7 +17,7 @@ import { listGaps, type GapResource, type RiskOnResource } from "./services/docq
 import { listInitiatives } from "./services/docqet/initiatives";
 import { listMechanisms } from "./services/docqet/mechanisms";
 import { listPersonas } from "./services/docqet/personas";
-import { listProblems } from "./services/docqet/problems";
+import { listFindings } from "./services/docqet/findings";
 import { listProjects } from "./services/docqet/projects";
 import { getRubric } from "./services/docqet/rubric";
 import { listRules } from "./services/docqet/rules";
@@ -175,7 +175,7 @@ async function readProduct(showing: Showing, signal?: AbortSignal) {
     gaps,
     tradeoffs,
     decisions,
-    problems,
+    findings,
   ] = await Promise.all([
     getStatus(showing, undefined, signal),
     listProjects(showing, signal),
@@ -192,7 +192,7 @@ async function readProduct(showing: Showing, signal?: AbortSignal) {
     listGaps(showing, {}, signal),
     listTradeoffs(showing, signal),
     listDecisions(showing, signal),
-    listProblems(showing, signal),
+    listFindings(showing, signal),
   ]);
   return {
     status,
@@ -210,7 +210,7 @@ async function readProduct(showing: Showing, signal?: AbortSignal) {
     gaps,
     tradeoffs,
     decisions,
-    problems,
+    findings,
   };
 }
 
@@ -331,7 +331,7 @@ function modelOf(r: Awaited<ReturnType<typeof readProduct>>, showing: Showing): 
       affected: [],
       decisions: [],
     })),
-    problems: r.problems.map((p) => ({
+    findings: r.findings.map((p) => ({
       type: p.type,
       subject: p.subject,
       capabilities: p.capabilities,

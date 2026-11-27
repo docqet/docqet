@@ -1,7 +1,7 @@
 // Package diff compares two states of a project and says what changed in
 // Docqet's words: docs added and removed, capabilities moving between
 // levels, gaps, tradeoffs and decisions added and removed, evidence gained
-// and lost, and problems found and fixed. It's pure: it reads only the
+// and lost, and findings made and fixed. It's pure: it reads only the
 // states and trailers it's given.
 package diff
 
@@ -26,8 +26,8 @@ const (
 	DecisionRemoved = "decision removed"
 	EvidenceAdded   = "evidence added"
 	EvidenceRemoved = "evidence removed"
-	ProblemAdded    = "problem added"
-	ProblemFixed    = "problem fixed"
+	FindingAdded    = "finding added"
+	FindingFixed    = "finding fixed"
 )
 
 // Change is one thing that changed.
@@ -40,7 +40,7 @@ type Change struct {
 	From string `json:"from,omitempty"`
 	To   string `json:"to,omitempty"`
 	// Detail is a decision's question, evidence's verb and place, or a
-	// problem's message.
+	// finding's message.
 	Detail string `json:"detail,omitempty"`
 	// Became is what a removed thing became, as Docqet-Became trailers say.
 	Became []string `json:"became,omitempty"`
@@ -104,17 +104,17 @@ func Compare(from, to *state.State, became map[string][]string) Diff {
 		}
 	}
 
-	oldProblems, newProblems := problemsOf(from), problemsOf(to)
-	for _, k := range sortedKeys(newProblems) {
-		if !oldProblems[k] {
+	oldFindings, newFindings := findingsOf(from), findingsOf(to)
+	for _, k := range sortedKeys(newFindings) {
+		if !oldFindings[k] {
 			where, msg, _ := strings.Cut(k, "\x00")
-			d.Changes = append(d.Changes, Change{Kind: ProblemAdded, Ref: where, Detail: msg})
+			d.Changes = append(d.Changes, Change{Kind: FindingAdded, Ref: where, Detail: msg})
 		}
 	}
-	for _, k := range sortedKeys(oldProblems) {
-		if !newProblems[k] {
+	for _, k := range sortedKeys(oldFindings) {
+		if !newFindings[k] {
 			where, msg, _ := strings.Cut(k, "\x00")
-			d.Changes = append(d.Changes, Change{Kind: ProblemFixed, Ref: where, Detail: msg})
+			d.Changes = append(d.Changes, Change{Kind: FindingFixed, Ref: where, Detail: msg})
 		}
 	}
 	return d
@@ -248,9 +248,9 @@ func evidenceOf(docs map[string]docOf) map[string]bool {
 	return out
 }
 
-func problemsOf(st *state.State) map[string]bool {
+func findingsOf(st *state.State) map[string]bool {
 	out := map[string]bool{}
-	for _, p := range st.Problems {
+	for _, p := range st.Findings {
 		where := p.Subject
 		if where == "" {
 			where = p.File

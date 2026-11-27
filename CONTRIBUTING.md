@@ -58,7 +58,7 @@ Docqet, keep those docs true in the same pull request:
 - **Rename IDs with `docqet rename`**, never by hand.
 - **Leave stability levels alone.** Maintainers decide them.
 - **Finish with `go run ./cmd/docqet check --changed`**, which must report no
-  problems.
+  findings.
 
 Use `go run ./cmd/docqet` rather than an installed `docqet`, so you're
 running the code you're changing.

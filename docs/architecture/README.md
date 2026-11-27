@@ -48,8 +48,8 @@ The core's packages:
 | Package   | Does                                                                                                    | Built with                          |
 | --------- | ------------------------------------------------------------------------------------------------------- | ----------------------------------- |
 | `state`   | The types of `state.json`, as the [state](../../docqet/domains/authoring/concepts/state.md) concept defines them                | `docqet index`                      |
-| `index`   | Reads a project's docs and annotations, and works out evidence, reverse links and problems              | `docqet index`                      |
-| `check`   | Finds the problems a state shows on its own, for the CLI and the server alike                           | `docqet check`, `apply`, the server |
+| `index`   | Reads a project's docs and annotations, and works out evidence, reverse links and findings              | `docqet index`                      |
+| `check`   | Makes the findings a state shows on its own, for the CLI and the server alike                           | `docqet check`, `apply`, the server |
 | `combine` | Puts several projects of one product together, as [Combining](../../docqet/domains/understanding/concepts/product.md) describes | `--product`, the server's reads     |
 | `derive`  | Works out maturity, readiness, risk and exposure                                                        | `docqet status`, the API            |
 | `diff`    | Compares two states, with the trailers between them                                                     | `docqet diff`, `log`, `preview`     |

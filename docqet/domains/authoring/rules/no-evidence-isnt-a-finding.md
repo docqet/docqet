@@ -1,8 +1,8 @@
 ---
 docqet: rule
-id: no-evidence-isnt-a-problem
+id: no-evidence-isnt-a-finding
 domain: authoring
-name: Having no evidence is never a problem
+name: Having no evidence is never a finding
 why: >-
   Evidence shows how we know something holds. Nothing requires it at any
   level, so its absence isn't something left to do.

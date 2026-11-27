@@ -1,7 +1,7 @@
 // Package combine puts the states of a product's projects together as one
 // picture, as the product concept's Combining section describes: each doc
 // once, with every project's contribution to it, links resolved across
-// projects, reverse links worked out again, and the problems only the
+// projects, reverse links worked out again, and the findings only the
 // product shows. It's pure: what it returns depends only on the states it's
 // given. What's derived from the result, such as maturity and risk, is
 // derive's.
@@ -35,7 +35,7 @@ type Product struct {
 	Components   []*Technical
 	Gaps         []*Gap
 	Tradeoffs    []*Tradeoff
-	Problems     []state.Problem
+	Findings     []state.Finding
 
 	// Rubric is the first project's, the same for every project, or nil with
 	// none.

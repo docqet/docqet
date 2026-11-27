@@ -34,7 +34,7 @@ them a database constraint.
   language. Nobody writes evidence down: the indexer finds it.
 - **It's optional at every level.** A rule or capability with none still
   holds, on trust, unless a [gap](gap.md) says it doesn't. Missing evidence
-  is neither a problem nor something left to do.
+  is neither a finding nor something left to do.
 - **A rule's evidence is about every capability that follows it.**
 - **A mechanism's or component's evidence is also the evidence for the
   [stability rubric](rubric.md) outcomes it `meets`.**

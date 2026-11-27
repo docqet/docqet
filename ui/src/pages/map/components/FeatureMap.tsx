@@ -101,13 +101,13 @@ const opener = (onOpen: (pick: Pick) => void, pick: Pick) => (e: MouseEvent<HTML
 export function mapItems(state: DocqetState, onOpen: (pick: Pick) => void, cards?: Set<string>): CanvasItem[] {
   const header = (doc: Doc, type: string, domain: string) => {
     /* A capability's own card says so on its line instead. */
-    const problems = type === "capability" ? [] : contradictionsOf(state, type, doc.id).map((p) => p.message);
+    const findings = type === "capability" ? [] : contradictionsOf(state, type, doc.id).map((p) => p.message);
     const elsewhere = type === "feature" ? (find(state.features, doc.id)?.parts ?? []).filter((p) => p.domain !== domain) : [];
     /* Its projects, said only where they aren't just those of its domain, which its region names. */
     const projects = [...new Set(doc.from.filter((f) => f.domain === domain).map((f) => f.project))];
     const domainProjects = new Set(find(state.domains, domain)?.from.map((f) => f.project));
     const ownProjects = state.projects.length > 1 && !(projects.length === domainProjects.size && projects.every((id) => domainProjects.has(id)));
-    if (!ownProjects && !problems.length && !elsewhere.length) return null;
+    if (!ownProjects && !findings.length && !elsewhere.length) return null;
     return (
       <Box component="span" sx={{ display: "flex", alignItems: "center", gap: "5px", m: "0 0 6px 2px", color: "text.disabled", fontSize: 12, fontWeight: 500 }}>
         {ownProjects ? (
@@ -124,7 +124,7 @@ export function mapItems(state: DocqetState, onOpen: (pick: Pick) => void, cards
             </Box>
           </Tooltip>
         ) : null}
-        <ContradictionHint messages={problems} />
+        <ContradictionHint messages={findings} />
       </Box>
     );
   };
