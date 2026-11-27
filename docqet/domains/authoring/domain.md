@@ -3,8 +3,8 @@ docqet: domain
 id: authoring
 name: Authoring
 description: >-
-  Writing down in a repository what its software is meant to do, and pointing
-  its code and tests at what they're about.
+  Writing down in a repository what its software is meant to do, pointing its
+  code and tests at it, and keeping both true as the software changes.
 decisions:
   - topic: Other forms of evidence
     question: >-
@@ -17,8 +17,8 @@ Docqet's format is how a repository records what its software is meant to
 do, so that people, agents and tools can all read it. It belongs to no
 particular tool: anyone can adopt it or write their own indexer for it.
 
-This domain's [concepts](concepts/), with [understanding's](../understanding/domain.md),
-are the format's definition. Each concept doc says what a word means, how
+This domain's [concepts](concepts/), with
+[understanding's](../understanding/domain.md), are the format's definition. Each concept doc says what a word means, how
 it's written down, and every rule about it. When a concept doc and a word in
 the code or the UI disagree, the concept doc is what we intend, and the other
 one is wrong. Start here, read the big picture, then follow
@@ -116,6 +116,13 @@ code. A commit can say what something it removed became with a
 **[indexer](concepts/indexer.md)** reads all of it, and works out each one's
 evidence and any problems. Readers then work out how far along and how ready
 it all is, as [understanding](../understanding/domain.md) describes.
+
+Intention is only worth reading while it's true, so it's kept current in the
+same change as the code it describes: before a change, people and agents see
+what it touches and what its levels allow, and before it's merged, the check
+finds anything in the docs that's wrong, and every rename or removal says
+what it became. That's [keeping intention current](features/keeping-current.md),
+and it's what keeps the docs from describing software that's gone.
 
 ```mermaid
 flowchart TB

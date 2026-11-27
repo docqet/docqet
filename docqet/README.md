@@ -19,9 +19,10 @@ maturity and the rest. So the concept docs in each domain's `concepts/` folder
 are the definition of the format. There's no separate spec.
 
 - **Start with the domains.** [Authoring](domains/authoring/domain.md)
-  introduces writing intention down and how the concepts fit together.
-  [Understanding](domains/understanding/domain.md) introduces how it's shown:
-  maturity, readiness, risk and improvements.
+  introduces declaring intention, keeping it current, and how the concepts
+  fit together. [Understanding](domains/understanding/domain.md) introduces
+  the questions Docqet answers for everyone involved, and what it works out
+  to answer them: maturity, readiness, risk and improvements.
 - **A concept defines a word for any project.** The
   [rule](domains/authoring/concepts/rule.md) concept says what a rule is
   wherever Docqet is used.
