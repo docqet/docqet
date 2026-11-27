@@ -6,6 +6,7 @@ description: >-
   The client portal, where a client organization's people buy and schedule
   capacity, follow their blocks, read estimates, pay, and manage the
   organization.
+is: archetype:web-app
 serves:
   - capability:client-home
   - capability:getting-set-up

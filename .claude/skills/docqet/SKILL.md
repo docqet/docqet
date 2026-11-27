@@ -1,6 +1,6 @@
 ---
 name: docqet
-description: How to read and keep current a repository's Docqet docs (capabilities, features, areas, rules, concepts, personas, problems, constraints, initiatives, mechanisms, components, gaps, tradeoffs, open decisions, stability levels) and its docqet:implements, verifies, gap and tradeoff annotations. Use in any repository with a docqet.yaml, before changing its code, tests or docs, to learn what the change touches and what it must keep; while changing them, to update the docs and annotations in the same change; when a product decision is needed that nobody has made; and when bringing Docqet to a repository that doesn't have it yet.
+description: How to read and keep current a repository's Docqet docs (capabilities, features, areas, rules, concepts, personas, problems, constraints, initiatives, mechanisms, components, archetypes, gaps, tradeoffs, open decisions, stability levels) and its docqet:implements, verifies, gap and tradeoff annotations. Use in any repository with a docqet.yaml, before changing its code, tests or docs, to learn what the change touches and what it must keep; while changing them, to update the docs and annotations in the same change; when a product decision is needed that nobody has made; and when bringing Docqet to a repository that doesn't have it yet.
 ---
 
 # Docqet
@@ -55,7 +55,8 @@ docqet/
 ├── concepts/                               what a word means in the product
 ├── initiatives/                            bodies of work, such as the MVP, naming the personas they're for
 ├── mechanisms/                             how something works across the whole project
-└── components/                             one area of the code, and the capabilities relying on it
+├── components/                             one area of the code, the capabilities relying on it, and the bigger component it's within
+└── archetypes/                             the kinds of component, such as a CLI, a service or a job
 .docqet/                                    written by `docqet`, gitignored, never edited
 ```
 
@@ -63,7 +64,7 @@ Personas, problems and constraints are the problem space: why the software
 exists, and what any solution must keep to, never naming the software. The rest is the
 solution space. Areas, features, capabilities, rules, concepts and
 initiatives are product docs: what it does, seen from outside, in the
-business's words. Mechanisms and components are technical docs: how it's meant
+business's words. Mechanisms, components and archetypes are technical docs: how it's meant
 to be built, seen from inside, in the code's words. Links only point toward
 why: technical docs to capabilities, capabilities to the problems they
 solve, rules and mechanisms to the constraints they respect. Within a space
@@ -128,7 +129,8 @@ changed, not docs to fill in the structure.
 | A decision was made                                                        | Delete it, and write the answer as whatever it became                                                                                     |
 | A gap was closed                                                           | Remove it and its `docqet:gap` annotations, which `docqet show <gap>` lists                                                               |
 | Code now implements or verifies a rule, capability, mechanism or component | A `docqet:implements` or `docqet:verifies` annotation on it. See [annotations.md](annotations.md)                                         |
-| A new area of code has something the code can't say                        | A component, with `docqet:implements` on its entry points. Most code needs no doc                                                         |
+| A new area of code has something the code can't say                        | A component, with `docqet:implements` on its entry points, `within` the bigger component it's part of, if any. Most code needs no doc        |
+| A new kind of component appears, such as the first job                     | An archetype, named by the component with `is`                                                                                            |
 | How something already documented works has changed                         | Its body, so it no longer says something untrue                                                                                           |
 | A business word is used in a new sense, or a new one appears               | A concept, or a change to it                                                                                                              |
 | Work was grouped into an initiative, or taken out of one                   | The capability's `included-in`, or the initiative's `for`, added or removed, and a doc for a new initiative, deleted once nothing links it         |

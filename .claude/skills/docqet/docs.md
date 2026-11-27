@@ -16,7 +16,7 @@
   others of its type, named after its ID. In a new project, use the
   recommended layout: a folder per type in `docqet/`: `areas/`, `features/`,
   `capabilities/`, `rules/`, `concepts/`, `personas/`, `problems/`,
-  `constraints/`, `initiatives/`, `mechanisms/` and `components/`. Subfolders
+  `constraints/`, `initiatives/`, `mechanisms/`, `components/` and `archetypes/`. Subfolders
   inside any of them are yours to use, and mean nothing to tools. The name is what it's called.
   The description says what it is, usually in a sentence, and for a concept a
   definition in as many sentences as that takes.
@@ -333,6 +333,8 @@ id: bookings
 name: Bookings
 description: >-
   Where a room is held for a stay, and where no double-booking is enforced.
+within: component:server   # optional: the one bigger component it's part of
+is: archetype:service      # optional: the archetype it is; a part is its bigger component's unless it says
 serves: [capability:room-booking, capability:group-bookings, capability:check-in]   # those relying on it
 meets: []
 gaps: []
@@ -343,6 +345,31 @@ decisions: []
 
 A component's `serves` is the only link from technical docs to the
 product. Product docs never link to technical docs.
+
+Components form a tree, so someone new can start from the few big parts that
+run, such as a CLI, a server and a web app, and go down into what's inside
+them: each is within one bigger component, or none. A big component shows the
+gaps of its parts too. Something that cuts across many parts is a mechanism,
+never a component within several.
+
+### Archetype: `docqet: archetype`
+
+A kind of component, such as a CLI, a service, a web app or a job, named by
+the project. Docqet defines none. Each capability shows the archetypes of the
+components serving it: what kinds of thing build it.
+
+```yaml
+---
+docqet: archetype
+id: service
+name: Service
+description: A program that runs on a server and answers requests over the network.
+---
+```
+
+Its body, optional, says what being one means here, such as what's expected
+of every one. Write one when a component first needs it, and keep the set
+small: a handful per product.
 
 The body of either is how it works, including what's correct but would
 surprise whoever changes it.
@@ -372,7 +399,9 @@ problem    felt-by      personas
 rule       uses         concepts
            respects     constraints
 concept    confused-with concepts
-component  serves       capabilities
+component  within       a component
+           is           an archetype
+           serves       capabilities
            meets        outcomes
 mechanism  meets        outcomes
            respects     constraints

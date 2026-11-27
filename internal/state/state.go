@@ -4,7 +4,7 @@
 package state
 
 // Version is the version of the state format this docqet writes and reads.
-const Version = "0.5"
+const Version = "0.6"
 
 // State is one project's state, indexed from its docs and annotations.
 type State struct {
@@ -25,6 +25,7 @@ type State struct {
 	Concepts     []Concept    `json:"concepts"`
 	Mechanisms   []Mechanism  `json:"mechanisms"`
 	Components   []Component  `json:"components"`
+	Archetypes   []Archetype  `json:"archetypes"`
 	Gaps         []Gap        `json:"gaps"`
 	Tradeoffs    []Tradeoff   `json:"tradeoffs"`
 	Findings     []Finding    `json:"findings"`
@@ -52,6 +53,7 @@ type Summary struct {
 	Tradeoffs    int             `json:"tradeoffs"`
 	Mechanisms   int             `json:"mechanisms"`
 	Components   int             `json:"components"`
+	Archetypes   int             `json:"archetypes"`
 }
 
 // CapabilityTally is how many capabilities there are at each level, drafts
@@ -251,12 +253,18 @@ type Mechanism struct {
 	Body         string     `json:"body"`
 }
 
-// Component is a component doc.
+// Component is a component doc. It can be within a bigger component, and
+// say which archetype it is. Its archetype is its own, or else the nearest
+// bigger component's, and its parts, those within it, are worked out.
 type Component struct {
 	ID           string     `json:"id"`
 	File         string     `json:"file"`
 	Name         string     `json:"name"`
 	Description  string     `json:"description"`
+	Within       *string    `json:"within"`
+	Is           *string    `json:"is"`
+	Archetype    *string    `json:"archetype"`
+	Parts        []string   `json:"parts"`
 	Capabilities []string   `json:"capabilities"`
 	Meets        []string   `json:"meets"`
 	Gaps         []string   `json:"gaps"`
@@ -264,6 +272,18 @@ type Component struct {
 	Evidence     Evidence   `json:"evidence"`
 	Decisions    []Decision `json:"decisions"`
 	Body         string     `json:"body"`
+}
+
+// Archetype is an archetype doc: a kind of thing components are, such as a
+// CLI, a service or a job, as the project defines it. Its components, those
+// that are it, directly or through a bigger component, are worked out.
+type Archetype struct {
+	ID          string   `json:"id"`
+	File        string   `json:"file"`
+	Name        string   `json:"name"`
+	Description string   `json:"description"`
+	Components  []string `json:"components"`
+	Body        string   `json:"body"`
 }
 
 // Gap is a gap declared on a capability, mechanism or component. Its ID is

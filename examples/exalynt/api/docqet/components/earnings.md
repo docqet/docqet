@@ -5,6 +5,7 @@ name: Earnings
 description: >-
   What engineers, leads, and partnerships earn on fulfilled blocks, recorded
   as each is fulfilled.
+is: archetype:http-api
 serves: [capability:earnings, capability:partner-earnings, capability:partner-clients, capability:partner-home]
 ---
 

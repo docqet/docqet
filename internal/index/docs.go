@@ -22,6 +22,7 @@ type frontmatter struct {
 	Name         string         `yaml:"name"`
 	Description  string         `yaml:"description"`
 	Within       *string        `yaml:"within"`
+	Is           *string        `yaml:"is"`
 	Stability    string         `yaml:"stability"`
 	Applies      string         `yaml:"applies"`
 	Why          *string        `yaml:"why"`
@@ -157,7 +158,7 @@ func readDoc(file string, data []byte) (d *doc, isDoc bool, findings []state.Fin
 	switch {
 	case !isDocType(fm.Docqet):
 		return nil, true, append(findings, fileFinding(state.InvalidFrontmatter, file, fm.line["docqet"],
-			fmt.Sprintf("docqet is %q, which isn't a doc type: it's one of area, feature, capability, rule, concept, persona, problem, constraint, initiative, mechanism or component", fm.Docqet)))
+			fmt.Sprintf("docqet is %q, which isn't a doc type: it's one of area, feature, capability, rule, concept, persona, problem, constraint, initiative, mechanism, component or archetype", fm.Docqet)))
 	case fm.ID == "":
 		return nil, true, append(findings, fileFinding(state.InvalidFrontmatter, file, fm.line["docqet"], "A doc needs an id."))
 	}
@@ -243,7 +244,8 @@ var fieldsOf = map[string][]string{
 	state.TypeConstraint: {"docqet", "id", "name", "description", "source"},
 	state.TypeInitiative: {"docqet", "id", "name", "description", "for"},
 	state.TypeMechanism:  {"docqet", "id", "name", "description", "applies", "respects", "meets", "gaps", "tradeoffs", "decisions"},
-	state.TypeComponent:  {"docqet", "id", "name", "description", "serves", "meets", "gaps", "tradeoffs", "decisions"},
+	state.TypeComponent:  {"docqet", "id", "name", "description", "within", "is", "serves", "meets", "gaps", "tradeoffs", "decisions"},
+	state.TypeArchetype:  {"docqet", "id", "name", "description"},
 }
 
 // movedFields says where a field went, for fields a type used to have, as
@@ -293,7 +295,7 @@ func unknownFields(file, typ string, node *yaml.Node, at func(int) int) []state.
 func isDocType(t string) bool {
 	switch t {
 	case state.TypeArea, state.TypeFeature, state.TypeCapability, state.TypeRule, state.TypeConcept,
-		state.TypePersona, state.TypeProblem, state.TypeConstraint, state.TypeInitiative, state.TypeMechanism, state.TypeComponent:
+		state.TypePersona, state.TypeProblem, state.TypeConstraint, state.TypeInitiative, state.TypeMechanism, state.TypeComponent, state.TypeArchetype:
 		return true
 	}
 	return false

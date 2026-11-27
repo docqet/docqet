@@ -145,6 +145,9 @@ func declaredIDs(st *state.State) map[string]bool {
 	for _, c := range st.Components {
 		add(state.TypeComponent, c.ID)
 	}
+	for _, a := range st.Archetypes {
+		add(state.TypeArchetype, a.ID)
+	}
 	for _, g := range st.Gaps {
 		ids[g.ID] = true
 	}

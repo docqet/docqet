@@ -5,6 +5,7 @@ name: Agreements
 description: >-
   Client, Engineer and Partner Agreements: rendered from versioned templates,
   offered to a party, accepted, and kept as the PDF made when accepted.
+is: archetype:http-api
 serves:
   - capability:agreements
   - capability:client-agreements

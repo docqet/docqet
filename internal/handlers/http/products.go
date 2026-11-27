@@ -65,6 +65,8 @@ func (h *ProductsHandler) RegisterRoutes(r chi.Router) {
 	r.Get("/products/{product}/components", h.listTechnical(combine.KindComponent))
 	r.Get("/products/{product}/components/{id}", h.getTechnical(combine.KindComponent))
 	r.Get("/products/{product}/components/{id}/gaps/{key}", h.getNestedGap(state.TypeComponent))
+	r.Get("/products/{product}/archetypes", h.ListArchetypes)
+	r.Get("/products/{product}/archetypes/{id}", h.GetArchetype)
 	r.Get("/products/{product}/gaps", h.ListGaps)
 	r.Get("/products/{product}/tradeoffs", h.ListTradeoffs)
 	r.Get("/products/{product}/decisions", h.ListDecisions)
@@ -380,6 +382,27 @@ func (h *ProductsHandler) GetInitiative(w http.ResponseWriter, r *http.Request) 
 			return
 		}
 		notShowing(w, r, state.DocRef(state.TypeInitiative, id))
+	}
+}
+
+// ListArchetypes lists the archetypes showing.
+// docqet:implements capability:how-its-built
+func (h *ProductsHandler) ListArchetypes(w http.ResponseWriter, r *http.Request) {
+	if v, ok := h.view(w, r); ok {
+		writePage(w, r, build(v.Archetypes, newArchetypeResource))
+	}
+}
+
+// GetArchetype returns an archetype.
+// docqet:implements capability:how-its-built
+func (h *ProductsHandler) GetArchetype(w http.ResponseWriter, r *http.Request) {
+	if v, ok := h.view(w, r); ok {
+		id := chi.URLParam(r, "id")
+		if a := v.Archetype(id); a != nil {
+			render.JSON(w, r, newArchetypeResource(a))
+			return
+		}
+		notShowing(w, r, state.DocRef(state.TypeArchetype, id))
 	}
 }
 

@@ -34,6 +34,7 @@ type Product struct {
 	Initiatives  []*Initiative
 	Mechanisms   []*Technical
 	Components   []*Technical
+	Archetypes   []*Archetype
 	Gaps         []*Gap
 	Tradeoffs    []*Tradeoff
 	Findings     []state.Finding
@@ -139,8 +140,11 @@ type Capability struct {
 	Tradeoffs []string
 	// BuiltBy is the mechanisms that apply to it and the components that list
 	// it, as mechanism:<id> or component:<id>.
-	BuiltBy  []string
-	Evidence Evidence
+	BuiltBy []string
+	// Archetypes is the archetypes of the components that list it: what
+	// kinds of thing build it, such as a CLI and a service.
+	Archetypes []string
+	Evidence   Evidence
 }
 
 // Rule is something the software promises always or never holds.
@@ -209,13 +213,28 @@ type Technical struct {
 	Kind string
 	// Applies is "project" or "product": what a mechanism applies to. A
 	// component's is always "project".
-	Applies      string
-	Respects     []string // a mechanism's: the constraints it respects
+	Applies  string
+	Respects []string // a mechanism's: the constraints it respects
+	// Within, Is and Archetype are a component's: the bigger component it's
+	// within, the archetype it says it is, and the archetype it is, its own
+	// or else the nearest bigger component's. Each is an ID, or "". Parts is
+	// the components within it.
+	Within       string
+	Is           string
+	Archetype    string
+	Parts        []string
 	Capabilities []string
 	Meets        []string
 	Gaps         []string
 	Tradeoffs    []string
 	Evidence     Evidence
+}
+
+// Archetype is a kind of thing components are, as the product defines it.
+type Archetype struct {
+	Doc
+	Components   []string // every component that is it, through a bigger one too
+	Capabilities []string // every capability those components serve
 }
 
 // Gap is a known gap, with the project that declares it. A rule it affects
@@ -307,6 +326,11 @@ func (p *Product) Technical(ref string) *Technical {
 		}
 	}
 	return nil
+}
+
+// Archetype returns the archetype with id, or nil.
+func (p *Product) Archetype(id string) *Archetype {
+	return find(p.Archetypes, id, func(a *Archetype) string { return a.ID })
 }
 
 // Gap returns the gap with id, or nil.

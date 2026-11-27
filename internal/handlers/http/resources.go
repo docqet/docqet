@@ -43,6 +43,8 @@ import "github.com/docqet/docqet/internal/state"
 //	GET /products/{product}/components              []TechnicalResource
 //	GET /products/{product}/components/{id}         TechnicalResource
 //	GET /products/{product}/components/{id}/gaps/{key}          GapResource
+//	GET /products/{product}/archetypes              []ArchetypeResource
+//	GET /products/{product}/archetypes/{id}         ArchetypeResource
 //	GET /products/{product}/gaps?for=&impact=&sort=risk         []GapResource
 //	GET /products/{product}/tradeoffs               []TradeoffResource
 //	GET /products/{product}/decisions               []HeldDecisionResource
@@ -260,6 +262,7 @@ type CountsResource struct {
 	Initiatives  int            `json:"initiatives"`
 	Mechanisms   int            `json:"mechanisms"`
 	Components   int            `json:"components"`
+	Archetypes   int            `json:"archetypes"`
 	Gaps         int            `json:"gaps"`
 	Tradeoffs    int            `json:"tradeoffs"`
 	Decisions    int            `json:"decisions"`
@@ -349,6 +352,7 @@ type CapabilityResource struct {
 	Gaps        []string         `json:"gaps"`
 	Tradeoffs   []string         `json:"tradeoffs"`
 	BuiltBy     []string         `json:"builtBy"`
+	Archetypes  []string         `json:"archetypes"` // of the components that list it
 	Evidence    EvidenceResource `json:"evidence"`
 
 	Readiness ReadinessResource `json:"readiness"`
@@ -437,15 +441,31 @@ type InitiativeResource struct {
 // its gaps.
 type TechnicalResource struct {
 	DocResource
-	Kind         string              `json:"kind"`     // mechanism or component
-	Applies      string              `json:"applies"`  // project or product
-	Respects     []string            `json:"respects"` // a mechanism's constraints
+	Kind     string   `json:"kind"`     // mechanism or component
+	Applies  string   `json:"applies"`  // project or product
+	Respects []string `json:"respects"` // a mechanism's constraints
+	// Within, Is and Archetype are a component's: the bigger component it's
+	// within, the archetype it says it is, and the one it is, its own or
+	// else its bigger component's. Each is an ID or null. Parts are the
+	// components within it.
+	Within       *string             `json:"within"`
+	Is           *string             `json:"is"`
+	Archetype    *string             `json:"archetype"`
+	Parts        []string            `json:"parts"`
 	Capabilities []string            `json:"capabilities"`
 	Meets        []string            `json:"meets"`
 	Gaps         []string            `json:"gaps"`
 	Tradeoffs    []string            `json:"tradeoffs"`
 	Evidence     EvidenceResource    `json:"evidence"`
 	Risk         RiskSummaryResource `json:"risk"`
+}
+
+// ArchetypeResource is an archetype, with the components that are it and the
+// capabilities they serve.
+type ArchetypeResource struct {
+	DocResource
+	Components   []string `json:"components"`
+	Capabilities []string `json:"capabilities"`
 }
 
 // RiskOnResource is how a gap scores on one capability, and why.

@@ -141,6 +141,10 @@ paths:
     $ref: "./paths/products/component.yml"
   /products/{product}/components/{id}/gaps/{key}:
     $ref: "./paths/products/component-gap.yml"
+  /products/{product}/archetypes:
+    $ref: "./paths/products/archetypes.yml"
+  /products/{product}/archetypes/{id}:
+    $ref: "./paths/products/archetype.yml"
   /products/{product}/gaps:
     $ref: "./paths/products/gaps.yml"
   /products/{product}/tradeoffs:

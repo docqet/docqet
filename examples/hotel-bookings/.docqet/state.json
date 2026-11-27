@@ -1,5 +1,5 @@
 {
-  "docqet": "0.5",
+  "docqet": "0.6",
   "project": {
     "id": "hotel-bookings",
     "name": "Hotel Bookings"
@@ -29,7 +29,8 @@
     "findings": 0,
     "tradeoffs": 4,
     "mechanisms": 1,
-    "components": 1
+    "components": 1,
+    "archetypes": 0
   },
   "areas": [
     {
@@ -1011,6 +1012,10 @@
       "file": "docqet/components/bookings.md",
       "name": "Bookings",
       "description": "Where a room is held for a stay, and where no double-booking is enforced.",
+      "within": null,
+      "is": null,
+      "archetype": null,
+      "parts": [],
       "capabilities": [
         "capability:room-booking",
         "capability:group-bookings",
@@ -1047,6 +1052,7 @@
       "body": "The app checks the room is free (`assertRoomFree`) so it can tell the clerk\nwhy it can't be booked. The bookings table's exclusion constraint is what\nactually guarantees it, since two clerks can pass the app's check at the same\nmoment.\n\nA stay is a half-open date range: the check-out date isn't a night of the\nstay. `daterange` in Postgres is half-open by default, and `overlaps` in the\napp agrees with it."
     }
   ],
+  "archetypes": [],
   "gaps": [
     {
       "id": "capability:cancellations#late-cancellations-refunded-in-full",

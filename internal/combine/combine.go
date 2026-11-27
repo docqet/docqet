@@ -32,6 +32,7 @@ func Combine(states []*state.State) *Product {
 	c.areasOfFeatures()
 	c.solvedProblems()
 	c.respectedConstraints()
+	c.componentStructure()
 	c.personasAndInitiatives()
 	c.contradictions()
 	c.duplicates()
@@ -81,6 +82,7 @@ type combiner struct {
 	initiatives  map[string]*Initiative
 	mechanisms   map[string]*Technical
 	components   map[string]*Technical
+	archetypes   map[string]*Archetype
 
 	featureOf map[string][]placed // a capability's feature, by capability
 	areaOf    map[string][]placed // a feature's area, by feature
@@ -106,6 +108,7 @@ func newCombiner() *combiner {
 			Initiatives:  []*Initiative{},
 			Mechanisms:   []*Technical{},
 			Components:   []*Technical{},
+			Archetypes:   []*Archetype{},
 			Gaps:         []*Gap{},
 			Tradeoffs:    []*Tradeoff{},
 			Findings:     []state.Finding{},
@@ -121,6 +124,7 @@ func newCombiner() *combiner {
 		initiatives:  map[string]*Initiative{},
 		mechanisms:   map[string]*Technical{},
 		components:   map[string]*Technical{},
+		archetypes:   map[string]*Archetype{},
 		featureOf:    map[string][]placed{},
 		areaOf:       map[string][]placed{},
 		serves:       map[string][]string{},
@@ -194,8 +198,8 @@ func (c *combiner) add(st *state.State) {
 				Concepts:    []string{},
 				Gaps:        []string{},
 				Tradeoffs:   []string{},
-				BuiltBy:     []string{},
-				Evidence:    newEvidence(),
+				BuiltBy:     []string{}, Archetypes: []string{},
+				Evidence: newEvidence(),
 			}
 		})
 		addEvidence(&capability.Evidence, cp.Evidence, project)
@@ -283,8 +287,19 @@ func (c *combiner) add(st *state.State) {
 		}
 	}
 	for _, m := range st.Components {
-		c.technical(&c.p.Components, c.components, KindComponent, project, m.ID, m.File, m.Name, m.Description, m.Body,
+		doc := c.technical(&c.p.Components, c.components, KindComponent, project, m.ID, m.File, m.Name, m.Description, m.Body,
 			m.Decisions, m.Capabilities, m.Meets, own(m.Gaps), own(m.Tradeoffs), m.Evidence)
+		if doc.Within == "" && m.Within != nil {
+			doc.Within = idOf(*m.Within)
+		}
+		if doc.Is == "" && m.Is != nil {
+			doc.Is = idOf(*m.Is)
+		}
+	}
+	for _, a := range st.Archetypes {
+		contribute(&c.p.Archetypes, c.archetypes, a.ID, contribution(project, a.File, a.Name, a.Description, a.Body), func(base Doc) *Archetype {
+			return &Archetype{Doc: base, Components: []string{}, Capabilities: []string{}}
+		})
 	}
 
 	// Each place in the code a gap or tradeoff names says which project it's
@@ -327,7 +342,7 @@ func (c *combiner) technical(list *[]*Technical, index map[string]*Technical, ki
 	from.Decisions = decisions(ds, project)
 	doc := contribute(list, index, id, from, func(base Doc) *Technical {
 		return &Technical{
-			Doc: base, Kind: kind, Applies: "project", Respects: []string{},
+			Doc: base, Kind: kind, Applies: "project", Respects: []string{}, Parts: []string{},
 			Capabilities: []string{}, Meets: []string{}, Gaps: []string{}, Tradeoffs: []string{},
 			Evidence: newEvidence(),
 		}
@@ -562,6 +577,39 @@ func (c *combiner) respectedConstraints() {
 	})
 }
 
+// componentStructure works out, across every project, each component's
+// parts and archetype, each archetype's components and the capabilities they
+// serve, and each capability's archetypes. A component's archetype is its
+// own, or else the nearest bigger component's, so a part of the server is a
+// service unless it says otherwise.
+func (c *combiner) componentStructure() {
+	for _, t := range c.p.Components {
+		if parent := c.components[t.Within]; parent != nil && parent != t {
+			parent.Parts = union(parent.Parts, t.ID)
+		}
+		seen := map[*Technical]bool{}
+		for at := t; at != nil && !seen[at]; at = c.components[at.Within] {
+			seen[at] = true
+			if at.Is != "" {
+				t.Archetype = at.Is
+				break
+			}
+		}
+		a := c.archetypes[t.Archetype]
+		if a == nil {
+			t.Archetype = ""
+			continue
+		}
+		a.Components = union(a.Components, t.ID)
+		a.Capabilities = union(a.Capabilities, t.Capabilities...)
+		for _, id := range t.Capabilities {
+			if cp := c.capabilities[id]; cp != nil {
+				cp.Archetypes = union(cp.Archetypes, a.ID)
+			}
+		}
+	}
+}
+
 // personasAndInitiatives works out each persona's capabilities and the
 // features those are in, and each initiative's capabilities, personas and
 // features.
@@ -644,6 +692,7 @@ func (c *combiner) contradictions() {
 	differing(state.TypeInitiative, docs(c.p.Initiatives))
 	differing(state.TypeMechanism, docs(c.p.Mechanisms))
 	differing(state.TypeComponent, docs(c.p.Components))
+	differing(state.TypeArchetype, docs(c.p.Archetypes))
 }
 
 // duplicates adds a finding for each gap or tradeoff ID two projects both

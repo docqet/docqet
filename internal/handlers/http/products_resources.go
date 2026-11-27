@@ -289,6 +289,7 @@ func newStatusResource(v *services.View, within []*combine.Capability, by derive
 		Initiatives:  len(p.Initiatives),
 		Mechanisms:   len(p.Mechanisms),
 		Components:   len(p.Components),
+		Archetypes:   len(p.Archetypes),
 		Gaps:         len(p.Gaps),
 		Tradeoffs:    len(p.Tradeoffs),
 		Decisions:    len(v.ListDecisions()),
@@ -353,6 +354,7 @@ func newCapabilityResource(p *combine.Product, c *combine.Capability) Capability
 		Gaps:        list(c.Gaps),
 		Tradeoffs:   list(c.Tradeoffs),
 		BuiltBy:     list(c.BuiltBy),
+		Archetypes:  list(c.Archetypes),
 		Evidence:    newEvidenceResource(c.Evidence),
 		Readiness:   newReadinessResource(p, readiness),
 		Exposure:    newExposureResource(readiness.Exposure),
@@ -495,6 +497,10 @@ func newTechnicalResource(p *combine.Product, t *combine.Technical) TechnicalRes
 		Kind:         t.Kind,
 		Applies:      t.Applies,
 		Respects:     list(t.Respects),
+		Within:       idPtr(t.Within),
+		Is:           idPtr(t.Is),
+		Archetype:    idPtr(t.Archetype),
+		Parts:        list(t.Parts),
 		Capabilities: list(t.Capabilities),
 		Meets:        list(t.Meets),
 		Gaps:         list(t.Gaps),
@@ -502,6 +508,18 @@ func newTechnicalResource(p *combine.Product, t *combine.Technical) TechnicalRes
 		Evidence:     newEvidenceResource(t.Evidence),
 		Risk:         newRiskSummaryResource(derive.RiskAcross(p, gaps, nil)),
 	}
+}
+
+// idPtr is an ID, or nil for none.
+func idPtr(id string) *string {
+	if id == "" {
+		return nil
+	}
+	return &id
+}
+
+func newArchetypeResource(a *combine.Archetype) ArchetypeResource {
+	return ArchetypeResource{DocResource: newDocResource(a.Doc), Components: list(a.Components), Capabilities: list(a.Capabilities)}
 }
 
 // subjectOf is the doc a gap or tradeoff is on, as a reference: its ID

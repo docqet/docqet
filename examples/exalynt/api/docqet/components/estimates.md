@@ -3,6 +3,7 @@ docqet: component
 id: estimates
 name: Estimates
 description: An estimate and everything in it is one document, replaced whole.
+is: archetype:http-api
 serves: [capability:estimates]
 tradeoffs:
   - id: prices-copied-onto-estimate

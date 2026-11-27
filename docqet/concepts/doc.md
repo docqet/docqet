@@ -4,7 +4,7 @@ id: doc
 name: Doc
 description: >-
   One Markdown file describing one thing: an area, feature, capability, rule,
-  concept, persona, problem, constraint, initiative, mechanism or component.
+  concept, persona, problem, constraint, initiative, mechanism, component or archetype.
 confused-with:
   - concept: "concept:state"
     summary: >-
@@ -140,6 +140,7 @@ its `docqet/` folder, with a folder per type:
 | initiative | `docqet/initiatives/`   | `busy-season`                 |
 | mechanism  | `docqet/mechanisms/`    | `deployment`                  |
 | component  | `docqet/components/`    | `bookings`                    |
+| archetype  | `docqet/archetypes/`    | `web-app`                     |
 
 - **`docqet` marks a file as a Docqet doc** and gives its type, one of those
   above. A Markdown file without it isn't a Docqet doc, and nothing reads it.
@@ -223,7 +224,8 @@ own. What has no name, such as what a concept is confused with, is said in its
 | constraint | `docqet`, `id`, `name`, `description`, `source` | Anything more, such as the clause or article it comes from, or what happens if it's broken | [invoice-numbers-in-sequence](../../examples/hotel-billing/docqet/constraints/invoice-numbers-in-sequence.md) |
 | initiative | `docqet`, `id`, `name`, `description`, `for` | Anything more about the work, such as what's in it and why | [busy-season](../../examples/hotel-bookings/docqet/initiatives/busy-season.md) |
 | mechanism | `docqet`, `id`, `name`, `description`, `applies`, `respects`, `meets`, `gaps`, `tradeoffs`, `decisions` | How it works | [deployment](../../examples/hotel-bookings/docqet/mechanisms/deployment.md) |
-| component | `docqet`, `id`, `name`, `description`, `serves`, `meets`, `gaps`, `tradeoffs`, `decisions` | How it works | [bookings](../../examples/hotel-bookings/docqet/components/bookings.md) |
+| component | `docqet`, `id`, `name`, `description`, `within`, `is`, `serves`, `meets`, `gaps`, `tradeoffs`, `decisions` | How it works | [bookings](../../examples/hotel-bookings/docqet/components/bookings.md) |
+| archetype | `docqet`, `id`, `name`, `description` | What it means here for a component to be one, such as what's expected of every one | [web-app](../../examples/exalynt/ui/docqet/archetypes/web-app.md) |
 
 The body column is a suggestion of what's worth writing, not a structure.
 Each field is defined by the concept it's about:
@@ -247,6 +249,8 @@ Each field is defined by the concept it's about:
   part of.
 - **`follows`** lists the [rules](rule.md) a capability follows, and
   **`uses`** the [concepts](concept.md) a capability or rule uses.
+- **`within`** on a component names the one bigger component it's part of,
+  and **`is`** the [archetype](archetype.md) it is.
 - **`serves`** lists the capabilities a [component](component.md) serves:
   those that rely on it.
 - **No doc names its code**: [mechanisms](mechanism.md) and components are

@@ -12,6 +12,9 @@ confused-with:
   - concept: "concept:capability"
     summary: >-
       a result of value. A component's scope follows the code, so it rarely lines up with one capability.
+  - concept: "concept:archetype"
+    summary: >-
+      the kind of thing a component is, such as a CLI or a job. Many components share one archetype.
 ---
 
 Hotel Bookings'
@@ -32,12 +35,40 @@ that rely on it, and holds its technical [gaps](gap.md), [tradeoffs](tradeoff.md
 the code, is in [how it's built](../areas/authoring.md#how-its-built). Most parts of the
 code need none.
 
+## Big components and their parts
+
+A component can be within one bigger component, so someone new to the code
+can start from the few big parts that run, such as a CLI, a server and a web
+app, and go down into the parts inside each. Docqet's own server is a
+component, and its indexer and checker are components within it.
+
+- **One bigger component at most.** How it's built is a tree: each
+  component is within one component, or none. Something that cuts across
+  many parts is a [mechanism](mechanism.md), not a component within several.
+- **Its parts are worked out**, from the components that name it.
+- **What's missing in its parts shows on it.** A big component shows its own
+  gaps and those of every part within it, so what's left in the server shows
+  on the server.
+- **It names the [archetype](archetype.md) it is** with `is`, such as a
+  service or a web app. A part is its bigger component's archetype unless it
+  names its own, so the indexer is a service because the server is. Each
+  capability shows the archetypes of the components that serve it: what
+  kinds of thing build it.
+- **Nesting is optional.** A component within nothing is a big part of its
+  own, and a small project needs no big parts at all.
+
 ## How it's written
 
 A component is a doc whose `docqet` is `component`. Its frontmatter, in order, is `docqet`, `id`, `name`, `description`,
-`serves`, `meets`, `gaps`, `tradeoffs` and `decisions`. Its body is how
-it works, as a mechanism's is.
+`within`, `is`, `serves`, `meets`, `gaps`, `tradeoffs` and `decisions`. Its
+body is how it works, as a mechanism's is.
 
+- **`within`**, optional, names the one bigger component it's part of:
+  `within: component:server`. A component within itself, through its parts,
+  is `invalid-frontmatter`.
+- **`is`**, optional, names the [archetype](archetype.md) it is:
+  `is: archetype:service`. Leave it out on a part that is what its bigger
+  component is.
 - **`serves`** lists the capabilities that rely on it. It's the only
   link between the technical docs and the product. A mechanism has none.
 - **It names no code**, as a mechanism doesn't: its entry points say

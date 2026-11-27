@@ -59,7 +59,8 @@ docqet/
 ├── problems/              the pain points they share
 ├── constraints/           what's imposed on Docqet from outside
 ├── mechanisms/            how something works across docqet's code
-└── components/            one part of docqet's code, linked to docs/architecture/
+├── components/            one part of docqet's code, within a bigger one, linked to docs/architecture/
+└── archetypes/            the kinds of component docqet has: a CLI, a service, a web app
 ```
 
 ## Working with it

@@ -48,6 +48,7 @@ func Index(fsys fs.FS) (*state.State, error) {
 		Concepts:     []state.Concept{},
 		Mechanisms:   []state.Mechanism{},
 		Components:   []state.Component{},
+		Archetypes:   []state.Archetype{},
 		Gaps:         []state.Gap{},
 		Tradeoffs:    []state.Tradeoff{},
 		Findings:     []state.Finding{},
@@ -206,12 +207,17 @@ func addEntry(st *state.State, d *doc) {
 	case state.TypeComponent:
 		st.Components = append(st.Components, state.Component{
 			ID: fm.ID, File: d.file, Name: name, Description: description,
+			Within: textPtr(fm.Within), Is: textPtr(fm.Is), Parts: []string{},
 			Capabilities: list(fm.Serves), Meets: list(fm.Meets),
 			Gaps: gapRefs(ref, fm.Gaps), Tradeoffs: tradeoffRefs(ref, fm.Tradeoffs),
 			Evidence: evidence(), Decisions: decisions(fm.Decisions), Body: d.body,
 		})
 		addGaps(st, ref, fm.Gaps)
 		addTradeoffs(st, ref, fm.Tradeoffs)
+	case state.TypeArchetype:
+		st.Archetypes = append(st.Archetypes, state.Archetype{
+			ID: fm.ID, File: d.file, Name: name, Description: description, Components: []string{}, Body: d.body,
+		})
 	}
 }
 
@@ -485,6 +491,55 @@ func linkBack(st *state.State) {
 	for i := range st.Mechanisms {
 		st.Mechanisms[i].Capabilities = append([]string{}, served...)
 	}
+
+	componentStructure(st)
+}
+
+// componentStructure works out each component's parts, those within it, and
+// its archetype: its own, or else the nearest bigger component's. It's
+// worked out for each archetype too, as the components that are it. A loop
+// of components within each other ends where it comes back round, and check
+// reports it.
+// docqet:implements capability:indexing
+func componentStructure(st *state.State) {
+	byID := map[string]*state.Component{}
+	for i := range st.Components {
+		byID[st.Components[i].ID] = &st.Components[i]
+	}
+	parent := func(c *state.Component) *state.Component {
+		if c.Within == nil {
+			return nil
+		}
+		if ref, ok := state.ParseRef(*c.Within); ok && ref.Type == state.TypeComponent {
+			return byID[ref.ID]
+		}
+		return nil
+	}
+	for i := range st.Components {
+		c := &st.Components[i]
+		if p := parent(c); p != nil && p != c {
+			p.Parts = appendNew(p.Parts, state.DocRef(state.TypeComponent, c.ID))
+		}
+		seen := map[*state.Component]bool{}
+		for at := c; at != nil && !seen[at]; at = parent(at) {
+			seen[at] = true
+			if at.Is != nil {
+				if ref, ok := state.ParseRef(*at.Is); ok && ref.Type == state.TypeArchetype {
+					archetype := state.DocRef(state.TypeArchetype, ref.ID)
+					c.Archetype = &archetype
+				}
+				break
+			}
+		}
+	}
+	for i := range st.Archetypes {
+		a := &st.Archetypes[i]
+		for _, c := range st.Components {
+			if c.Archetype != nil && *c.Archetype == state.DocRef(state.TypeArchetype, a.ID) {
+				a.Components = appendNew(a.Components, state.DocRef(state.TypeComponent, c.ID))
+			}
+		}
+	}
 }
 
 // names reports whether refs links the doc of type typ with id.
@@ -560,6 +615,7 @@ func summarize(st *state.State) state.Summary {
 		Tradeoffs:   len(st.Tradeoffs),
 		Mechanisms:  len(st.Mechanisms),
 		Components:  len(st.Components),
+		Archetypes:  len(st.Archetypes),
 	}
 	for _, c := range st.Capabilities {
 		switch c.Stability {

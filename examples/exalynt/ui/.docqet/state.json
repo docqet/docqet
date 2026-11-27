@@ -1,5 +1,5 @@
 {
-  "docqet": "0.5",
+  "docqet": "0.6",
   "project": {
     "id": "exalynt-ui",
     "name": "Exalynt UI"
@@ -29,7 +29,8 @@
     "findings": 47,
     "tradeoffs": 5,
     "mechanisms": 2,
-    "components": 6
+    "components": 6,
+    "archetypes": 1
   },
   "areas": [],
   "features": [],
@@ -164,6 +165,10 @@
       "file": "docqet/components/account.md",
       "name": "Account",
       "description": "The profile every app mounts at `/<app>/account`: the signed-in person's own account, their bio, their access tokens, their notification choices, and the app's theme.",
+      "within": null,
+      "is": "archetype:web-app",
+      "archetype": "archetype:web-app",
+      "parts": [],
       "capabilities": [
         "capability:your-profile",
         "capability:teams",
@@ -185,6 +190,10 @@
       "file": "docqet/components/admin.md",
       "name": "Admin",
       "description": "The admin, where Exalynt's admins run clients, partners, engineers, teams, roles and payouts.",
+      "within": null,
+      "is": "archetype:web-app",
+      "archetype": "archetype:web-app",
+      "parts": [],
       "capabilities": [
         "capability:client-directory",
         "capability:client-coupons",
@@ -211,6 +220,10 @@
       "file": "docqet/components/auth.md",
       "name": "Auth",
       "description": "Signing in and up, and onboarding: the pages that belong to no app, where someone gets an account and joins or creates what they'll work in.",
+      "within": null,
+      "is": "archetype:web-app",
+      "archetype": "archetype:web-app",
+      "parts": [],
       "capabilities": [
         "capability:organizations-and-members",
         "capability:engineer-onboarding",
@@ -233,6 +246,10 @@
       "file": "docqet/components/console.md",
       "name": "Console",
       "description": "The console, where Exalynt's engineers set themselves up, claim and work their blocks, offer their time, write estimates, and see what they're paid.",
+      "within": null,
+      "is": "archetype:web-app",
+      "archetype": "archetype:web-app",
+      "parts": [],
       "capabilities": [
         "capability:getting-set-up",
         "capability:claiming-blocks",
@@ -261,6 +278,10 @@
       "file": "docqet/components/hub.md",
       "name": "Hub",
       "description": "The Partner Hub, where a partnership's manager follows the clients it has brought in, invites more, and sees what it earns and how it's paid.",
+      "within": null,
+      "is": "archetype:web-app",
+      "archetype": "archetype:web-app",
+      "parts": [],
       "capabilities": [
         "capability:partner-home",
         "capability:partnerships",
@@ -287,6 +308,10 @@
       "file": "docqet/components/portal.md",
       "name": "Portal",
       "description": "The client portal, where a client organization's people buy and schedule capacity, follow their blocks, read estimates, pay, and manage the organization.",
+      "within": null,
+      "is": "archetype:web-app",
+      "archetype": "archetype:web-app",
+      "parts": [],
       "capabilities": [
         "capability:client-home",
         "capability:getting-set-up",
@@ -312,6 +337,23 @@
       },
       "decisions": [],
       "body": "Every page acts in the organization being looked at. `AccessProvider` holds\nit and the reader's role in it, and `Layout.tsx` builds the rail from that\nrole: a role without capacity, estimate or team reads (Billing) doesn't get\nthose pages, and one without `invoice:read` (Member) doesn't get Billing. The\npages that are left check the same permissions, say why when the role can't\nsee them, and ask the API for nothing then. `RequireOrganization` sends\nsomeone in no organization to onboarding, or offers someone with the console\nto create one. Switching organization starts each page again.\n\nNobody works in an organization until its Client Agreement is in effect:\n`Layout.tsx` puts the agreement in place of every page (`AgreementGate`), for\nsomeone with `organization:manage` to accept, or tells anyone else an Admin\nhas to first. The organization switcher stays, to work in another. The gate\nis the app's alone: the API still answers what a member's role allows\nwithout an agreement in effect, so anything new that must wait for the\nagreement has to sit behind the gate.\n\nEvery page reads and writes the API: the portal has no placeholder data\n(`data/relationships.ts` only orders the API's teams). A block's own page\n(`capacity/View.tsx`) is marked Prototype in `src/featureStability.ts`, below\nFulfillment's Alpha, because whether it's the right page for a client is\nstill the question, not because its data is fake. Its focus, timeline and\nconversations are the console's, from `src/components/block/`.\n\nThe setup bubble's steps are worked out by `beforeWorkStarts`\n(`components/setup/`), which unit tests cover. Estimates' figures are worked\nout in the browser by `src/estimates/`, from the sizes it shares with the API\nand the prices each estimate carries; unit tests pin them to the API's.\n\nBuying holds one `Idempotency-Key` for each opening of\n`PurchaseCapacityDialog`, so trying again while the dialog is open can't\ncharge twice, and closing it starts a new purchase with a new key. The\nprovider's page for an invoice is opened at an address the API reads from the\nprovider each time, since those addresses expire, so the portal never keeps\none. The Schedule's weeks are the API's, rolling over at midnight UTC."
+    }
+  ],
+  "archetypes": [
+    {
+      "id": "web-app",
+      "file": "docqet/archetypes/web-app.md",
+      "name": "Web app",
+      "description": "Pages people use in a browser, served as one app that reads everything through the API.",
+      "components": [
+        "component:account",
+        "component:admin",
+        "component:auth",
+        "component:console",
+        "component:hub",
+        "component:portal"
+      ],
+      "body": ""
     }
   ],
   "gaps": [],

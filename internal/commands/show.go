@@ -141,6 +141,7 @@ func showOf(p *combine.Product, ref string) (*shown, error) {
 		s.add("rules", rules...)
 		s.add("concepts", prefixed("concept:", c.Concepts)...)
 		s.add("built by", c.BuiltBy...)
+		s.add("archetypes", prefixed("archetype:", c.Archetypes)...)
 		s.items(p, c.Gaps, c.Tradeoffs, ref, c.Doc)
 		s.Evidence = evidenceOf(c.Evidence)
 		return s, nil
@@ -273,14 +274,58 @@ func showOf(p *combine.Product, ref string) (*shown, error) {
 			s.add("applies", "every capability the "+t.Applies+" serves")
 			s.add("respects", prefixed("constraint:", t.Respects)...)
 		} else {
+			if t.Within != "" {
+				s.add("within", "component:"+t.Within)
+			}
+			if t.Archetype != "" {
+				is := "archetype:" + t.Archetype
+				if t.Is == "" {
+					is += " (from component:" + t.Within + ")"
+				}
+				s.add("is", is)
+			}
+			s.add("parts", prefixed("component:", t.Parts)...)
 			s.add("capabilities", prefixed("capability:", t.Capabilities)...)
+			s.add("gaps in its parts", partGaps(p, t)...)
 		}
 		s.add("meets", t.Meets...)
 		s.items(p, t.Gaps, t.Tradeoffs, ref, t.Doc)
 		s.Evidence = evidenceOf(t.Evidence)
 		return s, nil
+	case state.TypeArchetype:
+		a := p.Archetype(r.ID)
+		if a == nil {
+			return nil, notFound
+		}
+		s := docShown(a.Doc, r.Type, ref)
+		s.add("components", prefixed("component:", a.Components)...)
+		s.add("builds", prefixed("capability:", a.Capabilities)...)
+		return s, nil
 	}
-	return nil, fmt.Errorf("%s isn't a type of doc: it's one of area, feature, capability, rule, concept, persona, problem, constraint, initiative, mechanism or component", r.Type)
+	return nil, fmt.Errorf("%s isn't a type of doc: it's one of area, feature, capability, rule, concept, persona, problem, constraint, initiative, mechanism, component or archetype", r.Type)
+}
+
+// partGaps is the gaps on a component's parts, and on theirs, so what's
+// missing inside a big component shows on it.
+func partGaps(p *combine.Product, t *combine.Technical) []string {
+	var out []string
+	seen := map[string]bool{t.ID: true}
+	var walk func(parts []string)
+	walk = func(parts []string) {
+		for _, id := range parts {
+			part := p.Technical(state.DocRef(state.TypeComponent, id))
+			if part == nil || seen[id] {
+				continue
+			}
+			seen[id] = true
+			for _, g := range gapsOf(p, part.Gaps) {
+				out = append(out, gapViewOf(p, g).ID)
+			}
+			walk(part.Parts)
+		}
+	}
+	walk(t.Parts)
+	return out
 }
 
 // docShown starts a shown doc with what every doc has.

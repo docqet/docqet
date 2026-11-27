@@ -6,6 +6,7 @@ description: >-
   The profile every app mounts at `/<app>/account`: the signed-in person's own
   account, their bio, their access tokens, their notification choices, and the
   app's theme.
+is: archetype:web-app
 serves:
   - capability:your-profile
   - capability:teams

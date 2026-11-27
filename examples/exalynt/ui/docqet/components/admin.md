@@ -5,6 +5,7 @@ name: Admin
 description: >-
   The admin, where Exalynt's admins run clients, partners, engineers, teams,
   roles and payouts.
+is: archetype:web-app
 serves:
   - capability:client-directory
   - capability:client-coupons

@@ -49,7 +49,7 @@ GET /api/v1/products/{product}/concepts/{id}
 GET /api/v1/products/{product}/gaps?sort=risk&impact=blocking,damaging
 GET /api/v1/products/{product}/search?q=refund
 GET /api/v1/products/{product}/areas, features, personas, problems, constraints,
-    initiatives, rules, concepts, mechanisms, components, decisions, tradeoffs,
+    initiatives, rules, concepts, mechanisms, components, archetypes, decisions, tradeoffs,
     findings, and each one by ID
 ```
 

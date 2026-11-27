@@ -113,7 +113,10 @@ code's words: **[mechanisms](../concepts/mechanism.md)**, each how something
 works across the whole project, and **[components](../concepts/component.md)**,
 each one part of the code. A component lists the capabilities that rely on
 it; a mechanism applies to every capability its project, or its whole
-product, serves.
+product, serves. A component can be within one bigger component, and says
+which **[archetype](../concepts/archetype.md)** it is, such as a CLI or a
+service, so anyone can see the big parts that run and what kinds of thing
+build each capability.
 
 Intention and reality differ in a few named ways:
 **[open decisions](../concepts/open-decision.md)**, **[gaps](../concepts/gap.md)**,
@@ -159,6 +162,7 @@ flowchart TB
   subgraph technical ["Technical docs: how it's meant to be built, in the code's words"]
     mechanism["Mechanism<br/>how something works across the project"]
     component["Component<br/>one part of the code"]
+    archetype["Archetype<br/>a kind of component"]
   end
 
   subgraph differ ["Where intention and reality differ"]
@@ -183,19 +187,21 @@ flowchart TB
     finding["Finding"]
   end
 
-  feature -- "in" --> area
-  capability -- "in" --> feature
+  feature -- "within" --> area
+  capability -- "within" --> feature
   capability -- "solves" --> problem
-  problem -- "had by" --> persona
-  capability -- "part of" --> initiative
+  problem -- "felt by" --> persona
+  capability -- "included in" --> initiative
   initiative -- "for" --> persona
   capability -- "follows" --> rule
   capability -- "uses" --> concept
-  rule -- "refers to" --> concept
+  rule -- "uses" --> concept
   rule -- "respects" --> constraint
   mechanism -- "respects" --> constraint
 
-  component -- "relied on by" --> capability
+  component -- "serves" --> capability
+  component -- "within" --> component
+  component -- "is" --> archetype
   mechanism -- "works across" --> project
   mechanism & component -- "meets" --> outcome
 
@@ -343,6 +349,10 @@ left out, since the code already says it.
   business's.
 - **They're one across every project by ID**, as features are. A mechanism
   that spans projects has its whole picture in the one that owns it.
+- **Components form a tree.** A component is within one bigger component, or
+  none, so the few big parts that run come first and the parts inside them
+  after. Each says which [archetype](../concepts/archetype.md) it is, or is
+  its bigger component's.
 
 ## Feature, capability or neither?
 
@@ -413,6 +423,8 @@ In the order to read them.
 - [Mechanism](../concepts/mechanism.md): how something works across a whole
   project.
 - [Component](../concepts/component.md): one part of the code.
+- [Archetype](../concepts/archetype.md): a kind of component, such as a CLI
+  or a job, as the project names them.
 
 **Where intention and reality differ**
 

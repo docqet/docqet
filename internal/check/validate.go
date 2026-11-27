@@ -64,6 +64,9 @@ func Validate(st *state.State) error {
 	for _, c := range st.Components {
 		entry("component", c.ID, c.File)
 	}
+	for _, a := range st.Archetypes {
+		entry("archetype", a.ID, a.File)
+	}
 	for _, g := range st.Gaps {
 		if ref, ok := state.ParseRef(g.ID); !ok || ref.Key == "" {
 			fail("gap %q isn't a gap's ID: <doc>#<key>", g.ID)

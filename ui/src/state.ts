@@ -155,6 +155,8 @@ export type Capability = Doc & {
   tradeoffs: string[];
   /* The mechanisms that apply to it and the components that list it, as `mechanism:<id>` or `component:<id>`, worked out from their `capabilities`. */
   builtBy: string[];
+  /* The archetypes of the components that list it, by ID: what kinds of thing build it. */
+  archetypes: string[];
   evidence: Evidence;
   readiness: Readiness;
   exposure: Exposure;
@@ -184,6 +186,11 @@ export type TechnicalDoc = Doc & {
   applies: "project" | "product";
   /* A mechanism's: the constraints it respects. A component's is always empty. */
   respects: string[];
+  /* A component's: the bigger component it's within, and the archetype it is, its own or its bigger component's, by ID. Null for a mechanism. */
+  within: string | null;
+  archetype: string | null;
+  /* A component's parts: the components within it, by ID. */
+  parts: string[];
   capabilities: string[];
   /* The expected outcomes it meets for the capabilities it serves, as `outcome:<quality>/<level>/<id>`. */
   meets: string[];

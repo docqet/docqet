@@ -5,6 +5,7 @@ name: Auth
 description: >-
   Signing in and up, and onboarding: the pages that belong to no app, where
   someone gets an account and joins or creates what they'll work in.
+is: archetype:web-app
 serves:
   - capability:organizations-and-members
   - capability:engineer-onboarding

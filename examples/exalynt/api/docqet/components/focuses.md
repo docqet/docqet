@@ -5,6 +5,7 @@ name: Focuses
 description: >-
   A block's focus: what its work is about, with images, videos, and files from
   its organization's objects.
+is: archetype:http-api
 serves: [capability:fulfillment]
 ---
 

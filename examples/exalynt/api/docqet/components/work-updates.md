@@ -5,6 +5,7 @@ name: Work updates
 description: >-
   What engineers write about a block's work as they do it, shown on its page
   with when it was started and fulfilled.
+is: archetype:http-api
 serves: [capability:fulfillment]
 ---
 

@@ -1,5 +1,5 @@
 {
-  "docqet": "0.5",
+  "docqet": "0.6",
   "project": {
     "id": "hotel-billing",
     "name": "Hotel Billing"
@@ -29,7 +29,8 @@
     "findings": 0,
     "tradeoffs": 4,
     "mechanisms": 0,
-    "components": 2
+    "components": 2,
+    "archetypes": 0
   },
   "areas": [
     {
@@ -1608,6 +1609,10 @@
       "file": "docqet/components/ledger.md",
       "name": "Ledger",
       "description": "Every amount a guest owes or pays, as lines on their bill that are only ever added, never changed.",
+      "within": null,
+      "is": null,
+      "archetype": null,
+      "parts": [],
       "capabilities": [
         "capability:extra-charges",
         "capability:split-bills",
@@ -1659,6 +1664,10 @@
       "file": "docqet/components/payments.md",
       "name": "Payments",
       "description": "Taking card payments through the payment provider, for deposits and payment links.",
+      "within": null,
+      "is": null,
+      "archetype": null,
+      "parts": [],
       "capabilities": [
         "capability:deposits",
         "capability:pay-by-link"
@@ -1684,6 +1693,7 @@
       "body": "The guest types their card into the provider's form, which hands the app a\ntoken. `takePayment` sends the provider that token and the amount, and keeps\nthe reference it sends back. Card numbers never reach the app.\n\nThe integration tests run against the provider's sandbox\n(`test/integration/sandbox.ts`), which accepts any test token instantly. Real\npayments can take seconds."
     }
   ],
+  "archetypes": [],
   "gaps": [
     {
       "id": "capability:city-tax#children-corrected-by-hand",

@@ -5,6 +5,7 @@ name: Organizations
 description: >-
   Client organizations, their members, invitations, payment customer, and
   logo.
+is: archetype:http-api
 serves: [capability:organizations-and-members, capability:client-directory, capability:billing]
 meets: [outcome:security/ga/sound]
 tradeoffs:

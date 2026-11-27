@@ -3,6 +3,7 @@ docqet: component
 id: payouts
 name: Payouts
 description: How earnings become money sent, to people and to partnerships.
+is: archetype:http-api
 serves: [capability:payouts, capability:partner-payouts]
 tradeoffs:
   - id: waiting-worked-out-on-read

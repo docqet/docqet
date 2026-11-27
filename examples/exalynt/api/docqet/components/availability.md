@@ -4,6 +4,7 @@ id: availability
 name: Availability
 description: >-
   How much of a week each engineer offers, which Capacity adds up per team.
+is: archetype:http-api
 serves: [capability:availability, capability:scheduling, capability:claiming-blocks, capability:staffing]
 tradeoffs:
   - id: recurrence-rules-not-weeks

@@ -16,7 +16,7 @@ import (
 )
 
 // listKinds are what list lists, each by its plural.
-var listKinds = []string{"areas", "features", "capabilities", "rules", "concepts", "personas", "problems", "constraints", "initiatives", "mechanisms", "components", "gaps", "tradeoffs", "decisions"}
+var listKinds = []string{"areas", "features", "capabilities", "rules", "concepts", "personas", "problems", "constraints", "initiatives", "mechanisms", "components", "archetypes", "gaps", "tradeoffs", "decisions"}
 
 // ListCommand lists docs of one kind, or gaps, tradeoffs or decisions.
 // docqet:implements capability:cli-reads
@@ -194,8 +194,15 @@ func listRows(lo local, cmd *cli.Command, kind string) ([]listRow, error) {
 			detail := "applies to the " + t.Applies
 			if t.Kind == combine.KindComponent {
 				detail = fmt.Sprintf("relied on by %d", len(t.Capabilities))
+				if t.Archetype != "" {
+					detail = "archetype:" + t.Archetype + ", " + detail
+				}
 			}
 			rows = append(rows, listRow{Ref: t.Kind + ":" + t.ID, Name: t.Name, Detail: detail})
+		}
+	case "archetypes":
+		for _, a := range p.Archetypes {
+			rows = append(rows, listRow{Ref: "archetype:" + a.ID, Name: a.Name, Detail: fmt.Sprintf("%d components", len(a.Components))})
 		}
 	case "gaps":
 		for _, l := range v.ListGaps(within, cmd.StringSlice("impact"), cmd.String("sort") == "risk") {

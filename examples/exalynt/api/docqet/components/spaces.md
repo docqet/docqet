@@ -7,6 +7,7 @@ description: >-
   kept in step with the messaging provider as memberships change, and blocks'
   conversations there. The provider is behind messaging: Google Chat or
   Stream.
+is: archetype:http-api
 serves: [capability:conversation-spaces]
 gaps:
   - id: sync-users-has-no-hook

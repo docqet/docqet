@@ -23,6 +23,8 @@ export type CapabilityResource = DocResource & {
   gaps: string[];
   tradeoffs: string[];
   builtBy: string[];
+  /* The archetypes of the components that list it. */
+  archetypes: string[];
   evidence: EvidenceResource;
   readiness: ReadinessResource;
   exposure: ExposureResource;

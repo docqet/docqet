@@ -6,6 +6,7 @@ description: >-
   Personal access tokens, which identify their creator to the API without a
   session. How one becomes a caller is in the [authentication
   doc](../mechanisms/authentication.md).
+is: archetype:http-api
 serves: [capability:access-tokens]
 ---
 

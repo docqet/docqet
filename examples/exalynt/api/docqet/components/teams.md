@@ -5,6 +5,7 @@ name: Teams
 description: >-
   Who at Exalynt a client sees and, through the `team` scope, which clients'
   records an engineer can reach.
+is: archetype:http-api
 serves:
   - capability:teams
   - capability:client-directory

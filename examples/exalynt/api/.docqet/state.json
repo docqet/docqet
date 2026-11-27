@@ -1,5 +1,5 @@
 {
-  "docqet": "0.5",
+  "docqet": "0.6",
   "project": {
     "id": "exalynt-api",
     "name": "Exalynt API"
@@ -29,7 +29,8 @@
     "findings": 4,
     "tradeoffs": 48,
     "mechanisms": 6,
-    "components": 14
+    "components": 14,
+    "archetypes": 1
   },
   "areas": [
     {
@@ -13051,6 +13052,10 @@
       "file": "docqet/components/access-tokens.md",
       "name": "Access tokens",
       "description": "Personal access tokens, which identify their creator to the API without a session. How one becomes a caller is in the [authentication doc](../mechanisms/authentication.md).",
+      "within": null,
+      "is": "archetype:http-api",
+      "archetype": "archetype:http-api",
+      "parts": [],
       "capabilities": [
         "capability:access-tokens"
       ],
@@ -13069,6 +13074,10 @@
       "file": "docqet/components/agreements.md",
       "name": "Agreements",
       "description": "Client, Engineer and Partner Agreements: rendered from versioned templates, offered to a party, accepted, and kept as the PDF made when accepted.",
+      "within": null,
+      "is": "archetype:http-api",
+      "archetype": "archetype:http-api",
+      "parts": [],
       "capabilities": [
         "capability:agreements",
         "capability:client-agreements",
@@ -13095,6 +13104,10 @@
       "file": "docqet/components/availability.md",
       "name": "Availability",
       "description": "How much of a week each engineer offers, which Capacity adds up per team.",
+      "within": null,
+      "is": "archetype:http-api",
+      "archetype": "archetype:http-api",
+      "parts": [],
       "capabilities": [
         "capability:availability",
         "capability:scheduling",
@@ -13118,6 +13131,10 @@
       "file": "docqet/components/billing.md",
       "name": "Billing",
       "description": "How the API charges for capacity through a payment provider. Clients handle payment methods, billing details, and invoices on the provider's own pages. How a provider plugs in is in the [provider boundary doc](../mechanisms/provider-boundary.md).",
+      "within": null,
+      "is": "archetype:http-api",
+      "archetype": "archetype:http-api",
+      "parts": [],
       "capabilities": [
         "capability:billing",
         "capability:capacity-purchasing"
@@ -13142,6 +13159,10 @@
       "file": "docqet/components/capacity.md",
       "name": "Capacity",
       "description": "Blocks of engineering capacity: bought, scheduled into a week, staffed, started, and fulfilled, each with at most one focus.",
+      "within": null,
+      "is": "archetype:http-api",
+      "archetype": "archetype:http-api",
+      "parts": [],
       "capabilities": [
         "capability:capacity-purchasing",
         "capability:client-home",
@@ -13168,6 +13189,10 @@
       "file": "docqet/components/earnings.md",
       "name": "Earnings",
       "description": "What engineers, leads, and partnerships earn on fulfilled blocks, recorded as each is fulfilled.",
+      "within": null,
+      "is": "archetype:http-api",
+      "archetype": "archetype:http-api",
+      "parts": [],
       "capabilities": [
         "capability:earnings",
         "capability:partner-earnings",
@@ -13189,6 +13214,10 @@
       "file": "docqet/components/estimates.md",
       "name": "Estimates",
       "description": "An estimate and everything in it is one document, replaced whole.",
+      "within": null,
+      "is": "archetype:http-api",
+      "archetype": "archetype:http-api",
+      "parts": [],
       "capabilities": [
         "capability:estimates"
       ],
@@ -13210,6 +13239,10 @@
       "file": "docqet/components/focuses.md",
       "name": "Focuses",
       "description": "A block's focus: what its work is about, with images, videos, and files from its organization's objects.",
+      "within": null,
+      "is": "archetype:http-api",
+      "archetype": "archetype:http-api",
+      "parts": [],
       "capabilities": [
         "capability:fulfillment"
       ],
@@ -13228,6 +13261,10 @@
       "file": "docqet/components/organizations.md",
       "name": "Organizations",
       "description": "Client organizations, their members, invitations, payment customer, and logo.",
+      "within": null,
+      "is": "archetype:http-api",
+      "archetype": "archetype:http-api",
+      "parts": [],
       "capabilities": [
         "capability:organizations-and-members",
         "capability:client-directory",
@@ -13253,6 +13290,10 @@
       "file": "docqet/components/partnerships.md",
       "name": "Partnerships",
       "description": "Partnerships and what their managers do in them: invite clients, see the clients attributed to them, and accept their Partner Agreements. How a request acts in one is in the [row-level security doc](../mechanisms/row-level-security.md), and Partner Agreements themselves are in [agreements](agreements.md).",
+      "within": null,
+      "is": "archetype:http-api",
+      "archetype": "archetype:http-api",
+      "parts": [],
       "capabilities": [
         "capability:partnerships",
         "capability:client-invitations",
@@ -13278,6 +13319,10 @@
       "file": "docqet/components/payouts.md",
       "name": "Payouts",
       "description": "How earnings become money sent, to people and to partnerships.",
+      "within": null,
+      "is": "archetype:http-api",
+      "archetype": "archetype:http-api",
+      "parts": [],
       "capabilities": [
         "capability:payouts",
         "capability:partner-payouts"
@@ -13299,6 +13344,10 @@
       "file": "docqet/components/spaces.md",
       "name": "Spaces",
       "description": "Our records of each organization's conversation space and who we put in it, kept in step with the messaging provider as memberships change, and blocks' conversations there. The provider is behind messaging: Google Chat or Stream.",
+      "within": null,
+      "is": "archetype:http-api",
+      "archetype": "archetype:http-api",
+      "parts": [],
       "capabilities": [
         "capability:conversation-spaces"
       ],
@@ -13319,6 +13368,10 @@
       "file": "docqet/components/teams.md",
       "name": "Teams",
       "description": "Who at Exalynt a client sees and, through the `team` scope, which clients' records an engineer can reach.",
+      "within": null,
+      "is": "archetype:http-api",
+      "archetype": "archetype:http-api",
+      "parts": [],
       "capabilities": [
         "capability:teams",
         "capability:client-directory",
@@ -13342,6 +13395,10 @@
       "file": "docqet/components/work-updates.md",
       "name": "Work updates",
       "description": "What engineers write about a block's work as they do it, shown on its page with when it was started and fulfilled.",
+      "within": null,
+      "is": "archetype:http-api",
+      "archetype": "archetype:http-api",
+      "parts": [],
       "capabilities": [
         "capability:fulfillment"
       ],
@@ -13354,6 +13411,31 @@
       },
       "decisions": [],
       "body": "**Blocks and focuses.** `work_updates.capacity_id` and `focus_id` are both\nnullable, so an update can be about a focus alone, but no CHECK requires one\nof them: `WorkUpdateService` always sets the block. Nothing posts or lists\nfocus-only updates yet, and `writers` treats one as not found. Adding them\nmeans deciding whose permission reaches a focus on no block. Updates are\nlisted by `capacity_id` only, so an update stays on the block it was posted on\neven after the block's focus changes, and the focus it was about is only its\n`focus_id`.\n\n**Who writes.** `work_updates` and `work_update_attachments` are\norganization-scoped with row-level security, and `api_organization` has\n`SELECT` only. Only a request acting in no organization writes one.\n\n**Deleting** keeps the row: `Delete` empties text, metrics, links, and\nattachments and sets `deleted_at`. The list returns deleted updates, so\nclients show them as deleted rather than drop them.\n\n**Links and metrics** are JSONB that only the service checks. Links are http\nor https only, because the UI renders them as `href`s in the client's browser,\nand the service keeps that check.\n\n**Attachments.** Attachment bytes are served safely by\n`GET /objects/{id}/content` (attachment, nosniff, sandboxed), but the ui reads\nthem into object URLs, which belong to the app's origin and keep the\nuploader's content type. Every ui page that reads them goes through\n`objectURLOf` (ui `src/services/exalynt/objects.ts`), which keeps only plain\nimages and videos renderable, or an uploaded SVG or HTML file opened in a tab\nruns as the app. The portal will too, once it reads real updates.\n\n**Who started a block** is `capacities.started_by`, which isn't always its\nengineer: `Start` takes `capacity:manage` at team or global scope too. Blocks\nstarted before migration 00088 have no `started_at`."
+    }
+  ],
+  "archetypes": [
+    {
+      "id": "http-api",
+      "file": "docqet/archetypes/http-api.md",
+      "name": "HTTP API",
+      "description": "A service the apps and partners' software call over HTTPS, answering in JSON, and holding the data behind every app.",
+      "components": [
+        "component:access-tokens",
+        "component:agreements",
+        "component:availability",
+        "component:billing",
+        "component:capacity",
+        "component:earnings",
+        "component:estimates",
+        "component:focuses",
+        "component:organizations",
+        "component:partnerships",
+        "component:payouts",
+        "component:spaces",
+        "component:teams",
+        "component:work-updates"
+      ],
+      "body": "What it serves can be relied on by software no person is watching, so a\nchange to what it answers is a change to a contract."
     }
   ],
   "gaps": [

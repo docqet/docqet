@@ -193,6 +193,9 @@ func (p *renamePlan) collectFiles(st *state.State) {
 	for _, x := range st.Components {
 		doc(state.TypeComponent, x.ID, x.File)
 	}
+	for _, x := range st.Archetypes {
+		doc(state.TypeArchetype, x.ID, x.File)
+	}
 	seen := map[string]bool{}
 	places := func(list []state.Place) {
 		for _, pl := range list {
@@ -231,7 +234,7 @@ func (p *renamePlan) collectFiles(st *state.State) {
 }
 
 var (
-	refToken   = regexp.MustCompile(`(?:^|[^a-zA-Z0-9_./:-])((?:area|feature|capability|rule|concept|persona|problem|constraint|initiative|mechanism|component):[a-z0-9]+(?:-[a-z0-9]+)*(?:@[a-z0-9]+(?:-[a-z0-9]+)*)?(?:#[a-z0-9]+(?:-[a-z0-9]+)*)?)`)
+	refToken   = regexp.MustCompile(`(?:^|[^a-zA-Z0-9_./:-])((?:area|feature|capability|rule|concept|persona|problem|constraint|initiative|mechanism|component|archetype):[a-z0-9]+(?:-[a-z0-9]+)*(?:@[a-z0-9]+(?:-[a-z0-9]+)*)?(?:#[a-z0-9]+(?:-[a-z0-9]+)*)?)`)
 	annotation = regexp.MustCompile(`docqet:(?:implements|verifies|gap|tradeoff)[ \t]`)
 	topKey     = regexp.MustCompile(`^([a-z][a-z-]*):`)
 	itemID     = regexp.MustCompile(`^(\s*-\s+id:\s*)([a-z0-9-]+)(\s*(?:#.*)?)$`)

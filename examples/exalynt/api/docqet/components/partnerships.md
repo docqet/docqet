@@ -8,6 +8,7 @@ description: >-
   request acts in one is in the [row-level security
   doc](../mechanisms/row-level-security.md), and Partner Agreements themselves
   are in [agreements](agreements.md).
+is: archetype:http-api
 serves:
   - capability:partnerships
   - capability:client-invitations

@@ -113,6 +113,12 @@ export type TechnicalResource = DocResource & {
   applies: "project" | "product";
   /* A mechanism's: the constraints it respects. Always empty for a component. */
   respects: string[];
+  /* A component's: the bigger component it's within, the archetype it says it is, and the one it is, its own or its bigger component's. Null for a mechanism. */
+  within: string | null;
+  is: string | null;
+  archetype: string | null;
+  /* A component's parts: the components within it. */
+  parts: string[];
   capabilities: string[];
   meets: string[];
   gaps: string[];

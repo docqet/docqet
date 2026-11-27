@@ -6,7 +6,7 @@ import { STABILITY } from "../../components/stability/stability";
 import { plural } from "../../components/names";
 import { initiativesOf } from "../../components/Initiatives";
 import { expectedOutcome, gapsById, inRiskOrder, openDecisions, find, type DocqetState, type TechnicalDoc } from "../../state";
-import { sectionHref, type Route } from "../../routes";
+import { docHref, sectionHref, type Route } from "../../routes";
 import { Empty, Section, Stat, Tabs, currentTab, type TabDef } from "../../components/shell/layout";
 import { type DocPageProps } from "../../components/doc/DocPage";
 import { tabHref } from "../../components/doc/DocPage";
@@ -94,6 +94,7 @@ export function TechnicalPage({ doc, route, ...go }: DocPageProps & { doc: Techn
       {tab === "built" ? (
         <>
           <Sources {...go} kind={doc.kind} doc={doc} title="What it is" />
+          {doc.archetype || doc.within || doc.parts.length ? <WhereItSits state={state} doc={doc} /> : null}
           {respects.length ? (
             <Section title="Respects" term="constraint" count={respects.length} note="What it keeps to that nobody here chose.">
               <ConstraintRows constraints={respects} />
@@ -139,7 +140,9 @@ export function TechnicalPage({ doc, route, ...go }: DocPageProps & { doc: Techn
               </Box>
             </Section>
           ) : null}
-          {!fielded && !hasBody(doc) && !outcomes.length && !respects.length ? <Empty>Nothing more is written about it than what's above.</Empty> : null}
+          {!fielded && !hasBody(doc) && !outcomes.length && !respects.length && !doc.within && !doc.parts.length ? (
+            <Empty>Nothing more is written about it than what's above.</Empty>
+          ) : null}
         </>
       ) : tab === "open" ? (
         <OpenTab {...go} open={open} here={doc} nothing="Nothing open: no open decisions or technical gaps are written down." />
@@ -175,4 +178,45 @@ export function openOnTechnical(state: DocqetState, doc: TechnicalDoc): OpenHere
     gaps: inRiskOrder(gapsById(state, doc.gaps), (g) => g).map((gap) => ({ gap })),
     risk: doc.risk,
   };
+}
+
+/*
+ * Where a component sits in how the software is built: the archetype it is,
+ * the bigger component it's within, and its parts, so a newcomer can go from
+ * a big runnable part to the smaller ones inside it.
+ */
+function WhereItSits({ state, doc }: { state: DocqetState; doc: TechnicalDoc }) {
+  const within = doc.within ? find(state.components, doc.within) : undefined;
+  const parts = doc.parts.flatMap((id) => find(state.components, id) ?? []);
+  const rows: [string, React.ReactNode][] = [];
+  if (doc.archetype) rows.push(["Is", doc.archetype]);
+  if (doc.within) rows.push(["Within", <a href={docHref("component", doc.within)}>{within?.name ?? doc.within}</a>]);
+  if (parts.length)
+    rows.push([
+      "Parts",
+      parts.map((p, i) => (
+        <span key={p.id}>
+          {i ? ", " : null}
+          <a href={docHref("component", p.id)}>{p.name}</a>
+        </span>
+      )),
+    ]);
+  return (
+    <Section title="Where it sits" note="The kind of thing it is, and what it's part of.">
+      <Box sx={cardSx}>
+        <Box component="dl" sx={{ display: "grid", gridTemplateColumns: "max-content 1fr", gap: "4px 16px", m: 0, fontSize: 13.5 }}>
+          {rows.map(([label, value]) => (
+            <Box key={label} sx={{ display: "contents" }}>
+              <Box component="dt" sx={{ color: "text.secondary" }}>
+                {label}
+              </Box>
+              <Box component="dd" sx={{ m: 0 }}>
+                {value}
+              </Box>
+            </Box>
+          ))}
+        </Box>
+      </Box>
+    </Section>
+  );
 }

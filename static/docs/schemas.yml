@@ -718,7 +718,7 @@ components:
     Counts:
       type: object
       description: How many of each there are, showing.
-      required: [areas, features, capabilities, rules, concepts, personas, problems, constraints, initiatives, mechanisms, components, gaps, tradeoffs, decisions, findings]
+      required: [areas, features, capabilities, rules, concepts, personas, problems, constraints, initiatives, mechanisms, components, archetypes, gaps, tradeoffs, decisions, findings]
       properties:
         areas:
           type: integer
@@ -750,6 +750,8 @@ components:
         mechanisms:
           type: integer
         components:
+          type: integer
+        archetypes:
           type: integer
         gaps:
           type: integer
@@ -899,7 +901,7 @@ components:
       allOf:
         - $ref: "#/components/schemas/Doc"
         - type: object
-          required: [solves, personas, initiatives, stability, levels, feature, rules, concepts, gaps, tradeoffs, builtBy, evidence, readiness, exposure, risk, open, ruleStandings, outcomes]
+          required: [solves, personas, initiatives, stability, levels, feature, rules, concepts, gaps, tradeoffs, builtBy, archetypes, evidence, readiness, exposure, risk, open, ruleStandings, outcomes]
           properties:
             solves:
               $ref: "#/components/schemas/StringList"
@@ -931,6 +933,10 @@ components:
               $ref: "#/components/schemas/StringList"
             builtBy:
               $ref: "#/components/schemas/StringList"
+            archetypes:
+              description: The archetypes of the components that list it.
+              allOf:
+                - $ref: "#/components/schemas/StringList"
             evidence:
               $ref: "#/components/schemas/Evidence"
             readiness:
@@ -1092,7 +1098,7 @@ components:
       allOf:
         - $ref: "#/components/schemas/Doc"
         - type: object
-          required: [kind, applies, respects, capabilities, meets, gaps, tradeoffs, evidence, risk]
+          required: [kind, applies, respects, within, is, archetype, parts, capabilities, meets, gaps, tradeoffs, evidence, risk]
           properties:
             kind:
               type: string
@@ -1102,6 +1108,24 @@ components:
               enum: [project, product]
             respects:
               description: A mechanism's constraints. A component's is always empty.
+              allOf:
+                - $ref: "#/components/schemas/StringList"
+            within:
+              type: string
+              nullable: true
+              description: A component's bigger component, by ID. Null for a mechanism.
+            is:
+              type: string
+              nullable: true
+              description: The archetype a component says it is, by ID.
+            archetype:
+              type: string
+              nullable: true
+              description: >-
+                The archetype a component is: its own, or else the nearest
+                bigger component's.
+            parts:
+              description: The components within a component.
               allOf:
                 - $ref: "#/components/schemas/StringList"
             capabilities:
@@ -1116,6 +1140,20 @@ components:
               $ref: "#/components/schemas/Evidence"
             risk:
               $ref: "#/components/schemas/RiskSummary"
+
+    Archetype:
+      description: >-
+        A kind of thing components are, as the product defines it, with the
+        components that are it and the capabilities they serve.
+      allOf:
+        - $ref: "#/components/schemas/Doc"
+        - type: object
+          required: [components, capabilities]
+          properties:
+            components:
+              $ref: "#/components/schemas/StringList"
+            capabilities:
+              $ref: "#/components/schemas/StringList"
 
     RiskOn:
       type: object

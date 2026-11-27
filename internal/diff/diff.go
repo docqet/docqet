@@ -208,6 +208,9 @@ func docsOf(st *state.State) map[string]docOf {
 	for i, x := range st.Components {
 		add(state.TypeComponent, x.ID, &st.Components[i].Evidence, x.Decisions)
 	}
+	for _, x := range st.Archetypes {
+		add(state.TypeArchetype, x.ID, nil, nil)
+	}
 	return docs
 }
 

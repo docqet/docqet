@@ -57,6 +57,7 @@ const (
 	TypeInitiative = "initiative"
 	TypeMechanism  = "mechanism"
 	TypeComponent  = "component"
+	TypeArchetype  = "archetype"
 )
 
 // Stability levels, in order, after draft.

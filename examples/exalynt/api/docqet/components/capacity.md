@@ -5,6 +5,7 @@ name: Capacity
 description: >-
   Blocks of engineering capacity: bought, scheduled into a week, staffed,
   started, and fulfilled, each with at most one focus.
+is: archetype:http-api
 serves:
   - capability:capacity-purchasing
   - capability:client-home

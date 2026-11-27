@@ -8,5 +8,5 @@ description: >-
 stability: prototype
 within: feature:reading-intention
 solves: [problem:intent-in-peoples-heads]
-uses: [concept:mechanism, concept:component]
+uses: [concept:mechanism, concept:component, concept:archetype]
 ---

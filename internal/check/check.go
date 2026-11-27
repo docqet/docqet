@@ -39,6 +39,7 @@ func Check(st *state.State) []state.Finding {
 	c.initiatives()
 	c.mechanisms()
 	c.components()
+	c.archetypes()
 	c.gaps()
 	c.tradeoffs()
 	c.duplicates()
@@ -233,9 +234,44 @@ func (c *checker) components() {
 	for _, cp := range c.st.Components {
 		s := subject{ref: state.DocRef(state.TypeComponent, cp.ID), file: cp.File}
 		c.common(s, cp.ID, cp.Name, cp.Description, true)
+		c.link(s, "within", cp.Within, state.TypeComponent)
+		c.link(s, "is", cp.Is, state.TypeArchetype)
 		c.links(s, "serves", cp.Capabilities, state.TypeCapability)
 		c.outcomes(s, "meets", cp.Meets)
 		c.decisions(s, cp.Decisions)
+		if c.withinItself(cp.ID) {
+			c.add(state.InvalidFrontmatter, s, "It's within itself, through within: a component is within one bigger component, and never its own parts.")
+		}
+	}
+}
+
+// withinItself reports whether following within from the component with id
+// comes back to it.
+func (c *checker) withinItself(id string) bool {
+	parent := map[string]string{}
+	for _, cp := range c.st.Components {
+		if cp.Within == nil {
+			continue
+		}
+		if ref, ok := state.ParseRef(*cp.Within); ok && ref.Type == state.TypeComponent {
+			parent[cp.ID] = ref.ID
+		}
+	}
+	seen := map[string]bool{}
+	for at, ok := parent[id]; ok && !seen[at]; at, ok = parent[at] {
+		if at == id {
+			return true
+		}
+		seen[at] = true
+	}
+	return false
+}
+
+// archetypes checks each archetype. One no component is isn't a finding: a
+// project can name its kinds of component before it writes their docs.
+func (c *checker) archetypes() {
+	for _, a := range c.st.Archetypes {
+		c.common(subject{ref: state.DocRef(state.TypeArchetype, a.ID), file: a.File}, a.ID, a.Name, a.Description, true)
 	}
 }
 
@@ -469,6 +505,8 @@ func (c *checker) fileOf(typ, id string) string {
 		return find(len(st.Mechanisms), func(i int) (string, string) { return st.Mechanisms[i].ID, st.Mechanisms[i].File })
 	case state.TypeComponent:
 		return find(len(st.Components), func(i int) (string, string) { return st.Components[i].ID, st.Components[i].File })
+	case state.TypeArchetype:
+		return find(len(st.Archetypes), func(i int) (string, string) { return st.Archetypes[i].ID, st.Archetypes[i].File })
 	}
 	return ""
 }
@@ -531,6 +569,9 @@ func (c *checker) duplicates() {
 	}
 	for _, cp := range c.st.Components {
 		check(state.TypeComponent, cp.ID, cp.File)
+	}
+	for _, a := range c.st.Archetypes {
+		check(state.TypeArchetype, a.ID, a.File)
 	}
 
 	// A doc's gaps and tradeoffs share their keys.
