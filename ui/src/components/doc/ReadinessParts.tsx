@@ -1,15 +1,15 @@
-import { ReadinessMark, StillNeeds } from "../Readiness";
+import { ReadinessMark } from "../Readiness";
 import { startedOf, type Readiness, type DocqetState } from "../../state";
 import { useStatusFor } from "../../model";
-import { Section, Stat } from "../shell/layout";
+import { Stat } from "../shell/layout";
 import { tabHref } from "./DocPage";
 import Skeleton from "@mui/material/Skeleton";
 import { ReadFallback } from "../ReadFallback";
 
-/* How ready it is, as a figure in the header, as its pie, linking to what it still needs on its first tab. `of` heads its popover. */
+/* How ready it is, as a figure in the header, as its pie, linking to its improvements on `tab`. `of` heads its popover. */
 export function ReadinessStat({ readiness, tab, of }: { readiness: Readiness; tab: string; of: string }) {
   const note = [
-    ...(readiness.notReady.length ? [`${readiness.notReady.length} with something left`] : []),
+    ...(readiness.started ? [`From ${readiness.started} started`] : []),
     ...(readiness.notStarted.length ? [`${readiness.notStarted.length} not started`] : []),
   ].join(" · ");
   return (
@@ -17,18 +17,9 @@ export function ReadinessStat({ readiness, tab, of }: { readiness: Readiness; ta
       label="Readiness"
       term="readiness"
       value={readiness.percent === null ? "Nothing started" : <ReadinessMark readiness={readiness} of={of} inButton />}
-      note={note || (readiness.percent === null ? "Drafts don't count" : "Nothing left on any capability")}
-      href={`${tabHref(tab)}#still-needs`}
+      note={note || "Drafts don't count"}
+      href={`${tabHref(tab)}#improvements`}
     />
-  );
-}
-
-/* What it still needs before people can use it, as a section of its first tab. */
-export function StillNeedsSection({ readiness, readyText }: { readiness: Readiness; readyText: string }) {
-  return (
-    <Section id="still-needs" title="What it still needs" term="readiness" note="What would make it more ready: each capability with something left, and what.">
-      <StillNeeds readiness={readiness} readyText={readyText} />
-    </Section>
   );
 }
 

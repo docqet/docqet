@@ -10,19 +10,15 @@ import { docHref, type Route } from "../../routes";
 import { Empty, Section, Stat, Tabs, currentTab, type TabDef } from "../../components/shell/layout";
 import { type DocPageProps } from "../../components/doc/DocPage";
 import { tabHref } from "../../components/doc/DocPage";
+import { openAcross, OpenTab, TopGaps } from "../../components/doc/Open";
+import { ImprovementsList, ImprovementsSection, ImprovementsStat, IMPROVEMENTS_TAB } from "../../components/improvements/Improvements";
 import { DocView } from "../../components/doc/DocPage";
 import { DocHeader } from "../../components/doc/DocPage";
 import { DomainTrail } from "../../components/doc/DocPage";
 import { hasBody } from "../../components/doc/About";
 import { Bodies } from "../../components/doc/About";
 import { ReadinessStat } from "../../components/doc/ReadinessParts";
-import { StillNeedsSection } from "../../components/doc/ReadinessParts";
 import { ReadinessFor } from "../../components/doc/ReadinessParts";
-import { leftAcross } from "../../components/doc/Left";
-import { leftTotal } from "../../components/doc/Left";
-import { LeftStat } from "../../components/doc/Left";
-import { LeftTab } from "../../components/doc/Left";
-import { TopGaps } from "../../components/doc/Left";
 import { CapabilityTable } from "../../components/doc/CapabilityTable";
 import { Missing } from "../../components/doc/Missing";
 import { docGo, Crumb, levelsSx, lineSx } from "../../components/doc/DocPage";
@@ -36,7 +32,7 @@ export default function InitiativeView({ state, id, route }: { state: DocqetStat
 
 /*
  * An initiative: how ready its work is, and what it still needs, then its
- * capabilities, by feature, what's left in them, and its body. Like a
+ * capabilities, by feature, its improvements and what's open in them, and its body. Like a
  * persona's page, everything on it counts only its capabilities.
  */
 export function InitiativePage({ initiative, route, ...go }: DocPageProps & { initiative: Initiative }) {
@@ -46,13 +42,13 @@ export function InitiativePage({ initiative, route, ...go }: DocPageProps & { in
   const loose = capabilities.filter((c) => !c.feature);
   const domains = [...new Set(capabilities.flatMap((c) => docDomains(c)))];
   const readiness = initiative.readiness;
-  const left = leftAcross(capabilities, readiness, undefined, false);
+  const open = openAcross(capabilities, readiness, undefined, false);
   const personas = initiative.personas.flatMap((id) => find(state.personas, id) ?? []);
   const name = initiative.name;
   const tabs: TabDef[] = [
     { id: "readiness", label: "Readiness", term: "readiness" as const },
     { id: "capabilities", label: "Capabilities", term: "capability" as const, count: capabilities.length },
-    { id: "left", label: "What's left in it", term: "gap" as const, count: leftTotal(left) || undefined },
+    { id: IMPROVEMENTS_TAB, label: "Improvements", term: "improvement" as const, count: readiness.improvements.length || undefined },
     ...(hasBody(initiative) ? [{ id: "about", label: "About" }] : []),
   ];
   const tab = currentTab(route, tabs);
@@ -82,14 +78,14 @@ export function InitiativePage({ initiative, route, ...go }: DocPageProps & { in
             />
             <ExposureStat exposure={initiative.exposure} risk={initiative.readiness.gaps} of={name} />
             <ReadinessStat readiness={readiness} tab="readiness" of={`Readiness of ${name}`} />
-            <LeftStat left={left} of={name} />
+            <ImprovementsStat readiness={readiness} />
           </>
         }
       />
       <Tabs tabs={tabs} current={tab} />
       {tab === "readiness" ? (
         <>
-          <StillNeedsSection readiness={readiness} readyText={`${name} is ready: everything started in it is at Beta or above, with no unacceptable gap.`} />
+          <ImprovementsSection readiness={readiness} />
           <Section title="Who it's for" term="persona" count={personas.length} note="How ready it is for each, from its capabilities that serve them.">
             {personas.length ? (
               <Box component="ul" sx={levelsSx}>
@@ -126,7 +122,7 @@ export function InitiativePage({ initiative, route, ...go }: DocPageProps & { in
               </Box>
             )}
           </Section>
-          <TopGaps state={state} left={left} />
+          <TopGaps state={state} open={open} />
         </>
       ) : tab === "capabilities" ? (
         <>
@@ -141,7 +137,7 @@ export function InitiativePage({ initiative, route, ...go }: DocPageProps & { in
                 }
                 aside={<ReadinessFor state={state} forRef={`feature:${f.id}`} initiative={initiative.id} of={`${f.name}'s readiness in ${name}`} started />}
               >
-                <CapabilityTable state={state} capabilities={capabilities.filter((c) => c.feature === f.id)} technical={false} />
+                <CapabilityTable state={state} capabilities={capabilities.filter((c) => c.feature === f.id)} />
               </Section>
             );
           })}
@@ -154,13 +150,16 @@ export function InitiativePage({ initiative, route, ...go }: DocPageProps & { in
               }
               count={loose.length}
             >
-              <CapabilityTable state={state} capabilities={loose} technical={false} />
+              <CapabilityTable state={state} capabilities={loose} />
             </Section>
           ) : null}
           {!capabilities.length ? <Empty>None of its capabilities is in the scope showing.</Empty> : null}
         </>
-      ) : tab === "left" ? (
-        <LeftTab {...go} left={left} nothing="Nothing left in it: no open decisions or product gaps are written down on its capabilities." />
+      ) : tab === IMPROVEMENTS_TAB ? (
+        <>
+          <ImprovementsList readiness={readiness} />
+          <OpenTab {...go} open={open} nothing="Nothing open in it: no open decisions or product gaps are written down on its capabilities." />
+        </>
       ) : (
         <Section title={MORE_ABOUT}>
           <Bodies {...go} doc={initiative} />

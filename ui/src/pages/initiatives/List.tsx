@@ -71,7 +71,7 @@ export default function InitiativesPage({ state }: { state: DocqetState; route: 
 function Row({ state, initiative: i }: { state: DocqetState; initiative: Initiative }) {
   const { name, description: note } = i;
   const href = docHref("initiative", i.id);
-  const left = docHref("initiative", i.id, "left");
+  const left = docHref("initiative", i.id, "improvements");
   const capabilities: Capability[] = capabilitiesById(state, i.capabilities);
   const personas = i.personas.filter((id) => find(state.personas, id)).length;
   const gaps = gapsById(state, [...new Set(capabilities.flatMap((c) => c.gaps))]);

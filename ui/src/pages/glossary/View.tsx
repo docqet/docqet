@@ -295,8 +295,9 @@ function Levels() {
           {TERMS.readiness.more}
         </Box>
         <Box component="p" sx={noteSx}>
-          It's a recommendation, and you're the judge. A capability with something left still needs to reach Beta, where it's below, and to close each gap whose
-          risk on it is unacceptable; every page lists what's left. A draft is not started, and never counts.
+          It's a recommendation, and you're the judge. Every page lists its improvements: promoting a capability to its next level, closing a gap, or answering
+          a rated open decision, each with how much it would raise readiness, most first. They're what could be done, not a finish line. A draft is not started,
+          and never counts.
         </Box>
         <TableContainer sx={narrowTableSx}>
           <Table aria-label="Readiness bands">

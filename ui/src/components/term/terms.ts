@@ -26,6 +26,7 @@ export type TermId =
   | "exposure"
   | "evidence"
   | "readiness"
+  | "improvement"
   | "stability"
   | "maturity"
   | "rubric"
@@ -131,12 +132,12 @@ export const TERMS: Record<TermId, TermEntry> = {
     name: "Open decision",
     means:
       "A question about what's intended that hasn't been settled yet, recorded so it isn't lost or quietly decided in code. Once it's answered, it's deleted, and the answer is written as whatever it became.",
-    more: "Does an early arrival's stay start that day?",
+    more: "Does an early arrival's stay start that day? One whose answer could change what people rely on is rated as a gap is, with impact, likelihood and reach, read about the change its answer could bring, and has a risk that counts in exposure.",
   },
   risk: {
     name: "Risk",
     means:
-      "What's at stake in leaving a gap open, from 0 to 100: what it could do, its impact times how likely it is and how many it reaches, weighed by how much people rely on each capability it's on, from its stability, and higher where it breaks a claim that level makes, the more so the higher the level. Its verdict says whether that's acceptable (under 33), tolerable (33 to 66) or unacceptable (67 and up).",
+      "What's at stake in leaving a gap, or a rated open decision, open, from 0 to 100: what it could do, its impact times how likely it is and how many it reaches, weighed by how much people rely on each capability it's on, from its stability, and higher where it breaks a claim that level makes, the more so the higher the level. Its verdict says whether that's acceptable (under 33), tolerable (33 to 66) or unacceptable (67 and up).",
     more: "A certain damaging gap reaching everyone that breaks a claim on a GA capability is 100. Only possible, it's 76, still unacceptable; on a Beta capability, where it breaks no claim, 48, tolerable.",
   },
   spread: {
@@ -148,8 +149,8 @@ export const TERMS: Record<TermId, TermEntry> = {
   exposure: {
     name: "Exposure",
     means:
-      "What the gaps still open on a feature, domain, project or what serves a persona put at stake together: how close its capabilities are to the worst their levels allow, as a percentage, in one of four bands: low, minor, moderate or high. It's to risk what maturity is to stability.",
-    more: "Each capability is exposed to its riskiest gap's share of the most it could be, a certain damaging gap reaching everyone that breaks a claim its level makes, and each counts by its level, GA most, as in maturity. Drafts don't count. Readiness is maturity less exposure.",
+      "What the gaps and rated decisions still open on a feature, domain, project or what serves a persona put at stake together: how close its capabilities are to the worst their levels allow, as a percentage, in one of four bands: low, minor, moderate or high. It's to risk what maturity is to stability.",
+    more: "Each capability is exposed to its riskiest gap's or decision's share of the most it could be, a certain damaging gap reaching everyone that breaks a claim its level makes, and each counts by its level, GA most, as in maturity. Drafts don't count. Readiness is maturity less exposure.",
   },
   evidence: {
     name: "Evidence",
@@ -159,8 +160,14 @@ export const TERMS: Record<TermId, TermEntry> = {
   readiness: {
     name: "Readiness",
     means:
-      "Our view of how ready the software is to serve people in production, from the engineering judgement written down beside it: each capability's stability level, and its gaps and their risk. It's a recommendation, and you're the judge.",
-    more: "It's maturity less the exposure: maturity × (1 − exposure), and it always comes with what's left to do. A persona at 70% is Viable: most of what they need can be relied on day to day.",
+      "Our view of how ready the software is to serve people in production, from the engineering judgement written down beside it: each capability's stability level, and its gaps, rated open decisions and their risk. It's a recommendation, and you're the judge.",
+    more: "It's maturity less the exposure: maturity × (1 − exposure), and it always comes with its improvements: what would raise it. A persona at 70% is Viable: most of what they need can be relied on day to day.",
+  },
+  improvement: {
+    name: "Improvement",
+    means:
+      "Something that would make it more ready, and by how much: promoting a capability to its next level, which raises maturity, or closing a gap or answering a rated open decision, which lowers exposure. They're ordered by how much each would raise readiness.",
+    more: "They're what could be done, not a finish line: software that keeps growing is never done, and whether any of it is worth doing, and when to stop, is yours to judge. A gap that isn't the riskiest on any capability raises nothing yet, so it isn't one until it is.",
   },
   stability: {
     name: "Stability",

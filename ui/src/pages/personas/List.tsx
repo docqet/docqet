@@ -87,7 +87,7 @@ function PersonaRow({ state, persona }: { state: DocqetState; persona: Persona }
           exposure={{ exposure: persona.exposure, risk: persona.readiness.gaps }}
           kind="product-gap"
           of={`what serves ${name}`}
-          href={docHref("persona", persona.id, "left")}
+          href={docHref("persona", persona.id, "improvements")}
         />
       </TableCell>
     </TableRow>

@@ -25,7 +25,7 @@ export type CapabilityResource = DocResource & {
   readiness: ReadinessResource;
   exposure: ExposureResource;
   risk: RiskSummaryResource;
-  left: { decisions: DecisionResource[]; gaps: string[]; technical: { gap: string; on: string }[] };
+  open: { decisions: DecisionResource[]; gaps: string[]; technical: { gap: string; on: string }[] };
   ruleStandings: Record<string, string>;
   outcomes: OutcomeStandingResource[];
 };

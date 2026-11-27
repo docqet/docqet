@@ -6,7 +6,7 @@ import FeaturesPage from "./pages/features/List";
 import GapPage from "./pages/gaps/View";
 import GlossaryPage from "./pages/glossary/View";
 import LanguagePage from "./pages/language/List";
-import LeftPage from "./pages/left/List";
+import ImprovementsPage from "./pages/improvements/List";
 import MapPage from "./pages/map/View";
 import OverviewPage from "./pages/overview/View";
 import InitiativesPage from "./pages/initiatives/List";
@@ -217,8 +217,8 @@ function content(state: DocqetState, route: Route, layoutKey: string): ReactNode
       return <LanguagePage state={state} route={route} />;
     case "built":
       return <BuiltPage state={state} route={route} />;
-    case "left":
-      return <LeftPage state={state} route={route} />;
+    case "improvements":
+      return <ImprovementsPage state={state} route={route} />;
     case "decided":
       return <DecidedPage state={state} route={route} />;
     case "problems":

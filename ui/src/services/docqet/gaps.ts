@@ -1,26 +1,8 @@
 import { getAll, productPath, type Showing } from "./client";
-import type { AffectedResource, HeldDecisionResource, PlaceResource, ScoredGapResource } from "./shared";
+import type { AffectedResource, HeldDecisionResource, PlaceResource, RiskResource, ScoredGapResource } from "./shared";
 
-/* What a gap puts at stake on one capability, and how that's worked out. */
-export type RiskOnResource = {
-  capability: string;
-  impact: number;
-  likelihood: number;
-  reach: number;
-  weight: number;
-  claim: boolean;
-  claimFactor: number;
-  raw: number;
-  score: number;
-};
-export type RiskResource = {
-  score: number;
-  verdict: string;
-  claim: boolean;
-  capabilities: number;
-  spread: { score: number; capabilities: number }[];
-  on: RiskOnResource[];
-};
+export type { RiskOnResource, RiskResource } from "./shared";
+
 export type GapResource = {
   id: string;
   subject: string;

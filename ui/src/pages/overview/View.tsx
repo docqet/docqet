@@ -5,10 +5,11 @@ import { useMemo } from "react";
 import { Maturity } from "../../components/maturity/Maturity";
 import { NAMES, TECHNICAL_NAMES, plural } from "../../components/names";
 import { StabilitySpread } from "../../components/stability/StabilitySpread";
-import { ExposureStat, GapsCell, MaturityStat } from "../../components/indexParts";
-import { LeftFigure } from "../../components/risk/GapRows";
+import { ExposureStat, MaturityStat } from "../../components/indexParts";
+import { ExposureMark } from "../../components/risk/RiskScore";
 import { PersonaAvatar } from "../../components/Personas";
-import { ReadinessMark, StillNeeds } from "../../components/Readiness";
+import { ReadinessMark } from "../../components/Readiness";
+import { ImprovementRows, ImprovementsFigure, improvementWords } from "../../components/improvements/Improvements";
 import { InlineMarkdown } from "../../components/markdown/Markdown";
 import { MaturityRing } from "../../components/maturity/MaturityRing";
 import { MATURITY_BANDS } from "../../components/maturity/maturity";
@@ -61,8 +62,8 @@ const nameRowSx: SystemStyleObject<Theme> = { ...rowSx, display: "flex", alignIt
 /*
  * How the product is doing, at a glance, with no panning: its maturity, how
  * far along the work is, its readiness, whether people can use it, who it's
- * least ready for, what's left and what's wrong in the docs, as tiles that
- * each link to where they're explained; then what it still needs to be
+ * least ready for, its improvements and what's wrong in the docs, as tiles
+ * that each link to where they're explained; then what would make it more
  * ready, how stable each domain is, how ready it is for each persona, and
  * the few riskiest gaps. Summary only: every count links on rather than
  * listing.
@@ -106,7 +107,7 @@ export default function OverviewPage({ state }: { state: DocqetState; route: Rou
             <Stat
               label="Readiness"
               term="readiness"
-              href="#still-needs"
+              href="#improvements"
               value={
                 readiness.percent === null ? (
                   <Box component="span" sx={faintSx}>
@@ -138,10 +139,15 @@ export default function OverviewPage({ state }: { state: DocqetState; route: Rou
               />
             ) : null}
             <Stat
-              label="What's left"
-              term="gap"
-              href={sectionHref("left")}
-              value={<LeftFigure gaps={state.gaps} decisions={decisions} risk={state.status.risk} of="everything" />}
+              label="Improvements"
+              term="improvement"
+              href={sectionHref("improvements")}
+              value={readiness.improvements.length ? <ImprovementsFigure readiness={readiness} /> : "None now"}
+              note={
+                readiness.improvements.length
+                  ? `Most from ${improvementWords(readiness.improvements[0])}`
+                  : `${plural(state.gaps.length, "gap", "gaps")} and ${plural(decisions, "open decision", "open decisions")} written down`
+              }
             />
             {state.problems.length ? (
               <Stat label="Doc problems" href={sectionHref("problems")} tone="warn" value={state.problems.length} note="Contradictions and mistakes to fix" />
@@ -151,12 +157,13 @@ export default function OverviewPage({ state }: { state: DocqetState; route: Rou
       />
 
       <Section
-        id="still-needs"
-        title="What it still needs"
-        term="readiness"
-        note="Before people can use it: each capability not ready yet, and what would make it ready."
+        id="improvements"
+        title="Improvements"
+        term="improvement"
+        note="What would make it more ready, most first. They're what could be done, not a finish line: what's worth doing is yours to judge."
+        aside={readiness.improvements.length > 5 ? <a href={sectionHref("improvements")}>See all {readiness.improvements.length}</a> : null}
       >
-        <StillNeeds readiness={readiness} readyText="Ready: every started capability is at Beta or above, with no unacceptable gap." />
+        <ImprovementRows readiness={readiness} limit={5} />
       </Section>
 
       <Section
@@ -166,7 +173,7 @@ export default function OverviewPage({ state }: { state: DocqetState; route: Rou
           </>
         }
         count={state.domains.length}
-        note="Its maturity and its capabilities' stability, beside what's left on them and their exposure, least mature first."
+        note="Its maturity and its capabilities' stability, beside their exposure and its improvements, least mature first."
       >
         {state.domains.length ? <DomainStability state={state} /> : <Empty>No domains yet.</Empty>}
       </Section>
@@ -196,7 +203,11 @@ export default function OverviewPage({ state }: { state: DocqetState; route: Rou
         </Section>
       ) : null}
 
-      <Section title="Riskiest gaps" count={state.gaps.length} aside={state.gaps.length > riskiest.length ? <a href={sectionHref("left")}>See all →</a> : null}>
+      <Section
+        title="Riskiest gaps"
+        count={state.gaps.length}
+        aside={state.gaps.length > riskiest.length ? <a href={sectionHref("improvements", { tab: "gaps" })}>See all →</a> : null}
+      >
         {riskiest.length ? (
           <ul>
             {riskiest.map((g) => (
@@ -276,10 +287,10 @@ const levelLabel = (level: CapabilityLevel) => (level ? STABILITY[level].name : 
 
 /*
  * Where each domain stands, a line each: its maturity, its capabilities as a
- * bar split by stability level, and what's left on them, as the same marks
- * and counts the Features list uses. One key under the list says which color
- * is which level. Least mature first. Below md, the name and maturity share
- * a line, and the bar and what's left each take one of their own.
+ * bar split by stability level, and its exposure and improvements. One key
+ * under the list says which color is which level. Least mature first. Below
+ * md, the name and maturity share a line, and the bar and the figures each
+ * take one of their own.
  */
 function DomainStability({ state }: { state: DocqetState }) {
   const rows = [...state.domains]
@@ -294,7 +305,7 @@ function DomainStability({ state }: { state: DocqetState }) {
   return (
     <>
       <ul>
-        {rows.map(({ domain, levels, gaps, decisions }) => {
+        {rows.map(({ domain, levels }) => {
           return (
             <Box
               component="li"
@@ -340,19 +351,21 @@ function DomainStability({ state }: { state: DocqetState }) {
                   {levels.length}
                 </Box>
               </Box>
-              {/* What's left in it, as the Features list shows it, linking to its What's left tab. */}
+              {/* Its exposure and improvements, linking to its Improvements tab. */}
               <Box
                 component="span"
                 sx={{ display: "flex", justifyContent: { xs: "flex-start", md: "flex-end" }, gridColumn: { xs: "1 / -1", md: "auto" }, whiteSpace: "nowrap" }}
               >
-                <GapsCell
-                  gaps={gaps}
-                  exposure={{ exposure: domain.exposure, risk: domain.readiness.gaps }}
-                  kind="gap"
-                  decisions={decisions}
-                  of={domain.name}
-                  href={docHref("domain", domain.id, "left")}
-                />
+                <Box component="span" sx={{ display: "inline-flex", alignItems: "center", gap: 1.5 }}>
+                  <ExposureMark exposure={domain.exposure} risk={domain.readiness.gaps} of={domain.name} />
+                  <Box
+                    component="a"
+                    href={docHref("domain", domain.id, "improvements")}
+                    sx={{ textDecoration: "none", color: "inherit", "&:hover": { color: "primary.main" } }}
+                  >
+                    <ImprovementsFigure readiness={domain.readiness} />
+                  </Box>
+                </Box>
               </Box>
             </Box>
           );

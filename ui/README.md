@@ -31,18 +31,18 @@ A bar across the top says where you are and finds anything: the product and
 its projects, the initiative showing, search, and the glossary of Docqet's
 words. A nav down the side picks which question you're asking:
 
-| Section        | Answers                                                                                                                                              | Address                       |
-| -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------- |
-| Overview       | How is it doing? Maturity, readiness and what it still needs, who it's least ready for, where each domain stands, the riskiest gaps                  | (none)                        |
-| Map            | How does it fit together? Domains, features and capabilities on a canvas, with their personas                                                        | `?view=map`                   |
-| Features       | What can it do? Domains, features and capabilities as a tree                                                                                         | `?view=features`              |
-| Personas       | Who it serves, and how ready it is for each                                                                                                          | `?view=personas`              |
-| Initiatives    | Bodies of work, such as the MVP, and how ready each is                                                                                               | `?view=initiatives`           |
-| Language       | What the words mean: concepts, and the rules that must hold                                                                                          | `?view=language`              |
-| How it's built | Mechanisms and components                                                                                                                            | `?view=built`                 |
-| What's left    | Gaps and open decisions, for everything or one project, persona, initiative, domain, feature or capability, filtered and ordered by any part of risk | `?view=left&for=persona:<id>` |
-| Decided        | Tradeoffs and non-goals                                                                                                                              | `?view=decided`               |
-| Doc problems   | Contradictions and mistakes in the docs                                                                                                              | `?view=problems`              |
+| Section        | Answers                                                                                                                                            | Address                               |
+| -------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------- |
+| Overview       | How is it doing? Maturity, readiness and what it still needs, who it's least ready for, where each domain stands, the riskiest gaps                | (none)                                |
+| Map            | How does it fit together? Domains, features and capabilities on a canvas, with their personas                                                      | `?view=map`                           |
+| Features       | What can it do? Domains, features and capabilities as a tree                                                                                       | `?view=features`                      |
+| Personas       | Who it serves, and how ready it is for each                                                                                                        | `?view=personas`                      |
+| Initiatives    | Bodies of work, such as the MVP, and how ready each is                                                                                             | `?view=initiatives`                   |
+| Language       | What the words mean: concepts, and the rules that must hold                                                                                        | `?view=language`                      |
+| How it's built | Mechanisms and components                                                                                                                          | `?view=built`                         |
+| Improvements   | What would make it more ready, then every gap and open decision, for everything or one project, persona, initiative, domain, feature or capability | `?view=improvements&for=persona:<id>` |
+| Decided        | Tradeoffs and non-goals                                                                                                                            | `?view=decided`                       |
+| Doc problems   | Contradictions and mistakes in the docs                                                                                                            | `?view=problems`                      |
 
 Every domain, feature, capability, persona, initiative, concept, rule,
 mechanism, component and gap has a page of its own, such as
@@ -142,14 +142,18 @@ decisions and tradeoffs.
   and why, and its score on each capability it's on. Then its links: the
   rules and expected outcomes it affects, the open decisions it waits on,
   what it shows on, and where the code marks it.
-- **What's left** is the open decisions and the gaps, and nothing else:
-  missing evidence is never something left to do. Counts of it show the gap
-  and decision marks with how many, and the worst impact. Its page is for
-  everything showing, or for one project, persona, domain, feature or
-  capability, chosen at the top right, with each gap scored on that one's
-  capabilities. Its tiles are the gaps, with their risk spread and how many
-  there are at each risk, and the open decisions, each with what it affects
-  and the risk of the riskiest gap waiting on it. Gaps are a table showing
+- **Improvements** are what would make something more ready, by how much
+  each would raise its readiness, most first: promoting a capability,
+  closing a gap or answering a rated open decision. Every page, list row and
+  tile shows the most one would add and how many more there are, and never
+  says anything is done. What's open is the open decisions and the gaps,
+  and nothing else: missing evidence is never open. The Improvements page is
+  for everything showing, or for one project, persona, initiative, domain,
+  feature or capability, chosen at the top right, with each gap scored on
+  that one's capabilities. Its first tab is the improvements; then the
+  gaps, with their risk spread and how many there are at each risk, and the
+  open decisions, each with what it affects and, when it's rated, its own
+  risk. Gaps are a table showing
   each one's risk, which opens how it's worked out, its impact, likelihood,
   reach, the stability of the capability it scores highest on, its kind, and
   whether it breaks a claim. Impact, likelihood and reach are tags, each

@@ -9,12 +9,12 @@ import type { Theme } from "@mui/material/styles";
 import type { SystemStyleObject } from "@mui/system";
 import { Excerpt } from "../markdown/Markdown";
 import { Term } from "../term/Term";
-import { LeftSummary, leftOf } from "../left/LeftSummary";
+import { ImprovementsFigure, IMPROVEMENTS_TAB } from "../improvements/Improvements";
 import { InitiativeTags } from "../Initiatives";
-import { find, leftCount, type Capability, type DocqetState } from "../../state";
+import { find, type Capability, type DocqetState } from "../../state";
 import { docHref } from "../../routes";
 import { Empty } from "../shell/layout";
-import { LevelName, faintSx } from "./DocPage";
+import { LevelName } from "./DocPage";
 import { Avatars } from "./DocPage";
 
 /* A table on a doc page, in a card of its own that scrolls sideways inside itself when it's wider than the page. Its last row is unruled, as the card closes it. */
@@ -35,23 +35,20 @@ export const wideOnly: SystemStyleObject<Theme> = { display: { xs: "none", sm: "
 
 /*
  * Capabilities as a table: each one's name, opening its page, its level (in
- * `domain`, when given), what's left about it, opening that tab of its page,
- * and who it serves. With `technical` false, as for a persona, what's left is
- * only what someone using the product would notice. On a phone, who it
- * serves is left out.
+ * `domain`, when given), its improvements, what would make it more ready,
+ * opening that tab of its page, and who it serves. On a phone, who it serves
+ * is left out.
  */
 export function CapabilityTable({
   state,
   capabilities,
   domain,
-  technical = true,
   compact = false,
 }: {
   state: DocqetState;
   capabilities: Capability[];
   domain?: string;
-  technical?: boolean;
-  /* Just each one's level, name and what's left, for where it stands. */
+  /* Just each one's level, name and improvements, for where it stands. */
   compact?: boolean;
 }) {
   if (!capabilities.length) return <Empty>None yet.</Empty>;
@@ -69,8 +66,8 @@ export function CapabilityTable({
             </TableCell>
             <TableCell>Level</TableCell>
             <TableCell>
-              <Term id="gap" hoverOnly>
-                What's left
+              <Term id="improvement" hoverOnly>
+                Improvements
               </Term>
             </TableCell>
             {compact ? null : (
@@ -85,7 +82,6 @@ export function CapabilityTable({
         <TableBody>
           {capabilities.map((c) => {
             const level = (domain && c.levels.find((l) => l.domain === domain)?.level) || c.stability;
-            const left = leftOf(c, technical);
             return (
               <TableRow key={c.id}>
                 <TableCell sx={{ minWidth: { xs: 120, sm: 240 } }}>
@@ -100,16 +96,14 @@ export function CapabilityTable({
                 <TableCell sx={rest}>
                   <LevelName level={level} name={c.name} />
                 </TableCell>
-                {/* What's left reads as the row's text, not as its name. */}
-                <TableCell sx={{ ...rest, "& a": { fontWeight: 400 } }}>
-                  {leftCount(left) ? (
-                    <a href={docHref("capability", c.id, "left")}>
-                      <LeftSummary left={left} />
+                {/* Its improvements read as the row's text, not as its name. */}
+                <TableCell sx={{ ...rest, "& a": { fontWeight: 400, textDecoration: "none" } }}>
+                  {c.readiness.improvements.length ? (
+                    <a href={docHref("capability", c.id, IMPROVEMENTS_TAB)}>
+                      <ImprovementsFigure readiness={c.readiness} />
                     </a>
                   ) : (
-                    <Box component="span" sx={faintSx}>
-                      Nothing open
-                    </Box>
+                    <ImprovementsFigure readiness={c.readiness} />
                   )}
                 </TableCell>
                 {compact ? null : (

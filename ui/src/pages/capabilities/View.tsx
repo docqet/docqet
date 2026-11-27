@@ -9,13 +9,15 @@ import { NAMES, plural } from "../../components/names";
 import { TechnicalRows } from "../../components/Technical";
 import { PersonaRows } from "../../components/Personas";
 import { levelName } from "../../components/stability/stability";
-import { ReadinessMark, needsLine } from "../../components/Readiness";
+import { ReadinessMark } from "../../components/Readiness";
 import { outcomesOf, builtOn, docDomains, domainName, find, nextLevel, projectName, type Capability, type DocqetState } from "../../state";
 import { ExposureStat } from "../../components/indexParts";
 import { docHref, type Route } from "../../routes";
 import { Section, Stat, Tabs, currentTab, type TabDef } from "../../components/shell/layout";
 import { type DocPageProps } from "../../components/doc/DocPage";
 import { tabHref } from "../../components/doc/DocPage";
+import { openAcross, OpenTab, TopGaps } from "../../components/doc/Open";
+import { ImprovementsList, ImprovementsSection, ImprovementsStat, IMPROVEMENTS_TAB, improvementWords } from "../../components/improvements/Improvements";
 import { DocView } from "../../components/doc/DocPage";
 import { DocHeader } from "../../components/doc/DocPage";
 import { DomainCrumb } from "../../components/doc/DocPage";
@@ -24,11 +26,6 @@ import { LevelName } from "../../components/doc/DocPage";
 import { Sources } from "../../components/doc/About";
 import { hasBody } from "../../components/doc/About";
 import { Bodies } from "../../components/doc/About";
-import { leftAcross } from "../../components/doc/Left";
-import { leftTotal } from "../../components/doc/Left";
-import { LeftStat } from "../../components/doc/Left";
-import { LeftTab } from "../../components/doc/Left";
-import { TopGaps } from "../../components/doc/Left";
 import { DecidedTab } from "../../components/doc/DecidedTab";
 import { RuleTable } from "../../components/doc/RuleTable";
 import { EvidencePair } from "../../components/doc/EvidencePair";
@@ -43,7 +40,7 @@ export default function CapabilityView({ state, id, route }: { state: DocqetStat
 }
 
 /*
- * A capability: what it does and where it stands, then what's left, the
+ * A capability: what it does and where it stands, then its improvements, the
  * rules it follows, what its level expects, how it's built,
  * what's been decided, and its body.
  */
@@ -65,15 +62,15 @@ export function CapabilityPage({ capability, route, ...go }: DocPageProps & { ca
   const on = builtOn(state, capability);
   const places = capability.evidence.implements.length + capability.evidence.verifies.length;
   const readiness = capability.readiness;
-  const left = leftAcross([capability], readiness);
+  const open = openAcross([capability], readiness);
   const decided = capability.tradeoffs.length;
   const ruleCount = (s: "gap" | "evidence" | "trust") => rules.filter((r) => capability.ruleStandings[r.id] === s).length;
-  /* What it still needs to be ready: nothing, once it is, and nothing asked of a draft. */
-  const needs = level ? (readiness.notReady.find((n) => n.capability.id === capability.id) ?? null) : null;
+  /* What would make it more ready: the improvement that would add most, and nothing asked of a draft. */
+  const best = level ? (readiness.improvements[0] ?? null) : null;
 
   const tabs: TabDef[] = [
     { id: "overview", label: "Overview" },
-    { id: "left", label: "What's left", term: "gap" as const, count: leftTotal(left) || undefined },
+    { id: IMPROVEMENTS_TAB, label: "Improvements", term: "improvement" as const, count: readiness.improvements.length || undefined },
     ...(rules.length ? [{ id: "rules", label: "Rules", term: "rule" as const, count: rules.length }] : []),
     ...(state.rubric ? [{ id: "stability", label: "Stability", term: "rubric" as const }] : []),
     ...(on.length || places ? [{ id: "built", label: "How it's built", count: on.length || undefined }] : []),
@@ -124,11 +121,11 @@ export function CapabilityPage({ capability, route, ...go }: DocPageProps & { ca
               label="Readiness"
               term="readiness"
               value={readiness.percent === null ? "Not started" : <ReadinessMark readiness={readiness} of={`Readiness of ${capability.name}`} inButton />}
-              note={!level ? "A draft doesn't count" : !needs ? "Nothing left: at Beta or above, with no unacceptable gap" : needsLine(needs)}
-              href={needs?.gaps.length ? tabHref("left") : undefined}
+              note={!level ? "A draft doesn't count" : best ? `Most from ${improvementWords(best)}` : "Nothing written down would raise it now"}
+              href={best ? tabHref(IMPROVEMENTS_TAB) : undefined}
             />
             <ExposureStat exposure={capability.exposure} risk={capability.risk} of={capability.name} />
-            <LeftStat left={left} of={capability.name} />
+            <ImprovementsStat readiness={readiness} />
             <Stat
               label="Rules"
               term="rule"
@@ -211,18 +208,8 @@ export function CapabilityPage({ capability, route, ...go }: DocPageProps & { ca
               )}
             </Box>
           </Section>
-          <TopGaps state={state} left={left} here={capability} />
-          {!left.gaps.length ? (
-            <Section title="What's left" term="gap">
-              <Box component="p" sx={lineSx}>
-                {left.decisions ? (
-                  <a href={tabHref("left")}>{plural(left.decisions, "open decision", "open decisions")}</a>
-                ) : (
-                  "Nothing left: no open decisions or gaps are written down."
-                )}
-              </Box>
-            </Section>
-          ) : null}
+          <ImprovementsSection readiness={readiness} here={capability} />
+          <TopGaps state={state} open={open} here={capability} />
           {personas.length ? (
             <Section title="Who it serves" term="persona" count={personas.length}>
               <PersonaRows state={state} personas={personas} onOpen={onOpen} />
@@ -241,8 +228,11 @@ export function CapabilityPage({ capability, route, ...go }: DocPageProps & { ca
             </Section>
           ) : null}
         </>
-      ) : tab === "left" ? (
-        <LeftTab {...go} left={left} here={capability} />
+      ) : tab === IMPROVEMENTS_TAB ? (
+        <>
+          <ImprovementsList readiness={readiness} here={capability} />
+          <OpenTab {...go} open={open} here={capability} />
+        </>
       ) : tab === "rules" ? (
         <Section
           title={<Term id="rule">Rules</Term>}

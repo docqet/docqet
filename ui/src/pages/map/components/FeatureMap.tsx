@@ -91,7 +91,7 @@ const opener = (onOpen: (pick: Pick) => void, pick: Pick) => (e: MouseEvent<HTML
  * there, and each capability in no feature on a card of its own. A feature
  * that spans domains has a card in each, saying where else it is. The cards
  * keep to what shows how things relate: names, levels and maturity, and each feature ends with the
- * concepts its capabilities use there, which open in the peek; what's left
+ * concepts its capabilities use there, which open in the peek; its improvements
  * and the rules are on each one's page. With several projects showing, each card says which define it,
  * and one that projects contradict each other on has a warning. Above the
  * domains, each persona has a small card of their own, in no region. With

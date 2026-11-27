@@ -13,6 +13,8 @@ import { type Route } from "../../routes";
 import { Empty, Section, Stat, Tabs, currentTab, type TabDef } from "../../components/shell/layout";
 import { type DocPageProps } from "../../components/doc/DocPage";
 import { tabHref } from "../../components/doc/DocPage";
+import { openAcross, OpenTab, TopGaps } from "../../components/doc/Open";
+import { ImprovementsList, ImprovementsSection, ImprovementsStat, IMPROVEMENTS_TAB } from "../../components/improvements/Improvements";
 import { DocView } from "../../components/doc/DocPage";
 import { DocHeader } from "../../components/doc/DocPage";
 import { DomainCrumb } from "../../components/doc/DocPage";
@@ -22,12 +24,6 @@ import { Sources } from "../../components/doc/About";
 import { hasBody } from "../../components/doc/About";
 import { Bodies } from "../../components/doc/About";
 import { ReadinessStat } from "../../components/doc/ReadinessParts";
-import { StillNeedsSection } from "../../components/doc/ReadinessParts";
-import { leftAcross } from "../../components/doc/Left";
-import { leftTotal } from "../../components/doc/Left";
-import { LeftStat } from "../../components/doc/Left";
-import { LeftTab } from "../../components/doc/Left";
-import { TopGaps } from "../../components/doc/Left";
 import { DecidedTab } from "../../components/doc/DecidedTab";
 import { CapabilityTable } from "../../components/doc/CapabilityTable";
 import { StandingSummary } from "../../components/doc/RuleTable";
@@ -42,8 +38,8 @@ export default function FeatureView({ state, id, route }: { state: DocqetState; 
 }
 
 /*
- * A feature: what it is, how mature and how ready, with what it still needs
- * to be ready, then its capabilities, what's left across them, who it
+ * A feature: what it is, how mature and how ready, with what would make it
+ * more ready, then its capabilities, its improvements and what's open across them, who it
  * serves, what it's decided, and its body.
  */
 export function FeaturePage({ feature, route, ...go }: DocPageProps & { feature: Feature }) {
@@ -52,12 +48,12 @@ export function FeaturePage({ feature, route, ...go }: DocPageProps & { feature:
   const concepts = featureConcepts(state, feature);
   const personas = state.personas.filter((p) => p.features.includes(feature.id));
   const readiness = feature.readiness;
-  const left = leftAcross(capabilities, readiness, { kind: "feature", doc: feature });
+  const open = openAcross(capabilities, readiness, { kind: "feature", doc: feature });
   const decided = feature.tradeoffs.length;
   const tabs: TabDef[] = [
     { id: "overview", label: "Overview" },
     { id: "capabilities", label: "Capabilities", term: "capability" as const, count: capabilities.length },
-    { id: "left", label: "What's left", term: "gap" as const, count: leftTotal(left) || undefined },
+    { id: IMPROVEMENTS_TAB, label: "Improvements", term: "improvement" as const, count: readiness.improvements.length || undefined },
     ...(personas.length ? [{ id: "personas", label: "Personas", term: "persona" as const, count: personas.length }] : []),
     ...(decided ? [{ id: "decided", label: "Decided", count: decided }] : []),
     ...(hasBody(feature) ? [{ id: "about", label: "About" }] : []),
@@ -90,7 +86,7 @@ export function FeaturePage({ feature, route, ...go }: DocPageProps & { feature:
             />
             <ExposureStat exposure={feature.exposure} risk={feature.readiness.gaps} of={feature.name} />
             <ReadinessStat readiness={readiness} tab="overview" of={`Readiness of ${feature.name}`} />
-            <LeftStat left={left} of={feature.name} />
+            <ImprovementsStat readiness={readiness} />
             <Stat
               label="Serves"
               value={personas.length ? <Avatars personas={personas} /> : "Nobody yet"}
@@ -134,8 +130,8 @@ export function FeaturePage({ feature, route, ...go }: DocPageProps & { feature:
               </Box>
             )}
           </Section>
-          <StillNeedsSection readiness={readiness} readyText="Ready: every started capability is at Beta or above, with no unacceptable gap." />
-          <TopGaps state={state} left={left} />
+          <ImprovementsSection readiness={readiness} />
+          <TopGaps state={state} open={open} />
           {concepts.length ? (
             <Section
               title={
@@ -173,8 +169,11 @@ export function FeaturePage({ feature, route, ...go }: DocPageProps & { feature:
         ) : (
           <Empty>A job the software doesn't do yet.</Empty>
         )
-      ) : tab === "left" ? (
-        <LeftTab {...go} left={left} here={feature} />
+      ) : tab === IMPROVEMENTS_TAB ? (
+        <>
+          <ImprovementsList readiness={readiness} />
+          <OpenTab {...go} open={open} here={feature} />
+        </>
       ) : tab === "personas" ? (
         <Section
           title="Who it serves"

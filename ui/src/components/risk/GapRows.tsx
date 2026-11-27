@@ -211,7 +211,7 @@ function onLink(state: DocqetState, { gap, on }: GapRow, here?: { id: string }):
 }
 
 /*
- * What's left, as a tile's figure: the gap mark and how many, the decision
+ * What's open, as a tile's figure: the gap mark and how many, the decision
  * mark and how many, the same marks every list uses, and under them the
  * highest risk among the gaps, worked out by whoever passes it. Inside a
  * link, so the risk's popover opens on hover only.

@@ -15,18 +15,14 @@ import { docHref, type Route } from "../../routes";
 import { Empty, Section, Stat, Tabs, currentTab, type TabDef } from "../../components/shell/layout";
 import { type DocPageProps } from "../../components/doc/DocPage";
 import { tabHref } from "../../components/doc/DocPage";
+import { openAcross, OpenTab, TopGaps } from "../../components/doc/Open";
+import { ImprovementsList, ImprovementsSection, ImprovementsStat, IMPROVEMENTS_TAB } from "../../components/improvements/Improvements";
 import { DocView } from "../../components/doc/DocPage";
 import { DocHeader } from "../../components/doc/DocPage";
 import { Sources } from "../../components/doc/About";
 import { hasBody } from "../../components/doc/About";
 import { Bodies } from "../../components/doc/About";
 import { ReadinessStat } from "../../components/doc/ReadinessParts";
-import { StillNeedsSection } from "../../components/doc/ReadinessParts";
-import { leftAcross } from "../../components/doc/Left";
-import { leftTotal } from "../../components/doc/Left";
-import { LeftStat } from "../../components/doc/Left";
-import { LeftTab } from "../../components/doc/Left";
-import { TopGaps } from "../../components/doc/Left";
 import { CapabilityTable } from "../../components/doc/CapabilityTable";
 import { StandingSummary } from "../../components/doc/RuleTable";
 import { RuleTable } from "../../components/doc/RuleTable";
@@ -60,7 +56,7 @@ export default function DomainView({ state, id, route }: { state: DocqetState; i
 /*
  * A domain: what it is, how mature and how ready, with what it still needs
  * to be ready, then its features, its language (the concepts and rules it
- * defines), what's left across it, and its body.
+ * defines), its improvements and what's open across it, and its body.
  */
 export function DomainPage({ domain, route, ...go }: DocPageProps & { domain: Domain }) {
   const { state } = go;
@@ -70,12 +66,12 @@ export function DomainPage({ domain, route, ...go }: DocPageProps & { domain: Do
   const concepts = state.concepts.filter((c) => c.domain === domain.id).sort((a, b) => a.name.localeCompare(b.name));
   const rules = state.rules.filter((r) => r.domain === domain.id);
   const readiness = domain.readiness;
-  const left = leftAcross(capabilities, readiness, { kind: "domain", doc: domain });
+  const open = openAcross(capabilities, readiness, { kind: "domain", doc: domain });
   const tabs: TabDef[] = [
     { id: "overview", label: "Overview" },
     { id: "features", label: "Features", term: "feature" as const, count: features.length },
     ...(concepts.length || rules.length ? [{ id: "language", label: "Language", term: "concept" as const, count: concepts.length + rules.length }] : []),
-    { id: "left", label: "What's left", term: "gap" as const, count: leftTotal(left) || undefined },
+    { id: IMPROVEMENTS_TAB, label: "Improvements", term: "improvement" as const, count: readiness.improvements.length || undefined },
     ...(hasBody(domain) ? [{ id: "about", label: "About" }] : []),
   ];
   const tab = currentTab(route, tabs);
@@ -119,7 +115,7 @@ export function DomainPage({ domain, route, ...go }: DocPageProps & { domain: Do
               note={plural(rules.length, "rule", "rules")}
               href={concepts.length || rules.length ? tabHref("language") : undefined}
             />
-            <LeftStat left={left} of={domain.name} />
+            <ImprovementsStat readiness={readiness} />
           </>
         }
       />
@@ -136,11 +132,8 @@ export function DomainPage({ domain, route, ...go }: DocPageProps & { domain: Do
               </Box>
             )}
           </Section>
-          <StillNeedsSection
-            readiness={readiness}
-            readyText="Ready: every started capability with a part in it is at Beta or above, with no unacceptable gap."
-          />
-          <TopGaps state={state} left={left} />
+          <ImprovementsSection readiness={readiness} />
+          <TopGaps state={state} open={open} />
         </>
       ) : tab === "features" ? (
         <>
@@ -233,8 +226,11 @@ export function DomainPage({ domain, route, ...go }: DocPageProps & { domain: Do
             </Section>
           ) : null}
         </>
-      ) : tab === "left" ? (
-        <LeftTab {...go} left={left} here={domain} />
+      ) : tab === IMPROVEMENTS_TAB ? (
+        <>
+          <ImprovementsList readiness={readiness} />
+          <OpenTab {...go} open={open} here={domain} />
+        </>
       ) : (
         <Section title={MORE_ABOUT}>
           <Bodies {...go} doc={domain} />

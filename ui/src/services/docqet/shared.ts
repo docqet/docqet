@@ -9,9 +9,52 @@ export type RiskSummaryResource = {
   counts: Record<string, number>;
   gaps: ScoredGapResource[];
 };
-export type DecisionResource = { topic: string | null; question: string; affects: string[] };
-export type HeldDecisionResource = DecisionResource & { on: string };
-export type NeedResource = { capability: string; belowBeta: boolean; gaps: string[]; decisions: DecisionResource[] };
+/* What a gap, or a rated decision, puts at stake on one capability, and how that's worked out. */
+export type RiskOnResource = {
+  capability: string;
+  impact: number;
+  likelihood: number;
+  reach: number;
+  weight: number;
+  claim: boolean;
+  claimFactor: number;
+  raw: number;
+  score: number;
+};
+export type RiskResource = {
+  score: number;
+  verdict: string;
+  claim: boolean;
+  capabilities: number;
+  spread: { score: number; capabilities: number }[];
+  on: RiskOnResource[];
+};
+/* An open decision, with its ratings, all null when it isn't rated. */
+export type DecisionResource = {
+  topic: string | null;
+  question: string;
+  affects: string[];
+  impact?: string | null;
+  likelihood?: string | null;
+  reach?: string | null;
+};
+/* An open decision, with the doc it's on and its risk: null when it isn't rated. */
+export type HeldDecisionResource = DecisionResource & { on: string; risk: RiskResource | null };
+/* Something that would raise a readiness: promoting a capability, closing a gap, or answering a rated decision. */
+export type ImprovementResource = {
+  kind: "promote" | "close" | "answer";
+  capability: string | null;
+  from: string | null;
+  to: string | null;
+  gap: string | null;
+  decision: HeldDecisionResource | null;
+  capabilities: string[];
+  readiness: number;
+  maturity: number;
+  exposure: number;
+  gain: number;
+  band: string | null;
+};
 export type ReadinessResource = {
   percent: number | null;
   band: string | null;
@@ -19,9 +62,9 @@ export type ReadinessResource = {
   exposure: ExposureResource;
   levels: string[];
   gaps: RiskSummaryResource;
-  ready: string[];
-  notReady: NeedResource[];
+  started: number;
   notStarted: string[];
+  improvements: ImprovementResource[];
 };
 /* The figures a domain, feature, persona or initiative carries. */
 export type FiguresResource = { maturity: MaturityResource; readiness: ReadinessResource; exposure: ExposureResource };

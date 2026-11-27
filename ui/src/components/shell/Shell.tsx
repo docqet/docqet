@@ -5,6 +5,7 @@ import HubOutlinedIcon from "@mui/icons-material/HubOutlined";
 import InsightsOutlinedIcon from "@mui/icons-material/InsightsOutlined";
 import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
 import TaskAltRoundedIcon from "@mui/icons-material/TaskAltRounded";
+import TrendingUpRoundedIcon from "@mui/icons-material/TrendingUpRounded";
 import WarningAmberRoundedIcon from "@mui/icons-material/WarningAmberRounded";
 import WidgetsOutlinedIcon from "@mui/icons-material/WidgetsOutlined";
 import Box from "@mui/material/Box";
@@ -15,7 +16,6 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import { barIconSx } from "./barIcon";
 import { ConceptIcon } from "../Concepts";
-import { GapIcon } from "../left/LeftMark";
 import { ColorSchemeToggle } from "./ColorSchemeToggle";
 import Logo from "./Logo";
 import { PersonaIcon } from "../Personas";
@@ -24,7 +24,7 @@ import ScopeFilter, { InitiativeIcon } from "./ScopeFilter";
 import type { Scope } from "../../scope";
 import { followLink, navigate, sectionHref, sectionOf, docHref, type Route, type Section } from "../../routes";
 import Search, { type Selection } from "./Search";
-import { openDecisions, pageHref, type DocqetState, type Product } from "../../state";
+import { pageHref, type DocqetState, type Product } from "../../state";
 
 /*
  * Every view's frame: a bar across the top that says where the reader is and
@@ -154,10 +154,6 @@ type NavItem = { section: Section; label: string; icon: ReactNode; question: str
 
 /* Which question the reader is asking: a link per section, grouped, each with how many it holds. `onGo` runs when one is chosen, to close the drawer. */
 function SideNav({ state, at, onGo }: { state: DocqetState; at: Section; onGo: () => void }) {
-  const decisions = [...state.domains, ...state.features, ...state.capabilities, ...state.mechanisms, ...state.components].reduce(
-    (n, doc) => n + openDecisions(doc).length,
-    0,
-  );
   const groups: { label?: string; items: NavItem[] }[] = [
     {
       items: [
@@ -217,7 +213,13 @@ function SideNav({ state, at, onGo }: { state: DocqetState; at: Section; onGo: (
     {
       label: "State",
       items: [
-        { section: "left", label: "What's left", icon: <GapIcon />, question: "Gaps and open decisions, riskiest first", count: state.gaps.length + decisions },
+        {
+          section: "improvements",
+          label: "Improvements",
+          icon: <TrendingUpRoundedIcon />,
+          question: "What would make it more ready, with every gap and open decision",
+          count: state.status.readiness.improvements.length,
+        },
         { section: "decided", label: "Decided", icon: <TaskAltRoundedIcon />, question: "Tradeoffs and non-goals", count: state.tradeoffs.length },
         {
           section: "problems",

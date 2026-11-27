@@ -15,7 +15,19 @@ import type { PageAt } from "./state";
  */
 
 /* The side nav's sections, in its order, and the glossary from the top nav. */
-export const SECTIONS = ["overview", "map", "features", "personas", "initiatives", "language", "built", "left", "decided", "problems", "glossary"] as const;
+export const SECTIONS = [
+  "overview",
+  "map",
+  "features",
+  "personas",
+  "initiatives",
+  "language",
+  "built",
+  "improvements",
+  "decided",
+  "problems",
+  "glossary",
+] as const;
 export type Section = (typeof SECTIONS)[number];
 
 /* What can have a page of its own. */
@@ -35,7 +47,7 @@ const SECTION_OF_DOC: Record<DocKind, Section> = {
   rule: "language",
   mechanism: "built",
   component: "built",
-  gap: "left",
+  gap: "improvements",
 };
 
 export const sectionOf = (route: Route): Section => (route.kind === "section" ? route.section : SECTION_OF_DOC[route.doc]);
@@ -48,8 +60,9 @@ export function routeOf(search: string): Route {
     if (id) return { kind: "doc", doc, id, tab };
   }
   const view = params.get("view");
-  /* Older addresses: the gaps page, and the map opening on something. */
-  if (view === "gaps") return { kind: "section", section: "left", tab };
+  /* Older addresses: the gaps page, What's left, and the map opening on something. */
+  if (view === "gaps") return { kind: "section", section: "improvements", tab: tab ?? "gaps" };
+  if (view === "left") return { kind: "section", section: "improvements", tab: tab === "decisions" ? tab : (tab ?? "gaps") };
   if (!view && params.get("show")) return { kind: "section", section: "map", tab };
   const section = (SECTIONS as readonly string[]).includes(view ?? "") ? (view as Section) : "overview";
   return { kind: "section", section, tab };

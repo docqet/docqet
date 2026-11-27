@@ -17,7 +17,6 @@ import {
   levelInDomain,
   find,
   gapsOn,
-  openDecisions,
   partOf,
   RISK_BANDS,
   type Capability,
@@ -26,7 +25,9 @@ import {
   type Domain,
   type Feature,
 } from "../../state";
-import { DocLink, GapsCell, LevelMark, PersonaFaces, ExposureStat, ellipsisSx, whereSx } from "../../components/indexParts";
+import { ImprovementsFigure, IMPROVEMENTS_TAB } from "../../components/improvements/Improvements";
+import type { Readiness } from "../../state";
+import { DocLink, LevelMark, PersonaFaces, ExposureStat, ellipsisSx, whereSx } from "../../components/indexParts";
 import { InitiativeTags, initiativesOf } from "../../components/Initiatives";
 import { useStatusFor } from "../../model";
 import Skeleton from "@mui/material/Skeleton";
@@ -39,7 +40,7 @@ const GROUPS: Group[] = ["domain", "stability", "exposure"];
  * Every domain, feature and capability, and how far along each is. By
  * default a tree: each domain, the features it has a part in, and the
  * capabilities of that part, each with its level in that domain, the risk it
- * is exposed to, what's left and who it serves. Domains and features show
+ * is exposed to, its improvements and who it serves. Domains and features show
  * their maturity and exposure in the same columns, as rings, as the map does;
  * what either is worked out from is in its popover. Grouped by stability
  * instead, every capability under its level, least stable first; grouped by
@@ -204,7 +205,7 @@ function ColumnHeads({ first }: { first: ReactNode }) {
         <Term id="exposure" />
       </Box>
       <Box component="span" sx={leftSx}>
-        What's left
+        <Term id="improvement">Improvements</Term>
       </Box>
       <Box component="span" sx={whoSx}>
         Serves
@@ -218,9 +219,8 @@ const levelIn = (c: Capability, domain?: string): CapabilityLevel => (domain && 
 /*
  * A capability's row: its name, linking to its page, and `where` it is when
  * that isn't plain from where the row sits; its level, in `domain` when
- * that's given; its exposure; what's left, its open decisions and
- * every gap on it, its own and those of what it's built on; and the personas
- * it serves.
+ * that's given; its exposure; its improvements, what would make it more
+ * ready; and the personas it serves.
  */
 function CapabilityRow({ state, capability, domain, where }: { state: DocqetState; capability: Capability; domain?: string; where?: ReactNode }) {
   const personas = capability.personas.flatMap((id) => find(state.personas, id) ?? []);
@@ -242,16 +242,21 @@ function CapabilityRow({ state, capability, domain, where }: { state: DocqetStat
         <ExposureMark exposure={capability.exposure} risk={capability.risk} of={capability.name} />
       </Box>
       <Box component="span" sx={leftSx}>
-        <GapsCell
-          gaps={[...new Set(gapsOn(state, capability))]}
-          kind="gap"
-          decisions={openDecisions(capability).length}
-          href={docHref("capability", capability.id, "left")}
-        />
+        <ImprovementsLink readiness={capability.readiness} href={docHref("capability", capability.id, IMPROVEMENTS_TAB)} />
       </Box>
       <Box component="span" sx={whoSx}>
         <PersonaFaces personas={personas} />
       </Box>
+    </Box>
+  );
+}
+
+/* Improvements in a row: the most one would add, and how many more, linking to the tab that lists them. */
+function ImprovementsLink({ readiness, href }: { readiness: Readiness; href: string }) {
+  if (!readiness.improvements.length) return <ImprovementsFigure readiness={readiness} />;
+  return (
+    <Box component="a" href={href} sx={{ textDecoration: "none", "&&": { color: "inherit", fontWeight: "inherit", "&:hover": { color: "primary.main" } } }}>
+      <ImprovementsFigure readiness={readiness} />
     </Box>
   );
 }
@@ -267,8 +272,8 @@ function FoldEmpty({ children }: { children: ReactNode }) {
 
 /*
  * A row that folds what's under it, open to begin with: its `head`, then its
- * maturity and exposure under the capability rows' Stability and Exposure
- * columns. A domain's row is a little larger, with more room above it, and
+ * maturity, exposure and improvements under the capability rows' Stability,
+ * Exposure and Improvements columns. A domain's row is a little larger, with more room above it, and
  * what's under each is indented by about its chevron.
  */
 function FoldRow({
@@ -276,12 +281,14 @@ function FoldRow({
   head,
   maturity,
   exposure,
+  improvements,
   children,
 }: {
   domain?: boolean;
   head: ReactNode;
   maturity: ReactNode;
   exposure: ReactNode;
+  improvements?: ReactNode;
   children: ReactNode;
 }) {
   return (
@@ -320,7 +327,9 @@ function FoldRow({
         <Box component="span" sx={riskSx}>
           {exposure}
         </Box>
-        <Box component="span" sx={leftSx} />
+        <Box component="span" sx={leftSx}>
+          {improvements}
+        </Box>
         <Box component="span" sx={whoSx} />
       </Box>
       <Box sx={{ pl: domain ? 2.75 : 3.25 }}>{children}</Box>
@@ -360,6 +369,7 @@ function DomainBranch({ state, domain }: { state: DocqetState; domain: Domain })
         )
       }
       exposure={<ExposureMark exposure={domain.exposure} risk={domain.readiness.gaps} of={domain.name} />}
+      improvements={<ImprovementsLink readiness={domain.readiness} href={docHref("domain", domain.id, IMPROVEMENTS_TAB)} />}
       head={<DocLink kind="domain" id={domain.id} name={domain.name} sx={{ ...nameLinkSx, fontWeight: 700 }} />}
     >
       {!features.length && !loose.length ? <FoldEmpty>A part of the business the software doesn't serve yet.</FoldEmpty> : null}
@@ -414,6 +424,7 @@ function FeatureBranch({ state, feature, domain }: { state: DocqetState; feature
           <ReadFallback read={inPart} what="its exposure here" inline skeleton={<Skeleton variant="circular" width={22} height={22} />} />
         )
       }
+      improvements={<ImprovementsLink readiness={feature.readiness} href={docHref("feature", feature.id, IMPROVEMENTS_TAB)} />}
       head={
         <>
           <DocLink kind="feature" id={feature.id} name={feature.name} sx={nameLinkSx} />

@@ -5,6 +5,7 @@ import type { SystemStyleObject } from "@mui/system";
 import { InlineMarkdown, Markdown, inlineCodeSx, linkButtonSx, plainText, type Go } from "./markdown/Markdown";
 import { LeftItem, LeftList, LeftMark } from "./left/LeftMark";
 import { GapRiskMark } from "./risk/RiskScore";
+import { ImpactBadge } from "./risk/ImpactBadge";
 import { STABILITY } from "./stability/stability";
 import { docHref, type DocKind } from "../routes";
 import {
@@ -48,10 +49,11 @@ export function Text({ from, text, go }: { from: Contribution; text: string; go:
 }
 
 /*
- * Open decisions, each its question under its topic, then what waits on its
- * answer. A decision has no risk: a question doesn't happen to anyone. Where
- * it affects gaps, the stakes are the riskiest of them: what's waiting on it,
- * not a risk of its own.
+ * Open decisions, each its question under its topic, then, for a rated one,
+ * what its answer could change and its risk, and what waits on its answer.
+ * A question doesn't happen to anyone, but the change its answer may bring
+ * does: a rated decision's risk is that, read on a gap's scales. What it
+ * affects never gives it risk.
  */
 export function DecisionList({ from, decisions, go }: { from: Contribution; decisions: Decision[]; go: Go }) {
   return (
@@ -64,10 +66,25 @@ export function DecisionList({ from, decisions, go }: { from: Contribution; deci
             </Box>
           ) : null}
           <Text from={from} text={d.question} go={go} />
+          <DecisionStakes decision={d} />
           <DecisionAffects state={go.state} decision={d} />
         </LeftItem>
       ))}
     </LeftList>
+  );
+}
+
+/* What a rated decision's answer could change, as its impact with its likelihood and reach, and its risk: nothing for one that isn't rated. */
+export function DecisionStakes({ decision: d }: { decision: Decision }) {
+  if (!d.impact || !d.likelihood || !d.reach || !d.risk) return null;
+  return (
+    <Box sx={[affectsSx, { alignItems: "center", mt: 0.5 }]}>
+      <Box component="span" sx={affectsLabelSx}>
+        What its answer could change
+      </Box>
+      <ImpactBadge impact={d.impact} likelihood={d.likelihood} reach={d.reach} eyebrow="What its answer could change" />
+      <GapRiskMark risk={d.risk} on={d.risk.on[0] ?? null} />
+    </Box>
   );
 }
 
@@ -89,11 +106,10 @@ const affectsLabelSx: SystemStyleObject<Theme> = {
 };
 const affectSx: SystemStyleObject<Theme> = { display: "inline-flex", alignItems: "baseline", gap: 0.75, "& code": inlineCodeSx };
 
-/* What waits on a decision's answer, and, where that's gaps, the riskiest of their risks. */
+/* What waits on a decision's answer. It never gives the decision risk: that's its own ratings'. */
 function DecisionAffects({ state, decision }: { state: DocqetState; decision: Decision }) {
   const affected = affectedBy(state, decision);
   if (!affected.length) return null;
-  const riskiest = affected.flatMap((a) => (a.kind === "gap" ? [a.gap.risk] : [])).sort((a, b) => b.score - a.score)[0];
   return (
     <Box sx={[affectsSx, { mt: 0.5 }]}>
       <Box component="span" sx={affectsLabelSx}>
@@ -102,14 +118,6 @@ function DecisionAffects({ state, decision }: { state: DocqetState; decision: De
       {affected.map((a, i) => (
         <AffectedItem key={i} item={a} />
       ))}
-      {riskiest ? (
-        <Box component="span" sx={[affectSx, { alignItems: "center" }]}>
-          <Box component="span" sx={affectsLabelSx}>
-            Stakes
-          </Box>
-          <GapRiskMark risk={riskiest} on={riskiest.on[0] ?? null} />
-        </Box>
-      ) : null}
     </Box>
   );
 }
@@ -197,7 +205,10 @@ export function HeldDecisionLine({ held }: { held: HeldDecision }) {
           "& :where(a)": { color: "text.secondary", textDecoration: "none", "&:hover": { color: "primary.main" } },
         }}
       >
-        on <a href={docHref(held.on.kind, held.on.doc.id, "left")}>{held.on.doc.name}</a>
+        on{" "}
+        <a href={docHref(held.on.kind, held.on.doc.id, held.on.kind === "mechanism" || held.on.kind === "component" ? "open" : "improvements")}>
+          {held.on.doc.name}
+        </a>
       </Box>
     </Box>
   );
@@ -209,7 +220,7 @@ export type Facet = { label: string; node: ReactNode; wide?: boolean };
 /*
  * The fields a contribution has, by its type, labelled, in the spec's order:
  * part of what it is, so they show with its name and description, never with its
- * body. Open decisions aren't among them: they're shown with what's left.
+ * body. Open decisions aren't among them: they're shown with what's open.
  */
 export function facets(kind: string, f: Contribution, go: Go): Facet[] {
   const out: Facet[] = [];

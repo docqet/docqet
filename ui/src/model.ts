@@ -9,6 +9,7 @@ import { useEffect, useEffectEvent, useState } from "react";
 import { listCapabilities, type OutcomeStandingResource } from "./services/docqet/capabilities";
 import { isAbort, type Showing } from "./services/docqet/client";
 import { listComponents } from "./services/docqet/components";
+import { listDecisions } from "./services/docqet/decisions";
 import { listConcepts } from "./services/docqet/concepts";
 import { listDomains } from "./services/docqet/domains";
 import { listFeatures } from "./services/docqet/features";
@@ -28,6 +29,7 @@ import type {
   EvidenceResource,
   ExposureResource,
   HeldDecisionResource,
+  ImprovementResource,
   MaturityResource,
   ReadinessResource,
   RiskSummaryResource,
@@ -54,11 +56,15 @@ import {
   type Feature,
   type Gap,
   type HeldDecision,
+  type Impact,
+  type Improvement,
   type Initiative,
   type Level,
+  type Likelihood,
   type OutcomeStanding,
   type Persona,
   type Project,
+  type Reach,
   type Readiness,
   type Risk,
   type RiskAcross,
@@ -70,13 +76,23 @@ import {
   type TechnicalDoc,
   type Tradeoff,
   type Verdict,
+  openDecisions,
 } from "./state";
 
 const level = (l: string): CapabilityLevel => (l === "draft" ? null : (l as Level));
 const percent = (m: MaturityResource) => m?.percent ?? null;
 const band = (m: MaturityResource) => (m ? (m.band as Level) : null);
 
-const decision = (d: DecisionResource): Decision => ({ topic: d.topic, question: d.question, affects: d.affects });
+/* An open decision, with its ratings; its risk is found once every capability is there to point at. */
+const decision = (d: DecisionResource): Decision => ({
+  topic: d.topic,
+  question: d.question,
+  affects: d.affects,
+  impact: (d.impact ?? null) as Impact | null,
+  likelihood: (d.likelihood ?? null) as Likelihood | null,
+  reach: (d.reach ?? null) as Reach | null,
+  risk: null,
+});
 
 const contribution = (c: ContributionResource): Contribution => ({
   project: c.project,
@@ -122,9 +138,9 @@ const noReadiness = (): Readiness => ({
   exposure: noExposure,
   levels: [],
   gaps: noAcross(),
-  ready: [],
-  notReady: [],
+  started: 0,
   notStarted: [],
+  improvements: [],
 });
 const noRisk = (g: GapResource): Risk => ({
   impact: g.impact as Risk["impact"],
@@ -140,24 +156,41 @@ const noRisk = (g: GapResource): Risk => ({
 
 /* Everything about the product showing, as the server serves it, read at once. */
 async function readProduct(showing: Showing, signal?: AbortSignal) {
-  const [status, projects, rubric, domains, features, capabilities, rules, concepts, personas, initiatives, mechanisms, components, gaps, tradeoffs, problems] =
-    await Promise.all([
-      getStatus(showing, undefined, signal),
-      listProjects(showing, signal),
-      getRubric(showing, signal),
-      listDomains(showing, signal),
-      listFeatures(showing, signal),
-      listCapabilities(showing, signal),
-      listRules(showing, signal),
-      listConcepts(showing, signal),
-      listPersonas(showing, signal),
-      listInitiatives(showing, signal),
-      listMechanisms(showing, signal),
-      listComponents(showing, signal),
-      listGaps(showing, {}, signal),
-      listTradeoffs(showing, signal),
-      listProblems(showing, signal),
-    ]);
+  const [
+    status,
+    projects,
+    rubric,
+    domains,
+    features,
+    capabilities,
+    rules,
+    concepts,
+    personas,
+    initiatives,
+    mechanisms,
+    components,
+    gaps,
+    tradeoffs,
+    decisions,
+    problems,
+  ] = await Promise.all([
+    getStatus(showing, undefined, signal),
+    listProjects(showing, signal),
+    getRubric(showing, signal),
+    listDomains(showing, signal),
+    listFeatures(showing, signal),
+    listCapabilities(showing, signal),
+    listRules(showing, signal),
+    listConcepts(showing, signal),
+    listPersonas(showing, signal),
+    listInitiatives(showing, signal),
+    listMechanisms(showing, signal),
+    listComponents(showing, signal),
+    listGaps(showing, {}, signal),
+    listTradeoffs(showing, signal),
+    listDecisions(showing, signal),
+    listProblems(showing, signal),
+  ]);
   return {
     status,
     projects,
@@ -173,6 +206,7 @@ async function readProduct(showing: Showing, signal?: AbortSignal) {
     components,
     gaps,
     tradeoffs,
+    decisions,
     problems,
   };
 }
@@ -228,7 +262,7 @@ function modelOf(r: Awaited<ReturnType<typeof readProduct>>, showing: Showing): 
       readiness: noReadiness(),
       exposure: noExposure,
       risk: noAcross(),
-      left: { decisions: [], gaps: [], technical: [] },
+      open: { decisions: [], gaps: [], technical: [] },
       ruleStandings: c.ruleStandings as Record<string, RuleStanding>,
       outcomes: {},
     })),
@@ -306,8 +340,13 @@ function modelOf(r: Awaited<ReturnType<typeof readProduct>>, showing: Showing): 
   };
 
   /* Now every doc is there, find what each figure points at. Each resource and its doc are in the same order, so they're paired by place: gaps first, since every figure about them carries their risk. */
-  const { risk, across, exposure, readiness, held, affected, outcome, gaps, technicals, some } = converters(state);
+  const { risk, decisionRisk, across, exposure, readiness, held, affected, outcome, gaps, technicals, some } = converters(state);
   r.gaps.forEach((x, i) => (state.gaps[i].risk = risk(x)));
+  /* Each rated decision's risk, on the decision its doc holds, matched by what it asks: decisions have no IDs. */
+  for (const d of r.decisions) {
+    const found = held(d)[0];
+    if (found) found.decision.risk = decisionRisk(d);
+  }
   r.domains.forEach((x, i) => Object.assign(state.domains[i], { readiness: readiness(x.readiness), exposure: exposure(x.exposure) }));
   r.features.forEach((x, i) => Object.assign(state.features[i], { readiness: readiness(x.readiness), exposure: exposure(x.exposure) }));
   r.personas.forEach((x, i) => Object.assign(state.personas[i], { readiness: readiness(x.readiness), exposure: exposure(x.exposure) }));
@@ -319,10 +358,10 @@ function modelOf(r: Awaited<ReturnType<typeof readProduct>>, showing: Showing): 
       readiness: readiness(x.readiness),
       exposure: exposure(x.exposure),
       risk: across(x.risk),
-      left: {
-        decisions: x.left.decisions.map(decision),
-        gaps: some(gaps, x.left.gaps),
-        technical: x.left.technical.flatMap((t) => {
+      open: {
+        decisions: x.open.decisions.map(decision),
+        gaps: some(gaps, x.open.gaps),
+        technical: x.open.technical.flatMap((t) => {
           const gap = gaps.get(t.gap);
           const on = technicals.get(t.on);
           return gap && on ? [{ gap, on }] : [];
@@ -378,6 +417,21 @@ function converters(state: DocqetState) {
     capabilities: g.risk.capabilities,
     spread: g.risk.spread,
   });
+  /* A rated decision's risk, read as a gap's is, about what its answer could change; null when it isn't rated. */
+  const decisionRisk = (d: HeldDecisionResource): Risk | null =>
+    d.risk && d.impact && d.likelihood && d.reach
+      ? {
+          impact: d.impact as Impact,
+          likelihood: d.likelihood as Likelihood,
+          reach: d.reach as Reach,
+          score: d.risk.score,
+          verdict: d.risk.verdict as Verdict,
+          claim: d.risk.claim,
+          on: d.risk.on.flatMap((o) => riskOn(o) ?? []),
+          capabilities: d.risk.capabilities,
+          spread: d.risk.spread,
+        }
+      : null;
   const across = (a: RiskSummaryResource): RiskAcross<Gap> => ({
     score: a.score,
     verdict: a.verdict as Verdict | null,
@@ -402,16 +456,38 @@ function converters(state: DocqetState) {
     exposure: exposure(x.exposure),
     levels: x.levels.map(level),
     gaps: across(x.gaps),
-    ready: some(capabilities, x.ready),
-    notReady: x.notReady.flatMap((n) => {
-      const capability = capabilities.get(n.capability);
-      return capability ? [{ capability, belowBeta: n.belowBeta, gaps: some(gaps, n.gaps), decisions: n.decisions.map(decision) }] : [];
-    }),
+    started: x.started,
     notStarted: some(capabilities, x.notStarted),
+    improvements: x.improvements.flatMap(improvement),
   });
+  /* An open decision with the doc it's on: the very decision that doc holds, so its risk, once found, is the same one everywhere. */
   const held = (d: HeldDecisionResource): HeldDecision[] => {
     const on = holders.get(d.on);
-    return on ? [{ decision: decision(d), on }] : [];
+    if (!on) return [];
+    const same = openDecisions(on.doc).find((x) => x.question === d.question && x.topic === d.topic);
+    return [{ decision: same ?? decision(d), on }];
+  };
+  const improvement = (x: ImprovementResource): Improvement[] => {
+    const capability = x.capability ? (capabilities.get(x.capability) ?? null) : null;
+    const gap = x.gap ? (gaps.get(x.gap) ?? null) : null;
+    const decided = x.decision ? (held(x.decision)[0] ?? null) : null;
+    if ((x.kind === "promote" && !capability) || (x.kind === "close" && !gap) || (x.kind === "answer" && !decided)) return [];
+    return [
+      {
+        kind: x.kind,
+        capability,
+        from: x.from ? level(x.from) : null,
+        to: x.to ? level(x.to) : null,
+        gap,
+        decision: decided,
+        capabilities: some(capabilities, x.capabilities),
+        readiness: x.readiness,
+        maturity: x.maturity,
+        exposure: x.exposure,
+        gain: x.gain,
+        band: READINESS_BANDS.find((b) => b.name === x.band) ?? null,
+      },
+    ];
   };
   const affected = (a: AffectedResource): Affected[] => {
     if (a.kind === "outcome") {
@@ -437,7 +513,7 @@ function converters(state: DocqetState) {
     by: some(technicals, o.by),
   });
 
-  return { risk, across, exposure, readiness, held, affected, outcome, gaps, technicals, some };
+  return { risk, decisionRisk, across, exposure, readiness, held, affected, outcome, gaps, technicals, some };
 }
 
 function technical(t: TechnicalResource): TechnicalDoc {
@@ -532,7 +608,7 @@ export type GapWithin = { gap: Gap; score: number; verdict: Verdict; on: RiskOn 
 
 /*
  * The gaps that show on the capabilities a for names, riskiest there first,
- * each scored there, as the server works them out: what's left for a persona,
+ * each scored there, as the server works them out: what's open for a persona,
  * a project or any other doc. With no for, nothing is read.
  */
 export function useGapsFor(state: DocqetState, forRef: string | null): Read<GapWithin[]> {

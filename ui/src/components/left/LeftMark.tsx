@@ -8,7 +8,7 @@ import { Term } from "../term/Term";
 import type { TermId } from "../term/terms";
 
 /*
- * What's left, and what we chose to live with, look the same wherever they
+ * What's open, and what we chose to live with, look the same wherever they
  * show: on the map, in the side panel, on a detail page and on the
  * rubric. Each kind has one mark, in one color, and one name. A gap is a
  * gap whoever would notice it, so product and technical gaps share a mark
@@ -187,7 +187,7 @@ export function LeftLabel({
 }
 
 /*
- * Items of what's left or tradeoffs, each a row: its mark, then what it says,
+ * Open items or tradeoffs, each a row: its mark, then what it says,
  * and under that anything more. `detailed`, as on a detail page, spaces them
  * out and rules them off, each with more under it.
  */

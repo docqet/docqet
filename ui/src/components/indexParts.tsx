@@ -24,7 +24,7 @@ import { fromCapabilities, type MaturitySubject } from "./popovers/MaturityDetai
 import { MATURITY_BANDS } from "./maturity/maturity";
 import { levelColor } from "./stability/stability";
 
-/* The pieces the index pages share: each kind's mark, counts of what's left, a level, personas, and a filter box. */
+/* The pieces the index pages share: each kind's mark, counts of what's open, a level, personas, and a filter box. */
 
 /* What's faint: none of something, or nothing yet. */
 export const faintSx: SystemStyleObject<Theme> = { color: "text.disabled" };
@@ -126,7 +126,7 @@ export function DocLink({ kind, id, name, icon = true, sx }: { kind: DocKind; id
 }
 
 /*
- * How many of one kind of what's left, as its mark and the number, naming it
+ * How many of one kind of what's open, as its mark and the number, naming it
  * on hover. "gap" is gaps of both kinds, product and technical, which share a
  * mark. Nothing with none.
  */
@@ -184,7 +184,7 @@ export function GapsCell({
   return (
     <Box component="span" sx={{ display: "inline-flex", alignItems: "center", gap: 1.25, whiteSpace: "nowrap" }}>
       {href ? (
-        /* The counts link to the page's What's left tab. */
+        /* The counts link to where the page lists them. */
         <Box
           component="a"
           href={href}

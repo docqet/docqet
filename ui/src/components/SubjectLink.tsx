@@ -19,7 +19,7 @@ const subjectSx = {
   "& svg": { flex: "none", width: 15, height: 15, fontSize: 15 },
 } as const;
 
-/* Quieter, where it's beside what matters more, as in a gap's "On" cell on What's left. */
+/* Quieter, where it's beside what matters more, as in a gap's "On" cell on Improvements' gaps. */
 const quietSx = { fontWeight: 500, color: "text.secondary" } as const;
 
 /* What a gap, tradeoff or decision is on, as a link to its page, with its icon, and with `withLevel`, a capability's stability. `quiet` sets it in the muted color, at a normal weight. */

@@ -84,7 +84,7 @@ function TechnicalTable({ state, kind, docs }: { state: DocqetState; kind: Techn
                 ) : null}
               </TableCell>
               <TableCell sx={{ whiteSpace: "nowrap" }}>
-                <GapsCell gaps={gapsById(state, d.gaps)} risk={d.risk} kind="technical-gap" of={d.name} href={docHref(d.kind, d.id, "left")} />
+                <GapsCell gaps={gapsById(state, d.gaps)} risk={d.risk} kind="technical-gap" of={d.name} href={docHref(d.kind, d.id, "open")} />
               </TableCell>
               <TableCell align="right" sx={[numSx, wideOnlySx]}>
                 <Num n={d.tradeoffs.length} />

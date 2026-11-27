@@ -10,6 +10,8 @@ import { docHref, type Route } from "../../routes";
 import { Empty, Section, Stat, Tabs, currentTab, type TabDef } from "../../components/shell/layout";
 import { type DocPageProps } from "../../components/doc/DocPage";
 import { tabHref } from "../../components/doc/DocPage";
+import { openAcross, OpenTab, TopGaps } from "../../components/doc/Open";
+import { ImprovementsList, ImprovementsSection, ImprovementsStat, IMPROVEMENTS_TAB } from "../../components/improvements/Improvements";
 import { DocView } from "../../components/doc/DocPage";
 import { DocHeader } from "../../components/doc/DocPage";
 import { DomainTrail } from "../../components/doc/DocPage";
@@ -17,13 +19,7 @@ import { Sources } from "../../components/doc/About";
 import { hasBody } from "../../components/doc/About";
 import { Bodies } from "../../components/doc/About";
 import { ReadinessStat } from "../../components/doc/ReadinessParts";
-import { StillNeedsSection } from "../../components/doc/ReadinessParts";
 import { ReadinessFor } from "../../components/doc/ReadinessParts";
-import { leftAcross } from "../../components/doc/Left";
-import { leftTotal } from "../../components/doc/Left";
-import { LeftStat } from "../../components/doc/Left";
-import { LeftTab } from "../../components/doc/Left";
-import { TopGaps } from "../../components/doc/Left";
 import { CapabilityTable } from "../../components/doc/CapabilityTable";
 import { Missing } from "../../components/doc/Missing";
 import { docGo, Crumb, levelsSx, lineSx } from "../../components/doc/DocPage";
@@ -37,7 +33,7 @@ export default function PersonaView({ state, id, route }: { state: DocqetState; 
 
 /*
  * A persona: how ready the software is for them, and what it still needs to
- * be, then what serves them, by feature, what's left for them (only what
+ * be, then what serves them, by feature, its improvements, and what's open for them (only what
  * someone using it would notice), and their body.
  */
 export function PersonaPage({ persona, route, ...go }: DocPageProps & { persona: Persona }) {
@@ -47,12 +43,12 @@ export function PersonaPage({ persona, route, ...go }: DocPageProps & { persona:
   const loose = capabilities.filter((c) => !c.feature);
   const domains = [...new Set(capabilities.flatMap((c) => docDomains(c)))];
   const readiness = persona.readiness;
-  const left = leftAcross(capabilities, readiness, undefined, false);
+  const open = openAcross(capabilities, readiness, undefined, false);
   const { name, role } = personaNameAndRole(persona);
   const tabs: TabDef[] = [
     { id: "readiness", label: "Readiness", term: "readiness" as const },
     { id: "serves", label: "What serves them", term: "capability" as const, count: capabilities.length },
-    { id: "left", label: "What's left for them", term: "gap" as const, count: leftTotal(left) || undefined },
+    { id: IMPROVEMENTS_TAB, label: "Improvements", term: "improvement" as const, count: readiness.improvements.length || undefined },
     ...(hasBody(persona) ? [{ id: "about", label: "About" }] : []),
   ];
   const tab = currentTab(route, tabs);
@@ -96,7 +92,7 @@ export function PersonaPage({ persona, route, ...go }: DocPageProps & { persona:
             />
             <ExposureStat exposure={persona.exposure} risk={persona.readiness.gaps} of={`what serves ${persona.name}`} />
             <ReadinessStat readiness={readiness} tab="readiness" of={`Readiness for ${name}`} />
-            <LeftStat left={left} of={`what serves ${persona.name}`} />
+            <ImprovementsStat readiness={readiness} />
           </>
         }
       />
@@ -104,10 +100,7 @@ export function PersonaPage({ persona, route, ...go }: DocPageProps & { persona:
       {tab === "readiness" ? (
         <>
           <Sources {...go} kind="persona" doc={persona} title="Who they are" />
-          <StillNeedsSection
-            readiness={readiness}
-            readyText={`Ready for ${name}: everything started that serves them is at Beta or above, with no unacceptable gap.`}
-          />
+          <ImprovementsSection readiness={readiness} />
           <Section title="By feature" count={features.length} note="How ready each feature is for them, from its capabilities that serve them.">
             {features.length ? (
               <Box component="ul" sx={levelsSx}>
@@ -126,7 +119,7 @@ export function PersonaPage({ persona, route, ...go }: DocPageProps & { persona:
               </Box>
             )}
           </Section>
-          <TopGaps state={state} left={left} />
+          <TopGaps state={state} open={open} />
         </>
       ) : tab === "serves" ? (
         <>
@@ -141,7 +134,7 @@ export function PersonaPage({ persona, route, ...go }: DocPageProps & { persona:
                 }
                 aside={<ReadinessFor state={state} forRef={`persona:${persona.id},feature:${f.id}`} of={`${f.name}'s readiness for ${name}`} started />}
               >
-                <CapabilityTable state={state} capabilities={capabilities.filter((c) => c.feature === f.id)} technical={false} />
+                <CapabilityTable state={state} capabilities={capabilities.filter((c) => c.feature === f.id)} />
               </Section>
             );
           })}
@@ -154,13 +147,16 @@ export function PersonaPage({ persona, route, ...go }: DocPageProps & { persona:
               }
               count={loose.length}
             >
-              <CapabilityTable state={state} capabilities={loose} technical={false} />
+              <CapabilityTable state={state} capabilities={loose} />
             </Section>
           ) : null}
           {!capabilities.length ? <Empty>Nothing serves them yet.</Empty> : null}
         </>
-      ) : tab === "left" ? (
-        <LeftTab {...go} left={left} nothing="Nothing left for them: no open decisions or product gaps are written down in what serves them." />
+      ) : tab === IMPROVEMENTS_TAB ? (
+        <>
+          <ImprovementsList readiness={readiness} />
+          <OpenTab {...go} open={open} nothing="Nothing open for them: no open decisions or product gaps are written down in what serves them." />
+        </>
       ) : (
         <Section title={MORE_ABOUT}>
           <Bodies {...go} doc={persona} />

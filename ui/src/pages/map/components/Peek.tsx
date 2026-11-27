@@ -22,8 +22,6 @@ import {
   partOf,
   domainName,
   find,
-  leftCount,
-  openDecisions,
   pickList,
   type Capability,
   type DocqetState,
@@ -71,10 +69,6 @@ type Summary = {
   initiatives?: string[];
 };
 
-/* How much is left across some capabilities, as a feature's or domain's page counts it; with `technical` false, none of what they're built on. */
-const leftAcross = (capabilities: Capability[], technical = true) =>
-  capabilities.reduce((n, c) => n + (technical ? leftCount(c.left) : c.left.decisions.length + c.left.gaps.length), 0);
-
 const capabilitiesOf = (state: DocqetState, ids: string[]) => ids.flatMap((id) => find(state.capabilities, id) ?? []);
 
 function summarize(state: DocqetState, at: Pick): Summary | null {
@@ -94,7 +88,7 @@ function summarize(state: DocqetState, at: Pick): Summary | null {
         </Box>
       ),
       figures: [
-        { label: "What's left", value: leftCount(c.left), tab: "left" },
+        { label: "Improvements", value: c.readiness.improvements.length, tab: "improvements" },
         { label: "Rules held", value: rules.length ? `${held} / ${rules.length}` : 0, tab: "rules" },
         { label: "Personas served", value: c.personas.filter((id) => find(state.personas, id)).length, tab: "overview" },
       ],
@@ -112,7 +106,7 @@ function summarize(state: DocqetState, at: Pick): Summary | null {
       mark: <Maturity value={f.maturity} of="none of its capabilities has a level" spread={capabilities.map((c) => c.stability)} />,
       figures: [
         { label: "Capabilities", value: capabilities.length, tab: "capabilities" },
-        { label: "What's left", value: openDecisions(f).length + leftAcross(capabilities), tab: "left" },
+        { label: "Improvements", value: f.readiness.improvements.length, tab: "improvements" },
         { label: "Personas served", value: new Set(capabilities.flatMap((c) => c.personas)).size, tab: "personas" },
       ],
       risk: f.readiness.gaps,
@@ -138,7 +132,7 @@ function summarize(state: DocqetState, at: Pick): Summary | null {
       figures: [
         { label: "Features", value: d.features.length, tab: "features" },
         { label: "Capabilities", value: capabilities.length, tab: "features" },
-        { label: "What's left", value: openDecisions(d).length + leftAcross(capabilities), tab: "left" },
+        { label: "Improvements", value: d.readiness.improvements.length, tab: "improvements" },
       ],
       risk: d.readiness.gaps,
       exposure: d.exposure,
@@ -176,11 +170,10 @@ function summarize(state: DocqetState, at: Pick): Summary | null {
     figures: [
       { label: "Capabilities", value: capabilities.length, tab: "serves" },
       { label: "Features", value: p.features.length, tab: "readiness" },
-      /* Only what someone using the product would notice. */
-      { label: "What's left", value: leftAcross(capabilities, false), tab: "left" },
+      { label: "Improvements", value: p.readiness.improvements.length, tab: "improvements" },
     ],
     /* Only what someone using the product would notice: their capabilities' own gaps, each scored on what serves them. */
-    risk: someOf(p.readiness.gaps, (g) => capabilities.some((c) => c.left.gaps.includes(g))),
+    risk: someOf(p.readiness.gaps, (g) => capabilities.some((c) => c.open.gaps.includes(g))),
     exposure: p.exposure,
     within: capabilities,
   };
@@ -302,7 +295,7 @@ export default function Peek({
             ))}
           </Box>
           {risk.items.length > riskiest.length ? (
-            <Box component="a" sx={[linkSx, { display: "inline-block", mt: 0.5, fontSize: 12.5 }]} href={page("left")}>
+            <Box component="a" sx={[linkSx, { display: "inline-block", mt: 0.5, fontSize: 12.5 }]} href={page("improvements")}>
               All {risk.items.length} gaps
             </Box>
           ) : null}

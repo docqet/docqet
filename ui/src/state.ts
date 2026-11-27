@@ -23,9 +23,20 @@ export type Decision = {
   /*
    * What waits on its answer: expected outcomes, as `outcome:<quality>/<level>/<id>`,
    * and gaps and tradeoffs, by ID, which combining makes its project's, as
-   * the docs' lists of them are. Missing from state written before it.
+   * the docs' lists of them are. Missing from state written before it. It
+   * never gives the decision risk.
    */
   affects: string[];
+  /*
+   * What its answer could change for the people relying on what's there
+   * now, rated on a gap's scales but read about the change: all three, or
+   * all null when it isn't rated.
+   */
+  impact: Impact | null;
+  likelihood: Likelihood | null;
+  reach: Reach | null;
+  /* What's at stake in its answer changing what people rely on, as the server scores it: null when it isn't rated. */
+  risk: Risk | null;
 };
 
 /* What a concept is easily mistaken for: another concept, as linked, or a word that isn't one, and how they differ. */
@@ -154,7 +165,7 @@ export type Capability = Doc & {
   exposure: Exposure;
   /* Every gap on it, its own and those of what it's built on, scored on it. */
   risk: RiskAcross<Gap>;
-  left: Left;
+  open: Open;
   /* How it stands on each rule it follows, by the rule's ID, and on each of the rubric's outcomes, by the outcome's. */
   ruleStandings: Record<string, RuleStanding>;
   outcomes: Record<string, OutcomeStanding>;
@@ -602,7 +613,7 @@ export function expectedOutcome(rubric: Rubric | null, id: string): { outcome: E
   }
 }
 
-/* ——— What's left ——— */
+/* ——— What's open ——— */
 
 /* The open decisions a doc's contributions list, in order: all of them, since answering one deletes it. */
 export const openDecisions = (doc: Doc): Decision[] => doc.from.flatMap((f) => f.decisions ?? []);
@@ -661,9 +672,10 @@ export type TechnicalGap = { gap: Gap; on: TechnicalDoc };
  * What's still open about a capability: decisions nobody has made, its known
  * gaps, and the technical gaps of what it's built on. Evidence isn't among
  * them: what's declared holds unless a gap says otherwise. Tradeoffs aren't
- * open either: they're decided.
+ * open either: they're decided. What would make it more ready is its
+ * improvements, on its readiness.
  */
-export type Left = { decisions: Decision[]; gaps: Gap[]; technical: TechnicalGap[] };
+export type Open = { decisions: Decision[]; gaps: Gap[]; technical: TechnicalGap[] };
 
 /* Gaps or tradeoffs by ID, in the order given. */
 export const gapsById = (state: DocqetState, ids: string[]) => ids.flatMap((id) => state.gaps.find((g) => g.id === id) ?? []);
@@ -678,7 +690,7 @@ export function technicalDoc(state: DocqetState, ref: string): TechnicalDoc | un
 /* What a capability is built on: the mechanisms and components that list it. */
 export const builtOn = (state: DocqetState, capability: Capability) => capability.builtBy.flatMap((ref) => technicalDoc(state, ref) ?? []);
 
-export const leftCount = (left: Left) => left.decisions.length + left.gaps.length + left.technical.length;
+export const openCount = (open: Open) => open.decisions.length + open.gaps.length + open.technical.length;
 
 /*
  * Where an expected outcome stands for a capability:
@@ -737,15 +749,29 @@ export type Risk = {
 /* ——— Readiness ——— */
 
 /*
- * How ready people can rely on it being: a recommendation, not a verdict.
- * A capability has nothing left when its level in short is Beta or GA,
- * settled enough for real use, and no gap scores unacceptable on it, its own
- * or one on what it's built on. Only gaps count, not tradeoffs. One that's
- * started with something left still needs to reach Beta, where it's below,
- * and to close each of those gaps. A draft is not started, and never counts.
+ * Something that would raise a readiness, and by how much, as the server
+ * works it out: promoting a capability to its next level, which raises
+ * maturity, or closing a gap or answering a rated decision, which lowers
+ * exposure. `capabilities` is where it changes something among those
+ * counted. Readiness, maturity and exposure are what they'd be after it,
+ * unrounded, and `gain` how much readiness it adds. `band` is the quarter
+ * readiness would move into, or null when it stays in the same one. It's
+ * what could be done, not what has to be.
  */
-/* With what it needs, its open decisions, which don't count toward readiness, but are left to settle there too. */
-export type NotReady = { capability: Capability; belowBeta: boolean; gaps: Gap[]; decisions: Decision[] };
+export type Improvement = {
+  kind: "promote" | "close" | "answer";
+  capability: Capability | null;
+  from: Level | null;
+  to: Level | null;
+  gap: Gap | null;
+  decision: HeldDecision | null;
+  capabilities: Capability[];
+  readiness: number;
+  maturity: number;
+  exposure: number;
+  gain: number;
+  band: (typeof READINESS_BANDS)[number] | null;
+};
 
 /* The gaps that show on a capability: its own, and those of the mechanisms and components it's built on. */
 export const gapsOn = (state: DocqetState, capability: Capability) => [
@@ -757,9 +783,9 @@ export const gapsOn = (state: DocqetState, capability: Capability) => [
  * The readiness of some capabilities, as of a feature, domain, persona or
  * project: a recommendation, 0 to 100, for people to judge by. It's their
  * maturity, each at its level in short, less their exposure:
- * maturity × (1 − exposure). With it, the two it's worked out from,
- * those with nothing left, those that still need something and what, and the
- * drafts, not started, which never count. Nothing started, it's null.
+ * maturity × (1 − exposure). With it, the two it's worked out from, how
+ * many are started, the drafts, not started, which never count, and its
+ * improvements, what would raise it, most first. Nothing started, it's null.
  */
 export type Readiness = {
   percent: number | null;
@@ -771,20 +797,20 @@ export type Readiness = {
   levels: CapabilityLevel[];
   /* Every gap on them, their own and those of what they're built on, each scored on them: what the exposure is worked out from. */
   gaps: RiskAcross<Gap>;
-  ready: Capability[];
-  notReady: NotReady[];
+  started: number;
   notStarted: Capability[];
+  improvements: Improvement[];
 };
 
 /* How many it's worked out from: the started ones. */
-export const startedOf = (r: Readiness) => r.ready.length + r.notReady.length;
+export const startedOf = (r: Readiness) => r.started;
 
 /* Readiness's quarters, named for what they recommend, from the lowest. */
 export const READINESS_BANDS = [
-  { from: 0, name: "Unready", says: "Most of what they need is still being explored, or its gaps put a lot at stake." },
+  { from: 0, name: "Unready", says: "Most of what they need is still being explored, or what's open on it puts a lot at stake." },
   { from: 25, name: "Partial", says: "Some of it can be used, but much of what they need is still taking shape." },
   { from: 50, name: "Viable", says: "Enough is settled for them to rely on day to day." },
-  { from: 75, name: "Ready", says: "What they need is mostly stable, and little is at stake in what's left open." },
+  { from: 75, name: "Ready", says: "What they need is mostly stable, and little is at stake in what's still open." },
 ] as const;
 
 /* The quarter a readiness falls in, or null with nothing started. */
@@ -872,8 +898,10 @@ function showingParams(): URLSearchParams {
 /* A detail page, as `?capability=deposits` or `?view=gaps`, showing the same product and projects as this page. */
 export function pageHref(pick: PageAt, section?: string): string {
   const params = showingParams();
-  if (pick.kind === "gaps") params.set("view", "left");
-  else params.set(pick.kind, pick.id);
+  if (pick.kind === "gaps") {
+    params.set("view", "improvements");
+    params.set("tab", "gaps");
+  } else params.set(pick.kind, pick.id);
   return `?${params}${section ? `#${section}` : ""}`;
 }
 

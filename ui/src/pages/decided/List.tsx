@@ -7,8 +7,8 @@ import { Choice } from "../../components/Choice";
 import { SubjectLink } from "../../components/SubjectLink";
 import { TradeoffRows } from "../../components/TradeoffRows";
 import Box from "@mui/material/Box";
-import { groupHeadSx, groupSx, introSx } from "../left/List";
-import { visuallyHidden } from "../left/components/ScopePicker";
+import { groupHeadSx, groupSx, introSx } from "../improvements/List";
+import { visuallyHidden } from "../improvements/components/ScopePicker";
 
 /*
  * What we chose on purpose, none of it left to do: tradeoffs, each with the
@@ -30,8 +30,8 @@ export default function DecidedPage({ state, route }: { state: DocqetState; rout
         title="Decided"
         lede={
           <>
-            What we chose on purpose: the tradeoffs we live with, and what features will never do. None of it is left to do; that&apos;s under{" "}
-            <a href={sectionHref("left")}>What&apos;s left</a>.
+            What we chose on purpose: the tradeoffs we live with, and what features will never do. None of it is open; what would make it more ready is under{" "}
+            <a href={sectionHref("improvements")}>Improvements</a>.
           </>
         }
         stats={

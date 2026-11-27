@@ -4,7 +4,7 @@
  * it names none.
  *
  * The server narrows what it serves to the scope, as `?initiative=`, so every
- * number on every page, maturity, exposure, readiness and what's left, counts
+ * number on every page, maturity, exposure, readiness and improvements, counts
  * only the capabilities in it.
  */
 export type Scope = { kind: "all" } | { kind: "initiative"; id: string };

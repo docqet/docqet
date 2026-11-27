@@ -14,10 +14,7 @@ import { DocHeader } from "../../components/doc/DocPage";
 import { Sources } from "../../components/doc/About";
 import { hasBody } from "../../components/doc/About";
 import { Bodies } from "../../components/doc/About";
-import { type LeftHere } from "../../components/doc/Left";
-import { leftTotal } from "../../components/doc/Left";
-import { LeftStat } from "../../components/doc/Left";
-import { LeftTab } from "../../components/doc/Left";
+import { openTotal, OpenStat, OpenTab, type OpenHere } from "../../components/doc/Open";
 import { DecidedTab } from "../../components/doc/DecidedTab";
 import { CapabilityTable } from "../../components/doc/CapabilityTable";
 import { EvidencePair } from "../../components/doc/EvidencePair";
@@ -43,12 +40,12 @@ export function TechnicalPage({ doc, route, ...go }: DocPageProps & { doc: Techn
   const capabilities = doc.capabilities.flatMap((id) => find(state.capabilities, id) ?? []);
   const outcomes = doc.meets.flatMap((id) => expectedOutcome(state.rubric, id) ?? []);
   const places = doc.evidence.implements.length + doc.evidence.verifies.length;
-  const left = leftOnTechnical(state, doc);
+  const open = openOnTechnical(state, doc);
   const decided = doc.tradeoffs.length;
   const reliedLabel = doc.kind === "component" ? "Relied on by" : "Applies to";
   const tabs: TabDef[] = [
     { id: "built", label: "How it's built" },
-    { id: "left", label: "What's left", term: "gap" as const, count: leftTotal(left) || undefined },
+    { id: "open", label: "Gaps and decisions", term: "gap" as const, count: openTotal(open) || undefined },
     ...(decided ? [{ id: "decided", label: "Decided", count: decided }] : []),
     ...(places ? [{ id: "code", label: "In the code", term: "evidence" as const, count: places }] : []),
     ...(capabilities.length ? [{ id: "relied", label: reliedLabel, count: capabilities.length }] : []),
@@ -65,7 +62,7 @@ export function TechnicalPage({ doc, route, ...go }: DocPageProps & { doc: Techn
         trail={<a href={sectionHref("built")}>How it's built</a>}
         stats={
           <>
-            <LeftStat left={left} of={doc.name} />
+            <OpenStat open={open} of={doc.name} tab="open" />
             <Stat
               label="Tradeoffs"
               term="tradeoff"
@@ -135,8 +132,8 @@ export function TechnicalPage({ doc, route, ...go }: DocPageProps & { doc: Techn
           ) : null}
           {!fielded && !hasBody(doc) && !outcomes.length ? <Empty>Nothing more is written about it than what's above.</Empty> : null}
         </>
-      ) : tab === "left" ? (
-        <LeftTab {...go} left={left} here={doc} nothing="Nothing left: no open decisions or technical gaps are written down." />
+      ) : tab === "open" ? (
+        <OpenTab {...go} open={open} here={doc} nothing="Nothing open: no open decisions or technical gaps are written down." />
       ) : tab === "decided" ? (
         <DecidedTab
           {...go}
@@ -160,8 +157,8 @@ export function TechnicalPage({ doc, route, ...go }: DocPageProps & { doc: Techn
   );
 }
 
-/* What's left about a mechanism or component: its own open decisions and technical gaps. */
-export function leftOnTechnical(state: DocqetState, doc: TechnicalDoc): LeftHere {
+/* What's open about a mechanism or component: its own open decisions and technical gaps. */
+export function openOnTechnical(state: DocqetState, doc: TechnicalDoc): OpenHere {
   const decisions = openDecisions(doc).length;
   return {
     holders: decisions ? [{ kind: doc.kind, doc }] : [],
