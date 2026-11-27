@@ -127,6 +127,7 @@ func newReadinessResource(p *combine.Product, r derive.Readiness) ReadinessResou
 		Started:      r.Started,
 		NotStarted:   capabilityIDs(r.NotStarted),
 		Improvements: make([]ImprovementResource, len(r.Improvements)),
+		Areas:        make([]AreaResource, len(r.Areas)),
 	}
 	if b := r.Band(); b != nil {
 		res.Band = &b.Name
@@ -134,7 +135,28 @@ func newReadinessResource(p *combine.Product, r derive.Readiness) ReadinessResou
 	for i, im := range r.Improvements {
 		res.Improvements[i] = newImprovementResource(p, im)
 	}
+	for i, a := range r.Areas {
+		res.Areas[i] = newAreaResource(p, a)
+	}
 	return res
+}
+
+func newAreaResource(p *combine.Product, a derive.Area) AreaResource {
+	r := AreaResource{Kind: string(a.Kind), Capabilities: capabilityIDs(a.Capabilities), Potential: a.Potential}
+	if a.Domain != nil {
+		r.Domain = &a.Domain.ID
+	}
+	if a.Feature != nil {
+		r.Feature = &a.Feature.ID
+	}
+	if a.Capability != nil {
+		r.Capability = &a.Capability.ID
+	}
+	if a.Next != nil {
+		next := newImprovementResource(p, *a.Next)
+		r.Next = &next
+	}
+	return r
 }
 
 // docqet:implements capability:improvements
@@ -149,6 +171,12 @@ func newImprovementResource(p *combine.Product, im derive.Improvement) Improveme
 	}
 	if im.Capability != nil {
 		r.Capability, r.From, r.To = &im.Capability.ID, &im.Capability.Stability, ptr(im.To)
+	}
+	if im.Feature != nil {
+		r.Feature = &im.Feature.ID
+	}
+	if im.Domain != nil {
+		r.Domain = &im.Domain.ID
 	}
 	if im.Gap != nil {
 		r.Gap = &im.Gap.ID
@@ -234,9 +262,9 @@ func newProductResource(v *services.View) ProductResource {
 }
 
 // newStatusResource is the product at a glance, or, with within not nil,
-// the figures of the capabilities a ?for= names. Counts are always what's
-// showing in the product.
-func newStatusResource(v *services.View, within []*combine.Capability) StatusResource {
+// the figures of the capabilities a ?for= names, with its readiness's areas
+// grouped by by. Counts are always what's showing in the product.
+func newStatusResource(v *services.View, within []*combine.Capability, by derive.Grouping) StatusResource {
 	p := v.Product
 	maturity := derive.ProductMaturity(p)
 	capabilities := p.Capabilities
@@ -244,7 +272,7 @@ func newStatusResource(v *services.View, within []*combine.Capability) StatusRes
 		maturity = derive.CapabilitiesMaturity(within)
 		capabilities = within
 	}
-	readiness := derive.ReadinessOf(p, capabilities)
+	readiness := derive.ReadinessOf(p, capabilities, by)
 	listed := v.ListGaps(within, nil, false)
 	gaps := make([]*combine.Gap, len(listed))
 	for i, l := range listed {
@@ -283,7 +311,7 @@ func newStatusResource(v *services.View, within []*combine.Capability) StatusRes
 }
 
 func newDomainResource(p *combine.Product, d *combine.Domain) DomainResource {
-	readiness := derive.ReadinessOf(p, derive.DomainCapabilities(p, d))
+	readiness := derive.ReadinessOf(p, derive.DomainCapabilities(p, d), derive.ByFeature)
 	return DomainResource{
 		DocResource:  newDocResource(d.Doc),
 		Features:     list(d.Features),
@@ -295,7 +323,7 @@ func newDomainResource(p *combine.Product, d *combine.Domain) DomainResource {
 }
 
 func newFeatureResource(p *combine.Product, f *combine.Feature) FeatureResource {
-	readiness := derive.ReadinessOf(p, derive.CapabilitiesByID(p, f.Capabilities))
+	readiness := derive.ReadinessOf(p, derive.CapabilitiesByID(p, f.Capabilities), derive.ByCapability)
 	r := FeatureResource{
 		DocResource:  newDocResource(f.Doc),
 		Capabilities: list(f.Capabilities),
@@ -317,7 +345,7 @@ func newFeatureResource(p *combine.Product, f *combine.Feature) FeatureResource 
 
 func newCapabilityResource(p *combine.Product, c *combine.Capability) CapabilityResource {
 	one := []*combine.Capability{c}
-	readiness := derive.ReadinessOf(p, one)
+	readiness := derive.ReadinessOf(p, one, derive.ByStep)
 	open := derive.OpenIn(p, c, true)
 	r := CapabilityResource{
 		DocResource: newDocResource(c.Doc),
@@ -397,7 +425,7 @@ func newConceptResource(c *combine.Concept) ConceptResource {
 
 func newPersonaResource(p *combine.Product, persona *combine.Persona) PersonaResource {
 	caps := derive.PersonaCapabilities(p, persona)
-	readiness := derive.ReadinessOf(p, caps)
+	readiness := derive.ReadinessOf(p, caps, derive.ByFeature)
 	return PersonaResource{
 		DocResource:  newDocResource(persona.Doc),
 		Role:         persona.Role,
@@ -414,7 +442,7 @@ func newPersonaResource(p *combine.Product, persona *combine.Persona) PersonaRes
 
 func newInitiativeResource(p *combine.Product, i *combine.Initiative) InitiativeResource {
 	caps := derive.CapabilitiesByID(p, i.Capabilities)
-	readiness := derive.ReadinessOf(p, caps)
+	readiness := derive.ReadinessOf(p, caps, derive.ByFeature)
 	return InitiativeResource{
 		DocResource:  newDocResource(i.Doc),
 		Capabilities: list(i.Capabilities),

@@ -23,8 +23,9 @@ func GapsOn(p *combine.Product, c *combine.Capability) []*combine.Gap {
 // started. Levels is each capability's level, Draft for a draft. Gaps is
 // every gap on them, their own and those of what they're built on, each
 // scored on them. Started is how many it's worked out from, and NotStarted
-// the drafts, which never count. Improvements is what would raise it, most
-// first.
+// the drafts, which never count. Improvements is what would raise it, one
+// thing at a time, most first, and Areas where it could rise, one level
+// below what it's of, by how far, most first.
 type Readiness struct {
 	Percent      *int
 	Maturity     *float64
@@ -34,14 +35,16 @@ type Readiness struct {
 	Started      int
 	NotStarted   []*combine.Capability
 	Improvements []Improvement
+	Areas        []Area
 }
 
 // ReadinessOf returns the readiness of some capabilities, as of a
 // capability, feature, domain, persona or product: their maturity less their
 // exposure, maturity × (1 − exposure), with what would raise it, and the
-// drafts, not started, which never count.
+// drafts, not started, which never count. by is what its areas are: the
+// parts one level below what it's of.
 // docqet:implements capability:readiness
-func ReadinessOf(p *combine.Product, capabilities []*combine.Capability) Readiness {
+func ReadinessOf(p *combine.Product, capabilities []*combine.Capability, by Grouping) Readiness {
 	var gaps []*combine.Gap
 	seen := map[*combine.Gap]bool{}
 	for _, c := range capabilities {
@@ -69,6 +72,7 @@ func ReadinessOf(p *combine.Product, capabilities []*combine.Capability) Readine
 		percent := int(math.Round(f.readiness))
 		r.Maturity, r.Percent = &f.maturity, &percent
 		r.Improvements = improvementsOf(p, parts, f)
+		r.Areas = areasOf(p, parts, f, r.Improvements, by)
 	}
 	return r
 }

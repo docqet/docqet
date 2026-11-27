@@ -323,7 +323,7 @@ components:
       description: >-
         How ready people can rely on some capabilities being, with its
         improvements: what would raise it, most first.
-      required: [percent, band, maturity, exposure, levels, gaps, started, notStarted, improvements]
+      required: [percent, band, maturity, exposure, levels, gaps, started, notStarted, improvements, areas]
       properties:
         percent:
           type: integer
@@ -358,21 +358,77 @@ components:
             type: string
         improvements:
           type: array
-          description: What would raise it, most first. Only what would raise it is listed.
+          description: What would raise it, one thing at a time, most first. Only what would raise it is listed.
           items:
             $ref: "#/components/schemas/Improvement"
+        areas:
+          type: array
+          description: >-
+            Where it could rise, one level below what it's of, by how far,
+            most first: a product's domains, a domain's, persona's or
+            initiative's features, a feature's capabilities, or a
+            capability's steps, with each gap or decision that spans more
+            than one of them. Only what would raise it is listed.
+          items:
+            $ref: "#/components/schemas/Area"
+
+    Area:
+      type: object
+      description: >-
+        Somewhere a readiness could rise, with how far: a domain, feature or
+        capability, or one step. Potentials overlap, a capability can be in
+        more than one area, so they don't add up.
+      required: [kind, domain, feature, capability, capabilities, potential, next]
+      properties:
+        kind:
+          type: string
+          enum: [domain, feature, capability, gap, decision, promotion]
+          example: feature
+        domain:
+          type: string
+          nullable: true
+          description: The domain it is, null otherwise.
+          example: guest-stays
+        feature:
+          type: string
+          nullable: true
+          description: The feature it is, null otherwise.
+          example: front-desk
+        capability:
+          type: string
+          nullable: true
+          description: The capability it is, null otherwise.
+          example: check-in
+        capabilities:
+          type: array
+          description: The capabilities counted that are in it.
+          items:
+            type: string
+        potential:
+          type: number
+          description: >-
+            What readiness would be with all of it settled, unrounded: every
+            capability in it at GA with nothing open on it, or its step taken.
+          example: 70.2
+        next:
+          description: The step in it that would raise readiness most, null when no one step does.
+          type: object
+          nullable: true
+          allOf:
+            - $ref: "#/components/schemas/Improvement"
 
     Improvement:
       type: object
       description: >-
         Something that would raise a readiness, and by how much: promoting a
-        capability to its next level, closing a gap, or answering a rated
+        capability to its next level, promoting every capability in a feature
+        or a domain to its next level, closing a gap, or answering a rated
         decision. It's what could be done, not what has to be.
-      required: [kind, capability, from, to, gap, decision, capabilities, readiness, maturity, exposure, gain, band]
+      required: [kind, capability, from, to, feature, domain, gap, decision, capabilities, readiness, maturity, exposure, gain, band]
       properties:
         kind:
           type: string
-          enum: [promote, close, answer]
+          enum: [promote, promote-feature, promote-domain, close, answer]
           example: close
         capability:
           type: string
@@ -389,6 +445,16 @@ components:
           nullable: true
           description: The level a promotion reaches, null otherwise.
           example: ga
+        feature:
+          type: string
+          nullable: true
+          description: The feature whose capabilities a promote-feature promotes, each to its next level, null otherwise.
+          example: front-desk
+        domain:
+          type: string
+          nullable: true
+          description: The domain whose capabilities a promote-domain promotes, each to its next level, null otherwise.
+          example: guest-stays
         gap:
           type: string
           nullable: true
@@ -402,7 +468,7 @@ components:
             - $ref: "#/components/schemas/HeldDecision"
         capabilities:
           type: array
-          description: Where it changes something among those counted.
+          description: Where it changes something among those counted, and for a promote-feature or promote-domain, the capabilities it promotes.
           items:
             type: string
         readiness:

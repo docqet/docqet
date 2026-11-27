@@ -90,7 +90,9 @@ type ScoredGapResource struct {
 }
 
 // ReadinessResource is how ready people can rely on some capabilities being,
-// with its improvements: what would raise it, most first. Percent is
+// with its improvements: what would raise it, one thing at a time, most
+// first, and its areas: where it could rise, one level below what it's of,
+// by how far, most first. Percent is
 // rounded and Band is Unready, Partial, Viable or Ready, both null with
 // nothing started. Maturity is the capabilities' own, unrounded, weighted by
 // level. Started is how many it's worked out from, and NotStarted the
@@ -105,13 +107,34 @@ type ReadinessResource struct {
 	Started      int                   `json:"started"`
 	NotStarted   []string              `json:"notStarted"`
 	Improvements []ImprovementResource `json:"improvements"`
+	Areas        []AreaResource        `json:"areas"`
+}
+
+// AreaResource is somewhere a readiness could rise: a domain, feature or
+// capability (Kind domain, feature or capability, with Domain, Feature or
+// Capability), or one step (gap, decision or promotion). Capabilities is
+// those counted in it. Potential is what readiness would be with all of it
+// settled, unrounded, and Next the step in it that would raise readiness
+// most, null when no one step does. Potentials overlap, so they don't add
+// up.
+type AreaResource struct {
+	Kind         string               `json:"kind"`
+	Domain       *string              `json:"domain"`
+	Feature      *string              `json:"feature"`
+	Capability   *string              `json:"capability"`
+	Capabilities []string             `json:"capabilities"`
+	Potential    float64              `json:"potential"`
+	Next         *ImprovementResource `json:"next"`
 }
 
 // ImprovementResource is something that would raise a readiness: promoting
 // a capability to its next level (Kind promote, with Capability, From and
-// To), closing a gap (close, with Gap) or answering a rated decision
-// (answer, with Decision). Capabilities is where it changes something among
-// those counted. Readiness, Maturity and Exposure are what they'd be after
+// To), promoting every capability in a feature (promote-feature, with
+// Feature) or a domain (promote-domain, with Domain) to its next level,
+// closing a
+// gap (close, with Gap) or answering a rated decision (answer, with
+// Decision). Capabilities is where it changes something among those
+// counted: for a promotion of several, those promoted. Readiness, Maturity and Exposure are what they'd be after
 // it, unrounded, and Gain how much readiness it adds. Band is the quarter
 // readiness would move into, null when it stays in the same one.
 type ImprovementResource struct {
@@ -119,6 +142,8 @@ type ImprovementResource struct {
 	Capability   *string               `json:"capability"`
 	From         *string               `json:"from"`
 	To           *string               `json:"to"`
+	Feature      *string               `json:"feature"`
+	Domain       *string               `json:"domain"`
 	Gap          *string               `json:"gap"`
 	Decision     *HeldDecisionResource `json:"decision"`
 	Capabilities []string              `json:"capabilities"`

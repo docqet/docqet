@@ -12,6 +12,7 @@ import (
 	"github.com/go-chi/render"
 
 	"github.com/docqet/docqet/internal/combine"
+	"github.com/docqet/docqet/internal/derive"
 	"github.com/docqet/docqet/internal/services"
 	"github.com/docqet/docqet/internal/state"
 )
@@ -107,7 +108,27 @@ func (h *ProductsHandler) GetStatus(w http.ResponseWriter, r *http.Request) {
 	if !ok {
 		return
 	}
-	render.JSON(w, r, newStatusResource(v, within))
+	render.JSON(w, r, newStatusResource(v, within, groupingFor(r.URL.Query().Get("for"))))
+}
+
+// groupingFor returns what a readiness's areas are for what a ?for= names:
+// one level below the finest thing it names. Domains with nothing named or
+// a project, features for a domain, persona or initiative, capabilities for
+// a feature, and steps for a capability.
+func groupingFor(refs string) derive.Grouping {
+	by := derive.ByDomain
+	for ref := range strings.SplitSeq(refs, ",") {
+		r, _ := state.ParseRef(strings.TrimSpace(ref))
+		switch r.Type {
+		case state.TypeDomain, state.TypePersona, state.TypeInitiative:
+			by = max(by, derive.ByFeature)
+		case state.TypeFeature:
+			by = max(by, derive.ByCapability)
+		case state.TypeCapability:
+			by = derive.ByStep
+		}
+	}
+	return by
 }
 
 // ListProjects lists the product's projects showing.
