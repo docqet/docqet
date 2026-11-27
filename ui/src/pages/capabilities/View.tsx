@@ -9,6 +9,7 @@ import { Term } from "../../components/term/Term";
 import { NAMES, plural } from "../../components/names";
 import { TechnicalRows } from "../../components/Technical";
 import { PersonaRows } from "../../components/Personas";
+import { ProblemRows } from "../../components/Problems";
 import { levelName } from "../../components/stability/stability";
 import { ReadinessMark } from "../../components/Readiness";
 import { outcomesOf, builtOn, docDomains, domainName, find, nextLevel, projectName, type Capability, type DocqetState } from "../../state";
@@ -50,6 +51,7 @@ export function CapabilityPage({ capability, route, ...go }: DocPageProps & { ca
   const concepts = capability.concepts.flatMap((id) => find(state.concepts, id) ?? []);
   const rules = capability.rules.flatMap((id) => find(state.rules, id) ?? []);
   const personas = capability.personas.flatMap((id) => find(state.personas, id) ?? []);
+  const problems = capability.solves.flatMap((id) => find(state.problems, id) ?? []);
   const level = capability.stability;
   const next = nextLevel(level);
   const counts = rubricCounts(state, capability);
@@ -211,8 +213,17 @@ export function CapabilityPage({ capability, route, ...go }: DocPageProps & { ca
           </Section>
           <ImprovementsSection readiness={readiness} here={capability} />
           <TopGaps state={state} open={open} here={capability} />
+          <Section title="What it solves" term="problem" count={problems.length || undefined}>
+            {problems.length ? (
+              <ProblemRows problems={problems} />
+            ) : (
+              <Box component="p" sx={lineSx}>
+                Solves no problem yet.
+              </Box>
+            )}
+          </Section>
           {personas.length ? (
-            <Section title="Who it serves" term="persona" count={personas.length}>
+            <Section title="Who it serves" term="persona" count={personas.length} note="The people who have the problems it solves.">
               <PersonaRows state={state} personas={personas} onOpen={onOpen} />
             </Section>
           ) : null}

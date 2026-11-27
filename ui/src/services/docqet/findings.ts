@@ -9,6 +9,8 @@ export type FindingResource = {
   domain?: string;
   file?: string;
   line?: number;
+  /* Shown, but never failing a check. */
+  advisory: boolean;
 };
 
 export const listFindings = (showing: Showing, signal?: AbortSignal) => getAll<FindingResource>(productPath(showing, "/findings"), signal);

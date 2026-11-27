@@ -117,6 +117,10 @@ paths:
     $ref: "./paths/products/personas.yml"
   /products/{product}/personas/{id}:
     $ref: "./paths/products/persona.yml"
+  /products/{product}/problems:
+    $ref: "./paths/products/problems.yml"
+  /products/{product}/problems/{id}:
+    $ref: "./paths/products/problem.yml"
   /products/{product}/initiatives:
     $ref: "./paths/products/initiatives.yml"
   /products/{product}/initiatives/{id}:

@@ -7,7 +7,7 @@ import RuleRoundedIcon from "@mui/icons-material/RuleRounded";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 import WidgetsOutlinedIcon from "@mui/icons-material/WidgetsOutlined";
 import { ConceptIcon } from "./Concepts";
-import { DomainIcon } from "./names";
+import { DomainIcon, ProblemIcon } from "./names";
 import { PersonaAvatar, PersonaIcon } from "./Personas";
 import { InitiativeIcon } from "./shell/ScopeFilter";
 import { GapIcon, LEFT_KINDS, LeftMark, type LeftKind } from "./left/LeftMark";
@@ -54,13 +54,13 @@ export const visuallyHiddenSx: SystemStyleObject<Theme> = {
   border: 0,
 };
 
-/* A row's name as a link to its page: a picture or mark, then the name over a line saying more, such as a persona's role. */
-export function NameLink({ href, mark, name, note }: { href: string; mark: ReactNode; name: ReactNode; note?: ReactNode }) {
+/* A row's name as a link to its page: a picture or mark, then the name over a line saying more, such as a persona's role. A long name, such as a problem's, can `wrap` rather than be cut short. */
+export function NameLink({ href, mark, name, note, wrap = false }: { href: string; mark: ReactNode; name: ReactNode; note?: ReactNode; wrap?: boolean }) {
   return (
     <Box component="a" href={href} sx={{ display: "flex", alignItems: "center", gap: 1.25, minWidth: 0 }}>
       {mark}
       <Box component="span" sx={{ display: "flex", flexDirection: "column", minWidth: 0 }}>
-        <Box component="span" sx={ellipsisSx}>
+        <Box component="span" sx={wrap ? { minWidth: 0 } : ellipsisSx}>
           {name}
         </Box>
         {note ? (
@@ -86,6 +86,8 @@ export function KindIcon({ kind, size = 15 }: { kind: DocKind; size?: number }) 
       return <ConceptIcon size={size} />;
     case "persona":
       return <PersonaIcon size={size} />;
+    case "problem":
+      return <ProblemIcon size={size} />;
     case "initiative":
       return <InitiativeIcon size={size} />;
     case "rule":

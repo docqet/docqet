@@ -1,0 +1,27 @@
+get:
+  operationId: getProblem
+  x-stability: prototype
+  summary: Get a problem
+  description: >-
+    A problem, with the personas who have it and the capabilities that
+    solve it, and their figures.
+  tags:
+    - Products
+  # No sign-in yet: a server is only reachable by its client's people.
+  security: []
+  parameters:
+    - $ref: "../../schemas.yml#/components/parameters/Product"
+    - $ref: "../../schemas.yml#/components/parameters/DocID"
+    - $ref: "../../schemas.yml#/components/parameters/ProjectsShown"
+    - $ref: "../../schemas.yml#/components/parameters/Initiative"
+  responses:
+    "200":
+      description: The problem.
+      content:
+        application/json:
+          schema:
+            $ref: "../../schemas.yml#/components/schemas/Problem"
+    "400":
+      $ref: "../../schemas.yml#/components/responses/InvalidQuery"
+    "404":
+      $ref: "../../schemas.yml#/components/responses/DocNotFound"

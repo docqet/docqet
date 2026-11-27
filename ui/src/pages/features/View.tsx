@@ -168,7 +168,7 @@ export function FeaturePage({ feature, route, ...go }: DocPageProps & { feature:
             </Section>
           ))
         ) : (
-          <Empty>A job the software doesn't do yet.</Empty>
+          <Empty>A part the software doesn't have yet.</Empty>
         )
       ) : tab === IMPROVEMENTS_TAB ? (
         <>

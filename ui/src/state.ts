@@ -128,7 +128,7 @@ export type Domain = Doc & {
 /* One domain's part of a feature: the capabilities that domain builds or lists, and its maturity from their levels there. */
 export type Part = { domain: string; capabilities: string[]; maturity: number | null; band: Level | null };
 
-/* A job the product does, grouping the capabilities that do it, in every domain that does part of it. */
+/* A part of what the product offers, grouping the capabilities in it, in every domain that does part of it. */
 export type Feature = Doc & {
   capabilities: string[];
   /* Its part in each domain, in the order they come up. */
@@ -143,7 +143,9 @@ export type Feature = Doc & {
 };
 
 export type Capability = Doc & {
-  /* The personas it serves: who does it, or who it's done for. */
+  /* The problems it solves. */
+  solves: string[];
+  /* The personas it serves: those of the problems it solves. */
   personas: string[];
   /* The initiatives it's part of. In none, it shows only when everything does. */
   initiatives: string[];
@@ -228,7 +230,8 @@ export type Concept = Doc & { capabilities: string[]; rules: string[] };
 
 /*
  * A type of person the software serves, one across every domain. What it
- * relates to is worked out from the capabilities that list it.
+ * relates to is worked out from the problems that name it, and the
+ * capabilities that solve those.
  */
 export type Persona = Doc & {
   /* How they use the software, such as the role it gives them, and the job title they hold. Either can be null. */
@@ -236,12 +239,33 @@ export type Persona = Doc & {
   title: string | null;
   /* Its picture's URL. */
   image: string | null;
-  /* Every capability that lists it, and the features those are in. */
+  /* The problems they have. */
+  problems: string[];
+  /* Every capability that serves them, and the features those are in. */
   capabilities: string[];
   features: string[];
   /* The initiatives it's part of: whose work they're for. In none, it shows only when everything does. */
   initiatives: string[];
   /* What serves them: how mature, ready and exposed it is. */
+  maturity: number | null;
+  band: Level | null;
+  readiness: Readiness;
+  exposure: Exposure;
+};
+
+/*
+ * A pain point one or more personas share, in their words, never naming the
+ * software: why it exists. One across every domain. Capabilities say which
+ * problems they solve; nothing solving it is shown as such.
+ */
+export type Problem = Doc & {
+  /* What it costs them or the business, or null when it isn't written down. */
+  cost: string | null;
+  /* The personas who have it. */
+  personas: string[];
+  /* Every capability that solves it, drafts among them. */
+  capabilities: string[];
+  /* What solves it: how mature, ready and exposed it is. */
   maturity: number | null;
   band: Level | null;
   readiness: Readiness;
@@ -375,8 +399,11 @@ export type RubricQuality = { id: string; name: string; question: string; why: s
 export type RubricKind = { id: string; name: string };
 export type Rubric = { kinds: RubricKind[]; qualities: RubricQuality[] };
 
-/* What the indexer found wrong. `domain` is that of the doc it's about, if it's about one. */
-export type Finding = { type: string; subject: string; capabilities: string[]; message: string; domain?: string };
+/* What the indexer found wrong. `domain` is that of the doc it's about, if it's about one. An advisory one is shown, but never fails a check. */
+export type Finding = { type: string; subject: string; capabilities: string[]; message: string; domain?: string; advisory: boolean };
+
+/* The findings that fail a check: those that aren't advisory. */
+export const failingFindings = (state: DocqetState) => state.findings.filter((f) => !f.advisory);
 
 /* What the page shows at once: the projects it's showing, and everything they define, together. */
 export type DocqetState = {
@@ -387,6 +414,7 @@ export type DocqetState = {
   rules: Rule[];
   concepts: Concept[];
   personas: Persona[];
+  problems: Problem[];
   initiatives: Initiative[];
   mechanisms: TechnicalDoc[];
   components: TechnicalDoc[];
@@ -905,9 +933,19 @@ export function inRiskOrder<T>(items: T[], of: (item: T) => Gap): T[] {
 /* ——— Detail pages ——— */
 
 /* What a detail page can show: a doc of the product, a mechanism or component, or every gap and tradeoff at once. */
-export type PageAt = Pick | { kind: TechnicalKind | "initiative"; id: string } | { kind: "gaps"; id: "" };
+export type PageAt = Pick | { kind: TechnicalKind | "problem" | "initiative"; id: string } | { kind: "gaps"; id: "" };
 
-const PAGE_KINDS: Exclude<PageAt["kind"], "gaps">[] = ["domain", "feature", "capability", "concept", "persona", "initiative", "mechanism", "component"];
+const PAGE_KINDS: Exclude<PageAt["kind"], "gaps">[] = [
+  "domain",
+  "feature",
+  "capability",
+  "concept",
+  "persona",
+  "problem",
+  "initiative",
+  "mechanism",
+  "component",
+];
 
 /* The product, projects and scope showing, as the address has them, carried over to the pages it links to. */
 function showingParams(): URLSearchParams {

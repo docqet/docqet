@@ -15,6 +15,8 @@ type DocqetPalette = {
   concept: { main: string; soft: string };
   /* Personas: a blue of their own, apart from concepts, features and capabilities. */
   persona: { main: string; soft: string };
+  /* Problems: a rose of their own, beside personas in the problem space. */
+  problem: { main: string; soft: string };
   /* Readiness: from a quiet grey, unready, to green, ready. */
   ready: { low: string; high: string };
   /* Areas: a faint violet wash behind their features, darker than the canvas, lighter than a card. */
@@ -98,6 +100,7 @@ const theme = createTheme({
         },
         concept: { main: "#0f766e", soft: "rgb(15 118 110 / 0.09)" },
         persona: { main: "#1d4ed8", soft: "rgb(29 78 216 / 0.08)" },
+        problem: { main: "#be123c", soft: "rgb(190 18 60 / 0.07)" },
         ready: { low: "#6f6982", high: "#047857" },
         area: { bg: "rgb(124 58 237 / 0.045)", border: "rgb(124 58 237 / 0.16)" },
         lit: {
@@ -129,6 +132,7 @@ const theme = createTheme({
         },
         concept: { main: "#2dd4bf", soft: "rgb(45 212 191 / 0.1)" },
         persona: { main: "#60a5fa", soft: "rgb(96 165 250 / 0.12)" },
+        problem: { main: "#fb7185", soft: "rgb(251 113 133 / 0.12)" },
         ready: { low: "#aaa4ba", high: "#34d399" },
         area: { bg: "rgb(167 139 250 / 0.055)", border: "rgb(167 139 250 / 0.2)" },
         lit: {

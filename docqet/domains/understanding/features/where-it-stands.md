@@ -12,6 +12,7 @@ capabilities:
   - capability:readiness
   - capability:improvements
   - capability:personas
+  - capability:problems
   - capability:initiative-scope
   - capability:product-view
   - capability:seeing-findings

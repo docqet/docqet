@@ -31,6 +31,8 @@ import "github.com/docqet/docqet/internal/state"
 //	GET /products/{product}/domains/{domain}/concepts/{id}      ConceptResource
 //	GET /products/{product}/personas                []PersonaResource
 //	GET /products/{product}/personas/{id}           PersonaResource
+//	GET /products/{product}/problems                []ProblemResource
+//	GET /products/{product}/problems/{id}           ProblemResource
 //	GET /products/{product}/initiatives             []InitiativeResource
 //	GET /products/{product}/initiatives/{id}        InitiativeResource
 //	GET /products/{product}/mechanisms              []TechnicalResource
@@ -46,7 +48,7 @@ import "github.com/docqet/docqet/internal/state"
 //	GET /products/{product}/search?q=               []SearchResultResource
 //
 // ?for= is a reference, such as persona:front-desk-clerk, to a project,
-// persona, initiative, domain, feature or capability, as the CLI's --for, or
+// persona, problem, initiative, domain, feature or capability, as the CLI's --for, or
 // several separated by commas, for the capabilities they all
 // share: a list or status then counts only those capabilities, and a gap's
 // Within says what it puts at stake there.
@@ -252,6 +254,7 @@ type CountsResource struct {
 	Rules        int            `json:"rules"`
 	Concepts     int            `json:"concepts"`
 	Personas     int            `json:"personas"`
+	Problems     int            `json:"problems"`
 	Initiatives  int            `json:"initiatives"`
 	Mechanisms   int            `json:"mechanisms"`
 	Components   int            `json:"components"`
@@ -340,7 +343,8 @@ type OutcomeStandingResource struct {
 // and how it stands on each rule it follows and each expected outcome.
 type CapabilityResource struct {
 	DocResource
-	Personas    []string         `json:"personas"`
+	Solves      []string         `json:"solves"`
+	Personas    []string         `json:"personas"` // those of the problems it solves
 	Initiatives []string         `json:"initiatives"`
 	Stability   string           `json:"stability"` // its level in short, or draft
 	Levels      []LevelResource  `json:"levels"`
@@ -387,9 +391,22 @@ type PersonaResource struct {
 	Role         *string           `json:"role"`
 	Title        *string           `json:"title"`
 	Image        *string           `json:"image"`
+	Problems     []string          `json:"problems"`
 	Capabilities []string          `json:"capabilities"`
 	Features     []string          `json:"features"`
 	Initiatives  []string          `json:"initiatives"`
+	Maturity     *MaturityResource `json:"maturity"`
+	Readiness    ReadinessResource `json:"readiness"`
+	Exposure     ExposureResource  `json:"exposure"`
+}
+
+// ProblemResource is a problem, with the figures of the capabilities that
+// solve it.
+type ProblemResource struct {
+	DocResource
+	Cost         *string           `json:"cost"`
+	Personas     []string          `json:"personas"`
+	Capabilities []string          `json:"capabilities"`
 	Maturity     *MaturityResource `json:"maturity"`
 	Readiness    ReadinessResource `json:"readiness"`
 	Exposure     ExposureResource  `json:"exposure"`
@@ -509,10 +526,11 @@ type FindingResource struct {
 	Domain       string   `json:"domain,omitempty"`
 	File         string   `json:"file,omitempty"`
 	Line         int      `json:"line,omitempty"`
+	Advisory     bool     `json:"advisory"` // shown, but never failing a check
 }
 
 // SearchResultResource is a doc that matches a search, best first: its kind
-// (project, domain, feature, capability, rule, concept, persona or
+// (project, domain, feature, capability, rule, concept, persona, problem or
 // initiative), ID and name, and where it matched.
 type SearchResultResource struct {
 	Kind        string `json:"kind"`

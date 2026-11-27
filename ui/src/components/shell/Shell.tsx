@@ -19,12 +19,13 @@ import { ConceptIcon } from "../Concepts";
 import { ColorSchemeToggle } from "./ColorSchemeToggle";
 import Logo from "./Logo";
 import { PersonaIcon } from "../Personas";
+import { ProblemIcon } from "../names";
 import ProductFilter, { type ProductChoice } from "./ProductFilter";
 import ScopeFilter, { InitiativeIcon } from "./ScopeFilter";
 import type { Scope } from "../../scope";
 import { followLink, navigate, sectionHref, sectionOf, docHref, type Route, type Section } from "../../routes";
 import Search, { type Selection } from "./Search";
-import { pageHref, type DocqetState, type Product } from "../../state";
+import { failingFindings, pageHref, type DocqetState, type Product } from "../../state";
 
 /*
  * Every view's frame: a bar across the top that says where the reader is and
@@ -178,6 +179,13 @@ function SideNav({ state, at, onGo }: { state: DocqetState; at: Section; onGo: (
           question: "Who it serves, and how ready it is for them",
           count: state.personas.length,
         },
+        {
+          section: "problems",
+          label: "Problems",
+          icon: <ProblemIcon size={20} />,
+          question: "Why it exists: the problems it solves, and how ready what solves each is",
+          count: state.problems.length,
+        },
         ...(state.initiatives.length
           ? [
               {
@@ -225,8 +233,8 @@ function SideNav({ state, at, onGo }: { state: DocqetState; at: Section; onGo: (
           section: "findings",
           label: "Findings",
           icon: <WarningAmberRoundedIcon />,
-          question: "Contradictions and mistakes in the docs",
-          count: state.findings.length,
+          question: "Contradictions and mistakes in the docs, and advice",
+          count: failingFindings(state).length,
         },
       ],
     },

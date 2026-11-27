@@ -17,6 +17,7 @@ import { listGaps, type GapResource, type RiskOnResource } from "./services/docq
 import { listInitiatives } from "./services/docqet/initiatives";
 import { listMechanisms } from "./services/docqet/mechanisms";
 import { listPersonas } from "./services/docqet/personas";
+import { listProblems } from "./services/docqet/problems";
 import { listFindings } from "./services/docqet/findings";
 import { listProjects } from "./services/docqet/projects";
 import { getRubric } from "./services/docqet/rubric";
@@ -65,6 +66,7 @@ import {
   type Likelihood,
   type OutcomeStanding,
   type Persona,
+  type Problem,
   type Project,
   type Reach,
   type Readiness,
@@ -169,6 +171,7 @@ async function readProduct(showing: Showing, signal?: AbortSignal) {
     rules,
     concepts,
     personas,
+    problems,
     initiatives,
     mechanisms,
     components,
@@ -186,6 +189,7 @@ async function readProduct(showing: Showing, signal?: AbortSignal) {
     listRules(showing, signal),
     listConcepts(showing, signal),
     listPersonas(showing, signal),
+    listProblems(showing, signal),
     listInitiatives(showing, signal),
     listMechanisms(showing, signal),
     listComponents(showing, signal),
@@ -204,6 +208,7 @@ async function readProduct(showing: Showing, signal?: AbortSignal) {
     rules,
     concepts,
     personas,
+    problems,
     initiatives,
     mechanisms,
     components,
@@ -251,6 +256,7 @@ function modelOf(r: Awaited<ReturnType<typeof readProduct>>, showing: Showing): 
     })),
     capabilities: r.capabilities.map((c): Capability => ({
       ...doc(c),
+      solves: c.solves,
       personas: c.personas,
       initiatives: c.initiatives,
       stability: level(c.stability),
@@ -283,9 +289,20 @@ function modelOf(r: Awaited<ReturnType<typeof readProduct>>, showing: Showing): 
       role: p.role,
       title: p.title,
       image: p.image,
+      problems: p.problems,
       capabilities: p.capabilities,
       features: p.features,
       initiatives: p.initiatives,
+      maturity: percent(p.maturity),
+      band: band(p.maturity),
+      readiness: noReadiness(),
+      exposure: noExposure,
+    })),
+    problems: r.problems.map((p): Problem => ({
+      ...doc(p),
+      cost: p.cost,
+      personas: p.personas,
+      capabilities: p.capabilities,
       maturity: percent(p.maturity),
       band: band(p.maturity),
       readiness: noReadiness(),
@@ -337,6 +354,7 @@ function modelOf(r: Awaited<ReturnType<typeof readProduct>>, showing: Showing): 
       capabilities: p.capabilities,
       message: p.message,
       ...(p.domain ? { domain: p.domain } : {}),
+      advisory: p.advisory,
     })),
     rubric: r.rubric.qualities.length ? (r.rubric as Rubric) : null,
     status: { maturity: percent(r.status.maturity), band: band(r.status.maturity), readiness: noReadiness(), exposure: noExposure, risk: noAcross() },
@@ -353,6 +371,7 @@ function modelOf(r: Awaited<ReturnType<typeof readProduct>>, showing: Showing): 
   r.domains.forEach((x, i) => Object.assign(state.domains[i], { readiness: readiness(x.readiness), exposure: exposure(x.exposure) }));
   r.features.forEach((x, i) => Object.assign(state.features[i], { readiness: readiness(x.readiness), exposure: exposure(x.exposure) }));
   r.personas.forEach((x, i) => Object.assign(state.personas[i], { readiness: readiness(x.readiness), exposure: exposure(x.exposure) }));
+  r.problems.forEach((x, i) => Object.assign(state.problems[i], { readiness: readiness(x.readiness), exposure: exposure(x.exposure) }));
   r.initiatives.forEach((x, i) => Object.assign(state.initiatives[i], { readiness: readiness(x.readiness), exposure: exposure(x.exposure) }));
   r.mechanisms.forEach((x, i) => (state.mechanisms[i].risk = across(x.risk)));
   r.components.forEach((x, i) => (state.components[i].risk = across(x.risk)));

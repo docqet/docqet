@@ -13,6 +13,7 @@ export type TermId =
   | "rule"
   | "concept"
   | "persona"
+  | "problem"
   | "initiative"
   | "mechanism"
   | "component"
@@ -61,14 +62,14 @@ export const TERMS: Record<TermId, TermEntry> = {
   feature: {
     name: "Feature",
     means:
-      "A job the software does for its users or the business: an outcome of value someone comes to the software for. It's made of capabilities, and its maturity comes from theirs.",
+      "A part of what the software offers its users or the business, with an identity that lasts: the part of the software someone comes to, and would name. It's made of capabilities, and its maturity comes from theirs.",
     more: "Reservations is a feature: taking bookings and handling changes to them, before the guest arrives.",
   },
   capability: {
     name: "Capability",
     means:
-      "The software's ability to produce one particular result of value, by itself or by letting someone produce it, as part of a feature's job. Each has its own stability level.",
-    more: "Room booking is a capability of Reservations: its result is a guest with a room held for their stay.",
+      "The software's ability to produce one particular result of value, by itself or by letting someone produce it, as part of a feature, solving part of one or more problems. Each has its own stability level.",
+    more: "Room booking is a capability of Reservations: its result is a guest with a room held for their stay. It serves the personas of the problems it solves.",
   },
   rule: {
     name: "Rule",
@@ -84,14 +85,20 @@ export const TERMS: Record<TermId, TermEntry> = {
   persona: {
     name: "Persona",
     means:
-      "A type of person the software serves, written as one invented person so it's easy to picture: who they are, what they need, and what they care about.",
+      "A type of person the software serves, written as one invented person so it's easy to picture: who they are, the context they work in, and what they care about. What they need is in the problems they have.",
     more: "Maria, front desk clerk, who takes bookings and checks guests in and out.",
+  },
+  problem: {
+    name: "Problem",
+    means:
+      "A pain point one or more personas share, said in their words without naming the software: why the software exists. Capabilities say which problems they solve.",
+    more: "“A guest's room is given to someone else” is a problem the front desk clerk has; room booking solves it. A problem would still be true if the software didn't exist, and one nothing solves yet is shown as such.",
   },
   initiative: {
     name: "Initiative",
     means:
       "A named body of work, such as the MVP or what comes after it. Capabilities and personas say which initiatives they're part of. Choosing a scope shows everything, or one initiative, and every number counts only what's showing.",
-    more: "Busy season, in Hotel Bookings: group bookings, the waitlist and room status, across two features. Unlike a feature, it's a stretch of work, not a lasting job.",
+    more: "Busy season, in Hotel Bookings: group bookings, the waitlist and room status, across two features. Unlike a feature, it's a stretch of work, not a lasting part of the product.",
   },
   mechanism: {
     name: "Mechanism",

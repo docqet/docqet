@@ -21,6 +21,7 @@ import { docHref, sectionHref, type Route } from "../../routes";
 import { Empty, PageHeader, Section, Stat, View } from "../../components/shell/layout";
 import {
   domainCapabilities,
+  failingFindings,
   find,
   partOf,
   isReady,
@@ -82,6 +83,9 @@ export default function OverviewPage({ state }: { state: DocqetState; route: Rou
     [state],
   );
   const leastReady = personas.find((p) => isReady(p.readiness) === false);
+  /* Findings that fail the check, apart from advisory ones, which never do. */
+  const failing = failingFindings(state).length;
+  const advisory = state.findings.length - failing;
   const riskiest = useMemo(() => inRiskOrder(state.gaps, (g) => g).slice(0, 5), [state]);
   const decisions = [...state.domains, ...state.features, ...state.capabilities, ...state.mechanisms, ...state.components].reduce(
     (n, doc) => n + openDecisions(doc).length,
@@ -150,8 +154,16 @@ export default function OverviewPage({ state }: { state: DocqetState; route: Rou
                   : `${plural(state.gaps.length, "gap", "gaps")} and ${plural(decisions, "open decision", "open decisions")} written down`
               }
             />
-            {state.findings.length ? (
-              <Stat label="Findings" href={sectionHref("findings")} tone="warn" value={state.findings.length} note="Contradictions and mistakes to fix" />
+            {failing ? (
+              <Stat
+                label="Findings"
+                href={sectionHref("findings")}
+                tone="warn"
+                value={failing}
+                note={`Contradictions and mistakes to fix${advisory ? `, and ${advisory} advisory` : ""}`}
+              />
+            ) : advisory ? (
+              <Stat label="Findings" href={sectionHref("findings")} value={advisory} note="Advisory only: nothing fails the check" />
             ) : null}
           </>
         }

@@ -207,6 +207,9 @@ components:
           type: string
         line:
           type: integer
+        advisory:
+          type: boolean
+          description: Shown and counted, but never failing a check.
 
     Error:
       type: object
@@ -725,7 +728,7 @@ components:
     Counts:
       type: object
       description: How many of each there are, showing.
-      required: [domains, features, capabilities, rules, concepts, personas, initiatives, mechanisms, components, gaps, tradeoffs, decisions, findings]
+      required: [domains, features, capabilities, rules, concepts, personas, problems, initiatives, mechanisms, components, gaps, tradeoffs, decisions, findings]
       properties:
         domains:
           type: integer
@@ -747,6 +750,8 @@ components:
         concepts:
           type: integer
         personas:
+          type: integer
+        problems:
           type: integer
         initiatives:
           type: integer
@@ -916,10 +921,14 @@ components:
       allOf:
         - $ref: "#/components/schemas/Doc"
         - type: object
-          required: [personas, initiatives, stability, levels, feature, rules, concepts, gaps, tradeoffs, builtBy, evidence, readiness, exposure, risk, open, ruleStandings, outcomes]
+          required: [solves, personas, initiatives, stability, levels, feature, rules, concepts, gaps, tradeoffs, builtBy, evidence, readiness, exposure, risk, open, ruleStandings, outcomes]
           properties:
-            personas:
+            solves:
               $ref: "#/components/schemas/StringList"
+            personas:
+              description: Those of the problems it solves.
+              allOf:
+                - $ref: "#/components/schemas/StringList"
             initiatives:
               $ref: "#/components/schemas/StringList"
             stability:
@@ -1006,7 +1015,7 @@ components:
       allOf:
         - $ref: "#/components/schemas/Doc"
         - type: object
-          required: [role, title, image, capabilities, features, initiatives, maturity, readiness, exposure]
+          required: [role, title, image, problems, capabilities, features, initiatives, maturity, readiness, exposure]
           properties:
             role:
               type: string
@@ -1017,11 +1026,34 @@ components:
             image:
               type: string
               nullable: true
+            problems:
+              $ref: "#/components/schemas/StringList"
             capabilities:
               $ref: "#/components/schemas/StringList"
             features:
               $ref: "#/components/schemas/StringList"
             initiatives:
+              $ref: "#/components/schemas/StringList"
+            maturity:
+              $ref: "#/components/schemas/Maturity"
+            readiness:
+              $ref: "#/components/schemas/Readiness"
+            exposure:
+              $ref: "#/components/schemas/Exposure"
+
+    Problem:
+      description: A problem, with the figures of the capabilities that solve it.
+      allOf:
+        - $ref: "#/components/schemas/Doc"
+        - type: object
+          required: [cost, personas, capabilities, maturity, readiness, exposure]
+          properties:
+            cost:
+              type: string
+              nullable: true
+            personas:
+              $ref: "#/components/schemas/StringList"
+            capabilities:
               $ref: "#/components/schemas/StringList"
             maturity:
               $ref: "#/components/schemas/Maturity"
@@ -1259,7 +1291,7 @@ components:
       properties:
         kind:
           type: string
-          enum: [project, domain, feature, capability, rule, concept, persona, initiative]
+          enum: [project, domain, feature, capability, rule, concept, persona, problem, initiative]
         id:
           type: string
           example: room-booking
@@ -1430,8 +1462,8 @@ components:
       in: query
       required: false
       description: >-
-        A reference to a project, persona, initiative, domain, feature or
-        capability, as the CLI's `--for`: count only its capabilities.
+        A reference to a project, persona, problem, initiative, domain, feature
+        or capability, as the CLI's `--for`: count only its capabilities.
         Several, separated by commas, count
         only the capabilities they all share, such as
         `persona:front-desk-clerk,feature:front-desk`. One that names nothing

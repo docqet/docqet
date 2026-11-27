@@ -6,6 +6,7 @@ export type PersonaResource = DocResource &
     role: string | null;
     title: string | null;
     image: string | null;
+    problems: string[];
     capabilities: string[];
     features: string[];
     initiatives: string[];

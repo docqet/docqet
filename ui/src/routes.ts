@@ -20,6 +20,7 @@ export const SECTIONS = [
   "map",
   "features",
   "personas",
+  "problems",
   "initiatives",
   "language",
   "built",
@@ -32,7 +33,7 @@ export type Section = (typeof SECTIONS)[number];
 
 /* What can have a page of its own. */
 export type DocKind = Exclude<PageAt["kind"], "gaps"> | "rule" | "gap";
-export const DOC_KINDS: DocKind[] = ["domain", "feature", "capability", "concept", "persona", "initiative", "mechanism", "component", "rule", "gap"];
+export const DOC_KINDS: DocKind[] = ["domain", "feature", "capability", "concept", "persona", "problem", "initiative", "mechanism", "component", "rule", "gap"];
 
 export type Route = { kind: "section"; section: Section; tab: string | null } | { kind: "doc"; doc: DocKind; id: string; tab: string | null };
 
@@ -42,6 +43,7 @@ const SECTION_OF_DOC: Record<DocKind, Section> = {
   feature: "features",
   capability: "features",
   persona: "personas",
+  problem: "problems",
   initiative: "initiatives",
   concept: "language",
   rule: "language",
@@ -60,8 +62,7 @@ export function routeOf(search: string): Route {
     if (id) return { kind: "doc", doc, id, tab };
   }
   const view = params.get("view");
-  /* Older addresses: the gaps page, What's left, doc problems, and the map opening on something. */
-  if (view === "problems") return { kind: "section", section: "findings", tab };
+  /* Older addresses: the gaps page, What's left, and the map opening on something. */
   if (view === "gaps") return { kind: "section", section: "improvements", tab: tab ?? "gaps" };
   if (view === "left") return { kind: "section", section: "improvements", tab: tab === "decisions" ? tab : (tab ?? "gaps") };
   if (!view && params.get("show")) return { kind: "section", section: "map", tab };

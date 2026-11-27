@@ -286,6 +286,7 @@ func newStatusResource(v *services.View, within []*combine.Capability, by derive
 		Rules:        len(p.Rules),
 		Concepts:     len(p.Concepts),
 		Personas:     len(p.Personas),
+		Problems:     len(p.Problems),
 		Initiatives:  len(p.Initiatives),
 		Mechanisms:   len(p.Mechanisms),
 		Components:   len(p.Components),
@@ -349,6 +350,7 @@ func newCapabilityResource(p *combine.Product, c *combine.Capability) Capability
 	open := derive.OpenIn(p, c, true)
 	r := CapabilityResource{
 		DocResource: newDocResource(c.Doc),
+		Solves:      list(c.Solves),
 		Personas:    list(c.Personas),
 		Initiatives: list(c.Initiatives),
 		Stability:   c.Stability,
@@ -431,9 +433,24 @@ func newPersonaResource(p *combine.Product, persona *combine.Persona) PersonaRes
 		Role:         persona.Role,
 		Title:        persona.Title,
 		Image:        persona.Image,
+		Problems:     list(persona.Problems),
 		Capabilities: list(persona.Capabilities),
 		Features:     list(persona.Features),
 		Initiatives:  list(persona.Initiatives),
+		Maturity:     newMaturityResource(derive.CapabilitiesMaturity(caps)),
+		Readiness:    newReadinessResource(p, readiness),
+		Exposure:     newExposureResource(readiness.Exposure),
+	}
+}
+
+func newProblemResource(p *combine.Product, problem *combine.Problem) ProblemResource {
+	caps := derive.ProblemCapabilities(p, problem)
+	readiness := derive.ReadinessOf(p, caps, derive.ByFeature)
+	return ProblemResource{
+		DocResource:  newDocResource(problem.Doc),
+		Cost:         problem.Cost,
+		Personas:     list(problem.Personas),
+		Capabilities: list(problem.Capabilities),
 		Maturity:     newMaturityResource(derive.CapabilitiesMaturity(caps)),
 		Readiness:    newReadinessResource(p, readiness),
 		Exposure:     newExposureResource(readiness.Exposure),
@@ -582,6 +599,7 @@ func newFindingResource(pr state.Finding) FindingResource {
 		Domain:       pr.Domain,
 		File:         pr.File,
 		Line:         pr.Line,
+		Advisory:     state.Advisory(pr.Type),
 	}
 }
 

@@ -11,6 +11,8 @@ export type OutcomeStandingResource = {
   by: string[];
 };
 export type CapabilityResource = DocResource & {
+  solves: string[];
+  /* Those of the problems it solves. */
   personas: string[];
   initiatives: string[];
   stability: string;

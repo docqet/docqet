@@ -3,6 +3,7 @@ import { type ReactNode } from "react";
 import BoltOutlinedIcon from "@mui/icons-material/BoltOutlined";
 import ExtensionOutlinedIcon from "@mui/icons-material/ExtensionOutlined";
 import HubOutlinedIcon from "@mui/icons-material/HubOutlined";
+import SentimentDissatisfiedOutlinedIcon from "@mui/icons-material/SentimentDissatisfiedOutlined";
 import WidgetsOutlinedIcon from "@mui/icons-material/WidgetsOutlined";
 import { PersonaIcon } from "./Personas";
 import { type TechnicalKind, type RuleStanding } from "../state";
@@ -31,6 +32,11 @@ export const RULE_STANDING_LABELS: Record<RuleStanding, string> = {
 };
 
 export const plural = (n: number, one: string, many: string) => `${n} ${n === 1 ? one : many}`;
+
+/* A problem's mark, wherever one is named. */
+export function ProblemIcon({ size = 16 }: { size?: number }) {
+  return <SentimentDissatisfiedOutlinedIcon sx={{ fontSize: size, flex: "none", color: "problem.main" }} />;
+}
 
 /* A domain's mark, wherever one is named. */
 export function DomainIcon({ size = 14 }: { size?: number }) {

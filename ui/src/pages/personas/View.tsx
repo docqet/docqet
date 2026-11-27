@@ -5,6 +5,7 @@ import { StabilitySpread } from "../../components/stability/StabilitySpread";
 import { Term } from "../../components/term/Term";
 import { NAMES } from "../../components/names";
 import { PersonaAvatar, personaNameAndRole } from "../../components/Personas";
+import { ProblemRows } from "../../components/Problems";
 import { docDomains, find, type DocqetState, type Persona } from "../../state";
 import { ExposureStat, MaturityStat } from "../../components/indexParts";
 import { docHref, type Route } from "../../routes";
@@ -34,12 +35,13 @@ export default function PersonaView({ state, id, route }: { state: DocqetState; 
 
 /*
  * A persona: how ready the software is for them, and what it still needs to
- * be, then what serves them, by feature, its improvements, and what's open for them (only what
+ * be, then the problems they have, what serves them, by feature, its improvements, and what's open for them (only what
  * someone using it would notice), and their body.
  */
 export function PersonaPage({ persona, route, ...go }: DocPageProps & { persona: Persona }) {
   const { state } = go;
   const capabilities = persona.capabilities.flatMap((id) => find(state.capabilities, id) ?? []);
+  const problems = persona.problems.flatMap((id) => find(state.problems, id) ?? []);
   const features = persona.features.flatMap((id) => find(state.features, id) ?? []);
   const loose = capabilities.filter((c) => !c.feature);
   const domains = [...new Set(capabilities.flatMap((c) => docDomains(c)))];
@@ -48,6 +50,7 @@ export function PersonaPage({ persona, route, ...go }: DocPageProps & { persona:
   const { name, role } = personaNameAndRole(persona);
   const tabs: TabDef[] = [
     { id: "readiness", label: "Readiness", term: "readiness" as const },
+    { id: "problems", label: "Their problems", term: "problem" as const, count: problems.length },
     { id: "serves", label: "What serves them", term: "capability" as const, count: capabilities.length },
     { id: IMPROVEMENTS_TAB, label: "Improvements", term: "improvement" as const, count: readiness.areas.length || undefined },
     ...(hasBody(persona) ? [{ id: "about", label: "About" }] : []),
@@ -122,6 +125,10 @@ export function PersonaPage({ persona, route, ...go }: DocPageProps & { persona:
           </Section>
           <TopGaps state={state} open={open} />
         </>
+      ) : tab === "problems" ? (
+        <Section title="Their problems" term="problem" count={problems.length} note="What goes wrong for them today, and how ready what solves each is.">
+          {problems.length ? <ProblemRows problems={problems} /> : <Empty>No problem names them yet.</Empty>}
+        </Section>
       ) : tab === "serves" ? (
         <>
           {features.map((f) => {

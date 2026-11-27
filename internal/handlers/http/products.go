@@ -53,6 +53,8 @@ func (h *ProductsHandler) RegisterRoutes(r chi.Router) {
 	r.Get("/products/{product}/domains/{domain}/concepts/{id}", h.GetConcept)
 	r.Get("/products/{product}/personas", h.ListPersonas)
 	r.Get("/products/{product}/personas/{id}", h.GetPersona)
+	r.Get("/products/{product}/problems", h.ListProblems)
+	r.Get("/products/{product}/problems/{id}", h.GetProblem)
 	r.Get("/products/{product}/initiatives", h.ListInitiatives)
 	r.Get("/products/{product}/initiatives/{id}", h.GetInitiative)
 	r.Get("/products/{product}/mechanisms", h.listTechnical(combine.KindMechanism))
@@ -120,7 +122,7 @@ func groupingFor(refs string) derive.Grouping {
 	for ref := range strings.SplitSeq(refs, ",") {
 		r, _ := state.ParseRef(strings.TrimSpace(ref))
 		switch r.Type {
-		case state.TypeDomain, state.TypePersona, state.TypeInitiative:
+		case state.TypeDomain, state.TypePersona, state.TypeProblem, state.TypeInitiative:
 			by = max(by, derive.ByFeature)
 		case state.TypeFeature:
 			by = max(by, derive.ByCapability)
@@ -313,6 +315,27 @@ func (h *ProductsHandler) GetPersona(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		notShowing(w, r, state.DocRef(state.TypePersona, id))
+	}
+}
+
+// ListProblems lists the problems showing.
+// docqet:implements capability:problems
+func (h *ProductsHandler) ListProblems(w http.ResponseWriter, r *http.Request) {
+	if v, ok := h.view(w, r); ok {
+		writePage(w, r, build(v.Problems, func(pr *combine.Problem) ProblemResource { return newProblemResource(v.Product, pr) }))
+	}
+}
+
+// GetProblem returns a problem.
+// docqet:implements capability:problems
+func (h *ProductsHandler) GetProblem(w http.ResponseWriter, r *http.Request) {
+	if v, ok := h.view(w, r); ok {
+		id := chi.URLParam(r, "id")
+		if pr := v.Problem(id); pr != nil {
+			render.JSON(w, r, newProblemResource(v.Product, pr))
+			return
+		}
+		notShowing(w, r, state.DocRef(state.TypeProblem, id))
 	}
 }
 
