@@ -22,7 +22,7 @@ const invalidTrailer = "invalid-trailer"
 // that it's written as <old> -> <new>, that <old> existed before the commit
 // and <new> exists after it, and that no Docqet-Became line is left in a
 // message's body, where git won't read it.
-// docqet:implements capability:trailers
+// docqet:implements capability:changes
 func checkTrailers(ctx context.Context, root, rng string) ([]state.Finding, error) {
 	commits, err := git.Commits(ctx, root, rng)
 	if err != nil {

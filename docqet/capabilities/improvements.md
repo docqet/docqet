@@ -7,7 +7,7 @@ description: >-
   promote would raise the readiness of a capability, feature, area, product,
   persona or initiative most, in that order.
 stability: prototype
-within: feature:where-it-stands
+within: feature:next-steps
 solves: [problem:unclear-what-helps-most, problem:decisions-made-blind]
 follows:
   - rule:drafts-claim-nothing

@@ -43,18 +43,23 @@ it, never by the view that answers it today, just as
 - **A question nothing answers yet is a draft capability**, never a gap on a
   view.
 
-| Feature                                                | Its question                                              |
-| ------------------------------------------------------ | --------------------------------------------------------- |
-| [Where it stands](../features/where-it-stands.md)         | Where does the software stand, and what would improve it? |
-| [Reading the intention](../features/reading-intention.md) | What is the software meant to do, and why?                |
-| [Seeing what changed](../features/history.md)             | How has it changed?                                       |
-| [Sharing one view](../features/sharing.md)                | Is everyone looking at the same, current picture?         |
+| Feature                                                    | Its question                                                  |
+| ---------------------------------------------------------- | ------------------------------------------------------------- |
+| [Problems and who has them](../features/who-it-helps.md)   | What problems does the software solve, and for whom?          |
+| [Readiness](../features/where-it-stands.md)                | How ready is it to rely on, for someone or for everyone?      |
+| [Intent versus reality](../features/intent-vs-reality.md)  | Where does what it does differ from what was meant?           |
+| [Decisions and risk](../features/decisions-and-risk.md)    | What has been decided, what's still open, and what's at stake? |
+| [What to do next](../features/next-steps.md)               | What would make it more solid, and by how much?               |
+| [Seeing it whole](../features/seeing-it-whole.md)          | How does it all fit together?                                 |
+| [Exploring](../features/exploring.md)                      | What is this, and how does it work?                           |
+| [Seeing what changed](../features/history.md)              | How has it changed?                                           |
+| [One shared picture](../features/sharing.md)               | Is everyone looking at the same, current picture?             |
 
 Readiness and improvements are a pair. [Readiness](../capabilities/readiness.md)
 answers what's holding the software back: capabilities at lower levels pull
 its maturity down, and the gaps and rated open decisions on them add
 exposure. [Improvements](../capabilities/improvements.md) answers what to do
-about it, and what each step would be worth. Sharing one view answers no
+about it, and what each step would be worth. One shared picture answers no
 question of its own: its capabilities are how every answer reaches everyone.
 
 ## What's worked out

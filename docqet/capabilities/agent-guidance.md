@@ -7,8 +7,8 @@ description: >-
   changing its code, and keep its docs and annotations current in the same
   change.
 stability: prototype
-within: feature:keeping-current
-solves: [problem:agents-guess-intention]
+within: feature:working-with-agents
+solves: [problem:agents-guess-intention, problem:docs-slow-every-change]
 gaps:
   - id: decisions-not-named
     name: Answered decisions can't be named
@@ -83,3 +83,16 @@ tradeoffs:
 ---
 
 The kit is in [kit/](../../kit/).
+
+## Includes
+
+- Installing the kit with `docqet kit`, where each agent the project uses
+  reads it: `.agents/skills/docqet/` and `AGENTS.md` for most agents, and
+  `.claude/skills/docqet/` and `CLAUDE.md` for Claude Code.
+- Adding and removing agents, updating the kit, and removing it entirely.
+- Listing the agents it supports, with `docqet kit agents`.
+- Adding the skill's folders to the project's `.docqetignore`, since the
+  kit's example annotations would otherwise be read as the project's own.
+- Seeing which agents it's installed for, and whether it's the installed
+  `docqet`'s, with `docqet kit status`.
+- `docqet kit check`, for CI.

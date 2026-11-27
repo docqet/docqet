@@ -1,7 +1,7 @@
 ---
 docqet: feature
 id: keeping-current
-name: Keeping intention current
+name: Keeping it true
 description: >-
   Keeping intention and evidence true in the same change as the code, so the
   docs never describe software that's gone.

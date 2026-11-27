@@ -122,7 +122,7 @@ func globToRegexp(glob string) string {
 // of the project. The last pattern that matches it decides, as in gitignore.
 // Folders are checked as they're walked, so a file in an ignored folder is
 // never reached, and can't be brought back with !.
-// docqet:implements capability:ignoring-files rule:ignored-files-arent-read
+// docqet:implements capability:docs-format rule:ignored-files-arent-read
 func (ig ignore) ignored(p string, isDir bool) bool {
 	out := false
 	for _, pat := range ig {

@@ -7,7 +7,7 @@ description: >-
   capabilities solving it, and how far along and how ready those are, with
   the problems nothing solves yet shown as such.
 stability: prototype
-within: feature:where-it-stands
+within: feature:who-it-helps
 solves: [problem:work-not-tied-to-a-need, problem:unclear-what-to-rely-on, problem:newcomers-cant-find-their-way]
 follows:
   - rule:drafts-claim-nothing

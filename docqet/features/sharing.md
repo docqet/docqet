@@ -1,7 +1,7 @@
 ---
 docqet: feature
 id: sharing
-name: Sharing one view
+name: One shared picture
 description: >-
   Is everyone looking at the same, current picture? Keeping one shared view of
   every project, and what's observed of it, on a server of the team's own.

@@ -59,7 +59,7 @@ var supportedAgents = []supportedAgent{
 
 // KitCommand manages the agent kit in the project: which agents it's
 // installed for, and whether it's this docqet's.
-// docqet:implements capability:kit-install
+// docqet:implements capability:agent-guidance
 func KitCommand() *cli.Command {
 	agentFlag := &cli.StringSliceFlag{Name: "agent", Usage: "an agent to install the kit for, such as claude or codex: docqet kit agents lists them"}
 	return &cli.Command{

@@ -7,6 +7,7 @@ description: >-
   projects, reading only the server's API.
 serves:
   - capability:overview
+  - capability:map
   - capability:readiness
   - capability:improvements
   - capability:personas

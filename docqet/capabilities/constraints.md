@@ -9,7 +9,7 @@ description: >-
   capabilities they bear on are, with the constraints nothing respects yet,
   and those a problem's solution doesn't say it keeps to, shown as such.
 stability: prototype
-within: feature:where-it-stands
+within: feature:who-it-helps
 solves: [problem:unclear-what-to-rely-on, problem:intent-in-peoples-heads, problem:decisions-made-blind]
 follows:
   - rule:drafts-claim-nothing

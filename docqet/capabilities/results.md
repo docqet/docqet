@@ -5,7 +5,7 @@ name: Test and QA results
 description: >-
   CI sends each commit's test and QA results to the server, beside its state.
 stability: draft
-within: feature:sharing
+within: feature:intent-vs-reality
 solves: [problem:knowledge-stuck-in-the-repository]
 decisions:
   - topic: Matching tests to evidence

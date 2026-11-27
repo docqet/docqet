@@ -9,7 +9,6 @@ serves:
   - capability:indexing
   - capability:docs-format
   - capability:annotations
-  - capability:ignoring-files
 ---
 
 How it works is in [Indexing](../../docs/architecture/indexing.md).
