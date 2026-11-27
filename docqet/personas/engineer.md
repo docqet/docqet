@@ -10,14 +10,6 @@ title: Software engineer
 image: https://randomuser.me/api/portraits/women/44.jpg
 ---
 
-## Needs
-
-- To know what a capability is meant to do, how stable it is, and the rules it
-  follows, before changing its code.
-- To find out a doc is wrong, or an annotation names nothing, before a
-  reviewer does.
-- To keep the docs current without it taking longer than the change itself.
-
 ## Knows
 
 The codebase and its conventions, git, and the CI it runs in. Knows the domain

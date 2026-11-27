@@ -4,9 +4,9 @@ id: adopting
 domain: authoring
 name: Adopting an existing repository
 description: >-
-  How do we write down the intention of software that's already built? Agents
-  propose it from the code, tests and docs, in batches a person can check, and
-  it's declared only once that person confirms it.
+  Agents propose the intention of software that's already built from its
+  code, tests and docs, in batches a person can check, and it's declared only
+  once that person confirms it.
 stability: prototype
 solves: [problem:no-record-of-what-it-was-for, problem:agents-guess-intention]
 gaps:

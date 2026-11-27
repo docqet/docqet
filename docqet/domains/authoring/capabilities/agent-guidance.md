@@ -4,9 +4,9 @@ id: agent-guidance
 domain: authoring
 name: Agent guidance
 description: >-
-  What must an agent know before it changes code, and keep true after? Coding
-  agents read a capability's level, rules, gaps and decisions before changing
-  its code, and keep its docs and annotations current in the same change.
+  Coding agents read a capability's level, rules, gaps and decisions before
+  changing its code, and keep its docs and annotations current in the same
+  change.
 stability: prototype
 solves: [problem:agents-guess-intention]
 gaps:

@@ -9,13 +9,6 @@ role: Stakeholder
 title: Support lead
 ---
 
-## Needs
-
-- To tell a bug from a choice when a customer reports something, and say
-  which with confidence.
-- To know what customers can rely on today, and what's still rough.
-- To use the same words for a capability or rule as the team that built it.
-
 ## Knows
 
 The customers, what they're trying to get done, and where they get stuck.

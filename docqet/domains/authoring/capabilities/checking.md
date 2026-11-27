@@ -4,8 +4,8 @@ id: checking
 domain: authoring
 name: Checking
 description: >-
-  Is anything in the docs wrong? Engineers and CI see the findings in a
-  project's docs and annotations, each with where to fix it.
+  Engineers and CI see the findings in a project's docs and annotations, each
+  with where to fix it.
 stability: prototype
 solves: [problem:docs-drift-from-code]
 concepts: [concept:finding]

@@ -4,8 +4,8 @@ id: preview
 domain: authoring
 name: Seeing a change before it's shared
 description: >-
-  How will this change look once it's shared? Engineers and agents see their
-  work the way everyone else will, on their own machine, before it's merged.
+  Engineers and agents see their work the way everyone else will, on their own
+  machine, before it's merged.
 stability: prototype
 solves: [problem:docs-drift-from-code]
 gaps:

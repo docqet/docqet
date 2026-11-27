@@ -4,8 +4,8 @@ id: changes
 domain: authoring
 name: Changes
 description: >-
-  What did this change do to the intention? Engineers and agents see how a
-  project's docs changed between commits, and the history of any doc.
+  Engineers and agents see how a project's docs changed between commits, and
+  the history of any doc.
 stability: prototype
 solves: [problem:docs-drift-from-code, problem:why-it-changed-is-lost]
 gaps:

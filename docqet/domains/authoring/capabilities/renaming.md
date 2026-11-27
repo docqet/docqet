@@ -4,9 +4,8 @@ id: renaming
 domain: authoring
 name: Renaming
 description: >-
-  How do we change an ID without breaking what names it? Engineers change a
-  doc's ID, with everything that names it, and get the trailer to commit it
-  with.
+  Engineers change a doc's ID, with everything that names it, and get the
+  trailer to commit it with.
 stability: prototype
 solves: [problem:docs-drift-from-code, problem:docs-slow-every-change]
 gaps:

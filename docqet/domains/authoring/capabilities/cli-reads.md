@@ -4,9 +4,9 @@ id: cli-reads
 domain: authoring
 name: Looking up intention
 description: >-
-  What does this capability, rule or gap say, and how ready is it? Engineers
-  and agents look it up while they work, from the working tree or a commit,
-  without leaving the terminal.
+  Engineers and agents look up what a capability, rule or gap says, and how
+  ready it is, while they work, from the working tree or a commit, without
+  leaving the terminal.
 stability: prototype
 solves:
   - problem:intent-in-peoples-heads

@@ -4,9 +4,8 @@ id: indexing
 domain: authoring
 name: Indexing
 description: >-
-  What does the project say at this commit? Engineers and CI work out a
-  project's state from its docs and annotations, at the working tree or any
-  commit.
+  Engineers and CI work out a project's state from its docs and annotations,
+  at the working tree or any commit.
 stability: prototype
 solves: [problem:docs-drift-from-code]
 concepts: [concept:indexer, concept:state, concept:project]

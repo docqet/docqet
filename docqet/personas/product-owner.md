@@ -10,14 +10,6 @@ title: Product owner
 image: https://randomuser.me/api/portraits/men/32.jpg
 ---
 
-## Needs
-
-- To see at a glance what the software can do, who it serves, and how far
-  along each part is.
-- To know what people can rely on now, and what's holding the rest back.
-- To point at a capability, rule or gap in a meeting, and have everyone mean
-  the same thing.
-
 ## Knows
 
 The business and its customers well. Not the code, and not git.

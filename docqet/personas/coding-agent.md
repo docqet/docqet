@@ -12,14 +12,6 @@ title: null
 Not a person, but someone Docqet is written for all the same: much of the
 work in a Docqet repository is done by agents, and the kit exists for them.
 
-## Needs
-
-- To read what a change touches, and what its stability level allows, before
-  making it.
-- To keep docs and annotations current in the same change as the code.
-- To know which decisions are a person's to make, and to ask, or record an
-  open decision, rather than decide them.
-
 ## Knows
 
 Whatever its instructions and the repository tell it, and nothing it isn't

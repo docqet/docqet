@@ -4,8 +4,8 @@ id: trailers
 domain: authoring
 name: Trailers
 description: >-
-  What did something that's gone become? Commits say what a doc, gap or
-  decision they removed became, so history can follow it.
+  Commits say what a doc, gap or decision they removed became, so history can
+  follow it.
 stability: prototype
 solves: [problem:why-it-changed-is-lost]
 concepts: [concept:trailer]

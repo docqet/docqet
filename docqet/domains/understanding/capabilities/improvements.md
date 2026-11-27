@@ -4,10 +4,9 @@ id: improvements
 domain: understanding
 name: Improvements
 description: >-
-  What would make it more ready, and by how much? Everyone sees which gap to
-  close, decision to answer or capability to promote would raise the readiness
-  of a capability, feature, domain, product, persona or initiative most, in
-  that order.
+  Everyone sees which gap to close, decision to answer or capability to
+  promote would raise the readiness of a capability, feature, domain, product,
+  persona or initiative most, in that order.
 stability: prototype
 solves: [problem:unclear-what-helps-most]
 concepts: [concept:readiness@understanding, concept:maturity@understanding, concept:exposure@understanding, concept:risk@understanding]
