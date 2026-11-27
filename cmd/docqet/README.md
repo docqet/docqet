@@ -859,7 +859,7 @@ What's left out on purpose is written down as tradeoffs in Docqet's own docs:
 on the [Commands](../../docqet/mechanisms/commands.md) mechanism, and on the
 features it's about, such as
 [Declaring intention](../../docqet/domains/authoring/features/declaring.md)
-and [Collecting states](../../docqet/domains/understanding/features/collecting.md).
+and [Sharing one view](../../docqet/domains/understanding/features/sharing.md).
 Signing in is a gap on
 [Applying states](../../docqet/domains/understanding/capabilities/applying.md).
 

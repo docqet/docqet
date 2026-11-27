@@ -1,11 +1,11 @@
 ---
 docqet: capability
 id: changes
-domain: understanding
+domain: authoring
 name: Changes
 description: >-
-  Engineers see how a project's docs changed between commits, and the history
-  of any doc, with `docqet diff`, `log` and `history`.
+  What did this change do to the intention? Engineers and agents see how a
+  project's docs changed between commits, and the history of any doc.
 stability: prototype
 personas: [persona:engineer, persona:coding-agent]
 gaps:
@@ -27,3 +27,5 @@ gaps:
       Nothing indexed is kept between runs, so each diff indexes both points
       again from git.
 ---
+
+Today it's `docqet diff`, with `docqet log` and `docqet history` to come.

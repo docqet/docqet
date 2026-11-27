@@ -4,21 +4,12 @@ id: agent-guidance
 domain: authoring
 name: Agent guidance
 description: >-
-  Coding agents read a capability's level, rules, gaps and decisions before
-  changing its code, and keep its docs and annotations current in the same
-  change.
+  What must an agent know before it changes code, and keep true after? Coding
+  agents read a capability's level, rules, gaps and decisions before changing
+  its code, and keep its docs and annotations current in the same change.
 stability: prototype
 personas: [persona:coding-agent]
 gaps:
-  - id: inferred-intention-unmarked
-    name: Inferred intention has no marker
-    impact: inconvenient
-    likelihood: certain
-    reach: some
-    description: >-
-      There's no way to mark intention an agent worked out from code as
-      unconfirmed, so the kit has agents propose it, and write it only once a
-      person confirms it.
   - id: decisions-not-named
     name: Answered decisions can't be named
     impact: negligible

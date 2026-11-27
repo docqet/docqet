@@ -106,6 +106,6 @@ What's left out for now is in Docqet's own docs, as gaps, tradeoffs and draft
 capabilities: signing in on
 [Applying states](../../docqet/domains/understanding/capabilities/applying.md),
 [Trends](../../docqet/domains/understanding/capabilities/trends.md),
-`?at=` on the [Local viewer](../../docqet/domains/understanding/capabilities/local-viewer.md),
+`?at=` on [Seeing a change before it's shared](../../docqet/domains/authoring/capabilities/preview.md),
 and how the server is configured on the [Server](../../docqet/components/server.md)
 component.

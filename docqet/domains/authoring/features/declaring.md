@@ -9,11 +9,11 @@ description: >-
 capabilities:
   - capability:docs-format
   - capability:annotations
-  - capability:ignoring-files
   - capability:rubric
   - capability:project-setup
-  - capability:renaming
-  - capability:trailers
+  - capability:kit-install
+  - capability:adopting
+  - capability:ignoring-files
 tradeoffs:
   - id: docs-written-by-hand
     name: Docs written by hand

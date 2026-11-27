@@ -4,9 +4,10 @@ id: improvements
 domain: understanding
 name: Improvements
 description: >-
-  Everyone sees what would make a capability, feature, domain, product,
-  persona or initiative more ready, ordered by how much each would raise its
-  readiness.
+  What would make it more ready, and by how much? Everyone sees which gap to
+  close, decision to answer or capability to promote would raise the readiness
+  of a capability, feature, domain, product, persona or initiative most, in
+  that order.
 stability: prototype
 personas: [persona:product-owner, persona:engineer]
 concepts: [concept:readiness@understanding, concept:maturity@understanding, concept:exposure@understanding, concept:risk@understanding]

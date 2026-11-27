@@ -4,10 +4,12 @@ id: readiness
 domain: understanding
 name: Maturity and readiness
 description: >-
-  Everyone sees how far along each feature, domain and persona is, how ready
-  it is to rely on, and the gaps holding it back.
+  How ready is it to rely on, and what's holding it back? Everyone sees how
+  far along each feature, domain and project is, how ready it is to rely on,
+  and what drags it down: capabilities at lower levels, and the gaps and rated
+  open decisions on them.
 stability: prototype
-personas: [persona:product-owner, persona:engineer]
+personas: [persona:product-owner, persona:engineer, persona:support]
 concepts: [concept:maturity@understanding, concept:band@understanding, concept:readiness@understanding, concept:risk@understanding, concept:exposure@understanding]
 rules:
   - rule:drafts-claim-nothing@understanding

@@ -25,7 +25,7 @@ const uiAddr = "127.0.0.1:4100"
 // it, read on every request, so re-indexing shows on reload. It doesn't
 // index the working tree itself. Only the working tree can be shown: the
 // source flags answer that they aren't built.
-// docqet:implements capability:local-viewer
+// docqet:implements capability:preview
 func UICommand() *cli.Command {
 	return &cli.Command{
 		Name:         "ui",

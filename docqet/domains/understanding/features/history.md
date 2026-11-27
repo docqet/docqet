@@ -4,10 +4,9 @@ id: history
 domain: understanding
 name: Seeing what changed
 description: >-
-  Showing how software's intention and evidence have changed, and what it was
-  like at any point.
+  How has it changed? What the software was like at any point, and how far
+  along and how ready it's been over time.
 capabilities:
-  - capability:changes
   - capability:looking-back
   - capability:trends
 ---

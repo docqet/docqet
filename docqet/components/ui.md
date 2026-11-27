@@ -8,8 +8,15 @@ description: >-
 capabilities:
   - capability:overview
   - capability:readiness
+  - capability:improvements
+  - capability:personas
+  - capability:initiative-scope
   - capability:product-view
-  - capability:local-viewer
+  - capability:seeing-problems
+  - capability:choices
+  - capability:domain-language
+  - capability:how-its-built
+  - capability:preview
 ---
 
 How it's laid out is in [the UI's README](../../ui/README.md), and its move to

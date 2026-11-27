@@ -1,16 +1,15 @@
 ---
 docqet: feature
-id: collecting
+id: sharing
 domain: understanding
-name: Collecting states
+name: Sharing one view
 description: >-
-  Keeping each project's state, and what's observed of it, on a server of the
-  team's own.
+  Is everyone looking at the same, current picture? Keeping one shared view of
+  every project, and what's observed of it, on a server of the team's own.
 capabilities:
   - capability:applying
-  - capability:api-reference
   - capability:results
-  - capability:preview
+  - capability:api-reference
 tradeoffs:
   - id: main-branch-only
     name: Main branch only

@@ -15,13 +15,6 @@ rules:
 decisions:
   - topic: The format's name
     question: What should the format be called?
-  - topic: Unconfirmed intention
-    question: >-
-      How is intention an agent worked out from existing code marked, so it
-      isn't counted as declared until a person confirms it? It isn't a draft
-      capability, which a person has declared and nobody has started.
-    affects:
-      - capability:agent-guidance#inferred-intention-unmarked
 ---
 
 The format is defined by this domain's [concepts](../domain.md), with an

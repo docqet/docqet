@@ -1,12 +1,12 @@
 ---
 docqet: capability
 id: cli-reads
-domain: understanding
-name: Reading from the command line
+domain: authoring
+name: Looking up intention
 description: >-
-  Engineers and agents read a project's docs, gaps and readiness with
-  `docqet show`, `list` and `status`, from the working tree, a commit or the
-  server.
+  What does this capability, rule or gap say, and how ready is it? Engineers
+  and agents look it up while they work, from the working tree or a commit,
+  without leaving the terminal.
 stability: prototype
 personas: [persona:engineer, persona:coding-agent]
 gaps:
@@ -28,3 +28,6 @@ gaps:
       `--product`, so they can't show the server's states or the rest of the
       product.
 ---
+
+Today it's `docqet show` and `docqet list`. Agents work only through commands,
+so for them this is the only way to read the intention.

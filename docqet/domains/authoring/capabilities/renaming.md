@@ -4,8 +4,9 @@ id: renaming
 domain: authoring
 name: Renaming
 description: >-
-  Engineers change a doc's ID, with everything that names it, and get the
-  trailer to commit it with, using `docqet rename`.
+  How do we change an ID without breaking what names it? Engineers change a
+  doc's ID, with everything that names it, and get the trailer to commit it
+  with.
 stability: prototype
 personas: [persona:engineer, persona:coding-agent]
 gaps:
@@ -29,3 +30,5 @@ gaps:
       and concept has to be renamed on its own, with a trailer for each, and
       the rest edited by hand.
 ---
+
+Today it's `docqet rename`.

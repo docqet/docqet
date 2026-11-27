@@ -4,8 +4,8 @@ id: applying
 domain: understanding
 name: Applying states
 description: >-
-  CI sends each commit on the main branch to the team's server with
-  `docqet apply`, and the server keeps its state and checks it again.
+  CI sends each commit on the main branch to the team's server, and the server
+  keeps its state and checks it again.
 stability: prototype
 personas: [persona:engineer]
 concepts: [concept:state@authoring, concept:problem@authoring]
@@ -52,3 +52,5 @@ decisions:
       large repository, the head of each push and every commit's trailers
       would do.
 ---
+
+Today it's `docqet apply`.

@@ -4,8 +4,8 @@ id: checking
 domain: authoring
 name: Checking
 description: >-
-  Engineers and CI find the problems in a project's docs and annotations, each
-  with where to fix it, with `docqet check`.
+  Is anything in the docs wrong? Engineers and CI find the problems in a
+  project's docs and annotations, each with where to fix it.
 stability: prototype
 personas: [persona:engineer, persona:coding-agent]
 concepts: [concept:problem]
@@ -24,3 +24,5 @@ gaps:
       `--product` isn't built and the check sees only this project. A team
       reusing another project's IDs gets a failing check it can't fix.
 ---
+
+Today it's `docqet check`.
