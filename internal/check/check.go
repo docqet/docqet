@@ -428,7 +428,7 @@ func (c *checker) link(s subject, field string, ref *string, typ string) {
 // links checks each link in field is a reference to a doc of type typ that
 // exists. Every doc's ID is one across the project, rules and concepts too,
 // so a link names no domain.
-// docqet:implements rule:product-never-names-implementation
+// docqet:implements rule:links-point-toward-why
 func (c *checker) links(s subject, field string, refs []string, typ string) {
 	for _, raw := range refs {
 		ref, ok := state.ParseRef(raw)

@@ -11,6 +11,7 @@ solves:
   - problem:work-not-tied-to-a-need
   - problem:newcomers-cant-find-their-way
   - problem:no-shared-picture-of-how-its-built
+included-in: [initiative:why-first-class]
 uses: [concept:area, concept:feature, concept:capability, concept:persona]
 gaps:
   - id: no-problems

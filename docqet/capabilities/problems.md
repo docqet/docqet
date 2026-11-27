@@ -9,6 +9,7 @@ description: >-
 stability: prototype
 within: feature:who-it-helps
 solves: [problem:work-not-tied-to-a-need, problem:unclear-what-to-rely-on, problem:newcomers-cant-find-their-way]
+included-in: [initiative:why-first-class]
 follows:
   - rule:drafts-claim-nothing
 uses: [concept:problem, concept:readiness, concept:maturity]

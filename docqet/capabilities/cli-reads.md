@@ -13,6 +13,7 @@ solves:
   - problem:agents-guess-intention
   - problem:docs-slow-every-change
   - problem:thread-lost-switching-hats
+follows: [rule:nothing-only-an-agent-can-do]
 gaps:
   - id: no-status
     name: No status

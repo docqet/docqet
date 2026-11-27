@@ -9,6 +9,7 @@ description: >-
 stability: prototype
 within: feature:working-with-agents
 solves: [problem:no-record-of-what-it-was-for, problem:agents-guess-intention]
+follows: [rule:inferred-intent-needs-a-person]
 gaps:
   - id: inferred-intention-unmarked
     name: Inferred intention has no marker

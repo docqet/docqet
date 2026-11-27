@@ -11,10 +11,11 @@ solves: [problem:intent-in-peoples-heads, problem:docs-drift-from-code, problem:
 follows:
   - rule:links-read-as-sentences
   - rule:location-means-nothing
-  - rule:product-never-names-implementation
+  - rule:links-point-toward-why
   - rule:problem-never-names-product
   - rule:docs-hold-nothing-private
   - rule:ignored-files-arent-read
+  - rule:docs-hold-no-presentation
 uses: [concept:doc, concept:area, concept:link, concept:problem, concept:project]
 tradeoffs:
   - id: whole-files

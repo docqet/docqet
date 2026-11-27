@@ -58,6 +58,7 @@ docqet/
 ├── personas/              who Docqet is for
 ├── problems/              the pain points they share
 ├── constraints/           what's imposed on Docqet from outside
+├── initiatives/           bodies of work, such as making why first class
 ├── mechanisms/            how something works across docqet's code
 ├── components/            one part of docqet's code, within a bigger one, linked to docs/architecture/
 └── archetypes/            the kinds of component docqet has: a CLI, a service, a web app

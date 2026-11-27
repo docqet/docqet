@@ -9,5 +9,6 @@ description: >-
 stability: draft
 within: feature:exploring
 solves: [problem:newcomers-cant-find-their-way, problem:no-shared-picture-of-how-its-built]
+included-in: [initiative:why-first-class]
 uses: [concept:problem, concept:feature, concept:capability, concept:component, concept:mechanism]
 ---

@@ -8,5 +8,6 @@ description: >-
 stability: prototype
 within: feature:exploring
 solves: [problem:intent-in-peoples-heads, problem:planned-and-built-drift-apart, problem:no-shared-picture-of-how-its-built]
+included-in: [initiative:why-first-class]
 uses: [concept:mechanism, concept:component, concept:archetype]
 ---

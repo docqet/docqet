@@ -11,6 +11,7 @@ description: >-
 stability: prototype
 within: feature:who-it-helps
 solves: [problem:unclear-what-to-rely-on, problem:intent-in-peoples-heads, problem:decisions-made-blind]
+included-in: [initiative:why-first-class]
 follows:
   - rule:drafts-claim-nothing
 uses: [concept:constraint, concept:readiness, concept:maturity]

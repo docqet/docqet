@@ -9,6 +9,7 @@ description: >-
 stability: draft
 within: feature:decisions-and-risk
 solves: [problem:decisions-made-blind, problem:thread-lost-switching-hats]
+included-in: [initiative:why-first-class]
 uses: [concept:open-decision, concept:risk]
 ---
 

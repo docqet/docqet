@@ -10,6 +10,13 @@ within: feature:declaring
 solves: [problem:no-shared-sense-of-enough]
 uses: [concept:rubric, concept:stability-level]
 decisions:
+  - topic: Expectations by archetype
+    question: >-
+      What a level expects depends on what kind of thing builds a capability:
+      an API needs versioning, a web app accessibility, a job retries and
+      alerting. Should outcomes be able to apply only to some archetypes? The
+      rubric's own kinds of software can't be archetypes, since archetypes
+      are each project's, so how would the two meet?
   - topic: A rubric of a project's own
     question: >-
       The rubric is the same for every project. Should a project be

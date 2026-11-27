@@ -9,6 +9,7 @@ description: >-
 stability: draft
 within: feature:intent-vs-reality
 solves: [problem:planned-and-built-drift-apart, problem:unclear-what-to-rely-on]
+included-in: [initiative:why-first-class]
 uses: [concept:evidence, concept:gap, concept:rubric, concept:declared-and-derived]
 decisions:
   - topic: Derived shortfalls

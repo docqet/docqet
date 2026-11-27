@@ -9,6 +9,7 @@ description: >-
 stability: prototype
 within: feature:working-with-agents
 solves: [problem:agents-guess-intention, problem:docs-slow-every-change]
+follows: [rule:nothing-only-an-agent-can-do, rule:inferred-intent-needs-a-person]
 gaps:
   - id: decisions-not-named
     name: Answered decisions can't be named
