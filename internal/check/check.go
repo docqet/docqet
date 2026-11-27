@@ -92,7 +92,7 @@ func (c *checker) features() {
 	for _, f := range c.st.Features {
 		s := subject{ref: state.DocRef(state.TypeFeature, f.ID), file: f.File}
 		c.common(s, f.ID, f.Name, f.Description, true)
-		c.link(s, "area", f.Area, state.TypeArea)
+		c.link(s, "within", f.Area, state.TypeArea)
 		c.decisions(s, f.Decisions)
 	}
 }
@@ -109,11 +109,11 @@ func (c *checker) capabilities() {
 		default:
 			c.add(state.InvalidFrontmatter, s, "stability is %q: it's draft, prototype, alpha, beta or ga.", cp.Stability)
 		}
-		c.link(s, "feature", cp.Feature, state.TypeFeature)
+		c.link(s, "within", cp.Feature, state.TypeFeature)
 		c.links(s, "solves", cp.Solves, state.TypeProblem)
-		c.links(s, "initiatives", cp.Initiatives, state.TypeInitiative)
-		c.links(s, "rules", cp.Rules, state.TypeRule)
-		c.links(s, "concepts", cp.Concepts, state.TypeConcept)
+		c.links(s, "included-in", cp.Initiatives, state.TypeInitiative)
+		c.links(s, "follows", cp.Rules, state.TypeRule)
+		c.links(s, "uses", cp.Concepts, state.TypeConcept)
 		c.decisions(s, cp.Decisions)
 	}
 
@@ -134,7 +134,7 @@ func (c *checker) rules() {
 		followers := c.followers(r)
 		s := subject{ref: ref, file: r.File, capabilities: followers}
 		c.common(s, r.ID, r.Name, "", false)
-		c.links(s, "concepts", r.Concepts, state.TypeConcept)
+		c.links(s, "uses", r.Concepts, state.TypeConcept)
 		c.links(s, "respects", r.Respects, state.TypeConstraint)
 		if len(followers) == 0 {
 			c.add(state.UnlinkedRule, s, "No capability follows this rule.")
@@ -191,7 +191,7 @@ func (c *checker) problems() {
 		if len(pr.Personas) == 0 {
 			c.add(state.InvalidFrontmatter, s, "A problem names the personas who have it.")
 		}
-		c.links(s, "personas", pr.Personas, state.TypePersona)
+		c.links(s, "felt-by", pr.Personas, state.TypePersona)
 	}
 }
 
@@ -212,7 +212,7 @@ func (c *checker) initiatives() {
 	for _, in := range c.st.Initiatives {
 		s := subject{ref: state.DocRef(state.TypeInitiative, in.ID), file: in.File}
 		c.common(s, in.ID, in.Name, in.Description, true)
-		c.links(s, "personas", in.Personas, state.TypePersona)
+		c.links(s, "for", in.Personas, state.TypePersona)
 	}
 }
 
@@ -233,7 +233,7 @@ func (c *checker) components() {
 	for _, cp := range c.st.Components {
 		s := subject{ref: state.DocRef(state.TypeComponent, cp.ID), file: cp.File}
 		c.common(s, cp.ID, cp.Name, cp.Description, true)
-		c.links(s, "capabilities", cp.Capabilities, state.TypeCapability)
+		c.links(s, "serves", cp.Capabilities, state.TypeCapability)
 		c.outcomes(s, "meets", cp.Meets)
 		c.decisions(s, cp.Decisions)
 	}

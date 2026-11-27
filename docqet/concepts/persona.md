@@ -92,5 +92,5 @@ At the desk all shift, on a shared desktop, with a guest or the phone waiting
 most of the time.
 ```
 
-A problem names them with `personas: [persona:front-desk-clerk]`, and so
+A problem names them with `felt-by: [persona:front-desk-clerk]`, and so
 does an initiative whose work is for them.

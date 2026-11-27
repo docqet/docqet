@@ -8,5 +8,5 @@ description: >-
   reports and other tools can't use either.
 cost: >-
   People rebuild the same picture by hand, already out of date.
-personas: [persona:engineer, persona:coding-agent]
+felt-by: [persona:engineer, persona:coding-agent]
 ---

@@ -7,7 +7,7 @@ description: >-
   changing its code, and keep its docs and annotations current in the same
   change.
 stability: prototype
-feature: feature:keeping-current
+within: feature:keeping-current
 solves: [problem:agents-guess-intention]
 gaps:
   - id: decisions-not-named

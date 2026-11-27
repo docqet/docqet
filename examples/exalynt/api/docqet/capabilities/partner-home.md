@@ -6,10 +6,10 @@ description: >-
   Partners land on the partnership they manage at a glance, with the clients
   it has brought in, how to bring in more, and how it earns.
 stability: alpha
-feature: feature:partner-program
+within: feature:partner-program
 solves: [problem:introductions-take-effort, problem:partner-earnings-opaque]
-initiatives: [initiative:mvp]
-rules:
+included-in: [initiative:mvp]
+follows:
   - rule:inviting-creates-the-partnership
   - rule:accepting-makes-the-invitee-manager
   - rule:the-manager-names-the-partnership
@@ -37,7 +37,7 @@ rules:
   - rule:what-partners-can-see
   - rule:clients-see-who-referred-them
   - rule:introductions-dont-affect-engineer-assignment
-concepts: [concept:partnership, concept:capacity-payout-basis, concept:payout-share]
+uses: [concept:partnership, concept:capacity-payout-basis, concept:payout-share]
 ---
 
 ## Includes

@@ -2,7 +2,7 @@
 docqet: rule
 id: free-cancellation-window
 name: Cancelling 48 hours ahead is free
-concepts: [concept:booking]
+uses: [concept:booking]
 respects: [constraint:cancellation-terms]
 ---
 

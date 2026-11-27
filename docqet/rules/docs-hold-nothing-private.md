@@ -2,7 +2,7 @@
 docqet: rule
 id: docs-hold-nothing-private
 name: Docs never hold anything private
-concepts: [concept:doc]
+uses: [concept:doc]
 respects: [constraint:repositories-hold-nothing-private]
 why: >-
   Docs are committed with the code, so whatever they say goes everywhere the

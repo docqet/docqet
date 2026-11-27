@@ -5,7 +5,7 @@ name: Teams
 description: >-
   Who at Exalynt a client sees and, through the `team` scope, which clients'
   records an engineer can reach.
-capabilities:
+serves:
   - capability:teams
   - capability:client-directory
   - capability:engineers

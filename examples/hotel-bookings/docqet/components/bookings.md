@@ -4,7 +4,7 @@ id: bookings
 name: Bookings
 description: >-
   Where a room is held for a stay, and where no double-booking is enforced.
-capabilities: [capability:room-booking, capability:group-bookings, capability:check-in]
+serves: [capability:room-booking, capability:group-bookings, capability:check-in]
 gaps:
   - id: clashes-logged-as-unknown
     name: Booking clashes logged as unknown errors

@@ -4,9 +4,9 @@ id: cleaning-schedule
 name: Cleaning schedule
 description: Housekeepers see which rooms to clean today, with early arrivals first.
 stability: prototype
-feature: feature:housekeeping
+within: feature:housekeeping
 solves: [problem:arrivals-wait-for-rooms]
-concepts: [concept:room]
+uses: [concept:room]
 decisions:
   - question: >-
       Is ordering by arrival time enough, or do housekeepers plan by

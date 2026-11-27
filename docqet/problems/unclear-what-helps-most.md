@@ -8,5 +8,5 @@ description: >-
   loudest.
 cost: >-
   Effort goes to work that barely changes what people can rely on.
-personas: [persona:product-owner, persona:engineer]
+felt-by: [persona:product-owner, persona:engineer]
 ---

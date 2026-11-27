@@ -6,13 +6,13 @@ description: >-
   The software adds the city's tourist tax to each guest's bill, night by
   night.
 stability: alpha
-feature: feature:guest-bills
+within: feature:guest-bills
 solves: [problem:guests-leave-owing, problem:guests-billed-more-than-they-owe]
-rules:
+follows:
   - rule:city-tax-per-guest-night
   - rule:children-pay-no-city-tax
   - rule:city-tax-stops-after-seven-nights
-concepts: [concept:bill, concept:charge]
+uses: [concept:bill, concept:charge]
 gaps:
   - id: children-corrected-by-hand
     name: City tax charged for children

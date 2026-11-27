@@ -7,14 +7,14 @@ description: >-
   people to Exalynt by giving them its referral code or inviting them by
   email.
 stability: alpha
-feature: feature:partner-program
+within: feature:partner-program
 solves:
   - problem:engineering-starts-slowly
   - problem:introductions-take-effort
   - problem:partner-earnings-opaque
   - problem:agreed-terms-applied-by-hand
-initiatives: [initiative:mvp]
-rules:
+included-in: [initiative:mvp]
+follows:
   - rule:inviting-creates-the-partnership
   - rule:accepting-makes-the-invitee-manager
   - rule:the-manager-names-the-partnership
@@ -48,7 +48,7 @@ rules:
   - rule:adding-a-hat-to-an-account
   - rule:invitations-stay-pending-until-resolved
   - rule:who-sees-and-revokes-pending-invitations
-concepts: [concept:partnership, concept:agreement, concept:capacity-payout-basis]
+uses: [concept:partnership, concept:agreement, concept:capacity-payout-basis]
 gaps:
   - id: existing-clients-spotted-by-name-only
     name: Existing clients spotted by name only

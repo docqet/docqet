@@ -2,7 +2,7 @@
 docqet: rule
 id: city-tax-stops-after-seven-nights
 name: City tax stops after seven nights
-concepts: [concept:charge]
+uses: [concept:charge]
 respects: [constraint:city-tax-owed-per-guest-night]
 ---
 

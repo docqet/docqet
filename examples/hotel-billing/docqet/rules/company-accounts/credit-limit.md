@@ -2,7 +2,7 @@
 docqet: rule
 id: credit-limit
 name: A company can't go over its credit limit
-concepts: [concept:company-account, concept:bill]
+uses: [concept:company-account, concept:bill]
 respects: [constraint:company-credit-agreements]
 ---
 

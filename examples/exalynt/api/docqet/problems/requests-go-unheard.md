@@ -10,5 +10,5 @@ description: >-
 cost: >-
   The wrong thing gets built, time goes on chasing updates, and the people who
   know the business stop raising what they need.
-personas: [persona:client-admin-founder, persona:client-admin-operations, persona:client-member]
+felt-by: [persona:client-admin-founder, persona:client-admin-operations, persona:client-member]
 ---

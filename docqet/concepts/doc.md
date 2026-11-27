@@ -89,12 +89,12 @@ description: >-
   Clerks cancel a booking when a guest's plans change, and the guest is
   refunded what the cancellation policy allows.
 stability: alpha
-feature: feature:reservations
+within: feature:reservations
 solves: [problem:late-cancellations-leave-rooms-empty]
-rules:
+follows:
   - rule:free-cancellation-window
   - rule:late-cancellation-fee
-concepts: [concept:booking]
+uses: [concept:booking]
 ---
 ```
 
@@ -171,11 +171,11 @@ Everything else names a doc by its **reference**, its type and ID.
   `rule:no-double-booking`, everywhere one is written: frontmatter links,
   annotations, and `state.json`. A reference reads the same in a doc as in
   code, so searching for one finds everything that names that doc. A link of
-  the wrong type for its field, such as a concept in `rules`, is
+  the wrong type for its field, such as a concept in `follows`, is
   `invalid-frontmatter`.
 
   ```yaml
-  rules: [rule:no-double-booking, rule:minimum-stay]
+  follows: [rule:no-double-booking, rule:minimum-stay]
   ```
 
 - **A reference is the same everywhere.** Rule and concept IDs are one
@@ -214,35 +214,41 @@ own. What has no name, such as what a concept is confused with, is said in its
 | Type | Frontmatter, in order | Its body, if it has one | Example |
 | --- | --- | --- | --- |
 | area | `docqet`, `id`, `name`, `description`, `decisions` | Anything more about the part of the business | [guest-stays](../../examples/hotel-bookings/docqet/areas/guest-stays.md) |
-| feature | `docqet`, `id`, `name`, `description`, `area`, `tradeoffs`, `decisions` | Anything more about what it offers | [reservations](../../examples/hotel-bookings/docqet/features/reservations.md) |
-| capability | `docqet`, `id`, `name`, `description`, `stability` (required), `feature`, `solves`, `initiatives`, `rules`, `concepts`, `gaps`, `tradeoffs`, `decisions` | Anything more about what it does, such as what else it includes, or how we'll know it's working | [room-booking](../../examples/hotel-bookings/docqet/capabilities/room-booking.md) |
-| rule | `docqet`, `id`, `name`, `concepts`, `respects`, `why` | The rule in full, where its name doesn't say it all, and examples or how it plays out | [same-day-turnover](../../examples/hotel-bookings/docqet/rules/booking/same-day-turnover.md) |
+| feature | `docqet`, `id`, `name`, `description`, `within`, `tradeoffs`, `decisions` | Anything more about what it offers | [reservations](../../examples/hotel-bookings/docqet/features/reservations.md) |
+| capability | `docqet`, `id`, `name`, `description`, `stability` (required), `within`, `solves`, `included-in`, `follows`, `uses`, `gaps`, `tradeoffs`, `decisions` | Anything more about what it does, such as what else it includes, or how we'll know it's working | [room-booking](../../examples/hotel-bookings/docqet/capabilities/room-booking.md) |
+| rule | `docqet`, `id`, `name`, `uses`, `respects`, `why` | The rule in full, where its name doesn't say it all, and examples or how it plays out | [same-day-turnover](../../examples/hotel-bookings/docqet/rules/booking/same-day-turnover.md) |
 | concept | `docqet`, `id`, `name`, `description`, `confused-with` | Its details: what it's made of, how it relates to other concepts, and the states it moves through | [booking](../../examples/hotel-bookings/docqet/concepts/booking.md) |
 | persona | `docqet`, `id`, `name`, `description`, `role`, `title`, `image` | Anything more about who they are, such as what they know, their context, what they expect, and what they care about | [front-desk-clerk](../../examples/hotel-bookings/docqet/personas/front-desk-clerk.md) |
-| problem | `docqet`, `id`, `name`, `description`, `cost`, `personas` (required) | Anything more about the pain, such as when it happens and what people do about it today | [room-given-to-two-guests](../../examples/hotel-bookings/docqet/problems/room-given-to-two-guests.md) |
+| problem | `docqet`, `id`, `name`, `description`, `cost`, `felt-by` (required) | Anything more about the pain, such as when it happens and what people do about it today | [room-given-to-two-guests](../../examples/hotel-bookings/docqet/problems/room-given-to-two-guests.md) |
 | constraint | `docqet`, `id`, `name`, `description`, `source` | Anything more, such as the clause or article it comes from, or what happens if it's broken | [invoice-numbers-in-sequence](../../examples/hotel-billing/docqet/constraints/invoice-numbers-in-sequence.md) |
-| initiative | `docqet`, `id`, `name`, `description`, `personas` | Anything more about the work, such as what's in it and why | [busy-season](../../examples/hotel-bookings/docqet/initiatives/busy-season.md) |
+| initiative | `docqet`, `id`, `name`, `description`, `for` | Anything more about the work, such as what's in it and why | [busy-season](../../examples/hotel-bookings/docqet/initiatives/busy-season.md) |
 | mechanism | `docqet`, `id`, `name`, `description`, `applies`, `respects`, `meets`, `gaps`, `tradeoffs`, `decisions` | How it works | [deployment](../../examples/hotel-bookings/docqet/mechanisms/deployment.md) |
-| component | `docqet`, `id`, `name`, `description`, `capabilities`, `meets`, `gaps`, `tradeoffs`, `decisions` | How it works | [bookings](../../examples/hotel-bookings/docqet/components/bookings.md) |
+| component | `docqet`, `id`, `name`, `description`, `serves`, `meets`, `gaps`, `tradeoffs`, `decisions` | How it works | [bookings](../../examples/hotel-bookings/docqet/components/bookings.md) |
 
 The body column is a suggestion of what's worth writing, not a structure.
 Each field is defined by the concept it's about:
 
-- **`area`** names the [area](area.md) a feature is in, and **`feature`** the
-  [feature](feature.md) a capability is in. Each is optional, and names one.
+- **Every link field reads as a sentence from the doc that writes it**, in
+  plain words: a capability is *within* a feature, *solves* a problem,
+  *follows* a rule and *uses* a concept.
+- **`within`** names the one thing a doc is part of: the [area](area.md) a
+  feature is in, or the [feature](feature.md) a capability is in. It's
+  optional, and names one.
 - **`stability`** is a capability's
   [stability level](stability-level.md), and only capabilities have one.
 - **`solves`** lists the [problems](problem.md) a capability solves, and so
   the personas it serves.
-- **`personas`** lists the [personas](persona.md) who have a problem, or, on
-  an initiative, those its work is for.
+- **`felt-by`** lists the [personas](persona.md) who have a problem, and
+  **`for`** those an initiative's work is for.
 - **`cost`** says what a problem costs the people who have it.
 - **`respects`** lists the [constraints](constraint.md) a rule or mechanism
   keeps to, and **`source`** says where a constraint comes from.
-- **`initiatives`** lists the [initiatives](initiative.md) a capability is
+- **`included-in`** lists the [initiatives](initiative.md) a capability is
   part of.
-- **`capabilities`** on a [component](component.md) lists the capabilities
-  that rely on it.
+- **`follows`** lists the [rules](rule.md) a capability follows, and
+  **`uses`** the [concepts](concept.md) a capability or rule uses.
+- **`serves`** lists the capabilities a [component](component.md) serves:
+  those that rely on it.
 - **No doc names its code**: [mechanisms](mechanism.md) and components are
   found in the code by their [annotations](annotation.md), and a capability
   through the mechanisms that apply to it and the components that list it.

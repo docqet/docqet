@@ -3,7 +3,7 @@ docqet: component
 id: estimates
 name: Estimates
 description: An estimate and everything in it is one document, replaced whole.
-capabilities: [capability:estimates]
+serves: [capability:estimates]
 tradeoffs:
   - id: prices-copied-onto-estimate
     name: Prices copied onto the estimate when made

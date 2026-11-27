@@ -6,13 +6,13 @@ description: >-
   Clients land on a page showing what's happening with their capacity, and
   what's waiting on them.
 stability: beta
-feature: feature:buying-capacity
+within: feature:buying-capacity
 solves: [problem:spend-without-visible-progress, problem:requests-go-unheard]
-initiatives: [initiative:mvp]
-rules:
+included-in: [initiative:mvp]
+follows:
   - rule:exalynt-can-move-lapsed-blocks
   - rule:the-preferred-week-is-a-target
-concepts: [concept:capacity-block]
+uses: [concept:capacity-block]
 tradeoffs:
   - id: status-not-work
     name: Block status, not the work done

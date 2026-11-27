@@ -6,12 +6,12 @@ description: >-
   Engineers read and accept the Engineer Agreement Exalynt sends them, with
   its Commercial Terms, before they work in the console.
 stability: beta
-feature: feature:agreements
+within: feature:agreements
 solves:
   - problem:new-engineer-unsure-ready-or-paid
   - problem:taking-on-work-blind
-initiatives: [initiative:mvp]
-rules:
+included-in: [initiative:mvp]
+follows:
   - rule:engineer-agreement-follows-the-invitations-terms
   - rule:an-engineer-agreement-can-have-no-commercial-terms
   - rule:acceptance-puts-an-agreement-in-effect
@@ -25,7 +25,7 @@ rules:
   - rule:accepted-agreements-never-change
   - rule:accepted-agreements-outlive-their-partys-account
   - rule:agreements-stay-private
-concepts: [concept:agreement]
+uses: [concept:agreement]
 gaps:
   - id: new-versions-not-offered
     name: New versions not offered to engineers

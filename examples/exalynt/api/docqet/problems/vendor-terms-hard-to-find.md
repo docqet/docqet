@@ -9,5 +9,5 @@ description: >-
 cost: >-
   Disputes over what was agreed, and work held up while it's settled
   (assumed).
-personas: [persona:client-admin-founder, persona:client-admin-operations, persona:client-member, persona:client-billing]
+felt-by: [persona:client-admin-founder, persona:client-admin-operations, persona:client-member, persona:client-billing]
 ---

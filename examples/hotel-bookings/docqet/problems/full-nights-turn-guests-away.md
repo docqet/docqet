@@ -8,5 +8,5 @@ description: >-
 cost: >-
   A room stays empty on a night the hotel could have filled, and the guest
   books elsewhere (assumed).
-personas: [persona:front-desk-clerk]
+felt-by: [persona:front-desk-clerk]
 ---

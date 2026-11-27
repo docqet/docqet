@@ -7,7 +7,7 @@ description: >-
   kept in step with the messaging provider as memberships change, and blocks'
   conversations there. The provider is behind messaging: Google Chat or
   Stream.
-capabilities: [capability:conversation-spaces]
+serves: [capability:conversation-spaces]
 gaps:
   - id: sync-users-has-no-hook
     name: User sync doesn't remove people from spaces

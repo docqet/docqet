@@ -6,12 +6,12 @@ description: >-
   Guests pay their bill by card from a link the hotel sends them, without
   coming to the desk.
 stability: alpha
-feature: feature:payments
+within: feature:payments
 solves: [problem:settling-up-holds-guests-up, problem:guests-queue-at-the-desk]
-rules:
+follows:
   - rule:card-numbers-are-never-kept
   - rule:closed-bills-dont-change
-concepts: [concept:payment, concept:bill]
+uses: [concept:payment, concept:bill]
 tradeoffs:
   - id: hotels-currency-only
     name: Hotel's currency only

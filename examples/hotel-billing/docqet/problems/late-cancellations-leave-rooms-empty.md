@@ -7,5 +7,5 @@ description: >-
   was held for them, and at such short notice it usually can't be sold again.
 cost: >-
   That night's takings for the room are lost.
-personas: [persona:manager]
+felt-by: [persona:manager]
 ---

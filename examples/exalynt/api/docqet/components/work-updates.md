@@ -5,7 +5,7 @@ name: Work updates
 description: >-
   What engineers write about a block's work as they do it, shown on its page
   with when it was started and fulfilled.
-capabilities: [capability:fulfillment]
+serves: [capability:fulfillment]
 ---
 
 **Blocks and focuses.** `work_updates.capacity_id` and `focus_id` are both

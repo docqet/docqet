@@ -6,10 +6,10 @@ description: >-
   Exalynt's admins see everyone who works with Exalynt: their team, what
   they're working on, and whether they're ready for client work.
 stability: alpha
-feature: feature:clients-and-teams
+within: feature:clients-and-teams
 solves: [problem:exceptions-hide-in-routine]
-initiatives: [initiative:mvp]
-rules:
+included-in: [initiative:mvp]
+follows:
   - rule:permissions-follow-where-someone-acts
   - rule:no-platform-role-means-no-permissions
   - rule:creators-get-the-creator-role
@@ -73,7 +73,7 @@ rules:
   - rule:payout-accounts-stay-private-to-their-owner
   - rule:admins-see-only-payment-readiness
   - rule:limited-tokens-cant-reach-payout-accounts
-concepts: [concept:team, concept:role]
+uses: [concept:team, concept:role]
 tradeoffs:
   - id: written-for-administrators
     name: Written for administrators, not narrower roles

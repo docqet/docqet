@@ -10,5 +10,5 @@ description: >-
 cost: >-
   The product or the process waits while money is tight and things feel
   urgent. Buyers give up when starting feels slow or the next step is unclear.
-personas: [persona:client-admin-founder, persona:client-admin-operations]
+felt-by: [persona:client-admin-founder, persona:client-admin-operations]
 ---

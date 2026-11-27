@@ -9,5 +9,5 @@ description: >-
 cost: >-
   Engineers distrust numbers that don't match, spend time reconciling or
   asking, and wait on pay they could have unblocked.
-personas: [persona:exalynt-engineer-1, persona:exalynt-engineer-2, persona:exalynt-team-lead]
+felt-by: [persona:exalynt-engineer-1, persona:exalynt-engineer-2, persona:exalynt-team-lead]
 ---

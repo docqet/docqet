@@ -7,5 +7,5 @@ description: >-
   which pains nothing answers yet.
 cost: >-
   Effort goes to things nobody needed while real pains wait.
-personas: [persona:product-owner, persona:engineer]
+felt-by: [persona:product-owner, persona:engineer]
 ---

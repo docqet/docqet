@@ -2,7 +2,7 @@
 docqet: rule
 id: closed-bills-dont-change
 name: A closed bill can't change
-concepts: [concept:bill, concept:charge, concept:payment]
+uses: [concept:bill, concept:charge, concept:payment]
 ---
 
 Nothing can be charged or paid on a closed bill. A charge that arrives after

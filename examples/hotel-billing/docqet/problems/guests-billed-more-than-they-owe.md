@@ -10,5 +10,5 @@ description: >-
 cost: >-
   A hard conversation with a guest who no longer trusts the bill. A guest
   charged twice is out of pocket until it's put right.
-personas: [persona:front-desk-clerk, persona:guest]
+felt-by: [persona:front-desk-clerk, persona:guest]
 ---

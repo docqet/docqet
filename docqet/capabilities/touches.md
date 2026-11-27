@@ -6,7 +6,7 @@ description: >-
   Before a change, engineers and agents see which capabilities, rules and gaps
   it's about, and what their levels allow.
 stability: prototype
-feature: feature:keeping-current
+within: feature:keeping-current
 solves:
   - problem:intent-in-peoples-heads
   - problem:agents-guess-intention

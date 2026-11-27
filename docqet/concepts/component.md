@@ -35,10 +35,10 @@ code need none.
 ## How it's written
 
 A component is a doc whose `docqet` is `component`. Its frontmatter, in order, is `docqet`, `id`, `name`, `description`,
-`capabilities`, `meets`, `gaps`, `tradeoffs` and `decisions`. Its body is how
+`serves`, `meets`, `gaps`, `tradeoffs` and `decisions`. Its body is how
 it works, as a mechanism's is.
 
-- **`capabilities`** lists the capabilities that rely on it. It's the only
+- **`serves`** lists the capabilities that rely on it. It's the only
   link between the technical docs and the product. A mechanism has none.
 - **It names no code**, as a mechanism doesn't: its entry points say
   `docqet:implements component:bookings`.
@@ -52,7 +52,7 @@ id: bookings
 name: Bookings
 description: >-
   Where a room is held for a stay, and where no double-booking is enforced.
-capabilities: [capability:room-booking, capability:group-bookings, capability:check-in]
+serves: [capability:room-booking, capability:group-bookings, capability:check-in]
 gaps:
   - id: clashes-logged-as-unknown
     name: Booking clashes logged as unknown errors

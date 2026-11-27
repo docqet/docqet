@@ -6,10 +6,10 @@ description: >-
   A client organization's Admin reads and accepts its Client Agreement on its
   behalf, before anyone can use the portal for it.
 stability: beta
-feature: feature:agreements
+within: feature:agreements
 solves: [problem:vendor-terms-hard-to-find]
-initiatives: [initiative:mvp]
-rules:
+included-in: [initiative:mvp]
+follows:
   - rule:engineer-agreement-follows-the-invitations-terms
   - rule:an-engineer-agreement-can-have-no-commercial-terms
   - rule:acceptance-puts-an-agreement-in-effect
@@ -23,7 +23,7 @@ rules:
   - rule:accepted-agreements-never-change
   - rule:accepted-agreements-outlive-their-partys-account
   - rule:agreements-stay-private
-concepts: [concept:agreement, concept:organization]
+uses: [concept:agreement, concept:organization]
 gaps:
   - id: new-versions-not-offered
     name: New versions not offered to organizations

@@ -7,5 +7,5 @@ description: >-
   way, and nobody notices until something is built or promised wrong.
 cost: >-
   Rework, and customers given answers that contradict what was built.
-personas: [persona:product-owner, persona:engineer, persona:support]
+felt-by: [persona:product-owner, persona:engineer, persona:support]
 ---

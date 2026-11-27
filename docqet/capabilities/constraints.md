@@ -8,9 +8,9 @@ description: >-
   respect each, and how far along and how ready the capabilities they bear on
   are, with the constraints nothing respects yet shown as such.
 stability: prototype
-feature: feature:where-it-stands
+within: feature:where-it-stands
 solves: [problem:unclear-what-to-rely-on, problem:intent-in-peoples-heads]
-rules:
+follows:
   - rule:drafts-claim-nothing
-concepts: [concept:constraint, concept:readiness, concept:maturity]
+uses: [concept:constraint, concept:readiness, concept:maturity]
 ---

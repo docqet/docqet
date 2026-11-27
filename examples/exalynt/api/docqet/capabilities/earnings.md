@@ -6,10 +6,10 @@ description: >-
   People see what they earn on each block, from when it's assigned to when
   it's fulfilled.
 stability: alpha
-feature: feature:getting-paid
+within: feature:getting-paid
 solves: [problem:pay-cant-be-checked, problem:taking-on-work-blind]
-initiatives: [initiative:mvp]
-rules:
+included-in: [initiative:mvp]
+follows:
   - rule:shares-earned-at-fulfillment
   - rule:payout-basis-per-capacity-unit
   - rule:engineer-earns-the-engineer-share
@@ -43,7 +43,7 @@ rules:
   - rule:manager-controls-the-partnerships-payout-account
   - rule:exalynt-bears-partnership-earnings
   - rule:partners-see-only-their-partnerships-earnings
-concepts:
+uses:
   - concept:payout-share
   - concept:capacity-payout-basis
   - concept:payout

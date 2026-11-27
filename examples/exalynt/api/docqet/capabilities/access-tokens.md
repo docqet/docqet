@@ -7,10 +7,10 @@ description: >-
   API as them, everywhere they belong or only in the organizations they
   choose.
 stability: beta
-feature: feature:access
+within: feature:access
 solves: [problem:others-can-act-as-you, problem:access-doesnt-match-the-job]
-initiatives: [initiative:mvp]
-rules:
+included-in: [initiative:mvp]
+follows:
   - rule:tokens-carry-their-creators-access
   - rule:role-changes-apply-at-once
   - rule:tokens-stay-in-their-creators-organizations
@@ -35,7 +35,7 @@ rules:
   - rule:limited-tokens-keep-an-organization
   - rule:limits-never-widen
   - rule:owners-see-a-tokens-limits
-concepts: [concept:access-token, concept:organization, concept:role]
+uses: [concept:access-token, concept:organization, concept:role]
 gaps:
   - id: impersonators-can-create-tokens
     name: Impersonators can create lasting tokens

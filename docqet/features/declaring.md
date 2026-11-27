@@ -5,7 +5,7 @@ name: Declaring intention
 description: >-
   Writing what the software is meant to do as docs beside its code, and
   linking the evidence of what it does to them.
-area: area:authoring
+within: area:authoring
 tradeoffs:
   - id: docs-written-by-hand
     name: Docs written by hand

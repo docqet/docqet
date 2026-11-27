@@ -62,9 +62,9 @@ frontmatter as in an annotation, so searching for one finds every doc and
 every place in the code that names it:
 
 ```yaml
-feature: feature:reservations
-rules: [rule:no-double-booking]
-concepts: [concept:booking]
+within: feature:reservations
+follows: [rule:no-double-booking]
+uses: [concept:booking]
 ```
 
 A concept's `confused-with` is a link too, when an item names a `concept`,

@@ -7,10 +7,10 @@ description: >-
   for people who work with Exalynt, and organization roles for client
   organizations' members.
 stability: alpha
-feature: feature:access
+within: feature:access
 solves: [problem:access-doesnt-match-the-job]
-initiatives: [initiative:mvp]
-rules:
+included-in: [initiative:mvp]
+follows:
   - rule:permissions-follow-where-someone-acts
   - rule:no-platform-role-means-no-permissions
   - rule:creators-get-the-creator-role
@@ -47,7 +47,7 @@ rules:
   - rule:applications-show-on-the-person
   - rule:who-sets-application-access
   - rule:inviting-with-applications-needs-access
-concepts: [concept:role, concept:organization]
+uses: [concept:role, concept:organization]
 gaps:
   - id: one-scope-per-permission
     name: Only one scope per permission

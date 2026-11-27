@@ -9,5 +9,5 @@ description: >-
 cost: >-
   Late answers to the owners. Once yesterday's takings move, the manager stops
   trusting all of them.
-personas: [persona:manager]
+felt-by: [persona:manager]
 ---

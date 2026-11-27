@@ -11,5 +11,5 @@ cost: >-
   Telling a guest at the desk that their room was given away: the worst
   conversation the front desk has. The guest's trust in the hotel is lost, and
   so is the clerk's trust in whatever they use to keep track of rooms.
-personas: [persona:front-desk-clerk]
+felt-by: [persona:front-desk-clerk]
 ---

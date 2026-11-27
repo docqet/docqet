@@ -10,5 +10,5 @@ description: >-
 cost: >-
   Someone acts on client work or money in their name, or they're locked out
   when they need to act (assumed).
-personas: [persona:client-admin-founder, persona:client-admin-operations, persona:client-member, persona:client-billing, persona:exalynt-admin, persona:exalynt-engineer-1, persona:exalynt-engineer-2, persona:exalynt-engineer-new-hire, persona:exalynt-team-lead, persona:partner]
+felt-by: [persona:client-admin-founder, persona:client-admin-operations, persona:client-member, persona:client-billing, persona:exalynt-admin, persona:exalynt-engineer-1, persona:exalynt-engineer-2, persona:exalynt-engineer-new-hire, persona:exalynt-team-lead, persona:partner]
 ---

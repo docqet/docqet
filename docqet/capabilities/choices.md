@@ -7,7 +7,7 @@ description: >-
   tradeoff with its benefit and drawback, and what each feature has decided
   never to do.
 stability: prototype
-feature: feature:reading-intention
+within: feature:reading-intention
 solves: [problem:bug-or-choice, problem:deliberate-code-gets-fixed]
-concepts: [concept:tradeoff]
+uses: [concept:tradeoff]
 ---

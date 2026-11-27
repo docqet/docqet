@@ -2,7 +2,7 @@
 docqet: rule
 id: card-numbers-are-never-kept
 name: Card numbers are never kept
-concepts: [concept:payment]
+uses: [concept:payment]
 respects: [constraint:card-scheme-security-rules]
 why: >-
   Holding card numbers would put the hotel under the card schemes' security

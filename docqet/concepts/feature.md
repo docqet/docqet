@@ -67,8 +67,8 @@ neither. The full test is in
 ## How it's written
 
 A feature is a doc whose `docqet` is `feature`. Its frontmatter, in order, is
-`docqet`, `id`, `name`, `description`, `area`, `tradeoffs` and `decisions`.
-`area`, optional, names the area it's in. Its body, if it has one, is
+`docqet`, `id`, `name`, `description`, `within`, `tradeoffs` and `decisions`.
+`within`, optional, names the area it's in. Its body, if it has one, is
 anything more about what it offers.
 [`reservations.md`](../../examples/hotel-bookings/docqet/features/reservations.md):
 
@@ -78,7 +78,7 @@ docqet: feature
 id: reservations
 name: Reservations
 description: Taking bookings and handling changes to them, before the guest arrives.
-area: area:guest-stays
+within: area:guest-stays
 tradeoffs:
   - id: front-desk-bookings-only
     name: Front desk bookings only
@@ -92,6 +92,6 @@ tradeoffs:
 ```
 
 Room booking, cancellations, group bookings and the waitlist each name it
-with `feature: feature:reservations`. A feature lists no capabilities and no
+with `within: feature:reservations`. A feature lists no capabilities and no
 rules: its rules are the ones its capabilities follow. Its maturity and
 readiness are worked out, never written here.

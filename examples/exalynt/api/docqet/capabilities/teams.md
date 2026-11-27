@@ -6,15 +6,15 @@ description: >-
   Exalynt groups its people into teams to work with the clients they're
   assigned to, and a client's teams decide who at Exalynt it sees.
 stability: beta
-feature: feature:clients-and-teams
+within: feature:clients-and-teams
 solves:
   - problem:spend-without-visible-progress
   - problem:requests-go-unheard
   - problem:working-without-client-context
   - problem:new-engineer-unsure-ready-or-paid
   - problem:team-trouble-seen-one-by-one
-initiatives: [initiative:mvp]
-rules:
+included-in: [initiative:mvp]
+follows:
   - rule:only-exalynt-makes-teams
   - rule:team-names-are-unique
   - rule:clients-can-have-several-teams
@@ -50,7 +50,7 @@ rules:
   - rule:invalid-payout-accounts-delay-payment
   - rule:when-an-engineer-is-ready
   - rule:invited-engineers-join-their-team
-concepts: [concept:team, concept:organization]
+uses: [concept:team, concept:organization]
 gaps:
   - id: names-can-name-clients
     name: Team names can name clients

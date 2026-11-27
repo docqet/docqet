@@ -58,7 +58,7 @@ and it's for the front desk clerk and the housekeeper.
 
 An initiative is a doc whose `docqet` is `initiative`. Its frontmatter, in
 order, is `docqet`, `id`, `name`, `description`, which say what the work is,
-and `personas`, optional, the personas its work is for, so showing it shows
+and `for`, optional, the personas its work is for, so showing it shows
 only its people. Its body, optional, can say more, such as what's in it and
 why. The same ID in two projects is one initiative.
 [`busy-season.md`](../../examples/hotel-bookings/docqet/initiatives/busy-season.md):
@@ -70,12 +70,12 @@ id: busy-season
 name: Busy season
 description: >-
   Handling full nights: groups, a waitlist, and turning rooms over faster.
-personas: [persona:front-desk-clerk, persona:housekeeper]
+for: [persona:front-desk-clerk, persona:housekeeper]
 ---
 ```
 
-A capability says which initiatives it's part of with an `initiatives` list:
+A capability says which initiatives it's part of with `included-in`:
 
 ```yaml
-initiatives: [initiative:busy-season]
+included-in: [initiative:busy-season]
 ```

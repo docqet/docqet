@@ -2,7 +2,7 @@
 docqet: rule
 id: children-pay-no-city-tax
 name: Children pay no city tax
-concepts: [concept:charge]
+uses: [concept:charge]
 respects: [constraint:city-tax-owed-per-guest-night]
 ---
 

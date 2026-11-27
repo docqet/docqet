@@ -5,7 +5,7 @@ name: Check
 description: >-
   Makes the findings a state shows on its own, so the command line and the
   server check states the same way.
-capabilities:
+serves:
   - capability:checking
   - capability:applying
 ---

@@ -6,7 +6,7 @@ description: >-
   Engineers and agents build on the server's data, from a reference to its API
   that gives each endpoint's stability.
 stability: prototype
-feature: feature:sharing
+within: feature:sharing
 solves: [problem:knowledge-stuck-in-the-repository]
 ---
 

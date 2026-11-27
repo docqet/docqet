@@ -6,12 +6,12 @@ description: >-
   Clerks cancel a booking when a guest's plans change, and the guest is
   refunded what the cancellation policy allows.
 stability: alpha
-feature: feature:reservations
+within: feature:reservations
 solves: [problem:late-cancellations-leave-rooms-empty]
-rules:
+follows:
   - rule:free-cancellation-window
   - rule:late-cancellation-fee
-concepts: [concept:booking]
+uses: [concept:booking]
 gaps:
   - id: late-cancellations-refunded-in-full
     name: Late cancellations refunded in full

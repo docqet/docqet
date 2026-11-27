@@ -3,7 +3,7 @@ docqet: component
 id: payouts
 name: Payouts
 description: How earnings become money sent, to people and to partnerships.
-capabilities: [capability:payouts, capability:partner-payouts]
+serves: [capability:payouts, capability:partner-payouts]
 tradeoffs:
   - id: waiting-worked-out-on-read
     name: Waiting payouts worked out on read, not stored

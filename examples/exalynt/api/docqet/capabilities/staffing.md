@@ -7,10 +7,10 @@ description: >-
   the client's shared queue, as [Claiming blocks](claiming-blocks.md) covers,
   or an admin assigns it.
 stability: alpha
-feature: feature:block-delivery
+within: feature:block-delivery
 solves: [problem:exceptions-hide-in-routine]
-initiatives: [initiative:mvp]
-rules:
+included-in: [initiative:mvp]
+follows:
   - rule:listing-an-engineers-blocks
   - rule:claiming-staffs-the-block-directly
   - rule:claiming-requires-eligibility
@@ -31,7 +31,7 @@ rules:
   - rule:late-claims-during-the-preferred-week
   - rule:lapsed-blocks-must-be-moved-first
   - rule:in-progress-blocks-cant-be-moved
-concepts:
+uses:
   - concept:capacity-block
   - concept:shared-queue
   - concept:eligible-engineer

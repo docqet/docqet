@@ -7,11 +7,11 @@ description: >-
   promote would raise the readiness of a capability, feature, area, product,
   persona or initiative most, in that order.
 stability: prototype
-feature: feature:where-it-stands
+within: feature:where-it-stands
 solves: [problem:unclear-what-helps-most]
-rules:
+follows:
   - rule:drafts-claim-nothing
-concepts: [concept:readiness, concept:maturity, concept:exposure, concept:risk]
+uses: [concept:readiness, concept:maturity, concept:exposure, concept:risk]
 decisions:
   - topic: Promoting with a gap against the new level
     question: >-

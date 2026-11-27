@@ -7,7 +7,7 @@ description: >-
   code, tests and docs, in batches a person can check, and it's declared only
   once that person confirms it.
 stability: prototype
-feature: feature:declaring
+within: feature:declaring
 solves: [problem:no-record-of-what-it-was-for, problem:agents-guess-intention]
 gaps:
   - id: inferred-intention-unmarked

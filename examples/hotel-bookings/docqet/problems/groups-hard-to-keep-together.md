@@ -11,5 +11,5 @@ cost: >-
   Slow to book. When the group changes, a room gets missed or left held
   (assumed). On a busy night a group can get some of its rooms and not the
   rest (assumed).
-personas: [persona:front-desk-clerk]
+felt-by: [persona:front-desk-clerk]
 ---

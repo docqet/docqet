@@ -5,7 +5,7 @@ name: Auth
 description: >-
   Signing in and up, and onboarding: the pages that belong to no app, where
   someone gets an account and joins or creates what they'll work in.
-capabilities:
+serves:
   - capability:organizations-and-members
   - capability:engineer-onboarding
   - capability:partnerships

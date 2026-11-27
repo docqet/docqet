@@ -7,13 +7,13 @@ description: >-
   adds up per team to decide which weeks have room, though clients never see
   it directly.
 stability: beta
-feature: feature:clients-and-teams
+within: feature:clients-and-teams
 solves:
   - problem:engineers-overbooked
   - problem:team-trouble-seen-one-by-one
   - problem:exceptions-hide-in-routine
-initiatives: [initiative:mvp]
-rules:
+included-in: [initiative:mvp]
+follows:
   - rule:how-a-weeks-availability-is-decided
   - rule:reductions-need-no-approval
   - rule:only-its-owner-sets-availability
@@ -26,7 +26,7 @@ rules:
   - rule:reductions-make-room-by-taking-blocks-out
   - rule:reductions-never-touch-started-work
   - rule:past-weeks-cant-change
-concepts: [concept:effective-availability, concept:capacity-unit, concept:capacity-block]
+uses: [concept:effective-availability, concept:capacity-unit, concept:capacity-block]
 ---
 
 ## Includes

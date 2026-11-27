@@ -5,7 +5,7 @@ name: Sharing one view
 description: >-
   Is everyone looking at the same, current picture? Keeping one shared view of
   every project, and what's observed of it, on a server of the team's own.
-area: area:understanding
+within: area:understanding
 tradeoffs:
   - id: main-branch-only
     name: Main branch only

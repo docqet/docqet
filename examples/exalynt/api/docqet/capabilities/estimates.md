@@ -7,10 +7,10 @@ description: >-
   prospects read them to see what each focus and the project would cost and
   take on every block type.
 stability: beta
-feature: feature:buying-capacity
+within: feature:buying-capacity
 solves: [problem:budgeting-blind, problem:quoting-takes-a-long-sitting]
-initiatives: [initiative:mvp]
-rules:
+included-in: [initiative:mvp]
+follows:
   - rule:focus-sizes-and-block-prices
   - rule:each-focus-has-its-own-pace
   - rule:discounts-apply-to-the-whole-project
@@ -24,7 +24,7 @@ rules:
   - rule:deleting-an-estimate-is-permanent
   - rule:estimates-are-for-organizations-or-prospects
   - rule:a-focus-belongs-to-one-estimate
-concepts: [concept:estimate, concept:capacity-block, concept:capacity-unit]
+uses: [concept:estimate, concept:capacity-block, concept:capacity-unit]
 gaps:
   - id: pdf-leaves-out-planned-pace
     name: PDF leaves out each focus's planned pace

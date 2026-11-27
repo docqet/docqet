@@ -367,329 +367,329 @@
       "type": "unknown-id",
       "subject": "component:account",
       "capabilities": [],
-      "message": "capabilities lists capability:your-profile, which this project doesn't define. It may be defined in another project in the product.",
+      "message": "serves lists capability:your-profile, which this project doesn't define. It may be defined in another project in the product.",
       "file": "docqet/components/account.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:account",
       "capabilities": [],
-      "message": "capabilities lists capability:teams, which this project doesn't define. It may be defined in another project in the product.",
+      "message": "serves lists capability:teams, which this project doesn't define. It may be defined in another project in the product.",
       "file": "docqet/components/account.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:account",
       "capabilities": [],
-      "message": "capabilities lists capability:access-tokens, which this project doesn't define. It may be defined in another project in the product.",
+      "message": "serves lists capability:access-tokens, which this project doesn't define. It may be defined in another project in the product.",
       "file": "docqet/components/account.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:account",
       "capabilities": [],
-      "message": "capabilities lists capability:notifications, which this project doesn't define. It may be defined in another project in the product.",
+      "message": "serves lists capability:notifications, which this project doesn't define. It may be defined in another project in the product.",
       "file": "docqet/components/account.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:admin",
       "capabilities": [],
-      "message": "capabilities lists capability:client-directory, which this project doesn't define. It may be defined in another project in the product.",
+      "message": "serves lists capability:client-directory, which this project doesn't define. It may be defined in another project in the product.",
       "file": "docqet/components/admin.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:admin",
       "capabilities": [],
-      "message": "capabilities lists capability:client-coupons, which this project doesn't define. It may be defined in another project in the product.",
+      "message": "serves lists capability:client-coupons, which this project doesn't define. It may be defined in another project in the product.",
       "file": "docqet/components/admin.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:admin",
       "capabilities": [],
-      "message": "capabilities lists capability:partnerships, which this project doesn't define. It may be defined in another project in the product.",
+      "message": "serves lists capability:partnerships, which this project doesn't define. It may be defined in another project in the product.",
       "file": "docqet/components/admin.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:admin",
       "capabilities": [],
-      "message": "capabilities lists capability:engineers, which this project doesn't define. It may be defined in another project in the product.",
+      "message": "serves lists capability:engineers, which this project doesn't define. It may be defined in another project in the product.",
       "file": "docqet/components/admin.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:admin",
       "capabilities": [],
-      "message": "capabilities lists capability:agreements, which this project doesn't define. It may be defined in another project in the product.",
+      "message": "serves lists capability:agreements, which this project doesn't define. It may be defined in another project in the product.",
       "file": "docqet/components/admin.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:admin",
       "capabilities": [],
-      "message": "capabilities lists capability:teams, which this project doesn't define. It may be defined in another project in the product.",
+      "message": "serves lists capability:teams, which this project doesn't define. It may be defined in another project in the product.",
       "file": "docqet/components/admin.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:admin",
       "capabilities": [],
-      "message": "capabilities lists capability:staffing, which this project doesn't define. It may be defined in another project in the product.",
+      "message": "serves lists capability:staffing, which this project doesn't define. It may be defined in another project in the product.",
       "file": "docqet/components/admin.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:admin",
       "capabilities": [],
-      "message": "capabilities lists capability:payouts, which this project doesn't define. It may be defined in another project in the product.",
+      "message": "serves lists capability:payouts, which this project doesn't define. It may be defined in another project in the product.",
       "file": "docqet/components/admin.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:admin",
       "capabilities": [],
-      "message": "capabilities lists capability:roles, which this project doesn't define. It may be defined in another project in the product.",
+      "message": "serves lists capability:roles, which this project doesn't define. It may be defined in another project in the product.",
       "file": "docqet/components/admin.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:auth",
       "capabilities": [],
-      "message": "capabilities lists capability:organizations-and-members, which this project doesn't define. It may be defined in another project in the product.",
+      "message": "serves lists capability:organizations-and-members, which this project doesn't define. It may be defined in another project in the product.",
       "file": "docqet/components/auth.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:auth",
       "capabilities": [],
-      "message": "capabilities lists capability:engineer-onboarding, which this project doesn't define. It may be defined in another project in the product.",
+      "message": "serves lists capability:engineer-onboarding, which this project doesn't define. It may be defined in another project in the product.",
       "file": "docqet/components/auth.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:auth",
       "capabilities": [],
-      "message": "capabilities lists capability:partnerships, which this project doesn't define. It may be defined in another project in the product.",
+      "message": "serves lists capability:partnerships, which this project doesn't define. It may be defined in another project in the product.",
       "file": "docqet/components/auth.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:console",
       "capabilities": [],
-      "message": "capabilities lists capability:getting-set-up, which this project doesn't define. It may be defined in another project in the product.",
+      "message": "serves lists capability:getting-set-up, which this project doesn't define. It may be defined in another project in the product.",
       "file": "docqet/components/console.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:console",
       "capabilities": [],
-      "message": "capabilities lists capability:claiming-blocks, which this project doesn't define. It may be defined in another project in the product.",
+      "message": "serves lists capability:claiming-blocks, which this project doesn't define. It may be defined in another project in the product.",
       "file": "docqet/components/console.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:console",
       "capabilities": [],
-      "message": "capabilities lists capability:fulfillment, which this project doesn't define. It may be defined in another project in the product.",
+      "message": "serves lists capability:fulfillment, which this project doesn't define. It may be defined in another project in the product.",
       "file": "docqet/components/console.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:console",
       "capabilities": [],
-      "message": "capabilities lists capability:conversation-spaces, which this project doesn't define. It may be defined in another project in the product.",
+      "message": "serves lists capability:conversation-spaces, which this project doesn't define. It may be defined in another project in the product.",
       "file": "docqet/components/console.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:console",
       "capabilities": [],
-      "message": "capabilities lists capability:teams, which this project doesn't define. It may be defined in another project in the product.",
+      "message": "serves lists capability:teams, which this project doesn't define. It may be defined in another project in the product.",
       "file": "docqet/components/console.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:console",
       "capabilities": [],
-      "message": "capabilities lists capability:availability, which this project doesn't define. It may be defined in another project in the product.",
+      "message": "serves lists capability:availability, which this project doesn't define. It may be defined in another project in the product.",
       "file": "docqet/components/console.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:console",
       "capabilities": [],
-      "message": "capabilities lists capability:earnings, which this project doesn't define. It may be defined in another project in the product.",
+      "message": "serves lists capability:earnings, which this project doesn't define. It may be defined in another project in the product.",
       "file": "docqet/components/console.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:console",
       "capabilities": [],
-      "message": "capabilities lists capability:payouts, which this project doesn't define. It may be defined in another project in the product.",
+      "message": "serves lists capability:payouts, which this project doesn't define. It may be defined in another project in the product.",
       "file": "docqet/components/console.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:console",
       "capabilities": [],
-      "message": "capabilities lists capability:payout-accounts, which this project doesn't define. It may be defined in another project in the product.",
+      "message": "serves lists capability:payout-accounts, which this project doesn't define. It may be defined in another project in the product.",
       "file": "docqet/components/console.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:console",
       "capabilities": [],
-      "message": "capabilities lists capability:estimates, which this project doesn't define. It may be defined in another project in the product.",
+      "message": "serves lists capability:estimates, which this project doesn't define. It may be defined in another project in the product.",
       "file": "docqet/components/console.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:console",
       "capabilities": [],
-      "message": "capabilities lists capability:engineer-agreements, which this project doesn't define. It may be defined in another project in the product.",
+      "message": "serves lists capability:engineer-agreements, which this project doesn't define. It may be defined in another project in the product.",
       "file": "docqet/components/console.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:hub",
       "capabilities": [],
-      "message": "capabilities lists capability:partner-home, which this project doesn't define. It may be defined in another project in the product.",
+      "message": "serves lists capability:partner-home, which this project doesn't define. It may be defined in another project in the product.",
       "file": "docqet/components/hub.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:hub",
       "capabilities": [],
-      "message": "capabilities lists capability:partnerships, which this project doesn't define. It may be defined in another project in the product.",
+      "message": "serves lists capability:partnerships, which this project doesn't define. It may be defined in another project in the product.",
       "file": "docqet/components/hub.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:hub",
       "capabilities": [],
-      "message": "capabilities lists capability:client-invitations, which this project doesn't define. It may be defined in another project in the product.",
+      "message": "serves lists capability:client-invitations, which this project doesn't define. It may be defined in another project in the product.",
       "file": "docqet/components/hub.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:hub",
       "capabilities": [],
-      "message": "capabilities lists capability:partner-clients, which this project doesn't define. It may be defined in another project in the product.",
+      "message": "serves lists capability:partner-clients, which this project doesn't define. It may be defined in another project in the product.",
       "file": "docqet/components/hub.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:hub",
       "capabilities": [],
-      "message": "capabilities lists capability:partner-earnings, which this project doesn't define. It may be defined in another project in the product.",
+      "message": "serves lists capability:partner-earnings, which this project doesn't define. It may be defined in another project in the product.",
       "file": "docqet/components/hub.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:hub",
       "capabilities": [],
-      "message": "capabilities lists capability:partner-payouts, which this project doesn't define. It may be defined in another project in the product.",
+      "message": "serves lists capability:partner-payouts, which this project doesn't define. It may be defined in another project in the product.",
       "file": "docqet/components/hub.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:hub",
       "capabilities": [],
-      "message": "capabilities lists capability:partner-payout-accounts, which this project doesn't define. It may be defined in another project in the product.",
+      "message": "serves lists capability:partner-payout-accounts, which this project doesn't define. It may be defined in another project in the product.",
       "file": "docqet/components/hub.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:hub",
       "capabilities": [],
-      "message": "capabilities lists capability:partner-agreements, which this project doesn't define. It may be defined in another project in the product.",
+      "message": "serves lists capability:partner-agreements, which this project doesn't define. It may be defined in another project in the product.",
       "file": "docqet/components/hub.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:hub",
       "capabilities": [],
-      "message": "capabilities lists capability:getting-set-up, which this project doesn't define. It may be defined in another project in the product.",
+      "message": "serves lists capability:getting-set-up, which this project doesn't define. It may be defined in another project in the product.",
       "file": "docqet/components/hub.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:portal",
       "capabilities": [],
-      "message": "capabilities lists capability:client-home, which this project doesn't define. It may be defined in another project in the product.",
+      "message": "serves lists capability:client-home, which this project doesn't define. It may be defined in another project in the product.",
       "file": "docqet/components/portal.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:portal",
       "capabilities": [],
-      "message": "capabilities lists capability:getting-set-up, which this project doesn't define. It may be defined in another project in the product.",
+      "message": "serves lists capability:getting-set-up, which this project doesn't define. It may be defined in another project in the product.",
       "file": "docqet/components/portal.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:portal",
       "capabilities": [],
-      "message": "capabilities lists capability:teams, which this project doesn't define. It may be defined in another project in the product.",
+      "message": "serves lists capability:teams, which this project doesn't define. It may be defined in another project in the product.",
       "file": "docqet/components/portal.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:portal",
       "capabilities": [],
-      "message": "capabilities lists capability:capacity-purchasing, which this project doesn't define. It may be defined in another project in the product.",
+      "message": "serves lists capability:capacity-purchasing, which this project doesn't define. It may be defined in another project in the product.",
       "file": "docqet/components/portal.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:portal",
       "capabilities": [],
-      "message": "capabilities lists capability:scheduling, which this project doesn't define. It may be defined in another project in the product.",
+      "message": "serves lists capability:scheduling, which this project doesn't define. It may be defined in another project in the product.",
       "file": "docqet/components/portal.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:portal",
       "capabilities": [],
-      "message": "capabilities lists capability:fulfillment, which this project doesn't define. It may be defined in another project in the product.",
+      "message": "serves lists capability:fulfillment, which this project doesn't define. It may be defined in another project in the product.",
       "file": "docqet/components/portal.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:portal",
       "capabilities": [],
-      "message": "capabilities lists capability:conversation-spaces, which this project doesn't define. It may be defined in another project in the product.",
+      "message": "serves lists capability:conversation-spaces, which this project doesn't define. It may be defined in another project in the product.",
       "file": "docqet/components/portal.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:portal",
       "capabilities": [],
-      "message": "capabilities lists capability:estimates, which this project doesn't define. It may be defined in another project in the product.",
+      "message": "serves lists capability:estimates, which this project doesn't define. It may be defined in another project in the product.",
       "file": "docqet/components/portal.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:portal",
       "capabilities": [],
-      "message": "capabilities lists capability:billing, which this project doesn't define. It may be defined in another project in the product.",
+      "message": "serves lists capability:billing, which this project doesn't define. It may be defined in another project in the product.",
       "file": "docqet/components/portal.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:portal",
       "capabilities": [],
-      "message": "capabilities lists capability:organizations-and-members, which this project doesn't define. It may be defined in another project in the product.",
+      "message": "serves lists capability:organizations-and-members, which this project doesn't define. It may be defined in another project in the product.",
       "file": "docqet/components/portal.md"
     },
     {
       "type": "unknown-id",
       "subject": "component:portal",
       "capabilities": [],
-      "message": "capabilities lists capability:client-agreements, which this project doesn't define. It may be defined in another project in the product.",
+      "message": "serves lists capability:client-agreements, which this project doesn't define. It may be defined in another project in the product.",
       "file": "docqet/components/portal.md"
     }
   ],

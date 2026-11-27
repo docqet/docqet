@@ -2,7 +2,7 @@
 docqet: rule
 id: same-day-turnover
 name: A stay can start on the day another ends
-concepts: [concept:booking, concept:room]
+uses: [concept:booking, concept:room]
 respects: [constraint:one-stay-a-room-a-night, constraint:rooms-cleaned-between-stays]
 why: >-
   Guests check out by 11:00 and check in from 15:00, which leaves time to

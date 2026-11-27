@@ -7,12 +7,12 @@ description: >-
   organization's default payment method on one invoice, to schedule now or
   later.
 stability: beta
-feature: feature:buying-capacity
+within: feature:buying-capacity
 solves:
   - problem:engineering-starts-slowly
   - problem:spend-without-visible-progress
-initiatives: [initiative:mvp]
-rules:
+included-in: [initiative:mvp]
+follows:
   - rule:blocks-stay-within-their-organization
   - rule:capacity-types-listed-smallest-first
   - rule:buying-only-defined-capacity-types
@@ -22,7 +22,7 @@ rules:
   - rule:blocks-are-bought-then-scheduled
   - rule:block-numbers-are-per-organization
   - rule:retrying-a-purchase-never-charges-twice
-concepts: [concept:capacity-block, concept:capacity-unit, concept:invoice]
+uses: [concept:capacity-block, concept:capacity-unit, concept:invoice]
 gaps:
   - id: unknown-outcome-retry-while-open
     name: Unclear purchase retry safe only while open

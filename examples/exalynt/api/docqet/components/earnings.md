@@ -5,7 +5,7 @@ name: Earnings
 description: >-
   What engineers, leads, and partnerships earn on fulfilled blocks, recorded
   as each is fulfilled.
-capabilities: [capability:earnings, capability:partner-earnings, capability:partner-clients, capability:partner-home]
+serves: [capability:earnings, capability:partner-earnings, capability:partner-clients, capability:partner-home]
 ---
 
 An earning has exactly one payee, `user_id` or `partnership_id`, which

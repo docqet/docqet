@@ -6,10 +6,10 @@ description: >-
   Engineers join Exalynt by an admin's invitation, on the team it names if it
   names one, since nobody signs up as an engineer on their own.
 stability: alpha
-feature: feature:onboarding
+within: feature:onboarding
 solves: [problem:new-engineer-unsure-ready-or-paid]
-initiatives: [initiative:mvp]
-rules:
+included-in: [initiative:mvp]
+follows:
   - rule:engineers-join-by-invitation-only
   - rule:existing-accounts-gain-the-engineer-role
   - rule:admins-see-and-revoke-all-invitations
@@ -22,7 +22,7 @@ rules:
   - rule:adding-a-hat-to-an-account
   - rule:invitations-stay-pending-until-resolved
   - rule:who-sees-and-revokes-pending-invitations
-concepts: [concept:agreement, concept:team]
+uses: [concept:agreement, concept:team]
 ---
 
 ## Includes

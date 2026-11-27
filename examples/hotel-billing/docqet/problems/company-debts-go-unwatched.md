@@ -12,5 +12,5 @@ cost: >-
   Month end becomes the busiest time of the bookkeeper's month. Money is paid
   late or never (assumed), and companies dispute stays they didn't agree to
   cover (assumed).
-personas: [persona:bookkeeper]
+felt-by: [persona:bookkeeper]
 ---

@@ -9,5 +9,5 @@ description: >-
 cost: >-
   Introductions aren't made or aren't credited, and partners drift away if it
   feels like a sales tool.
-personas: [persona:partner]
+felt-by: [persona:partner]
 ---

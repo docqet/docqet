@@ -9,5 +9,5 @@ description: >-
 cost: >-
   Work misses what the client meant, and the engineer looks unprepared in front
   of them.
-personas: [persona:exalynt-engineer-1, persona:exalynt-engineer-2, persona:exalynt-team-lead, persona:exalynt-admin]
+felt-by: [persona:exalynt-engineer-1, persona:exalynt-engineer-2, persona:exalynt-team-lead, persona:exalynt-admin]
 ---

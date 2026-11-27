@@ -10,5 +10,5 @@ cost: >-
   I over-promise and a customer finds the gap first, or I hedge everything and
   we undersell what works. A gap I hear about from a customer costs more trust
   than any number I was told about.
-personas: [persona:product-owner, persona:support]
+felt-by: [persona:product-owner, persona:support]
 ---

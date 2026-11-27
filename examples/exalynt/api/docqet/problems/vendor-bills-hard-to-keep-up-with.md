@@ -9,5 +9,5 @@ description: >-
 cost: >-
   Amounts don't match the books, filing takes longer, and an unnoticed failed
   payment holds up the work it paid for.
-personas: [persona:client-billing]
+felt-by: [persona:client-billing]
 ---

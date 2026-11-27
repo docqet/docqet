@@ -6,10 +6,10 @@ description: >-
   Exalynt's admins see every client organization, the blocks each has bought
   and how far the work has got, and assign the teams that serve it.
 stability: alpha
-feature: feature:clients-and-teams
+within: feature:clients-and-teams
 solves: [problem:exceptions-hide-in-routine]
-initiatives: [initiative:mvp]
-rules:
+included-in: [initiative:mvp]
+follows:
   - rule:logos-stay-within-their-organization
   - rule:anyone-can-create-an-organization
   - rule:newcomers-start-with-no-organization
@@ -59,7 +59,7 @@ rules:
   - rule:removed-members-leave-every-clients-view
   - rule:removing-someone-already-gone
   - rule:only-exalynts-people-join-teams
-concepts: [concept:capacity-block, concept:invoice, concept:organization, concept:team]
+uses: [concept:capacity-block, concept:invoice, concept:organization, concept:team]
 tradeoffs:
   - id: no-primary-contact
     name: Client members not shown to staff

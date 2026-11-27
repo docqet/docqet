@@ -6,10 +6,10 @@ description: >-
   Partners see the clients attributed to their partnership: who they are, how
   each came to it, since when, and how long the partnership earns on each.
 stability: beta
-feature: feature:partner-program
+within: feature:partner-program
 solves: [problem:partner-earnings-opaque]
-initiatives: [initiative:mvp]
-rules:
+included-in: [initiative:mvp]
+follows:
   - rule:inviting-creates-the-partnership
   - rule:accepting-makes-the-invitee-manager
   - rule:the-manager-names-the-partnership
@@ -37,7 +37,7 @@ rules:
   - rule:what-partners-can-see
   - rule:clients-see-who-referred-them
   - rule:introductions-dont-affect-engineer-assignment
-concepts: [concept:partnership]
+uses: [concept:partnership]
 gaps:
   - id: moving-restarts-since
     name: Moving a client loses its history

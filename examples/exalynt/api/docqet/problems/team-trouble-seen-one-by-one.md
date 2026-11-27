@@ -9,5 +9,5 @@ description: >-
 cost: >-
   Work stalls, teammates get overloaded, and clients wait before the lead
   notices.
-personas: [persona:exalynt-team-lead]
+felt-by: [persona:exalynt-team-lead]
 ---

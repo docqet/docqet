@@ -9,5 +9,5 @@ description: >-
 cost: >-
   Customers are told a fix is coming that never will, or a real bug is waved
   away as intended.
-personas: [persona:support, persona:product-owner]
+felt-by: [persona:support, persona:product-owner]
 ---

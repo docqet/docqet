@@ -6,7 +6,7 @@ description: >-
   Engineers change a doc's ID, with everything that names it, and get the
   trailer to commit it with.
 stability: prototype
-feature: feature:keeping-current
+within: feature:keeping-current
 solves: [problem:docs-drift-from-code, problem:docs-slow-every-change]
 gaps:
   - id: other-projects-not-listed

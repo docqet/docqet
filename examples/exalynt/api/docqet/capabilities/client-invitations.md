@@ -6,10 +6,10 @@ description: >-
   Partners invite people they know to become Exalynt clients by email, and
   each one who signs up as a new client is attributed to their partnership.
 stability: beta
-feature: feature:partner-program
+within: feature:partner-program
 solves: [problem:introductions-take-effort, problem:engineering-starts-slowly]
-initiatives: [initiative:mvp]
-rules:
+included-in: [initiative:mvp]
+follows:
   - rule:inviting-creates-the-partnership
   - rule:accepting-makes-the-invitee-manager
   - rule:the-manager-names-the-partnership
@@ -37,7 +37,7 @@ rules:
   - rule:what-partners-can-see
   - rule:clients-see-who-referred-them
   - rule:introductions-dont-affect-engineer-assignment
-concepts: [concept:partnership]
+uses: [concept:partnership]
 gaps:
   - id: existing-clients-spotted-by-name-only
     name: Existing clients spotted by name only

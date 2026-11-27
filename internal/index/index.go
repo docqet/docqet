@@ -139,7 +139,7 @@ func addEntry(st *state.State, d *doc) {
 		})
 	case state.TypeFeature:
 		st.Features = append(st.Features, state.Feature{
-			ID: fm.ID, File: d.file, Name: name, Description: description, Area: textPtr(fm.Area),
+			ID: fm.ID, File: d.file, Name: name, Description: description, Area: textPtr(fm.Within),
 			Capabilities: []string{}, Tradeoffs: tradeoffRefs(ref, fm.Tradeoffs),
 			Decisions: decisions(fm.Decisions), Body: d.body,
 		})
@@ -147,8 +147,8 @@ func addEntry(st *state.State, d *doc) {
 	case state.TypeCapability:
 		st.Capabilities = append(st.Capabilities, state.Capability{
 			ID: fm.ID, File: d.file, Name: name, Description: description,
-			Stability: fm.Stability, Feature: textPtr(fm.Feature), Solves: list(fm.Solves), Personas: []string{}, Initiatives: list(fm.Initiatives),
-			Rules: list(fm.Rules), Concepts: list(fm.Concepts),
+			Stability: fm.Stability, Feature: textPtr(fm.Within), Solves: list(fm.Solves), Personas: []string{}, Initiatives: list(fm.IncludedIn),
+			Rules: list(fm.Follows), Concepts: list(fm.Uses),
 			Gaps: gapRefs(ref, fm.Gaps), Tradeoffs: tradeoffRefs(ref, fm.Tradeoffs),
 			Decisions: decisions(fm.Decisions), Evidence: evidence(), Body: d.body,
 		})
@@ -157,7 +157,7 @@ func addEntry(st *state.State, d *doc) {
 	case state.TypeRule:
 		st.Rules = append(st.Rules, state.Rule{
 			ID: fm.ID, File: d.file, Name: name,
-			Capabilities: []string{}, Concepts: list(fm.Concepts), Respects: list(fm.Respects), Why: textPtr(fm.Why),
+			Capabilities: []string{}, Concepts: list(fm.Uses), Respects: list(fm.Respects), Why: textPtr(fm.Why),
 			Evidence: evidence(), Body: d.body,
 		})
 	case state.TypeConcept:
@@ -178,7 +178,7 @@ func addEntry(st *state.State, d *doc) {
 	case state.TypeProblem:
 		st.Problems = append(st.Problems, state.Problem{
 			ID: fm.ID, File: d.file, Name: name, Description: description, Cost: textPtr(fm.Cost),
-			Personas: list(fm.Personas), Capabilities: []string{}, Body: d.body,
+			Personas: list(fm.FeltBy), Capabilities: []string{}, Body: d.body,
 		})
 	case state.TypeConstraint:
 		st.Constraints = append(st.Constraints, state.Constraint{
@@ -188,7 +188,7 @@ func addEntry(st *state.State, d *doc) {
 	case state.TypeInitiative:
 		st.Initiatives = append(st.Initiatives, state.Initiative{
 			ID: fm.ID, File: d.file, Name: name, Description: description,
-			Capabilities: []string{}, Features: []string{}, Personas: list(fm.Personas), Body: d.body,
+			Capabilities: []string{}, Features: []string{}, Personas: list(fm.For), Body: d.body,
 		})
 	case state.TypeMechanism:
 		applies := fm.Applies
@@ -206,7 +206,7 @@ func addEntry(st *state.State, d *doc) {
 	case state.TypeComponent:
 		st.Components = append(st.Components, state.Component{
 			ID: fm.ID, File: d.file, Name: name, Description: description,
-			Capabilities: list(fm.Capabilities), Meets: list(fm.Meets),
+			Capabilities: list(fm.Serves), Meets: list(fm.Meets),
 			Gaps: gapRefs(ref, fm.Gaps), Tradeoffs: tradeoffRefs(ref, fm.Tradeoffs),
 			Evidence: evidence(), Decisions: decisions(fm.Decisions), Body: d.body,
 		})

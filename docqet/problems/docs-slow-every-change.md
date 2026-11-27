@@ -7,5 +7,5 @@ description: >-
   takes longer than the change itself, so it gets skipped.
 cost: >-
   The docs fall behind, one skipped update at a time.
-personas: [persona:engineer]
+felt-by: [persona:engineer]
 ---

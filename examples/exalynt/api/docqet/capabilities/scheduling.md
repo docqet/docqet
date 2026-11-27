@@ -7,13 +7,13 @@ description: >-
   engineers on their organization's teams offer, and can move it to another
   week, or take it back out, until that week starts.
 stability: beta
-feature: feature:block-delivery
+within: feature:block-delivery
 solves:
   - problem:engineering-starts-slowly
   - problem:work-ignores-the-business-calendar
   - problem:exceptions-hide-in-routine
-initiatives: [initiative:mvp]
-rules:
+included-in: [initiative:mvp]
+follows:
   - rule:scheduling-comes-before-work
   - rule:unscheduled-blocks-reserve-no-room
   - rule:room-comes-from-assigned-teams
@@ -27,7 +27,7 @@ rules:
   - rule:exalynt-can-move-lapsed-blocks
   - rule:starting-means-work-has-begun
   - rule:the-preferred-week-is-a-target
-concepts:
+uses:
   - concept:capacity-block
   - concept:preferred-week
   - concept:shared-queue

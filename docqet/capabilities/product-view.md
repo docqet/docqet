@@ -6,9 +6,9 @@ description: >-
   Everyone sees a product's projects together, as one picture, with where they
   disagree.
 stability: prototype
-feature: feature:where-it-stands
+within: feature:where-it-stands
 solves: [problem:teams-accounts-disagree, problem:unclear-what-to-rely-on]
-rules:
+follows:
   - rule:contradictions-shown
-concepts: [concept:product, concept:contradiction]
+uses: [concept:product, concept:contradiction]
 ---

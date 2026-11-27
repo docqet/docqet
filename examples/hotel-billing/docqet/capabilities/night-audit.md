@@ -6,15 +6,15 @@ description: >-
   The software closes each business day overnight, charging every guest in the
   hotel for that night's room.
 stability: ga
-feature: feature:closing-the-day
+within: feature:closing-the-day
 solves:
   - problem:closing-the-day-takes-the-night
   - problem:takings-late-and-moving
-rules:
+follows:
   - rule:one-room-charge-per-night
   - rule:closed-days-dont-change
   - rule:charges-are-never-changed
-concepts: [concept:business-day, concept:bill, concept:charge]
+uses: [concept:business-day, concept:bill, concept:charge]
 ---
 
 ## Includes

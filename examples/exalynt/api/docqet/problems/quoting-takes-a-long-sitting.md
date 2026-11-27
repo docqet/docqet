@@ -10,5 +10,5 @@ description: >-
 cost: >-
   Prospects wait for a quote, and quotes differ depending on who wrote them
   (assumed).
-personas: [persona:exalynt-admin, persona:exalynt-engineer-1, persona:exalynt-engineer-2]
+felt-by: [persona:exalynt-admin, persona:exalynt-engineer-1, persona:exalynt-engineer-2]
 ---

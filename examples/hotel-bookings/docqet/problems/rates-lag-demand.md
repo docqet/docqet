@@ -8,5 +8,5 @@ description: >-
   new ones.
 cost: >-
   Busy dates earn no more than quiet ones.
-personas: [persona:manager]
+felt-by: [persona:manager]
 ---

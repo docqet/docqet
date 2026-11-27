@@ -9,5 +9,5 @@ description: >-
 cost: >-
   Engineers commit to the wrong work, get it wrong in front of a client, or
   stop trusting their pay. Unexplained refusals drive them away.
-personas: [persona:exalynt-engineer-1, persona:exalynt-engineer-2]
+felt-by: [persona:exalynt-engineer-1, persona:exalynt-engineer-2]
 ---

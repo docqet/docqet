@@ -7,10 +7,10 @@ description: >-
   Agreement for an organization, an Engineer Agreement for someone working in
   the console, and a Partner Agreement for a partnership.
 stability: alpha
-feature: feature:agreements
+within: feature:agreements
 solves: [problem:agreed-terms-applied-by-hand]
-initiatives: [initiative:mvp]
-rules:
+included-in: [initiative:mvp]
+follows:
   - rule:engineer-agreement-follows-the-invitations-terms
   - rule:an-engineer-agreement-can-have-no-commercial-terms
   - rule:acceptance-puts-an-agreement-in-effect
@@ -24,7 +24,7 @@ rules:
   - rule:accepted-agreements-never-change
   - rule:accepted-agreements-outlive-their-partys-account
   - rule:agreements-stay-private
-concepts: [concept:agreement, concept:organization, concept:partnership]
+uses: [concept:agreement, concept:organization, concept:partnership]
 gaps:
   - id: no-preview-before-sending
     name: No preview before sending an Engineer Agreement

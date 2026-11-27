@@ -5,7 +5,7 @@ name: Console
 description: >-
   The console, where Exalynt's engineers set themselves up, claim and work
   their blocks, offer their time, write estimates, and see what they're paid.
-capabilities:
+serves:
   - capability:getting-set-up
   - capability:claiming-blocks
   - capability:fulfillment

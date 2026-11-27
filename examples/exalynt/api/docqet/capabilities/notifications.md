@@ -4,7 +4,7 @@ id: notifications
 name: Notifications
 description: People choose which notifications they get and where they go.
 stability: prototype
-feature: feature:your-account
+within: feature:your-account
 solves:
   - problem:requests-go-unheard
   - problem:vendor-bills-hard-to-keep-up-with
@@ -12,8 +12,8 @@ solves:
   - problem:team-trouble-seen-one-by-one
   - problem:pay-cant-be-checked
   - problem:partner-earnings-opaque
-initiatives: [initiative:notifications]
-rules:
+included-in: [initiative:notifications]
+follows:
   - rule:each-app-offers-its-own-notifications
   - rule:nobody-hears-of-their-own-actions
   - rule:notifications-respect-what-someone-can-see

@@ -4,7 +4,7 @@ id: busy-season
 name: Busy season
 description: >-
   Handling full nights: groups, a waitlist, and turning rooms over faster.
-personas: [persona:front-desk-clerk, persona:housekeeper]
+for: [persona:front-desk-clerk, persona:housekeeper]
 ---
 
 Set apart until the hotel's first summer on the app, so the front desk can

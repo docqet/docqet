@@ -8,5 +8,5 @@ description: >-
   breaks.
 cost: >-
   Regressions in exactly the places someone already thought hardest about.
-personas: [persona:engineer, persona:coding-agent]
+felt-by: [persona:engineer, persona:coding-agent]
 ---

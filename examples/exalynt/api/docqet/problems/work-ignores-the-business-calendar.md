@@ -8,5 +8,5 @@ description: >-
 cost: >-
   Work lands when nobody at the business can engage with it, or urgent work
   waits for a slot.
-personas: [persona:client-admin-founder, persona:client-admin-operations, persona:client-member]
+felt-by: [persona:client-admin-founder, persona:client-admin-operations, persona:client-member]
 ---

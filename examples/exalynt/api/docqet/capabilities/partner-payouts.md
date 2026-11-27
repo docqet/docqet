@@ -6,10 +6,10 @@ description: >-
   Each partnership is paid what it earns into its own payout account, never
   its manager's, once an admin releases it, and its manager sees each payout.
 stability: beta
-feature: feature:partner-program
+within: feature:partner-program
 solves: [problem:partner-earnings-opaque]
-initiatives: [initiative:mvp]
-rules:
+included-in: [initiative:mvp]
+follows:
   - rule:expected-pay-visible-from-assignment
   - rule:people-see-only-their-own-earnings
   - rule:each-earning-shows-where-it-stands
@@ -64,7 +64,7 @@ rules:
   - rule:manager-controls-the-partnerships-payout-account
   - rule:exalynt-bears-partnership-earnings
   - rule:partners-see-only-their-partnerships-earnings
-concepts: [concept:payout, concept:partnership]
+uses: [concept:payout, concept:partnership]
 tradeoffs:
   - id: pre-production-payouts-say-paid
     name: Pre-production payouts left saying Paid

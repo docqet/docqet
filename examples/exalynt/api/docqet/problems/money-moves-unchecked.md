@@ -9,5 +9,5 @@ description: >-
 cost: >-
   A wrong payment, once sent, has to be settled outside the normal process.
   Payees lose trust.
-personas: [persona:exalynt-admin]
+felt-by: [persona:exalynt-admin]
 ---

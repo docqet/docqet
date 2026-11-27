@@ -5,7 +5,7 @@ name: UI
 description: >-
   The web app `docqet` serves, built into the binary, that shows a product's
   projects, reading only the server's API.
-capabilities:
+serves:
   - capability:overview
   - capability:readiness
   - capability:improvements

@@ -6,7 +6,7 @@ description: >-
   A block's engineer starts it once its week begins, and marks it fulfilled
   when the work is done, with nobody reviewing it.
 stability: alpha
-feature: feature:block-delivery
+within: feature:block-delivery
 solves:
   - problem:spend-without-visible-progress
   - problem:requests-go-unheard
@@ -14,8 +14,8 @@ solves:
   - problem:reporting-eats-into-the-work
   - problem:team-trouble-seen-one-by-one
   - problem:exceptions-hide-in-routine
-initiatives: [initiative:mvp]
-rules:
+included-in: [initiative:mvp]
+follows:
   - rule:engineers-start-their-blocks-from-the-start-of-the-week
   - rule:engineers-mark-their-blocks-fulfilled
   - rule:started-before-fulfilled
@@ -62,7 +62,7 @@ rules:
   - rule:manager-controls-the-partnerships-payout-account
   - rule:exalynt-bears-partnership-earnings
   - rule:partners-see-only-their-partnerships-earnings
-concepts: [concept:capacity-block, concept:fulfilled, concept:focus, concept:payout-share]
+uses: [concept:capacity-block, concept:fulfilled, concept:focus, concept:payout-share]
 gaps:
   - id: departed-engineers-blocks-stuck
     name: Departed engineers' blocks can't be fulfilled

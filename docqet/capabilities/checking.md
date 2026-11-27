@@ -6,12 +6,12 @@ description: >-
   Engineers and CI see the findings in a project's docs and annotations, each
   with where to fix it.
 stability: prototype
-feature: feature:keeping-current
+within: feature:keeping-current
 solves: [problem:docs-drift-from-code]
-rules:
+follows:
   - rule:docs-with-findings-still-index
   - rule:no-evidence-isnt-a-finding
-concepts: [concept:finding]
+uses: [concept:finding]
 gaps:
   - id: links-into-other-projects
     name: Links into another project are findings

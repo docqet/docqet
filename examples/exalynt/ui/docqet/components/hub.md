@@ -5,7 +5,7 @@ name: Hub
 description: >-
   The Partner Hub, where a partnership's manager follows the clients it has
   brought in, invites more, and sees what it earns and how it's paid.
-capabilities:
+serves:
   - capability:partner-home
   - capability:partnerships
   - capability:client-invitations

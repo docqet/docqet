@@ -8,5 +8,5 @@ description: >-
   sees.
 cost: >-
   Clients and planners get two answers, and work falls between teams.
-personas: [persona:product-owner, persona:engineer]
+felt-by: [persona:product-owner, persona:engineer]
 ---

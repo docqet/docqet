@@ -10,5 +10,5 @@ description: >-
 cost: >-
   Numbers partners can't check, and payouts that don't arrive, push them to
   ask the company or to leave.
-personas: [persona:partner]
+felt-by: [persona:partner]
 ---

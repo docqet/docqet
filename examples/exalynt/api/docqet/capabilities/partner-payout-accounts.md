@@ -6,10 +6,10 @@ description: >-
   Partners set up and look after the one bank account each partnership they
   manage is paid to, its own apart from theirs and any other partnership's.
 stability: beta
-feature: feature:partner-program
+within: feature:partner-program
 solves: [problem:partner-earnings-opaque]
-initiatives: [initiative:mvp]
-rules:
+included-in: [initiative:mvp]
+follows:
   - rule:one-payout-account-per-person
   - rule:a-partnerships-payout-account-is-its-own
   - rule:removing-a-payout-account
@@ -50,7 +50,7 @@ rules:
   - rule:manager-controls-the-partnerships-payout-account
   - rule:exalynt-bears-partnership-earnings
   - rule:partners-see-only-their-partnerships-earnings
-concepts: [concept:payout, concept:partnership]
+uses: [concept:payout, concept:partnership]
 tradeoffs:
   - id: one-account-per-partnership-checked-each-time
     name: Each partnership has its own account

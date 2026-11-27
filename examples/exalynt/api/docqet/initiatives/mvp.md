@@ -4,7 +4,7 @@ id: mvp
 name: MVP
 description: >-
   What clients and Exalynt's engineers rely on at launch.
-personas:
+for:
   - persona:client-admin-founder
   - persona:client-admin-operations
   - persona:client-billing

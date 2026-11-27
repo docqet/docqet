@@ -9,5 +9,5 @@ description: >-
 cost: >-
   Plans made within tight money or a fixed budget overrun, or work isn't
   started at all because nobody can say what it costs.
-personas: [persona:client-admin-founder, persona:client-admin-operations]
+felt-by: [persona:client-admin-founder, persona:client-admin-operations]
 ---

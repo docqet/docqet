@@ -7,5 +7,5 @@ description: >-
   not at whether what people can rely on has grown.
 cost: >-
   Decline is noticed late, and progress isn't believed.
-personas: [persona:product-owner]
+felt-by: [persona:product-owner]
 ---

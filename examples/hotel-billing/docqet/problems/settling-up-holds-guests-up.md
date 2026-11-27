@@ -8,5 +8,5 @@ description: >-
 cost: >-
   Missed trains and a bad last impression of the hotel. Company guests pay for
   stays their company covers and have to claim it back (assumed).
-personas: [persona:guest]
+felt-by: [persona:guest]
 ---

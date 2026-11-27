@@ -2,7 +2,7 @@
 docqet: rule
 id: late-cancellation-fee
 name: A late cancellation costs the first night
-concepts: [concept:booking]
+uses: [concept:booking]
 respects: [constraint:cancellation-terms]
 why: The room usually can't be rebooked at such short notice.
 ---

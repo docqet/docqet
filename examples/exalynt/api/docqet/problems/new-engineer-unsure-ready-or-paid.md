@@ -10,5 +10,5 @@ description: >-
 cost: >-
   Missed setup steps surface in front of a client, worries about bank details
   delay setup, and dead ends make them give up.
-personas: [persona:exalynt-engineer-new-hire]
+felt-by: [persona:exalynt-engineer-new-hire]
 ---

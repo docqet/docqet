@@ -71,6 +71,6 @@ decisions:
 ---
 ```
 
-A feature names it with `area: area:guest-stays`. Hotel Billing writes the
+A feature names it with `within: area:guest-stays`. Hotel Billing writes the
 same doc, since its front desk is in Guest stays too, and the two are one
 area.

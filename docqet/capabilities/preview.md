@@ -6,7 +6,7 @@ description: >-
   Engineers and agents see their work the way everyone else will, on their own
   machine, before it's merged.
 stability: prototype
-feature: feature:keeping-current
+within: feature:keeping-current
 solves: [problem:docs-drift-from-code]
 gaps:
   - id: no-reindex

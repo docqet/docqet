@@ -7,10 +7,10 @@ description: >-
   sends with its invitation, with its Commercial Terms, before working in the
   Partner Hub for that partnership.
 stability: beta
-feature: feature:agreements
+within: feature:agreements
 solves: [problem:partner-earnings-opaque, problem:agreed-terms-applied-by-hand]
-initiatives: [initiative:mvp]
-rules:
+included-in: [initiative:mvp]
+follows:
   - rule:engineer-agreement-follows-the-invitations-terms
   - rule:an-engineer-agreement-can-have-no-commercial-terms
   - rule:acceptance-puts-an-agreement-in-effect
@@ -24,7 +24,7 @@ rules:
   - rule:accepted-agreements-never-change
   - rule:accepted-agreements-outlive-their-partys-account
   - rule:agreements-stay-private
-concepts: [concept:agreement, concept:partnership]
+uses: [concept:agreement, concept:partnership]
 gaps:
   - id: names-outside-western-european-alphabets
     name: Names outside Western alphabets lost in PDFs

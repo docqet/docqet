@@ -8,5 +8,5 @@ description: >-
   and "ready" means something different to everyone.
 cost: >-
   Effort wasted on some parts while others let people down.
-personas: [persona:engineer, persona:coding-agent, persona:product-owner]
+felt-by: [persona:engineer, persona:coding-agent, persona:product-owner]
 ---

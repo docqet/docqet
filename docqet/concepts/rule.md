@@ -70,7 +70,7 @@ leaves the rule in place.
 ## How it's written
 
 A rule is one doc whose `docqet` is `rule`. Its frontmatter, in order, is
-`docqet`, `id`, `name`, `concepts`, `respects` and `why`:
+`docqet`, `id`, `name`, `uses`, `respects` and `why`:
 
 - **`name`** is the rule in a few words.
 - **`respects`**, optional, lists the [constraints](constraint.md) it's there
@@ -93,7 +93,7 @@ feature. The folders are for people and mean nothing to tools.
 docqet: rule
 id: no-double-booking
 name: A room can't be double-booked
-concepts: [concept:booking, concept:room]
+uses: [concept:booking, concept:room]
 respects: [constraint:one-stay-a-room-a-night]
 ---
 
@@ -109,7 +109,7 @@ why: The room usually can't be rebooked at such short notice.
 ```
 
 Capabilities follow it by listing it, as room booking does with
-`rules: [rule:no-double-booking, ...]`. Places in the repository point at it
+`follows: [rule:no-double-booking, ...]`. Places in the repository point at it
 as evidence, such as this Gherkin rule:
 
 ```gherkin

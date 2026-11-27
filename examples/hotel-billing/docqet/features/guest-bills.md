@@ -3,5 +3,5 @@ docqet: feature
 id: guest-bills
 name: Guest bills
 description: Keeping an accurate record of what each guest owes during their stay.
-area: area:billing
+within: area:billing
 ---

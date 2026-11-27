@@ -6,9 +6,9 @@ description: >-
   Clients choose whether they or Exalynt operate the software Exalynt builds
   for them, and keep what they own.
 stability: prototype
-feature: feature:working-together
+within: feature:working-together
 solves: [problem:dependent-on-the-builder]
-initiatives: [initiative:operations-and-ownership]
+included-in: [initiative:operations-and-ownership]
 decisions:
   - topic: Choosing who operates
     question: >-

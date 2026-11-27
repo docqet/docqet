@@ -8,5 +8,5 @@ description: >-
 cost: >-
   They can't tell what the money bought, lose confidence in the vendor, and
   give up on it.
-personas: [persona:client-admin-founder, persona:client-admin-operations]
+felt-by: [persona:client-admin-founder, persona:client-admin-operations]
 ---

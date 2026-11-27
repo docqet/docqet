@@ -8,5 +8,5 @@ description: >-
   with everyone it affects.
 cost: >-
   Overloaded engineers, weeks that can't be delivered, and clients let down.
-personas: [persona:exalynt-engineer-1, persona:exalynt-engineer-2, persona:exalynt-team-lead]
+felt-by: [persona:exalynt-engineer-1, persona:exalynt-engineer-2, persona:exalynt-team-lead]
 ---

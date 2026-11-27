@@ -8,5 +8,5 @@ description: >-
 cost: >-
   Hours of typing, mistakes in the books, and books that don't balance. All of
   it is worst at month end, the bookkeeper's busiest time.
-personas: [persona:bookkeeper]
+felt-by: [persona:bookkeeper]
 ---

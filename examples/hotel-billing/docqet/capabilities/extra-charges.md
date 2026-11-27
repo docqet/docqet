@@ -6,12 +6,12 @@ description: >-
   Staff add extras such as breakfast, parking or the minibar to a guest's
   bill.
 stability: ga
-feature: feature:guest-bills
+within: feature:guest-bills
 solves: [problem:guests-leave-owing, problem:guests-billed-more-than-they-owe]
-rules:
+follows:
   - rule:charges-are-never-changed
   - rule:closed-bills-dont-change
-concepts: [concept:bill, concept:charge]
+uses: [concept:bill, concept:charge]
 ---
 
 ## Includes

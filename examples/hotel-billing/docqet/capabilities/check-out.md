@@ -6,13 +6,13 @@ description: >-
   Guests settle their bill as they leave, so nothing is left owing once
   they've gone.
 stability: alpha
-feature: feature:front-desk
+within: feature:front-desk
 solves:
   - problem:guests-queue-at-the-desk
   - problem:guests-leave-owing
   - problem:settling-up-holds-guests-up
-rules: [rule:closed-bills-dont-change]
-concepts: [concept:bill, concept:billed-stay]
+follows: [rule:closed-bills-dont-change]
+uses: [concept:bill, concept:billed-stay]
 decisions:
   - question: >-
       Do guests want their bill emailed as they leave, or printed at the

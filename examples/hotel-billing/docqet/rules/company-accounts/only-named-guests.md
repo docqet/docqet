@@ -2,7 +2,7 @@
 docqet: rule
 id: only-named-guests
 name: Only named guests' bills go to a company
-concepts: [concept:company-account, concept:bill]
+uses: [concept:company-account, concept:bill]
 respects: [constraint:company-credit-agreements]
 ---
 

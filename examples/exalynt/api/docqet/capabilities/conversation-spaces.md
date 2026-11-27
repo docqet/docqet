@@ -8,10 +8,10 @@ description: >-
   outside the app or with Stream inside it, and about each block in
   conversations they start there, each on a subject of its own.
 stability: prototype
-feature: feature:working-together
+within: feature:working-together
 solves: [problem:requests-go-unheard, problem:working-without-client-context]
-initiatives: [initiative:conversation-spaces]
-rules:
+included-in: [initiative:conversation-spaces]
+follows:
   - rule:every-organization-has-a-space
   - rule:joining-an-organization-puts-you-in-its-space
   - rule:a-teams-engineers-are-in-its-clients-spaces
@@ -25,7 +25,7 @@ rules:
   - rule:none-start-on-a-fulfilled-block
   - rule:anyone-at-the-client-or-on-a-team-supporting-it-starts-its-blocks-conversations
   - rule:a-blocks-conversations-are-for-its-client-and-the-teams-supporting-it
-concepts: [concept:space, concept:space-membership, concept:conversation]
+uses: [concept:space, concept:space-membership, concept:conversation]
 gaps:
   - id: stream-messages-final
     name: Stream messages can't be edited or deleted

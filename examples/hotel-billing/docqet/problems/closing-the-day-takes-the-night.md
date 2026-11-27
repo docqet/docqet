@@ -9,5 +9,5 @@ description: >-
 cost: >-
   Hours of night work. A night charged twice or not at all (assumed). A
   morning that starts with yesterday open.
-personas: [persona:night-auditor]
+felt-by: [persona:night-auditor]
 ---

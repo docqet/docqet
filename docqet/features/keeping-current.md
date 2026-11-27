@@ -5,7 +5,7 @@ name: Keeping intention current
 description: >-
   Keeping intention and evidence true in the same change as the code, so the
   docs never describe software that's gone.
-area: area:authoring
+within: area:authoring
 tradeoffs:
   - id: no-editor-integration
     name: No watching or editor integration

@@ -87,7 +87,7 @@ description: >-
   second guest is standing in front of me.
 cost: >-                          # optional: what it costs them or the business
   The worst conversation the front desk has.
-personas: [persona:front-desk-clerk]   # required: who has it
+felt-by: [persona:front-desk-clerk]   # required: who feels it
 ---
 ```
 
@@ -162,7 +162,7 @@ docqet: feature
 id: reservations
 name: Reservations
 description: Taking bookings and handling changes to them, before the guest arrives.
-area: area:guest-stays   # optional: the area it's in
+within: area:guest-stays   # optional: the area it's in
 tradeoffs: []        # non-goals: capabilities we've decided never to build
 decisions: []
 ---
@@ -187,11 +187,11 @@ id: room-booking
 name: Room booking
 description: Clerks book a free room for a guest's stay.
 stability: beta      # required: draft, prototype, alpha, beta or ga
-feature: feature:reservations   # optional: the feature it's in, at most one
+within: feature:reservations   # optional: the feature it's in, at most one
 solves: [problem:room-given-to-two-guests]   # why it exists; its personas are its problems'
-initiatives: []
-rules: [rule:no-double-booking, rule:minimum-stay]
-concepts: [concept:booking]
+included-in: []
+follows: [rule:no-double-booking, rule:minimum-stay]
+uses: [concept:booking]
 gaps: []
 tradeoffs: []
 decisions: []
@@ -228,7 +228,7 @@ full when its name doesn't, with examples.
 docqet: rule
 id: same-day-turnover
 name: A stay can start on the day another ends
-concepts: [concept:booking, concept:room]
+uses: [concept:booking, concept:room]
 respects: [constraint:rooms-cleaned-between-stays]   # optional: constraints it keeps to
 why: >-
   Guests check out by 11:00 and check in from 15:00, which leaves time to
@@ -276,13 +276,13 @@ id: busy-season
 name: Busy season
 description: >-
   Handling full nights: groups, a waitlist, and turning rooms over faster.
-personas: [persona:front-desk-clerk]   # the personas its work is for
+for: [persona:front-desk-clerk]   # the personas its work is for
 ---
 ```
 
 The body is optional, and can say more, such as what the work is and why.
-Capabilities link to it in `initiatives`, and it names the personas its work
-is for. It has no level, gaps, tradeoffs or decisions, and no
+Capabilities link to it with `included-in`, and it names the personas its
+work is for with `for`. It has no level, gaps, tradeoffs or decisions, and no
 dates or order. A capability or persona in no initiative shows only when
 everything does.
 
@@ -333,7 +333,7 @@ id: bookings
 name: Bookings
 description: >-
   Where a room is held for a stay, and where no double-booking is enforced.
-capabilities: [capability:room-booking, capability:group-bookings, capability:check-in]   # those relying on it
+serves: [capability:room-booking, capability:group-bookings, capability:check-in]   # those relying on it
 meets: []
 gaps: []
 tradeoffs: []
@@ -341,7 +341,7 @@ decisions: []
 ---
 ```
 
-A component's `capabilities` is the only link from technical docs to the
+A component's `serves` is the only link from technical docs to the
 product. Product docs never link to technical docs.
 
 The body of either is how it works, including what's correct but would
@@ -356,21 +356,32 @@ Within a space it's up: a capability names its feature, and a feature its
 area. Docqet works out every reverse link, so each page shows both
 directions.
 
+Every link field reads as a sentence from the doc that writes it, in plain
+words anyone can follow: a capability is *within* a feature and *follows* a
+rule.
+
 ```text
-feature    → area
-capability → feature, problems (solves), initiatives, rules, concepts
-initiative → personas
-problem    → personas
-rule       → concepts, constraints (respects)
-concept    → concepts                      (confused-with)
-component  → capabilities, outcomes        (meets)
-mechanism  → outcomes (meets), constraints (respects)
-gap        → an outcome, a rule            (outcome, rule)
-tradeoff   → an outcome                    (outcome)
+feature    within       an area
+capability within       a feature
+           solves       problems
+           included-in  initiatives
+           follows      rules
+           uses         concepts
+initiative for          personas
+problem    felt-by      personas
+rule       uses         concepts
+           respects     constraints
+concept    confused-with concepts
+component  serves       capabilities
+           meets        outcomes
+mechanism  meets        outcomes
+           respects     constraints
+gap        affects      an outcome or a rule
+tradeoff   affects      an outcome
 ```
 
 Every link is a reference, `<type>:<id>`, the same in frontmatter as in an
-annotation: `rules: [rule:no-double-booking]`. Every ID names one thing across
+annotation: `follows: [rule:no-double-booking]`. Every ID names one thing across
 the whole product, rules and concepts included.
 
 To go the other way, such as finding which capabilities follow a rule, use

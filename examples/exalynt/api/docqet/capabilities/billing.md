@@ -6,13 +6,13 @@ description: >-
   Clients pay for the capacity they buy with their default payment method, and
   each purchase issues an invoice.
 stability: beta
-feature: feature:paying-for-capacity
+within: feature:paying-for-capacity
 solves:
   - problem:engineering-starts-slowly
   - problem:vendor-bills-hard-to-keep-up-with
   - problem:exceptions-hide-in-routine
-initiatives: [initiative:mvp]
-rules:
+included-in: [initiative:mvp]
+follows:
   - rule:who-manages-billing
   - rule:buying-requires-a-payment-method
   - rule:buying-charges-at-once
@@ -28,7 +28,7 @@ rules:
   - rule:company-details-stay-untouched
   - rule:when-company-details-count-as-given
   - rule:capacity-fees-and-infrastructure-billed-separately
-concepts: [concept:invoice, concept:capacity-block]
+uses: [concept:invoice, concept:capacity-block]
 gaps:
   - id: no-fees-or-infrastructure-charges
     name: Operations and infrastructure charges not shown

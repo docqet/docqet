@@ -6,13 +6,13 @@ description: >-
   People and partnerships each have one bank account their payouts go to,
   which they add, change, fix, remove, and see whether it can be paid.
 stability: alpha
-feature: feature:getting-paid
+within: feature:getting-paid
 solves:
   - problem:pay-cant-be-checked
   - problem:new-engineer-unsure-ready-or-paid
   - problem:partner-earnings-opaque
-initiatives: [initiative:mvp]
-rules:
+included-in: [initiative:mvp]
+follows:
   - rule:one-payout-account-per-person
   - rule:a-partnerships-payout-account-is-its-own
   - rule:removing-a-payout-account
@@ -20,7 +20,7 @@ rules:
   - rule:payout-accounts-stay-private-to-their-owner
   - rule:admins-see-only-payment-readiness
   - rule:limited-tokens-cant-reach-payout-accounts
-concepts: [concept:payout, concept:partnership]
+uses: [concept:payout, concept:partnership]
 gaps:
   - id: one-account-one-country
     name: One account, its country fixed once chosen

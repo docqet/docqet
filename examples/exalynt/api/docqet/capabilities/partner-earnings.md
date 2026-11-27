@@ -7,10 +7,10 @@ description: >-
   what each block has earned or will, how long each client's earning window
   has left, and what's waiting to be paid.
 stability: beta
-feature: feature:partner-program
+within: feature:partner-program
 solves: [problem:partner-earnings-opaque]
-initiatives: [initiative:mvp]
-rules:
+included-in: [initiative:mvp]
+follows:
   - rule:shares-earned-at-fulfillment
   - rule:payout-basis-per-capacity-unit
   - rule:engineer-earns-the-engineer-share
@@ -92,7 +92,7 @@ rules:
   - rule:what-partners-can-see
   - rule:clients-see-who-referred-them
   - rule:introductions-dont-affect-engineer-assignment
-concepts: [concept:partnership, concept:payout-share, concept:capacity-payout-basis, concept:fulfilled]
+uses: [concept:partnership, concept:payout-share, concept:capacity-payout-basis, concept:fulfilled]
 tradeoffs:
   - id: nothing-before-partnership-earnings
     name: Earnings start from launch, not backdated

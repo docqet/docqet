@@ -5,7 +5,7 @@ name: Admin
 description: >-
   The admin, where Exalynt's admins run clients, partners, engineers, teams,
   roles and payouts.
-capabilities:
+serves:
   - capability:client-directory
   - capability:client-coupons
   - capability:partnerships

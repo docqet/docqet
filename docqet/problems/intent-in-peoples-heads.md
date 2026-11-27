@@ -9,5 +9,5 @@ description: >-
 cost: >-
   Changes break rules nobody wrote down, or take twice as long while I find
   out.
-personas: [persona:engineer]
+felt-by: [persona:engineer]
 ---

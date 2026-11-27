@@ -10,5 +10,5 @@ description: >-
 cost: >-
   Guests spend their first and last minutes at the hotel waiting. A rushed
   clerk makes mistakes (assumed).
-personas: [persona:front-desk-clerk]
+felt-by: [persona:front-desk-clerk]
 ---

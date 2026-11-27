@@ -10,5 +10,5 @@ description: >-
 cost: >-
   Guests wait at the desk for their room, clerks lose time on the phone, and
   housekeepers are rushed and walk the building twice.
-personas: [persona:front-desk-clerk, persona:housekeeper]
+felt-by: [persona:front-desk-clerk, persona:housekeeper]
 ---

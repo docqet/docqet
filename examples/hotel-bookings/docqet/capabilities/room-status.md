@@ -6,10 +6,10 @@ description: >-
   Housekeepers mark rooms clean or dirty, so the front desk knows which are
   ready.
 stability: prototype
-feature: feature:housekeeping
+within: feature:housekeeping
 solves: [problem:arrivals-wait-for-rooms]
-initiatives: [initiative:busy-season]
-concepts: [concept:room]
+included-in: [initiative:busy-season]
+uses: [concept:room]
 decisions:
   - question: >-
       Will housekeepers update a room's status as they go, or at the end

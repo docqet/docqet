@@ -59,13 +59,13 @@ and a problem never links to the solution.
 ## How it's written
 
 A problem is a doc whose `docqet` is `problem`. Its frontmatter, in order, is `docqet`, `id`, `name`, `description`, `cost` and
-`personas` (required):
+`felt-by` (required):
 
 - **`name`** is the problem in a few words, the way a rule's name is the rule:
   `A guest's room is given to someone else`.
 - **`description`** is the situation, in the words of the people who have it.
 - **`cost`**, optional, is what it costs them or the business.
-- **`personas`** names the personas who have it, at least one.
+- **`felt-by`** names the personas who have it, at least one.
 
 Its body, which can be left out, is anything more about the pain, such as
 when it happens, how often, and what people do about it today.
@@ -84,7 +84,7 @@ description: >-
 cost: >-
   Telling a guest at the desk that their room was given away: the worst
   conversation the front desk has.
-personas: [persona:front-desk-clerk]
+felt-by: [persona:front-desk-clerk]
 ---
 ```
 

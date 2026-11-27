@@ -5,7 +5,7 @@ name: Partner program
 description: >-
   Bringing Exalynt clients through partners, and paying partners for the
   clients they bring.
-area: area:partnerships
+within: area:partnerships
 ---
 
 ## Enrolling a partner

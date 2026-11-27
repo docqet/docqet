@@ -2,7 +2,7 @@
 docqet: rule
 id: invoice-numbers-run-in-sequence
 name: Invoice numbers run in sequence
-concepts: [concept:company-account]
+uses: [concept:company-account]
 respects: [constraint:invoice-numbers-in-sequence]
 why: The tax office requires it, so it can tell no invoice is missing.
 ---

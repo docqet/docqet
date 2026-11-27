@@ -7,7 +7,7 @@ description: >-
   ready it is, while they work, from the working tree or a commit, without
   leaving the terminal.
 stability: prototype
-feature: feature:keeping-current
+within: feature:keeping-current
 solves:
   - problem:intent-in-peoples-heads
   - problem:agents-guess-intention

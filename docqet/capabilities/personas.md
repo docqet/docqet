@@ -6,9 +6,9 @@ description: >-
   Everyone sees, for each persona, the capabilities that serve them, how far
   along and how ready those are, and what would make them more ready.
 stability: prototype
-feature: feature:where-it-stands
+within: feature:where-it-stands
 solves: [problem:unclear-what-to-rely-on, problem:unclear-what-helps-most]
-rules:
+follows:
   - rule:drafts-claim-nothing
-concepts: [concept:persona, concept:readiness, concept:maturity]
+uses: [concept:persona, concept:readiness, concept:maturity]
 ---

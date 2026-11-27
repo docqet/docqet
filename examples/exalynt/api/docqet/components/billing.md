@@ -7,7 +7,7 @@ description: >-
   payment methods, billing details, and invoices on the provider's own pages.
   How a provider plugs in is in the [provider boundary
   doc](../mechanisms/provider-boundary.md).
-capabilities: [capability:billing, capability:capacity-purchasing]
+serves: [capability:billing, capability:capacity-purchasing]
 meets: [outcome:reliability/beta/fails-clearly]
 tradeoffs:
   - id: provider-is-source-of-truth

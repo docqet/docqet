@@ -6,15 +6,15 @@ description: >-
   Clerks move a guest's bill to their company's account at check-out, so the
   guest leaves without paying.
 stability: alpha
-feature: feature:company-accounts
+within: feature:company-accounts
 solves:
   - problem:settling-up-holds-guests-up
   - problem:guests-queue-at-the-desk
   - problem:company-debts-go-unwatched
-rules:
+follows:
   - rule:credit-limit
   - rule:only-named-guests
-concepts: [concept:bill, concept:company-account]
+uses: [concept:bill, concept:company-account]
 tradeoffs:
   - id: whole-bill-moves
     name: Whole bills move, not single charges

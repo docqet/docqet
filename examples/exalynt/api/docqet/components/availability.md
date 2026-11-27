@@ -4,7 +4,7 @@ id: availability
 name: Availability
 description: >-
   How much of a week each engineer offers, which Capacity adds up per team.
-capabilities: [capability:availability, capability:scheduling, capability:claiming-blocks, capability:staffing]
+serves: [capability:availability, capability:scheduling, capability:claiming-blocks, capability:staffing]
 tradeoffs:
   - id: recurrence-rules-not-weeks
     name: Recurrence rules kept, not a weeks column

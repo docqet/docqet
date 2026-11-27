@@ -9,5 +9,5 @@ description: >-
 cost: >-
   People are paid or charged on terms nobody agreed to, which leads to disputes
   and rework (assumed).
-personas: [persona:exalynt-admin]
+felt-by: [persona:exalynt-admin]
 ---

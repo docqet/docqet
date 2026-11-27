@@ -7,5 +7,5 @@ description: >-
   to do, and writing it all down from scratch is too big to start.
 cost: >-
   The codebases that most need their intention written down never get it.
-personas: [persona:engineer, persona:coding-agent]
+felt-by: [persona:engineer, persona:coding-agent]
 ---

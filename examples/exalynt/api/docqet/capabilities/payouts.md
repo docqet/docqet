@@ -6,13 +6,13 @@ description: >-
   Admins release what people and partnerships have earned, and it goes to each
   payee's payout account.
 stability: alpha
-feature: feature:getting-paid
+within: feature:getting-paid
 solves:
   - problem:money-moves-unchecked
   - problem:pay-cant-be-checked
   - problem:partner-earnings-opaque
-initiatives: [initiative:mvp]
-rules:
+included-in: [initiative:mvp]
+follows:
   - rule:expected-pay-visible-from-assignment
   - rule:people-see-only-their-own-earnings
   - rule:each-earning-shows-where-it-stands
@@ -67,7 +67,7 @@ rules:
   - rule:manager-controls-the-partnerships-payout-account
   - rule:exalynt-bears-partnership-earnings
   - rule:partners-see-only-their-partnerships-earnings
-concepts: [concept:payout, concept:payout-share, concept:capacity-payout-basis, concept:partnership]
+uses: [concept:payout, concept:payout-share, concept:capacity-payout-basis, concept:partnership]
 gaps:
   - id: nothing-held-back-from-a-release
     name: Nothing can be held back from a release

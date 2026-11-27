@@ -4,7 +4,7 @@ id: notifications
 name: Notifications
 description: >-
   Telling people when something needs them, in the app and outside it.
-personas:
+for:
   - persona:client-admin-founder
   - persona:client-admin-operations
   - persona:client-billing

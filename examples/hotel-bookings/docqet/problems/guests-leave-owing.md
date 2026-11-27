@@ -10,5 +10,5 @@ cost: >-
   Lost takings. The hotel owes the city's tax for every guest night whether or
   not it charged the guest, so tax it didn't charge comes out of the hotel's
   own pocket.
-personas: [persona:front-desk-clerk, persona:manager]
+felt-by: [persona:front-desk-clerk, persona:manager]
 ---

@@ -4,10 +4,10 @@ id: invoices
 name: Invoices
 description: Bookkeepers invoice each company once a month for its staff's stays.
 stability: alpha
-feature: feature:company-accounts
+within: feature:company-accounts
 solves: [problem:company-debts-go-unwatched]
-rules: [rule:invoice-numbers-run-in-sequence]
-concepts: [concept:company-account]
+follows: [rule:invoice-numbers-run-in-sequence]
+uses: [concept:company-account]
 gaps:
   - id: no-payment-reminders
     name: No reminders for overdue invoices

@@ -2,7 +2,7 @@
 docqet: rule
 id: problem-never-names-product
 name: A problem never names the software
-concepts: [concept:problem]
+uses: [concept:problem]
 why: >-
   So a problem stays true whatever solves it, and the solution can change
   without the problem changing.

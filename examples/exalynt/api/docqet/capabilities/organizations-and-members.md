@@ -6,12 +6,12 @@ description: >-
   Clients sign up, create the organization their people share, invite others
   to it, and give each member a role.
 stability: ga
-feature: feature:client-organizations
+within: feature:client-organizations
 solves:
   - problem:engineering-starts-slowly
   - problem:vendor-relationship-has-one-door
-initiatives: [initiative:mvp]
-rules:
+included-in: [initiative:mvp]
+follows:
   - rule:logos-stay-within-their-organization
   - rule:anyone-can-create-an-organization
   - rule:newcomers-start-with-no-organization
@@ -79,7 +79,7 @@ rules:
   - rule:what-partners-can-see
   - rule:clients-see-who-referred-them
   - rule:introductions-dont-affect-engineer-assignment
-concepts: [concept:organization, concept:role, concept:team]
+uses: [concept:organization, concept:role, concept:team]
 gaps:
   - id: invitations-never-expire
     name: Invitations never expire and can't be resent

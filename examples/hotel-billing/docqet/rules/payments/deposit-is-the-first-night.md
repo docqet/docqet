@@ -2,7 +2,7 @@
 docqet: rule
 id: deposit-is-the-first-night
 name: A deposit is the first night
-concepts: [concept:payment]
+uses: [concept:payment]
 respects: [constraint:cancellation-terms]
 ---
 

@@ -6,16 +6,16 @@ description: >-
   CI sends each commit on the main branch to the team's server, and the server
   keeps its state and checks it again.
 stability: prototype
-feature: feature:sharing
+within: feature:sharing
 solves:
   - problem:knowledge-stuck-in-the-repository
   - problem:teams-accounts-disagree
-rules:
+follows:
   - rule:one-client-per-server
   - rule:intention-only-from-repository
   - rule:applying-twice-changes-nothing
   - rule:same-findings-everywhere
-concepts: [concept:state, concept:finding]
+uses: [concept:state, concept:finding]
 gaps:
   - id: no-sign-in
     name: No sign-in

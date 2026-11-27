@@ -7,10 +7,10 @@ description: >-
   email addresses, the accounts they sign in with, their password, and the
   devices they're signed in on.
 stability: beta
-feature: feature:your-account
+within: feature:your-account
 solves: [problem:others-can-act-as-you]
-initiatives: [initiative:mvp]
-rules:
+included-in: [initiative:mvp]
+follows:
   - rule:everyone-sees-the-name-given
   - rule:invitations-follow-the-primary-address
   - rule:at-least-one-name-is-kept

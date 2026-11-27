@@ -2,7 +2,7 @@
 docqet: rule
 id: closed-days-dont-change
 name: A closed day can't change
-concepts: [concept:business-day, concept:charge]
+uses: [concept:business-day, concept:charge]
 why: A closed day's takings have already gone to the accountant.
 ---
 

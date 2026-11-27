@@ -11,5 +11,5 @@ cost: >-
   Weeks clients paid for pass with nobody working them, payments stay failed,
   people go unpaid, and finding exceptions takes a long unbroken sitting there
   isn't time for.
-personas: [persona:exalynt-admin]
+felt-by: [persona:exalynt-admin]
 ---

@@ -5,7 +5,7 @@ name: Capacity
 description: >-
   Blocks of engineering capacity: bought, scheduled into a week, staffed,
   started, and fulfilled, each with at most one focus.
-capabilities:
+serves:
   - capability:capacity-purchasing
   - capability:client-home
   - capability:scheduling

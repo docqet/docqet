@@ -7,9 +7,9 @@ description: >-
   capabilities solving it, and how far along and how ready those are, with
   the problems nothing solves yet shown as such.
 stability: prototype
-feature: feature:where-it-stands
+within: feature:where-it-stands
 solves: [problem:work-not-tied-to-a-need, problem:unclear-what-to-rely-on]
-rules:
+follows:
   - rule:drafts-claim-nothing
-concepts: [concept:problem, concept:readiness, concept:maturity]
+uses: [concept:problem, concept:readiness, concept:maturity]
 ---

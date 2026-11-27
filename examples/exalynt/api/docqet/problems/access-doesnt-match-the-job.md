@@ -10,5 +10,5 @@ description: >-
 cost: >-
   Work stalls behind access requests, or client and payment details are
   exposed (assumed).
-personas: [persona:exalynt-admin]
+felt-by: [persona:exalynt-admin]
 ---

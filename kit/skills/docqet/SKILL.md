@@ -91,7 +91,7 @@ nothing reads. [docs.md](docs.md) has every type's fields.
    product terms, find its capabilities with `docqet list capabilities`, and
    look for the code through the components that list them.
 2. **Read each capability it touches** with `docqet show`: its `stability`,
-   the problems it `solves` and the personas who have them, the `rules` it follows, its `gaps`, `tradeoffs` and open
+   the problems it `solves` and the personas who have them, the rules it `follows`, its `gaps`, `tradeoffs` and open
    `decisions`, and the evidence for each. Show those rules too, for their
    `why`, and the concepts for any term you're unsure of. A capability can be
    written in several projects of a product, each with its own level. Use the
@@ -131,7 +131,7 @@ changed, not docs to fill in the structure.
 | A new area of code has something the code can't say                        | A component, with `docqet:implements` on its entry points. Most code needs no doc                                                         |
 | How something already documented works has changed                         | Its body, so it no longer says something untrue                                                                                           |
 | A business word is used in a new sense, or a new one appears               | A concept, or a change to it                                                                                                              |
-| Work was grouped into an initiative, or taken out of one                   | The capability's `initiatives`, or the initiative's `personas`, added or removed, and a doc for a new initiative, deleted once nothing links it         |
+| Work was grouped into an initiative, or taken out of one                   | The capability's `included-in`, or the initiative's `for`, added or removed, and a doc for a new initiative, deleted once nothing links it         |
 | A doc's ID needs to change                                                 | `docqet rename`, which changes every link and annotation here. With `--product`, it lists other projects' references to change there      |
 | Code that an annotation names was deleted or moved                         | Move or remove the annotation with it                                                                                                     |
 

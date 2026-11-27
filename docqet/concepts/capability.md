@@ -137,8 +137,9 @@ when someone decides to promote or demote it.
 
 A capability is a doc whose `docqet` is `capability`. Its frontmatter, in
 order, is `docqet`, `id`, `name`, `description`, `stability` (required),
-`feature`, `solves`, `initiatives`, `rules`, `concepts`, `gaps`, `tradeoffs`
-and `decisions`. `feature`, optional, names the feature it's in. Its body, which can be left out, is for
+`within`, `solves`, `included-in`, `follows`, `uses`, `gaps`, `tradeoffs`
+and `decisions`. `within`, optional, names the feature it's in, `follows`
+the rules it follows and `uses` the concepts it uses. Its body, which can be left out, is for
 anything more about what it does, such as what else it includes or how we'll
 know it works.
 [`room-booking.md`](../../examples/hotel-bookings/docqet/capabilities/room-booking.md):
@@ -150,13 +151,13 @@ id: room-booking
 name: Room booking
 description: Clerks book a free room for a guest's stay.
 stability: beta
-feature: feature:reservations
+within: feature:reservations
 solves: [problem:room-given-to-two-guests]
-rules:
+follows:
   - rule:no-double-booking
   - rule:minimum-stay
   - rule:same-day-turnover
-concepts: [concept:booking, concept:room]
+uses: [concept:booking, concept:room]
 gaps:
   - id: calendar-needs-a-mouse
     name: Calendar needs a mouse
@@ -204,11 +205,11 @@ description: >-
   Clerks put a guest on a waitlist when every room is taken, and offer them
   the first room that frees up for their stay.
 stability: draft
-feature: feature:reservations
+within: feature:reservations
 solves: [problem:full-nights-turn-guests-away]
-initiatives: [initiative:busy-season]
-rules: [rule:no-double-booking]
-concepts: [concept:booking, concept:room]
+included-in: [initiative:busy-season]
+follows: [rule:no-double-booking]
+uses: [concept:booking, concept:room]
 decisions:
   - topic: Who goes first
     question: Whoever asked first, or whoever's stay fits the free nights best?

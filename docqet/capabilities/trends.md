@@ -5,6 +5,6 @@ name: Trends
 description: >-
   Everyone sees how maturity and readiness have changed over time.
 stability: draft
-feature: feature:history
+within: feature:history
 solves: [problem:progress-invisible]
 ---

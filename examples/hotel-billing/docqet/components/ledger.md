@@ -5,7 +5,7 @@ name: Ledger
 description: >-
   Every amount a guest owes or pays, as lines on their bill that are only ever
   added, never changed.
-capabilities: [capability:extra-charges, capability:split-bills, capability:deposits, capability:check-out, capability:direct-billing]
+serves: [capability:extra-charges, capability:split-bills, capability:deposits, capability:check-out, capability:direct-billing]
 meets: [outcome:reliability/beta/data-kept]
 gaps:
   - id: corrections-of-corrections-untested

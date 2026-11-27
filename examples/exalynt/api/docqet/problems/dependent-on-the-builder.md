@@ -9,5 +9,5 @@ description: >-
 cost: >-
   The business can't switch vendors or leave without risk, and doesn't fully
   own what it paid for (assumed: neither client admin persona states this).
-personas: [persona:client-admin-founder, persona:client-admin-operations]
+felt-by: [persona:client-admin-founder, persona:client-admin-operations]
 ---

@@ -6,9 +6,9 @@ description: >-
   Everyone sees what each stability level expects of a capability, from the
   stability rubric built into `docqet`.
 stability: prototype
-feature: feature:declaring
+within: feature:declaring
 solves: [problem:no-shared-sense-of-enough]
-concepts: [concept:rubric, concept:stability-level]
+uses: [concept:rubric, concept:stability-level]
 decisions:
   - topic: A rubric of a project's own
     question: >-

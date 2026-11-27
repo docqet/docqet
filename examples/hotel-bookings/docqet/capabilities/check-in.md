@@ -4,10 +4,10 @@ id: check-in
 name: Check-in
 description: Clerks check guests in when they arrive and give them their room.
 stability: beta
-feature: feature:front-desk
+within: feature:front-desk
 solves: [problem:guests-queue-at-the-desk, problem:room-given-to-two-guests]
-rules: [rule:no-double-booking]
-concepts: [concept:booking, concept:room]
+follows: [rule:no-double-booking]
+uses: [concept:booking, concept:room]
 ---
 
 ## Includes

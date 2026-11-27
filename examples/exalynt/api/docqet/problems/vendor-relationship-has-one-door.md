@@ -9,5 +9,5 @@ description: >-
 cost: >-
   The buyer becomes a relay, colleagues wait on them, and people who've left
   may keep seeing the business's work and spending (assumed).
-personas: [persona:client-admin-operations, persona:client-member, persona:client-billing]
+felt-by: [persona:client-admin-operations, persona:client-member, persona:client-billing]
 ---

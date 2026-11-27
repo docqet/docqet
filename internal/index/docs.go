@@ -21,8 +21,7 @@ type frontmatter struct {
 	ID           string         `yaml:"id"`
 	Name         string         `yaml:"name"`
 	Description  string         `yaml:"description"`
-	Area         *string        `yaml:"area"`
-	Feature      *string        `yaml:"feature"`
+	Within       *string        `yaml:"within"`
 	Stability    string         `yaml:"stability"`
 	Applies      string         `yaml:"applies"`
 	Why          *string        `yaml:"why"`
@@ -31,13 +30,14 @@ type frontmatter struct {
 	Role         *string        `yaml:"role"`
 	Title        *string        `yaml:"title"`
 	Image        *string        `yaml:"image"`
-	Capabilities []string       `yaml:"capabilities"`
+	Serves       []string       `yaml:"serves"`
 	Solves       []string       `yaml:"solves"`
 	Respects     []string       `yaml:"respects"`
-	Personas     []string       `yaml:"personas"`
-	Initiatives  []string       `yaml:"initiatives"`
-	Rules        []string       `yaml:"rules"`
-	Concepts     []string       `yaml:"concepts"`
+	FeltBy       []string       `yaml:"felt-by"`
+	For          []string       `yaml:"for"`
+	IncludedIn   []string       `yaml:"included-in"`
+	Follows      []string       `yaml:"follows"`
+	Uses         []string       `yaml:"uses"`
 	Meets        []string       `yaml:"meets"`
 	ConfusedWith []confusion    `yaml:"confused-with"`
 	Gaps         []gap          `yaml:"gaps"`
@@ -230,27 +230,38 @@ func fileFinding(typ, file string, line int, msg string) state.Finding {
 }
 
 // fieldsOf is the fields each doc type has, in the order they're written.
+// Each link field reads as a sentence from the doc that writes it: a
+// capability is within a feature, solves a problem and follows a rule.
 var fieldsOf = map[string][]string{
 	state.TypeArea:       {"docqet", "id", "name", "description", "decisions"},
-	state.TypeFeature:    {"docqet", "id", "name", "description", "area", "tradeoffs", "decisions"},
-	state.TypeCapability: {"docqet", "id", "name", "description", "stability", "feature", "solves", "initiatives", "rules", "concepts", "gaps", "tradeoffs", "decisions"},
-	state.TypeRule:       {"docqet", "id", "name", "concepts", "respects", "why"},
+	state.TypeFeature:    {"docqet", "id", "name", "description", "within", "tradeoffs", "decisions"},
+	state.TypeCapability: {"docqet", "id", "name", "description", "stability", "within", "solves", "included-in", "follows", "uses", "gaps", "tradeoffs", "decisions"},
+	state.TypeRule:       {"docqet", "id", "name", "uses", "respects", "why"},
 	state.TypeConcept:    {"docqet", "id", "name", "description", "confused-with"},
 	state.TypePersona:    {"docqet", "id", "name", "description", "role", "title", "image"},
-	state.TypeProblem:    {"docqet", "id", "name", "description", "cost", "personas"},
+	state.TypeProblem:    {"docqet", "id", "name", "description", "cost", "felt-by"},
 	state.TypeConstraint: {"docqet", "id", "name", "description", "source"},
-	state.TypeInitiative: {"docqet", "id", "name", "description", "personas"},
+	state.TypeInitiative: {"docqet", "id", "name", "description", "for"},
 	state.TypeMechanism:  {"docqet", "id", "name", "description", "applies", "respects", "meets", "gaps", "tradeoffs", "decisions"},
-	state.TypeComponent:  {"docqet", "id", "name", "description", "capabilities", "meets", "gaps", "tradeoffs", "decisions"},
+	state.TypeComponent:  {"docqet", "id", "name", "description", "serves", "meets", "gaps", "tradeoffs", "decisions"},
 }
 
 // movedFields says where a field went, for fields a type used to have, as
 // <type>.<field>: links are written in the more concrete doc, naming the more
-// general one.
+// general one, and read as a sentence from it.
 var movedFields = map[string]string{
-	"capability.personas":  "A capability's personas are those of the problems it solves: link the problems with solves, and remove personas.",
-	"feature.capabilities": "A capability names its feature with feature:; remove capabilities.",
-	"persona.initiatives":  "An initiative names the personas it's for with personas:; remove initiatives.",
+	"capability.personas":    "A capability's personas are those of the problems it solves: link the problems with solves, and remove personas.",
+	"capability.feature":     "A capability names its feature with within: now.",
+	"capability.initiatives": "A capability names its initiatives with included-in: now.",
+	"capability.rules":       "A capability names the rules it follows with follows: now.",
+	"capability.concepts":    "A capability names the concepts it uses with uses: now.",
+	"feature.capabilities":   "A capability names its feature with within:; remove capabilities.",
+	"feature.area":           "A feature names its area with within: now.",
+	"rule.concepts":          "A rule names the concepts it uses with uses: now.",
+	"problem.personas":       "A problem names the personas who feel it with felt-by: now.",
+	"initiative.personas":    "An initiative names the personas it's for with for: now.",
+	"component.capabilities": "A component names the capabilities it serves with serves: now.",
+	"persona.initiatives":    "An initiative names the personas it's for with for:; remove initiatives.",
 }
 
 // unknownFields reports each top-level field a doc of type typ doesn't have,
@@ -272,7 +283,7 @@ func unknownFields(file, typ string, node *yaml.Node, at func(int) int) []state.
 		if hint, ok := movedFields[typ+"."+key.Value]; ok {
 			msg = hint
 		} else if key.Value == "domain" {
-			msg = "Docs have no domain now: features name their area with area:, and rules and concepts are product-wide."
+			msg = "Docs have no domain now: features name their area with within:, and rules and concepts are product-wide."
 		}
 		findings = append(findings, fileFinding(state.InvalidFrontmatter, file, at(key.Line), msg))
 	}

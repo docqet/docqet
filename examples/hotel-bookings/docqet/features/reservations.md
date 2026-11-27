@@ -3,7 +3,7 @@ docqet: feature
 id: reservations
 name: Reservations
 description: Taking bookings and handling changes to them, before the guest arrives.
-area: area:guest-stays
+within: area:guest-stays
 tradeoffs:
   - id: front-desk-bookings-only
     name: Front desk bookings only

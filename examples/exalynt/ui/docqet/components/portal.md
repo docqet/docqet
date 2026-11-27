@@ -6,7 +6,7 @@ description: >-
   The client portal, where a client organization's people buy and schedule
   capacity, follow their blocks, read estimates, pay, and manage the
   organization.
-capabilities:
+serves:
   - capability:client-home
   - capability:getting-set-up
   - capability:teams

@@ -5,7 +5,7 @@ name: Organizations
 description: >-
   Client organizations, their members, invitations, payment customer, and
   logo.
-capabilities: [capability:organizations-and-members, capability:client-directory, capability:billing]
+serves: [capability:organizations-and-members, capability:client-directory, capability:billing]
 meets: [outcome:security/ga/sound]
 tradeoffs:
   - id: lists-returned-whole

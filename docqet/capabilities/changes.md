@@ -6,7 +6,7 @@ description: >-
   Engineers and agents see how a project's docs changed between commits, and
   the history of any doc.
 stability: prototype
-feature: feature:keeping-current
+within: feature:keeping-current
 solves: [problem:docs-drift-from-code, problem:why-it-changed-is-lost]
 gaps:
   - id: diff-only

@@ -8,5 +8,5 @@ description: >-
   commits.
 cost: >-
   Settled questions get argued again, and old mistakes get made twice.
-personas: [persona:engineer, persona:product-owner]
+felt-by: [persona:engineer, persona:product-owner]
 ---

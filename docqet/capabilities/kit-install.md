@@ -6,7 +6,7 @@ description: >-
   Engineers install the agent kit into a project, for the agents it uses, and
   keep it up to date, with `docqet kit`.
 stability: prototype
-feature: feature:declaring
+within: feature:declaring
 solves: [problem:agents-guess-intention, problem:docs-slow-every-change]
 ---
 
