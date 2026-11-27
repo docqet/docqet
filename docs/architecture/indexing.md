@@ -61,9 +61,10 @@ way the CLI does:
   Each is about a doc, gap or tradeoff, its `subject`. `index` runs it on
   what it reads, and the server runs it again on every state it's sent.
 - **`index` finds what only files show**: frontmatter that isn't YAML, a
-  `docqet` type that isn't one, a doc or gap with no ID, an annotation naming
-  nothing or a rule without its domain, and broken relative links. These
-  have no `subject`, and say where they are with `file` and `line`.
+  `docqet` type that isn't one, a field its type doesn't have (`fieldsOf`), a
+  doc or gap with no ID, an annotation naming nothing or a rule without its
+  domain, and broken relative links. These have no `subject`, and say where
+  they are with `file` and `line`.
 - **`check.Validate` decides whether a state is one at all**: the format's
   version, a project, an ID for every entry. `apply` runs it before sending,
   and the server refuses a state that fails it. A state with findings in its

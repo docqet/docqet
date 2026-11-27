@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"regexp"
+	"slices"
 	"strconv"
 	"strings"
 
@@ -155,6 +156,7 @@ func readDoc(file string, data []byte) (d *doc, isDoc bool, findings []state.Fin
 	case fm.ID == "":
 		return nil, true, append(findings, fileFinding(state.InvalidFrontmatter, file, fm.line["docqet"], "A doc needs an id."))
 	}
+	findings = append(findings, unknownFields(file, fm.Docqet, &node, at)...)
 
 	// Gaps and tradeoffs need a key to be one: without one, there's nothing to
 	// call them by.
@@ -220,6 +222,40 @@ func yamlFinding(file string, err error, at func(int) int) state.Finding {
 // fileFinding is a finding made reading a file, rather than one about a doc.
 func fileFinding(typ, file string, line int, msg string) state.Finding {
 	return state.Finding{Type: typ, Capabilities: []string{}, Message: msg, File: file, Line: line}
+}
+
+// fieldsOf is the fields each doc type has, in the order they're written.
+var fieldsOf = map[string][]string{
+	state.TypeDomain:     {"docqet", "id", "name", "description", "decisions"},
+	state.TypeFeature:    {"docqet", "id", "domain", "name", "description", "capabilities", "tradeoffs", "decisions"},
+	state.TypeCapability: {"docqet", "id", "domain", "name", "description", "stability", "personas", "initiatives", "rules", "concepts", "gaps", "tradeoffs", "decisions"},
+	state.TypeRule:       {"docqet", "id", "domain", "name", "concepts", "why"},
+	state.TypeConcept:    {"docqet", "id", "domain", "name", "description", "confused-with"},
+	state.TypePersona:    {"docqet", "id", "name", "description", "role", "title", "image", "initiatives"},
+	state.TypeInitiative: {"docqet", "id", "name", "description"},
+	state.TypeMechanism:  {"docqet", "id", "name", "description", "applies", "meets", "gaps", "tradeoffs", "decisions"},
+	state.TypeComponent:  {"docqet", "id", "name", "description", "capabilities", "meets", "gaps", "tradeoffs", "decisions"},
+}
+
+// unknownFields reports each top-level field a doc of type typ doesn't have,
+// in the order they're written, so a field that's misspelled, or that its
+// type has never had, isn't silently ignored.
+func unknownFields(file, typ string, node *yaml.Node, at func(int) int) []state.Finding {
+	if node.Kind != yaml.DocumentNode || len(node.Content) == 0 || node.Content[0].Kind != yaml.MappingNode {
+		return nil
+	}
+	fields := fieldsOf[typ]
+	var findings []state.Finding
+	m := node.Content[0]
+	for i := 0; i+1 < len(m.Content); i += 2 {
+		key := m.Content[i]
+		if slices.Contains(fields, key.Value) {
+			continue
+		}
+		findings = append(findings, fileFinding(state.InvalidFrontmatter, file, at(key.Line),
+			fmt.Sprintf("%s isn't a field a %s has: it has %s", key.Value, typ, strings.Join(fields, ", "))))
+	}
+	return findings
 }
 
 func isDocType(t string) bool {

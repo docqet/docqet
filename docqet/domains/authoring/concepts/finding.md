@@ -26,7 +26,7 @@ closed, for example, is an `unknown-id`.
 | Type                  | Raised when |
 | --------------------- | ----------- |
 | `unknown-id`          | A link, annotation, `affects` or `domain` names a doc, gap or tradeoff that doesn't exist. |
-| `invalid-frontmatter` | A required field is missing, or a value isn't allowed, such as a link of the wrong type for its field, a `docqet` that isn't a type, or a feature, capability, rule or concept with no `domain`. |
+| `invalid-frontmatter` | A required field is missing, a field its type doesn't have is written, or a value isn't allowed, such as a link of the wrong type for its field, a `docqet` that isn't a type, or a feature, capability, rule or concept with no `domain`. |
 | `duplicate-id`        | A project has two docs of one type with the same ID in one domain, or two domains, personas, initiatives, mechanisms or components with the same ID, or a doc has two gaps or tradeoffs with the same key across the projects and domains that write it. |
 | `broken-link`         | A relative link in a doc's body or a text value doesn't resolve. |
 | `unlinked-rule`       | No capability follows a rule. |
