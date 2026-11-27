@@ -8,11 +8,10 @@ description: >-
   engineers on their organization's teams offer, and can move it to another
   week, or take it back out, until that week starts.
 stability: beta
-personas:
-  - persona:client-admin-founder
-  - persona:client-admin-operations
-  - persona:client-member
-  - persona:exalynt-admin
+solves:
+  - problem:engineering-starts-slowly
+  - problem:work-ignores-the-business-calendar
+  - problem:exceptions-hide-in-routine
 initiatives: [initiative:mvp]
 rules:
   - rule:scheduling-comes-before-work

@@ -9,7 +9,7 @@ description: >-
   of a capability, feature, domain, product, persona or initiative most, in
   that order.
 stability: prototype
-personas: [persona:product-owner, persona:engineer]
+solves: [problem:unclear-what-helps-most]
 concepts: [concept:readiness@understanding, concept:maturity@understanding, concept:exposure@understanding, concept:risk@understanding]
 rules:
   - rule:drafts-claim-nothing@understanding

@@ -7,7 +7,9 @@ description: >-
   The software closes each business day overnight, charging every guest in the
   hotel for that night's room.
 stability: ga
-personas: [persona:night-auditor, persona:manager]
+solves:
+  - problem:closing-the-day-takes-the-night
+  - problem:takings-late-and-moving
 rules:
   - rule:one-room-charge-per-night
   - rule:closed-days-dont-change

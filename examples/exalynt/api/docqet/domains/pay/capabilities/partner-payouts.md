@@ -7,7 +7,7 @@ description: >-
   Each partnership is paid what it earns into its own payout account, never
   its manager's, once an admin releases it, and its manager sees each payout.
 stability: beta
-personas: [persona:partner]
+solves: [problem:partner-earnings-opaque]
 initiatives: [initiative:mvp]
 rules:
   - rule:expected-pay-visible-from-assignment

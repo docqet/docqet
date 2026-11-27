@@ -11,7 +11,8 @@ import (
 // the states are combined, so everything worked out from the result counts
 // only what's in it. Whether a capability or persona is in the initiative is
 // decided across every project first, since projects contribute to the same
-// one: it's in when any contribution says so. It returns new states and
+// one: it's in when any contribution says so. A problem is in when a
+// capability in it solves the problem, in any project. It returns new states and
 // never changes the ones it's given. With no initiative, it returns them as
 // they are.
 // docqet:implements capability:initiative-scope
@@ -34,9 +35,20 @@ func ScopeToInitiative(states []*state.State, initiative string) []*state.State 
 			}
 		}
 	}
+	problems := map[string]bool{}
+	for _, st := range states {
+		for _, c := range st.Capabilities {
+			if !kept[state.DocRef(state.TypeCapability, c.ID)] {
+				continue
+			}
+			for _, raw := range c.Solves {
+				problems[state.DocRef(state.TypeProblem, idOf(raw))] = true
+			}
+		}
+	}
 	out := make([]*state.State, 0, len(states))
 	for _, st := range states {
-		out = append(out, scope(st, kept, personas))
+		out = append(out, scope(st, kept, personas, problems))
 	}
 	return out
 }
@@ -45,10 +57,11 @@ func ScopeToInitiative(states []*state.State, initiative string) []*state.State 
 // kept, and the product docs those capabilities reach. A feature or domain
 // left with none of them goes, and so do rules and concepts no kept
 // capability links. A persona in the initiative stays even when nothing in it
-// serves them yet. Gaps and tradeoffs on a capability or feature that went go
+// serves them yet. A problem stays when a kept capability solves it. Gaps and
+// tradeoffs on a capability or feature that went go
 // with it. Mechanisms and components stay, with what's left of their
 // capabilities. Initiatives all stay, so each can still be chosen.
-func scope(st *state.State, kept, personas map[string]bool) *state.State {
+func scope(st *state.State, kept, personas, problems map[string]bool) *state.State {
 	narrow := func(refs []string) []string {
 		out := []string{}
 		for _, r := range refs {
@@ -137,6 +150,13 @@ func scope(st *state.State, kept, personas map[string]bool) *state.State {
 	for _, p := range st.Personas {
 		if personas[state.DocRef(state.TypePersona, p.ID)] {
 			out.Personas = append(out.Personas, p)
+		}
+	}
+	out.Problems = []state.Problem{}
+	for _, pr := range st.Problems {
+		if problems[state.DocRef(state.TypeProblem, pr.ID)] {
+			pr.Capabilities = narrow(pr.Capabilities)
+			out.Problems = append(out.Problems, pr)
 		}
 	}
 	out.Mechanisms = make([]state.Mechanism, 0, len(st.Mechanisms))

@@ -13,7 +13,7 @@ confused-with:
       one area of the code, relied on by the capabilities it lists. Something many capabilities share, such as the ledger, is still a component if it's one place in the code.
   - concept: "concept:feature"
     summary: >-
-      a job the product does, in the domain's words. A mechanism is how part of the software works, in the code's.
+      a part of what the product offers, in the domain's words. A mechanism is how part of the software works, in the code's.
   - term: "A convention or standard"
     summary: >-
       how code should be written. A mechanism is how something already works.

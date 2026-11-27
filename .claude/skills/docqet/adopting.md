@@ -47,9 +47,14 @@ repository:
 
 1. **The domains.** Ask, or propose from how the business talks about itself,
    not from how the code is split up. Most projects have one or two.
-2. **The feature and its capabilities**, each as one sentence saying who does
-   what, at its level. Capabilities asked for but not started are drafts.
-3. **The personas** those capabilities serve.
+2. **The personas** the feature is for, and **the problems** they have that
+   it's there to solve, in their words and never naming the software. Only a
+   person can usually say these: propose them from the code and docs, and ask.
+3. **The feature and its capabilities**, each as one sentence saying who does
+   what, at its level, with the problems it `solves`. Capabilities asked for
+   but not started are drafts. One whose problem nobody can say yet can leave
+   `solves` out: it's reported as an advisory finding, which doesn't fail the
+   check, and serves nobody until its problem is written.
 4. **The rules** they follow, each with its `why`, which only a person can
    usually give. A rule without a known why is worth asking about.
 5. **The gaps** people already know about, and the tradeoffs they've already

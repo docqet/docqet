@@ -7,12 +7,10 @@ description: >-
   Admins release what people and partnerships have earned, and it goes to each
   payee's payout account.
 stability: alpha
-personas:
-  - persona:exalynt-engineer-1
-  - persona:exalynt-engineer-2
-  - persona:exalynt-team-lead
-  - persona:exalynt-admin
-  - persona:partner
+solves:
+  - problem:money-moves-unchecked
+  - problem:pay-cant-be-checked
+  - problem:partner-earnings-opaque
 initiatives: [initiative:mvp]
 rules:
   - rule:expected-pay-visible-from-assignment

@@ -8,11 +8,10 @@ description: >-
   adds up per team to decide which weeks have room, though clients never see
   it directly.
 stability: beta
-personas:
-  - persona:exalynt-engineer-1
-  - persona:exalynt-engineer-2
-  - persona:exalynt-team-lead
-  - persona:exalynt-admin
+solves:
+  - problem:engineers-overbooked
+  - problem:team-trouble-seen-one-by-one
+  - problem:exceptions-hide-in-routine
 initiatives: [initiative:mvp]
 rules:
   - rule:how-a-weeks-availability-is-decided

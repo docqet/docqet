@@ -5,7 +5,7 @@ domain: guest-stays
 name: Room booking
 description: Clerks book a free room for a guest's stay.
 stability: beta
-personas: [persona:front-desk-clerk]
+solves: [problem:room-given-to-two-guests]
 rules:
   - rule:no-double-booking
   - rule:minimum-stay

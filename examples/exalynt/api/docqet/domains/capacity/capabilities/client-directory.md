@@ -7,7 +7,7 @@ description: >-
   Exalynt's admins see every client organization, the blocks each has bought
   and how far the work has got, and assign the teams that serve it.
 stability: alpha
-personas: [persona:exalynt-admin]
+solves: [problem:exceptions-hide-in-routine]
 initiatives: [initiative:mvp]
 rules:
   - rule:logos-stay-within-their-organization@accounts

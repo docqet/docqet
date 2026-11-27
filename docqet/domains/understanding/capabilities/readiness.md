@@ -9,7 +9,7 @@ description: >-
   and what drags it down: capabilities at lower levels, and the gaps and rated
   open decisions on them.
 stability: prototype
-personas: [persona:product-owner, persona:engineer, persona:support]
+solves: [problem:unclear-what-to-rely-on, problem:unclear-what-helps-most]
 concepts: [concept:maturity@understanding, concept:band@understanding, concept:readiness@understanding, concept:risk@understanding, concept:exposure@understanding]
 rules:
   - rule:drafts-claim-nothing@understanding

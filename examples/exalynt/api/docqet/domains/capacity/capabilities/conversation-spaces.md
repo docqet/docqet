@@ -9,14 +9,7 @@ description: >-
   outside the app or with Stream inside it, and about each block in
   conversations they start there, each on a subject of its own.
 stability: prototype
-personas:
-  - persona:client-admin-founder
-  - persona:client-admin-operations
-  - persona:client-member
-  - persona:exalynt-engineer-1
-  - persona:exalynt-engineer-2
-  - persona:exalynt-team-lead
-  - persona:exalynt-admin
+solves: [problem:requests-go-unheard, problem:working-without-client-context]
 initiatives: [initiative:conversation-spaces]
 rules:
   - rule:every-organization-has-a-space

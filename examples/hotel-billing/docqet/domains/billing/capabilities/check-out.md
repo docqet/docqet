@@ -7,7 +7,10 @@ description: >-
   Guests settle their bill as they leave, so nothing is left owing once
   they've gone.
 stability: alpha
-personas: [persona:front-desk-clerk, persona:guest]
+solves:
+  - problem:guests-queue-at-the-desk
+  - problem:guests-leave-owing
+  - problem:settling-up-holds-guests-up
 rules: [rule:closed-bills-dont-change]
 concepts: [concept:bill, concept:booking]
 decisions:

@@ -8,7 +8,7 @@ description: >-
   for people who work with Exalynt, and organization roles for client
   organizations' members.
 stability: alpha
-personas: [persona:exalynt-admin]
+solves: [problem:access-doesnt-match-the-job]
 initiatives: [initiative:mvp]
 rules:
   - rule:permissions-follow-where-someone-acts

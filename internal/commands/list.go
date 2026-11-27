@@ -15,7 +15,7 @@ import (
 )
 
 // listKinds are what list lists, each by its plural.
-var listKinds = []string{"domains", "features", "capabilities", "rules", "concepts", "personas", "initiatives", "mechanisms", "components", "gaps", "tradeoffs", "decisions"}
+var listKinds = []string{"domains", "features", "capabilities", "rules", "concepts", "personas", "problems", "initiatives", "mechanisms", "components", "gaps", "tradeoffs", "decisions"}
 
 // ListCommand lists docs of one kind, or gaps, tradeoffs or decisions.
 // docqet:implements capability:cli-reads
@@ -168,6 +168,10 @@ func listRows(lo local, cmd *cli.Command, kind string) ([]listRow, error) {
 				detail = *pe.Title
 			}
 			rows = append(rows, listRow{Ref: "persona:" + pe.ID, Name: pe.Name, Detail: detail})
+		}
+	case "problems":
+		for _, pr := range p.Problems {
+			rows = append(rows, listRow{Ref: "problem:" + pr.ID, Name: pr.Name, Detail: fmt.Sprintf("%d capabilities", len(pr.Capabilities))})
 		}
 	case "initiatives":
 		for _, in := range p.Initiatives {

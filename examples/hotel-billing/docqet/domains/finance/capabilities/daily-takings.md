@@ -6,7 +6,7 @@ name: Daily takings
 description: >-
   Managers see each closed day's takings, for rooms, food and drink, and tax.
 stability: beta
-personas: [persona:manager]
+solves: [problem:takings-late-and-moving]
 rules: [rule:closed-days-dont-change]
 concepts: [concept:business-day, concept:charge@billing]
 ---

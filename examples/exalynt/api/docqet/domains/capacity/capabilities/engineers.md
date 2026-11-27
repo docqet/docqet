@@ -7,7 +7,7 @@ description: >-
   Exalynt's admins see everyone who works with Exalynt: their team, what
   they're working on, and whether they're ready for client work.
 stability: alpha
-personas: [persona:exalynt-admin]
+solves: [problem:exceptions-hide-in-routine]
 initiatives: [initiative:mvp]
 rules:
   - rule:permissions-follow-where-someone-acts@accounts

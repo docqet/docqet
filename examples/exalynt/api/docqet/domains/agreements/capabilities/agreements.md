@@ -8,7 +8,7 @@ description: >-
   Agreement for an organization, an Engineer Agreement for someone working in
   the console, and a Partner Agreement for a partnership.
 stability: alpha
-personas: [persona:exalynt-admin]
+solves: [problem:agreed-terms-applied-by-hand]
 initiatives: [initiative:mvp]
 rules:
   - rule:engineer-agreement-follows-the-invitations-terms

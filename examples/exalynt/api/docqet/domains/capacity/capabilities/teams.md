@@ -7,15 +7,12 @@ description: >-
   Exalynt groups its people into teams to work with the clients they're
   assigned to, and a client's teams decide who at Exalynt it sees.
 stability: beta
-personas:
-  - persona:client-admin-founder
-  - persona:client-admin-operations
-  - persona:client-member
-  - persona:exalynt-engineer-1
-  - persona:exalynt-engineer-2
-  - persona:exalynt-engineer-new-hire
-  - persona:exalynt-team-lead
-  - persona:exalynt-admin
+solves:
+  - problem:spend-without-visible-progress
+  - problem:requests-go-unheard
+  - problem:working-without-client-context
+  - problem:new-engineer-unsure-ready-or-paid
+  - problem:team-trouble-seen-one-by-one
 initiatives: [initiative:mvp]
 rules:
   - rule:only-exalynt-makes-teams

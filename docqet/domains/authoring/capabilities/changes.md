@@ -7,7 +7,7 @@ description: >-
   What did this change do to the intention? Engineers and agents see how a
   project's docs changed between commits, and the history of any doc.
 stability: prototype
-personas: [persona:engineer, persona:coding-agent]
+solves: [problem:docs-drift-from-code, problem:why-it-changed-is-lost]
 gaps:
   - id: diff-only
     name: Only diff is built

@@ -7,7 +7,7 @@ description: >-
   Clerks check guests out on their departure day and take payment for anything
   still owed.
 stability: ga
-personas: [persona:front-desk-clerk]
+solves: [problem:guests-queue-at-the-desk, problem:guests-leave-owing]
 concepts: [concept:booking]
 ---
 

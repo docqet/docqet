@@ -128,6 +128,7 @@ func showOf(p *combine.Product, ref string) (*shown, error) {
 		if c.Feature != nil {
 			s.add("feature", "feature:"+*c.Feature)
 		}
+		s.add("solves", prefixed("problem:", c.Solves)...)
 		s.add("personas", prefixed("persona:", c.Personas)...)
 		s.add("initiatives", prefixed("initiative:", c.Initiatives)...)
 		var rules []string
@@ -230,9 +231,22 @@ func showOf(p *combine.Product, ref string) (*shown, error) {
 		if pe.Title != nil {
 			s.add("title", *pe.Title)
 		}
+		s.add("problems", prefixed("problem:", pe.Problems)...)
 		s.add("capabilities", prefixed("capability:", pe.Capabilities)...)
 		s.add("features", prefixed("feature:", pe.Features)...)
 		s.add("initiatives", prefixed("initiative:", pe.Initiatives)...)
+		return s, nil
+	case state.TypeProblem:
+		pr := p.Problem(r.ID)
+		if pr == nil {
+			return nil, notFound
+		}
+		s := docShown(pr.Doc, r.Type, ref)
+		if pr.Cost != nil {
+			s.add("cost", *pr.Cost)
+		}
+		s.add("personas", prefixed("persona:", pr.Personas)...)
+		s.add("capabilities", prefixed("capability:", pr.Capabilities)...)
 		return s, nil
 	case state.TypeInitiative:
 		in := p.Initiative(r.ID)
@@ -260,7 +274,7 @@ func showOf(p *combine.Product, ref string) (*shown, error) {
 		s.Evidence = evidenceOf(t.Evidence)
 		return s, nil
 	}
-	return nil, fmt.Errorf("%s isn't a type of doc: it's one of domain, feature, capability, rule, concept, persona, initiative, mechanism or component", r.Type)
+	return nil, fmt.Errorf("%s isn't a type of doc: it's one of domain, feature, capability, rule, concept, persona, problem, initiative, mechanism or component", r.Type)
 }
 
 // docShown starts a shown doc with what every doc has.

@@ -7,7 +7,7 @@ description: >-
   Clerks refund a guest what they've paid over their bill, before the bill
   closes.
 stability: draft
-personas: [persona:front-desk-clerk, persona:guest]
+solves: [problem:guests-billed-more-than-they-owe]
 rules: [rule:overpayments-are-refunded]
 concepts: [concept:payment, concept:bill]
 decisions:

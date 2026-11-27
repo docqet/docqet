@@ -115,6 +115,12 @@ func PersonaCapabilities(p *combine.Product, persona *combine.Persona) []*combin
 	return CapabilitiesByID(p, persona.Capabilities)
 }
 
+// ProblemCapabilities returns the capabilities that solve a problem: what a
+// figure for the problem counts.
+func ProblemCapabilities(p *combine.Product, problem *combine.Problem) []*combine.Capability {
+	return CapabilitiesByID(p, problem.Capabilities)
+}
+
 // PersonaCapabilitiesIn returns the capabilities in a feature that serve a
 // persona: what a figure for the feature, for that persona, counts.
 func PersonaCapabilitiesIn(p *combine.Product, persona *combine.Persona, f *combine.Feature) []*combine.Capability {

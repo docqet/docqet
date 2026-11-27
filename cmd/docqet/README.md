@@ -242,8 +242,9 @@ examples show the ones each is most often used with.
 ### `docqet check`
 
 Reports every [finding](../../docqet/domains/authoring/concepts/finding.md), with the file and line,
-and exits 1 if there are any. Agents run it with `--changed` before they
-finish, as the kit tells them to.
+and exits 1 if there are any but advisory ones, such as a capability that
+solves no problem yet. Agents run it with `--changed` before they finish, as
+the kit tells them to.
 
 ```sh
 docqet check                          # everything in the working tree
@@ -318,6 +319,7 @@ the UI's views have.
 
 ```sh
 docqet list capabilities --stability alpha
+docqet list problems
 docqet list gaps --initiative mvp --sort risk --product
 docqet list gaps --for persona:front-desk-clerk --impact damaging,blocking
 docqet list decisions --domain guest-stays --remote

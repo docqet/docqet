@@ -5,7 +5,7 @@ domain: guest-stays
 name: Check-in
 description: Clerks check guests in when they arrive and give them their room.
 stability: beta
-personas: [persona:front-desk-clerk]
+solves: [problem:guests-queue-at-the-desk, problem:room-given-to-two-guests]
 rules: [rule:no-double-booking]
 concepts: [concept:booking, concept:room]
 ---

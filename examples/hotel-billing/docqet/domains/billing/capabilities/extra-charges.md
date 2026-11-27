@@ -7,7 +7,7 @@ description: >-
   Staff add extras such as breakfast, parking or the minibar to a guest's
   bill.
 stability: ga
-personas: [persona:front-desk-clerk]
+solves: [problem:guests-leave-owing, problem:guests-billed-more-than-they-owe]
 rules:
   - rule:charges-are-never-changed
   - rule:closed-bills-dont-change

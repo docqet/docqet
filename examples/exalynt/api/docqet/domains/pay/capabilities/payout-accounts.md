@@ -7,7 +7,10 @@ description: >-
   People and partnerships each have one bank account their payouts go to,
   which they add, change, fix, remove, and see whether it can be paid.
 stability: alpha
-personas: [persona:exalynt-engineer-1, persona:exalynt-engineer-2, persona:partner]
+solves:
+  - problem:pay-cant-be-checked
+  - problem:new-engineer-unsure-ready-or-paid
+  - problem:partner-earnings-opaque
 initiatives: [initiative:mvp]
 rules:
   - rule:one-payout-account-per-person

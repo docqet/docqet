@@ -8,6 +8,6 @@ description: >-
   domain's words mean and the rules that must hold in it, with how many
   capabilities use or follow each.
 stability: prototype
-personas: [persona:product-owner, persona:engineer, persona:support]
+solves: [problem:words-mean-different-things]
 concepts: [concept:domain@authoring, concept:concept@authoring, concept:rule@authoring]
 ---

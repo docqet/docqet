@@ -8,7 +8,9 @@ description: >-
   organization's default payment method on one invoice, to schedule now or
   later.
 stability: beta
-personas: [persona:client-admin-founder, persona:client-admin-operations]
+solves:
+  - problem:engineering-starts-slowly
+  - problem:spend-without-visible-progress
 initiatives: [initiative:mvp]
 rules:
   - rule:blocks-stay-within-their-organization

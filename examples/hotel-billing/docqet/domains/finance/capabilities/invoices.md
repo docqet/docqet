@@ -5,7 +5,7 @@ domain: finance
 name: Invoices
 description: Bookkeepers invoice each company once a month for its staff's stays.
 stability: alpha
-personas: [persona:bookkeeper]
+solves: [problem:company-debts-go-unwatched]
 rules: [rule:invoice-numbers-run-in-sequence]
 concepts: [concept:company-account]
 gaps:

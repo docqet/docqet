@@ -8,7 +8,10 @@ description: >-
   engineers and agents see which capabilities, rules and gaps it's about, and
   what their levels allow.
 stability: prototype
-personas: [persona:engineer, persona:coding-agent]
+solves:
+  - problem:intent-in-peoples-heads
+  - problem:agents-guess-intention
+  - problem:deliberate-code-gets-fixed
 ---
 
 Today it's `docqet touches`.

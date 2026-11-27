@@ -49,6 +49,9 @@ func Validate(st *state.State) error {
 	for _, p := range st.Personas {
 		entry("persona", p.ID, p.File)
 	}
+	for _, pr := range st.Problems {
+		entry("problem", pr.ID, pr.File)
+	}
 	for _, in := range st.Initiatives {
 		entry("initiative", in.ID, in.File)
 	}

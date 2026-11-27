@@ -5,16 +5,13 @@ domain: accounts
 name: Notifications
 description: People choose which notifications they get and where they go.
 stability: prototype
-personas:
-  - persona:client-admin-founder
-  - persona:client-admin-operations
-  - persona:client-member
-  - persona:client-billing
-  - persona:exalynt-engineer-1
-  - persona:exalynt-engineer-2
-  - persona:exalynt-team-lead
-  - persona:exalynt-admin
-  - persona:partner
+solves:
+  - problem:requests-go-unheard
+  - problem:vendor-bills-hard-to-keep-up-with
+  - problem:exceptions-hide-in-routine
+  - problem:team-trouble-seen-one-by-one
+  - problem:pay-cant-be-checked
+  - problem:partner-earnings-opaque
 initiatives: [initiative:notifications]
 rules:
   - rule:each-app-offers-its-own-notifications

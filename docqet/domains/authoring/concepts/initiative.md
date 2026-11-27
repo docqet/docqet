@@ -11,7 +11,7 @@ description: >-
 confused-with:
   - term: "Feature"
     summary: >-
-      a lasting job that a capability is in at most one of.
+      a lasting part of the product that a capability is in at most one of.
   - term: "Domain"
     summary: >-
       a part of the business, with its own language.
@@ -25,13 +25,14 @@ groups, a waitlist, and turning rooms over faster". Group bookings and the
 waitlist, in Reservations, and room status, in Housekeeping, are part of it,
 and it's for the front desk clerk and the housekeeper.
 
-- **It's work, not a job.** A [feature](feature.md) is a job the product does
-  for good, and owns its capabilities. An initiative groups capabilities for a
+- **It's work, not a part of the product.** A [feature](feature.md) is a part
+  of the product for good, and owns its capabilities. An initiative groups capabilities for a
   stretch of work. Once that work no longer needs seeing on its own, its
   capabilities and personas drop the link and the doc is deleted.
 - **[Capabilities](capability.md) link to it**, and so do the
   [personas](persona.md) its work is for. It lists neither. Its features,
-  domains, rules and gaps are worked out from its capabilities.
+  domains, rules, gaps and [problems](problem.md) are worked out from its
+  capabilities: a problem is in it when one of its capabilities solves it.
 - **It cuts across features and [domains](domain.md)**, so like a persona it's
   written once for the whole project, not in a domain. A capability or persona
   can be part of several initiatives, or none.

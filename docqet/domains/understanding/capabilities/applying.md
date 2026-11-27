@@ -7,7 +7,9 @@ description: >-
   CI sends each commit on the main branch to the team's server, and the server
   keeps its state and checks it again.
 stability: prototype
-personas: [persona:engineer]
+solves:
+  - problem:knowledge-stuck-in-the-repository
+  - problem:teams-accounts-disagree
 concepts: [concept:state@authoring, concept:finding@authoring]
 rules:
   - rule:one-client-per-server@understanding

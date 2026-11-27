@@ -4,8 +4,9 @@ id: rule
 domain: authoring
 name: Rule
 description: >-
-  A business rule of the domain: a constraint the business and its software
-  operate under. It's something that must always be true, or must never happen,
+  A business rule of the domain: a promise the software keeps while its
+  capabilities do their jobs, often one the business chose. It's something
+  that must always be true, or must never happen,
   in the domain's words, such as "a room can't be double-booked" or "cancelling
   48 hours ahead is free".
 confused-with:

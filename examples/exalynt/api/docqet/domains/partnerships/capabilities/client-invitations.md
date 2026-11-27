@@ -7,7 +7,7 @@ description: >-
   Partners invite people they know to become Exalynt clients by email, and
   each one who signs up as a new client is attributed to their partnership.
 stability: beta
-personas: [persona:partner, persona:client-admin-founder, persona:client-admin-operations]
+solves: [problem:introductions-take-effort, problem:engineering-starts-slowly]
 initiatives: [initiative:mvp]
 rules:
   - rule:inviting-creates-the-partnership

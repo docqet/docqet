@@ -4,15 +4,19 @@ id: capability
 domain: authoring
 name: Capability
 description: >-
-  The software's ability to produce one particular result of value, either by
-  itself or by letting someone produce it, as part of a feature's job.
+  The software's ability to produce one particular result, either by itself or
+  by letting someone produce it, as part of a feature, solving part of one or
+  more problems.
 confused-with:
   - concept: "concept:feature"
     summary: >-
-      the job a capability is part of.
+      the part of the product a capability is in.
+  - concept: "concept:problem"
+    summary: >-
+      the pain a capability is there to solve, which never names the software.
   - concept: "concept:rule"
     summary: >-
-      a constraint capabilities do their jobs under, not a result of value.
+      a promise capabilities keep while they do their jobs, not a result.
   - term: "A step, screen or quality"
     summary: >-
       see [feature, capability or neither?](../domain.md#feature-capability-or-neither)
@@ -35,10 +39,16 @@ sentence, in one of two forms:
 The sentence can add a condition that limits it, or to what end, when that
 helps: "Clerks move a guest's bill to their company's account at check-out, so
 the guest leaves without paying." It names the people it's about the way the
-business does, and the capability links the [personas](persona.md) it serves:
-who does it, or who it's done for. So the sentence reads on its own, and the
-links carry the exact list. It also links any [initiatives](initiative.md)
-it's part of.
+business does. The capability links the [problems](problem.md) it solves,
+which is why it exists, and it serves the [personas](persona.md) who have
+them. So the sentence reads on its own, and the links carry the exact list.
+It also links any [initiatives](initiative.md) it's part of.
+
+A capability that solves no problem yet is shown as one, so the reason it
+exists gets written down: `docqet check` reports it as an advisory
+[finding](finding.md), which doesn't fail the check, and it serves nobody
+until it does. A capability never lists personas: who it serves is whoever
+has the problems it solves, and a `personas` field on it is a mistake.
 
 ### What it doesn't do
 
@@ -128,7 +138,7 @@ when someone decides to promote or demote it.
 
 A capability is a doc whose `docqet` is `capability`, with its `domain`. Its
 frontmatter, in order, is `docqet`, `id`, `domain`, `name`, `description`,
-`stability` (required), `personas`, `initiatives`, `rules`, `concepts`,
+`stability` (required), `solves`, `initiatives`, `rules`, `concepts`,
 `gaps`, `tradeoffs` and `decisions`. Its body, which can be left out, is for
 anything more about what it does, such as what else it includes or how we'll
 know it works.
@@ -142,7 +152,7 @@ domain: guest-stays
 name: Room booking
 description: Clerks book a free room for a guest's stay.
 stability: beta
-personas: [persona:front-desk-clerk]
+solves: [problem:room-given-to-two-guests]
 rules:
   - rule:no-double-booking
   - rule:minimum-stay
@@ -184,8 +194,8 @@ tradeoffs:
 
 A draft is written the same way, with `stability: draft`.
 [`waitlist.md`](../../../../examples/hotel-bookings/docqet/domains/guest-stays/capabilities/waitlist.md)
-has its people, its initiative, rules and an open decision before any code
-exists:
+has the problem it solves, its initiative, rules and an open decision before
+any code exists:
 
 ```markdown
 ---
@@ -197,7 +207,7 @@ description: >-
   Clerks put a guest on a waitlist when every room is taken, and offer them
   the first room that frees up for their stay.
 stability: draft
-personas: [persona:front-desk-clerk]
+solves: [problem:full-nights-turn-guests-away]
 initiatives: [initiative:busy-season]
 rules: [rule:no-double-booking]
 concepts: [concept:booking, concept:room]

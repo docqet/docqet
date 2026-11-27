@@ -8,6 +8,6 @@ description: >-
   with every figure, from maturity and readiness to its improvements, counting
   only what's in it.
 stability: prototype
-personas: [persona:product-owner, persona:engineer]
+solves: [problem:unclear-what-helps-most]
 concepts: [concept:initiative@authoring]
 ---

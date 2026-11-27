@@ -8,7 +8,7 @@ description: >-
   what each block has earned or will, how long each client's earning window
   has left, and what's waiting to be paid.
 stability: beta
-personas: [persona:partner]
+solves: [problem:partner-earnings-opaque]
 initiatives: [initiative:mvp]
 rules:
   - rule:shares-earned-at-fulfillment

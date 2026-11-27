@@ -7,7 +7,7 @@ description: >-
   Partners set up and look after the one bank account each partnership they
   manage is paid to, its own apart from theirs and any other partnership's.
 stability: beta
-personas: [persona:partner]
+solves: [problem:partner-earnings-opaque]
 initiatives: [initiative:mvp]
 rules:
   - rule:one-payout-account-per-person

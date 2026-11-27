@@ -51,6 +51,7 @@ const (
 	TypeRule       = "rule"
 	TypeConcept    = "concept"
 	TypePersona    = "persona"
+	TypeProblem    = "problem"
 	TypeInitiative = "initiative"
 	TypeMechanism  = "mechanism"
 	TypeComponent  = "component"

@@ -7,7 +7,10 @@ description: >-
   Clerks move a guest's bill to their company's account at check-out, so the
   guest leaves without paying.
 stability: alpha
-personas: [persona:front-desk-clerk, persona:guest]
+solves:
+  - problem:settling-up-holds-guests-up
+  - problem:guests-queue-at-the-desk
+  - problem:company-debts-go-unwatched
 rules:
   - rule:credit-limit
   - rule:only-named-guests

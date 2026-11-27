@@ -7,7 +7,7 @@ description: >-
   Bookkeepers set up companies that pay for their staff's stays, each with a
   credit limit.
 stability: beta
-personas: [persona:bookkeeper]
+solves: [problem:company-debts-go-unwatched]
 rules: [rule:credit-limit]
 concepts: [concept:company-account]
 ---

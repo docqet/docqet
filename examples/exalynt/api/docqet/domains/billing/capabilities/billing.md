@@ -7,11 +7,10 @@ description: >-
   Clients pay for the capacity they buy with their default payment method, and
   each purchase issues an invoice.
 stability: beta
-personas:
-  - persona:client-admin-founder
-  - persona:client-admin-operations
-  - persona:client-billing
-  - persona:exalynt-admin
+solves:
+  - problem:engineering-starts-slowly
+  - problem:vendor-bills-hard-to-keep-up-with
+  - problem:exceptions-hide-in-routine
 initiatives: [initiative:mvp]
 rules:
   - rule:who-manages-billing

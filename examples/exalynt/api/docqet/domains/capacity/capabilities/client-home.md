@@ -7,7 +7,7 @@ description: >-
   Clients land on a page showing what's happening with their capacity, and
   what's waiting on them.
 stability: beta
-personas: [persona:client-admin-founder, persona:client-admin-operations, persona:client-member]
+solves: [problem:spend-without-visible-progress, problem:requests-go-unheard]
 initiatives: [initiative:mvp]
 rules:
   - rule:exalynt-can-move-lapsed-blocks

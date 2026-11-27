@@ -42,9 +42,10 @@ func Index(project fs.FS) (*state.State, error)
   then line.
 - **Reverse links.** A draft claims nothing, so it's left out of the
   capabilities that follow a rule or use a concept, though it still counts
-  for its personas and initiatives, and as following a rule for
-  `unlinked-rule`. A mechanism's capabilities are every capability the
-  project declares but drafts, then each its components list.
+  for its problems, personas and initiatives, and as following a rule for
+  `unlinked-rule`. A capability's personas are those of the problems it
+  solves. A mechanism's capabilities are every capability the project
+  declares but drafts, then each its components list.
 - **The summary**, counting a feature written in several domains once.
 - **The rubric**, embedded from
   `internal/rubric/rubric.yml` through the `rubric`

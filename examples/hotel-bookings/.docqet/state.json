@@ -1,5 +1,5 @@
 {
-  "docqet": "0.2",
+  "docqet": "0.3",
   "project": {
     "id": "hotel-bookings",
     "name": "Hotel Bookings"
@@ -14,6 +14,7 @@
     "domains": 2,
     "features": 3,
     "personas": 3,
+    "problems": 8,
     "initiatives": 1,
     "capabilities": {
       "draft": 1,
@@ -110,18 +111,26 @@
       "title": "Front desk clerk",
       "description": "Runs the front desk: takes bookings, and checks guests in and out.",
       "image": "https://randomuser.me/api/portraits/women/68.jpg",
+      "problems": [
+        "problem:arrivals-wait-for-rooms",
+        "problem:full-nights-turn-guests-away",
+        "problem:groups-hard-to-keep-together",
+        "problem:guests-leave-owing",
+        "problem:guests-queue-at-the-desk",
+        "problem:room-given-to-two-guests"
+      ],
       "capabilities": [
-        "capability:room-booking",
-        "capability:cancellations",
         "capability:check-in",
         "capability:check-out",
         "capability:group-bookings",
-        "capability:room-status",
-        "capability:waitlist"
+        "capability:room-booking",
+        "capability:waitlist",
+        "capability:cleaning-schedule",
+        "capability:room-status"
       ],
       "features": [
-        "feature:reservations",
         "feature:front-desk",
+        "feature:reservations",
         "feature:housekeeping"
       ],
       "initiatives": [
@@ -137,6 +146,9 @@
       "title": "Housekeeper",
       "description": "Cleans and readies the rooms between guests.",
       "image": "https://randomuser.me/api/portraits/women/26.jpg",
+      "problems": [
+        "problem:arrivals-wait-for-rooms"
+      ],
       "capabilities": [
         "capability:cleaning-schedule",
         "capability:room-status"
@@ -157,12 +169,141 @@
       "title": "Hotel manager",
       "description": "Runs the hotel, and answers for its takings to the owners.",
       "image": "https://randomuser.me/api/portraits/men/52.jpg",
+      "problems": [
+        "problem:guests-leave-owing",
+        "problem:late-cancellations-leave-rooms-empty",
+        "problem:rates-lag-demand"
+      ],
+      "capabilities": [
+        "capability:cancellations",
+        "capability:check-out",
+        "capability:rate-calendar"
+      ],
+      "features": [
+        "feature:reservations",
+        "feature:front-desk"
+      ],
+      "initiatives": [],
+      "body": "## Needs\n\n- To set what each room costs, night by night, so busy dates earn more.\n\n## Knows\n\nThe local market and the hotel's busy seasons. Reads a spreadsheet well, and\nexpects software to do the arithmetic for them.\n\n## Context\n\nAt a desk in the back office, a few times a week, in between everything else\nrunning a hotel brings.\n\n## Expects\n\nA calendar of rates, like the one they keep in a spreadsheet today.\n\n## Cares about\n\nRates they can change in a minute when a big event is announced, and being sure\nthe front desk is quoting them."
+    }
+  ],
+  "problems": [
+    {
+      "id": "arrivals-wait-for-rooms",
+      "file": "docqet/problems/arrivals-wait-for-rooms.md",
+      "name": "Arriving guests wait for a room that isn't ready",
+      "description": "A guest arrives and the desk doesn't know whether their room is ready, so the clerk phones housekeeping. Housekeeping didn't know that room was urgent, and gets rushed for it. When a room is ready, the housekeeper walks back down to say so.",
+      "cost": "Guests wait at the desk for their room, clerks lose time on the phone, and housekeepers are rushed and walk the building twice.",
+      "personas": [
+        "persona:front-desk-clerk",
+        "persona:housekeeper"
+      ],
+      "capabilities": [
+        "capability:cleaning-schedule",
+        "capability:room-status"
+      ],
+      "body": ""
+    },
+    {
+      "id": "full-nights-turn-guests-away",
+      "file": "docqet/problems/full-nights-turn-guests-away.md",
+      "name": "Guests are turned away from nights that later have a room",
+      "description": "On full nights I turn guests away. When someone cancels, a room frees up, but the guest who wanted it has gone and nobody kept a note of who asked.",
+      "cost": "A room stays empty on a night the hotel could have filled, and the guest books elsewhere (assumed).",
+      "personas": [
+        "persona:front-desk-clerk"
+      ],
+      "capabilities": [
+        "capability:waitlist"
+      ],
+      "body": ""
+    },
+    {
+      "id": "groups-hard-to-keep-together",
+      "file": "docqet/problems/groups-hard-to-keep-together.md",
+      "name": "A group's rooms are hard to keep together",
+      "description": "A group travelling together wants several rooms for the same nights, under one name. I book each room on its own, keep track of which ones belong to the group, and change each one when the group's plans change. A family that needs two rooms is two bookings.",
+      "cost": "Slow to book. When the group changes, a room gets missed or left held (assumed). On a busy night a group can get some of its rooms and not the rest (assumed).",
+      "personas": [
+        "persona:front-desk-clerk"
+      ],
+      "capabilities": [
+        "capability:group-bookings"
+      ],
+      "body": ""
+    },
+    {
+      "id": "guests-leave-owing",
+      "file": "docqet/problems/guests-leave-owing.md",
+      "name": "Guests leave without paying for everything they had",
+      "description": "An extra gets forgotten in a busy shift, a night or the city's tax doesn't get charged, or a guest leaves before settling up. Once they've gone, the money has gone with them.",
+      "cost": "Lost takings. The hotel owes the city's tax for every guest night whether or not it charged the guest, so tax it didn't charge comes out of the hotel's own pocket.",
+      "personas": [
+        "persona:front-desk-clerk",
+        "persona:manager"
+      ],
+      "capabilities": [
+        "capability:check-out"
+      ],
+      "body": ""
+    },
+    {
+      "id": "guests-queue-at-the-desk",
+      "file": "docqet/problems/guests-queue-at-the-desk.md",
+      "name": "Guests queue at the desk",
+      "description": "At arrivals, and on check-out mornings, the busiest part of my day, I have a guest in front of me, a queue behind them and the phone ringing. Every arrival and every departure takes as long as it takes me to find the stay, the room and what's owed, and anything I start may be finished minutes later.",
+      "cost": "Guests spend their first and last minutes at the hotel waiting. A rushed clerk makes mistakes (assumed).",
+      "personas": [
+        "persona:front-desk-clerk"
+      ],
+      "capabilities": [
+        "capability:check-in",
+        "capability:check-out"
+      ],
+      "body": ""
+    },
+    {
+      "id": "late-cancellations-leave-rooms-empty",
+      "file": "docqet/problems/late-cancellations-leave-rooms-empty.md",
+      "name": "Rooms held for guests who don't come earn nothing",
+      "description": "A guest cancels a day or two before arriving, or never turns up. Their room was held for them, and at such short notice it usually can't be sold again.",
+      "cost": "That night's takings for the room are lost.",
+      "personas": [
+        "persona:manager"
+      ],
+      "capabilities": [
+        "capability:cancellations"
+      ],
+      "body": ""
+    },
+    {
+      "id": "rates-lag-demand",
+      "file": "docqet/problems/rates-lag-demand.md",
+      "name": "Busy dates sell at quiet-date rates",
+      "description": "I keep each room's rates in a spreadsheet. When a big event is announced, changing them takes time, and I can't be sure the front desk is quoting the new ones.",
+      "cost": "Busy dates earn no more than quiet ones.",
+      "personas": [
+        "persona:manager"
+      ],
       "capabilities": [
         "capability:rate-calendar"
       ],
-      "features": [],
-      "initiatives": [],
-      "body": "## Needs\n\n- To set what each room costs, night by night, so busy dates earn more.\n\n## Knows\n\nThe local market and the hotel's busy seasons. Reads a spreadsheet well, and\nexpects software to do the arithmetic for them.\n\n## Context\n\nAt a desk in the back office, a few times a week, in between everything else\nrunning a hotel brings.\n\n## Expects\n\nA calendar of rates, like the one they keep in a spreadsheet today.\n\n## Cares about\n\nRates they can change in a minute when a big event is announced, and being sure\nthe front desk is quoting them."
+      "body": ""
+    },
+    {
+      "id": "room-given-to-two-guests",
+      "file": "docqet/problems/room-given-to-two-guests.md",
+      "name": "A guest's room is given to someone else",
+      "description": "I take bookings at the desk and on the phone, interrupted all the time. To tell a guest whether a room is free I have to check every night of their stay, and I can promise a room for a night it's already taken. I find out when the second guest is standing in front of me.",
+      "cost": "Telling a guest at the desk that their room was given away: the worst conversation the front desk has. The guest's trust in the hotel is lost, and so is the clerk's trust in whatever they use to keep track of rooms.",
+      "personas": [
+        "persona:front-desk-clerk"
+      ],
+      "capabilities": [
+        "capability:check-in",
+        "capability:room-booking"
+      ],
+      "body": ""
     }
   ],
   "initiatives": [
@@ -195,6 +336,9 @@
       "name": "Room booking",
       "description": "Clerks book a free room for a guest's stay.",
       "stability": "beta",
+      "solves": [
+        "problem:room-given-to-two-guests"
+      ],
       "personas": [
         "persona:front-desk-clerk"
       ],
@@ -241,8 +385,11 @@
       "name": "Cancellations",
       "description": "Clerks cancel a booking when a guest's plans change, and the guest is refunded what the cancellation policy allows.",
       "stability": "alpha",
+      "solves": [
+        "problem:late-cancellations-leave-rooms-empty"
+      ],
       "personas": [
-        "persona:front-desk-clerk"
+        "persona:manager"
       ],
       "initiatives": [],
       "rules": [
@@ -277,6 +424,10 @@
       "name": "Check-in",
       "description": "Clerks check guests in when they arrive and give them their room.",
       "stability": "beta",
+      "solves": [
+        "problem:guests-queue-at-the-desk",
+        "problem:room-given-to-two-guests"
+      ],
       "personas": [
         "persona:front-desk-clerk"
       ],
@@ -305,8 +456,13 @@
       "name": "Check-out",
       "description": "Clerks check guests out on their departure day and take payment for anything still owed.",
       "stability": "ga",
+      "solves": [
+        "problem:guests-queue-at-the-desk",
+        "problem:guests-leave-owing"
+      ],
       "personas": [
-        "persona:front-desk-clerk"
+        "persona:front-desk-clerk",
+        "persona:manager"
       ],
       "initiatives": [],
       "rules": [],
@@ -330,7 +486,11 @@
       "name": "Cleaning schedule",
       "description": "Housekeepers see which rooms to clean today, with early arrivals first.",
       "stability": "prototype",
+      "solves": [
+        "problem:arrivals-wait-for-rooms"
+      ],
       "personas": [
+        "persona:front-desk-clerk",
         "persona:housekeeper"
       ],
       "initiatives": [],
@@ -361,6 +521,9 @@
       "name": "Group bookings",
       "description": "Clerks hold several rooms at once for a group travelling together, under one name.",
       "stability": "prototype",
+      "solves": [
+        "problem:groups-hard-to-keep-together"
+      ],
       "personas": [
         "persona:front-desk-clerk"
       ],
@@ -397,6 +560,9 @@
       "name": "Rate calendar",
       "description": "Managers set each room type's nightly rate, date by date.",
       "stability": "prototype",
+      "solves": [
+        "problem:rates-lag-demand"
+      ],
       "personas": [
         "persona:manager"
       ],
@@ -426,9 +592,12 @@
       "name": "Room status",
       "description": "Housekeepers mark rooms clean or dirty, so the front desk knows which are ready.",
       "stability": "prototype",
+      "solves": [
+        "problem:arrivals-wait-for-rooms"
+      ],
       "personas": [
-        "persona:housekeeper",
-        "persona:front-desk-clerk"
+        "persona:front-desk-clerk",
+        "persona:housekeeper"
       ],
       "initiatives": [
         "initiative:busy-season"
@@ -460,6 +629,9 @@
       "name": "Waitlist",
       "description": "Clerks put a guest on a waitlist when every room is taken, and offer them the first room that frees up for their stay.",
       "stability": "draft",
+      "solves": [
+        "problem:full-nights-turn-guests-away"
+      ],
       "personas": [
         "persona:front-desk-clerk"
       ],

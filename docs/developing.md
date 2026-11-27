@@ -29,7 +29,7 @@ examples are folders in this repository, so `apply` sends their state at each
 commit of it:
 
 ```sh
-go run ./cmd/docqet -C examples/hotel-bookings check          # its findings, exit 1 if any
+go run ./cmd/docqet -C examples/hotel-bookings check          # its findings, exit 1 if any but advisory
 go run ./cmd/docqet -C examples/hotel-bookings index --stdout # its state
 make run                                                      # migrate, then serve on localhost:8080
 DOCQET_SERVER=http://localhost:8080 go run ./cmd/docqet -C examples/hotel-bookings apply

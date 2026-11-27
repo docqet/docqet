@@ -7,7 +7,7 @@ description: >-
   Partners see the clients attributed to their partnership: who they are, how
   each came to it, since when, and how long the partnership earns on each.
 stability: beta
-personas: [persona:partner]
+solves: [problem:partner-earnings-opaque]
 initiatives: [initiative:mvp]
 rules:
   - rule:inviting-creates-the-partnership

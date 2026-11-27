@@ -7,7 +7,7 @@ description: >-
   What did something that's gone become? Commits say what a doc, gap or
   decision they removed became, so history can follow it.
 stability: prototype
-personas: [persona:engineer, persona:coding-agent]
+solves: [problem:why-it-changed-is-lost]
 concepts: [concept:trailer]
 decisions:
   - topic: Keys for decisions

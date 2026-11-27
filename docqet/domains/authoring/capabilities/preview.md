@@ -7,7 +7,7 @@ description: >-
   How will this change look once it's shared? Engineers and agents see their
   work the way everyone else will, on their own machine, before it's merged.
 stability: prototype
-personas: [persona:engineer, persona:coding-agent]
+solves: [problem:docs-drift-from-code]
 gaps:
   - id: no-reindex
     name: Doesn't re-index as files change

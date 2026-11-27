@@ -8,7 +8,7 @@ description: >-
   agents read a capability's level, rules, gaps and decisions before changing
   its code, and keep its docs and annotations current in the same change.
 stability: prototype
-personas: [persona:coding-agent]
+solves: [problem:agents-guess-intention]
 gaps:
   - id: decisions-not-named
     name: Answered decisions can't be named

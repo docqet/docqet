@@ -35,6 +35,7 @@ func Combine(states []*state.State) *Product {
 	c.resolveGaps()
 	c.featuresOfCapabilities()
 	c.parts()
+	c.solvedProblems()
 	c.personasAndInitiatives()
 	c.contradictions()
 	c.duplicates()
@@ -93,6 +94,7 @@ type combiner struct {
 	rules        map[string]*Rule
 	concepts     map[string]*Concept
 	personas     map[string]*Persona
+	problems     map[string]*Problem
 	initiatives  map[string]*Initiative
 	mechanisms   map[string]*Technical
 	components   map[string]*Technical
@@ -117,6 +119,7 @@ func newCombiner() *combiner {
 			Rules:        []*Rule{},
 			Concepts:     []*Concept{},
 			Personas:     []*Persona{},
+			Problems:     []*Problem{},
 			Initiatives:  []*Initiative{},
 			Mechanisms:   []*Technical{},
 			Components:   []*Technical{},
@@ -130,6 +133,7 @@ func newCombiner() *combiner {
 		rules:        map[string]*Rule{},
 		concepts:     map[string]*Concept{},
 		personas:     map[string]*Persona{},
+		problems:     map[string]*Problem{},
 		initiatives:  map[string]*Initiative{},
 		mechanisms:   map[string]*Technical{},
 		components:   map[string]*Technical{},
@@ -198,6 +202,7 @@ func (c *combiner) add(st *state.State) {
 		capability := contribute(&c.p.Capabilities, c.capabilities, cp.ID, from, func(base Doc) *Capability {
 			return &Capability{
 				Doc:         base,
+				Solves:      []string{},
 				Personas:    []string{},
 				Initiatives: []string{},
 				Stability:   cp.Stability,
@@ -212,7 +217,7 @@ func (c *combiner) add(st *state.State) {
 		})
 		addEvidence(&capability.Evidence, cp.Evidence, project)
 		capability.Levels = append(capability.Levels, LevelIn{Project: project, Domain: cp.Domain, Level: cp.Stability})
-		capability.Personas = union(capability.Personas, ids(cp.Personas)...)
+		capability.Solves = union(capability.Solves, ids(cp.Solves)...)
 		capability.Initiatives = union(capability.Initiatives, ids(cp.Initiatives)...)
 		capability.Gaps = union(capability.Gaps, own(cp.Gaps)...)
 		capability.Tradeoffs = union(capability.Tradeoffs, own(cp.Tradeoffs)...)
@@ -254,10 +259,20 @@ func (c *combiner) add(st *state.State) {
 		persona := contribute(&c.p.Personas, c.personas, pr.ID, from, func(base Doc) *Persona {
 			return &Persona{
 				Doc: base, Role: pr.Role, Title: pr.Title, Image: pr.Image,
-				Capabilities: []string{}, Features: []string{}, Initiatives: []string{},
+				Problems: []string{}, Capabilities: []string{}, Features: []string{}, Initiatives: []string{},
 			}
 		})
 		persona.Initiatives = union(persona.Initiatives, ids(pr.Initiatives)...)
+	}
+
+	// A problem is in no domain either.
+	for _, pr := range st.Problems {
+		from := contribution(project, "", pr.File, pr.Name, pr.Description, pr.Body)
+		from.Cost = pr.Cost
+		problem := contribute(&c.p.Problems, c.problems, pr.ID, from, func(base Doc) *Problem {
+			return &Problem{Doc: base, Cost: pr.Cost, Personas: []string{}, Capabilities: []string{}}
+		})
+		problem.Personas = union(problem.Personas, ids(pr.Personas)...)
 	}
 
 	// An initiative is in no domain either.
@@ -535,6 +550,38 @@ func (c *combiner) parts() {
 	}
 }
 
+// solvedProblems works out each problem's capabilities, and each persona's
+// problems. A capability has the personas of the problems it solves, across
+// every project, and isn't reported as solving none by a project that leaves
+// its problems to another.
+func (c *combiner) solvedProblems() {
+	for _, pr := range c.p.Problems {
+		for _, id := range pr.Personas {
+			if p := c.personas[id]; p != nil {
+				p.Problems = union(p.Problems, pr.ID)
+			}
+		}
+	}
+	solves := map[string]bool{}
+	for _, cp := range c.p.Capabilities {
+		if len(cp.Solves) == 0 {
+			continue
+		}
+		solves[cp.ID] = true
+		personas := []string{}
+		for _, id := range cp.Solves {
+			if pr := c.problems[id]; pr != nil {
+				pr.Capabilities = union(pr.Capabilities, cp.ID)
+				personas = union(personas, pr.Personas...)
+			}
+		}
+		cp.Personas = personas
+	}
+	c.p.Findings = slices.DeleteFunc(c.p.Findings, func(f state.Finding) bool {
+		return f.Type == state.SolvesNoProblem && solves[idOf(f.Subject)]
+	})
+}
+
 // personasAndInitiatives works out each persona's capabilities and the
 // features those are in, and each initiative's capabilities, personas and
 // features.
@@ -589,7 +636,7 @@ func (c *combiner) contradictions() {
 				if typ == state.TypeRule {
 					body = f.Body
 				}
-				said = union(said, strings.Join([]string{f.Name, deref(f.Role), deref(f.Title), f.Description, body}, "\n"))
+				said = union(said, strings.Join([]string{f.Name, deref(f.Role), deref(f.Title), deref(f.Cost), f.Description, body}, "\n"))
 			}
 			if len(said) < 2 {
 				continue
@@ -612,6 +659,7 @@ func (c *combiner) contradictions() {
 	differing(state.TypeRule, docs(c.p.Rules))
 	differing(state.TypeConcept, docs(c.p.Concepts))
 	differing(state.TypePersona, docs(c.p.Personas))
+	differing(state.TypeProblem, docs(c.p.Problems))
 	differing(state.TypeInitiative, docs(c.p.Initiatives))
 	differing(state.TypeMechanism, docs(c.p.Mechanisms))
 	differing(state.TypeComponent, docs(c.p.Components))

@@ -7,7 +7,7 @@ description: >-
   Partners land on the partnership they manage at a glance, with the clients
   it has brought in, how to bring in more, and how it earns.
 stability: alpha
-personas: [persona:partner]
+solves: [problem:introductions-take-effort, problem:partner-earnings-opaque]
 initiatives: [initiative:mvp]
 rules:
   - rule:inviting-creates-the-partnership

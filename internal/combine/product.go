@@ -30,6 +30,7 @@ type Product struct {
 	Rules        []*Rule
 	Concepts     []*Concept
 	Personas     []*Persona
+	Problems     []*Problem
 	Initiatives  []*Initiative
 	Mechanisms   []*Technical
 	Components   []*Technical
@@ -64,6 +65,7 @@ type Contribution struct {
 
 	Role  *string // a persona's
 	Title *string // a persona's
+	Cost  *string // a problem's
 
 	// Decisions are the doc's open decisions as this project declares them.
 	// What each affects, other than an outcome, has @<project> added, as gap
@@ -130,8 +132,10 @@ type LevelIn struct {
 }
 
 // Capability is something the product can do, built in one or more domains.
+// Its personas are those of the problems it solves.
 type Capability struct {
 	Doc
+	Solves      []string
 	Personas    []string
 	Initiatives []string
 	// Stability is its level in short: the lowest of Levels, Draft lowest of
@@ -171,9 +175,18 @@ type Persona struct {
 	Role         *string
 	Title        *string
 	Image        *string
-	Capabilities []string // every capability that lists it
+	Problems     []string // every problem that names it
+	Capabilities []string // every capability that serves it
 	Features     []string // the features those are in
 	Initiatives  []string
+}
+
+// Problem is a pain point the personas it names share.
+type Problem struct {
+	Doc
+	Cost         *string
+	Personas     []string
+	Capabilities []string // every capability that solves it
 }
 
 // Initiative is a body of work.
@@ -254,6 +267,11 @@ func (p *Product) Feature(id string) *Feature {
 // Capability returns the capability with id, or nil.
 func (p *Product) Capability(id string) *Capability {
 	return find(p.Capabilities, id, func(c *Capability) string { return c.ID })
+}
+
+// Problem returns the problem with id, or nil.
+func (p *Product) Problem(id string) *Problem {
+	return find(p.Problems, id, func(pr *Problem) string { return pr.ID })
 }
 
 // Rule returns the rule with key, <id>@<domain>, or nil.

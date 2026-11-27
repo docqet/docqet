@@ -8,7 +8,7 @@ description: >-
   doc's ID, with everything that names it, and get the trailer to commit it
   with.
 stability: prototype
-personas: [persona:engineer, persona:coding-agent]
+solves: [problem:docs-drift-from-code, problem:docs-slow-every-change]
 gaps:
   - id: other-projects-not-listed
     name: Other projects' references aren't listed

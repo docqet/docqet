@@ -8,7 +8,7 @@ description: >-
   the client's shared queue, as [Claiming blocks](claiming-blocks.md) covers,
   or an admin assigns it.
 stability: alpha
-personas: [persona:exalynt-admin]
+solves: [problem:exceptions-hide-in-routine]
 initiatives: [initiative:mvp]
 rules:
   - rule:listing-an-engineers-blocks

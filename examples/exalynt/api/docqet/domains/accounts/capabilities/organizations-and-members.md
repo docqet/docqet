@@ -7,11 +7,9 @@ description: >-
   Clients sign up, create the organization their people share, invite others
   to it, and give each member a role.
 stability: ga
-personas:
-  - persona:client-admin-founder
-  - persona:client-admin-operations
-  - persona:client-member
-  - persona:client-billing
+solves:
+  - problem:engineering-starts-slowly
+  - problem:vendor-relationship-has-one-door
 initiatives: [initiative:mvp]
 rules:
   - rule:logos-stay-within-their-organization

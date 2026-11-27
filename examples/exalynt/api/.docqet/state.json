@@ -1,5 +1,5 @@
 {
-  "docqet": "0.2",
+  "docqet": "0.3",
   "project": {
     "id": "exalynt-api",
     "name": "Exalynt API"
@@ -14,6 +14,7 @@
     "domains": 6,
     "features": 12,
     "personas": 10,
+    "problems": 24,
     "initiatives": 4,
     "capabilities": {
       "draft": 0,
@@ -281,12 +282,16 @@
       "name": "Access tokens",
       "description": "People create personal access tokens so their scripts and tools can call the API as them, everywhere they belong or only in the organizations they choose.",
       "stability": "beta",
+      "solves": [
+        "problem:others-can-act-as-you",
+        "problem:access-doesnt-match-the-job"
+      ],
       "personas": [
+        "persona:exalynt-admin",
         "persona:client-admin-founder",
         "persona:client-admin-operations",
         "persona:client-member",
         "persona:client-billing",
-        "persona:exalynt-admin",
         "persona:exalynt-engineer-1",
         "persona:exalynt-engineer-2",
         "persona:exalynt-engineer-new-hire",
@@ -353,6 +358,9 @@
       "name": "Engineer onboarding",
       "description": "Engineers join Exalynt by an admin's invitation, on the team it names if it names one, since nobody signs up as an engineer on their own.",
       "stability": "alpha",
+      "solves": [
+        "problem:new-engineer-unsure-ready-or-paid"
+      ],
       "personas": [
         "persona:exalynt-engineer-new-hire"
       ],
@@ -394,6 +402,11 @@
       "name": "Getting set up",
       "description": "People see what they still have to set up: a client before work can start, an engineer before they're ready for client work, and a partner before they can be paid.",
       "stability": "alpha",
+      "solves": [
+        "problem:engineering-starts-slowly",
+        "problem:new-engineer-unsure-ready-or-paid",
+        "problem:partner-earnings-opaque"
+      ],
       "personas": [
         "persona:client-admin-founder",
         "persona:client-admin-operations",
@@ -432,16 +445,24 @@
       "name": "Notifications",
       "description": "People choose which notifications they get and where they go.",
       "stability": "prototype",
+      "solves": [
+        "problem:requests-go-unheard",
+        "problem:vendor-bills-hard-to-keep-up-with",
+        "problem:exceptions-hide-in-routine",
+        "problem:team-trouble-seen-one-by-one",
+        "problem:pay-cant-be-checked",
+        "problem:partner-earnings-opaque"
+      ],
       "personas": [
-        "persona:client-admin-founder",
-        "persona:client-admin-operations",
-        "persona:client-member",
-        "persona:client-billing",
+        "persona:exalynt-admin",
+        "persona:partner",
         "persona:exalynt-engineer-1",
         "persona:exalynt-engineer-2",
         "persona:exalynt-team-lead",
-        "persona:exalynt-admin",
-        "persona:partner"
+        "persona:client-admin-founder",
+        "persona:client-admin-operations",
+        "persona:client-member",
+        "persona:client-billing"
       ],
       "initiatives": [
         "initiative:notifications"
@@ -500,6 +521,10 @@
       "name": "Organizations and members",
       "description": "Clients sign up, create the organization their people share, invite others to it, and give each member a role.",
       "stability": "ga",
+      "solves": [
+        "problem:engineering-starts-slowly",
+        "problem:vendor-relationship-has-one-door"
+      ],
       "personas": [
         "persona:client-admin-founder",
         "persona:client-admin-operations",
@@ -616,6 +641,9 @@
       "name": "Roles",
       "description": "Exalynt's admins decide what people may do by making roles: platform roles for people who work with Exalynt, and organization roles for client organizations' members.",
       "stability": "alpha",
+      "solves": [
+        "problem:access-doesnt-match-the-job"
+      ],
       "personas": [
         "persona:exalynt-admin"
       ],
@@ -684,6 +712,9 @@
       "name": "Your profile",
       "description": "Everyone manages their own account in every app: their name and photo, their email addresses, the accounts they sign in with, their password, and the devices they're signed in on.",
       "stability": "beta",
+      "solves": [
+        "problem:others-can-act-as-you"
+      ],
       "personas": [
         "persona:client-admin-founder",
         "persona:client-admin-operations",
@@ -724,6 +755,9 @@
       "name": "Agreements",
       "description": "Admins offer each party the agreement that binds it to Exalynt: a Client Agreement for an organization, an Engineer Agreement for someone working in the console, and a Partner Agreement for a partnership.",
       "stability": "alpha",
+      "solves": [
+        "problem:agreed-terms-applied-by-hand"
+      ],
       "personas": [
         "persona:exalynt-admin"
       ],
@@ -775,6 +809,9 @@
       "name": "Client agreements",
       "description": "A client organization's Admin reads and accepts its Client Agreement on its behalf, before anyone can use the portal for it.",
       "stability": "beta",
+      "solves": [
+        "problem:vendor-terms-hard-to-find"
+      ],
       "personas": [
         "persona:client-admin-founder",
         "persona:client-admin-operations",
@@ -832,6 +869,10 @@
       "name": "Engineer agreements",
       "description": "Engineers read and accept the Engineer Agreement Exalynt sends them, with its Commercial Terms, before they work in the console.",
       "stability": "beta",
+      "solves": [
+        "problem:new-engineer-unsure-ready-or-paid",
+        "problem:taking-on-work-blind"
+      ],
       "personas": [
         "persona:exalynt-engineer-new-hire",
         "persona:exalynt-engineer-1",
@@ -885,9 +926,13 @@
       "name": "Partner agreements",
       "description": "A partnership's manager reads and accepts the Partner Agreement Exalynt sends with its invitation, with its Commercial Terms, before working in the Partner Hub for that partnership.",
       "stability": "beta",
+      "solves": [
+        "problem:partner-earnings-opaque",
+        "problem:agreed-terms-applied-by-hand"
+      ],
       "personas": [
-        "persona:partner",
-        "persona:exalynt-admin"
+        "persona:exalynt-admin",
+        "persona:partner"
       ],
       "initiatives": [
         "initiative:mvp"
@@ -930,11 +975,16 @@
       "name": "Billing",
       "description": "Clients pay for the capacity they buy with their default payment method, and each purchase issues an invoice.",
       "stability": "beta",
+      "solves": [
+        "problem:engineering-starts-slowly",
+        "problem:vendor-bills-hard-to-keep-up-with",
+        "problem:exceptions-hide-in-routine"
+      ],
       "personas": [
         "persona:client-admin-founder",
         "persona:client-admin-operations",
-        "persona:client-billing",
-        "persona:exalynt-admin"
+        "persona:exalynt-admin",
+        "persona:client-billing"
       ],
       "initiatives": [
         "initiative:mvp"
@@ -982,6 +1032,9 @@
       "name": "Client coupons",
       "description": "Exalynt's admins give one client a coupon: a name, and a percentage or amount off each block they buy, either forever or on their next purchase.",
       "stability": "prototype",
+      "solves": [
+        "problem:agreed-terms-applied-by-hand"
+      ],
       "personas": [
         "persona:exalynt-admin"
       ],
@@ -1015,6 +1068,11 @@
       "name": "Availability",
       "description": "Engineers set how much of each week they offer, in capacity units, and that adds up per team to decide which weeks have room, though clients never see it directly.",
       "stability": "beta",
+      "solves": [
+        "problem:engineers-overbooked",
+        "problem:team-trouble-seen-one-by-one",
+        "problem:exceptions-hide-in-routine"
+      ],
       "personas": [
         "persona:exalynt-engineer-1",
         "persona:exalynt-engineer-2",
@@ -1060,6 +1118,10 @@
       "name": "Capacity purchasing",
       "description": "Clients buy engineering capacity in blocks, charged at once to their organization's default payment method on one invoice, to schedule now or later.",
       "stability": "beta",
+      "solves": [
+        "problem:engineering-starts-slowly",
+        "problem:spend-without-visible-progress"
+      ],
       "personas": [
         "persona:client-admin-founder",
         "persona:client-admin-operations"
@@ -1119,6 +1181,9 @@
       "name": "Claiming blocks",
       "description": "Engineers see their weeks on My Schedule beside what their team's clients have scheduled that nobody's on, and claim the blocks that fit their availability, or unclaim one until its week starts.",
       "stability": "beta",
+      "solves": [
+        "problem:taking-on-work-blind"
+      ],
       "personas": [
         "persona:exalynt-engineer-1",
         "persona:exalynt-engineer-2"
@@ -1183,6 +1248,9 @@
       "name": "Client directory",
       "description": "Exalynt's admins see every client organization, the blocks each has bought and how far the work has got, and assign the teams that serve it.",
       "stability": "alpha",
+      "solves": [
+        "problem:exceptions-hide-in-routine"
+      ],
       "personas": [
         "persona:exalynt-admin"
       ],
@@ -1265,6 +1333,10 @@
       "name": "Client home",
       "description": "Clients land on a page showing what's happening with their capacity, and what's waiting on them.",
       "stability": "beta",
+      "solves": [
+        "problem:spend-without-visible-progress",
+        "problem:requests-go-unheard"
+      ],
       "personas": [
         "persona:client-admin-founder",
         "persona:client-admin-operations",
@@ -1299,6 +1371,10 @@
       "name": "Conversation spaces",
       "description": "A client's people and the Exalynt engineers who work with them talk about the work in a space of their own with the messaging provider, in Google Chat outside the app or with Stream inside it, and about each block in conversations they start there, each on a subject of its own.",
       "stability": "prototype",
+      "solves": [
+        "problem:requests-go-unheard",
+        "problem:working-without-client-context"
+      ],
       "personas": [
         "persona:client-admin-founder",
         "persona:client-admin-operations",
@@ -1359,6 +1435,9 @@
       "name": "Engineers",
       "description": "Exalynt's admins see everyone who works with Exalynt: their team, what they're working on, and whether they're ready for client work.",
       "stability": "alpha",
+      "solves": [
+        "problem:exceptions-hide-in-routine"
+      ],
       "personas": [
         "persona:exalynt-admin"
       ],
@@ -1453,13 +1532,16 @@
       "name": "Estimates",
       "description": "Exalynt prepares estimates of what a project might take, and clients and prospects read them to see what each focus and the project would cost and take on every block type.",
       "stability": "beta",
+      "solves": [
+        "problem:budgeting-blind",
+        "problem:quoting-takes-a-long-sitting"
+      ],
       "personas": [
         "persona:client-admin-founder",
         "persona:client-admin-operations",
-        "persona:client-member",
+        "persona:exalynt-admin",
         "persona:exalynt-engineer-1",
-        "persona:exalynt-engineer-2",
-        "persona:exalynt-admin"
+        "persona:exalynt-engineer-2"
       ],
       "initiatives": [
         "initiative:mvp"
@@ -1512,14 +1594,22 @@
       "name": "Fulfillment",
       "description": "A block's engineer starts it once its week begins, and marks it fulfilled when the work is done, with nobody reviewing it.",
       "stability": "alpha",
+      "solves": [
+        "problem:spend-without-visible-progress",
+        "problem:requests-go-unheard",
+        "problem:working-without-client-context",
+        "problem:reporting-eats-into-the-work",
+        "problem:team-trouble-seen-one-by-one",
+        "problem:exceptions-hide-in-routine"
+      ],
       "personas": [
-        "persona:exalynt-engineer-1",
-        "persona:exalynt-engineer-2",
-        "persona:exalynt-team-lead",
         "persona:exalynt-admin",
+        "persona:exalynt-engineer-1",
         "persona:client-admin-founder",
         "persona:client-admin-operations",
-        "persona:client-member"
+        "persona:client-member",
+        "persona:exalynt-team-lead",
+        "persona:exalynt-engineer-2"
       ],
       "initiatives": [
         "initiative:mvp"
@@ -1599,6 +1689,9 @@
       "name": "Operations and ownership",
       "description": "Clients choose whether they or Exalynt operate the software Exalynt builds for them, and keep what they own.",
       "stability": "prototype",
+      "solves": [
+        "problem:dependent-on-the-builder"
+      ],
       "personas": [
         "persona:client-admin-founder",
         "persona:client-admin-operations"
@@ -1666,11 +1759,16 @@
       "name": "Scheduling",
       "description": "Clients schedule each block into a week that has room, against what the engineers on their organization's teams offer, and can move it to another week, or take it back out, until that week starts.",
       "stability": "beta",
+      "solves": [
+        "problem:engineering-starts-slowly",
+        "problem:work-ignores-the-business-calendar",
+        "problem:exceptions-hide-in-routine"
+      ],
       "personas": [
         "persona:client-admin-founder",
         "persona:client-admin-operations",
-        "persona:client-member",
-        "persona:exalynt-admin"
+        "persona:exalynt-admin",
+        "persona:client-member"
       ],
       "initiatives": [
         "initiative:mvp"
@@ -1736,6 +1834,9 @@
       "name": "Staffing",
       "description": "Each scheduled block gets one engineer: an eligible engineer claims it from the client's shared queue, as [Claiming blocks](claiming-blocks.md) covers, or an admin assigns it.",
       "stability": "alpha",
+      "solves": [
+        "problem:exceptions-hide-in-routine"
+      ],
       "personas": [
         "persona:exalynt-admin"
       ],
@@ -1803,14 +1904,21 @@
       "name": "Teams",
       "description": "Exalynt groups its people into teams to work with the clients they're assigned to, and a client's teams decide who at Exalynt it sees.",
       "stability": "beta",
+      "solves": [
+        "problem:spend-without-visible-progress",
+        "problem:requests-go-unheard",
+        "problem:working-without-client-context",
+        "problem:new-engineer-unsure-ready-or-paid",
+        "problem:team-trouble-seen-one-by-one"
+      ],
       "personas": [
+        "persona:exalynt-engineer-new-hire",
         "persona:client-admin-founder",
         "persona:client-admin-operations",
         "persona:client-member",
+        "persona:exalynt-team-lead",
         "persona:exalynt-engineer-1",
         "persona:exalynt-engineer-2",
-        "persona:exalynt-engineer-new-hire",
-        "persona:exalynt-team-lead",
         "persona:exalynt-admin"
       ],
       "initiatives": [
@@ -1880,10 +1988,14 @@
       "name": "Client invitations",
       "description": "Partners invite people they know to become Exalynt clients by email, and each one who signs up as a new client is attributed to their partnership.",
       "stability": "beta",
+      "solves": [
+        "problem:introductions-take-effort",
+        "problem:engineering-starts-slowly"
+      ],
       "personas": [
-        "persona:partner",
         "persona:client-admin-founder",
-        "persona:client-admin-operations"
+        "persona:client-admin-operations",
+        "persona:partner"
       ],
       "initiatives": [
         "initiative:mvp"
@@ -1942,6 +2054,9 @@
       "name": "Partner clients",
       "description": "Partners see the clients attributed to their partnership: who they are, how each came to it, since when, and how long the partnership earns on each.",
       "stability": "beta",
+      "solves": [
+        "problem:partner-earnings-opaque"
+      ],
       "personas": [
         "persona:partner"
       ],
@@ -2000,6 +2115,10 @@
       "name": "Partner home",
       "description": "Partners land on the partnership they manage at a glance, with the clients it has brought in, how to bring in more, and how it earns.",
       "stability": "alpha",
+      "solves": [
+        "problem:introductions-take-effort",
+        "problem:partner-earnings-opaque"
+      ],
       "personas": [
         "persona:partner"
       ],
@@ -2057,11 +2176,17 @@
       "name": "Partnerships",
       "description": "Partners Exalynt has enrolled each manage a partnership, and introduce people to Exalynt by giving them its referral code or inviting them by email.",
       "stability": "alpha",
+      "solves": [
+        "problem:engineering-starts-slowly",
+        "problem:introductions-take-effort",
+        "problem:partner-earnings-opaque",
+        "problem:agreed-terms-applied-by-hand"
+      ],
       "personas": [
+        "persona:exalynt-admin",
         "persona:client-admin-founder",
         "persona:client-admin-operations",
-        "persona:partner",
-        "persona:exalynt-admin"
+        "persona:partner"
       ],
       "initiatives": [
         "initiative:mvp"
@@ -2137,6 +2262,10 @@
       "name": "Earnings",
       "description": "People see what they earn on each block, from when it's assigned to when it's fulfilled.",
       "stability": "alpha",
+      "solves": [
+        "problem:pay-cant-be-checked",
+        "problem:taking-on-work-blind"
+      ],
       "personas": [
         "persona:exalynt-engineer-1",
         "persona:exalynt-engineer-2",
@@ -2208,6 +2337,9 @@
       "name": "Partner earnings",
       "description": "Partners see what their partnership earns on each of its clients' blocks: what each block has earned or will, how long each client's earning window has left, and what's waiting to be paid.",
       "stability": "beta",
+      "solves": [
+        "problem:partner-earnings-opaque"
+      ],
       "personas": [
         "persona:partner"
       ],
@@ -2323,6 +2455,9 @@
       "name": "Partner payout accounts",
       "description": "Partners set up and look after the one bank account each partnership they manage is paid to, its own apart from theirs and any other partnership's.",
       "stability": "beta",
+      "solves": [
+        "problem:partner-earnings-opaque"
+      ],
       "personas": [
         "persona:partner"
       ],
@@ -2399,6 +2534,9 @@
       "name": "Partner payouts",
       "description": "Each partnership is paid what it earns into its own payout account, never its manager's, once an admin releases it, and its manager sees each payout.",
       "stability": "beta",
+      "solves": [
+        "problem:partner-earnings-opaque"
+      ],
       "personas": [
         "persona:partner"
       ],
@@ -2485,10 +2623,17 @@
       "name": "Payout accounts",
       "description": "People and partnerships each have one bank account their payouts go to, which they add, change, fix, remove, and see whether it can be paid.",
       "stability": "alpha",
+      "solves": [
+        "problem:pay-cant-be-checked",
+        "problem:new-engineer-unsure-ready-or-paid",
+        "problem:partner-earnings-opaque"
+      ],
       "personas": [
+        "persona:exalynt-engineer-new-hire",
+        "persona:partner",
         "persona:exalynt-engineer-1",
         "persona:exalynt-engineer-2",
-        "persona:partner"
+        "persona:exalynt-team-lead"
       ],
       "initiatives": [
         "initiative:mvp"
@@ -2529,12 +2674,17 @@
       "name": "Payouts",
       "description": "Admins release what people and partnerships have earned, and it goes to each payee's payout account.",
       "stability": "alpha",
+      "solves": [
+        "problem:money-moves-unchecked",
+        "problem:pay-cant-be-checked",
+        "problem:partner-earnings-opaque"
+      ],
       "personas": [
+        "persona:exalynt-admin",
+        "persona:partner",
         "persona:exalynt-engineer-1",
         "persona:exalynt-engineer-2",
-        "persona:exalynt-team-lead",
-        "persona:exalynt-admin",
-        "persona:partner"
+        "persona:exalynt-team-lead"
       ],
       "initiatives": [
         "initiative:mvp"
@@ -11304,6 +11454,16 @@
       "title": "Founder",
       "description": "Founder of an early-stage startup with no full engineering team, buying engineering to build the product.",
       "image": "https://randomuser.me/api/portraits/men/45.jpg",
+      "problems": [
+        "problem:budgeting-blind",
+        "problem:dependent-on-the-builder",
+        "problem:engineering-starts-slowly",
+        "problem:others-can-act-as-you",
+        "problem:requests-go-unheard",
+        "problem:spend-without-visible-progress",
+        "problem:vendor-terms-hard-to-find",
+        "problem:work-ignores-the-business-calendar"
+      ],
       "capabilities": [
         "capability:access-tokens",
         "capability:getting-set-up",
@@ -11352,6 +11512,17 @@
       "title": "Director of operations",
       "description": "Director of operations at a mid-sized equipment-rental business. Buys and steers custom software from Exalynt, and owns the budget and the relationship.",
       "image": "https://randomuser.me/api/portraits/women/44.jpg",
+      "problems": [
+        "problem:budgeting-blind",
+        "problem:dependent-on-the-builder",
+        "problem:engineering-starts-slowly",
+        "problem:others-can-act-as-you",
+        "problem:requests-go-unheard",
+        "problem:spend-without-visible-progress",
+        "problem:vendor-relationship-has-one-door",
+        "problem:vendor-terms-hard-to-find",
+        "problem:work-ignores-the-business-calendar"
+      ],
       "capabilities": [
         "capability:access-tokens",
         "capability:getting-set-up",
@@ -11400,6 +11571,12 @@
       "title": "Controller",
       "description": "Controller at a client business who pays invoices and manages payment methods and billing details.",
       "image": "https://randomuser.me/api/portraits/men/22.jpg",
+      "problems": [
+        "problem:others-can-act-as-you",
+        "problem:vendor-bills-hard-to-keep-up-with",
+        "problem:vendor-relationship-has-one-door",
+        "problem:vendor-terms-hard-to-find"
+      ],
       "capabilities": [
         "capability:access-tokens",
         "capability:notifications",
@@ -11429,6 +11606,13 @@
       "title": "Customer service manager",
       "description": "Customer service manager at a non-software business whose team uses what Exalynt builds. Follows the work and raises what the software should do.",
       "image": "https://randomuser.me/api/portraits/women/57.jpg",
+      "problems": [
+        "problem:others-can-act-as-you",
+        "problem:requests-go-unheard",
+        "problem:vendor-relationship-has-one-door",
+        "problem:vendor-terms-hard-to-find",
+        "problem:work-ignores-the-business-calendar"
+      ],
       "capabilities": [
         "capability:access-tokens",
         "capability:notifications",
@@ -11437,7 +11621,6 @@
         "capability:client-agreements",
         "capability:client-home",
         "capability:conversation-spaces",
-        "capability:estimates",
         "capability:fulfillment",
         "capability:scheduling",
         "capability:teams"
@@ -11467,6 +11650,15 @@
       "title": "Founder-operator",
       "description": "Founder-operator who runs Exalynt's staffing, payouts, estimates, partnerships and roles, while also talking to clients and doing engineering.",
       "image": "https://randomuser.me/api/portraits/women/12.jpg",
+      "problems": [
+        "problem:access-doesnt-match-the-job",
+        "problem:agreed-terms-applied-by-hand",
+        "problem:exceptions-hide-in-routine",
+        "problem:money-moves-unchecked",
+        "problem:others-can-act-as-you",
+        "problem:quoting-takes-a-long-sitting",
+        "problem:working-without-client-context"
+      ],
       "capabilities": [
         "capability:access-tokens",
         "capability:notifications",
@@ -11515,6 +11707,15 @@
       "title": "Senior full-stack engineer",
       "description": "Senior full-stack engineer, long at Exalynt, on a team assigned to a few clients. Owns blocks end to end, from starting one to marking it fulfilled.",
       "image": "https://randomuser.me/api/portraits/women/33.jpg",
+      "problems": [
+        "problem:engineers-overbooked",
+        "problem:others-can-act-as-you",
+        "problem:pay-cant-be-checked",
+        "problem:quoting-takes-a-long-sitting",
+        "problem:reporting-eats-into-the-work",
+        "problem:taking-on-work-blind",
+        "problem:working-without-client-context"
+      ],
       "capabilities": [
         "capability:access-tokens",
         "capability:notifications",
@@ -11555,6 +11756,14 @@
       "title": "Associate engineer",
       "description": "Recently joined Associate engineer on Lena's team, learning to own blocks end to end.",
       "image": "https://randomuser.me/api/portraits/men/76.jpg",
+      "problems": [
+        "problem:engineers-overbooked",
+        "problem:others-can-act-as-you",
+        "problem:pay-cant-be-checked",
+        "problem:quoting-takes-a-long-sitting",
+        "problem:taking-on-work-blind",
+        "problem:working-without-client-context"
+      ],
       "capabilities": [
         "capability:access-tokens",
         "capability:notifications",
@@ -11595,20 +11804,26 @@
       "title": "Full-stack engineer",
       "description": "Mid-level full-stack engineer just hired by Exalynt, coming from a product company or agency. Will work blocks for the clients their team supports, and is paid per block rather than a salary.",
       "image": "https://randomuser.me/api/portraits/men/14.jpg",
+      "problems": [
+        "problem:new-engineer-unsure-ready-or-paid",
+        "problem:others-can-act-as-you"
+      ],
       "capabilities": [
         "capability:access-tokens",
         "capability:engineer-onboarding",
         "capability:getting-set-up",
         "capability:your-profile",
         "capability:engineer-agreements",
-        "capability:teams"
+        "capability:teams",
+        "capability:payout-accounts"
       ],
       "features": [
         "feature:access",
         "feature:onboarding",
         "feature:your-account",
         "feature:agreements",
-        "feature:clients-and-teams"
+        "feature:clients-and-teams",
+        "feature:getting-paid"
       ],
       "initiatives": [
         "initiative:mvp"
@@ -11623,6 +11838,13 @@
       "title": "Principal engineer",
       "description": "Principal engineer who leads Lena and Ravi's team. Carries client blocks too, with coordination as a part-time responsibility rather than a management job.",
       "image": "https://randomuser.me/api/portraits/men/61.jpg",
+      "problems": [
+        "problem:engineers-overbooked",
+        "problem:others-can-act-as-you",
+        "problem:pay-cant-be-checked",
+        "problem:team-trouble-seen-one-by-one",
+        "problem:working-without-client-context"
+      ],
       "capabilities": [
         "capability:access-tokens",
         "capability:notifications",
@@ -11632,6 +11854,7 @@
         "capability:fulfillment",
         "capability:teams",
         "capability:earnings",
+        "capability:payout-accounts",
         "capability:payouts"
       ],
       "features": [
@@ -11657,6 +11880,11 @@
       "title": "Independent consultant",
       "description": "Independent consultant who already works with Exalynt and makes an introduction or two a year through their own partnership. Uses only the Partner Hub.",
       "image": "https://randomuser.me/api/portraits/women/79.jpg",
+      "problems": [
+        "problem:introductions-take-effort",
+        "problem:others-can-act-as-you",
+        "problem:partner-earnings-opaque"
+      ],
       "capabilities": [
         "capability:access-tokens",
         "capability:getting-set-up",
@@ -11686,6 +11914,428 @@
         "initiative:notifications"
       ],
       "body": "## Needs\n\n- To copy their referral code or sign-up link, or invite someone by email, in a\n  moment when making an introduction.\n- To see what the partnership has earned, what's been paid and what's still\n  waiting, client by client, on their phone as well.\n- To see how long they earn on each client, without remembering how earning\n  windows work.\n- To be paid into the partnership's own account, and told why when earnings are\n  held.\n\n## Knows\n\nExalynt's work and reputation. Forgets how the hub and earning windows work\nbetween visits.\n\n## Context\n\nA few times a year, often from an emailed link on a phone, wanting the code to\nshare or what they've earned.\n\n## Expects\n\nA simple earnings statement. No quotas or selling.\n\n## Cares about\n\nClear numbers that match, and payouts that arrive. Leaves if it feels like a\nsales tool."
+    }
+  ],
+  "problems": [
+    {
+      "id": "access-doesnt-match-the-job",
+      "file": "docqet/problems/access-doesnt-match-the-job.md",
+      "name": "What people may do doesn't match their job",
+      "description": "People work with us in many roles: client admins, colleagues, controllers, engineers, leads, partners, sometimes several at once. I decide what each can do, and when I get it wrong they're blocked, or they see clients or money they shouldn't.",
+      "cost": "Work stalls behind access requests, or client and payment details are exposed (assumed).",
+      "personas": [
+        "persona:exalynt-admin"
+      ],
+      "capabilities": [
+        "capability:access-tokens",
+        "capability:roles"
+      ],
+      "body": ""
+    },
+    {
+      "id": "agreed-terms-applied-by-hand",
+      "file": "docqet/problems/agreed-terms-applied-by-hand.md",
+      "name": "Each party's agreed terms are applied by hand",
+      "description": "Each engineer, partner and client works with us on terms chosen for them: shares, how long a partner earns, a discount. I bring each one in on their terms, then have to apply those terms on every sale and every payout.",
+      "cost": "People are paid or charged on terms nobody agreed to, which leads to disputes and rework (assumed).",
+      "personas": [
+        "persona:exalynt-admin"
+      ],
+      "capabilities": [
+        "capability:agreements",
+        "capability:partner-agreements",
+        "capability:client-coupons",
+        "capability:partnerships"
+      ],
+      "body": ""
+    },
+    {
+      "id": "budgeting-blind",
+      "file": "docqet/problems/budgeting-blind.md",
+      "name": "Software work is budgeted blind",
+      "description": "Before we commit I need to know what each piece will cost and how many weeks it takes, in money and weeks, not hours, so I can plan the budget and compare it with hiring a contractor.",
+      "cost": "Plans made within tight money or a fixed budget overrun, or work isn't started at all because nobody can say what it costs.",
+      "personas": [
+        "persona:client-admin-founder",
+        "persona:client-admin-operations"
+      ],
+      "capabilities": [
+        "capability:estimates"
+      ],
+      "body": ""
+    },
+    {
+      "id": "dependent-on-the-builder",
+      "file": "docqet/problems/dependent-on-the-builder.md",
+      "name": "Custom software leaves the business dependent on whoever built it",
+      "description": "Someone else builds our software and may run it. I don't know where the code lives, who has access, what's live, or how we'd take it over if we stopped working with them.",
+      "cost": "The business can't switch vendors or leave without risk, and doesn't fully own what it paid for (assumed: neither client admin persona states this).",
+      "personas": [
+        "persona:client-admin-founder",
+        "persona:client-admin-operations"
+      ],
+      "capabilities": [
+        "capability:operations-and-ownership"
+      ],
+      "body": ""
+    },
+    {
+      "id": "engineering-starts-slowly",
+      "file": "docqet/problems/engineering-starts-slowly.md",
+      "name": "Starting engineering work is slow and unclear",
+      "description": "We need the product built now, and hiring or contracting engineers means weeks of searching and back-and-forth before anyone writes a line. I'm buying between meetings, and I can't tell what's still needed from us before work can start, or what happens next.",
+      "cost": "The product or the process waits while money is tight and things feel urgent. Buyers give up when starting feels slow or the next step is unclear.",
+      "personas": [
+        "persona:client-admin-founder",
+        "persona:client-admin-operations"
+      ],
+      "capabilities": [
+        "capability:getting-set-up",
+        "capability:organizations-and-members",
+        "capability:billing",
+        "capability:capacity-purchasing",
+        "capability:scheduling",
+        "capability:client-invitations",
+        "capability:partnerships"
+      ],
+      "body": ""
+    },
+    {
+      "id": "engineers-overbooked",
+      "file": "docqet/problems/engineers-overbooked.md",
+      "name": "Engineers get booked for more than they can do",
+      "description": "How much I can work changes week to week. If clients book me without knowing that, my weeks overfill, and changing a week means sorting it out with everyone it affects.",
+      "cost": "Overloaded engineers, weeks that can't be delivered, and clients let down.",
+      "personas": [
+        "persona:exalynt-engineer-1",
+        "persona:exalynt-engineer-2",
+        "persona:exalynt-team-lead"
+      ],
+      "capabilities": [
+        "capability:availability"
+      ],
+      "body": ""
+    },
+    {
+      "id": "exceptions-hide-in-routine",
+      "file": "docqet/problems/exceptions-hide-in-routine.md",
+      "name": "Exceptions hide among routine work",
+      "description": "I run staffing, payouts, estimates and partnerships in short bursts between calls and engineering. Paid work nobody's on, overbooked weeks, failed payments and earnings on hold only turn up if I go through every client and engineer.",
+      "cost": "Weeks clients paid for pass with nobody working them, payments stay failed, people go unpaid, and finding exceptions takes a long unbroken sitting there isn't time for.",
+      "personas": [
+        "persona:exalynt-admin"
+      ],
+      "capabilities": [
+        "capability:notifications",
+        "capability:billing",
+        "capability:availability",
+        "capability:client-directory",
+        "capability:engineers",
+        "capability:fulfillment",
+        "capability:scheduling",
+        "capability:staffing"
+      ],
+      "body": ""
+    },
+    {
+      "id": "introductions-take-effort",
+      "file": "docqet/problems/introductions-take-effort.md",
+      "name": "Making an introduction takes more than a moment",
+      "description": "I recommend the company once or twice a year, often from my phone, in the middle of a conversation. Finding how to refer someone, and making sure it counts as mine, shouldn't feel like selling.",
+      "cost": "Introductions aren't made or aren't credited, and partners drift away if it feels like a sales tool.",
+      "personas": [
+        "persona:partner"
+      ],
+      "capabilities": [
+        "capability:client-invitations",
+        "capability:partner-home",
+        "capability:partnerships"
+      ],
+      "body": ""
+    },
+    {
+      "id": "money-moves-unchecked",
+      "file": "docqet/problems/money-moves-unchecked.md",
+      "name": "Money goes out before it's been checked",
+      "description": "Once a week I send everyone what they've earned. I have to see who gets what and what each amount is for before it goes, and that's hard to double-check.",
+      "cost": "A wrong payment, once sent, has to be settled outside the normal process. Payees lose trust.",
+      "personas": [
+        "persona:exalynt-admin"
+      ],
+      "capabilities": [
+        "capability:payouts"
+      ],
+      "body": ""
+    },
+    {
+      "id": "new-engineer-unsure-ready-or-paid",
+      "file": "docqet/problems/new-engineer-unsure-ready-or-paid.md",
+      "name": "New engineers can't tell if they're ready or how they'll be paid",
+      "description": "I've just joined, paid per piece of work instead of a salary. I want to read the terms that set my pay, know what's left to set up before a client depends on me, and why I'm handing over my bank details and who holds them, without bothering the person who hired me.",
+      "cost": "Missed setup steps surface in front of a client, worries about bank details delay setup, and dead ends make them give up.",
+      "personas": [
+        "persona:exalynt-engineer-new-hire"
+      ],
+      "capabilities": [
+        "capability:engineer-onboarding",
+        "capability:getting-set-up",
+        "capability:engineer-agreements",
+        "capability:teams",
+        "capability:payout-accounts"
+      ],
+      "body": ""
+    },
+    {
+      "id": "others-can-act-as-you",
+      "file": "docqet/problems/others-can-act-as-you.md",
+      "name": "Someone else can act as you",
+      "description": "I sign in from several devices and addresses over time, and some of my tools act for me. An old address, a lost laptop or a leaked credential lets someone in as me, and a changed address can lock me out. (assumed: no persona states this)",
+      "cost": "Someone acts on client work or money in their name, or they're locked out when they need to act (assumed).",
+      "personas": [
+        "persona:client-admin-founder",
+        "persona:client-admin-operations",
+        "persona:client-member",
+        "persona:client-billing",
+        "persona:exalynt-admin",
+        "persona:exalynt-engineer-1",
+        "persona:exalynt-engineer-2",
+        "persona:exalynt-engineer-new-hire",
+        "persona:exalynt-team-lead",
+        "persona:partner"
+      ],
+      "capabilities": [
+        "capability:access-tokens",
+        "capability:your-profile"
+      ],
+      "body": ""
+    },
+    {
+      "id": "partner-earnings-opaque",
+      "file": "docqet/problems/partner-earnings-opaque.md",
+      "name": "Partners can't tell what they've earned, for how long, or why it's held",
+      "description": "Between visits I forget how earning works. I want to see what my partnership has earned client by client, what's paid and what's waiting, how long I earn on each client, and why money is held, and to be paid into the partnership's own account.",
+      "cost": "Numbers partners can't check, and payouts that don't arrive, push them to ask the company or to leave.",
+      "personas": [
+        "persona:partner"
+      ],
+      "capabilities": [
+        "capability:getting-set-up",
+        "capability:notifications",
+        "capability:partner-agreements",
+        "capability:partner-clients",
+        "capability:partner-home",
+        "capability:partnerships",
+        "capability:partner-earnings",
+        "capability:partner-payout-accounts",
+        "capability:partner-payouts",
+        "capability:payout-accounts",
+        "capability:payouts"
+      ],
+      "body": ""
+    },
+    {
+      "id": "pay-cant-be-checked",
+      "file": "docqet/problems/pay-cant-be-checked.md",
+      "name": "Engineers can't check their pay against the work",
+      "description": "I'm paid per piece of work, sometimes with shares from teammates' work or as lead on top of my own. I can't tell what each piece earned, when it'll be paid, or why money is held and what I need to fix.",
+      "cost": "Engineers distrust numbers that don't match, spend time reconciling or asking, and wait on pay they could have unblocked.",
+      "personas": [
+        "persona:exalynt-engineer-1",
+        "persona:exalynt-engineer-2",
+        "persona:exalynt-team-lead"
+      ],
+      "capabilities": [
+        "capability:notifications",
+        "capability:earnings",
+        "capability:payout-accounts",
+        "capability:payouts"
+      ],
+      "body": ""
+    },
+    {
+      "id": "quoting-takes-a-long-sitting",
+      "file": "docqet/problems/quoting-takes-a-long-sitting.md",
+      "name": "Quoting a project takes a long unbroken sitting",
+      "description": "Clients and prospects want to know what a project would cost and take before they commit, so someone has to size each piece, price it every way they might buy it, and send it, around our other work. (assumed: drawn from the admin persona running estimates, and from engineers preparing them)",
+      "cost": "Prospects wait for a quote, and quotes differ depending on who wrote them (assumed).",
+      "personas": [
+        "persona:exalynt-admin",
+        "persona:exalynt-engineer-1",
+        "persona:exalynt-engineer-2"
+      ],
+      "capabilities": [
+        "capability:estimates"
+      ],
+      "body": ""
+    },
+    {
+      "id": "reporting-eats-into-the-work",
+      "file": "docqet/problems/reporting-eats-into-the-work.md",
+      "name": "Reporting on the work eats into doing it",
+      "description": "Coding is the real job. Saying I started, what I did, and that it's done should take seconds, not feel like filling in a timesheet.",
+      "cost": "Reports come late or not at all, so clients can't see progress, and engineers resent the process.",
+      "personas": [
+        "persona:exalynt-engineer-1"
+      ],
+      "capabilities": [
+        "capability:fulfillment"
+      ],
+      "body": ""
+    },
+    {
+      "id": "requests-go-unheard",
+      "file": "docqet/problems/requests-go-unheard.md",
+      "name": "What the business asks for gets lost on the way to the engineers",
+      "description": "We know what the software should do, and we explain it in our own words, with our own screenshots and files. Then it's passed along, what comes back reads as technical, and I have to ask where things stand and whether anyone heard us.",
+      "cost": "The wrong thing gets built, time goes on chasing updates, and the people who know the business stop raising what they need.",
+      "personas": [
+        "persona:client-admin-founder",
+        "persona:client-admin-operations",
+        "persona:client-member"
+      ],
+      "capabilities": [
+        "capability:notifications",
+        "capability:client-home",
+        "capability:conversation-spaces",
+        "capability:fulfillment",
+        "capability:teams"
+      ],
+      "body": ""
+    },
+    {
+      "id": "spend-without-visible-progress",
+      "file": "docqet/problems/spend-without-visible-progress.md",
+      "name": "Money goes out without visible progress",
+      "description": "Every week we pay for engineering, and unless I ask, I can't see who worked on what, what it was about, or whether it got finished.",
+      "cost": "They can't tell what the money bought, lose confidence in the vendor, and give up on it.",
+      "personas": [
+        "persona:client-admin-founder",
+        "persona:client-admin-operations"
+      ],
+      "capabilities": [
+        "capability:capacity-purchasing",
+        "capability:client-home",
+        "capability:fulfillment",
+        "capability:teams"
+      ],
+      "body": ""
+    },
+    {
+      "id": "taking-on-work-blind",
+      "file": "docqet/problems/taking-on-work-blind.md",
+      "name": "Engineers take on work without knowing what it asks or pays",
+      "description": "Before I commit to a client's week I want to know what's expected of me, whether it fits my time, and what it'll earn me, and if I can't take it, why not.",
+      "cost": "Engineers commit to the wrong work, get it wrong in front of a client, or stop trusting their pay. Unexplained refusals drive them away.",
+      "personas": [
+        "persona:exalynt-engineer-1",
+        "persona:exalynt-engineer-2"
+      ],
+      "capabilities": [
+        "capability:engineer-agreements",
+        "capability:claiming-blocks",
+        "capability:earnings"
+      ],
+      "body": ""
+    },
+    {
+      "id": "team-trouble-seen-one-by-one",
+      "file": "docqet/problems/team-trouble-seen-one-by-one.md",
+      "name": "A lead finds team trouble one person at a time",
+      "description": "I lead the team part-time while carrying my own client work. To see who's stuck, who's overloaded, or who joined, left or can't take work any more, I have to check each person.",
+      "cost": "Work stalls, teammates get overloaded, and clients wait before the lead notices.",
+      "personas": [
+        "persona:exalynt-team-lead"
+      ],
+      "capabilities": [
+        "capability:notifications",
+        "capability:availability",
+        "capability:fulfillment",
+        "capability:teams"
+      ],
+      "body": ""
+    },
+    {
+      "id": "vendor-bills-hard-to-keep-up-with",
+      "file": "docqet/problems/vendor-bills-hard-to-keep-up-with.md",
+      "name": "A vendor's bills are hard to keep up with",
+      "description": "I work through invoices in batches at month end. I need every invoice with its tax and whether it's paid, ready to file, and when a payment fails I need to know at once and what to do about it.",
+      "cost": "Amounts don't match the books, filing takes longer, and an unnoticed failed payment holds up the work it paid for.",
+      "personas": [
+        "persona:client-billing"
+      ],
+      "capabilities": [
+        "capability:notifications",
+        "capability:billing"
+      ],
+      "body": ""
+    },
+    {
+      "id": "vendor-relationship-has-one-door",
+      "file": "docqet/problems/vendor-relationship-has-one-door.md",
+      "name": "Everything with the vendor runs through one person",
+      "description": "I bought this, so my colleagues who need to follow the work or pay the invoices have to come to me for everything, and when someone joins or leaves it's on me to sort out what they can see.",
+      "cost": "The buyer becomes a relay, colleagues wait on them, and people who've left may keep seeing the business's work and spending (assumed).",
+      "personas": [
+        "persona:client-admin-operations",
+        "persona:client-member",
+        "persona:client-billing"
+      ],
+      "capabilities": [
+        "capability:organizations-and-members"
+      ],
+      "body": ""
+    },
+    {
+      "id": "vendor-terms-hard-to-find",
+      "file": "docqet/problems/vendor-terms-hard-to-find.md",
+      "name": "What the business agreed to is hard to find later",
+      "description": "We started working with the vendor on terms someone here accepted. When a question comes up later, nobody can find the exact terms or say who accepted them and when. (assumed: no persona states this)",
+      "cost": "Disputes over what was agreed, and work held up while it's settled (assumed).",
+      "personas": [
+        "persona:client-admin-founder",
+        "persona:client-admin-operations",
+        "persona:client-member",
+        "persona:client-billing"
+      ],
+      "capabilities": [
+        "capability:client-agreements"
+      ],
+      "body": ""
+    },
+    {
+      "id": "work-ignores-the-business-calendar",
+      "file": "docqet/problems/work-ignores-the-business-calendar.md",
+      "name": "Engineering time doesn't follow the business's calendar",
+      "description": "The business has busy weeks and quiet weeks. I need the work in the weeks that suit us, and to move it when our plans change, before it starts.",
+      "cost": "Work lands when nobody at the business can engage with it, or urgent work waits for a slot.",
+      "personas": [
+        "persona:client-admin-founder",
+        "persona:client-admin-operations",
+        "persona:client-member"
+      ],
+      "capabilities": [
+        "capability:scheduling"
+      ],
+      "body": ""
+    },
+    {
+      "id": "working-without-client-context",
+      "file": "docqet/problems/working-without-client-context.md",
+      "name": "Engineers start work without the client's context",
+      "description": "I'm about to work for a client and don't know what they actually want, which clients we support, or who to ask on their side, so I guess or chase people for it.",
+      "cost": "Work misses what the client meant, and the engineer looks unprepared in front of them.",
+      "personas": [
+        "persona:exalynt-engineer-1",
+        "persona:exalynt-engineer-2",
+        "persona:exalynt-team-lead",
+        "persona:exalynt-admin"
+      ],
+      "capabilities": [
+        "capability:conversation-spaces",
+        "capability:fulfillment",
+        "capability:teams"
+      ],
+      "body": ""
     }
   ],
   "initiatives": [

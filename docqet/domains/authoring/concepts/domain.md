@@ -13,7 +13,7 @@ confused-with:
       a source of state, such as a repository or a package in one. A project works in domains, but says nothing about what words mean.
   - concept: "concept:feature"
     summary: >-
-      a job the product does. A domain is the part of the business whose language the job is described in.
+      a part of what the product offers. A domain is the part of the business whose language it's described in.
 ---
 
 Guest stays is a domain: "looking after guests from their booking to their
@@ -30,10 +30,10 @@ domain.
   several. A project works in as many domains as it has domain docs.
   Repackaging the software, or reorganizing the teams that build it, never
   creates, removes or splits a domain.
-- **Every product doc but a persona or an initiative is written in exactly
-  one domain**: the one whose words it uses, which it names in its `domain`
+- **Every product doc but an initiative is written in exactly one domain**: the one whose words it uses, which it names in its `domain`
   field. Changing a doc's `domain` moves it to that domain, wherever its file
-  is. Mechanisms and components are in no domain either.
+  is. Personas and problems, in the problem space, are in no domain, and
+  neither are mechanisms and components.
 - **Domains are shared by ID.** Projects that work in the same part of the
   business use the same domain ID, and their contributions to it are one
   domain.
@@ -94,7 +94,7 @@ with others of the same ID depends on its type:
 
 | Type | Is one across | The same ID elsewhere |
 | --- | --- | --- |
-| domain, feature, capability, persona, initiative, mechanism, component | everything | A contribution to the same one. Its links are put together, and its name and description should match. |
+| domain, feature, capability, persona, problem, initiative, mechanism, component | everything | A contribution to the same one. Its links are put together, and its name and description should match. |
 | rule, concept | its domain | Another definition, shown beside this one. Within the same domain, it's a contribution, as above. |
 
 - **Features and capabilities span domains.** A feature or capability written
@@ -103,14 +103,15 @@ with others of the same ID depends on its type:
   check guests in and out, and in Billing, where the bill is settled at
   check-out, and the feature is one.
 - **Links are combined**: a feature's capabilities and tradeoffs, a
-  capability's personas, initiatives, rules, concepts, gaps and tradeoffs, a
+  capability's problems, initiatives, rules, concepts, gaps and tradeoffs, a
+  problem's personas, a
   mechanism's or component's capabilities, outcomes, gaps and tradeoffs, and
   everything's evidence. Each contribution's order is kept, in the order the
   projects are read.
 - **What a contribution says is its own**: its body, and its frontmatter
   fields that aren't links, such as `decisions` or a rule's `why`. Readers
   show each, labelled with its project and domain. Its name and description,
-  and a persona's role and title, should match the others'. Where they don't,
+  a persona's role and title, and a problem's cost, should match the others'. Where they don't,
   that's a [contradiction](../../understanding/concepts/contradiction.md).
 - **A capability's `stability` is per domain.** Each contribution declares the
   level of its own part. Where they differ, the capability's level in short is

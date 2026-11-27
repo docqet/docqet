@@ -7,5 +7,5 @@ description: >-
   What was it like then? Everyone sees the software as it was at any commit or
   time.
 stability: draft
-personas: [persona:product-owner, persona:engineer]
+solves: [problem:why-it-changed-is-lost]
 ---

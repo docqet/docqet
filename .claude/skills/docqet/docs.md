@@ -16,9 +16,11 @@
 - **Where a file is means nothing.** Put a new doc where the project keeps
   others of its type, named after its ID. In a new project, use the
   recommended layout: `docqet/domains/<domain>/` with `domain.md` and
-  `features/`, `capabilities/`, `rules/` and `concepts/`, and `docqet/personas/`,
-  `docqet/initiatives/`, `docqet/mechanisms/` and `docqet/components/`. The name is what it's called. The description says what it is, usually in a
-  sentence, and for a concept a definition in as many sentences as that takes.
+  `features/`, `capabilities/`, `rules/` and `concepts/`, and
+  `docqet/personas/`, `docqet/problems/`, `docqet/initiatives/`,
+  `docqet/mechanisms/` and `docqet/components/`. The name is what it's called.
+  The description says what it is, usually in a sentence, and for a concept a
+  definition in as many sentences as that takes.
 - **Fields go in the order below.** Leave out any that aren't required and
   have nothing to say. `docqet check` reports a missing required field, an
   unknown one, or a value the format doesn't allow.
@@ -35,6 +37,73 @@
 - **Nothing private.** Docs are checked in, so they never hold secrets,
   accounts, a real person's details, or real client data.
 
+## Two spaces
+
+Docs are in two spaces. **Problem docs**, personas and problems, are the
+problem space: why the software exists, in the words of the people it's for,
+never naming the software. The solution space holds **product docs**: what
+the software does, seen from outside, in the domain's words, never naming the
+implementation. And **technical docs**: how it's built, seen from inside, in
+the code's words. Links only point toward why: technical docs link to
+capabilities, and capabilities to the problems they solve, never the other
+way. The spaces say what a doc describes, not who decides it.
+
+## Problem docs
+
+### Persona: `docqet: persona`
+
+A type of person the software serves, written as one invented person, for the
+whole project rather than per domain.
+
+```yaml
+---
+docqet: persona
+id: front-desk-clerk
+name: Maria                        # the invented person's name
+description: Runs the front desk: takes bookings, and checks guests in and out.
+role: Front desk                   # how they use the software; null if none
+title: Front desk clerk            # their job title; null if none
+image: https://randomuser.me/api/portraits/women/68.jpg   # optional
+initiatives: [initiative:busy-season]   # the initiatives whose work is for them
+---
+```
+
+The body says what they know, their context, and what makes them trust the
+software or give up on it. What they need goes in their problems. Never base
+a persona on a real person's details.
+
+### Problem: `docqet: problem`
+
+A pain point one or more personas share, for the whole project rather than
+per domain. It's why capabilities exist.
+
+```yaml
+---
+docqet: problem
+id: room-given-to-two-guests
+name: A guest's room is given to someone else   # the problem in a few words
+description: >-
+  I take bookings at the desk and on the phone, interrupted all the time, and
+  I can promise a room for a night it's already taken. I find out when the
+  second guest is standing in front of me.
+cost: >-                          # optional: what it costs them or the business
+  The worst conversation the front desk has.
+personas: [persona:front-desk-clerk]   # required: who has it
+---
+```
+
+- **It never names the software**, its screens or its capabilities. Ask
+  whether it would still be true if the software didn't exist. "Can't book
+  online" is a capability with "can't" in front, not a problem.
+- **Its description is the situation**, as the people who have it would say
+  it, and its cost is what that costs.
+- **Personas share one only when it's the same pain**: the same situation,
+  and the same cost. Otherwise it's two problems.
+
+A problem is a person's call, like any intention: propose it, and write it
+once they confirm it. Its capabilities, those whose `solves` names it, are
+worked out.
+
 ## Product docs
 
 Written in the domain's words, for anyone with a stake in the software. They
@@ -42,8 +111,8 @@ never name the implementation.
 
 ### Domain: `docqet: domain`
 
-A part of the business with a language of its own. Every product doc but a
-persona or an initiative is in one, the one its `domain` field names. A domain
+A part of the business with a language of its own. Every product doc but an
+initiative is in one, the one its `domain` field names. A domain
 doc's `id` is the domain's ID, and projects working in the same part of the
 business use the same one.
 
@@ -59,10 +128,11 @@ decisions: []        # optional, see gaps-and-decisions.md
 
 ### Feature: `docqet: feature`
 
-A job the product does, such as Reservations. It keeps its identity as
-capabilities come and go. If work helps an existing feature do its job, it's a
-capability of that feature. If it gives the product a new job, it's a new
-feature. Work that only changes how something is built is neither.
+A part of what the product offers, such as Reservations: what someone comes
+to the software for, and would name. It keeps its identity as capabilities
+come and go. If work produces a new result in a part the product already has,
+it's a capability of that feature. If it gives the product a new part, it's a
+new feature. Work that only changes how something is built is neither.
 
 ```yaml
 ---
@@ -79,15 +149,16 @@ decisions: []
 ---
 ```
 
-A feature has no level, rules or gaps. Its maturity and readiness come from its
-capabilities, its rules are theirs, and a capability it lacks is a draft
-capability. A capability is in at most one feature.
+A feature has no level, rules, gaps or problems. Its maturity and readiness
+come from its capabilities, its rules and problems are theirs, and a
+capability it lacks is a draft capability. A capability is in at most one feature.
 
 ### Capability: `docqet: capability`
 
-One result of value, and the only doc with a stability level. Its description
-is one sentence saying who or what does what: "Clerks book a free room for a
-guest's stay", or "The software closes each business day overnight".
+One result the product produces, solving part of one or more problems, and
+the only doc with a stability level. Its description is one sentence saying
+who or what does what: "Clerks book a free room for a guest's stay", or "The
+software closes each business day overnight".
 
 ```yaml
 ---
@@ -97,7 +168,7 @@ domain: guest-stays
 name: Room booking
 description: Clerks book a free room for a guest's stay.
 stability: beta      # required: draft, prototype, alpha, beta or ga
-personas: [persona:front-desk-clerk]
+solves: [problem:room-given-to-two-guests]   # why it exists; its personas are its problems'
 initiatives: []
 rules: [rule:no-double-booking, rule:minimum-stay]
 concepts: [concept:booking]
@@ -116,6 +187,12 @@ is a rule, what's missing for now is a gap, what's limited by choice is a
 tradeoff, and a whole result it doesn't produce yet is another capability, as
 a draft. Following a rule claims the capability holds to it, unless one of its
 gaps names that rule.
+
+A capability that solves no problem yet is an advisory finding: shown, but
+never failing `docqet check`, and it serves nobody until it solves one. A
+capability never lists `personas`: they're its problems', and the field fails
+the check. Moving an older project over, write the problems its `personas`
+stood for, link them with `solves`, and remove `personas`.
 
 ### Rule: `docqet: rule`
 
@@ -166,28 +243,6 @@ confused-with:
 
 The body holds its details: what it's made of, how it relates to other
 concepts, and the states it moves through.
-
-### Persona: `docqet: persona`
-
-A type of person the software serves, written as one invented person, for the
-whole project rather than per domain.
-
-```yaml
----
-docqet: persona
-id: front-desk-clerk
-name: Maria                        # the invented person's name
-description: Runs the front desk: takes bookings, and checks guests in and out.
-role: Front desk                   # how they use the software; null if none
-title: Front desk clerk            # their job title; null if none
-image: https://randomuser.me/api/portraits/women/68.jpg   # optional
-initiatives: [initiative:busy-season]   # the initiatives whose work is for them
----
-```
-
-The body says what they need and why, what they know, their context, and what
-makes them trust the software or give up on it. Never base a persona on a real
-person's details.
 
 ### Initiative: `docqet: initiative`
 
@@ -277,7 +332,8 @@ Every link points one way, and is written once:
 
 ```text
 feature    → capabilities
-capability → personas, initiatives, rules, concepts
+capability → problems (solves), initiatives, rules, concepts
+problem    → personas
 persona    → initiatives
 rule       → concepts
 concept    → concepts                      (confused-with)
@@ -301,8 +357,8 @@ the code that points at it.
 ## Several projects
 
 Projects in the same product, named in `docqet.yaml`, contribute to one
-picture of the product. A domain, feature, capability, persona, initiative,
-mechanism or component with the same ID in two projects is one thing: its name and
+picture of the product. A domain, feature, capability, persona, problem,
+initiative, mechanism or component with the same ID in two projects is one thing: its name and
 description must match, its links are combined, and a capability's level is
 per domain. Before creating one, check whether another project in the
 product already has it, with `docqet list <type> --product`. Reuse its ID,

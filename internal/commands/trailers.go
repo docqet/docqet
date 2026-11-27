@@ -130,6 +130,9 @@ func declaredIDs(st *state.State) map[string]bool {
 	for _, p := range st.Personas {
 		add(state.TypePersona, p.ID)
 	}
+	for _, pr := range st.Problems {
+		add(state.TypeProblem, pr.ID)
+	}
 	for _, i := range st.Initiatives {
 		add(state.TypeInitiative, i.ID)
 	}

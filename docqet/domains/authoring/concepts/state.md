@@ -49,7 +49,7 @@ with each list cut down to its keys:
     "tradeoffs": 3,
     "findings": 0
   },
-  "domains": [], "features": [], "personas": [], "initiatives": [],
+  "domains": [], "features": [], "personas": [], "problems": [], "initiatives": [],
   "capabilities": [], "rules": [], "concepts": [], "mechanisms": [],
   "components": [], "gaps": [], "tradeoffs": [], "findings": [],
   "rubric": {}
@@ -63,18 +63,24 @@ with each list cut down to its keys:
 - **Every `file` is from the project's folder**, the one with its
   `docqet.yaml`, such as `docqet/domains/billing/concepts/bill.md`, not from
   the repository's root, so a project reads the same wherever it is.
-- **`summary`**: how many domains, features, personas and initiatives there
+- **`summary`**: how many domains, features, personas, problems and initiatives there
   are, capabilities per level with `draft` among them, how many rules, gaps,
   tradeoffs, mechanisms, components and findings. This is the at-a-glance
   view.
 - **`domains`**: each of the project's domain docs.
 - **`features`**: each with its capabilities and its `tradeoffs`. Each
   capability names the feature it's in, as a reference, or `null`, and lists
-  its `gaps` and `tradeoffs`, by ID. Its `stability` can be `"draft"`.
+  its `gaps` and `tradeoffs`, by ID. Its `stability` can be `"draft"`. It
+  lists the problems it `solves`, and its `personas`, those of the problems
+  it solves, worked out.
 - **`personas`**: each with its `name`, `role` and `title`, `role` and
-  `title` as `null` where it has none, the capabilities that list them, the
-  features those are in, and the `initiatives` it lists, as references.
-  Personas aren't in a domain, so these have no `domain`.
+  `title` as `null` where it has none, the problems that name them, the
+  capabilities that serve them, the features those are in, and the
+  `initiatives` it lists, as references. Personas aren't in a domain, so
+  these have no `domain`.
+- **`problems`**: each with its ID, file, `name`, `description`, `cost`, or
+  `null`, the `personas` it names, the capabilities that solve it, drafts
+  among them, and its body. Problems aren't in a domain either.
 - **`initiatives`**: each with its ID, file, `name`, `description`, the
   capabilities that list it, the features those are in, the personas that
   list it, and its body. Like personas, they have no `domain`. Each

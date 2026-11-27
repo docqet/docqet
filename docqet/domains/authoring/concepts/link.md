@@ -16,7 +16,8 @@ Every link points one way and is written once:
 
 ```text
 feature                    → capabilities
-capability                 → personas, initiatives, rules, concepts
+problem                    → personas
+capability                 → problems (solves), initiatives, rules, concepts
 rule                       → concepts
 concept                    → concepts                  (confused-with)
 gap                        → outcomes, rules           (affects)

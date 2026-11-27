@@ -8,11 +8,10 @@ description: >-
   an engineer before they're ready for client work, and a partner before they
   can be paid.
 stability: alpha
-personas:
-  - persona:client-admin-founder
-  - persona:client-admin-operations
-  - persona:exalynt-engineer-new-hire
-  - persona:partner
+solves:
+  - problem:engineering-starts-slowly
+  - problem:new-engineer-unsure-ready-or-paid
+  - problem:partner-earnings-opaque
 initiatives: [initiative:mvp]
 rules:
   - rule:engineers-join-by-invitation-only

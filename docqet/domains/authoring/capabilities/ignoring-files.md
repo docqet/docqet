@@ -7,7 +7,7 @@ description: >-
   Engineers leave files out of a project with a `.docqetignore`, such as docs
   that show example annotations.
 stability: prototype
-personas: [persona:engineer]
+solves: [problem:docs-slow-every-change]
 concepts: [concept:project]
 rules:
   - rule:ignored-files-arent-read

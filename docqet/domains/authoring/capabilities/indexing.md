@@ -8,7 +8,7 @@ description: >-
   project's state from its docs and annotations, at the working tree or any
   commit.
 stability: prototype
-personas: [persona:engineer, persona:coding-agent]
+solves: [problem:docs-drift-from-code]
 concepts: [concept:indexer, concept:state, concept:project]
 rules:
   - rule:location-means-nothing

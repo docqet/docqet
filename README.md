@@ -73,7 +73,7 @@ go install github.com/docqet/docqet/cmd/docqet@latest
 
 docqet init --id my-app --name "My App"   # writes docqet.yaml
 docqet kit install                        # the agent kit
-docqet check                              # exit 1 on any finding
+docqet check                              # exit 1 on any finding but advisory ones
 ```
 
 [Installing](docs/installing.md) covers CI, and

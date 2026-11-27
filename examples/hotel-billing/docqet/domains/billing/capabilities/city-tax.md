@@ -7,7 +7,7 @@ description: >-
   The software adds the city's tourist tax to each guest's bill, night by
   night.
 stability: alpha
-personas: [persona:manager, persona:front-desk-clerk]
+solves: [problem:guests-leave-owing, problem:guests-billed-more-than-they-owe]
 rules:
   - rule:city-tax-per-guest-night
   - rule:children-pay-no-city-tax

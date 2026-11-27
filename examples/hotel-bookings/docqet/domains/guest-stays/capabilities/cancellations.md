@@ -7,7 +7,7 @@ description: >-
   Clerks cancel a booking when a guest's plans change, and the guest is
   refunded what the cancellation policy allows.
 stability: alpha
-personas: [persona:front-desk-clerk]
+solves: [problem:late-cancellations-leave-rooms-empty]
 rules:
   - rule:free-cancellation-window
   - rule:late-cancellation-fee

@@ -7,10 +7,9 @@ description: >-
   Engineers read and accept the Engineer Agreement Exalynt sends them, with
   its Commercial Terms, before they work in the console.
 stability: beta
-personas:
-  - persona:exalynt-engineer-new-hire
-  - persona:exalynt-engineer-1
-  - persona:exalynt-engineer-2
+solves:
+  - problem:new-engineer-unsure-ready-or-paid
+  - problem:taking-on-work-blind
 initiatives: [initiative:mvp]
 rules:
   - rule:engineer-agreement-follows-the-invitations-terms

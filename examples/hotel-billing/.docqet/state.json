@@ -1,5 +1,5 @@
 {
-  "docqet": "0.2",
+  "docqet": "0.3",
   "project": {
     "id": "hotel-billing",
     "name": "Hotel Billing"
@@ -14,6 +14,7 @@
     "domains": 2,
     "features": 5,
     "personas": 5,
+    "problems": 9,
     "capabilities": {
       "draft": 1,
       "prototype": 1,
@@ -130,14 +131,19 @@
       "title": "Bookkeeper",
       "description": "Keeps the hotel's books, and invoices the companies that pay for their staff's stays.",
       "image": "https://randomuser.me/api/portraits/women/90.jpg",
+      "problems": [
+        "problem:company-debts-go-unwatched",
+        "problem:takings-rekeyed-by-hand"
+      ],
       "capabilities": [
+        "capability:accounting-export",
         "capability:company-accounts",
-        "capability:invoices",
-        "capability:accounting-export"
+        "capability:direct-billing",
+        "capability:invoices"
       ],
       "features": [
-        "feature:company-accounts",
-        "feature:closing-the-day"
+        "feature:closing-the-day",
+        "feature:company-accounts"
       ],
       "body": "## Needs\n\n- To get each day's takings into the accounting software without typing them in.\n- To invoice every company once a month, and see what each one owes.\n- To keep companies within the credit the hotel allows them.\n\n## Knows\n\nBookkeeping, and the hotel's accounting software, well. Less about how the front\ndesk works.\n\n## Context\n\nPart time, two or three days a week, at a desk in the back office. Month end is\ntheir busiest time.\n\n## Expects\n\nDays that are closed and stay closed, invoice numbers that run in order, and an\nexport their accounting software takes as it is.\n\n## Cares about\n\nBooks that balance. A day that changes after they've exported it means finding\nthe difference by hand."
     },
@@ -149,21 +155,26 @@
       "title": "Front desk clerk",
       "description": "Runs the front desk: takes bookings, and checks guests in and out.",
       "image": "https://randomuser.me/api/portraits/women/68.jpg",
+      "problems": [
+        "problem:guests-billed-more-than-they-owe",
+        "problem:guests-leave-owing",
+        "problem:guests-queue-at-the-desk"
+      ],
       "capabilities": [
-        "capability:extra-charges",
-        "capability:city-tax",
-        "capability:split-bills",
-        "capability:deposits",
-        "capability:pay-by-link",
-        "capability:direct-billing",
         "capability:check-out",
-        "capability:refunds"
+        "capability:city-tax",
+        "capability:deposits",
+        "capability:extra-charges",
+        "capability:pay-by-link",
+        "capability:refunds",
+        "capability:split-bills",
+        "capability:direct-billing"
       ],
       "features": [
+        "feature:front-desk",
         "feature:guest-bills",
         "feature:payments",
-        "feature:company-accounts",
-        "feature:front-desk"
+        "feature:company-accounts"
       ],
       "body": "## Needs\n\n- To see everything a guest owes on one bill, so check-out is a single payment.\n- To put extras on a bill the moment they happen, so nothing is forgotten.\n- To let company guests leave without paying, knowing their company will be\n  invoiced.\n\n## Knows\n\nWhat every extra costs, and which guests' companies pay for their stays. Not an\naccountant: they think in bills, not ledgers.\n\n## Context\n\nAt the desk, with the guest in front of them and often a queue behind. Check-out\nmornings are the busiest part of their day.\n\n## Expects\n\nA bill that reads like a receipt: each night, each extra, then the total.\nPayments by card at the desk.\n\n## Cares about\n\nA bill the guest doesn't argue with. A charge they can't explain, or one they\ncan't take off when it was a mistake, makes for a hard conversation."
     },
@@ -175,16 +186,25 @@
       "title": null,
       "description": "Stays at the hotel, for work or on holiday, and pays for the stay.",
       "image": "https://randomuser.me/api/portraits/men/32.jpg",
+      "problems": [
+        "problem:guests-billed-more-than-they-owe",
+        "problem:settling-up-holds-guests-up"
+      ],
       "capabilities": [
-        "capability:pay-by-link",
-        "capability:direct-billing",
         "capability:check-out",
-        "capability:refunds"
+        "capability:city-tax",
+        "capability:deposits",
+        "capability:extra-charges",
+        "capability:pay-by-link",
+        "capability:refunds",
+        "capability:split-bills",
+        "capability:direct-billing"
       ],
       "features": [
+        "feature:front-desk",
+        "feature:guest-bills",
         "feature:payments",
-        "feature:company-accounts",
-        "feature:front-desk"
+        "feature:company-accounts"
       ],
       "body": "## Needs\n\n- To pay without queueing at the desk on the way out.\n- To leave without paying when their company is paying for the stay.\n- A bill they can understand, with nothing on it they didn't have.\n\n## Knows\n\nNothing about the hotel's systems. Pays for things online and by card all the\ntime.\n\n## Context\n\nOn their phone, often in a hurry: packing, catching a train, or already home.\n\n## Expects\n\nPaying by link to work like any other online payment, in a minute or two.\n\n## Cares about\n\nNot being charged twice, and not being chased for something they've paid."
     },
@@ -196,13 +216,21 @@
       "title": "Hotel manager",
       "description": "Runs the hotel, and answers for its takings to the owners.",
       "image": "https://randomuser.me/api/portraits/men/52.jpg",
+      "problems": [
+        "problem:guests-leave-owing",
+        "problem:late-cancellations-leave-rooms-empty",
+        "problem:takings-late-and-moving"
+      ],
       "capabilities": [
+        "capability:check-out",
         "capability:city-tax",
         "capability:deposits",
-        "capability:night-audit",
-        "capability:daily-takings"
+        "capability:extra-charges",
+        "capability:daily-takings",
+        "capability:night-audit"
       ],
       "features": [
+        "feature:front-desk",
         "feature:guest-bills",
         "feature:payments",
         "feature:closing-the-day"
@@ -217,6 +245,9 @@
       "title": "Night auditor",
       "description": "Looks after the hotel overnight, and makes sure each day is closed before morning.",
       "image": "https://randomuser.me/api/portraits/men/71.jpg",
+      "problems": [
+        "problem:closing-the-day-takes-the-night"
+      ],
       "capabilities": [
         "capability:night-audit"
       ],
@@ -224,6 +255,149 @@
         "feature:closing-the-day"
       ],
       "body": "## Needs\n\n- To know the day was closed and every guest charged for the night, without\n  staying up to do it by hand.\n- To close the day themselves when the audit didn't run on its own.\n\n## Knows\n\nThe night audit's steps, from years of doing them on paper. Less at ease with\nsoftware that does them for them.\n\n## Context\n\nAt the front desk overnight, alone, with few guests around and no one to ask.\n\n## Expects\n\nTo see, at a glance, that tonight's audit has run, and what it charged.\n\n## Cares about\n\nNot handing over to the morning shift with yesterday still open."
+    }
+  ],
+  "problems": [
+    {
+      "id": "closing-the-day-takes-the-night",
+      "file": "docqet/problems/closing-the-day-takes-the-night.md",
+      "name": "Closing the day takes the night shift",
+      "description": "Overnight, alone, I work through the audit's steps: charge every guest for the night, then close the day. If it doesn't get done, I hand over to the morning shift with yesterday still open.",
+      "cost": "Hours of night work. A night charged twice or not at all (assumed). A morning that starts with yesterday open.",
+      "personas": [
+        "persona:night-auditor"
+      ],
+      "capabilities": [
+        "capability:night-audit"
+      ],
+      "body": ""
+    },
+    {
+      "id": "company-debts-go-unwatched",
+      "file": "docqet/problems/company-debts-go-unwatched.md",
+      "name": "Companies run up debts nobody is watching",
+      "description": "Companies pay for their staff's stays. At month end I work out what each one owes and invoice it, and every week I check for unpaid invoices and chase them by email. A company can run up more than the hotel allows it before anyone notices, and a stay can end up on a company's account that the company never agreed to pay for.",
+      "cost": "Month end becomes the busiest time of the bookkeeper's month. Money is paid late or never (assumed), and companies dispute stays they didn't agree to cover (assumed).",
+      "personas": [
+        "persona:bookkeeper"
+      ],
+      "capabilities": [
+        "capability:company-accounts",
+        "capability:direct-billing",
+        "capability:invoices"
+      ],
+      "body": ""
+    },
+    {
+      "id": "guests-billed-more-than-they-owe",
+      "file": "docqet/problems/guests-billed-more-than-they-owe.md",
+      "name": "Guests are billed for more than they owe",
+      "description": "A charge goes on by mistake or onto the wrong guest's bill, a child is charged the city's tax, or a deposit or an overpayment isn't counted. The guest notices at the desk, reading a bill with something on it they didn't have, or that they've already paid.",
+      "cost": "A hard conversation with a guest who no longer trusts the bill. A guest charged twice is out of pocket until it's put right.",
+      "personas": [
+        "persona:front-desk-clerk",
+        "persona:guest"
+      ],
+      "capabilities": [
+        "capability:city-tax",
+        "capability:deposits",
+        "capability:extra-charges",
+        "capability:refunds",
+        "capability:split-bills"
+      ],
+      "body": ""
+    },
+    {
+      "id": "guests-leave-owing",
+      "file": "docqet/problems/guests-leave-owing.md",
+      "name": "Guests leave without paying for everything they had",
+      "description": "An extra gets forgotten in a busy shift, a night or the city's tax doesn't get charged, or a guest leaves before settling up. Once they've gone, the money has gone with them.",
+      "cost": "Lost takings. The hotel owes the city's tax for every guest night whether or not it charged the guest, so tax it didn't charge comes out of the hotel's own pocket.",
+      "personas": [
+        "persona:front-desk-clerk",
+        "persona:manager"
+      ],
+      "capabilities": [
+        "capability:check-out",
+        "capability:city-tax",
+        "capability:extra-charges"
+      ],
+      "body": ""
+    },
+    {
+      "id": "guests-queue-at-the-desk",
+      "file": "docqet/problems/guests-queue-at-the-desk.md",
+      "name": "Guests queue at the desk",
+      "description": "At arrivals, and on check-out mornings, the busiest part of my day, I have a guest in front of me, a queue behind them and the phone ringing. Every arrival and every departure takes as long as it takes me to find the stay, the room and what's owed, and anything I start may be finished minutes later.",
+      "cost": "Guests spend their first and last minutes at the hotel waiting. A rushed clerk makes mistakes (assumed).",
+      "personas": [
+        "persona:front-desk-clerk"
+      ],
+      "capabilities": [
+        "capability:check-out",
+        "capability:pay-by-link",
+        "capability:direct-billing"
+      ],
+      "body": ""
+    },
+    {
+      "id": "late-cancellations-leave-rooms-empty",
+      "file": "docqet/problems/late-cancellations-leave-rooms-empty.md",
+      "name": "Rooms held for guests who don't come earn nothing",
+      "description": "A guest cancels a day or two before arriving, or never turns up. Their room was held for them, and at such short notice it usually can't be sold again.",
+      "cost": "That night's takings for the room are lost.",
+      "personas": [
+        "persona:manager"
+      ],
+      "capabilities": [
+        "capability:deposits"
+      ],
+      "body": ""
+    },
+    {
+      "id": "settling-up-holds-guests-up",
+      "file": "docqet/problems/settling-up-holds-guests-up.md",
+      "name": "Settling up holds guests up as they leave",
+      "description": "I'm packing, catching a train, or already home, and I still have to queue at the desk to pay, even when my company is paying for the stay.",
+      "cost": "Missed trains and a bad last impression of the hotel. Company guests pay for stays their company covers and have to claim it back (assumed).",
+      "personas": [
+        "persona:guest"
+      ],
+      "capabilities": [
+        "capability:check-out",
+        "capability:pay-by-link",
+        "capability:direct-billing"
+      ],
+      "body": ""
+    },
+    {
+      "id": "takings-late-and-moving",
+      "file": "docqet/problems/takings-late-and-moving.md",
+      "name": "Yesterday's takings are late and still moving",
+      "description": "First thing each morning I want yesterday's takings, final and broken down into rooms, food and drink, and tax, the way the owners ask for them. I wait for the bookkeeper, and even then the numbers can still change.",
+      "cost": "Late answers to the owners. Once yesterday's takings move, the manager stops trusting all of them.",
+      "personas": [
+        "persona:manager"
+      ],
+      "capabilities": [
+        "capability:daily-takings",
+        "capability:night-audit"
+      ],
+      "body": ""
+    },
+    {
+      "id": "takings-rekeyed-by-hand",
+      "file": "docqet/problems/takings-rekeyed-by-hand.md",
+      "name": "Takings are re-keyed and reconciled by hand",
+      "description": "I type each day's takings into the accounting software. If a day changes after I've entered it, I have to find the difference by hand.",
+      "cost": "Hours of typing, mistakes in the books, and books that don't balance. All of it is worst at month end, the bookkeeper's busiest time.",
+      "personas": [
+        "persona:bookkeeper"
+      ],
+      "capabilities": [
+        "capability:accounting-export"
+      ],
+      "body": ""
     }
   ],
   "capabilities": [
@@ -234,8 +408,14 @@
       "name": "Extra charges",
       "description": "Staff add extras such as breakfast, parking or the minibar to a guest's bill.",
       "stability": "ga",
+      "solves": [
+        "problem:guests-leave-owing",
+        "problem:guests-billed-more-than-they-owe"
+      ],
       "personas": [
-        "persona:front-desk-clerk"
+        "persona:front-desk-clerk",
+        "persona:guest",
+        "persona:manager"
       ],
       "rules": [
         "rule:charges-are-never-changed",
@@ -262,9 +442,14 @@
       "name": "City tax",
       "description": "The software adds the city's tourist tax to each guest's bill, night by night.",
       "stability": "alpha",
+      "solves": [
+        "problem:guests-leave-owing",
+        "problem:guests-billed-more-than-they-owe"
+      ],
       "personas": [
-        "persona:manager",
-        "persona:front-desk-clerk"
+        "persona:front-desk-clerk",
+        "persona:guest",
+        "persona:manager"
       ],
       "rules": [
         "rule:city-tax-per-guest-night",
@@ -294,8 +479,12 @@
       "name": "Split bills",
       "description": "Clerks split a bill between guests sharing a room, or move charges onto another guest's bill.",
       "stability": "prototype",
+      "solves": [
+        "problem:guests-billed-more-than-they-owe"
+      ],
       "personas": [
-        "persona:front-desk-clerk"
+        "persona:front-desk-clerk",
+        "persona:guest"
       ],
       "rules": [
         "rule:moving-charges-keeps-the-total"
@@ -327,9 +516,14 @@
       "name": "Deposits",
       "description": "The software takes a deposit on the guest's card when a stay is booked.",
       "stability": "beta",
+      "solves": [
+        "problem:late-cancellations-leave-rooms-empty",
+        "problem:guests-billed-more-than-they-owe"
+      ],
       "personas": [
-        "persona:manager",
-        "persona:front-desk-clerk"
+        "persona:front-desk-clerk",
+        "persona:guest",
+        "persona:manager"
       ],
       "rules": [
         "rule:deposit-is-the-first-night",
@@ -375,9 +569,13 @@
       "name": "Pay by link",
       "description": "Guests pay their bill by card from a link the hotel sends them, without coming to the desk.",
       "stability": "alpha",
+      "solves": [
+        "problem:settling-up-holds-guests-up",
+        "problem:guests-queue-at-the-desk"
+      ],
       "personas": [
-        "persona:guest",
-        "persona:front-desk-clerk"
+        "persona:front-desk-clerk",
+        "persona:guest"
       ],
       "rules": [
         "rule:card-numbers-are-never-kept",
@@ -418,6 +616,9 @@
       "name": "Company accounts",
       "description": "Bookkeepers set up companies that pay for their staff's stays, each with a credit limit.",
       "stability": "beta",
+      "solves": [
+        "problem:company-debts-go-unwatched"
+      ],
       "personas": [
         "persona:bookkeeper"
       ],
@@ -444,7 +645,13 @@
       "name": "Direct billing",
       "description": "Clerks move a guest's bill to their company's account at check-out, so the guest leaves without paying.",
       "stability": "alpha",
+      "solves": [
+        "problem:settling-up-holds-guests-up",
+        "problem:guests-queue-at-the-desk",
+        "problem:company-debts-go-unwatched"
+      ],
       "personas": [
+        "persona:bookkeeper",
         "persona:front-desk-clerk",
         "persona:guest"
       ],
@@ -475,6 +682,9 @@
       "name": "Invoices",
       "description": "Bookkeepers invoice each company once a month for its staff's stays.",
       "stability": "alpha",
+      "solves": [
+        "problem:company-debts-go-unwatched"
+      ],
       "personas": [
         "persona:bookkeeper"
       ],
@@ -503,6 +713,10 @@
       "name": "Night audit",
       "description": "The software closes each business day overnight, charging every guest in the hotel for that night's room.",
       "stability": "ga",
+      "solves": [
+        "problem:closing-the-day-takes-the-night",
+        "problem:takings-late-and-moving"
+      ],
       "personas": [
         "persona:night-auditor",
         "persona:manager"
@@ -534,6 +748,9 @@
       "name": "Daily takings",
       "description": "Managers see each closed day's takings, for rooms, food and drink, and tax.",
       "stability": "beta",
+      "solves": [
+        "problem:takings-late-and-moving"
+      ],
       "personas": [
         "persona:manager"
       ],
@@ -561,6 +778,9 @@
       "name": "Accounting export",
       "description": "Bookkeepers export each closed day's takings to the hotel's accounting software.",
       "stability": "alpha",
+      "solves": [
+        "problem:takings-rekeyed-by-hand"
+      ],
       "personas": [
         "persona:bookkeeper"
       ],
@@ -593,8 +813,14 @@
       "name": "Check-out",
       "description": "Guests settle their bill as they leave, so nothing is left owing once they've gone.",
       "stability": "alpha",
+      "solves": [
+        "problem:guests-queue-at-the-desk",
+        "problem:guests-leave-owing",
+        "problem:settling-up-holds-guests-up"
+      ],
       "personas": [
         "persona:front-desk-clerk",
+        "persona:manager",
         "persona:guest"
       ],
       "rules": [
@@ -627,6 +853,9 @@
       "name": "Refunds",
       "description": "Clerks refund a guest what they've paid over their bill, before the bill closes.",
       "stability": "draft",
+      "solves": [
+        "problem:guests-billed-more-than-they-owe"
+      ],
       "personas": [
         "persona:front-desk-clerk",
         "persona:guest"

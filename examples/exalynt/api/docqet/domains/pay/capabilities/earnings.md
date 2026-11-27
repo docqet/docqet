@@ -7,7 +7,7 @@ description: >-
   People see what they earn on each block, from when it's assigned to when
   it's fulfilled.
 stability: alpha
-personas: [persona:exalynt-engineer-1, persona:exalynt-engineer-2, persona:exalynt-team-lead]
+solves: [problem:pay-cant-be-checked, problem:taking-on-work-blind]
 initiatives: [initiative:mvp]
 rules:
   - rule:shares-earned-at-fulfillment

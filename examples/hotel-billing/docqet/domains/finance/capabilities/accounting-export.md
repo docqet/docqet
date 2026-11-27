@@ -7,7 +7,7 @@ description: >-
   Bookkeepers export each closed day's takings to the hotel's accounting
   software.
 stability: alpha
-personas: [persona:bookkeeper]
+solves: [problem:takings-rekeyed-by-hand]
 rules: [rule:closed-days-dont-change]
 concepts: [concept:business-day]
 decisions:

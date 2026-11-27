@@ -10,3 +10,6 @@ why: >-
 
 Technical docs link to the product, through a component's capabilities, and
 never the other way.
+
+The same holds one space up: problem docs never link to the solution, so
+links only point toward why. A problem names only the personas who have it.

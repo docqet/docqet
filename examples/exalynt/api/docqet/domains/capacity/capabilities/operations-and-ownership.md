@@ -7,7 +7,7 @@ description: >-
   Clients choose whether they or Exalynt operate the software Exalynt builds
   for them, and keep what they own.
 stability: prototype
-personas: [persona:client-admin-founder, persona:client-admin-operations]
+solves: [problem:dependent-on-the-builder]
 initiatives: [initiative:operations-and-ownership]
 decisions:
   - topic: Choosing who operates

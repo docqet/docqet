@@ -5,7 +5,7 @@ domain: property
 name: Cleaning schedule
 description: Housekeepers see which rooms to clean today, with early arrivals first.
 stability: prototype
-personas: [persona:housekeeper]
+solves: [problem:arrivals-wait-for-rooms]
 concepts: [concept:room@guest-stays]
 decisions:
   - question: >-

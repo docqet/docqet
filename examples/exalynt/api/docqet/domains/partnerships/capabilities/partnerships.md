@@ -8,11 +8,11 @@ description: >-
   people to Exalynt by giving them its referral code or inviting them by
   email.
 stability: alpha
-personas:
-  - persona:client-admin-founder
-  - persona:client-admin-operations
-  - persona:partner
-  - persona:exalynt-admin
+solves:
+  - problem:engineering-starts-slowly
+  - problem:introductions-take-effort
+  - problem:partner-earnings-opaque
+  - problem:agreed-terms-applied-by-hand
 initiatives: [initiative:mvp]
 rules:
   - rule:inviting-creates-the-partnership

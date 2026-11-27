@@ -7,7 +7,7 @@ description: >-
   Housekeepers mark rooms clean or dirty, so the front desk knows which are
   ready.
 stability: prototype
-personas: [persona:housekeeper, persona:front-desk-clerk]
+solves: [problem:arrivals-wait-for-rooms]
 initiatives: [initiative:busy-season]
 concepts: [concept:room@guest-stays]
 decisions:

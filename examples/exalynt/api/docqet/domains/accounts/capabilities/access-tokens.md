@@ -8,17 +8,7 @@ description: >-
   API as them, everywhere they belong or only in the organizations they
   choose.
 stability: beta
-personas:
-  - persona:client-admin-founder
-  - persona:client-admin-operations
-  - persona:client-member
-  - persona:client-billing
-  - persona:exalynt-admin
-  - persona:exalynt-engineer-1
-  - persona:exalynt-engineer-2
-  - persona:exalynt-engineer-new-hire
-  - persona:exalynt-team-lead
-  - persona:partner
+solves: [problem:others-can-act-as-you, problem:access-doesnt-match-the-job]
 initiatives: [initiative:mvp]
 rules:
   - rule:tokens-carry-their-creators-access

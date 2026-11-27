@@ -11,21 +11,25 @@ confused-with:
   - term: "A role or permission"
     summary: >-
       what someone may do in the software. A persona has a role, but is who they are and what they need.
+  - concept: "concept:problem"
+    summary: >-
+      a pain point personas share. A persona is who has it.
 ---
 
-A persona says who they are, what they need the software to do for them, what
-they know, the context they work in, what they expect, and what they care
-about.
+A persona says who they are, what they know, the context they work in, what
+they expect, and what they care about. What they need is in the
+[problems](problem.md) they have, each its own doc, so more than one persona
+can share it and capabilities can link to it.
 
-- **[Capabilities](capability.md) link to the personas they serve**: whoever
-  does it, or whoever it's done for when the software does it on its own. Room
-  status serves the housekeeper who marks rooms clean and the clerk who sees
-  which are ready. Night audit runs by itself, and serves the night auditor and
-  the manager.
-- **What it relates to is worked out from those links**: its capabilities, the
-  features they're in, the domains those are in, and the gaps and open
-  decisions on those capabilities. Nobody lists them on the persona, and
-  technical gaps aren't shown for them.
+- **[Problems](problem.md) name the personas who have them**, and a
+  [capability](capability.md) serves the personas of the problems it solves.
+  Arriving guests waiting for a room that isn't ready is a problem for the
+  clerk at the desk and the housekeeper on the floor, so room status, which
+  solves it, serves both.
+- **What it relates to is worked out from those links**: its problems, the
+  capabilities solving them, the features they're in, the domains those are
+  in, and the gaps and open decisions on those capabilities. Nobody lists them
+  on the persona, and technical gaps aren't shown for them.
 - **It's one across every domain.** People work across the parts of the
   business, so a persona is written once for the whole project, not in a
   domain, and projects that serve the same people share its ID.
@@ -57,11 +61,11 @@ frontmatter, in order, is `docqet`, `id`, `name`, `description`, `role`,
   work is for them, so showing one initiative shows only its people.
 
 Its body, which can be left out, is where to say more about who they are, such
-as what they need the software to do for them and why it matters to them,
-their domain knowledge and technical skill, their device and how often and
+as their domain knowledge and technical skill, their device and how often and
 under what pressure they do the work, the words and tools they already know,
-and what makes them trust the software or give up on it. The examples use
-headings of their own for these; nothing reads them.
+and what makes them trust the software or give up on it. What they need goes
+in their problems, not here. The examples use headings of their own for
+these; nothing reads them.
 [`front-desk-clerk.md`](../../../../examples/hotel-bookings/docqet/personas/front-desk-clerk.md):
 
 ```markdown
@@ -92,4 +96,4 @@ At the desk all shift, on a shared desktop, with a guest or the phone waiting
 most of the time.
 ```
 
-A capability links them with `personas: [persona:front-desk-clerk]`.
+A problem names them with `personas: [persona:front-desk-clerk]`.

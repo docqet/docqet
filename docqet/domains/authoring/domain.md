@@ -11,6 +11,16 @@ decisions:
       Which forms of evidence should count beyond annotations, such as test
       and QA results, deploys or pull requests, and how is each linked to the
       intention it's about?
+  - topic: How sure a problem is
+    question: >-
+      Should a problem say whether it's assumed or confirmed with the people
+      who have it, so readers can see which capabilities answer a problem
+      nobody has confirmed?
+  - topic: Grouping features
+    question: >-
+      Should domains give way to areas, a plain grouping of features with no
+      language of its own, so rules and concepts have one ID each across the
+      product and links need no @domain?
 ---
 
 Docqet's format is how a repository records what its software is meant to
@@ -40,10 +50,11 @@ domains, such as [intention docs](capabilities/docs-format.md).
   work out what depends on other projects, such as maturity, readiness, risk,
   and which outcomes a capability meets with evidence. Nobody edits derived
   state by hand. See [declared and derived](concepts/declared-and-derived.md).
-- **Intention about the product, and about how it's built.** Product docs say
-  what the software does, in the domain's words, and never name its
+- **Why, what and how.** Problem docs say why the software exists: the
+  problems people have, in their words, never naming the software. Product
+  docs say what it does, in the domain's words, and never name its
   implementation. Technical docs say how it's meant to be built, in the
-  code's words, and link to the product, never the other way.
+  code's words. [Links only point toward why](#problem-space-and-solution-space).
 - **Evidence is optional.** Code and tests can point at the rules they're
   about, so readers can see them beside the rule. Docqet doesn't run tests or
   read their results, and nothing requires evidence at any level.
@@ -66,14 +77,23 @@ usually implemented. A project is often a whole repository, and can be one
 package of several in one. Docqet shows one product at a time. Each project
 works in one or more **[domains](concepts/domain.md)**: parts of the
 business, each with its own language, such as Guest stays or Billing. Every
-doc but a persona, an initiative, a mechanism or a component is written in
-exactly one domain. Every project contributes what it knows to one picture
+doc but a persona, a problem, an initiative, a mechanism or a component is
+written in exactly one domain. Every project contributes what it knows to one picture
 of the whole product, and where two of them say different things, Docqet
 shows the **[contradiction](../understanding/concepts/contradiction.md)** rather
 than picking one.
 
-A **[feature](concepts/feature.md)** is a job the product does, and it groups
-the **[capabilities](concepts/capability.md)** that do that job. Features and
+Why the software exists comes first. A **[persona](concepts/persona.md)** is a
+type of person the software serves, such as a front desk clerk. A
+**[problem](concepts/problem.md)** is a pain point one or more personas share,
+such as guests being turned away when rooms are free, said in their words and
+never naming the software.
+
+A **[feature](concepts/feature.md)** is a part of what the product offers,
+and it groups the **[capabilities](concepts/capability.md)**, each one result
+the product produces. Each capability says which problems it solves, and
+serves the personas who have them, so Docqet can show, for each problem and
+each persona, what the software does about it and how ready that is. Features and
 capabilities can span domains: each domain that does part of the work
 contributes its part. Each capability has a
 **[stability level](concepts/stability-level.md)** in each domain that builds
@@ -83,11 +103,6 @@ and mean what they say there. A capability refers to the ones it follows and
 uses, so one rule can apply to many capabilities, in different features and
 domains. What each level generally means and expects is in the
 **[stability rubric](concepts/rubric.md)**.
-
-A **[persona](concepts/persona.md)** is a type of person the software serves,
-such as a front desk clerk. Each capability says which personas it serves, so
-Docqet can show, for each of them, what the software does for them and how
-ready it is for them.
 
 An **[initiative](concepts/initiative.md)** is a body of work, such as the
 MVP or the hotel's busy season. Each capability, and each persona the work is
@@ -128,11 +143,15 @@ and it's what keeps the docs from describing software that's gone.
 flowchart TB
   project(["Project<br/>a folder with a docqet.yaml"])
 
-  subgraph product ["Product docs: what it's meant to do, in the domain's words"]
-    domain["Domain<br/>a part of the business"]
-    feature["Feature<br/>a job the product does"]
-    capability["Capability<br/>one result of value"]
+  subgraph problemSpace ["Problem docs: why it exists, in the persona's words"]
     persona["Persona<br/>who it serves"]
+    problem["Problem<br/>a pain point they share"]
+  end
+
+  subgraph product ["Product docs: what it does, in the domain's words"]
+    domain["Domain<br/>a part of the business"]
+    feature["Feature<br/>a part of what the product offers"]
+    capability["Capability<br/>one result it produces"]
     initiative["Initiative<br/>a body of work, such as the MVP"]
     rule["Rule<br/>must always or never happen"]
     concept["Concept<br/>what a word means"]
@@ -169,7 +188,8 @@ flowchart TB
   domain -- "has its part of" --> feature
   domain -- "defines" --> rule & concept
   feature -- "groups" --> capability
-  capability -- "serves" --> persona
+  capability -- "solves" --> problem
+  problem -- "had by" --> persona
   capability -- "part of" --> initiative
   persona -- "part of" --> initiative
   capability -- "follows" --> rule
@@ -216,6 +236,45 @@ doc. Dashed arrows and boxes are derived from them, and nobody writes them by
 hand. An arrow into a group means some of what's in it:
 [which each one holds](../understanding/domain.md#where-intention-and-reality-differ)
 is set out in understanding.
+
+## Problem space and solution space
+
+Docqet's docs are in two spaces, the way people already talk about software:
+
+| Space              | Docs                                                                                | Say                                            | In whose words          |
+| ------------------ | ----------------------------------------------------------------------------------- | ---------------------------------------------- | ----------------------- |
+| **Problem space**  | Personas and problems                                                               | **Why**: the pain, and who has it              | The persona's           |
+| **Solution space** | **Product docs**: domains, features, capabilities, rules, concepts and initiatives  | **What** the software does, seen from outside  | The domain's            |
+|                    | **Technical docs**: mechanisms and components                                       | **How** it's built, seen from inside           | The code's              |
+
+Product and technical docs differ by what can be seen, not by how detailed
+they are. "A room is never booked twice for one night" is detailed, and still
+product: anyone using the software can see it hold. "Each release replaces
+the running one only once it's healthy" is broad, and still technical: nobody
+using it can tell.
+
+- **Links only point toward why.** Technical docs link to the capabilities
+  they serve, and capabilities link to the problems they solve. Product docs
+  never link to technical docs, and problem docs never link to product docs,
+  so a problem stays true whatever solves it, and a capability stays the same
+  however it's built.
+- **A problem never names the software.** It's the pain as the people who
+  have it would say it, and would still be true if the software didn't
+  exist.
+- **The spaces say what a doc describes, not who decides it.** A problem
+  isn't product's alone, and a capability isn't something product hands
+  engineering: which capabilities solve a problem is a choice the team makes
+  together, reviewed like any other change.
+
+Three questions place a doc:
+
+- **Problem or capability?** Would it still be true if the software didn't
+  exist? Then it's a problem.
+- **Capability or technical?** Could it be built a completely different way
+  and still be the same? Then it's a capability.
+- **Feature or capability?** Would someone using it name it as a part of the
+  product? Then it's a feature. One result, with a stability level, is a
+  capability.
 
 ## Agnostic of implementation
 
@@ -279,15 +338,17 @@ Ask what value the work adds:
 
 | The work                                                              | Is                                                                      |
 | --------------------------------------------------------------------- | ----------------------------------------------------------------------- |
-| Gives the software a job it didn't do at all                          | A new feature, with the capabilities that start doing it                |
-| Produces a new result of value toward a job the software already does | A new capability of that feature, a draft until it's started            |
+| Answers a pain nothing in the software answers yet                    | A problem, if it isn't written down already, then what follows below    |
+| Gives the software a part it didn't have at all                       | A new feature, with the capabilities that start it                      |
+| Produces a new result toward a part the software already has          | A new capability of that feature, a draft until it's started            |
 | Adds another way to reach a result a capability already produces      | Part of that capability                                                 |
 | Makes a capability better at what it does                             | A change to that capability, often closing one of its gaps              |
 | Only changes how something is built                                   | Neither, though it may close a mechanism's or component's technical gap |
 
-A rough check: the reason someone uses part of the software is a feature.
-What they get done while they're there is a capability. The parts of the
-business whose language they're in are its domains.
+A rough check: why someone needs the software at all is a problem. The part
+of the software they come to is a feature. What they get done while they're
+there is a capability. The parts of the business whose language they're in
+are its domains.
 
 Some things are never features or capabilities:
 
@@ -296,8 +357,9 @@ Some things are never features or capabilities:
   itself.
 - **A screen, page, endpoint or service** is how a capability is delivered,
   not what it is.
-- **A rule** is a constraint capabilities do their jobs under: something
-  that must always be true, or must never happen.
+- **A problem** is why a capability exists, never the capability itself.
+- **A rule** is a promise capabilities keep while they do their jobs:
+  something that must always be true, or must never happen.
 - **A quality**, such as being fast, accessible or secure, is how well
   capabilities do their job. Where one falls short, that's a gap in the
   capability.
@@ -317,12 +379,20 @@ In the order to read them, across both domains.
   saying different things that should agree.
 - [Domain](concepts/domain.md): a part of the business, with a language of
   its own.
-- [Feature](concepts/feature.md): a job the software does.
-- [Capability](concepts/capability.md): the software's ability to produce one
-  result of value.
+
+**The problem space**
+
+- [Persona](concepts/persona.md): a type of person the software serves.
+- [Problem](concepts/problem.md): a pain point one or more personas share,
+  never naming the software.
+
+**The solution space**
+
+- [Feature](concepts/feature.md): a part of what the product offers.
+- [Capability](concepts/capability.md): one result the product produces,
+  solving part of one or more problems.
 - [Rule](concepts/rule.md): what must always be true, or must never happen.
 - [Concept](concepts/concept.md): what a word means in a domain.
-- [Persona](concepts/persona.md): a type of person the software serves.
 - [Initiative](concepts/initiative.md): a body of work, such as the MVP, so
   it can be seen on its own.
 

@@ -7,14 +7,13 @@ description: >-
   A block's engineer starts it once its week begins, and marks it fulfilled
   when the work is done, with nobody reviewing it.
 stability: alpha
-personas:
-  - persona:exalynt-engineer-1
-  - persona:exalynt-engineer-2
-  - persona:exalynt-team-lead
-  - persona:exalynt-admin
-  - persona:client-admin-founder
-  - persona:client-admin-operations
-  - persona:client-member
+solves:
+  - problem:spend-without-visible-progress
+  - problem:requests-go-unheard
+  - problem:working-without-client-context
+  - problem:reporting-eats-into-the-work
+  - problem:team-trouble-seen-one-by-one
+  - problem:exceptions-hide-in-routine
 initiatives: [initiative:mvp]
 rules:
   - rule:engineers-start-their-blocks-from-the-start-of-the-week

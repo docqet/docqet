@@ -7,7 +7,7 @@ description: >-
   Exalynt's admins give one client a coupon: a name, and a percentage or
   amount off each block they buy, either forever or on their next purchase.
 stability: prototype
-personas: [persona:exalynt-admin]
+solves: [problem:agreed-terms-applied-by-hand]
 initiatives: [initiative:mvp]
 concepts: [concept:organization@accounts]
 decisions:

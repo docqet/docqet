@@ -34,6 +34,7 @@ func Check(st *state.State) []state.Finding {
 	c.rules()
 	c.concepts()
 	c.personas()
+	c.problems()
 	c.initiatives()
 	c.mechanisms()
 	c.components()
@@ -142,11 +143,29 @@ func (c *checker) capabilities() {
 		default:
 			c.add(state.InvalidFrontmatter, s, "stability is %q: it's draft, prototype, alpha, beta or ga.", cp.Stability)
 		}
-		c.links(s, "personas", cp.Personas, state.TypePersona, cp.Domain)
+		c.links(s, "solves", cp.Solves, state.TypeProblem, cp.Domain)
 		c.links(s, "initiatives", cp.Initiatives, state.TypeInitiative, cp.Domain)
 		c.links(s, "rules", cp.Rules, state.TypeRule, cp.Domain)
 		c.links(s, "concepts", cp.Concepts, state.TypeConcept, cp.Domain)
 		c.decisions(s, cp.Decisions)
+	}
+
+	// Why a capability exists is the problems it solves. One written in
+	// several domains needs them in only one.
+	solves := map[string]bool{}
+	for _, cp := range c.st.Capabilities {
+		if len(cp.Solves) > 0 {
+			solves[cp.ID] = true
+		}
+	}
+	for _, cp := range c.st.Capabilities {
+		if solves[cp.ID] {
+			continue
+		}
+		solves[cp.ID] = true // once per capability
+		ref := state.DocRef(state.TypeCapability, cp.ID)
+		c.add(state.SolvesNoProblem, subject{ref: ref, domain: cp.Domain, file: cp.File, capabilities: []string{ref}},
+			"It solves no problem yet: link the problems it solves with solves.")
 	}
 }
 
@@ -209,6 +228,17 @@ func (c *checker) personas() {
 		s := subject{ref: state.DocRef(state.TypePersona, p.ID), file: p.File}
 		c.common(s, p.ID, p.Name, p.Description, true)
 		c.links(s, "initiatives", p.Initiatives, state.TypeInitiative, "")
+	}
+}
+
+func (c *checker) problems() {
+	for _, pr := range c.st.Problems {
+		s := subject{ref: state.DocRef(state.TypeProblem, pr.ID), file: pr.File}
+		c.common(s, pr.ID, pr.Name, pr.Description, true)
+		if len(pr.Personas) == 0 {
+			c.add(state.InvalidFrontmatter, s, "A problem names the personas who have it.")
+		}
+		c.links(s, "personas", pr.Personas, state.TypePersona, "")
 	}
 }
 
@@ -477,6 +507,8 @@ func (c *checker) fileOf(typ, id, domain string) string {
 		}
 	case state.TypePersona:
 		return find(len(st.Personas), func(i int) (string, string) { return st.Personas[i].ID, st.Personas[i].File })
+	case state.TypeProblem:
+		return find(len(st.Problems), func(i int) (string, string) { return st.Problems[i].ID, st.Problems[i].File })
 	case state.TypeInitiative:
 		return find(len(st.Initiatives), func(i int) (string, string) { return st.Initiatives[i].ID, st.Initiatives[i].File })
 	case state.TypeMechanism:
@@ -531,6 +563,9 @@ func (c *checker) duplicates() {
 	}
 	for _, p := range c.st.Personas {
 		check(state.TypePersona, p.ID, "", p.File)
+	}
+	for _, pr := range c.st.Problems {
+		check(state.TypeProblem, pr.ID, "", pr.File)
 	}
 	for _, in := range c.st.Initiatives {
 		check(state.TypeInitiative, in.ID, "", in.File)

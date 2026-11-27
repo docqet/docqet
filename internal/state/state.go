@@ -4,7 +4,7 @@
 package state
 
 // Version is the version of the state format this docqet writes and reads.
-const Version = "0.2"
+const Version = "0.3"
 
 // State is one project's state, indexed from its docs and annotations.
 type State struct {
@@ -17,6 +17,7 @@ type State struct {
 	Domains      []Domain     `json:"domains"`
 	Features     []Feature    `json:"features"`
 	Personas     []Persona    `json:"personas"`
+	Problems     []Problem    `json:"problems"`
 	Initiatives  []Initiative `json:"initiatives"`
 	Capabilities []Capability `json:"capabilities"`
 	Rules        []Rule       `json:"rules"`
@@ -40,6 +41,7 @@ type Summary struct {
 	Domains      int             `json:"domains"`
 	Features     int             `json:"features"`
 	Personas     int             `json:"personas"`
+	Problems     int             `json:"problems"`
 	Initiatives  int             `json:"initiatives"`
 	Capabilities CapabilityTally `json:"capabilities"`
 	Rules        int             `json:"rules"`
@@ -114,7 +116,8 @@ type Feature struct {
 	Body         string     `json:"body"`
 }
 
-// Capability is a capability doc, in one domain.
+// Capability is a capability doc, in one domain. Its personas are worked out
+// from the problems it solves, not declared.
 type Capability struct {
 	ID          string     `json:"id"`
 	Domain      string     `json:"domain"`
@@ -123,6 +126,7 @@ type Capability struct {
 	Description string     `json:"description"`
 	Stability   string     `json:"stability"`
 	Feature     *string    `json:"feature"`
+	Solves      []string   `json:"solves"`
 	Personas    []string   `json:"personas"`
 	Initiatives []string   `json:"initiatives"`
 	Rules       []string   `json:"rules"`
@@ -177,9 +181,24 @@ type Persona struct {
 	Title        *string  `json:"title"`
 	Description  string   `json:"description"`
 	Image        *string  `json:"image"`
+	Problems     []string `json:"problems"`
 	Capabilities []string `json:"capabilities"`
 	Features     []string `json:"features"`
 	Initiatives  []string `json:"initiatives"`
+	Body         string   `json:"body"`
+}
+
+// Problem is a problem doc: a pain point the personas it names share, said
+// without naming the software. Problems are in no domain. Its capabilities,
+// those that solve it, are worked out, not declared.
+type Problem struct {
+	ID           string   `json:"id"`
+	File         string   `json:"file"`
+	Name         string   `json:"name"`
+	Description  string   `json:"description"`
+	Cost         *string  `json:"cost"`
+	Personas     []string `json:"personas"`
+	Capabilities []string `json:"capabilities"`
 	Body         string   `json:"body"`
 }
 
@@ -279,7 +298,15 @@ const (
 	Contradiction      = "contradiction"
 	InvalidAnnotation  = "invalid-annotation"
 	UnknownOutcome     = "unknown-outcome"
+	SolvesNoProblem    = "solves-no-problem"
 )
+
+// Advisory reports whether findings of type typ are advisory: shown and
+// counted like any other, but never failing a check, so a project can adopt
+// what they ask for one doc at a time.
+func Advisory(typ string) bool {
+	return typ == SolvesNoProblem
+}
 
 // Rubric is the stability rubric: what each stability level expects, as the
 // project was indexed against it.

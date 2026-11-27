@@ -8,7 +8,10 @@ description: >-
   and agents look it up while they work, from the working tree or a commit,
   without leaving the terminal.
 stability: prototype
-personas: [persona:engineer, persona:coding-agent]
+solves:
+  - problem:intent-in-peoples-heads
+  - problem:agents-guess-intention
+  - problem:docs-slow-every-change
 gaps:
   - id: no-status
     name: No status

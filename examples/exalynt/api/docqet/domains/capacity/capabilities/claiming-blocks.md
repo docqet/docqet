@@ -8,7 +8,7 @@ description: >-
   have scheduled that nobody's on, and claim the blocks that fit their
   availability, or unclaim one until its week starts.
 stability: beta
-personas: [persona:exalynt-engineer-1, persona:exalynt-engineer-2]
+solves: [problem:taking-on-work-blind]
 initiatives: [initiative:mvp]
 rules:
   - rule:listing-an-engineers-blocks

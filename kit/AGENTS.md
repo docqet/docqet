@@ -2,9 +2,10 @@
 
 This repository records what its software is meant to do with Docqet.
 `docqet.yaml` marks it. Its docs, usually in `docqet/`, are the Markdown files
-whose frontmatter has `docqet`. Product docs say what the software should do,
-in the domain's words. Technical docs, mechanisms and components, say how it's
-meant to be built, in the code's words. Comments in code, tests and config
+whose frontmatter has `docqet`. Problem docs, personas and problems, say why
+the software exists, in the words of the people it's for. Product docs say
+what it should do, in the domain's words. Technical docs, mechanisms and
+components, say how it's meant to be built, in the code's words. Comments in code, tests and config
 point back at them: `docqet:implements`, `docqet:verifies`, `docqet:gap` and
 `docqet:tradeoff`. Keep all of it true as you work.
 
@@ -27,13 +28,13 @@ skills from that folder.
   does, must do, or still lacks changes, update its docs and annotations then,
   not later. Change an ID only with `docqet rename`.
 - **Don't invent intention.** People decide what the software should do, its
-  rules, who it serves, and how stable each part is. Write down what the user
+  rules, the problems it solves and who has them, and how stable each part is. Write down what the user
   said or confirmed. When the work needs a decision nobody has made, ask if the
   answer changes what you build. Otherwise take the simplest path, record it as
   an open decision, and say so.
 - **Never change a stability level** unless the user tells you to.
-- **Finish clean.** `docqet check --changed` must report no findings before
-  you're done.
+- **Finish clean.** `docqet check --changed` must pass before you're done.
+  Advisory findings don't fail it; never invent a problem to clear one.
 - **Say what you changed.** End your work with what you changed in Docqet,
   from `docqet diff`, and anything waiting on someone: intention you inferred
   that a person has to confirm, open decisions you raised, and gaps you added

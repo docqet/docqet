@@ -7,7 +7,7 @@ description: >-
   Guests pay their bill by card from a link the hotel sends them, without
   coming to the desk.
 stability: alpha
-personas: [persona:guest, persona:front-desk-clerk]
+solves: [problem:settling-up-holds-guests-up, problem:guests-queue-at-the-desk]
 rules:
   - rule:card-numbers-are-never-kept
   - rule:closed-bills-dont-change

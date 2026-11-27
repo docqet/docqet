@@ -41,6 +41,7 @@ func Index(fsys fs.FS) (*state.State, error) {
 		Domains:      []state.Domain{},
 		Features:     []state.Feature{},
 		Personas:     []state.Persona{},
+		Problems:     []state.Problem{},
 		Initiatives:  []state.Initiative{},
 		Capabilities: []state.Capability{},
 		Rules:        []state.Rule{},
@@ -146,7 +147,7 @@ func addEntry(st *state.State, d *doc) {
 	case state.TypeCapability:
 		st.Capabilities = append(st.Capabilities, state.Capability{
 			ID: fm.ID, Domain: fm.Domain, File: d.file, Name: name, Description: description,
-			Stability: fm.Stability, Personas: list(fm.Personas), Initiatives: list(fm.Initiatives),
+			Stability: fm.Stability, Solves: list(fm.Solves), Personas: []string{}, Initiatives: list(fm.Initiatives),
 			Rules: list(fm.Rules), Concepts: list(fm.Concepts),
 			Gaps: gapRefs(ref, fm.Gaps), Tradeoffs: tradeoffRefs(ref, fm.Tradeoffs),
 			Decisions: decisions(fm.Decisions), Evidence: evidence(), Body: d.body,
@@ -172,7 +173,12 @@ func addEntry(st *state.State, d *doc) {
 		st.Personas = append(st.Personas, state.Persona{
 			ID: fm.ID, File: d.file, Name: name, Role: fm.Role, Title: fm.Title,
 			Description: description, Image: fm.Image,
-			Capabilities: []string{}, Features: []string{}, Initiatives: list(fm.Initiatives), Body: d.body,
+			Problems: []string{}, Capabilities: []string{}, Features: []string{}, Initiatives: list(fm.Initiatives), Body: d.body,
+		})
+	case state.TypeProblem:
+		st.Problems = append(st.Problems, state.Problem{
+			ID: fm.ID, File: d.file, Name: name, Description: description, Cost: textPtr(fm.Cost),
+			Personas: list(fm.Personas), Capabilities: []string{}, Body: d.body,
 		})
 	case state.TypeInitiative:
 		st.Initiatives = append(st.Initiatives, state.Initiative{
@@ -380,6 +386,34 @@ func linkBack(st *state.State) {
 		}
 	}
 
+	// A problem's capabilities are those that solve it, drafts among them:
+	// a draft answers a problem nothing else does yet. A capability's
+	// personas are its problems'.
+	for i := range st.Capabilities {
+		c := &st.Capabilities[i]
+		capRef := state.DocRef(state.TypeCapability, c.ID)
+		var personas []string
+		for j := range st.Problems {
+			pr := &st.Problems[j]
+			if !names(c.Solves, state.TypeProblem, pr.ID) {
+				continue
+			}
+			pr.Capabilities = appendNew(pr.Capabilities, capRef)
+			for _, p := range pr.Personas {
+				personas = appendNew(personas, p)
+			}
+		}
+		c.Personas = list(personas)
+	}
+	for i := range st.Personas {
+		p := &st.Personas[i]
+		for _, pr := range st.Problems {
+			if names(pr.Personas, state.TypePersona, p.ID) {
+				p.Problems = appendNew(p.Problems, state.DocRef(state.TypeProblem, pr.ID))
+			}
+		}
+	}
+
 	featureOf := func(c state.Capability) string {
 		if c.Feature == nil {
 			return ""
@@ -521,6 +555,7 @@ func summarize(st *state.State) state.Summary {
 		Domains:     len(st.Domains),
 		Features:    distinct(len(st.Features), func(i int) string { return st.Features[i].ID }),
 		Personas:    len(st.Personas),
+		Problems:    len(st.Problems),
 		Initiatives: len(st.Initiatives),
 		Rules:       len(st.Rules),
 		Gaps:        len(st.Gaps),

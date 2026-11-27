@@ -8,7 +8,7 @@ description: >-
   sends with its invitation, with its Commercial Terms, before working in the
   Partner Hub for that partnership.
 stability: beta
-personas: [persona:partner, persona:exalynt-admin]
+solves: [problem:partner-earnings-opaque, problem:agreed-terms-applied-by-hand]
 initiatives: [initiative:mvp]
 rules:
   - rule:engineer-agreement-follows-the-invitations-terms

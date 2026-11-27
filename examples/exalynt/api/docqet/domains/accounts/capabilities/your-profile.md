@@ -8,17 +8,7 @@ description: >-
   email addresses, the accounts they sign in with, their password, and the
   devices they're signed in on.
 stability: beta
-personas:
-  - persona:client-admin-founder
-  - persona:client-admin-operations
-  - persona:client-member
-  - persona:client-billing
-  - persona:exalynt-admin
-  - persona:exalynt-engineer-1
-  - persona:exalynt-engineer-2
-  - persona:exalynt-engineer-new-hire
-  - persona:exalynt-team-lead
-  - persona:partner
+solves: [problem:others-can-act-as-you]
 initiatives: [initiative:mvp]
 rules:
   - rule:everyone-sees-the-name-given

@@ -50,7 +50,7 @@ In the repository to bring Docqet to:
 ```sh
 docqet init --id my-app --name "My App"   # writes docqet.yaml
 docqet kit install                        # the agent kit; --agent claude for Claude Code
-docqet check                              # exit 1 on any finding
+docqet check                              # exit 1 on any finding but advisory ones
 ```
 
 The kit's [README](../kit/README.md) says what `docqet kit` writes, for which

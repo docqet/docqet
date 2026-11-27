@@ -22,7 +22,8 @@ func CheckCommand() *cli.Command {
 		Category: reading,
 		Usage:    "Report what's wrong in the docs, annotations and commit trailers",
 		Description: `Indexes the working tree, or with --at a commit, and reports every finding,
-with its file and line where it has one. It exits 1 when there are any. The
+with its file and line where it has one. It exits 1 when there are any but
+advisory ones, such as a capability that solves no problem yet. The
 server checks every state it's sent with the same check.`,
 		ArgValidator: maxArgs(0),
 		Flags: withSourceFlags(
@@ -61,8 +62,10 @@ server checks every state it's sent with the same check.`,
 				_, _ = fmt.Fprintf(out, "%s\n\n", ix.source.line())
 				printFindings(cmd, findings)
 			}
-			if len(findings) > 0 {
-				return errFound
+			for _, f := range findings {
+				if !state.Advisory(f.Type) {
+					return errFound
+				}
 			}
 			return nil
 		},
@@ -95,7 +98,17 @@ func printFindings(cmd *cli.Command, findings []state.Finding) {
 	if len(findings) == 1 {
 		noun = "finding"
 	}
-	_, _ = fmt.Fprintf(out, "\n%d %s.\n", len(findings), noun)
+	advisory := 0
+	for _, f := range findings {
+		if state.Advisory(f.Type) {
+			advisory++
+		}
+	}
+	if advisory == 0 {
+		_, _ = fmt.Fprintf(out, "\n%d %s.\n", len(findings), noun)
+		return
+	}
+	_, _ = fmt.Fprintf(out, "\n%d %s, %d advisory: advisory findings don't fail the check.\n", len(findings), noun, advisory)
 }
 
 // onlyChanged keeps the findings a change since base brought: those in the

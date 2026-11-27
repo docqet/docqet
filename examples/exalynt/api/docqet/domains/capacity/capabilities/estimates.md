@@ -8,13 +8,7 @@ description: >-
   prospects read them to see what each focus and the project would cost and
   take on every block type.
 stability: beta
-personas:
-  - persona:client-admin-founder
-  - persona:client-admin-operations
-  - persona:client-member
-  - persona:exalynt-engineer-1
-  - persona:exalynt-engineer-2
-  - persona:exalynt-admin
+solves: [problem:budgeting-blind, problem:quoting-takes-a-long-sitting]
 initiatives: [initiative:mvp]
 rules:
   - rule:focus-sizes-and-block-prices

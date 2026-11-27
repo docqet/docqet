@@ -1,6 +1,6 @@
 ---
 name: docqet
-description: How to read and keep current a repository's Docqet docs (capabilities, features, rules, concepts, personas, initiatives, domains, mechanisms, components, gaps, tradeoffs, open decisions, stability levels) and its docqet:implements, verifies, gap and tradeoff annotations. Use in any repository with a docqet.yaml, before changing its code, tests or docs, to learn what the change touches and what it must keep; while changing them, to update the docs and annotations in the same change; when a product decision is needed that nobody has made; and when bringing Docqet to a repository that doesn't have it yet.
+description: How to read and keep current a repository's Docqet docs (capabilities, features, rules, concepts, personas, problems, initiatives, domains, mechanisms, components, gaps, tradeoffs, open decisions, stability levels) and its docqet:implements, verifies, gap and tradeoff annotations. Use in any repository with a docqet.yaml, before changing its code, tests or docs, to learn what the change touches and what it must keep; while changing them, to update the docs and annotations in the same change; when a product decision is needed that nobody has made; and when bringing Docqet to a repository that doesn't have it yet.
 ---
 
 # Docqet
@@ -46,11 +46,12 @@ they are. Most projects keep them in the recommended layout:
 docqet.yaml                                 the project's id and name, and its product
 docqet/
 ├── personas/                               who it serves, across every domain
+├── problems/                               the pain points it's there to solve, never naming it
 ├── initiatives/                            bodies of work, such as the MVP, across every domain
 ├── domains/<domain>/
 │   ├── domain.md                           a part of the business with its own language
-│   ├── features/                           a job the product does, listing its capabilities
-│   ├── capabilities/                       one result of value; the only docs with a level
+│   ├── features/                           a part of what the product offers, listing its capabilities
+│   ├── capabilities/                       one result it produces, solving problems; the only docs with a level
 │   ├── rules/                              one rule per file: what must always or never happen
 │   └── concepts/                           what a word means in this domain
 ├── mechanisms/                             how something works across the whole project
@@ -58,9 +59,13 @@ docqet/
 .docqet/                                    written by `docqet`, gitignored, never edited
 ```
 
-Personas, initiatives, domains, features, capabilities, rules and concepts are
-product docs: what it should do, in the domain's words. Mechanisms and
-components are technical docs: how it's meant to be built, in the code's words.
+Personas and problems are the problem space: why the software exists, in the
+words of the people it's for, never naming the software. The rest is the
+solution space. Domains, features, capabilities, rules, concepts and
+initiatives are product docs: what it does, seen from outside, in the
+domain's words. Mechanisms and components are technical docs: how it's meant
+to be built, seen from inside, in the code's words. Links only point toward
+why: technical docs to capabilities, capabilities to the problems they solve.
 
 Every doc starts by saying what it is: `docqet`, its type, `id`, its ID, such
 as `no-double-booking`, and `domain`, for a feature, capability, rule or
@@ -84,7 +89,7 @@ nothing reads. [docs.md](docs.md) has every type's fields.
    product terms, find its capabilities with `docqet list capabilities`, and
    look for the code through the components that list them.
 2. **Read each capability it touches** with `docqet show`: its `stability`,
-   `personas`, the `rules` it follows, its `gaps`, `tradeoffs` and open
+   the problems it `solves` and the personas who have them, the `rules` it follows, its `gaps`, `tradeoffs` and open
    `decisions`, and the evidence for each. Show those rules too, for their
    `why`, and the concepts for any term you're unsure of. A capability can be
    written in several domains, each with its own level. Use the domain the
@@ -109,7 +114,8 @@ changed, not docs to fill in the structure.
 
 | What happened                                                              | What to write                                                                                                                             |
 | -------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| The software can now do something new for someone                          | A capability, at the level the user gives, in the feature whose job it serves. A new job is a new feature. Ask which when it isn't clear. |
+| The software can now do something new for someone                          | A capability, at the level the user gives, in the feature it's part of, linked to the problems it `solves`. A new part of the product is a new feature. Ask which when it isn't clear. |
+| Someone has a pain the software is meant to solve, and the user confirmed it | A problem, naming the personas who have it, linked from every capability that solves it                                                   |
 | A capability was asked for and not started                                 | A capability with `stability: draft`                                                                                                      |
 | Something must always or never happen, and the user said so                | A rule, linked from every capability that follows it                                                                                      |
 | A rule is followed but not held yet                                        | A gap on each capability that doesn't hold it, with the rule in its `affects`                                                             |
@@ -142,7 +148,7 @@ person has stated or confirmed it.
 
 | Who decides | What                                                                                                                                                                                                                                          |
 | ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| A person    | What the software should do, its rules, who it serves, each capability's level, which feature a capability is in, which initiatives it's part of, whether a gap is closed later or accepted as a tradeoff                                     |
+| A person    | What the software should do, its rules, the problems it solves and who has them, each capability's level, which feature a capability is in, which initiatives it's part of, whether a gap is closed later or accepted as a tradeoff                                     |
 | You         | Annotations, what a technical doc says about how the code works, gaps you found or left and each one's impact, likelihood and reach, the ratings of decisions you record, and tradeoffs in how you built something, all listed in your report |
 
 - **The user's request is a decision.** When they say what the software should
@@ -163,12 +169,14 @@ person has stated or confirmed it.
 
 ## Before you finish
 
-1. **Run `docqet check --changed`** and fix every finding it reports in what
+1. **Run `docqet check --changed`** and fix every finding that fails it in what
    you changed: invalid frontmatter, a link or annotation that doesn't
    resolve, a rule no capability follows, an outcome that isn't in the
    rubric. Leave findings that were there before your change alone, unless
    the task is to fix them. A link into another project is reported as
-   `unknown-id` unless you add `--product`.
+   `unknown-id` unless you add `--product`. An advisory finding, such as a
+   capability that solves no problem yet, doesn't fail the check: never invent
+   a problem to clear one. Propose it to the user instead.
 2. **Check what it can't**, since it reads frontmatter and annotations, never
    meaning:
    - Every annotation you added is true: the test checks the rule, the code

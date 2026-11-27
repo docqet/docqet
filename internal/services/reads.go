@@ -152,8 +152,8 @@ func (v *View) ProjectMaturity(project string) *derive.Maturity {
 }
 
 // Within returns the capabilities a for names, as the CLI's --for and the
-// API's ?for= mean it: a project's, a persona's, an initiative's, a domain's
-// or a feature's capabilities, or one capability.
+// API's ?for= mean it: a project's, a persona's, a problem's, an
+// initiative's, a domain's or a feature's capabilities, or one capability.
 // Several references, separated by commas, name the capabilities they all
 // share, such as those in a feature that serve a persona. It returns
 // ErrInvalidScope for a reference that names nothing showing.
@@ -194,6 +194,10 @@ func (v *View) within(ref string) ([]*combine.Capability, error) {
 	case state.TypePersona:
 		if p := v.Persona(r.ID); p != nil {
 			return derive.PersonaCapabilities(v.Product, p), nil
+		}
+	case state.TypeProblem:
+		if pr := v.Problem(r.ID); pr != nil {
+			return derive.ProblemCapabilities(v.Product, pr), nil
 		}
 	case state.TypeInitiative:
 		if i := v.Initiative(r.ID); i != nil {

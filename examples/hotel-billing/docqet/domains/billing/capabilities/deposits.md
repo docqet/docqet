@@ -5,7 +5,9 @@ domain: billing
 name: Deposits
 description: The software takes a deposit on the guest's card when a stay is booked.
 stability: beta
-personas: [persona:manager, persona:front-desk-clerk]
+solves:
+  - problem:late-cancellations-leave-rooms-empty
+  - problem:guests-billed-more-than-they-owe
 rules:
   - rule:deposit-is-the-first-night
   - rule:deposit-counts-towards-the-bill

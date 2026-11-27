@@ -7,11 +7,7 @@ description: >-
   A client organization's Admin reads and accepts its Client Agreement on its
   behalf, before anyone can use the portal for it.
 stability: beta
-personas:
-  - persona:client-admin-founder
-  - persona:client-admin-operations
-  - persona:client-member
-  - persona:client-billing
+solves: [problem:vendor-terms-hard-to-find]
 initiatives: [initiative:mvp]
 rules:
   - rule:engineer-agreement-follows-the-invitations-terms
