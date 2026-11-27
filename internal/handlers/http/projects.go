@@ -95,6 +95,7 @@ type ProjectResource struct {
 
 // ApplyCommit stores a project's state at a commit: 201 when the commit is
 // new to the server, 200 when it replaces what was there.
+// docqet:implements capability:applying
 func (h *ProjectsHandler) ApplyCommit(w http.ResponseWriter, r *http.Request) {
 	var req ApplyCommitRequest
 	dec := json.NewDecoder(http.MaxBytesReader(w, r.Body, maxStateBytes))

@@ -1,3 +1,4 @@
+// docqet:implements capability:overview
 import { useCallback, useEffect, useEffectEvent, useMemo, useRef, useState } from "react";
 import Box from "@mui/material/Box";
 import Tooltip from "@mui/material/Tooltip";

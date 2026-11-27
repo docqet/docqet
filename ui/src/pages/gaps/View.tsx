@@ -1,3 +1,4 @@
+// docqet:implements capability:readiness
 import { Fragment, useState } from "react";
 import Box from "@mui/material/Box";
 import type { Theme } from "@mui/material/styles";

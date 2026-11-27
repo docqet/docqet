@@ -137,6 +137,7 @@ func newReadinessResource(p *combine.Product, r derive.Readiness) ReadinessResou
 	return res
 }
 
+// docqet:implements capability:improvements
 func newImprovementResource(p *combine.Product, im derive.Improvement) ImprovementResource {
 	r := ImprovementResource{
 		Kind:         string(im.Kind),

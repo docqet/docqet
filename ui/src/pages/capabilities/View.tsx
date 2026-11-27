@@ -1,3 +1,4 @@
+// docqet:implements capability:overview
 import Box from "@mui/material/Box";
 import { StabilityRubric } from "./components/Rubric";
 import { ConceptChips } from "../../components/Concepts";

@@ -1,3 +1,4 @@
+// docqet:implements capability:readiness
 import { ReadinessMark } from "../Readiness";
 import { startedOf, type Readiness, type DocqetState } from "../../state";
 import { useStatusFor } from "../../model";

@@ -1,3 +1,4 @@
+// docqet:implements capability:overview
 import type { ReactNode } from "react";
 import ExpandMoreRoundedIcon from "@mui/icons-material/ExpandMoreRounded";
 import Box from "@mui/material/Box";

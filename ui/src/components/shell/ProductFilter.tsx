@@ -1,3 +1,4 @@
+// docqet:implements capability:product-view
 import { useState, type ReactNode } from "react";
 import CheckBoxOutlineBlankRoundedIcon from "@mui/icons-material/CheckBoxOutlineBlankRounded";
 import CheckBoxRoundedIcon from "@mui/icons-material/CheckBoxRounded";

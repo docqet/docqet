@@ -1,3 +1,4 @@
+// docqet:implements capability:domain-language
 import Box from "@mui/material/Box";
 import { ConceptChips, ConceptIcon, related } from "../../components/Concepts";
 import { facets } from "../../components/Fields";

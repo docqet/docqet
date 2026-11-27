@@ -1,3 +1,4 @@
+// docqet:implements capability:domain-language
 import type { ReactNode } from "react";
 import Box from "@mui/material/Box";
 import type { Theme } from "@mui/material/styles";

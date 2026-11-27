@@ -1,3 +1,4 @@
+// docqet:implements capability:how-its-built
 import Box from "@mui/material/Box";
 import { facets } from "../../components/Fields";
 import { MORE_ABOUT } from "../../components/markdown/Markdown";

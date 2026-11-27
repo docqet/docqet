@@ -28,7 +28,6 @@ type ProductsHandler struct {
 }
 
 // NewProductsHandler returns a ProductsHandler over reads.
-// docqet:implements capability:overview capability:readiness capability:product-view
 func NewProductsHandler(logger *slog.Logger, reads *services.ReadService) *ProductsHandler {
 	return &ProductsHandler{logger: logger, reads: reads}
 }
@@ -69,6 +68,7 @@ func (h *ProductsHandler) RegisterRoutes(r chi.Router) {
 }
 
 // ListProducts lists every product, each with every project of its own.
+// docqet:implements capability:product-view
 func (h *ProductsHandler) ListProducts(w http.ResponseWriter, r *http.Request) {
 	summaries, err := h.reads.Products(r.Context())
 	if err != nil {
@@ -88,6 +88,7 @@ func (h *ProductsHandler) ListProducts(w http.ResponseWriter, r *http.Request) {
 }
 
 // GetProduct returns a product.
+// docqet:implements capability:overview
 func (h *ProductsHandler) GetProduct(w http.ResponseWriter, r *http.Request) {
 	if v, ok := h.view(w, r); ok {
 		render.JSON(w, r, newProductResource(v))
@@ -96,6 +97,7 @@ func (h *ProductsHandler) GetProduct(w http.ResponseWriter, r *http.Request) {
 
 // GetStatus returns the product at a glance, or the figures of what a ?for=
 // names.
+// docqet:implements capability:overview capability:readiness
 func (h *ProductsHandler) GetStatus(w http.ResponseWriter, r *http.Request) {
 	v, ok := h.view(w, r)
 	if !ok {
@@ -109,6 +111,7 @@ func (h *ProductsHandler) GetStatus(w http.ResponseWriter, r *http.Request) {
 }
 
 // ListProjects lists the product's projects showing.
+// docqet:implements capability:product-view
 func (h *ProductsHandler) ListProjects(w http.ResponseWriter, r *http.Request) {
 	v, ok := h.view(w, r)
 	if !ok {
@@ -122,6 +125,7 @@ func (h *ProductsHandler) ListProjects(w http.ResponseWriter, r *http.Request) {
 }
 
 // GetRubric returns the product's rubric, empty when it has none.
+// docqet:implements capability:rubric
 func (h *ProductsHandler) GetRubric(w http.ResponseWriter, r *http.Request) {
 	v, ok := h.view(w, r)
 	if !ok {
@@ -135,6 +139,7 @@ func (h *ProductsHandler) GetRubric(w http.ResponseWriter, r *http.Request) {
 }
 
 // ListDomains lists the domains showing.
+// docqet:implements capability:overview
 func (h *ProductsHandler) ListDomains(w http.ResponseWriter, r *http.Request) {
 	if v, ok := h.view(w, r); ok {
 		writePage(w, r, build(v.Domains, func(d *combine.Domain) DomainResource { return newDomainResource(v.Product, d) }))
@@ -142,6 +147,7 @@ func (h *ProductsHandler) ListDomains(w http.ResponseWriter, r *http.Request) {
 }
 
 // GetDomain returns a domain.
+// docqet:implements capability:overview
 func (h *ProductsHandler) GetDomain(w http.ResponseWriter, r *http.Request) {
 	if v, ok := h.view(w, r); ok {
 		id := chi.URLParam(r, "id")
@@ -154,6 +160,7 @@ func (h *ProductsHandler) GetDomain(w http.ResponseWriter, r *http.Request) {
 }
 
 // ListFeatures lists the features showing.
+// docqet:implements capability:overview
 func (h *ProductsHandler) ListFeatures(w http.ResponseWriter, r *http.Request) {
 	if v, ok := h.view(w, r); ok {
 		writePage(w, r, build(v.Features, func(f *combine.Feature) FeatureResource { return newFeatureResource(v.Product, f) }))
@@ -161,6 +168,7 @@ func (h *ProductsHandler) ListFeatures(w http.ResponseWriter, r *http.Request) {
 }
 
 // GetFeature returns a feature.
+// docqet:implements capability:overview
 func (h *ProductsHandler) GetFeature(w http.ResponseWriter, r *http.Request) {
 	if v, ok := h.view(w, r); ok {
 		id := chi.URLParam(r, "id")
@@ -174,6 +182,7 @@ func (h *ProductsHandler) GetFeature(w http.ResponseWriter, r *http.Request) {
 
 // ListCapabilities lists the capabilities showing, narrowed by ?for= and
 // ?stability=.
+// docqet:implements capability:overview
 func (h *ProductsHandler) ListCapabilities(w http.ResponseWriter, r *http.Request) {
 	levels, ok := listParam(w, r, "stability", append([]string{combine.Draft}, state.Levels...))
 	if !ok {
@@ -193,6 +202,7 @@ func (h *ProductsHandler) ListCapabilities(w http.ResponseWriter, r *http.Reques
 }
 
 // GetCapability returns a capability.
+// docqet:implements capability:overview
 func (h *ProductsHandler) GetCapability(w http.ResponseWriter, r *http.Request) {
 	if v, ok := h.view(w, r); ok {
 		id := chi.URLParam(r, "id")
@@ -206,6 +216,7 @@ func (h *ProductsHandler) GetCapability(w http.ResponseWriter, r *http.Request) 
 
 // getNestedGap returns the gap with a key on a doc of a type: the first,
 // in the product's order, whatever project declares it.
+// docqet:implements capability:readiness capability:how-its-built
 func (h *ProductsHandler) getNestedGap(typ string) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		v, ok := h.view(w, r)
@@ -222,6 +233,7 @@ func (h *ProductsHandler) getNestedGap(typ string) http.HandlerFunc {
 }
 
 // ListRules lists the rules showing.
+// docqet:implements capability:domain-language
 func (h *ProductsHandler) ListRules(w http.ResponseWriter, r *http.Request) {
 	if v, ok := h.view(w, r); ok {
 		writePage(w, r, build(v.Rules, func(x *combine.Rule) RuleResource { return newRuleResource(v.Product, x) }))
@@ -229,6 +241,7 @@ func (h *ProductsHandler) ListRules(w http.ResponseWriter, r *http.Request) {
 }
 
 // GetRule returns a domain's rule.
+// docqet:implements capability:domain-language
 func (h *ProductsHandler) GetRule(w http.ResponseWriter, r *http.Request) {
 	if v, ok := h.view(w, r); ok {
 		key := chi.URLParam(r, "id") + "@" + chi.URLParam(r, "domain")
@@ -241,6 +254,7 @@ func (h *ProductsHandler) GetRule(w http.ResponseWriter, r *http.Request) {
 }
 
 // ListConcepts lists the concepts showing.
+// docqet:implements capability:domain-language
 func (h *ProductsHandler) ListConcepts(w http.ResponseWriter, r *http.Request) {
 	if v, ok := h.view(w, r); ok {
 		writePage(w, r, build(v.Concepts, newConceptResource))
@@ -248,6 +262,7 @@ func (h *ProductsHandler) ListConcepts(w http.ResponseWriter, r *http.Request) {
 }
 
 // GetConcept returns a domain's concept.
+// docqet:implements capability:domain-language
 func (h *ProductsHandler) GetConcept(w http.ResponseWriter, r *http.Request) {
 	if v, ok := h.view(w, r); ok {
 		key := chi.URLParam(r, "id") + "@" + chi.URLParam(r, "domain")
@@ -260,6 +275,7 @@ func (h *ProductsHandler) GetConcept(w http.ResponseWriter, r *http.Request) {
 }
 
 // ListPersonas lists the personas showing.
+// docqet:implements capability:personas
 func (h *ProductsHandler) ListPersonas(w http.ResponseWriter, r *http.Request) {
 	if v, ok := h.view(w, r); ok {
 		writePage(w, r, build(v.Personas, func(p *combine.Persona) PersonaResource { return newPersonaResource(v.Product, p) }))
@@ -267,6 +283,7 @@ func (h *ProductsHandler) ListPersonas(w http.ResponseWriter, r *http.Request) {
 }
 
 // GetPersona returns a persona.
+// docqet:implements capability:personas
 func (h *ProductsHandler) GetPersona(w http.ResponseWriter, r *http.Request) {
 	if v, ok := h.view(w, r); ok {
 		id := chi.URLParam(r, "id")
@@ -279,6 +296,7 @@ func (h *ProductsHandler) GetPersona(w http.ResponseWriter, r *http.Request) {
 }
 
 // ListInitiatives lists the initiatives showing.
+// docqet:implements capability:initiative-scope
 func (h *ProductsHandler) ListInitiatives(w http.ResponseWriter, r *http.Request) {
 	if v, ok := h.view(w, r); ok {
 		writePage(w, r, build(v.Initiatives, func(i *combine.Initiative) InitiativeResource { return newInitiativeResource(v.Product, i) }))
@@ -286,6 +304,7 @@ func (h *ProductsHandler) ListInitiatives(w http.ResponseWriter, r *http.Request
 }
 
 // GetInitiative returns an initiative.
+// docqet:implements capability:initiative-scope
 func (h *ProductsHandler) GetInitiative(w http.ResponseWriter, r *http.Request) {
 	if v, ok := h.view(w, r); ok {
 		id := chi.URLParam(r, "id")
@@ -298,6 +317,7 @@ func (h *ProductsHandler) GetInitiative(w http.ResponseWriter, r *http.Request) 
 }
 
 // listTechnical lists the mechanisms or components showing, by kind.
+// docqet:implements capability:how-its-built
 func (h *ProductsHandler) listTechnical(kind string) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		v, ok := h.view(w, r)
@@ -313,6 +333,7 @@ func (h *ProductsHandler) listTechnical(kind string) http.HandlerFunc {
 }
 
 // getTechnical returns a mechanism or component, by kind.
+// docqet:implements capability:how-its-built
 func (h *ProductsHandler) getTechnical(kind string) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		v, ok := h.view(w, r)
@@ -330,6 +351,7 @@ func (h *ProductsHandler) getTechnical(kind string) http.HandlerFunc {
 
 // ListGaps lists the gaps showing, narrowed by ?for= and ?impact=, and
 // riskiest first with ?sort=risk.
+// docqet:implements capability:readiness
 func (h *ProductsHandler) ListGaps(w http.ResponseWriter, r *http.Request) {
 	rated, ok := listParam(w, r, "impact", impacts)
 	if !ok {
@@ -353,6 +375,7 @@ func (h *ProductsHandler) ListGaps(w http.ResponseWriter, r *http.Request) {
 }
 
 // ListTradeoffs lists the tradeoffs showing.
+// docqet:implements capability:choices
 func (h *ProductsHandler) ListTradeoffs(w http.ResponseWriter, r *http.Request) {
 	if v, ok := h.view(w, r); ok {
 		writePage(w, r, build(v.Tradeoffs, func(t *combine.Tradeoff) TradeoffResource { return newTradeoffResource(v.Product, t) }))
@@ -360,6 +383,7 @@ func (h *ProductsHandler) ListTradeoffs(w http.ResponseWriter, r *http.Request) 
 }
 
 // ListDecisions lists the open decisions showing, each with the doc it's on.
+// docqet:implements capability:readiness
 func (h *ProductsHandler) ListDecisions(w http.ResponseWriter, r *http.Request) {
 	if v, ok := h.view(w, r); ok {
 		writePage(w, r, newHeldDecisionResources(v.Product, v.ListDecisions()))
@@ -367,6 +391,7 @@ func (h *ProductsHandler) ListDecisions(w http.ResponseWriter, r *http.Request) 
 }
 
 // ListProblems lists the problems showing.
+// docqet:implements capability:seeing-problems
 func (h *ProductsHandler) ListProblems(w http.ResponseWriter, r *http.Request) {
 	if v, ok := h.view(w, r); ok {
 		writePage(w, r, build(v.Problems, newProblemResource))
@@ -397,6 +422,7 @@ func build[T, R any](items []T, resource func(T) R) []R {
 
 // view returns the product the path names, put together within ?project=
 // and ?initiative=. It writes the error and returns false when it can't.
+// docqet:implements capability:initiative-scope
 func (h *ProductsHandler) view(w http.ResponseWriter, r *http.Request) (*services.View, bool) {
 	query := r.URL.Query()
 	scope := services.Scope{Projects: splitList(query.Get("project")), Initiative: query.Get("initiative")}

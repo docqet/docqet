@@ -1,3 +1,4 @@
+// docqet:implements capability:initiative-scope
 import Box from "@mui/material/Box";
 import { MORE_ABOUT } from "../../components/markdown/Markdown";
 import { StabilitySpread } from "../../components/stability/StabilitySpread";
