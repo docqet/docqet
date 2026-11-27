@@ -91,9 +91,42 @@ that could be done:
 - **Promoting** a started capability to its next level, which raises
   maturity, and can raise exposure where a gap or decision breaks a claim
   the new level makes.
+- **Promoting several**: every capability in a feature or a domain, where
+  that's more than one, each to its own next level, the same way.
 - **Closing** the riskiest gap on a capability, which lowers its exposure
   to the next riskiest gap or decision on it.
 - **Answering** the riskiest rated decision on a capability, the same way.
+
+One capability among many moves readiness little, so readers show
+improvements by area, one level below what they're of: a product's or
+project's domains; a domain's, persona's or initiative's features; a
+feature's capabilities; and a capability's own steps. A gap or decision
+that's the riskiest on capabilities in more than one area is an area of its
+own. Each area has:
+
+- **Its potential**: what readiness would be with all of it settled, every
+  capability in it at GA with nothing open on it. Areas are ordered by it,
+  most first. Potentials overlap, so they don't add up.
+- **Its next step**: the improvement in it that would raise readiness
+  most, promoting all of it a level among them.
+
+Three features of ten capabilities each, all at Prototype with no gaps, are
+15% ready. Promoting any one capability adds about 1%:
+
+```text
+(29 × 15 × 2 + 35 × 3) ÷ (29 × 2 + 3) = 975 ÷ 61 ≈ 16%
+```
+
+Each feature's next step, promoting its ten to Alpha, would make it 24%,
+and its potential, its ten at GA, is 66%:
+
+```text
+next step   (20 × 15 × 2 + 10 × 35 × 3) ÷ (20 × 2 + 10 × 3) = 1650 ÷ 70 ≈ 24%
+potential   (20 × 15 × 2 + 10 × 100 × 6) ÷ (20 × 2 + 10 × 6) = 6600 ÷ 100 = 66%
+```
+
+Opening an area shows its own areas, one level down, and so on down to
+the steps.
 
 Only what would raise it is listed. A gap or decision that isn't the
 riskiest on any capability raises nothing yet, so it isn't one until it is,
@@ -148,7 +181,8 @@ exposure        (75 × 4 + 40 × 4 + 100 × 3 + 50 × 6 + 50 × 2 + 50 × 2) ÷ 
 readiness       59% × (1 − 60%) ≈ 24%
 ```
 
-That's Unready, just short of Partial. Its improvements, most first, are:
+That's Unready, just short of Partial. Its improvements one at a time,
+most first, are:
 
 ```text
  +14%  close deployment's migrations-only-go-forward   exposure 60% → 36%, on 4, makes it Partial

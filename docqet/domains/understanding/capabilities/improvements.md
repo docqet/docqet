@@ -44,6 +44,33 @@ doing, and when to stop, is for people to decide.
   and whether it does that by lowering exposure or raising maturity.
 - Promoting a capability to its next level is an improvement, raising
   maturity.
+- Promoting every capability in a feature or a domain to its next level is
+  one improvement too, where that's more than one capability.
+- Improvements are shown by area, one level below what's being looked at:
+  a product's or project's domains; a domain's, a persona's or an
+  initiative's features; a feature's capabilities; and a capability's own
+  steps. Where everything falls in one area, they're the next level down.
+  One capability among many moves readiness little, so this shows where
+  the larger steps are, and what holds readiness where it is.
+- A gap or decision that's the riskiest on capabilities in more than one
+  area is an area of its own, so it isn't hidden in any one.
+- Each area shows its potential: how ready what's being looked at could be
+  with all of the area settled, every capability in it at GA with nothing
+  open on it. Areas are ordered by potential, most first. Potentials
+  overlap, since a capability can be in more than one area, so they don't
+  add up.
+- Each area shows its next step too: the one improvement in it that would
+  raise readiness most, promoting all of it a level among them, and where
+  readiness would be after it. Where no one step raises it, it says so.
+- Each area's readiness now, where its next step would take it, and its
+  potential are drawn together, so how far each could go shows at a
+  glance, and pointing at an area shows the change its next step would
+  make.
+- Opening an area shows its own improvements, by area one level down, so
+  anyone can follow what holds readiness down to the steps that would
+  raise it.
+- Everyone can also see every improvement one at a time, each a single
+  step, most first.
 - Closing the riskiest gap on a capability is an improvement, lowering
   exposure by the difference between it and the next riskiest gap or
   decision.
@@ -57,11 +84,10 @@ doing, and when to stop, is for people to decide.
 - One gap or decision that's the riskiest on several capabilities, such as
   one on a mechanism they're built on, or a decision on a feature or
   domain, is one improvement, counting all of them.
-- Improvements are ordered by how much each would raise readiness, most
-  first, and say when one would move it into the next quarter, such as from
-  Partial to Viable.
-- In a list of capabilities, features or domains, each shows the
-  improvement that would raise its readiness most, and how many more there
+- Each improvement says when it would move readiness into the next
+  quarter, such as from Partial to Viable.
+- In a list of capabilities, features or domains, each shows the next
+  step that would raise its readiness most, and how many more areas there
   are.
 - With one initiative showing, improvements count only what's in it, as
   every other figure does.
