@@ -52,6 +52,16 @@ make apply DOCQET_SERVER=http://localhost:8090   # or to the server make build s
 curl localhost:8080/api/v1/products/docqet/status   # its figures, as the API serves them
 ```
 
+To see a change that spans the command, the server and the API, uncommitted
+and all, `make reload` rebuilds Docker's server from this checkout, sends it
+every commit of Docqet's again, indexed by this code, then sends the working
+tree in place of HEAD's state. It never commits, and it's only for a local
+server: on a shared one, the working tree would read as if it were committed.
+
+```sh
+make reload     # then open http://localhost:8090, and run it again after each change
+```
+
 ## Configuration
 
 `docqet serve` and `docqet migrate` read these, each also a flag:

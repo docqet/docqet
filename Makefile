@@ -1,4 +1,4 @@
-.PHONY: help install build up down nuke logs migrate run apply examples ui ui-build ui-lint fix fmt lint vet docs-lint check test
+.PHONY: help install build up down nuke logs migrate run apply examples reload ui ui-build ui-lint fix fmt lint vet docs-lint check test
 
 help: ## Show this help
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-20s\033[0m %s\n", $$1, $$2}'
@@ -53,6 +53,27 @@ examples: ## Load the examples into the local server, for the UI to show
 			curl -sf -o /dev/null -w "$$id %{http_code}\n" -X PUT -H 'Content-Type: application/json' \
 				--data-binary @- $(DOCQET_SERVER)/api/v1/projects/$$id/commits/$$sha || exit 1; \
 	done
+
+## --- Dogfooding: Docqet on its own docs ---
+
+# Docker's server, which compose.override.yml publishes on localhost:8090.
+DOCKER_SERVER ?= http://localhost:8090
+
+# Docqet has been a project since the commit that added its docqet.yaml, and
+# every commit since is indexed again with this code. apply sends only
+# commits, so the working tree is then sent in place of HEAD's state, with
+# HEAD's parents, time and trailers. Needs jq.
+reload: ## Rebuild the Docker stack from this code, send it Docqet's history again, and show the working tree as HEAD
+	docker compose up -d --build
+	@until curl -sf -o /dev/null $(DOCKER_SERVER)/api/v1/readyz; do sleep 1; done
+	DOCQET_SERVER=$(DOCKER_SERVER) go run ./cmd/docqet apply --replace \
+		--from $$(git log --diff-filter=A --format=%H --reverse -- docqet.yaml | head -1)
+	@sha=$$(git rev-parse HEAD); url=$(DOCKER_SERVER)/api/v1/projects/docqet/commits/$$sha; \
+	go run ./cmd/docqet index --stdout | \
+		jq -c --argjson c "$$(curl -sf $$url)" \
+			'{parents: $$c.parents, committedAt: $$c.committedAt, trailers: $$c.trailers, state: .}' | \
+		curl -sf -o /dev/null -w "working tree as $$sha: %{http_code}\n" -X PUT -H 'Content-Type: application/json' \
+			--data-binary @- $$url
 
 ## --- UI ---
 
