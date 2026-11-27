@@ -11,6 +11,7 @@ solves:
   - problem:unclear-what-to-rely-on
   - problem:intent-in-peoples-heads
   - problem:work-not-tied-to-a-need
+  - problem:newcomers-cant-find-their-way
 ---
 
 The UI is in [ui/](../../ui/).

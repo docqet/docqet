@@ -7,6 +7,6 @@ description: >-
   where a gap or tradeoff shows, with a comment.
 stability: prototype
 within: feature:declaring
-solves: [problem:docs-drift-from-code, problem:deliberate-code-gets-fixed]
+solves: [problem:docs-drift-from-code, problem:deliberate-code-gets-fixed, problem:planned-and-built-drift-apart]
 uses: [concept:annotation, concept:evidence]
 ---

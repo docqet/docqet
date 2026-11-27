@@ -8,7 +8,7 @@ description: >-
   persona or initiative most, in that order.
 stability: prototype
 within: feature:where-it-stands
-solves: [problem:unclear-what-helps-most]
+solves: [problem:unclear-what-helps-most, problem:decisions-made-blind]
 follows:
   - rule:drafts-claim-nothing
 uses: [concept:readiness, concept:maturity, concept:exposure, concept:risk]

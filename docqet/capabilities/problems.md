@@ -8,7 +8,7 @@ description: >-
   the problems nothing solves yet shown as such.
 stability: prototype
 within: feature:where-it-stands
-solves: [problem:work-not-tied-to-a-need, problem:unclear-what-to-rely-on]
+solves: [problem:work-not-tied-to-a-need, problem:unclear-what-to-rely-on, problem:newcomers-cant-find-their-way]
 follows:
   - rule:drafts-claim-nothing
 uses: [concept:problem, concept:readiness, concept:maturity]

@@ -8,5 +8,5 @@ description: >-
 cost: >-
   People stop reading docs the first time they're wrong, and everything in
   them is wasted.
-felt-by: [persona:engineer, persona:coding-agent]
+felt-by: [persona:engineer, persona:coding-agent, persona:product-engineer]
 ---

@@ -12,6 +12,7 @@ solves:
   - problem:intent-in-peoples-heads
   - problem:agents-guess-intention
   - problem:docs-slow-every-change
+  - problem:thread-lost-switching-hats
 gaps:
   - id: no-status
     name: No status

@@ -7,7 +7,7 @@ description: >-
   follow it.
 stability: prototype
 within: feature:keeping-current
-solves: [problem:why-it-changed-is-lost]
+solves: [problem:why-it-changed-is-lost, problem:thread-lost-switching-hats]
 uses: [concept:trailer]
 decisions:
   - topic: Keys for decisions

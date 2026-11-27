@@ -8,6 +8,6 @@ description: >-
   never to do.
 stability: prototype
 within: feature:reading-intention
-solves: [problem:bug-or-choice, problem:deliberate-code-gets-fixed]
+solves: [problem:bug-or-choice, problem:deliberate-code-gets-fixed, problem:decisions-made-blind, problem:thread-lost-switching-hats]
 uses: [concept:tradeoff]
 ---

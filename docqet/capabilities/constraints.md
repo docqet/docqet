@@ -10,7 +10,7 @@ description: >-
   and those a problem's solution doesn't say it keeps to, shown as such.
 stability: prototype
 within: feature:where-it-stands
-solves: [problem:unclear-what-to-rely-on, problem:intent-in-peoples-heads]
+solves: [problem:unclear-what-to-rely-on, problem:intent-in-peoples-heads, problem:decisions-made-blind]
 follows:
   - rule:drafts-claim-nothing
 uses: [concept:constraint, concept:readiness, concept:maturity]

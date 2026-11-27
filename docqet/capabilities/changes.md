@@ -7,7 +7,7 @@ description: >-
   the history of any doc.
 stability: prototype
 within: feature:keeping-current
-solves: [problem:docs-drift-from-code, problem:why-it-changed-is-lost]
+solves: [problem:docs-drift-from-code, problem:why-it-changed-is-lost, problem:thread-lost-switching-hats]
 gaps:
   - id: diff-only
     name: Only diff is built

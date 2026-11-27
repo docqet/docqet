@@ -9,5 +9,5 @@ description: >-
 cost: >-
   Bugs become entrenched as behaviour, and people learn about decisions after
   they're made.
-felt-by: [persona:coding-agent]
+felt-by: [persona:coding-agent, persona:engineer, persona:product-engineer]
 ---

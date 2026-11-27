@@ -7,6 +7,6 @@ description: >-
   hold, with how many capabilities use or follow each.
 stability: prototype
 within: feature:reading-intention
-solves: [problem:words-mean-different-things]
+solves: [problem:words-mean-different-things, problem:newcomers-cant-find-their-way]
 uses: [concept:concept, concept:rule]
 ---
