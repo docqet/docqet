@@ -37,9 +37,8 @@ What each level generally expects, quality by quality, is in the
   is.** A prototype that answers its question quickly is good work.
 - **Stability isn't perfection.** GA software still has bugs, and it can
   still have known [gaps](gap.md).
-- **Beta is the bar for real use.** A capability below it still needs to
-  reach it, in what [readiness](../../reporting/concepts/readiness.md) says
-  is left.
+- **Beta is the bar for real use.** Reaching each next level is one of the
+  improvements [readiness](../../reporting/concepts/readiness.md) lists.
 - **Only capabilities have one.** A feature's, domain's, project's,
   persona's and initiative's
   [maturity](../../reporting/concepts/maturity.md) and

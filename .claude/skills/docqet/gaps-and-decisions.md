@@ -184,7 +184,8 @@ decisions:
     reach: few
 ```
 
-- **Every decision written down is open**, and counts as what's left.
+- **Every decision written down is open**, and shows with the gaps as
+  what's open.
 - **Record one** when a question about intention comes up that nobody has
   answered and you didn't need answered to go on. Write the question so that
   someone without your context can answer it, and put any options in it.

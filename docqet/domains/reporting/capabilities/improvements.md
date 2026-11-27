@@ -7,18 +7,12 @@ description: >-
   Everyone sees what would make a capability, feature, domain, product,
   persona or initiative more ready, ordered by how much each would raise its
   readiness.
-stability: draft
+stability: prototype
 personas: [persona:product-owner, persona:engineer]
 concepts: [concept:readiness, concept:maturity, concept:exposure, concept:risk]
 rules:
   - rule:drafts-claim-nothing
 decisions:
-  - topic: What it replaces
-    question: >-
-      Does Improvements replace what's left wherever it shows, from the
-      readiness concept and each persona's tab to the command line and the
-      README's tagline, or sit beside it, with what's left kept as the list of
-      every open gap and decision?
   - topic: Promoting with a gap against the new level
     question: >-
       Promoting a capability whose gap breaks a claim the new level makes can
@@ -32,6 +26,11 @@ this more ready? It's asked of whatever they're looking at, whether that's
 one capability, a feature, a domain, a project or the whole product, what
 serves a persona, or an initiative, and the improvements count the same
 capabilities its readiness does.
+
+It replaces what was shown as what's left everywhere: a list of every open
+gap and decision says what's open, not what would help, and what's left
+read as a finish line. Every open gap and decision is still listed, under
+the improvements.
 
 It's not a finish line or a to-do list. Software that keeps growing is never
 done, and readiness is a recommendation that people judge. Improvements say

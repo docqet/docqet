@@ -7,8 +7,9 @@ description: >-
   Our view of how ready the software is to serve people in production, based on
   the engineering judgement written down beside it: each capability's
   [stability level](../../authoring/concepts/stability-level.md), and its [gaps](../../authoring/concepts/gap.md), rated
-  [open decisions](../../authoring/concepts/open-decision.md) and their [risk](risk.md). It's a percentage, with what's still left, and
-  a recommendation: people judge. Nobody writes it down.
+  [open decisions](../../authoring/concepts/open-decision.md) and their [risk](risk.md). It's a percentage, with its
+  improvements, what would raise it, and a recommendation: people judge.
+  Nobody writes it down.
 confused-with:
   - concept: "concept:maturity"
     summary: >-
@@ -76,24 +77,34 @@ maturity's, nor in a level's color.
 | Unready   | 0%   | Most of what they need is still being explored, or what's open on it puts a lot at stake. |
 | Partial   | 25%  | Some of it can be used, but much of what they need is still taking shape.                 |
 | Viable    | 50%  | Enough is settled for them to rely on day to day.                                         |
-| Ready     | 75%  | What they need is mostly stable, and little is at stake in what's left open.              |
+| Ready     | 75%  | What they need is mostly stable, and little is at stake in what's still open.             |
 
 The quarter comes from the percentage alone. An unacceptable gap or
-decision lowers it a lot, through exposure, and is always in what's left,
-but doesn't cap it.
+decision lowers it a lot, through exposure, but doesn't cap it.
 
-## What's left
+## Its improvements
 
-Readers show what it still needs with it. Each started capability below
-Beta, the first level settled enough for real use, needs to reach Beta, and
-each gap that's [unacceptable](risk.md#verdict) on one needs closing, and
-each decision that's unacceptable on one needs answering. A capability at
-Beta or GA with none of those has nothing left. Lesser gaps and decisions
-still lower readiness, but aren't left to do: their verdict says they're
-fine to leave open. Drafts are listed as not started.
+Readers show with it what would raise it, and by how much, most first:
+its [improvements](../capabilities/improvements.md). Each is one thing
+that could be done:
 
-What would raise readiness, whether it's left or not, ordered by how much,
-is its [improvements](../capabilities/improvements.md).
+- **Promoting** a started capability to its next level, which raises
+  maturity, and can raise exposure where a gap or decision breaks a claim
+  the new level makes.
+- **Closing** the riskiest gap on a capability, which lowers its exposure
+  to the next riskiest gap or decision on it.
+- **Answering** the riskiest rated decision on a capability, the same way.
+
+Only what would raise it is listed. A gap or decision that isn't the
+riskiest on any capability raises nothing yet, so it isn't one until it is,
+and a decision with no ratings never is. One that's the riskiest on several
+capabilities is one improvement, counting all of them.
+
+There's no finish line. Software that keeps growing is never done, and an
+improvement says what could be done, not what has to be: whether it's
+worth doing, and when to stop, is for people to judge. Something with no
+improvements shows none, without saying it's done. Drafts are listed as
+not started.
 
 ## Reading it
 
@@ -137,25 +148,29 @@ exposure        (75 × 4 + 40 × 4 + 100 × 3 + 50 × 6 + 50 × 2 + 50 × 2) ÷ 
 readiness       59% × (1 − 60%) ≈ 24%
 ```
 
-That's Unready, just short of Partial. Late cancellations refunded in full scores 66 at Alpha,
-tolerable, so it lowers readiness but isn't left to do. What's left is:
+That's Unready, just short of Partial. Its improvements, most first, are:
 
 ```text
-room booking    close capability:room-booking#calendar-needs-a-mouse
-cancellations   reach Beta, now Alpha
-check-out       close mechanism:deployment#migrations-only-go-forward
-group bookings  reach Beta, now Prototype
-room status     reach Beta, now Prototype
+ +14%  close deployment's migrations-only-go-forward   exposure 60% → 36%, on 4, makes it Partial
+  +5%  close late-cancellations-refunded-in-full       exposure 60% → 52%, makes it Partial
+  +4%  close calendar-needs-a-mouse                    exposure 60% → 53%, makes it Partial
+  +4%  check-in reaching GA                            maturity 59% → 70%, exposure 61%, makes it Partial
+  +3%  room booking reaching GA                        maturity 59% → 70%, exposure 61%, makes it Partial
+  +1%  group bookings reaching Alpha                   maturity 59% → 60%
+  +1%  room status reaching Alpha                      maturity 59% → 60%
+ +<1%  cancellations reaching Beta                     maturity 59% → 63%, exposure 62%
 ```
 
-Closing those two gaps would leave 26% exposure, mostly from late
+Closing deployment's gap counts on four capabilities, since it's the
+riskiest on each. Reaching GA raises exposure a little as well as maturity,
+since deployment's gap breaks GA's claim of recovery. Closing deployment's
+gap and the calendar's together would leave 26% exposure, mostly from late
 cancellations, and make it 44%, Partial.
 
 In Hotel Billing, the manager has city tax at Alpha, deposits and daily
 takings at Beta, and night audit at GA: 1185 ÷ 17 ≈ 70% mature, with 18%
 exposure, from city tax's children corrected by hand and deposits' provider
-calls with no timeout, so 57%, Viable, with only city tax left to reach
-Beta. The night auditor has only night audit, at GA, with no gaps, so
+calls with no timeout, so 57%, Viable. The night auditor has only night audit, at GA, with no gaps, so
 they're 100%, Ready.
 
 ## How it's written

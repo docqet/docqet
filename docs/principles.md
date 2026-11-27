@@ -100,7 +100,8 @@ visible to everyone.
   belong wherever a team keeps them.
 - **A score to maximize.** Maturity is an indication, not a target: starting
   new work lowers it, and 100% isn't the goal. Readiness is a recommendation,
-  and comes with what's left.
+  and comes with its improvements, which are what could be done, not a
+  finish line.
 - **A place to change intention outside the repository.** Intention is only
   changed in a repository, so it's reviewed with the code. Servers and other
   tools read it and show it, never edit it.

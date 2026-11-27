@@ -121,8 +121,8 @@ verdict.
 
 A risk's **verdict** says whether it's OK to leave the gap open at the level
 it's at, by the third its score falls in. A gap that's `unacceptable` on a
-capability is left to close before that capability is
-[ready](readiness.md):
+capability isn't OK to leave open there, and lowers its
+[readiness](readiness.md) a lot:
 
 | Verdict        | Score     | What it means                              |
 | -------------- | --------- | ------------------------------------------ |

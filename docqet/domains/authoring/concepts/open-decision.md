@@ -133,10 +133,10 @@ A decision affects nothing else: the doc it's on is already what it's about.
 
 Open → Answered
 
-Every decision written down is open, and counts as what's left. Once it's
-answered, it's deleted, and git has its history. Its answer is written where
-it belongs, as whatever it became, written as any other is, with no link
-back to the question.
+Every decision written down is open, and shows with the gaps as what's
+open. Once it's answered, it's deleted, and git has its history. Its answer
+is written where it belongs, as whatever it became, written as any other
+is, with no link back to the question.
 
 One answer can become several things, such as a capability and a gap for
 what its first version leaves out. What it can become stays on the decision's

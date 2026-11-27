@@ -70,7 +70,7 @@ the server are separate, since they aren't reads.
 | [`docqet touches`](#docqet-touches) | What a set of files or a change is about | Read |
 | [`docqet show`](#docqet-show) | One doc, with everything derived about it | Read |
 | [`docqet list`](#docqet-list) | Docs, gaps, decisions or tradeoffs, filtered and ordered | Read |
-| [`docqet status`](#docqet-status) | Maturity, readiness and what's left, at a glance | Read |
+| [`docqet status`](#docqet-status) | Maturity, readiness and its improvements, at a glance | Read |
 | [`docqet rubric`](#docqet-rubric) | What each stability level expects, or what a promotion needs | Read |
 | [`docqet rename`](#docqet-rename) | Change an ID everywhere in the project, and say so in history | Changing |
 | [`docqet diff`](#docqet-diff) | What changed in Docqet between two points | Read |

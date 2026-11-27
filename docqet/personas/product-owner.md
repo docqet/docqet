@@ -4,7 +4,7 @@ id: product-owner
 name: Tomás
 description: >-
   Owns what a product is meant to do, and needs to know what it does today and
-  what's left, without reading code.
+  what would make it more ready, without reading code.
 role: Stakeholder
 title: Product owner
 image: https://randomuser.me/api/portraits/men/32.jpg

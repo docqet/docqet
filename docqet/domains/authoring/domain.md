@@ -106,7 +106,7 @@ Intention and reality differ in a few named ways:
 **[open decisions](concepts/open-decision.md)**, **[gaps](concepts/gap.md)**,
 **[tradeoffs](concepts/tradeoff.md)** and **[problems](concepts/problem.md)**.
 [Reporting](../reporting/domain.md#where-intention-and-reality-differ) sets
-out where each is declared, and what's left.
+out where each is declared, and what's open.
 
 Anything in the repository can point at a rule, capability, mechanism or
 component with an **[annotation](concepts/annotation.md)**, as evidence that

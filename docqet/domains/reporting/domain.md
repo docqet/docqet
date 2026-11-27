@@ -4,7 +4,8 @@ id: reporting
 name: Reporting
 description: >-
   Showing everyone with a stake in software where it is: what it does, who it
-  serves, how ready it is, what's left, and how that's changed.
+  serves, how ready it is, what would make it more ready, and how that's
+  changed.
 decisions:
   - topic: Results and changes
     question: >-
@@ -26,19 +27,21 @@ them.
 
 Readers put a [product's](concepts/product.md) projects together by ID, and
 show any [contradiction](concepts/contradiction.md) between them instead of
-choosing one. From what's left they work out:
+choosing one. From the result they work out:
 
-- **[Risk](concepts/risk.md)**: what's at stake in each gap, scored from the
-  impact, likelihood and reach it declares, the level of each capability
-  it's on, and whether it breaks a claim made there.
-- **[Exposure](concepts/exposure.md)**: what the gaps on some capabilities
-  put at stake together, from the riskiest gap on each.
+- **[Risk](concepts/risk.md)**: what's at stake in each gap, and each rated
+  open decision, scored from the impact, likelihood and reach it declares,
+  the level of each capability it's on, and whether it breaks a claim made
+  there.
+- **[Exposure](concepts/exposure.md)**: what the gaps and rated decisions on
+  some capabilities put at stake together, from the riskiest on each.
 - **[Maturity](concepts/maturity.md)**: how far along each feature, domain,
   project, initiative, and what serves each persona, is, from its
   capabilities' levels. Each falls in a [band](concepts/band.md).
 - **[Readiness](concepts/readiness.md)**: how ready people can rely on each
   capability, feature, domain, project, persona and initiative being, as a
-  recommendation, with what's left. It's maturity less exposure.
+  recommendation, with its improvements: what would raise it, and by how
+  much. It's maturity less exposure.
 
 Read them in that order, since each builds on the one before. None of them
 is written down or in [state](../authoring/concepts/state.md), since each
@@ -72,9 +75,9 @@ worked out.
 A rule holds none of them. A rule is decided once its doc exists, and a gap
 that says a capability doesn't hold to a rule yet is the capability's.
 
-### What's left, and what holds
+### What's open, and what holds
 
-What's left is the open decisions and the gaps, and nothing else. Everything
+What's open is the open decisions and the gaps, and nothing else. Everything
 else declared is taken to hold: a gap is how we say part of it doesn't yet.
 Everything declared, such as what a capability does, each rule it follows,
 and each outcome its level
@@ -92,5 +95,5 @@ is in one of these standings:
 A gap wins over a tradeoff, a tradeoff over a decision, and all three over
 evidence. A decision can also affect a gap, which then waits on its answer,
 or a tradeoff, which it reopens. Evidence is always optional: it shows how
-we know something holds, and its absence is never something left to do. A
+we know something holds, and its absence is never open. A
 draft capability claims nothing yet.

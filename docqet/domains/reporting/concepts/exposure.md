@@ -25,7 +25,7 @@ confused-with:
       how far along the same capabilities are.
   - concept: "concept:readiness"
     summary: >-
-      maturity less the exposure, with what's left.
+      maturity less the exposure, with its improvements.
   - concept: "concept:stability-level@authoring"
     summary: >-
       how much you can depend on one capability, as declared. Exposure never changes it.

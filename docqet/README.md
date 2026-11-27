@@ -21,7 +21,7 @@ are the definition of the format. There's no separate spec.
 - **Start with the domains.** [Authoring](domains/authoring/domain.md)
   introduces writing intention down and how the concepts fit together.
   [Reporting](domains/reporting/domain.md) introduces how it's shown:
-  maturity, readiness, risk and what's left.
+  maturity, readiness, risk and improvements.
 - **A concept defines a word for any project.** The
   [rule](domains/authoring/concepts/rule.md) concept says what a rule is
   wherever Docqet is used.

@@ -5,7 +5,7 @@
   <img src="docs/assets/stability-prototype-light.svg" alt="Stability: Prototype · Exploring" height="18">
 </picture></a>
 
-**Intent as Code. Say what it's for. See where it stands. Know what's left.**
+**Intent as Code. Say what it's for. See where it stands. Know what would improve it.**
 
 What your software is meant to do, written beside the code, linked to the
 evidence of what it actually does, and readable by everyone with a stake in it.
@@ -46,8 +46,8 @@ they serve, how stable each one is, and the gaps and tradeoffs you know about.
   shows it instead of hiding it.
 
 With that, anyone, technical or not, person or agent, can see what the
-software does and for whom, how stable each part is, what's left, and the
-code and tests behind each rule.
+software does and for whom, how stable each part is, what would make it
+more ready, and the code and tests behind each rule.
 
 ## Who it's for
 

@@ -18,7 +18,7 @@ confused-with:
       what the gaps open on the same capabilities put at stake. It's to risk what maturity is to stability.
   - concept: "concept:readiness"
     summary: >-
-      maturity less the same capabilities' exposure, with what's left.
+      maturity less the same capabilities' exposure, with its improvements.
 ---
 
 Maturity says how close the work under way is to being stable and supported.

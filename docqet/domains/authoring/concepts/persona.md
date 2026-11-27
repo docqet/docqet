@@ -33,7 +33,7 @@ about.
   someone is and what they need, not what they're allowed to do.
 - **It has no stability level.** It has a
   [readiness](../../reporting/concepts/readiness.md): how ready they can rely
-  on what they need being, with what's left.
+  on what they need being, with its improvements.
 
 ## How it's written
 
