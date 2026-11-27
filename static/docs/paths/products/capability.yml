@@ -3,7 +3,7 @@ get:
   x-stability: prototype
   summary: Get a capability
   description: >-
-    A capability, with its readiness, exposure and risk, what's left on it,
+    A capability, with its readiness, exposure and risk, its improvements, what's open on it,
     and how it stands on each rule it follows and each expected outcome.
   tags:
     - Products

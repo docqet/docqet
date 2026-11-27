@@ -60,11 +60,21 @@ type CapabilityTally struct {
 	GA        int `json:"ga"`
 }
 
-// Decision is an open question on a doc.
+// Decision is an open question on a doc. Impact, Likelihood and Reach rate
+// what its answer could change for the people relying on what's there now:
+// all three, or all nil when it isn't rated, and it then has no risk.
 type Decision struct {
-	Topic    *string  `json:"topic"`
-	Question string   `json:"question"`
-	Affects  []string `json:"affects"`
+	Topic      *string  `json:"topic"`
+	Question   string   `json:"question"`
+	Affects    []string `json:"affects"`
+	Impact     *string  `json:"impact"`
+	Likelihood *string  `json:"likelihood"`
+	Reach      *string  `json:"reach"`
+}
+
+// Rated reports whether a decision has all three ratings, and so a risk.
+func (d Decision) Rated() bool {
+	return d.Impact != nil && d.Likelihood != nil && d.Reach != nil
 }
 
 // Place is where an annotation is: its file, and the line it's on and that

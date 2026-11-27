@@ -362,7 +362,7 @@ func (h *ProductsHandler) ListTradeoffs(w http.ResponseWriter, r *http.Request) 
 // ListDecisions lists the open decisions showing, each with the doc it's on.
 func (h *ProductsHandler) ListDecisions(w http.ResponseWriter, r *http.Request) {
 	if v, ok := h.view(w, r); ok {
-		writePage(w, r, newHeldDecisionResources(v.ListDecisions()))
+		writePage(w, r, newHeldDecisionResources(v.Product, v.ListDecisions()))
 	}
 }
 

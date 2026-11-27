@@ -1,6 +1,6 @@
 // Package derive works out the figures nobody writes down from a combined
 // product: maturity and its bands, each gap's risk and verdict, exposure,
-// readiness, and what's left. They're the reporting domain's concepts, worked
+// readiness, and its improvements. They're the reporting domain's concepts, worked
 // out as the UI works them out, with its numbers. It's pure: what it returns
 // depends only on the product it's given.
 //

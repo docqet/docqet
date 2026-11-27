@@ -259,20 +259,52 @@ func placesOf(places []combine.Place) []state.Place {
 	return out
 }
 
-// decisionView is an open decision as reads show it.
+// decisionView is an open decision as reads show it, with its ratings when
+// it's rated, and, where it's shown with the doc it's on, its risk.
 type decisionView struct {
-	On       string   `json:"on,omitempty"`
-	Topic    *string  `json:"topic"`
-	Question string   `json:"question"`
-	Affects  []string `json:"affects"`
+	On         string   `json:"on,omitempty"`
+	Topic      *string  `json:"topic"`
+	Question   string   `json:"question"`
+	Affects    []string `json:"affects"`
+	Impact     *string  `json:"impact"`
+	Likelihood *string  `json:"likelihood"`
+	Reach      *string  `json:"reach"`
+	Risk       *int     `json:"risk,omitempty"`
+	Verdict    string   `json:"verdict,omitempty"`
 }
 
 func decisionViews(on string, ds []state.Decision) []decisionView {
 	out := []decisionView{}
 	for _, d := range ds {
-		out = append(out, decisionView{On: on, Topic: d.Topic, Question: d.Question, Affects: declaredAll(d.Affects)})
+		out = append(out, decisionView{
+			On: on, Topic: d.Topic, Question: d.Question, Affects: declaredAll(d.Affects),
+			Impact: d.Impact, Likelihood: d.Likelihood, Reach: d.Reach,
+		})
 	}
 	return out
+}
+
+// heldDecisionView is an open decision with the doc it's on, and its risk
+// when it's rated.
+func heldDecisionView(p *combine.Product, h derive.HeldDecision) decisionView {
+	v := decisionViews(h.Kind+":"+h.Doc.ID, []state.Decision{h.Decision})[0]
+	if r := derive.DecisionRiskOf(p, h); r != nil {
+		v.Risk, v.Verdict = &r.Score, string(r.Verdict)
+	}
+	return v
+}
+
+// ratingsText is a rated decision's ratings and risk in a few words, or ""
+// when it isn't rated.
+func (v decisionView) ratingsText() string {
+	if v.Impact == nil || v.Likelihood == nil || v.Reach == nil {
+		return ""
+	}
+	text := *v.Impact + ", " + *v.Likelihood + ", " + *v.Reach
+	if v.Risk != nil {
+		text += fmt.Sprintf("  risk %d (%s)", *v.Risk, v.Verdict)
+	}
+	return text
 }
 
 // oneLine folds text onto one line, cut to n runes.

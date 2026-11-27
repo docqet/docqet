@@ -312,6 +312,7 @@ func (c *checker) decisions(s subject, ds []state.Decision) {
 		if d.Question == "" {
 			c.add(state.InvalidFrontmatter, s, "A decision has a question.")
 		}
+		c.decisionRatings(s, d)
 		for _, raw := range d.Affects {
 			if state.IsOutcomeRef(raw) {
 				c.outcomes(s, "affects", []string{raw})
@@ -329,6 +330,32 @@ func (c *checker) decisions(s subject, ds []state.Decision) {
 				c.add(state.UnknownID, s, "A decision affects %s, which doesn't exist.", raw)
 			}
 		}
+	}
+}
+
+// decisionRatings checks a decision is rated with all three of impact,
+// likelihood and reach, each one of a gap's values, or with none.
+func (c *checker) decisionRatings(s subject, d state.Decision) {
+	ratings := []struct {
+		field   string
+		value   *string
+		allowed []string
+	}{
+		{"impact", d.Impact, []string{"negligible", "inconvenient", "blocking", "damaging"}},
+		{"likelihood", d.Likelihood, []string{"certain", "expected", "possible", "unlikely"}},
+		{"reach", d.Reach, []string{"all", "most", "some", "few"}},
+	}
+	var missing []string
+	for _, r := range ratings {
+		switch {
+		case r.value == nil:
+			missing = append(missing, r.field)
+		case !slices.Contains(r.allowed, *r.value):
+			c.add(state.InvalidFrontmatter, s, "A decision's %s is %q: it's %s.", r.field, *r.value, strings.Join(r.allowed, ", "))
+		}
+	}
+	if len(missing) > 0 && len(missing) < len(ratings) {
+		c.add(state.InvalidFrontmatter, s, "A decision is rated with all of impact, likelihood and reach, or none: this one has no %s.", strings.Join(missing, " or "))
 	}
 }
 

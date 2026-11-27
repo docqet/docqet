@@ -58,8 +58,8 @@ type MaturityResource struct {
 	Band    string `json:"band"`
 }
 
-// ExposureResource is what the gaps open on some capabilities put at stake
-// together. Percent is unrounded, and null with nothing started. Band is
+// ExposureResource is what the gaps and rated decisions open on some
+// capabilities put at stake together. Percent is unrounded, and null with nothing started. Band is
 // low, minor, moderate or high.
 type ExposureResource struct {
 	Percent      *float64 `json:"percent"`
@@ -90,43 +90,64 @@ type ScoredGapResource struct {
 }
 
 // ReadinessResource is how ready people can rely on some capabilities being,
-// with what's left. Percent is rounded and Band is Unready, Partial, Viable
-// or Ready, both null with nothing started. Maturity is the capabilities'
-// own, unrounded, weighted by level.
+// with its improvements: what would raise it, most first. Percent is
+// rounded and Band is Unready, Partial, Viable or Ready, both null with
+// nothing started. Maturity is the capabilities' own, unrounded, weighted by
+// level. Started is how many it's worked out from, and NotStarted the
+// drafts, which never count.
 type ReadinessResource struct {
-	Percent    *int                `json:"percent"`
-	Band       *string             `json:"band"`
-	Maturity   *float64            `json:"maturity"`
-	Exposure   ExposureResource    `json:"exposure"`
-	Levels     []string            `json:"levels"`
-	Gaps       RiskSummaryResource `json:"gaps"`
-	Ready      []string            `json:"ready"`
-	NotReady   []NeedResource      `json:"notReady"`
-	NotStarted []string            `json:"notStarted"`
+	Percent      *int                  `json:"percent"`
+	Band         *string               `json:"band"`
+	Maturity     *float64              `json:"maturity"`
+	Exposure     ExposureResource      `json:"exposure"`
+	Levels       []string              `json:"levels"`
+	Gaps         RiskSummaryResource   `json:"gaps"`
+	Started      int                   `json:"started"`
+	NotStarted   []string              `json:"notStarted"`
+	Improvements []ImprovementResource `json:"improvements"`
 }
 
-// NeedResource is what a started capability still needs to be ready: to
-// reach Beta, and to close each gap that's unacceptable on it.
-type NeedResource struct {
-	Capability string             `json:"capability"`
-	BelowBeta  bool               `json:"belowBeta"`
-	Gaps       []string           `json:"gaps"`
-	Decisions  []DecisionResource `json:"decisions"`
+// ImprovementResource is something that would raise a readiness: promoting
+// a capability to its next level (Kind promote, with Capability, From and
+// To), closing a gap (close, with Gap) or answering a rated decision
+// (answer, with Decision). Capabilities is where it changes something among
+// those counted. Readiness, Maturity and Exposure are what they'd be after
+// it, unrounded, and Gain how much readiness it adds. Band is the quarter
+// readiness would move into, null when it stays in the same one.
+type ImprovementResource struct {
+	Kind         string                `json:"kind"`
+	Capability   *string               `json:"capability"`
+	From         *string               `json:"from"`
+	To           *string               `json:"to"`
+	Gap          *string               `json:"gap"`
+	Decision     *HeldDecisionResource `json:"decision"`
+	Capabilities []string              `json:"capabilities"`
+	Readiness    float64               `json:"readiness"`
+	Maturity     float64               `json:"maturity"`
+	Exposure     float64               `json:"exposure"`
+	Gain         float64               `json:"gain"`
+	Band         *string               `json:"band"`
 }
 
-// DecisionResource is an open decision.
+// DecisionResource is an open decision. Impact, Likelihood and Reach rate
+// what its answer could change, all null when it isn't rated.
 type DecisionResource struct {
-	Topic    *string  `json:"topic"`
-	Question string   `json:"question"`
-	Affects  []string `json:"affects"`
+	Topic      *string  `json:"topic"`
+	Question   string   `json:"question"`
+	Affects    []string `json:"affects"`
+	Impact     *string  `json:"impact"`
+	Likelihood *string  `json:"likelihood"`
+	Reach      *string  `json:"reach"`
 }
 
-// HeldDecisionResource is an open decision with the doc it's on.
+// HeldDecisionResource is an open decision with the doc it's on, and its
+// risk, scored on each capability it counts on: null when it isn't rated.
 type HeldDecisionResource struct {
 	DecisionResource
 	// On is the doc it's on, as a reference: domain:, feature:, capability:,
 	// mechanism: or component:.
-	On string `json:"on"`
+	On   string        `json:"on"`
+	Risk *RiskResource `json:"risk"`
 }
 
 // ConfusionResource is what a concept is easily mistaken for.
@@ -270,9 +291,9 @@ type TechnicalGapResource struct {
 	On  string `json:"on"` // mechanism:<id> or component:<id>
 }
 
-// LeftResource is what's left on a capability: its open decisions, its own
+// OpenResource is what's open on a capability: its open decisions, its own
 // gaps, and the gaps on what it's built on.
-type LeftResource struct {
+type OpenResource struct {
 	Decisions []DecisionResource     `json:"decisions"`
 	Gaps      []string               `json:"gaps"`
 	Technical []TechnicalGapResource `json:"technical"`
@@ -290,8 +311,8 @@ type OutcomeStandingResource struct {
 	By        []string           `json:"by"` // the mechanisms and components that meet it
 }
 
-// CapabilityResource is a capability, with its figures, what's left, and how
-// it stands on each rule it follows and each expected outcome.
+// CapabilityResource is a capability, with its figures, what's open on it,
+// and how it stands on each rule it follows and each expected outcome.
 type CapabilityResource struct {
 	DocResource
 	Personas    []string         `json:"personas"`
@@ -310,7 +331,7 @@ type CapabilityResource struct {
 	Exposure  ExposureResource  `json:"exposure"`
 	// Risk is across its gaps, its own and those of what it's built on.
 	Risk RiskSummaryResource `json:"risk"`
-	Left LeftResource        `json:"left"`
+	Open OpenResource        `json:"open"`
 	// RuleStandings is how it stands on each rule it follows: gap, evidence
 	// or trust, by the rule's ID.
 	RuleStandings map[string]string         `json:"ruleStandings"`
@@ -394,8 +415,8 @@ type SpreadResource struct {
 	Capabilities int `json:"capabilities"`
 }
 
-// RiskResource is what's at stake in leaving a gap open, on every
-// capability it shows on. Score is 0 where it shows on none.
+// RiskResource is what's at stake in leaving a gap, or a rated decision,
+// open, on every capability it shows on. Score is 0 where it shows on none.
 type RiskResource struct {
 	Score        int              `json:"score"`
 	Verdict      string           `json:"verdict"`

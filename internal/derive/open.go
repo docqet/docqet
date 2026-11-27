@@ -8,16 +8,6 @@ import (
 	"github.com/docqet/docqet/internal/state"
 )
 
-// OpenDecisions returns the open decisions a doc's contributions list, in
-// order: all of them, since answering one deletes it.
-func OpenDecisions(d combine.Doc) []state.Decision {
-	var decisions []state.Decision
-	for _, f := range d.From {
-		decisions = append(decisions, f.Decisions...)
-	}
-	return decisions
-}
-
 // The kinds of thing a gap, tradeoff or decision can affect.
 const (
 	AffectsOutcome  = "outcome"
@@ -59,44 +49,6 @@ func AffectedBy(p *combine.Product, affects []string) []Affected {
 		} else if t := p.Tradeoff(ref); t != nil {
 			out = append(out, Affected{Kind: AffectsTradeoff, Tradeoff: t})
 		}
-	}
-	return out
-}
-
-// HeldDecision is an open decision, with the doc it's held on and that doc's
-// kind: domain, feature, capability, mechanism or component.
-type HeldDecision struct {
-	Decision state.Decision
-	Kind     string
-	Doc      *combine.Doc
-}
-
-// DecisionsAffecting returns the open decisions that affect a gap or
-// tradeoff, by its ID, each with the doc it's held on: what it waits on, or
-// what reopens it.
-func DecisionsAffecting(p *combine.Product, id string) []HeldDecision {
-	var out []HeldDecision
-	add := func(kind string, d *combine.Doc) {
-		for _, decision := range OpenDecisions(*d) {
-			if slices.Contains(decision.Affects, id) {
-				out = append(out, HeldDecision{Decision: decision, Kind: kind, Doc: d})
-			}
-		}
-	}
-	for _, d := range p.Domains {
-		add("domain", &d.Doc)
-	}
-	for _, f := range p.Features {
-		add("feature", &f.Doc)
-	}
-	for _, c := range p.Capabilities {
-		add("capability", &c.Doc)
-	}
-	for _, t := range p.Mechanisms {
-		add(combine.KindMechanism, &t.Doc)
-	}
-	for _, t := range p.Components {
-		add(combine.KindComponent, &t.Doc)
 	}
 	return out
 }
@@ -174,26 +126,22 @@ type TechnicalGap struct {
 	On  *combine.Technical
 }
 
-// Left is what's still open about a capability: decisions nobody has made,
+// Open is what's still open about a capability: decisions nobody has made,
 // its known gaps, and the technical gaps of what it's built on. Evidence
 // isn't among them: what's declared holds unless a gap says otherwise.
-// Tradeoffs aren't either: they're decided.
-type Left struct {
+// Tradeoffs aren't either: they're decided. What would make it more ready
+// is its improvements, from its readiness.
+type Open struct {
 	Decisions []state.Decision
 	Gaps      []*combine.Gap
 	Technical []TechnicalGap
 }
 
-// Count returns how many things are left.
-func (l Left) Count() int {
-	return len(l.Decisions) + len(l.Gaps) + len(l.Technical)
-}
-
-// LeftIn returns what's still open about a capability. With technical
+// OpenIn returns what's still open about a capability. With technical
 // false, as for a persona, it's only what someone using the product would
 // notice.
-func LeftIn(p *combine.Product, c *combine.Capability, technical bool) Left {
-	l := Left{Decisions: OpenDecisions(c.Doc), Gaps: gapsByID(p, c.Gaps)}
+func OpenIn(p *combine.Product, c *combine.Capability, technical bool) Open {
+	l := Open{Decisions: OpenDecisions(c.Doc), Gaps: gapsByID(p, c.Gaps)}
 	if technical {
 		for _, t := range BuiltOn(p, c) {
 			for _, g := range gapsByID(p, t.Gaps) {

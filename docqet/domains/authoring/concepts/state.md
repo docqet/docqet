@@ -90,7 +90,8 @@ with each list cut down to its keys:
   `confused-with` is `confusedWith`. A field the doc leaves out is there
   anyway, as `[]` for a list and `null` otherwise, such as a rule's `why` or
   a persona's `image`. Each decision is its `topic`, or `null`, its
-  `question`, and its `affects`. Each `confusedWith` is its `concept` or
+  `question`, its `affects`, and its `impact`, `likelihood` and `reach`,
+  each `null` when it isn't rated. Each `confusedWith` is its `concept` or
   `term`, the other `null`, and `summary`.
 - **`mechanisms`** and **`components`**: each with its ID, file, name,
   `description`, `capabilities`, `meets`, its `gaps` and `tradeoffs` by ID,

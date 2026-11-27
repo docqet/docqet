@@ -67,9 +67,12 @@ type tradeoff struct {
 }
 
 type decision struct {
-	Topic    *string  `yaml:"topic"`
-	Question string   `yaml:"question"`
-	Affects  []string `yaml:"affects"`
+	Topic      *string  `yaml:"topic"`
+	Question   string   `yaml:"question"`
+	Affects    []string `yaml:"affects"`
+	Impact     *string  `yaml:"impact"`
+	Likelihood *string  `yaml:"likelihood"`
+	Reach      *string  `yaml:"reach"`
 }
 
 // doc is one Docqet doc read from a file.
@@ -237,7 +240,10 @@ func trimBody(body string) string {
 func decisions(ds []decision) []state.Decision {
 	out := make([]state.Decision, 0, len(ds))
 	for _, d := range ds {
-		out = append(out, state.Decision{Topic: d.Topic, Question: strings.TrimSpace(d.Question), Affects: list(d.Affects)})
+		out = append(out, state.Decision{
+			Topic: d.Topic, Question: strings.TrimSpace(d.Question), Affects: list(d.Affects),
+			Impact: d.Impact, Likelihood: d.Likelihood, Reach: d.Reach,
+		})
 	}
 	return out
 }

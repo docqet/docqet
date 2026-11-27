@@ -78,29 +78,21 @@ func (v *View) ListGaps(within []*combine.Capability, impacts []string, byRisk b
 }
 
 // ListDecisions returns every open decision showing, with the doc it's held
-// on: the domains', then the features', capabilities', mechanisms' and
-// components'.
+// on, riskiest first: the rated ones by their risk, then those with none,
+// each in the product's order, the domains', then the features',
+// capabilities', mechanisms' and components'.
 func (v *View) ListDecisions() []derive.HeldDecision {
-	out := []derive.HeldDecision{}
-	add := func(kind string, d *combine.Doc) {
-		for _, decision := range derive.OpenDecisions(*d) {
-			out = append(out, derive.HeldDecision{Decision: decision, Kind: kind, Doc: d})
+	out := derive.HeldDecisions(v.Product)
+	scores := map[string]int{}
+	for _, h := range out {
+		scores[h.Key()] = -1
+		if r := derive.DecisionRiskOf(v.Product, h); r != nil {
+			scores[h.Key()] = r.Score
 		}
 	}
-	for _, d := range v.Domains {
-		add("domain", &d.Doc)
-	}
-	for _, f := range v.Features {
-		add("feature", &f.Doc)
-	}
-	for _, c := range v.Capabilities {
-		add("capability", &c.Doc)
-	}
-	for _, t := range v.Mechanisms {
-		add(combine.KindMechanism, &t.Doc)
-	}
-	for _, t := range v.Components {
-		add(combine.KindComponent, &t.Doc)
+	slices.SortStableFunc(out, func(a, b derive.HeldDecision) int { return scores[b.Key()] - scores[a.Key()] })
+	if out == nil {
+		out = []derive.HeldDecision{}
 	}
 	return out
 }

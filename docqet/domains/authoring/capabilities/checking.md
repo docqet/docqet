@@ -23,13 +23,4 @@ gaps:
       feature defined in another project is reported as a problem, since
       `--product` isn't built and the check sees only this project. A team
       reusing another project's IDs gets a failing check it can't fix.
-  - id: half-rated-decisions
-    name: Half-rated decisions aren't reported
-    impact: inconvenient
-    likelihood: expected
-    reach: some
-    description: >-
-      A decision with only one or two of its impact, likelihood and reach
-      isn't reported as invalid frontmatter, since the ratings aren't read at
-      all yet, so whoever wrote it isn't told it has no risk.
 ---

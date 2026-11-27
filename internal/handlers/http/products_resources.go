@@ -86,7 +86,10 @@ func newRiskSummaryResource(a derive.Across) RiskSummaryResource {
 }
 
 func newDecisionResource(d state.Decision) DecisionResource {
-	return DecisionResource{Topic: d.Topic, Question: d.Question, Affects: list(d.Affects)}
+	return DecisionResource{
+		Topic: d.Topic, Question: d.Question, Affects: list(d.Affects),
+		Impact: d.Impact, Likelihood: d.Likelihood, Reach: d.Reach,
+	}
 }
 
 func newDecisionResources(ds []state.Decision) []DecisionResource {
@@ -97,41 +100,66 @@ func newDecisionResources(ds []state.Decision) []DecisionResource {
 	return out
 }
 
-func newHeldDecisionResource(h derive.HeldDecision) HeldDecisionResource {
-	return HeldDecisionResource{DecisionResource: newDecisionResource(h.Decision), On: state.DocRef(h.Kind, h.Doc.ID)}
+func newHeldDecisionResource(p *combine.Product, h derive.HeldDecision) HeldDecisionResource {
+	r := HeldDecisionResource{DecisionResource: newDecisionResource(h.Decision), On: state.DocRef(h.Kind, h.Doc.ID)}
+	if risk := derive.DecisionRiskOf(p, h); risk != nil {
+		res := newRiskResource(*risk)
+		r.Risk = &res
+	}
+	return r
 }
 
-func newHeldDecisionResources(hs []derive.HeldDecision) []HeldDecisionResource {
+func newHeldDecisionResources(p *combine.Product, hs []derive.HeldDecision) []HeldDecisionResource {
 	out := make([]HeldDecisionResource, len(hs))
 	for i, h := range hs {
-		out[i] = newHeldDecisionResource(h)
+		out[i] = newHeldDecisionResource(p, h)
 	}
 	return out
 }
 
-func newReadinessResource(r derive.Readiness) ReadinessResource {
+func newReadinessResource(p *combine.Product, r derive.Readiness) ReadinessResource {
 	res := ReadinessResource{
-		Percent:    r.Percent,
-		Maturity:   r.Maturity,
-		Exposure:   newExposureResource(r.Exposure),
-		Levels:     list(r.Levels),
-		Gaps:       newRiskSummaryResource(r.Gaps),
-		Ready:      capabilityIDs(r.Ready),
-		NotReady:   make([]NeedResource, len(r.NotReady)),
-		NotStarted: capabilityIDs(r.NotStarted),
+		Percent:      r.Percent,
+		Maturity:     r.Maturity,
+		Exposure:     newExposureResource(r.Exposure),
+		Levels:       list(r.Levels),
+		Gaps:         newRiskSummaryResource(r.Gaps),
+		Started:      r.Started,
+		NotStarted:   capabilityIDs(r.NotStarted),
+		Improvements: make([]ImprovementResource, len(r.Improvements)),
 	}
 	if b := r.Band(); b != nil {
 		res.Band = &b.Name
 	}
-	for i, n := range r.NotReady {
-		res.NotReady[i] = NeedResource{
-			Capability: n.Capability.ID,
-			BelowBeta:  n.BelowBeta,
-			Gaps:       gapIDs(n.Gaps),
-			Decisions:  newDecisionResources(n.Decisions),
-		}
+	for i, im := range r.Improvements {
+		res.Improvements[i] = newImprovementResource(p, im)
 	}
 	return res
+}
+
+func newImprovementResource(p *combine.Product, im derive.Improvement) ImprovementResource {
+	r := ImprovementResource{
+		Kind:         string(im.Kind),
+		Capabilities: capabilityIDs(im.Capabilities),
+		Readiness:    im.Readiness,
+		Maturity:     im.Maturity,
+		Exposure:     im.Exposure,
+		Gain:         im.Gain,
+	}
+	if im.Capability != nil {
+		r.Capability, r.From, r.To = &im.Capability.ID, &im.Capability.Stability, ptr(im.To)
+	}
+	if im.Gap != nil {
+		r.Gap = &im.Gap.ID
+	}
+	if im.Decision != nil {
+		d := newHeldDecisionResource(p, *im.Decision)
+		r.Decision = &d
+	}
+	if im.Band != nil {
+		r.Band = &im.Band.Name
+	}
+	return r
 }
 
 func newPlaceResources(places []combine.Place) []PlaceResource {
@@ -246,7 +274,7 @@ func newStatusResource(v *services.View, within []*combine.Capability) StatusRes
 
 	return StatusResource{
 		Maturity:  newMaturityResource(maturity),
-		Readiness: newReadinessResource(readiness),
+		Readiness: newReadinessResource(p, readiness),
 		Exposure:  newExposureResource(readiness.Exposure),
 		Risk:      newRiskSummaryResource(derive.RiskAcross(p, gaps, within)),
 		Counts:    counts,
@@ -260,7 +288,7 @@ func newDomainResource(p *combine.Product, d *combine.Domain) DomainResource {
 		Features:     list(d.Features),
 		Capabilities: list(d.Capabilities),
 		Maturity:     newMaturityResource(derive.DomainMaturity(p, d)),
-		Readiness:    newReadinessResource(readiness),
+		Readiness:    newReadinessResource(p, readiness),
 		Exposure:     newExposureResource(readiness.Exposure),
 	}
 }
@@ -273,7 +301,7 @@ func newFeatureResource(p *combine.Product, f *combine.Feature) FeatureResource 
 		Tradeoffs:    list(f.Tradeoffs),
 		Parts:        make([]PartResource, len(f.Parts)),
 		Maturity:     newMaturityResource(derive.FeatureMaturity(p, f)),
-		Readiness:    newReadinessResource(readiness),
+		Readiness:    newReadinessResource(p, readiness),
 		Exposure:     newExposureResource(readiness.Exposure),
 	}
 	for i, part := range f.Parts {
@@ -289,7 +317,7 @@ func newFeatureResource(p *combine.Product, f *combine.Feature) FeatureResource 
 func newCapabilityResource(p *combine.Product, c *combine.Capability) CapabilityResource {
 	one := []*combine.Capability{c}
 	readiness := derive.ReadinessOf(p, one)
-	left := derive.LeftIn(p, c, true)
+	open := derive.OpenIn(p, c, true)
 	r := CapabilityResource{
 		DocResource: newDocResource(c.Doc),
 		Personas:    list(c.Personas),
@@ -303,13 +331,13 @@ func newCapabilityResource(p *combine.Product, c *combine.Capability) Capability
 		Tradeoffs:   list(c.Tradeoffs),
 		BuiltBy:     list(c.BuiltBy),
 		Evidence:    newEvidenceResource(c.Evidence),
-		Readiness:   newReadinessResource(readiness),
+		Readiness:   newReadinessResource(p, readiness),
 		Exposure:    newExposureResource(readiness.Exposure),
 		Risk:        newRiskSummaryResource(derive.RiskAcross(p, derive.GapsOn(p, c), one)),
-		Left: LeftResource{
-			Decisions: newDecisionResources(left.Decisions),
-			Gaps:      gapIDs(left.Gaps),
-			Technical: make([]TechnicalGapResource, len(left.Technical)),
+		Open: OpenResource{
+			Decisions: newDecisionResources(open.Decisions),
+			Gaps:      gapIDs(open.Gaps),
+			Technical: make([]TechnicalGapResource, len(open.Technical)),
 		},
 		RuleStandings: map[string]string{},
 		Outcomes:      []OutcomeStandingResource{},
@@ -317,8 +345,8 @@ func newCapabilityResource(p *combine.Product, c *combine.Capability) Capability
 	for i, l := range c.Levels {
 		r.Levels[i] = LevelResource{Project: l.Project, Domain: l.Domain, Level: l.Level}
 	}
-	for i, t := range left.Technical {
-		r.Left.Technical[i] = TechnicalGapResource{Gap: t.Gap.ID, On: state.DocRef(t.On.Kind, t.On.ID)}
+	for i, t := range open.Technical {
+		r.Open.Technical[i] = TechnicalGapResource{Gap: t.Gap.ID, On: state.DocRef(t.On.Kind, t.On.ID)}
 	}
 	for _, id := range c.Rules {
 		if rule := p.Rule(id); rule != nil {
@@ -378,7 +406,7 @@ func newPersonaResource(p *combine.Product, persona *combine.Persona) PersonaRes
 		Features:     list(persona.Features),
 		Initiatives:  list(persona.Initiatives),
 		Maturity:     newMaturityResource(derive.CapabilitiesMaturity(caps)),
-		Readiness:    newReadinessResource(readiness),
+		Readiness:    newReadinessResource(p, readiness),
 		Exposure:     newExposureResource(readiness.Exposure),
 	}
 }
@@ -392,7 +420,7 @@ func newInitiativeResource(p *combine.Product, i *combine.Initiative) Initiative
 		Features:     list(i.Features),
 		Personas:     list(i.Personas),
 		Maturity:     newMaturityResource(derive.CapabilitiesMaturity(caps)),
-		Readiness:    newReadinessResource(readiness),
+		Readiness:    newReadinessResource(p, readiness),
 		Exposure:     newExposureResource(readiness.Exposure),
 	}
 }
@@ -460,22 +488,31 @@ func newGapResource(p *combine.Product, g *combine.Gap, within *derive.Scored) G
 		Name:        g.Name,
 		Description: g.Description,
 		Places:      newPlaceResources(g.Places),
-		Risk: RiskResource{
-			Score:        risk.Score,
-			Verdict:      string(risk.Verdict),
-			Claim:        risk.Claim,
-			Capabilities: risk.Capabilities,
-			Spread:       make([]SpreadResource, len(risk.Spread)),
-			On:           make([]RiskOnResource, len(risk.On)),
-		},
-		Affected:  newAffectedResources(p, g.Affects),
-		Decisions: newHeldDecisionResources(derive.DecisionsAffecting(p, g.ID)),
+		Risk:        newRiskResource(risk),
+		Affected:    newAffectedResources(p, g.Affects),
+		Decisions:   newHeldDecisionResources(p, derive.DecisionsAffecting(p, g.ID)),
+	}
+	if within != nil {
+		s := newScoredGapResource(*within)
+		r.Within = &s
+	}
+	return r
+}
+
+func newRiskResource(risk derive.Risk) RiskResource {
+	r := RiskResource{
+		Score:        risk.Score,
+		Verdict:      string(risk.Verdict),
+		Claim:        risk.Claim,
+		Capabilities: risk.Capabilities,
+		Spread:       make([]SpreadResource, len(risk.Spread)),
+		On:           make([]RiskOnResource, len(risk.On)),
 	}
 	for i, s := range risk.Spread {
-		r.Risk.Spread[i] = SpreadResource{Score: s.Score, Capabilities: s.Capabilities}
+		r.Spread[i] = SpreadResource{Score: s.Score, Capabilities: s.Capabilities}
 	}
 	for i, o := range risk.On {
-		r.Risk.On[i] = RiskOnResource{
+		r.On[i] = RiskOnResource{
 			Capability:  o.Capability.ID,
 			Impact:      o.Impact,
 			Likelihood:  o.Likelihood,
@@ -486,10 +523,6 @@ func newGapResource(p *combine.Product, g *combine.Gap, within *derive.Scored) G
 			Raw:         o.Raw,
 			Score:       o.Score,
 		}
-	}
-	if within != nil {
-		s := newScoredGapResource(*within)
-		r.Within = &s
 	}
 	return r
 }
@@ -507,7 +540,7 @@ func newTradeoffResource(p *combine.Product, t *combine.Tradeoff) TradeoffResour
 		Drawback:    t.Drawback,
 		Places:      newPlaceResources(t.Places),
 		Affected:    newAffectedResources(p, t.Affects),
-		Decisions:   newHeldDecisionResources(derive.DecisionsAffecting(p, t.ID)),
+		Decisions:   newHeldDecisionResources(p, derive.DecisionsAffecting(p, t.ID)),
 	}
 }
 

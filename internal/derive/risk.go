@@ -93,8 +93,8 @@ type Spread struct {
 	Capabilities int
 }
 
-// Risk is what's at stake in leaving a gap open. Score is its highest score
-// on the capabilities it shows on, 0 on none.
+// Risk is what's at stake in leaving a gap, or a rated decision, open. Score
+// is its highest score on the capabilities it shows on, 0 on none.
 type Risk struct {
 	Impact     string
 	Likelihood string
@@ -111,21 +111,38 @@ type Risk struct {
 	Spread []Spread
 }
 
-// scoreOn returns how a gap scores on one capability: its impact's step
-// times its likelihood times its reach, times the capability's level's
-// weight in risk, times that level's claim factor where the gap breaks a
-// claim it makes, affecting a rule the capability follows or an outcome its
-// level expects. A draft weighs nothing, and scores 0.
+// rated is what risk is worked out from: a gap's ratings and what it
+// affects, or a rated decision's. The numbers are the same for both; a
+// decision's are read about what its answer could change.
+type rated struct {
+	impact, likelihood, reach string
+	affects                   []string
+}
+
+func gapRated(g *combine.Gap) rated {
+	return rated{impact: g.Impact, likelihood: g.Likelihood, reach: g.Reach, affects: g.Affects}
+}
+
+// scoreOn returns how a gap scores on one capability.
 func scoreOn(p *combine.Product, g *combine.Gap, c *combine.Capability) RiskOn {
+	return scoreRatedOn(p, gapRated(g), c)
+}
+
+// scoreRatedOn returns how a gap or rated decision scores on one
+// capability: its impact's step times its likelihood times its reach, times
+// the capability's level's weight in risk, times that level's claim factor
+// where it breaks a claim the capability makes, affecting a rule it follows
+// or an outcome its level expects. A draft weighs nothing, and scores 0.
+func scoreRatedOn(p *combine.Product, r rated, c *combine.Capability) RiskOn {
 	on := RiskOn{
 		Capability:  c,
-		Impact:      ImpactSteps[g.Impact],
-		Likelihood:  LikelihoodFactors[g.Likelihood],
-		Reach:       ReachFactors[g.Reach],
+		Impact:      ImpactSteps[r.impact],
+		Likelihood:  LikelihoodFactors[r.likelihood],
+		Reach:       ReachFactors[r.reach],
 		Weight:      RiskWeights[c.Stability],
 		ClaimFactor: 1,
 	}
-	if on.Weight > 0 && breaksClaim(p, g, c) {
+	if on.Weight > 0 && breaksClaim(p, r.affects, c) {
 		on.Claim = true
 		on.ClaimFactor = ClaimFactors[c.Stability]
 	}
@@ -134,10 +151,10 @@ func scoreOn(p *combine.Product, g *combine.Gap, c *combine.Capability) RiskOn {
 	return on
 }
 
-// breaksClaim reports whether a gap affects a rule a capability follows, or
-// an outcome its level in short expects.
-func breaksClaim(p *combine.Product, g *combine.Gap, c *combine.Capability) bool {
-	for _, ref := range g.Affects {
+// breaksClaim reports whether what a gap or decision affects names a rule a
+// capability follows, or an outcome its level in short expects.
+func breaksClaim(p *combine.Product, affects []string, c *combine.Capability) bool {
+	for _, ref := range affects {
 		if rule, ok := strings.CutPrefix(ref, "rule:"); ok && slices.Contains(c.Rules, rule) {
 			return true
 		}
@@ -177,6 +194,12 @@ func RiskOf(p *combine.Product, g *combine.Gap) Risk {
 	for _, c := range ShowsOn(p, g.ID) {
 		on = append(on, scoreOn(p, g, c))
 	}
+	return riskFrom(gapRated(g), on)
+}
+
+// riskFrom returns a risk from how it scores on each capability it shows
+// on: its highest score, with its verdict and spread.
+func riskFrom(rt rated, on []RiskOn) Risk {
 	slices.SortStableFunc(on, func(a, b RiskOn) int {
 		if a.Score != b.Score {
 			return b.Score - a.Score
@@ -184,9 +207,9 @@ func RiskOf(p *combine.Product, g *combine.Gap) Risk {
 		return int(b.Weight - a.Weight)
 	})
 	r := Risk{
-		Impact:       g.Impact,
-		Likelihood:   g.Likelihood,
-		Reach:        g.Reach,
+		Impact:       rt.impact,
+		Likelihood:   rt.likelihood,
+		Reach:        rt.reach,
 		On:           on,
 		Capabilities: len(on),
 	}

@@ -739,7 +739,8 @@ func decisions(ds []state.Decision, project string) []state.Decision {
 			}
 			affects = append(affects, ref)
 		}
-		out = append(out, state.Decision{Topic: d.Topic, Question: d.Question, Affects: affects})
+		d.Affects = affects
+		out = append(out, d)
 	}
 	return out
 }

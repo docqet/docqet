@@ -277,7 +277,13 @@ func (s *shown) items(p *combine.Product, gaps, tradeoffs []string, on string, d
 	for _, t := range tradeoffsOf(p, tradeoffs) {
 		s.Tradeoffs = append(s.Tradeoffs, tradeoffViewOf(t))
 	}
-	s.Decisions = decisionViews("", derive.OpenDecisions(d))
+	kind, _, _ := strings.Cut(on, ":")
+	s.Decisions = []decisionView{}
+	for i, decision := range derive.OpenDecisions(d) {
+		v := heldDecisionView(p, derive.HeldDecision{Decision: decision, Kind: kind, Doc: &d, Index: i})
+		v.On = ""
+		s.Decisions = append(s.Decisions, v)
+	}
 }
 
 // showItem shows a gap or tradeoff on its own.
@@ -298,7 +304,7 @@ func showItem(p *combine.Product, r state.Ref) (*shown, error) {
 			s.add("scores", fmt.Sprintf("%d on capability:%s (%s)", on.Score, on.Capability.ID, on.Capability.Stability))
 		}
 		for _, d := range derive.DecisionsAffecting(p, g.ID) {
-			s.Decisions = append(s.Decisions, decisionViews(d.Kind+":"+d.Doc.ID, []state.Decision{d.Decision})...)
+			s.Decisions = append(s.Decisions, heldDecisionView(p, d))
 		}
 		s.Places = v.Places
 		s.Gaps = []gapView{v}
@@ -369,6 +375,9 @@ func (s *shown) print(out io.Writer) {
 				on = d.On + ": "
 			}
 			_, _ = fmt.Fprintf(out, "  %s%s\n", on, oneLine(d.Question, 200))
+			if r := d.ratingsText(); r != "" {
+				_, _ = fmt.Fprintf(out, "    %s\n", r)
+			}
 		}
 	}
 	if e := s.Evidence; e != nil && len(e.Implements)+len(e.Verifies) > 0 {

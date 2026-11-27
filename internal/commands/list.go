@@ -12,7 +12,6 @@ import (
 
 	"github.com/docqet/docqet/internal/combine"
 	"github.com/docqet/docqet/internal/derive"
-	"github.com/docqet/docqet/internal/state"
 )
 
 // listKinds are what list lists, each by its plural.
@@ -208,12 +207,16 @@ func listRows(lo local, cmd *cli.Command, kind string) ([]listRow, error) {
 			if (on != "" && ref != on) || !inDomain(h.Doc.Domain) {
 				continue
 			}
-			d := decisionViews(ref, []state.Decision{h.Decision})[0]
+			d := heldDecisionView(v.Product, h)
 			name := ""
 			if h.Decision.Topic != nil {
 				name = *h.Decision.Topic
 			}
-			rows = append(rows, listRow{Ref: ref, Name: name, Detail: oneLine(h.Decision.Question, 100), Item: d})
+			detail := oneLine(h.Decision.Question, 100)
+			if r := d.ratingsText(); r != "" {
+				detail += "   " + r
+			}
+			rows = append(rows, listRow{Ref: ref, Name: name, Detail: detail, Item: d})
 		}
 	}
 	return rows, nil

@@ -242,7 +242,7 @@ components:
 
     Exposure:
       type: object
-      description: What the gaps open on some capabilities put at stake together.
+      description: What the gaps and rated decisions open on some capabilities put at stake together.
       required: [percent, capabilities, band, unacceptable]
       properties:
         percent:
@@ -320,8 +320,10 @@ components:
 
     Readiness:
       type: object
-      description: How ready people can rely on some capabilities being, with what's left.
-      required: [percent, band, maturity, exposure, levels, gaps, ready, notReady, notStarted]
+      description: >-
+        How ready people can rely on some capabilities being, with its
+        improvements: what would raise it, most first.
+      required: [percent, band, maturity, exposure, levels, gaps, started, notStarted, improvements]
       properties:
         percent:
           type: integer
@@ -345,45 +347,93 @@ components:
           $ref: "#/components/schemas/StringList"
         gaps:
           $ref: "#/components/schemas/RiskSummary"
-        ready:
-          type: array
-          description: The capabilities that are ready.
-          items:
-            type: string
-        notReady:
-          type: array
-          description: The started capabilities that aren't, with what each still needs.
-          items:
-            $ref: "#/components/schemas/Need"
+        started:
+          type: integer
+          description: How many started capabilities it's worked out from.
+          example: 6
         notStarted:
           type: array
-          description: The capabilities still drafts.
+          description: The capabilities still drafts, which never count.
           items:
             type: string
+        improvements:
+          type: array
+          description: What would raise it, most first. Only what would raise it is listed.
+          items:
+            $ref: "#/components/schemas/Improvement"
 
-    Need:
+    Improvement:
       type: object
       description: >-
-        What a started capability still needs to be ready: to reach Beta, and
-        to close each gap that's unacceptable on it.
-      required: [capability, belowBeta, gaps, decisions]
+        Something that would raise a readiness, and by how much: promoting a
+        capability to its next level, closing a gap, or answering a rated
+        decision. It's what could be done, not what has to be.
+      required: [kind, capability, from, to, gap, decision, capabilities, readiness, maturity, exposure, gain, band]
       properties:
+        kind:
+          type: string
+          enum: [promote, close, answer]
+          example: close
         capability:
           type: string
-          example: room-booking
-        belowBeta:
-          type: boolean
-        gaps:
-          $ref: "#/components/schemas/StringList"
-        decisions:
+          nullable: true
+          description: The capability a promotion is of, null otherwise.
+          example: check-in
+        from:
+          type: string
+          nullable: true
+          description: A promotion's level now, null otherwise.
+          example: beta
+        to:
+          type: string
+          nullable: true
+          description: The level a promotion reaches, null otherwise.
+          example: ga
+        gap:
+          type: string
+          nullable: true
+          description: The gap to close, null otherwise.
+          example: mechanism:deployment#migrations-only-go-forward@hotel-bookings
+        decision:
+          description: The decision to answer, null otherwise.
+          type: object
+          nullable: true
+          allOf:
+            - $ref: "#/components/schemas/HeldDecision"
+        capabilities:
           type: array
+          description: Where it changes something among those counted.
           items:
-            $ref: "#/components/schemas/Decision"
+            type: string
+        readiness:
+          type: number
+          description: What readiness would be after it, unrounded.
+          example: 38.1
+        maturity:
+          type: number
+          description: What maturity would be after it, unrounded.
+          example: 59.3
+        exposure:
+          type: number
+          description: What exposure would be after it, unrounded.
+          example: 35.7
+        gain:
+          type: number
+          description: How much readiness it would add, unrounded.
+          example: 14.4
+        band:
+          type: string
+          nullable: true
+          enum: [Unready, Partial, Viable, Ready, null]
+          description: The quarter readiness would move into, null when it stays in the same one.
+          example: Partial
 
     Decision:
       type: object
-      description: An open decision.
-      required: [topic, question, affects]
+      description: >-
+        An open decision, with what its answer could change rated as a gap's
+        risk is, read about the change: all three null when it isn't rated.
+      required: [topic, question, affects, impact, likelihood, reach]
       properties:
         topic:
           type: string
@@ -394,13 +444,28 @@ components:
           example: Should a late cancellation be charged a night?
         affects:
           $ref: "#/components/schemas/StringList"
+        impact:
+          type: string
+          nullable: true
+          enum: [negligible, inconvenient, blocking, damaging, null]
+          example: damaging
+        likelihood:
+          type: string
+          nullable: true
+          enum: [certain, expected, possible, unlikely, null]
+          example: expected
+        reach:
+          type: string
+          nullable: true
+          enum: [all, most, some, few, null]
+          example: some
 
     HeldDecision:
-      description: An open decision, with the doc it's on.
+      description: An open decision, with the doc it's on and its risk.
       allOf:
         - $ref: "#/components/schemas/Decision"
         - type: object
-          required: ["on"]
+          required: ["on", risk]
           properties:
             "on":
               type: string
@@ -408,6 +473,15 @@ components:
                 The doc it's on, as a reference: `domain:`, `feature:`,
                 `capability:`, `mechanism:` or `component:`.
               example: capability:room-booking
+            risk:
+              description: >-
+                What's at stake in its answer changing what people rely on,
+                scored on each capability it counts on: null when it isn't
+                rated.
+              type: object
+              nullable: true
+              allOf:
+                - $ref: "#/components/schemas/Risk"
 
     Confusion:
       type: object
@@ -724,10 +798,10 @@ components:
           description: "`mechanism:<id>` or `component:<id>`."
           example: component:ledger
 
-    Left:
+    Open:
       type: object
       description: >-
-        What's left on a capability: its open decisions, its own gaps, and the
+        What's open on a capability: its open decisions, its own gaps, and the
         gaps on what it's built on.
       required: [decisions, gaps, technical]
       properties:
@@ -771,12 +845,12 @@ components:
 
     Capability:
       description: >-
-        A capability, with its figures, what's left, and how it stands on each
-        rule it follows and each expected outcome.
+        A capability, with its figures, what's open on it, and how it stands
+        on each rule it follows and each expected outcome.
       allOf:
         - $ref: "#/components/schemas/Doc"
         - type: object
-          required: [personas, initiatives, stability, levels, feature, rules, concepts, gaps, tradeoffs, builtBy, evidence, readiness, exposure, risk, left, ruleStandings, outcomes]
+          required: [personas, initiatives, stability, levels, feature, rules, concepts, gaps, tradeoffs, builtBy, evidence, readiness, exposure, risk, open, ruleStandings, outcomes]
           properties:
             personas:
               $ref: "#/components/schemas/StringList"
@@ -812,8 +886,8 @@ components:
               $ref: "#/components/schemas/Exposure"
             risk:
               $ref: "#/components/schemas/RiskSummary"
-            left:
-              $ref: "#/components/schemas/Left"
+            open:
+              $ref: "#/components/schemas/Open"
             ruleStandings:
               type: object
               description: >-
