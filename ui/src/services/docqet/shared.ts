@@ -113,6 +113,8 @@ export type AffectedResource = { kind: "outcome" | "rule" | "gap" | "tradeoff"; 
 export type TechnicalResource = DocResource & {
   kind: "mechanism" | "component";
   applies: "project" | "product";
+  /* A mechanism's: the constraints it respects. Always empty for a component. */
+  respects: string[];
   capabilities: string[];
   meets: string[];
   gaps: string[];

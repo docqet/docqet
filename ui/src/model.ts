@@ -18,6 +18,7 @@ import { listInitiatives } from "./services/docqet/initiatives";
 import { listMechanisms } from "./services/docqet/mechanisms";
 import { listPersonas } from "./services/docqet/personas";
 import { listProblems } from "./services/docqet/problems";
+import { listConstraints } from "./services/docqet/constraints";
 import { listFindings } from "./services/docqet/findings";
 import { listProjects } from "./services/docqet/projects";
 import { getRubric } from "./services/docqet/rubric";
@@ -67,6 +68,7 @@ import {
   type OutcomeStanding,
   type Persona,
   type Problem,
+  type Constraint,
   type Project,
   type Reach,
   type Readiness,
@@ -172,6 +174,7 @@ async function readProduct(showing: Showing, signal?: AbortSignal) {
     concepts,
     personas,
     problems,
+    constraints,
     initiatives,
     mechanisms,
     components,
@@ -190,6 +193,7 @@ async function readProduct(showing: Showing, signal?: AbortSignal) {
     listConcepts(showing, signal),
     listPersonas(showing, signal),
     listProblems(showing, signal),
+    listConstraints(showing, signal),
     listInitiatives(showing, signal),
     listMechanisms(showing, signal),
     listComponents(showing, signal),
@@ -209,6 +213,7 @@ async function readProduct(showing: Showing, signal?: AbortSignal) {
     concepts,
     personas,
     problems,
+    constraints,
     initiatives,
     mechanisms,
     components,
@@ -279,6 +284,7 @@ function modelOf(r: Awaited<ReturnType<typeof readProduct>>, showing: Showing): 
       ...doc(x),
       capabilities: x.capabilities,
       concepts: x.concepts,
+      respects: x.respects,
       gaps: x.gaps,
       evidence: evidence(x.evidence),
       standings: x.standings as Record<string, RuleStanding>,
@@ -305,6 +311,17 @@ function modelOf(r: Awaited<ReturnType<typeof readProduct>>, showing: Showing): 
       capabilities: p.capabilities,
       maturity: percent(p.maturity),
       band: band(p.maturity),
+      readiness: noReadiness(),
+      exposure: noExposure,
+    })),
+    constraints: r.constraints.map((c): Constraint => ({
+      ...doc(c),
+      source: c.source,
+      rules: c.rules,
+      mechanisms: c.mechanisms,
+      capabilities: c.capabilities,
+      maturity: percent(c.maturity),
+      band: band(c.maturity),
       readiness: noReadiness(),
       exposure: noExposure,
     })),
@@ -372,6 +389,7 @@ function modelOf(r: Awaited<ReturnType<typeof readProduct>>, showing: Showing): 
   r.features.forEach((x, i) => Object.assign(state.features[i], { readiness: readiness(x.readiness), exposure: exposure(x.exposure) }));
   r.personas.forEach((x, i) => Object.assign(state.personas[i], { readiness: readiness(x.readiness), exposure: exposure(x.exposure) }));
   r.problems.forEach((x, i) => Object.assign(state.problems[i], { readiness: readiness(x.readiness), exposure: exposure(x.exposure) }));
+  r.constraints.forEach((x, i) => Object.assign(state.constraints[i], { readiness: readiness(x.readiness), exposure: exposure(x.exposure) }));
   r.initiatives.forEach((x, i) => Object.assign(state.initiatives[i], { readiness: readiness(x.readiness), exposure: exposure(x.exposure) }));
   r.mechanisms.forEach((x, i) => (state.mechanisms[i].risk = across(x.risk)));
   r.components.forEach((x, i) => (state.components[i].risk = across(x.risk)));
@@ -567,6 +585,7 @@ function technical(t: TechnicalResource): TechnicalDoc {
     ...doc(t),
     kind: t.kind,
     applies: t.applies,
+    respects: t.respects,
     capabilities: t.capabilities,
     meets: t.meets,
     gaps: t.gaps,

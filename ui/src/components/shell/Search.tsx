@@ -13,7 +13,7 @@ import { StabilityTrack } from "../stability/StabilityTrack";
 import { ConceptIcon } from "../Concepts";
 import { PersonaIcon } from "../Personas";
 import { InitiativeIcon } from "./ScopeFilter";
-import { DomainIcon, ProblemIcon } from "../names";
+import { ConstraintIcon, DomainIcon, ProblemIcon } from "../names";
 import { ProjectIcon } from "./ProductFilter";
 import { searchProduct, type SearchResultResource } from "../../services/docqet/search";
 import {
@@ -22,6 +22,7 @@ import {
   find,
   docProjects,
   projectName,
+  respecting,
   ruleAppliesTo,
   type DocqetState,
   type Level,
@@ -35,11 +36,11 @@ import { ReadError, useDelayed } from "../ReadFallback";
 
 /*
  * What choosing a result does: opens a domain, feature, capability, concept,
- * persona, problem or rule on its page, or shows only that project.
+ * persona, problem, constraint or rule on its page, or shows only that project.
  */
-export type Selection = { pick: Pick | { kind: "problem" | "initiative"; id: string } } | { rule: string } | { project: string };
+export type Selection = { pick: Pick | { kind: "problem" | "constraint" | "initiative"; id: string } } | { rule: string } | { project: string };
 
-type Kind = "project" | "domain" | "feature" | "capability" | "rule" | "concept" | "persona" | "problem" | "initiative";
+type Kind = "project" | "domain" | "feature" | "capability" | "rule" | "concept" | "persona" | "problem" | "constraint" | "initiative";
 
 type Entry = {
   key: string;
@@ -63,6 +64,7 @@ const GROUPS: { kind: Kind; label: string }[] = [
   { kind: "concept", label: "Concepts" },
   { kind: "persona", label: "Personas" },
   { kind: "problem", label: "Problems" },
+  { kind: "constraint", label: "Constraints" },
   { kind: "initiative", label: "Initiatives" },
 ];
 
@@ -175,6 +177,16 @@ function entries(state: DocqetState): (Entry & { projects: string[] })[] {
       target: { pick: { kind: "problem" as const, id: p.id } },
       projects: docProjects(p),
     })),
+    ...state.constraints.map((c) => ({
+      key: `constraint:${c.id}`,
+      kind: "constraint" as const,
+      title: c.name,
+      context: respecting(c)
+        ? (c.source ?? plural(respecting(c), "rule or mechanism respects it", "rules and mechanisms respect it"))
+        : "Nothing respects it yet",
+      target: { pick: { kind: "constraint" as const, id: c.id } },
+      projects: docProjects(c),
+    })),
     ...state.initiatives.map((i) => ({
       key: `initiative:${i.id}`,
       kind: "initiative" as const,
@@ -216,7 +228,7 @@ const MOD = typeof navigator !== "undefined" && /Mac|iPhone|iPad/.test(navigator
 
 /*
  * Search across projects, domains, features, capabilities, rules, concepts,
- * personas and problems. The header only says how to open it; `/` or Ctrl/⌘ + K, or
+ * personas, problems and constraints. The header only says how to open it; `/` or Ctrl/⌘ + K, or
  * clicking that, opens it in the middle of the page over a blurred canvas.
  * The arrow keys move through the results, Enter shows one on the canvas, and
  * Esc or a click outside closes it. It keeps what was typed for next time.
@@ -393,7 +405,7 @@ export default function Search({ state, all, onSelect }: { state: DocqetState; a
             type="search"
             value={query}
             placeholder={placeholder}
-            aria-label="Search projects, domains, features, capabilities, rules, concepts, personas, and problems"
+            aria-label="Search projects, domains, features, capabilities, rules, concepts, personas, problems, and constraints"
             aria-expanded={q.length > 0}
             aria-controls="search-results"
             aria-activedescendant={flat[active] ? `result-${flat[active].key}` : undefined}
@@ -444,7 +456,7 @@ export default function Search({ state, all, onSelect }: { state: DocqetState; a
           sx={{ flex: 1, minHeight: 0, maxHeight: { sm: 440 }, overflowY: "auto", p: 0.75 }}
         >
           {!q ? (
-            <Box sx={emptySx}>Find a project, domain, feature, capability, rule, concept, persona, or problem, and open it.</Box>
+            <Box sx={emptySx}>Find a project, domain, feature, capability, rule, concept, persona, problem, or constraint, and open it.</Box>
           ) : groups.length ? (
             groups.map((g) => (
               <div key={g.kind} role="group" aria-label={g.label}>
@@ -591,6 +603,7 @@ function KindIcon({ kind }: { kind: Kind }) {
   if (kind === "concept") return <ConceptIcon />;
   if (kind === "persona") return <PersonaIcon />;
   if (kind === "problem") return <ProblemIcon />;
+  if (kind === "constraint") return <ConstraintIcon />;
   if (kind === "initiative") return <InitiativeIcon />;
   return <RuleRoundedIcon sx={{ ...sx, color: "text.secondary" }} />;
 }

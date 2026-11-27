@@ -31,21 +31,22 @@ A bar across the top says where you are and finds anything: the product and
 its projects, the initiative showing, search, and the glossary of Docqet's
 words. A nav down the side picks which question you're asking:
 
-| Section        | Answers                                                                                                                                            | Address                               |
-| -------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------- |
-| Overview       | How is it doing? Maturity, readiness and what it still needs, who it's least ready for, where each domain stands, the riskiest gaps                | (none)                                |
-| Map            | How does it fit together? Domains, features and capabilities on a canvas, with their personas                                                      | `?view=map`                           |
-| Features       | What can it do? Domains, features and capabilities as a tree                                                                                       | `?view=features`                      |
-| Personas       | Who it serves, and how ready it is for each                                                                                                        | `?view=personas`                      |
-| Problems       | Why it exists: the problems it solves, who has each, and how ready what solves it is, with those nothing solves yet shown as such                  | `?view=problems`                      |
-| Initiatives    | Bodies of work, such as the MVP, and how ready each is                                                                                             | `?view=initiatives`                   |
-| Language       | What the words mean: concepts, and the rules that must hold                                                                                        | `?view=language`                      |
-| How it's built | Mechanisms and components                                                                                                                          | `?view=built`                         |
-| Improvements   | What would make it more ready, then every gap and open decision, for everything or one project, persona, initiative, domain, feature or capability | `?view=improvements&for=persona:<id>` |
-| Decided        | Tradeoffs and non-goals                                                                                                                            | `?view=decided`                       |
-| Findings       | Contradictions and mistakes in the docs, then advice that never fails a check                                                                      | `?view=findings`                      |
+| Section        | Answers                                                                                                                                                                 | Address                               |
+| -------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------- |
+| Overview       | How is it doing? Maturity, readiness and what it still needs, who it's least ready for, where each domain stands, the riskiest gaps                                     | (none)                                |
+| Map            | How does it fit together? Domains, features and capabilities on a canvas, with their personas                                                                           | `?view=map`                           |
+| Features       | What can it do? Domains, features and capabilities as a tree                                                                                                            | `?view=features`                      |
+| Personas       | Who it serves, and how ready it is for each                                                                                                                             | `?view=personas`                      |
+| Problems       | Why it exists: the problems it solves, who has each, and how ready what solves it is, with those nothing solves yet shown as such                                       | `?view=problems`                      |
+| Constraints    | What it must keep to that nobody on the team can change, such as laws and contracts, and how ready what keeps to each is, with those nothing respects yet shown as such | `?view=constraints`                   |
+| Initiatives    | Bodies of work, such as the MVP, and how ready each is                                                                                                                  | `?view=initiatives`                   |
+| Language       | What the words mean: concepts, and the rules that must hold                                                                                                             | `?view=language`                      |
+| How it's built | Mechanisms and components                                                                                                                                               | `?view=built`                         |
+| Improvements   | What would make it more ready, then every gap and open decision, for everything or one project, persona, initiative, domain, feature or capability                      | `?view=improvements&for=persona:<id>` |
+| Decided        | Tradeoffs and non-goals                                                                                                                                                 | `?view=decided`                       |
+| Findings       | Contradictions and mistakes in the docs, then advice that never fails a check                                                                                           | `?view=findings`                      |
 
-Every domain, feature, capability, persona, problem, initiative, concept, rule,
+Every domain, feature, capability, persona, problem, constraint, initiative, concept, rule,
 mechanism, component and gap has a page of its own, such as
 `?capability=deposits`: a header saying what it is and how it's doing, then
 tabs, each answering one question about it, kept in the address as

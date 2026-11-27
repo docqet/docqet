@@ -12,6 +12,7 @@ import OverviewPage from "./pages/overview/View";
 import InitiativesPage from "./pages/initiatives/List";
 import PersonasPage from "./pages/personas/List";
 import ProblemsPage from "./pages/problems/List";
+import ConstraintsPage from "./pages/constraints/List";
 import FindingsPage from "./pages/findings/List";
 import RulePage from "./pages/rules/View";
 import CapabilityView from "./pages/capabilities/View";
@@ -21,6 +22,7 @@ import FeatureView from "./pages/features/View";
 import InitiativeView from "./pages/initiatives/View";
 import PersonaView from "./pages/personas/View";
 import ProblemView from "./pages/problems/View";
+import ConstraintView from "./pages/constraints/View";
 import TechnicalView from "./pages/built/View";
 import type { ProductChoice } from "./components/shell/ProductFilter";
 import { navigate, routeOf, useSearch, type Route } from "./routes";
@@ -197,6 +199,8 @@ function content(state: DocqetState, route: Route, layoutKey: string): ReactNode
         return <PersonaView key={id} {...props} />;
       case "problem":
         return <ProblemView key={id} {...props} />;
+      case "constraint":
+        return <ConstraintView key={id} {...props} />;
       case "initiative":
         return <InitiativeView key={id} {...props} />;
       case "concept":
@@ -217,6 +221,8 @@ function content(state: DocqetState, route: Route, layoutKey: string): ReactNode
       return <PersonasPage state={state} route={route} />;
     case "problems":
       return <ProblemsPage state={state} route={route} />;
+    case "constraints":
+      return <ConstraintsPage state={state} route={route} />;
     case "initiatives":
       return <InitiativesPage state={state} route={route} />;
     case "language":

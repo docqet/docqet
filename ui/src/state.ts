@@ -189,6 +189,8 @@ export type TechnicalDoc = Doc & {
   kind: TechnicalKind;
   /* What a mechanism applies to: its project's capabilities, or its product's. A component's is always "project", and means nothing. */
   applies: "project" | "product";
+  /* A mechanism's: the constraints it respects. A component's is always empty. */
+  respects: string[];
   capabilities: string[];
   /* The expected outcomes it meets for the capabilities it serves, as `outcome:<quality>/<level>/<id>`. */
   meets: string[];
@@ -219,6 +221,8 @@ export type Rule = Doc & {
   /* Every capability that follows it, worked out from their `rules`. */
   capabilities: string[];
   concepts: string[];
+  /* The constraints it respects. */
+  respects: string[];
   evidence: Evidence;
   /* The gaps that say a capability doesn't hold to it yet, worked out from what they affect. */
   gaps: string[];
@@ -271,6 +275,30 @@ export type Problem = Doc & {
   readiness: Readiness;
   exposure: Exposure;
 };
+
+/*
+ * Something imposed from outside that any solution must respect, and nobody
+ * on the team can change: a law, a contract, a policy set elsewhere, or a
+ * fact of the world. One across every domain. Rules and mechanisms say which
+ * constraints they respect; nothing respecting it is shown as such.
+ */
+export type Constraint = Doc & {
+  /* Where it comes from, such as the law or contract, or null when it isn't written down. */
+  source: string | null;
+  /* The rules that respect it, as `<id>@<domain>`, and the mechanisms that do. */
+  rules: string[];
+  mechanisms: string[];
+  /* The capabilities it bears on: those following its rules, and those its mechanisms apply to. */
+  capabilities: string[];
+  /* What it bears on: how mature, ready and exposed it is. */
+  maturity: number | null;
+  band: Level | null;
+  readiness: Readiness;
+  exposure: Exposure;
+};
+
+/* How many rules and mechanisms respect a constraint. */
+export const respecting = (c: Constraint) => c.rules.length + c.mechanisms.length;
 
 /*
  * A body of work, such as the MVP or what comes after it, one across every
@@ -415,6 +443,7 @@ export type DocqetState = {
   concepts: Concept[];
   personas: Persona[];
   problems: Problem[];
+  constraints: Constraint[];
   initiatives: Initiative[];
   mechanisms: TechnicalDoc[];
   components: TechnicalDoc[];
@@ -933,7 +962,7 @@ export function inRiskOrder<T>(items: T[], of: (item: T) => Gap): T[] {
 /* ——— Detail pages ——— */
 
 /* What a detail page can show: a doc of the product, a mechanism or component, or every gap and tradeoff at once. */
-export type PageAt = Pick | { kind: TechnicalKind | "problem" | "initiative"; id: string } | { kind: "gaps"; id: "" };
+export type PageAt = Pick | { kind: TechnicalKind | "problem" | "constraint" | "initiative"; id: string } | { kind: "gaps"; id: "" };
 
 const PAGE_KINDS: Exclude<PageAt["kind"], "gaps">[] = [
   "domain",
@@ -942,6 +971,7 @@ const PAGE_KINDS: Exclude<PageAt["kind"], "gaps">[] = [
   "concept",
   "persona",
   "problem",
+  "constraint",
   "initiative",
   "mechanism",
   "component",

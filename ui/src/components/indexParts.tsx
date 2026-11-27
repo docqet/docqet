@@ -7,7 +7,7 @@ import RuleRoundedIcon from "@mui/icons-material/RuleRounded";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 import WidgetsOutlinedIcon from "@mui/icons-material/WidgetsOutlined";
 import { ConceptIcon } from "./Concepts";
-import { DomainIcon, ProblemIcon } from "./names";
+import { ConstraintIcon, DomainIcon, ProblemIcon } from "./names";
 import { PersonaAvatar, PersonaIcon } from "./Personas";
 import { InitiativeIcon } from "./shell/ScopeFilter";
 import { GapIcon, LEFT_KINDS, LeftMark, type LeftKind } from "./left/LeftMark";
@@ -88,6 +88,8 @@ export function KindIcon({ kind, size = 15 }: { kind: DocKind; size?: number }) 
       return <PersonaIcon size={size} />;
     case "problem":
       return <ProblemIcon size={size} />;
+    case "constraint":
+      return <ConstraintIcon size={size} />;
     case "initiative":
       return <InitiativeIcon size={size} />;
     case "rule":

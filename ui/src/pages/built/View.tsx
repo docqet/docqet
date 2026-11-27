@@ -21,6 +21,7 @@ import { CapabilityTable } from "../../components/doc/CapabilityTable";
 import { EvidencePair } from "../../components/doc/EvidencePair";
 import { Missing } from "../../components/doc/Missing";
 import { docGo, cardSx, tagSx } from "../../components/doc/DocPage";
+import { ConstraintRows } from "../../components/Constraints";
 
 /* A mechanism's or component's page, or what shows when it isn't in the projects showing. */
 export default function TechnicalView({ state, kind, id, route }: { state: DocqetState; kind: "mechanism" | "component"; id: string; route: Route }) {
@@ -30,7 +31,8 @@ export default function TechnicalView({ state, kind, id, route }: { state: Docqe
 }
 
 /*
- * A mechanism or component: how it's built, in the code's words, then what's
+ * A mechanism or component: how it's built, in the code's words, and the
+ * constraints a mechanism respects, if any, then what's
  * left (its open decisions and technical gaps), what's been decided (its
  * tradeoffs), where it is in the code, from the
  * annotations that implement or verify it, and the capabilities that rely on
@@ -40,6 +42,7 @@ export function TechnicalPage({ doc, route, ...go }: DocPageProps & { doc: Techn
   const { state } = go;
   const capabilities = doc.capabilities.flatMap((id) => find(state.capabilities, id) ?? []);
   const outcomes = doc.meets.flatMap((id) => expectedOutcome(state.rubric, id) ?? []);
+  const respects = doc.respects.flatMap((id) => find(state.constraints, id) ?? []);
   const places = doc.evidence.implements.length + doc.evidence.verifies.length;
   const open = openOnTechnical(state, doc);
   const decided = doc.tradeoffs.length;
@@ -91,6 +94,11 @@ export function TechnicalPage({ doc, route, ...go }: DocPageProps & { doc: Techn
       {tab === "built" ? (
         <>
           <Sources {...go} kind={doc.kind} doc={doc} title="What it is" />
+          {respects.length ? (
+            <Section title="Respects" term="constraint" count={respects.length} note="What it keeps to that nobody here chose.">
+              <ConstraintRows constraints={respects} />
+            </Section>
+          ) : null}
           {hasBody(doc) ? (
             <Section title={MORE_ABOUT}>
               <Bodies {...go} doc={doc} />
@@ -131,7 +139,7 @@ export function TechnicalPage({ doc, route, ...go }: DocPageProps & { doc: Techn
               </Box>
             </Section>
           ) : null}
-          {!fielded && !hasBody(doc) && !outcomes.length ? <Empty>Nothing more is written about it than what's above.</Empty> : null}
+          {!fielded && !hasBody(doc) && !outcomes.length && !respects.length ? <Empty>Nothing more is written about it than what's above.</Empty> : null}
         </>
       ) : tab === "open" ? (
         <OpenTab {...go} open={open} here={doc} nothing="Nothing open: no open decisions or technical gaps are written down." />

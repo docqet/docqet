@@ -19,7 +19,7 @@ import { ConceptIcon } from "../Concepts";
 import { ColorSchemeToggle } from "./ColorSchemeToggle";
 import Logo from "./Logo";
 import { PersonaIcon } from "../Personas";
-import { ProblemIcon } from "../names";
+import { ConstraintIcon, ProblemIcon } from "../names";
 import ProductFilter, { type ProductChoice } from "./ProductFilter";
 import ScopeFilter, { InitiativeIcon } from "./ScopeFilter";
 import type { Scope } from "../../scope";
@@ -185,6 +185,13 @@ function SideNav({ state, at, onGo }: { state: DocqetState; at: Section; onGo: (
           icon: <ProblemIcon size={20} />,
           question: "Why it exists: the problems it solves, and how ready what solves each is",
           count: state.problems.length,
+        },
+        {
+          section: "constraints",
+          label: "Constraints",
+          icon: <ConstraintIcon size={20} />,
+          question: "What it must respect: laws, contracts and facts nobody here can change",
+          count: state.constraints.length,
         },
         ...(state.initiatives.length
           ? [

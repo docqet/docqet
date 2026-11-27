@@ -101,6 +101,7 @@ const TYPES: Record<string, { name: string; note: string }> = {
   "broken-link": { name: "Broken links", note: "A relative link in a doc's body or a text value doesn't resolve." },
   "unlinked-rule": { name: "Rules nothing follows", note: "No capability follows the rule." },
   "solves-no-problem": { name: "Solves no problem", note: "A capability that names no problem it solves, so nothing says who it's for." },
+  "respected-by-nothing": { name: "Respected by nothing", note: "A constraint no rule or mechanism respects, so nothing says the software keeps to it." },
   "unknown-outcome": {
     name: "Unknown outcomes",
     note: "An outcome that a gap, tradeoff or decision affects, or that a mechanism or component says it meets, isn't in the rubric.",
@@ -145,6 +146,8 @@ function docsOf(state: DocqetState, kind: DocKind): Doc[] {
       return state.personas;
     case "problem":
       return state.problems;
+    case "constraint":
+      return state.constraints;
     case "initiative":
       return state.initiatives;
     case "mechanism":

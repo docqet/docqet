@@ -2,6 +2,7 @@ import SpaceDashboardOutlinedIcon from "@mui/icons-material/SpaceDashboardOutlin
 import { type ReactNode } from "react";
 import BoltOutlinedIcon from "@mui/icons-material/BoltOutlined";
 import ExtensionOutlinedIcon from "@mui/icons-material/ExtensionOutlined";
+import GavelOutlinedIcon from "@mui/icons-material/GavelOutlined";
 import HubOutlinedIcon from "@mui/icons-material/HubOutlined";
 import SentimentDissatisfiedOutlinedIcon from "@mui/icons-material/SentimentDissatisfiedOutlined";
 import WidgetsOutlinedIcon from "@mui/icons-material/WidgetsOutlined";
@@ -36,6 +37,11 @@ export const plural = (n: number, one: string, many: string) => `${n} ${n === 1 
 /* A problem's mark, wherever one is named. */
 export function ProblemIcon({ size = 16 }: { size?: number }) {
   return <SentimentDissatisfiedOutlinedIcon sx={{ fontSize: size, flex: "none", color: "problem.main" }} />;
+}
+
+/* A constraint's mark, wherever one is named. */
+export function ConstraintIcon({ size = 16 }: { size?: number }) {
+  return <GavelOutlinedIcon sx={{ fontSize: size, flex: "none", color: "constraint.main" }} />;
 }
 
 /* A domain's mark, wherever one is named. */

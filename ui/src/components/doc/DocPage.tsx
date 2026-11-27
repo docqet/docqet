@@ -8,7 +8,7 @@ import { StabilityMark } from "../stability/StabilityMark";
 import { Term } from "../term/Term";
 import { CapabilityStability } from "../CapabilityLabel";
 import { TECHNICAL_NAMES, NAMES, type ExploreKind } from "../names";
-import { DomainIcon, ProblemIcon } from "../names";
+import { ConstraintIcon, DomainIcon, ProblemIcon } from "../names";
 import { PersonaAvatar, personaNameAndRole } from "../Personas";
 import { ProjectIcon } from "../shell/ProductFilter";
 import { InitiativeIcon } from "../shell/ScopeFilter";
@@ -40,10 +40,11 @@ export type DocGo = {
 
 export type DocPageProps = DocGo & { route: Route };
 
-export const KIND_NAMES: Record<Pick["kind"] | TechnicalKind | "problem" | "initiative", { one: string; icon: ReactNode }> = {
+export const KIND_NAMES: Record<Pick["kind"] | TechnicalKind | "problem" | "constraint" | "initiative", { one: string; icon: ReactNode }> = {
   ...NAMES,
   concept: { one: "Concept", icon: <ConceptIcon size={18} /> },
   problem: { one: "Problem", icon: <ProblemIcon size={18} /> },
+  constraint: { one: "Constraint", icon: <ConstraintIcon size={18} /> },
   initiative: { one: "Initiative", icon: <InitiativeIcon size={18} /> },
   ...TECHNICAL_NAMES,
 };
@@ -167,7 +168,7 @@ export function DocHeader({
   under,
 }: {
   state: DocqetState;
-  kind: Pick["kind"] | TechnicalKind | "problem" | "initiative";
+  kind: Pick["kind"] | TechnicalKind | "problem" | "constraint" | "initiative";
   doc: Doc;
   title?: ReactNode;
   kindNote?: ReactNode;
@@ -176,7 +177,7 @@ export function DocHeader({
   initiatives?: string[];
   marks?: ReactNode;
   stats: ReactNode;
-  /* More it says about itself, under the figures, such as what a problem costs. */
+  /* More it says about itself, under the figures, such as what a problem costs, or where a constraint comes from. */
   under?: ReactNode;
 }) {
   const findings = contradictionsOf(state, kind, doc.id);

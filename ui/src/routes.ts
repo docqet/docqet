@@ -21,6 +21,7 @@ export const SECTIONS = [
   "features",
   "personas",
   "problems",
+  "constraints",
   "initiatives",
   "language",
   "built",
@@ -33,7 +34,20 @@ export type Section = (typeof SECTIONS)[number];
 
 /* What can have a page of its own. */
 export type DocKind = Exclude<PageAt["kind"], "gaps"> | "rule" | "gap";
-export const DOC_KINDS: DocKind[] = ["domain", "feature", "capability", "concept", "persona", "problem", "initiative", "mechanism", "component", "rule", "gap"];
+export const DOC_KINDS: DocKind[] = [
+  "domain",
+  "feature",
+  "capability",
+  "concept",
+  "persona",
+  "problem",
+  "constraint",
+  "initiative",
+  "mechanism",
+  "component",
+  "rule",
+  "gap",
+];
 
 export type Route = { kind: "section"; section: Section; tab: string | null } | { kind: "doc"; doc: DocKind; id: string; tab: string | null };
 
@@ -44,6 +58,7 @@ const SECTION_OF_DOC: Record<DocKind, Section> = {
   capability: "features",
   persona: "personas",
   problem: "problems",
+  constraint: "constraints",
   initiative: "initiatives",
   concept: "language",
   rule: "language",

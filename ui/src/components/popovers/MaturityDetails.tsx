@@ -10,9 +10,9 @@ import { LevelSpread } from "../stability/StabilitySpread";
  * A feature's maturity comes from its capabilities, a domain's from its parts
  * of features, and a project's from its features. A persona's is of what
  * serves them, from the capabilities that list them, as a feature's is, and
- * a problem's of what solves it.
+ * a problem's of what solves it, and a constraint's of what keeps to it.
  */
-export type MaturitySubject = "feature" | "domain" | "project" | "persona" | "problem" | "initiative";
+export type MaturitySubject = "feature" | "domain" | "project" | "persona" | "problem" | "constraint" | "initiative";
 
 export const SUBJECT_NAMES: Record<MaturitySubject, string> = {
   feature: "Feature",
@@ -20,16 +20,17 @@ export const SUBJECT_NAMES: Record<MaturitySubject, string> = {
   project: "Project",
   persona: "Persona",
   problem: "Problem",
+  constraint: "Constraint",
   initiative: "Initiative",
 };
 
 /* What the work is on, in a sentence: "this feature", or "what serves them". */
 export const subjectPhrase = (subject: MaturitySubject) =>
-  subject === "persona" ? "what serves them" : subject === "problem" ? "what solves it" : `this ${subject}`;
+  subject === "persona" ? "what serves them" : subject === "problem" ? "what solves it" : subject === "constraint" ? "what keeps to it" : `this ${subject}`;
 
 /* Whether it's worked out from capabilities, rather than from features. */
 export const fromCapabilities = (subject: MaturitySubject) =>
-  subject === "feature" || subject === "persona" || subject === "problem" || subject === "initiative";
+  subject === "feature" || subject === "persona" || subject === "problem" || subject === "constraint" || subject === "initiative";
 
 export type MaturityDetailsProps = {
   /** 0 to 100; anything outside is clamped, and fractions rounded. */
@@ -62,7 +63,7 @@ const BAND_SUMMARIES: Record<StabilityLevelId, string> = {
 
 function basis(subject: MaturitySubject, count: number) {
   return fromCapabilities(subject)
-    ? `Based on ${subject === "persona" || subject === "problem" ? "the" : "its"} ${count} ${count === 1 ? "capability" : "capabilities"}`
+    ? `Based on ${subject === "persona" || subject === "problem" || subject === "constraint" ? "the" : "its"} ${count} ${count === 1 ? "capability" : "capabilities"}`
     : `The weighted average of its ${count} ${count === 1 ? "feature" : "features"}`;
 }
 
@@ -80,7 +81,13 @@ export function MaturityDetails({ progress, subject, count, spread, card = true 
   return (
     <DetailsCard card={card} width={320}>
       <DetailsEyebrow>
-        {subject === "persona" ? "Maturity of what serves them" : subject === "problem" ? "Maturity of what solves it" : `${SUBJECT_NAMES[subject]} maturity`}
+        {subject === "persona"
+          ? "Maturity of what serves them"
+          : subject === "problem"
+            ? "Maturity of what solves it"
+            : subject === "constraint"
+              ? "Maturity of what keeps to it"
+              : `${SUBJECT_NAMES[subject]} maturity`}
       </DetailsEyebrow>
       <Box sx={{ mt: 1.25, display: "flex", alignItems: "center", gap: 1.5 }}>
         <RingGlyph progress={value} size={56} />

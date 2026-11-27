@@ -14,6 +14,7 @@ export type TermId =
   | "concept"
   | "persona"
   | "problem"
+  | "constraint"
   | "initiative"
   | "mechanism"
   | "component"
@@ -74,8 +75,8 @@ export const TERMS: Record<TermId, TermEntry> = {
   rule: {
     name: "Rule",
     means:
-      "A business rule: something that must always be true, or must never happen, in the domain's words. It says what and why, never how the code enforces it.",
-    more: "“A room can't be double-booked” is a rule. So is “cancelling 48 hours ahead is free”.",
+      "A business rule: a promise the software keeps, often one the business chose. It's something that must always be true, or must never happen, in the domain's words, and says what and why, never how the code enforces it.",
+    more: "“A room can't be double-booked” is a rule. So is “cancelling 48 hours ahead is free”. A rule can respect a constraint, but the constraint would hold whatever the rules said.",
   },
   concept: {
     name: "Concept",
@@ -93,6 +94,12 @@ export const TERMS: Record<TermId, TermEntry> = {
     means:
       "A pain point one or more personas share, said in their words without naming the software: why the software exists. Capabilities say which problems they solve.",
     more: "“A guest's room is given to someone else” is a problem the front desk clerk has; room booking solves it. A problem would still be true if the software didn't exist, and one nothing solves yet is shown as such.",
+  },
+  constraint: {
+    name: "Constraint",
+    means:
+      "Something imposed from outside that any solution must respect, and nobody on the team can change: a law, a contract, a policy set elsewhere, or a fact of the world. Rules and mechanisms say which constraints they respect.",
+    more: "The tax office requires invoice numbers to run in sequence; the rule “invoice numbers run in sequence” respects it. Capabilities solve problems; rules and mechanisms respect constraints. One nothing respects yet is shown as such.",
   },
   initiative: {
     name: "Initiative",

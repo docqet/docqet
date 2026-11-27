@@ -21,12 +21,14 @@ import { byFeature, contradictionsOf, domainName, find, gapsById, projectName, t
 import { EvidenceList } from "../../components/doc/EvidenceList";
 import { Missing } from "../../components/doc/Missing";
 import { InitiativeTags, initiativesOf } from "../../components/Initiatives";
+import { ConstraintRows } from "../../components/Constraints";
 
 /*
  * One rule's page: what must always hold, and does it? Its header says what
  * it is and, in figures, how many capabilities follow it and how many hold
- * to it. Its tabs say where it applies, the evidence that it holds, the
- * concepts it's in the words of, and more about it.
+ * to it. Its tabs say where it applies, with the constraints it respects
+ * first, if any, the evidence that it holds, the concepts it's in the words
+ * of, and more about it.
  */
 export default function RulePage({ state, id, route }: { state: DocqetState; id: string; route: Route }) {
   const rule = find(state.rules, id);
@@ -48,6 +50,7 @@ function RuleView({ state, rule, route }: { state: DocqetState; rule: Rule; rout
   const held = following.length - notHeld.length;
   const withEvidence = following.filter((c) => rule.standings[c.id] === "evidence").length;
   const concepts = rule.concepts.flatMap((cid) => find(state.concepts, cid) ?? []);
+  const respects = rule.respects.flatMap((cid) => find(state.constraints, cid) ?? []);
   const places = rule.evidence.verifies.length + rule.evidence.implements.length;
   const written = rule.from.filter((f) => f.body.trim());
   const several = rule.from.length > 1;
@@ -158,7 +161,14 @@ function RuleView({ state, rule, route }: { state: DocqetState; rule: Rule; rout
       <Tabs tabs={tabs} current={tab} />
 
       {tab === "applies" ? (
-        <AppliesTo state={state} rule={rule} />
+        <>
+          {respects.length ? (
+            <Section title="Respects" term="constraint" count={respects.length} note="What it keeps to that nobody here chose.">
+              <ConstraintRows constraints={respects} />
+            </Section>
+          ) : null}
+          <AppliesTo state={state} rule={rule} />
+        </>
       ) : tab === "evidence" ? (
         <RuleEvidence state={state} rule={rule} />
       ) : tab === "concepts" ? (

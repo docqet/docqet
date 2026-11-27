@@ -4,6 +4,8 @@ import type { DocResource, EvidenceResource } from "./shared";
 export type RuleResource = DocResource & {
   capabilities: string[];
   concepts: string[];
+  /* The constraints it respects. */
+  respects: string[];
   gaps: string[];
   evidence: EvidenceResource;
   standings: Record<string, string>;
